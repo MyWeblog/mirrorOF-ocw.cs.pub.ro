@@ -1,0 +1,465 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 03 - Executables. Static Analysis    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cns/labs/lab-03.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-03","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='media'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/cns/"><img height="70" src="../../res/sigla_cns.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+          <a href="lab-03.html"  class="action show" accesskey="v" rel="nofollow" title="Show page [V]">Show page</a>        </div>
+        <div class="bar-right">
+          <a href="lab-03%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab-03%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="page">
+          <div id="mediamanager__page">
+<h1>Media Manager</h1>
+<div class="panel namespaces">
+<h2>Namespaces</h2>
+<div class="panelHeader">Choose namespace</div>
+<div class="panelContent" id="media__tree">
+
+<ul class="idx">
+<li class="media level0 open"><img src="http://ocw.cs.pub.ro/courses/lib/images/minus.gif" alt="−" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=&amp;tab_files=files&amp;do=media" class="idx_dir">[root]</a></div>
+<ul class="idx">
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=bd&amp;tab_files=files&amp;do=media" class="idx_dir">bd</a></div></li>
+<li class="media level1 open"><img src="http://ocw.cs.pub.ro/courses/lib/images/minus.gif" alt="−" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cns&amp;tab_files=files&amp;do=media" class="idx_dir">cns</a></div>
+<ul class="idx">
+<li class="media level2 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cns%2Fassignments&amp;tab_files=files&amp;do=media" class="idx_dir">assignments</a></div></li>
+<li class="media level2 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cns%2Finternal&amp;tab_files=files&amp;do=media" class="idx_dir">internal</a></div></li>
+<li class="media level2 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cns%2Flaborator&amp;tab_files=files&amp;do=media" class="idx_dir">laborator</a></div></li>
+<li class="media level2 open"><img src="http://ocw.cs.pub.ro/courses/lib/images/minus.gif" alt="−" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cns%2Flabs&amp;tab_files=files&amp;do=media" class="idx_dir">labs</a></div>
+<ul class="idx">
+<li class="media level3 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cns%2Flabs%2F2014-2015&amp;tab_files=files&amp;do=media" class="idx_dir">2014-2015</a></div></li>
+</ul>
+</li>
+<li class="media level2 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cns%2Fresurse&amp;tab_files=files&amp;do=media" class="idx_dir">resurse</a></div></li>
+</ul>
+</li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cpl&amp;tab_files=files&amp;do=media" class="idx_dir">cpl</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cpl-atm&amp;tab_files=files&amp;do=media" class="idx_dir">cpl-atm</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=cplatm&amp;tab_files=files&amp;do=media" class="idx_dir">cplatm</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=egc&amp;tab_files=files&amp;do=media" class="idx_dir">egc</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=eim&amp;tab_files=files&amp;do=media" class="idx_dir">eim</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=ep&amp;tab_files=files&amp;do=media" class="idx_dir">ep</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=gsr&amp;tab_files=files&amp;do=media" class="idx_dir">gsr</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=ic&amp;tab_files=files&amp;do=media" class="idx_dir">ic</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=ii&amp;tab_files=files&amp;do=media" class="idx_dir">ii</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=iocla&amp;tab_files=files&amp;do=media" class="idx_dir">iocla</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=iot&amp;tab_files=files&amp;do=media" class="idx_dir">iot</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=iot2015&amp;tab_files=files&amp;do=media" class="idx_dir">iot2015</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=iotcluj&amp;tab_files=files&amp;do=media" class="idx_dir">iotcluj</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=isc&amp;tab_files=files&amp;do=media" class="idx_dir">isc</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=isrm&amp;tab_files=files&amp;do=media" class="idx_dir">isrm</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=mentors&amp;tab_files=files&amp;do=media" class="idx_dir">mentors</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=mn&amp;tab_files=files&amp;do=media" class="idx_dir">mn</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=mps&amp;tab_files=files&amp;do=media" class="idx_dir">mps</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=mpsit&amp;tab_files=files&amp;do=media" class="idx_dir">mpsit</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=ndk&amp;tab_files=files&amp;do=media" class="idx_dir">ndk</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=osp&amp;tab_files=files&amp;do=media" class="idx_dir">osp</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=pa&amp;tab_files=files&amp;do=media" class="idx_dir">pa</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=pr&amp;tab_files=files&amp;do=media" class="idx_dir">pr</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=programare&amp;tab_files=files&amp;do=media" class="idx_dir">programare</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=ps&amp;tab_files=files&amp;do=media" class="idx_dir">ps</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=rl&amp;tab_files=files&amp;do=media" class="idx_dir">rl</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=saisp&amp;tab_files=files&amp;do=media" class="idx_dir">saisp</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=sasc&amp;tab_files=files&amp;do=media" class="idx_dir">sasc</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=scr&amp;tab_files=files&amp;do=media" class="idx_dir">scr</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=sd-ca&amp;tab_files=files&amp;do=media" class="idx_dir">sd-ca</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=so&amp;tab_files=files&amp;do=media" class="idx_dir">so</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=so-etti&amp;tab_files=files&amp;do=media" class="idx_dir">so-etti</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=so2&amp;tab_files=files&amp;do=media" class="idx_dir">so2</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=sred&amp;tab_files=files&amp;do=media" class="idx_dir">sred</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=uso&amp;tab_files=files&amp;do=media" class="idx_dir">uso</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=uso-ac&amp;tab_files=files&amp;do=media" class="idx_dir">uso-ac</a></div></li>
+<li class="media level1 closed"><img src="http://ocw.cs.pub.ro/courses/lib/images/plus.gif" alt="+" /><div class="li"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?ns=wiki&amp;tab_files=files&amp;do=media" class="idx_dir">wiki</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div class="panel filelist">
+<h2 class="a11y">Media Files</h2>
+<ul class="tabs">
+<li><strong>Media Files</strong></li>
+<li><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?tab_files=upload&amp;do=media&amp;ns=cns%3Alabs">Upload</a></li>
+<li><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?tab_files=search&amp;do=media&amp;ns=cns%3Alabs">Search</a></li>
+</ul>
+<div class="panelHeader">
+<h3>Files in <strong>cns:labs</strong></h3>
+<form class="options" method="get" action="lab-03.html" accept-charset="utf-8"><div class="no">
+<input type="hidden" name="do" value="media" /><input type="hidden" name="ns" value="cns:labs" /><ul>
+<li class="listType"><label class="thumbs" for="listType__thumbs"><input type="radio" id="listType__thumbs" name="list" value="thumbs" checked="checked" /> <span>Thumbnails</span></label>
+<label class="rows" for="listType__rows"><input type="radio" id="listType__rows" name="list" value="rows" /> <span>Rows</span></label>
+</li>
+<li class="sortBy"><label class="name" for="sortBy__name"><input type="radio" id="sortBy__name" name="sort" value="name" checked="checked" /> <span>Name</span></label>
+<label class="date" for="sortBy__date"><input type="radio" id="sortBy__date" name="sort" value="date" /> <span>Date</span></label>
+</li>
+<li><input type="submit" value="Apply" class="button" />
+</li>
+</ul>
+</div></form>
+</div>
+<div class="panelContent">
+<ul class="thumbs"><li><dl title="cns:labs:arm.tar.gz">
+<dt><a id="d_:cns:labs:arm.tar.gz" class="image" title="cns:labs:arm.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aarm.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:arm.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aarm.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:arm.tar.gz">arm.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/28 10:15</dd>
+<dd class="filesize">243.8 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:call_stack.png">
+<dt><a id="l_:cns:labs:call_stack.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Acall_stack.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/call_stack.png?w=90&amp;h=67&amp;t=1414982469&amp;tok=8f5c64" alt="cns:labs:call_stack.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Acall_stack.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:call_stack.png">call_stack.png</a></dd>
+<dd class="size">399&#215;299</dd>
+<dd class="date">2014/11/03 04:41</dd>
+<dd class="filesize">40.3 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:cns-lab-2.tar.gz">
+<dt><a id="d_:cns:labs:cns-lab-2.tar.gz" class="image" title="cns:labs:cns-lab-2.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Acns-lab-2.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:cns-lab-2.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Acns-lab-2.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:cns-lab-2.tar.gz">cns-lab-2.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/21 10:49</dd>
+<dd class="filesize">6.8 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:elf_dynamic_linking.png">
+<dt><a id="l_:cns:labs:elf_dynamic_linking.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_dynamic_linking.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/elf_dynamic_linking.png?w=90&amp;h=51&amp;t=1414331254&amp;tok=7e4dd3" alt="cns:labs:elf_dynamic_linking.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_dynamic_linking.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:elf_dynamic_linking.png">elf_dynamic_linking.png</a></dd>
+<dd class="size">720&#215;408</dd>
+<dd class="date">2014/10/26 15:47</dd>
+<dd class="filesize">148.7 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:elf_link_exec.png">
+<dt><a id="l_:cns:labs:elf_link_exec.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_link_exec.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/elf_link_exec.png?w=90&amp;h=80&amp;t=1414330440&amp;tok=43ba77" alt="cns:labs:elf_link_exec.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_link_exec.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:elf_link_exec.png">elf_link_exec.png</a></dd>
+<dd class="size">430&#215;383</dd>
+<dd class="date">2014/10/26 15:34</dd>
+<dd class="filesize">88 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:elf_merging.png">
+<dt><a id="l_:cns:labs:elf_merging.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_merging.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/elf_merging.png?w=81&amp;h=90&amp;t=1414330447&amp;tok=3be207" alt="cns:labs:elf_merging.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_merging.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:elf_merging.png">elf_merging.png</a></dd>
+<dd class="size">740&#215;820</dd>
+<dd class="date">2014/10/26 15:34</dd>
+<dd class="filesize">46.4 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:elf_sect_inf.png">
+<dt><a id="l_:cns:labs:elf_sect_inf.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_sect_inf.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/elf_sect_inf.png?w=90&amp;h=50&amp;t=1414333020&amp;tok=a2d6a7" alt="cns:labs:elf_sect_inf.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_sect_inf.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:elf_sect_inf.png">elf_sect_inf.png</a></dd>
+<dd class="size">519&#215;293</dd>
+<dd class="date">2014/10/26 16:17</dd>
+<dd class="filesize">27.9 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:elf_static_linking.png">
+<dt><a id="l_:cns:labs:elf_static_linking.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_static_linking.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/elf_static_linking.png?w=90&amp;h=47&amp;t=1414331246&amp;tok=91d7b8" alt="cns:labs:elf_static_linking.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aelf_static_linking.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:elf_static_linking.png">elf_static_linking.png</a></dd>
+<dd class="size">740&#215;388</dd>
+<dd class="date">2014/10/26 15:47</dd>
+<dd class="filesize">74.3 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:envvar.tar.gz">
+<dt><a id="d_:cns:labs:envvar.tar.gz" class="image" title="cns:labs:envvar.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aenvvar.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:envvar.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aenvvar.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:envvar.tar.gz">envvar.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/27 19:18</dd>
+<dd class="filesize">2.4 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:even-password.zip">
+<dt><a id="d_:cns:labs:even-password.zip" class="image" title="cns:labs:even-password.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aeven-password.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:even-password.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aeven-password.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:even-password.zip">even-password.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/08 16:54</dd>
+<dd class="filesize">2 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:even-password_arm.zip">
+<dt><a id="d_:cns:labs:even-password_arm.zip" class="image" title="cns:labs:even-password_arm.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aeven-password_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:even-password_arm.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aeven-password_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:even-password_arm.zip">even-password_arm.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/11 10:19</dd>
+<dd class="filesize">2.6 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:guesser.zip">
+<dt><a id="d_:cns:labs:guesser.zip" class="image" title="cns:labs:guesser.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aguesser.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:guesser.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aguesser.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:guesser.zip">guesser.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/08 17:28</dd>
+<dd class="filesize">2.7 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:guesser_arm.zip">
+<dt><a id="d_:cns:labs:guesser_arm.zip" class="image" title="cns:labs:guesser_arm.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aguesser_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:guesser_arm.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aguesser_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:guesser_arm.zip">guesser_arm.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/11 10:19</dd>
+<dd class="filesize">2.6 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:halting-problem.zip">
+<dt><a id="d_:cns:labs:halting-problem.zip" class="image" title="cns:labs:halting-problem.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Ahalting-problem.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:halting-problem.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Ahalting-problem.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:halting-problem.zip">halting-problem.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/08 17:17</dd>
+<dd class="filesize">2.5 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:halting-problem_arm.zip">
+<dt><a id="d_:cns:labs:halting-problem_arm.zip" class="image" title="cns:labs:halting-problem_arm.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Ahalting-problem_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:halting-problem_arm.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Ahalting-problem_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:halting-problem_arm.zip">halting-problem_arm.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/11 10:19</dd>
+<dd class="filesize">2.4 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:lab-04.tar.gz">
+<dt><a id="d_:cns:labs:lab-04.tar.gz" class="image" title="cns:labs:lab-04.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab-04.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:lab-04.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab-04.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:lab-04.tar.gz">lab-04.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/11/04 07:15</dd>
+<dd class="filesize">80.9 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:lab-05.tar.gz">
+<dt><a id="d_:cns:labs:lab-05.tar.gz" class="image" title="cns:labs:lab-05.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab-05.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:lab-05.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab-05.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:lab-05.tar.gz">lab-05.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/11/11 15:08</dd>
+<dd class="filesize">9.9 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:lab-06.tar.gz">
+<dt><a id="d_:cns:labs:lab-06.tar.gz" class="image" title="cns:labs:lab-06.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab-06.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:lab-06.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab-06.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:lab-06.tar.gz">lab-06.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/11/17 11:52</dd>
+<dd class="filesize">10.5 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:lab-09.tar.gz">
+<dt><a id="d_:cns:labs:lab-09.tar.gz" class="image" title="cns:labs:lab-09.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab-09.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:lab-09.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab-09.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:lab-09.tar.gz">lab-09.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/12/09 12:38</dd>
+<dd class="filesize">1.2 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:lab07.tar.gz">
+<dt><a id="d_:cns:labs:lab07.tar.gz" class="image" title="cns:labs:lab07.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab07.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:lab07.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab07.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:lab07.tar.gz">lab07.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/11/25 04:39</dd>
+<dd class="filesize">120 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:lab08.tar.gz">
+<dt><a id="d_:cns:labs:lab08.tar.gz" class="image" title="cns:labs:lab08.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab08.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:lab08.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alab08.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:lab08.tar.gz">lab08.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/12/02 09:56</dd>
+<dd class="filesize">120 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:level05.tar.gz">
+<dt><a id="d_:cns:labs:level05.tar.gz" class="image" title="cns:labs:level05.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alevel05.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:level05.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Alevel05.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:level05.tar.gz">level05.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/21 12:41</dd>
+<dd class="filesize">3 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:netfilter.zip">
+<dt><a id="d_:cns:labs:netfilter.zip" class="image" title="cns:labs:netfilter.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Anetfilter.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:netfilter.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Anetfilter.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:netfilter.zip">netfilter.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2014/01/06 12:32</dd>
+<dd class="filesize">937 B</dd>
+</dl></li>
+<li><dl title="cns:labs:odd-password.zip">
+<dt><a id="d_:cns:labs:odd-password.zip" class="image" title="cns:labs:odd-password.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aodd-password.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:odd-password.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aodd-password.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:odd-password.zip">odd-password.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/08 17:25</dd>
+<dd class="filesize">2.8 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:odd-password_arm.zip">
+<dt><a id="d_:cns:labs:odd-password_arm.zip" class="image" title="cns:labs:odd-password_arm.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aodd-password_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:odd-password_arm.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aodd-password_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:odd-password_arm.zip">odd-password_arm.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/11 10:19</dd>
+<dd class="filesize">2.7 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:printf-helper.tar.gz">
+<dt><a id="d_:cns:labs:printf-helper.tar.gz" class="image" title="cns:labs:printf-helper.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aprintf-helper.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:printf-helper.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Aprintf-helper.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:printf-helper.tar.gz">printf-helper.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/28 17:23</dd>
+<dd class="filesize">255 B</dd>
+</dl></li>
+<li><dl title="cns:labs:sess-03-aslr.png">
+<dt><a id="l_:cns:labs:sess-03-aslr.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Asess-03-aslr.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/sess-03-aslr.png?w=80&amp;h=90&amp;t=1414337104&amp;tok=f57e89" alt="cns:labs:sess-03-aslr.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Asess-03-aslr.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:sess-03-aslr.png">sess-03-aslr.png</a></dd>
+<dd class="size">651&#215;732</dd>
+<dd class="date">2014/10/26 17:25</dd>
+<dd class="filesize">42.3 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:sess-03-elf_space_final.png">
+<dt><a id="l_:cns:labs:sess-03-elf_space_final.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Asess-03-elf_space_final.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/sess-03-elf_space_final.png?w=89&amp;h=90&amp;t=1414337047&amp;tok=b1495d" alt="cns:labs:sess-03-elf_space_final.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Asess-03-elf_space_final.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:sess-03-elf_space_final.png">sess-03-elf_space_final.png</a></dd>
+<dd class="size">642&#215;647</dd>
+<dd class="date">2014/10/26 17:24</dd>
+<dd class="filesize">28.4 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:shellcode.tar.gz">
+<dt><a id="d_:cns:labs:shellcode.tar.gz" class="image" title="cns:labs:shellcode.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Ashellcode.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:shellcode.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Ashellcode.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:shellcode.tar.gz">shellcode.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/21 12:41</dd>
+<dd class="filesize">404 B</dd>
+</dl></li>
+<li><dl title="cns:labs:simple-shellcode.tar.gz">
+<dt><a id="d_:cns:labs:simple-shellcode.tar.gz" class="image" title="cns:labs:simple-shellcode.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Asimple-shellcode.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:simple-shellcode.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Asimple-shellcode.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:simple-shellcode.tar.gz">simple-shellcode.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/28 00:12</dd>
+<dd class="filesize">464 B</dd>
+</dl></li>
+<li><dl title="cns:labs:stack-convention.png">
+<dt><a id="l_:cns:labs:stack-convention.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astack-convention.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/stack-convention.png?w=90&amp;h=67&amp;t=1413810843&amp;tok=745118" alt="cns:labs:stack-convention.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astack-convention.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:stack-convention.png">stack-convention.png</a></dd>
+<dd class="size">720&#215;540</dd>
+<dd class="date">2014/10/20 16:14</dd>
+<dd class="filesize">9.7 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:stack_canary_illustration.png">
+<dt><a id="l_:cns:labs:stack_canary_illustration.png" class="image thumb" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astack_canary_illustration.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/stack_canary_illustration.png?w=90&amp;h=59&amp;t=1479492244&amp;tok=e92bfc" alt="cns:labs:stack_canary_illustration.png" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astack_canary_illustration.png&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:stack_canary_illustration.png">stack_canary_illustration.png</a></dd>
+<dd class="size">742&#215;493</dd>
+<dd class="date">2016/11/18 20:04</dd>
+<dd class="filesize">14.9 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:straceme.zip">
+<dt><a id="d_:cns:labs:straceme.zip" class="image" title="cns:labs:straceme.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astraceme.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:straceme.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astraceme.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:straceme.zip">straceme.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/08 17:09</dd>
+<dd class="filesize">2.8 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:straceme_arm.zip">
+<dt><a id="d_:cns:labs:straceme_arm.zip" class="image" title="cns:labs:straceme_arm.zip" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astraceme_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/zip.png" alt="cns:labs:straceme_arm.zip" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astraceme_arm.zip&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:straceme_arm.zip">straceme_arm.zip</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/11 10:19</dd>
+<dd class="filesize">2.8 KB</dd>
+</dl></li>
+<li><dl title="cns:labs:string-jmp-call.tar.gz">
+<dt><a id="d_:cns:labs:string-jmp-call.tar.gz" class="image" title="cns:labs:string-jmp-call.tar.gz" href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astring-jmp-call.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media"><img src="../../lib/images/fileicons/gz.png" alt="cns:labs:string-jmp-call.tar.gz" class="icon" /></a></dt>
+<dd class="name"><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-03?image=cns%3Alabs%3Astring-jmp-call.tar.gz&amp;ns=cns%3Alabs&amp;tab_details=view&amp;do=media" id="h_:cns:labs:string-jmp-call.tar.gz">string-jmp-call.tar.gz</a></dd>
+<dd class="size">&#160;</dd>
+<dd class="date">2013/10/28 16:09</dd>
+<dd class="filesize">220 B</dd>
+</dl></li>
+</ul>
+</div>
+</div>
+<div class="panel file">
+<h2 class="a11y">File</h2>
+</div>
+</div>
+
+ 
+        </div> 
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cns/labs/lab-03.txt · Last modified: 2016/10/18 16:05 by dan.gioga          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="lab-03.html"  class="action show" accesskey="v" rel="nofollow" title="Show page [V]">Show page</a>      </div>
+      <div class="bar-right">
+        <a href="lab-03%3Fdo=media&amp;ns=cns%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab-03%3Fdo=media&amp;ns=cns%253Alabs.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="http://ocw.cs.pub.ro/courses/lib/exe/indexer.php?id=cns%3Alabs%3Alab-03&amp;1479894643" width="2" height="1" alt="" /></div>
+</body>
+</html>

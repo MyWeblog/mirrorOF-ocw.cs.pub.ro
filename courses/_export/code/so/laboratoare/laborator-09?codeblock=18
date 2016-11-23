@@ -1,0 +1,85 @@
+    
+    
+
+#include <stdio.h>
+#include <windows.h>
+#include "utils.h" 
+
+#define NO_THREADS 2
+ 
+DWORD dwTlsIndex;
+ 
+ 
+VOID TLSUse(VOID)
+{
+	LPVOID lpvData;
+ 
+	/* get the pointer from TLS for current thread */
+	lpvData = TlsGetValue(dwTlsIndex);
+	DIE((lpvData == 0) && (GetLastError() != 0), "TlsGetValue");
+ 
+	/* use this data */
+	printf("thread %d: get lpvData=%p\n", GetCurrentThreadId(), lpvData);
+ 
+	Sleep(5000);
+}
+ 
+/* function executed by the threads */
+DWORD WINAPI ThreadFunc(LPVOID lpParameter)
+{
+	LPVOID lpvData;
+	DWORD dwReturn;
+ 
+	/* TLS init for the current thread */
+	lpvData = (LPVOID) LocalAlloc(LPTR, 256);
+	DIE(lpvData == NULL, "LocallAloc");
+
+	dwReturn = TlsSetValue(dwTlsIndex, lpvData);
+	DIE(dwReturn == FALSE, "TlsSetValue");
+ 
+	printf("thread %d: set lpvData=%p\n", GetCurrentThreadId(), lpvData);
+ 
+	TLSUse();
+ 
+	/* free dinamic memory */
+	lpvData = TlsGetValue(dwTlsIndex);
+	DIE((lpvData == 0) && (GetLastError() != 0), "TlsGetValue");
+
+	LocalFree((HLOCAL) lpvData);
+ 
+	return 0;
+}
+ 
+DWORD main(VOID)
+{
+	DWORD IDThread, dwReturn;
+	HANDLE hThread[NO_THREADS];
+	int i;
+ 
+	/* allocate TLS index */
+	dwTlsIndex = TlsAlloc();
+	DIE(dwTlsIndex == TLS_OUT_OF_INDEXES, "Eroare la TlsAlloc");
+ 
+	/* create threads */
+	for (i = 0; i < NO_THREADS; i++) {
+		hThread[i] = CreateThread(NULL,                    /* default security attributes */
+			      0,                                   /* default stack size */
+			      (LPTHREAD_START_ROUTINE) ThreadFunc, /* routine to execute */
+			      NULL,                                /* no thread parameter */
+			      0,                                   /* immediately run the thread */
+			      &IDThread);                          /* thread id */
+		DIE(hThread[i] == NULL, "CreateThread");
+	}
+ 
+	/* wait for threads completion */
+	for (i = 0; i < NO_THREADS; i++) {
+		dwReturn = WaitForSingleObject(hThread[i], INFINITE);
+		DIE(dwReturn == WAIT_FAILED, "WaitForSingleObject");
+	}
+ 
+	/* free TLS index */
+	dwReturn = TlsFree(dwTlsIndex);
+	DIE(dwReturn == FALSE, "TlsFree");
+ 
+	return 0;
+}

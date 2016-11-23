@@ -1,0 +1,212 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:resurse:masini-virtuale</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-13T12:21:11+0200"/>
+<meta name="keywords" content="so2,resurse,masini-virtuale"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so2:resurse"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="masini-virtuale.html"/>
+<link rel="canonical" href="../../../../so2/resurse/masini-virtuale.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:resurse';var JSINFO = {"id":"so2:resurse:masini-virtuale","namespace":"so2:resurse","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="masini-virtuale.html#masina_virtuala">Mașina virtuală</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="masini-virtuale.html#inspectare_informatii_din_masina_virtuala">Inspectare informații din mașina virtuală</a></div></li>
+<li class="level2"><div class="li"><a href="masini-virtuale.html#probleme_frecvente">Probleme frecvente</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="masini-virtuale.html#can_t_find_syslinux">can&#039;t find syslinux</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="masini-virtuale.html#masina_virtuala_virtualbox_tip_wrapper">Mașină virtuală VirtualBox (tip wrapper)</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="masina_virtuala">Mașina virtuală</h1>
+<div class="level1">
+
+<p>
+Desfășurarea laboratorului și testarea temelor pentru Sisteme de Operare 2 se realizează cu ajutorul unei mașini virtuale.  Recomandăm descărcarea acesteia și folosirea sa pentru pregătirea și aprofundarea laboratorului și pentru implementarea și verificarea temelor.
+</p>
+
+<p>
+Mașina virtuală este un setup bazat pe qemu.  Ea nu include facilități pentru a edita, compila și depana module, deci va trebui să faceți acest lucru pe mașina fizică.  Mașina virtuală doar rulează un kernel minimal, modulele voastre și eventuale programe de test.
+</p>
+
+<p>
+Pentru a rula mașina virtuală veți avea nevoie de o mașină Linux cu următoarele pachete:
+</p>
+<ul>
+<li class="level1"><div class="li"> build-essential</div>
+</li>
+<li class="level1"><div class="li"> genisoimage</div>
+</li>
+<li class="level1"><div class="li"> syslinux</div>
+</li>
+<li class="level1"><div class="li"> qemu</div>
+</li>
+<li class="level1"><div class="li"> kvm</div>
+</li>
+</ul>
+
+<p>
+Pentru siguranță este util să aveți instalate pachetele:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>gcc-X.Y-multilib</code> (<code>X.Y</code> este versiunea din repository-ul distribuției voastre)</div>
+</li>
+</ul>
+
+<p>
+Tot pentru siguranță, dacă aveți sistemul pe 64 de biți, este util să aveți biblioteca C pentru <code>i386</code>. Pentru aceasta pe un sistem Debian-based veți rula, ca root, comenzile:
+</p>
+<pre class="code"># dpkg --add-architecture i386
+# apt-get update
+# apt-get install libc6:i386</pre>
+
+<p>
+Descărcați kernel-ul de la <a href="http://elf.cs.pub.ro/so2/res/linux-3.13-update-2016-03-06.tar.bz2" class="urlextern" title="http://elf.cs.pub.ro/so2/res/linux-3.13-update-2016-03-06.tar.bz2"  rel="nofollow">http://elf.cs.pub.ro/so2/res/linux-3.13-update-2016-03-06.tar.bz2</a>.  Se dezarhivează într-un director numit <code>linux-3.13</code>.  Va trebui să faceți un symlink numit <code>/usr/src/linux-so2</code> către directorul creat după dezarhivare..
+</p>
+
+<p>
+Descărcați mașina virtuală de la <a href="http://elf.cs.pub.ro/so2/res/qemu-vm-update-2016-03-06.tar.bz2" class="urlextern" title="http://elf.cs.pub.ro/so2/res/qemu-vm-update-2016-03-06.tar.bz2"  rel="nofollow">http://elf.cs.pub.ro/so2/res/qemu-vm-update-2016-03-06.tar.bz2</a>.  Se dezarhivează într-un director numit <code>qemu-vm</code>.  Acest director conține, printre altele:
+</p>
+<ul>
+<li class="level1"><div class="li"> un <code>Makefile</code>;  rulați <code>make</code> pentru a construi imaginea mașinii virtuale;</div>
+</li>
+<li class="level1"><div class="li"> <code>busybox</code>, pentru utilitare de bază în mașina virtuală;</div>
+</li>
+<li class="level1"><div class="li"> symlink către <code>/usr/src/linux-so2/arch/x86/boot/bzImage</code>, imaginea kernel-ului;  nu este nevoie să schimbați symlink-ul sau să recompilați kernel-ul după prima compilare.  Temele sunt module de kernel.</div>
+</li>
+<li class="level1"><div class="li"> script-uri pentru reconstruirea imaginii mașinii virtuale;  nu trebuie să le apelați de mână, se ocupă <code>make</code> de asta;</div>
+</li>
+<li class="level1"><div class="li"> alte fișiere necesare rulării mașinii virtuale vor fi create la prima rulare a <code>make</code>;  nu este nevoie să le modificați.</div>
+</li>
+</ul>
+
+<p>
+Este necesar să rulați <code>make</code> folosind config-ul <code>kernel_config</code>:
+</p>
+<pre class="code">cp /path/to/qemu-vm/kernel_config /usr/src/linux-so2/.config
+cd /usr/src/linux-so2
+make -j $((`nproc`+1))</pre>
+
+<p>
+Verificați că funcționează <code>netconsole</code>.  Rulați <code>netcat -lup 6666</code> pe mașina fizică și apoi boot-ați mașina virtuală.  Ar trebui să vedeți mesajele de la consolă în fereastra cu <code>netcat</code>.
+</p>
+
+<p>
+Fișierele pe care vreți să le puneți în mașina virtuală vor trebui puse în directorul <code>fsimg/root</code>.  Ele vor fi accesibile în mașina virtuală din directorul <code>/root</code>.  Pentru a automatiza copierea în <code>fsimg/root</code> puteți adăuga un target în makefile-ul modulului, sau puteți crea symlink-uri.
+</p>
+
+<p>
+<p><div class="noteclassic">
+GNU Make nu se pricepe prea bine la dependency tracking pe symlink-uri.  Dacă alegeți să faceți symlink-uri în <code>fsimg/root</code> către fișierele voastre, asigurați-vă că imaginea este reconstruită de fiecare dată.  Cel mai simplu este să faceți target-ul <code>boot.iso</code> phony.  Generarea imaginii durează doar câteva secunde.
+
+</div></p>
+</p>
+
+<p>
+Veți compila modulele de kernel și programele de test pe mașina fizică.  Dacă aveți un sistem pe 64 de biți, folosiți flag-ul <code>-m32</code> pentru gcc, pentru a genera binare pe 32 de biți.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Mașina virtuală" [1-3549] -->
+<h2 class="sectionedit2" id="inspectare_informatii_din_masina_virtuala">Inspectare informații din mașina virtuală</h2>
+<div class="level2">
+
+<p>
+Dacă aveți multe mesaje afișate în mașina virtuală puteți folosi combinațiile de taste <code>Shift+PgUp</code>, respectiv <code>Shift+PgDn</code> pentru a parcurge output-ul (<em>scrolling</em>) din consolă.
+</p>
+
+<p>
+Pentru a inspecta pe mașina fizică mesajele din consolă, porniți un netcat pe UDP, port 6666:  <code>nc -lup 6666</code>.  <strong>Asigurați-vă că mesajele nu sunt blocate de firewall.</strong>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Inspectare informații din mașina virtuală" [3550-3982] -->
+<h2 class="sectionedit3" id="probleme_frecvente">Probleme frecvente</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "Probleme frecvente" [3983-4014] -->
+<h3 class="sectionedit4" id="can_t_find_syslinux">can&#039;t find syslinux</h3>
+<div class="level3">
+
+<p>
+Puteți găsi un isolinux.bin aici: <a href="http://elf.cs.pub.ro/so2/res/isolinux.bin" class="urlextern" title="http://elf.cs.pub.ro/so2/res/isolinux.bin"  rel="nofollow">http://elf.cs.pub.ro/so2/res/isolinux.bin</a>.  Editați fișierul <code>build-iso.sh</code> și schimbați variabila <code>isolinux_bin</code>.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "can't find syslinux" [4015-4209] -->
+<h2 class="sectionedit5" id="masina_virtuala_virtualbox_tip_wrapper">Mașină virtuală VirtualBox (tip wrapper)</h2>
+<div class="level2">
+
+<p>
+Dacă aveți dificultăți în a configura pe sistemul vostru un mediu de lucru pentru mașina virtuală QEMU, puteți folosi mașina virtuală VirtualBox disponibilă la adresa <a href="https://repository.grid.pub.ro/cs/so2/vm/" class="urlextern" title="https://repository.grid.pub.ro/cs/so2/vm/"  rel="nofollow">https://repository.grid.pub.ro/cs/so2/vm/</a>. E vorba de fișierul <code>SO2 Wrapper VM.ova</code> pe care îl puteți importa în VirtualBox.
+</p>
+
+<p>
+Pentru autentificare la link-ul de mai sus folosiți contul și parola de pe <a href="http://cs.curs.pub.ro/2015/my/" class="urlextern" title="http://cs.curs.pub.ro/2015/my/"  rel="nofollow">cs.curs.pub.ro</a>.
+</p>
+
+<p>
+Pentru mașina virtuală aveți acces la conturile:
+</p>
+<ul>
+<li class="level1"><div class="li"> nume de utilizator <code>student</code> cu parola <code>student</code> cu permisiuni de <code>sudo</code></div>
+</li>
+<li class="level1"><div class="li"> contul <code>root</code> cu parola <code>student</code> (nenecesar intrucât contul <code>student</code> are permisiuni de <code>sudo</code>)</div>
+</li>
+</ul>
+
+<p>
+Infrastructura QEMU și codul sursă al nucleului se găsesc în subdirectorul <code>so2/</code> din directorul home al utilizatorului <code>student</code>.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Mașină virtuală VirtualBox (tip wrapper)" [4210-] --></div>
+</body>
+</html>

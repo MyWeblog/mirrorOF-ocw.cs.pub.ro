@@ -1,0 +1,122 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:04:contents:09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-16T23:57:43+0200"/>
+<meta name="keywords" content="saisp,labs,04,contents,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:04:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="09.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/04/contents/09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:04:contents';var JSINFO = {"id":"saisp:labs:04:contents:09","namespace":"saisp:labs:04:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_criptare_volum_lvm">09. [15p] Criptare volum LVM</h3>
+<div class="level3">
+
+<p>
+Vrem să criptăm un modul LVM folosind LUKS (<em>Linux Unified Key System</em>). Vom folosi al treilea volum logic creat anterior.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Pachetul <code>cryptsetup</code>, necesar acestui exercițiu este instalat.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Puteți urmări <a href="http://www.cyberciti.biz/hardware/howto-linux-hard-disk-encryption-with-luks-cryptsetup-command/" class="urlextern" title="http://www.cyberciti.biz/hardware/howto-linux-hard-disk-encryption-with-luks-cryptsetup-command/"  rel="nofollow">pașii de aici</a>.
+
+</div></p>
+</p>
+
+<p>
+Pentru început formatăm volumele cu suport de criptare:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span>cryptsetup <span class="re5">-v</span> luksFormat <span class="sy0">/</span>dev<span class="sy0">/</span>antagarich<span class="sy0">/</span>tatalia
+&nbsp;
+WARNING<span class="sy0">!</span>
+========
+This will overwrite data on <span class="sy0">/</span>dev<span class="sy0">/</span>antagarich<span class="sy0">/</span>tatalia irrevocably.
+&nbsp;
+Are you sure? <span class="br0">&#40;</span>Type uppercase <span class="kw2">yes</span><span class="br0">&#41;</span>: YES
+Enter passphrase:
+Verify passphrase:
+Command successful.</pre>
+
+<p>
+Acolo unde se cere parolă introduceți parola corespunzătoare.
+</p>
+
+<p>
+Apoi “deschidem” partiția și furnizăm parola:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span>cryptsetup luksOpen <span class="sy0">/</span>dev<span class="sy0">/</span>antagarich<span class="sy0">/</span>tatalia crypto-tatalia
+Enter passphrase <span class="kw1">for</span> <span class="sy0">/</span>dev<span class="sy0">/</span>antagarich<span class="sy0">/</span>tatalia:</pre>
+
+<p>
+Acum avem creat dispozitivul <code>/dev/mapper/crypto-tatalia</code> pe care îl putem folosi. Formatăm dispozitivul cu <code>ext4</code>:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span>mkfs.ext4 <span class="sy0">/</span>dev<span class="sy0">/</span>mapper<span class="sy0">/</span>crypto-tatalia</pre>
+
+<p>
+Montăm dispozitivul în <code>/mnt/crypto-tatalia</code>:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span>mnt<span class="sy0">/</span>crypto-tatalia
+<span class="co4">root@raid:~# </span><span class="kw2">mount</span> <span class="sy0">/</span>dev<span class="sy0">/</span>mapper<span class="sy0">/</span>crypto-tatalia <span class="sy0">/</span>mnt<span class="sy0">/</span>crypto-tatalia
+<span class="co4">root@raid:~# </span><span class="kw2">ls</span> <span class="sy0">/</span>mnt<span class="sy0">/</span>crypto-tatalia
+lost+found</pre>
+
+<p>
+Ca să încheiem folosirea dispozitivului, întâi îl vom demonta:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span><span class="kw2">umount</span> <span class="sy0">/</span>mnt<span class="sy0">/</span>crypto-tatalia</pre>
+
+<p>
+iar apoi vom “închide” partiția. O nouă deschidere va necesita reintroducerea parolei:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span>cryptsetup luksClose crypto-tatalia</pre>
+
+<p>
+Aplicați pașii de mai sus pentru a cripta în mod similar al patrulea volum logic.
+</p>
+
+</div>
+</div>
+</body>
+</html>

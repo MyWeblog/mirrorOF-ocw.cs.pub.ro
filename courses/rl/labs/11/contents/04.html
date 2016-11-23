@@ -1,0 +1,269 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    04. [15p] Conectare de containere la rețeaua publică    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-01-15T13:09:14+0200"/>
+<meta name="keywords" content="rl,labs,11,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=rl:labs:11:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/rl/labs/11/contents/04.html"/>
+<link rel="canonical" href="04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:11:contents';var JSINFO = {"id":"rl:labs:11:contents:04","namespace":"rl:labs:11:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/rl/"><img height="70" src="../../../../res/sigla_rl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="04%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="04%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_conectare_de_containere_la_reteaua_publica">04. [15p] Conectare de containere la rețeaua publică</h3>
+<div class="level3">
+
+<p>
+Până acum conectarea la Internet containerelor <code>red</code>, <code>green</code> și <code>blue</code> se face prin intermediul stației <code>host</code> pe post de ruter/gateway. Stația <code>host</code> preia pachetele sosite pe interfața <code>br0</code> și le transferă apoi pe interfața <code>eth0</code> legată la o rețea pe care vom denumi în continuare <em>rețea publică</em>.
+</p>
+
+<p>
+Dorim să realizăm conectarea la Internet a containerelor direct la rețeaua publică, renunțânt astfel la rutare și la NAT pe stația <code>host</code>. Pentru aceasta vom adăuga inclusiv interfața <code>eth0</code> la bridge-ul <code>br0</code>, asigurând astfel o conexiune ,prin bridge, a containerelelor la <em>rețeaua publică</em>.
+</p>
+
+<p>
+Pentru început dezactivăm NAT pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">1</span> packets, <span class="nu0">32</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+   <span class="nu0">50</span>  <span class="nu0">3166</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      eth1    0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>           
+<span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-F</span> POSTROUTING
+<span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination</pre>
+
+<p>
+<p><div class="noteimportant">
+Operațiile următoare le vom efectua direct în consola mașinii virtuale VMware, adică în fereastra VMware, întrucât vor afecta configurația rețelei și vor închide conexiunile SSH curente.
+
+</div></p>
+</p>
+
+<p>
+După cum am precizat, adăugăm interfața <code>eth0</code> în brige-ul <code>br0</code> (practic creăm o legătură între switch-ul nostru virtual <code>br0</code> și rețeaua publică):
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>brctl addif br0 eth0
+<span class="co4">root@host:~# </span>brctl show br0
+bridge name	bridge <span class="kw2">id</span>		STP enabled	interfaces
+br0		8000.080027db5278	no		eth0
+							veth-blue
+							veth-green
+							veth-red</pre>
+
+<p>
+Pentru a reveni la conectare prin SSH de pe sistemul fizic pe stația <code>host</code>, va trebui să configurăm o adresă IP pe bridge-ul <code>br0</code>. Pentru acesta vom șterge vechile adrese de pe interfețele <code>eth0</code> și <code>br0</code> și vom obține o adresă nouă pe interfața <code>br0</code> folosind comenzile:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a f dev br0
+<span class="co4">root@host:~# </span>dhclient br0
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a s br0
+<span class="nu0">25</span>: br0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc noqueue state UP 
+    link<span class="sy0">/</span>ether 08:00:<span class="nu0">27</span>:db:<span class="nu0">52</span>:<span class="nu0">78</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global br0</pre>
+
+<p>
+<p><div class="noteclassic">
+Sunt șanse ca pe interfața <code>br0</code> să fie primită, prin DHCP, aceeași adresă IP. În acest caz conexiunea SSH existentă va fi deblocată și veți putea continua lucrul la exerciții. Adică nu va mai fi nevoie să rulați comanda <code>ssh</code> indicată imediat mai jos.
+
+</div></p>
+</p>
+
+<p>
+Acum ne putem reconecta de pe sistemul fizic la stația <code>host</code> prin SSH, folosind adresa IP asociată acum interfeței <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_BR0</pre>
+
+<p>
+Acum containerele sunt conectate la <em>rețeaua publică</em>. Pentru a obține adrese din acea rețea, ștergem vechea adresă pe interfața <code>eth0</code>, rulăm pe fiecare container comanda <code>dhclient eth0</code> și observăm ce adrese IP a obținut fiecare container:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@red:~# </span>dhclient eth0
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">26</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.102<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0
+&nbsp;
+<span class="co4">root@blue:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@blue:~# </span>dhclient eth0
+<span class="co4">root@blue:~# </span><span class="kw2">ip</span> a s eth0
+<span class="nu0">19</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:<span class="nu0">32</span>:0f:ae brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.103<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0
+&nbsp;
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@green:~# </span>dhclient eth0
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">22</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.104<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0</pre>
+
+<p>
+Folosind noile adrese obținute ne putem conecta <strong>direct</strong> prin SSH de pe sistemul fizic pe containere:
+</p>
+<pre class="code bash"><span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_RED
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~#
+</span>
+<span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_GREEN
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@green:~#
+</span>
+<span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_BLUE
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@blue:~#</span></pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="navigare">Navigare</h1>
+<div class="level1">
+
+<p>
+<strong><a href="../../11.html" class="wikilink1" title="rl:labs:11">Laboratorul 11</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "rl:labs:11:meta:nav" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:meta:nav">
+<div class="level1">
+
+<div><div id="nojs_indexmenu_887606759583560beef926" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="00.html" class="wikilink1" title="rl:labs:11:contents:00">00. [BONUS - 10p] Completare formular de feedback</a></div></li>
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="rl:labs:11:contents:01">01. [15p] Conectare logică a două containere</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="rl:labs:11:contents:02">02. [15p] Asigurare conectivitate la Internet pentru containere</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="rl:labs:11:contents:03">03. [10p] Asigurare conectivitate la Internet pentru un nou container</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="04.html" class="wikilink1" title="rl:labs:11:contents:04">04. [15p] Conectare de containere la rețeaua publică</a></span></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="rl:labs:11:contents:05">05. [15p] Filtrare pe bridge</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="rl:labs:11:contents:06">06. [15p] Rețele distincte pentru containere</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="rl:labs:11:contents:07">07. [15p] Filtrare de trafic între containere</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="rl:labs:11:contents:08">08. [BONUS - 10p] Gestiune bridge-uri folosind suita iproute2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "rl:labs:11:meta:nav" [0-] --></div>
+<div class="level1">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          rl/labs/11/contents/04.txt · Last modified: 2015/01/15 13:09 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="04%3Fdo=media&amp;ns=rl%253Alabs%253A11%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="04.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=rl%253Alabs%253A11%253Acontents%253A04&amp;1479893182" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,1668 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 06. Comunicația prin Sockeți TCP    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-08T07:53:16+0300"/>
+<meta name="keywords" content="eim,laboratoare,laborator06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=eim:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/eim/laboratoare/laborator06.html"/>
+<link rel="canonical" href="laborator06.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='eim:laboratoare';var JSINFO = {"id":"eim:laboratoare:laborator06","namespace":"eim:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="laborator06%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="laborator06%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_06_comunicatia_prin_socketi_tcp">Laborator 06. Comunicația prin Sockeți TCP</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="realizarea_conexiunii_intre_o_masina_fizica_si_dispozitivul_mobil">Realizarea Conexiunii între o Mașină Fizică și Dispozitivul Mobil</h2>
+<div class="level2">
+
+<p>
+Pentru a putea comunica prin intermediul unui socket TCP, o mașină fizică și dispozitivul mobil trebuie să se găsească în aceeași rețea, astfel încât adresele IP ale acestora să fie vizibile între ele.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="dispozitiv_fizic">Dispozitiv Fizic</h3>
+<div class="level3">
+
+<p>
+O mașină fizică și un dispozitiv fizic pot comunica:
+</p>
+<ol>
+<li class="level1"><div class="li"> prin plasarea lor în aceeași rețea fără fir (WiFi), având adresele IP furnizate de un server DHCP ce rulează pe un router;</div>
+</li>
+<li class="level1"><div class="li"> prin stabilirea unei legături punct la punct, folosind Bluetooth;</div>
+</li>
+<li class="level1"><div class="li"> printr-o conexiune de date realizată prin intermediul portului USB.</div>
+</li>
+</ol>
+
+<p>
+Pe telefon, se accesează <em>Settings</em> → <em>Wireless &amp; Networks</em> → <em>Tethering &amp; portable hotspot</em> și se selectează opțiunea <em>USB  Tethering</em>
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/usb_tethering_configuration.png%3Fw=400&amp;tok=2d0de8" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Astfel, se va activa (în mod automat) interfața <code>rndis0</code>, pentru care se poate determina adresa Internet:
+</p>
+<pre class="code">student@eim2016:/opt/android-sdk-linux/platform-tools$ ./adb devices
+List of devices attached
+0019531d59461f    device
+student@eim2016:/opt/android-sdk-linux/platform-tools$ ./adb -s 0019531d59461f shell
+shell@n7000:/ $ su
+su
+shell@n7000:/ # ifconfig rndis0
+ifconfig rndis0
+rndis0: ip 192.168.42.129 mask 255.255.255.0 flags [up broadcast running multicast]
+shell@n7000:/ #</pre>
+
+<p>
+<p><div class="noteimportant">Pe Linux, în situația în care dispozitivul mobil este detectat, fără a se indica tipul său, este necesar să se pornească serverul de ADB cu drepturi de administrator:
+</p>
+<pre class="code">student@eim2016:/opt/android-sdk-linux/platform-tools$ ./adb devices
+List of devices attached
+0019531d59461f    ????????????
+student@eim2016:/opt/android-sdk-linux/platform-tools$ sudo ./adb kill-server
+student@eim2016:/opt/android-sdk-linux/platform-tools$ sudo ./adb start-server
+student@eim2016:/opt/android-sdk-linux/platform-tools$ sudo ./adb devices
+List of devices attached
+0019531d59461f    device</pre>
+
+<p>
+Pentru dispozitivele care nu permit conectarea cu <code>adb shell</code> în modul tethering se aplică <a href="http://stackoverflow.com/questions/9210152/set-up-device-for-development-no-permissions" class="urlextern" title="http://stackoverflow.com/questions/9210152/set-up-device-for-development-no-permissions"  rel="nofollow">soluția prezentată pe stackoverflow</a>: trebuie creat în Ubuntu fișierul <code>/etc/udev/rules.d/51-android.rules</code> și adăugat codul obținut cu <code>lsusb</code> pentru fabricantul telefonului. Odată dispozitivul de rețea obținut (de exemplu <code>rndis0</code>), se folosește <code>dhclient rndis0</code> pentru a obține o adresă IP de la telefon.  
+</p>
+
+<p>
+Pe Windows, dacă dispozitivul mobil nu este detectat, poate fi necesară instalarea unor drivere suplimentare pentru stabilirea legăturii prin intermediul portului USB.
+
+</div></p>
+</p>
+
+<p>
+Ulterior, se determină adresa Internet a mașinii fizice, asociată interfeței <code>usb0</code> (Linux), respectiv Ethernet (Windows).
+</p>
+<table class="columns-plugin" style="width:100%">
+<tr><td class="columns-plugin first" style="width:50%;">
+
+<p>
+<strong>Linux</strong>
+</p>
+<pre class="code">student@eim2016:~$ sudo ifconfig usb0
+usb0      Link encap:Ethernet  HWaddr 32:ca:4b:1c:ff:7b 
+          inet addr:192.168.42.170  Bcast:192.168.42.255  Mask:255.255.255.0
+          inet6 addr: fe80::30ca:4bff:fe1c:ff7b/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:109 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:319 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:24103 (23.5 KiB)  TX bytes:64369 (62.8 KiB)</pre>
+</td><td class="columns-plugin last">
+
+<p>
+<strong>Windows</strong>
+</p>
+<pre class="code">C:\Program Files (x86)\Android\android-sdk\platform-tools&gt;ipconfig
+
+Windows IP Configuration
+
+
+Ethernet adapter Local Area Connection:
+
+   Connection-specific DNS Suffix  . :
+   Link-local IPv6 Address . . . . . : fe80::18bf:d0be:3625:6b1%44
+   IPv4 Address. . . . . . . . . . . : 192.168.42.81
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.42.129</pre>
+</td></tr></table>
+
+</div>
+
+<h3 class="sectionedit4" id="dispozitiv_virtual_emulator">Dispozitiv Virtual (Emulator)</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="genymotion">Genymotion</h4>
+<div class="level4">
+
+<p>
+Fiecărui dispozitiv virtual Genymotion îi este alocată în mod automat o adresă IP de către serverul DHCP configurat pe mașina virtuală VirtualBox în cadrul căruia rulează. 
+</p>
+
+<p>
+Implicit, este utilizat spațiul de adrese <code>192.168.56.1/24</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"> mașina fizică (default gateway) are adresa <code>192.168.56.1</code>;</div>
+</li>
+<li class="level1"><div class="li"> pentru dispozitivele virtuale sunt alocate adrese în intervalul <code>192.168.56.101</code> .. <code>192.168.56.254</code>.</div>
+</li>
+</ul>
+
+<p>
+Configurarea spațiului de adrese care este folosit poate fi configurat prin intermediul VirtualBox, accesând <em>File</em> → <em>Preferences</em> → <em>Network</em> → <em>Host Only Networks</em>
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/virtualbox01.png%3Fw=500&amp;tok=d793a6" class="mediacenter" alt="" width="500" />
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/virtualbox02.png%3Fw=500&amp;tok=11c57a" class="mediacenter" alt="" width="500" />
+</p>
+
+<p>
+Adresa IP care a fost atașată fiecărui dispozitiv virtual Genymotion poate fi verificată:
+</p>
+<ul>
+<li class="level1"><div class="li"> folosind comanda <code>adb devices</code>; <pre class="code">student@eim2016:/opt/android-sdk-linux/platform-tools$ ./adb devices
+List of devices attached
+192.168.56.101:5555     device</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> prin intermediul plugin-ului Genymotion pentru mediile integrate de dezvoltare.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/genymotion_ip_addresses.png%3Fw=700&amp;tok=2c4559" class="mediacenter" alt="" width="700" />
+</p>
+
+<p>
+Conectivitatea dintre mașina fizică și dispozitivul virtual poate fi verificată folosind comanda <code>ping</code>. 
+</p>
+<pre class="code">student@eim2016:~$ ping 192.168.56.101
+Pinging 192.168.56.101 with 32 bytes of data:
+Reply from 192.168.56.101: bytes=32 time&lt;1ms TTL=64
+Reply from 192.168.56.101: bytes=32 time&lt;1ms TTL=64
+Reply from 192.168.56.101: bytes=32 time&lt;1ms TTL=64
+Reply from 192.168.56.101: bytes=32 time&lt;1ms TTL=64
+
+Ping statistics for 192.168.56.101:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms</pre>
+
+</div>
+
+<h4 id="android_virtual_device">Android Virtual Device</h4>
+<div class="level4">
+
+<p>
+Fiecare instanță a unui dispozitiv virtual Android oferă o pereche de porturi pentru diferite conexiuni:
+</p>
+<ul>
+<li class="level1"><div class="li"> un port de consolă, prin intermediul căruia este permis accesul prin telnet pentru execuția de diverse comenzi; </div>
+</li>
+<li class="level1"><div class="li"> un port pentru <code>adb</code>.</div>
+</li>
+</ul>
+
+<p>
+Numerele folosite pentru aceste porturi sunt succesive. Implicit, numerotarea porturilor începe de la 5554 (portul de consolă) / 5555 (portul adb). Determinarea portului poate fi realizată:
+</p>
+<ul>
+<li class="level1"><div class="li"> prin inspectarea ferestrei în care este afișat emulatorul, având forma <em>Android Emulator (55nr)</em>, unde nr poate lua valori cuprinse între 54 și 87 (doar valori impare - pentru portul de consolă, valorile pare fiind rezervate pentru portul adb); astfel, sunt suportate maxim 16 instanțe de dispozitive virtuale Android simultan;</div>
+</li>
+</ul>
+
+<p>
+<img src="http://ocw.cs.pub.ro/courses/_media/laboratoare/laborator06/android_virtual_device_port.png?w=600&amp;tok=2e9b15" class="mediacenter" alt="" width="600" />
+</p>
+<ul>
+<li class="level1"><div class="li"> prin rularea comenzii <code>adb devices</code> <pre class="code">student@eim2016:/opt/android-sdk-linux/platform-tools$ ./adb devices
+List of devices attached
+emulator-5554   device</pre>
+</div>
+</li>
+</ul>
+
+<p>
+Conectarea la consola dispozitivului virtual Android se face prin comanda: 
+</p>
+<pre class="code">student@eim2016:~$ telnet localhost 55nr</pre>
+
+<p>
+specificându-se portul pe care rulează emulatorul.
+</p>
+
+<p>
+În consolă, realizarea unei legături între mașina fizică și dispozitivul virtual Android se face prin <a href="http://developer.android.com/tools/help/emulator.html#redirection" class="urlextern" title="http://developer.android.com/tools/help/emulator.html#redirection"  rel="nofollow">redirectarea portului</a>, folosind comanda <code>redir</code>, aceasta suportând mai multe opțiuni:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>list</code>;</div>
+</li>
+<li class="level1"><div class="li"> <code>add</code>;</div>
+</li>
+<li class="level1"><div class="li"> <code>del</code>.</div>
+</li>
+</ul>
+<div class="table sectionedit5"><table class="inline">
+	<tr class="row0">
+		<th class="col0 centeralign">  <strong>OPȚIUNE</strong>  </th><th class="col1 centeralign">  <strong>DESCRIERE</strong>  </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> <code>list</code> </td><td class="col1"> afișează toate redirectările de port folosite la momentul respectiv </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <code>add &lt;protocol&gt;:&lt;port_masina_fizica&gt;:&lt;port_dispozitiv_virtual&gt;</code> </td><td class="col1"> adaugă o redirectare de port<br/>
+✔ <code>&lt;protocol&gt;</code> poate avea doar valorile <code>tcp</code> sau <code>udp</code><br/>
+✔ <code>&lt;port_masina_fizica&gt;</code> reprezintă numărul portului utilizat pe mașina fizică <br/>
+✔ <code>&lt;port_dizpozitiv_virtual&gt;</code> reprezintă numărul portului de pe dispozitivul virtual spre care vor fi redirecționate datele<br/>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <code>del &lt;protocol&gt;:&lt;port_masina_fizica&gt;</code> </td><td class="col1"> șterge o redirectare de port </td>
+	</tr>
+</table></div>
+
+<p>
+<strong>Exemplu</strong>
+</p>
+<pre class="code">student@eim2016:~$ telnet localhost 5554
+Android Console: type &#039;help&#039; for a list of commands
+OK
+redir add tcp:2000:4000
+OK
+redir list
+tcp:2000  =&gt; 4000
+OK
+redir del tcp:2000
+OK
+redir list
+no active redirections
+OK
+exit
+Connection to host lost.
+student@eim2016:~$</pre>
+
+</div>
+
+<h2 class="sectionedit6" id="mecanisme_pentru_comunicatia_prin_retea_in_android">Mecanisme pentru Comunicația prin Rețea în Android</h2>
+<div class="level2">
+
+<p>
+Comunicația între mai multe dispozitive poate fi realizată:
+</p>
+<ol>
+<li class="level1"><div class="li"> prin metode generale, disponibile la nivelul platformei Java:</div>
+<ol>
+<li class="level2"><div class="li"> sockeți TCP, a căror funcționalitate este implementată în pachetul <a href="https://docs.oracle.com/javase/8/docs/api/index.html" class="urlextern" title="https://docs.oracle.com/javase/8/docs/api/index.html"  rel="nofollow">java.net</a>, oferind acces la cele mai multe operații ce implică programarea de rețea (atât server, cât și client);</div>
+</li>
+<li class="level2"><div class="li"> clasa <a href="https://docs.oracle.com/javase/8/docs/api/java/net/HttpURLConnection.html" class="urlextern" title="https://docs.oracle.com/javase/8/docs/api/java/net/HttpURLConnection.html"  rel="nofollow">HttpURLConnection</a>, prin care este facilitat accesul la servere care folosesc protocolul <code>http</code>;</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> prin mecanisme specifice Android:</div>
+<ol>
+<li class="level2"><div class="li"> clasa <a href="http://developer.android.com/reference/android/net/http/AndroidHttpClient.html" class="urlextern" title="http://developer.android.com/reference/android/net/http/AndroidHttpClient.html"  rel="nofollow">HttpClient</a> permite posibilitatea de a descărca un conținut disponibil la o anumită adresă Internet, identificată printr-un <abbr title="Uniform Resource Locator">URL</abbr>;</div>
+</li>
+<li class="level2"><div class="li"> clasa <a href="http://developer.android.com/reference/org/json/JSONObject.html" class="urlextern" title="http://developer.android.com/reference/org/json/JSONObject.html"  rel="nofollow">JSONObject</a> este utilizată pentru gestiunea datelor în format JSON.</div>
+</li>
+</ol>
+</li>
+</ol>
+
+<p>
+<p><div class="noteimportant">De regulă, o aplicație Android nu are acces la comunicația prin rețea decât prin intermediul unei permisiuni speciale: 
+</p>
+<pre class="code xml"><span class="sc3"><span class="re1">&lt;manifest</span> ...<span class="re2">&gt;</span></span>
+  <span class="sc-1">&lt;!-- other application properties or components --&gt;</span>
+  <span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">    <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.INTERNET&quot;</span> <span class="re2">/&gt;</span></span>
+  <span class="sc-1">&lt;!-- other application properties or components --&gt;</span> 
+<span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span></pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="programarea_de_retea_folosind_socketi_tcp_in_android">Programarea de Rețea folosind Sockeți TCP în Android</h2>
+<div class="level2">
+
+<p>
+Folosirea unui socket TCP presupune comunicația între două entități:
+</p>
+<ol>
+<li class="level1"><div class="li"> un client care se conectează la o anumită adresă, pe un anumit port, pe care le cunoaște în prealabil;</div>
+</li>
+<li class="level1"><div class="li"> un server care așteaptă să fie invocat, la o adresă și la un port.</div>
+</li>
+</ol>
+
+<p>
+În Android (ca și în cazul platformei Java), clasa de bază pentru comunicația dintre client și server este <a href="http://developer.android.com/reference/java/net/Socket.html" class="urlextern" title="http://developer.android.com/reference/java/net/Socket.html"  rel="nofollow">Socket</a>. Aceasta pune la dispoziție un flux de intrare și un flux de ieșire prin intermediul cărora diferite entități, ale căror adrese IP sunt vizibile între ele, pot transmite diferite date, folosind protocolul TCP. Un socket este reprezentat de o asociere dintre o adresă și un port.
+</p>
+
+<p>
+“Ascultarea” invocărilor este realizată prin intermediul clasei <a href="http://developer.android.com/reference/java/net/ServerSocket.html" class="urlextern" title="http://developer.android.com/reference/java/net/ServerSocket.html"  rel="nofollow">ServerSocket</a>. În momentul în care este detectată o astfel de solicitare, este creată o nouă conexiune, reprezentată de un obiect de tip <code>Socket</code> prin care se va realiza comunicarea. Astfel, la nivelul serverului, fiecare client este identificat printr-o instanță proprie a unui obiect <code>Socket</code>.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="clientul">Clientul</h3>
+<div class="level3">
+
+<p>
+Conexiunea unui client la un server se poate realiza numai în situația în care sunt cunoscute adresa IP (sau denumirea, rezolvată apoi prin intermediul <abbr title="Domain Name System">DNS</abbr>) și portul la care acesta așteaptă să fie invocat. Aceste valori sunt transmise ca parametrii în constructorul obiectului <code>Socket</code>. Ulterior, operațiile de comunicație (citire / scriere) sunt realizate prin operații pe fluxuri de intrare (<code>InputStream</code>) și pe fluxuri de ieșire (<code>OutputStream</code>).
+</p>
+
+<p>
+Așadar, comunicația prin intermediul unui obiect de tip <code>Socket</code> presupune următorii pași:
+</p>
+
+<p>
+<strong>1.</strong> deschiderea unui socket, prin transmiterea parametrilor de identificare a gazdei (adresă IP / denumire și port) ca parametrii ai constructorului unui obiect de tip <code>Socket</code>
+</p>
+<pre class="code java"><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> hostname <span class="sy0">=</span> <span class="st0">&quot;localhost&quot;</span><span class="sy0">;</span>
+<span class="kw4">int</span> port <span class="sy0">=</span> <span class="nu0">2016</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a><span class="br0">&#40;</span>hostname, port<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<p><div class="notewarning">În momentul în care se realizează o instanță a unui obiect de tip <code>Socket</code>, pot fi generate următoarele excepții:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>UnknownHostException</code>, în situația în care se folosește o denumire pentru gazdă și aceasta nu poate fi rezolvată de serverul <abbr title="Domain Name System">DNS</abbr> (alternativ, poate fi furnizată chiar adresa IP, dacă este cunoscută în prealabil);</div>
+</li>
+<li class="level1"><div class="li"> <code>IOException</code>, atunci când:</div>
+<ul>
+<li class="level2"><div class="li"> conexiunea nu a fost acceptată de către server;</div>
+</li>
+<li class="level2"><div class="li"> perioada de așteptare pentru realizarea operației a fost depășită:</div>
+</li>
+<li class="level2"><div class="li"> s-a produs o întrerupere sau altă problemă neașteptată.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<strong>2.</strong> crearea unui flux de ieșire pentru a trimite date prin intermediul socket-ului TCP și trimiterea efectivă a datelor:
+</p>
+<pre class="code java"><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedoutputstream"><span class="kw3">BufferedOutputStream</span></a> bufferedOutputStream <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedoutputstream"><span class="kw3">BufferedOutputStream</span></a><span class="br0">&#40;</span>socket.<span class="me1">getOutputStream</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+printwriter"><span class="kw3">PrintWriter</span></a> printWriter <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+printwriter"><span class="kw3">PrintWriter</span></a><span class="br0">&#40;</span>bufferedOutputStrea, <span class="kw2">true</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<p><div class="noteimportant">De remarcat faptul că obiectul <code>PrintWriter</code> primește în constructor un parametru de tip <code>boolean</code> prin care se indică dacă transmiterea efectivă a datelor este realizată sau nu în mod automat atunci când se întâlnește caracterul <code>\n</code> (newline).
+</div></p>
+</p>
+
+<p>
+Metodele implementate de clasa <a href="http://developer.android.com/reference/java/io/PrintWriter.html" class="urlextern" title="http://developer.android.com/reference/java/io/PrintWriter.html"  rel="nofollow">PrintWriter</a> sunt similare cu cele oferite de <code>PrintStream</code> (clasa folosită de metodele din <code>System.out</code>), diferența fiind faptul că pot fi create mai multe instanțe pentru seturi de caractere Unicode diferite:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>print()</code>;</div>
+</li>
+<li class="level1"><div class="li"> <code>println()</code>;</div>
+</li>
+<li class="level1"><div class="li"> <code>printf()</code>;</div>
+</li>
+<li class="level1"><div class="li"> <code>write()</code>.</div>
+</li>
+</ul>
+
+<p>
+Trimiterea efectivă a datelor este realizată atunci când se apelează metoda <code>flush()</code>.
+</p>
+
+<p>
+<strong>3.</strong> crearea unui flux de intrare pentru a primi date prin intermediul socket-ului TCP și primirea efectivă a datelor:
+</p>
+<pre class="code java"><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+inputstreamreader"><span class="kw3">InputStreamReader</span></a> inputStreamReader <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+inputstreamreader"><span class="kw3">InputStreamReader</span></a><span class="br0">&#40;</span>socket.<span class="me1">getInputStream</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedreader"><span class="kw3">BufferedReader</span></a> bufferedReader <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedreader"><span class="kw3">BufferedReader</span></a><span class="br0">&#40;</span>inputStreamReader<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<p><div class="noteimportant">Un obiect de tip <code>BufferedReader</code> poate stoca maxim 8192 de caractere în zona de memorie tampon de care dispune.
+</div></p>
+</p>
+
+<p>
+Metodele implementate de clasa <a href="http://developer.android.com/reference/java/io/BufferedReader.html" class="urlextern" title="http://developer.android.com/reference/java/io/BufferedReader.html"  rel="nofollow">BufferedReader</a> sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>read()</code> - pentru a primi un singur caracter (dacă este apelată fără parametrii) sau un tablou de caractere (de o anumită dimensiune, acestea fiind stocate într-un vector furnizat ca parametru, începând cu o anumită poziție);</div>
+</li>
+<li class="level1"><div class="li"> <code>readLine()</code> - pentru a primi o linie.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">Metoda <code>readLine()</code> este blocantă, așteptând un mesaj terminat prin <code>\n</code> (newline). În situația în care conexiunea este terminată, se transmite <code><abbr title="End of file">EOF</abbr></code>, iar metoda întoarce valoarea <code>null</code>.
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">Pot fi utilizate obiecte de tipul <code>ObjectOutputStream</code> și <code>ObjectInputStream</code> pentru transmiterea de obiecte Java, atunci când entitățile care comunică rulează în contextul unei mașini virtuale de acest tip (JVM).
+</div></p>
+</p>
+
+<p>
+Se recomandă ca obținerea de referințe către fluxul de intrare respectiv fluxul de ieșire asociate unui obiect de tip <code>Socket</code> să fie realizată prin intermediul unor metode statice definite în cadrul unor clase ajutător:
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/eim/laboratoare/laborator06%3Fcodeblock=13" title="Download Snippet" class="mediafile mf_java">Utilities.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">import</span> <span class="co2">java.io.BufferedReader</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.io.IOException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.io.InputStreamReader</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.io.PrintWriter</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.net.Socket</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a> <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw1">static</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedreader"><span class="kw3">BufferedReader</span></a> getReader<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+    <span class="kw1">return</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedreader"><span class="kw3">BufferedReader</span></a><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+inputstreamreader"><span class="kw3">InputStreamReader</span></a><span class="br0">&#40;</span>socket.<span class="me1">getInputStream</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw1">static</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+printwriter"><span class="kw3">PrintWriter</span></a> getWriter<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket<span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> <span class="br0">&#123;</span>
+    <span class="kw1">return</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+printwriter"><span class="kw3">PrintWriter</span></a><span class="br0">&#40;</span>socket.<span class="me1">getOutputStream</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, <span class="kw2">true</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+<strong>4.</strong> închiderea obiectului <code>Socket</code>, atunci când acesta nu mai este necesar
+</p>
+<pre class="code java">socket.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+În momentul în care se apelează metoda <code>close()</code>, sunt transmise și datele care erau stocate în zonele de memorie tampon.
+</p>
+
+<p>
+<p><div class="notetip">Metoda <code>close()</code> eliberează și resursele folosite de fluxul de intrare și fluxul de ieșire asociate, care sunt de asemenea închise.
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="utilizarea_unui_fir_de_executie_dedicat_pentru_comunicatia_prin_retea">Utilizarea unui Fir de Execuție Dedicat pentru Comunicația prin Rețea</h3>
+<div class="level3">
+
+<p>
+Începând cu nivelul de <abbr title="Application Programming Interface">API</abbr> 11 (Android 3.0 Honeycomb), nu este permisă comunicația prin rețea pe același fir de execuție folosit pentru interfața grafică și pentru interacțiunea cu utilizatorul (<em>eng.</em> UI Thread), întrucât unele operații realizate în acest context sunt blocante, astfel încât experiența folosirii aplicației Android ar fi afectată. O astfel de tentativă va fi sancționată prin generarea unei excepții de tip <a href="http://developer.android.com/reference/android/os/NetworkOnMainThreadException.html" class="urlextern" title="http://developer.android.com/reference/android/os/NetworkOnMainThreadException.html"  rel="nofollow">NetworkOnMainThreadException</a>. Din acest motiv, orice operație ce presupune folosirea unor sockeți TCP trebuie realizată pe un fir de execuție dedicat.
+</p>
+
+<p>
+Trebuie avut în vedere faptul că pe firul de execuție dedicat comunicației prin rețea NU pot fi actualizate informațiile asociate controalelor grafice, excepția generată în această situație fiind <a href="http://developer.android.com/tools/testing/activity_testing.html#UITestTroubleshooting" class="urlextern" title="http://developer.android.com/tools/testing/activity_testing.html#UITestTroubleshooting"  rel="nofollow">CalledFromWrongThreadException</a>. Explicația este dată în mesajul care însoțește această excepție: numai firul de execuție în care a fost instanțiat un control grafic (obiect de tip <code>android.view.View</code>) are dreptul de a realiza modificări asupra acestuia (<em>Only the original thread that created a view hierarchy can touch its views</em>). În această situație, accesul la firul de execuție pe care este gestionată interfața grafică poate fi obținut în mai multe moduri:
+</p>
+<ol>
+<li class="level1"><div class="li"> folosind metoda <a href="http://developer.android.com/reference/android/app/Activity.html#runOnUiThread%28java.lang.Runnable%29" class="urlextern" title="http://developer.android.com/reference/android/app/Activity.html#runOnUiThread%28java.lang.Runnable%29"  rel="nofollow">runOnUiThread(Runnable)</a>, disponibilă în clasa <code>Activity</code>;</div>
+</li>
+<li class="level1"><div class="li"> folosind una din metodele <a href="http://developer.android.com/reference/android/view/View.html#post%28java.lang.Runnable%29" class="urlextern" title="http://developer.android.com/reference/android/view/View.html#post%28java.lang.Runnable%29"  rel="nofollow">post(Runnable)</a> sau <a href="http://developer.android.com/reference/android/view/View.html#postDelayed%28java.lang.Runnable,%20long%29" class="urlextern" title="http://developer.android.com/reference/android/view/View.html#postDelayed%28java.lang.Runnable,%20long%29"  rel="nofollow">postDelayed(Runnable, long)</a> disponibile:</div>
+<ol>
+<li class="level2"><div class="li"> în clasa <code>android.view.View</code>, pentru fiecare control grafic care se dorește a fi accesat;</div>
+</li>
+<li class="level2"><div class="li"> în clasa <code>android.os.Handler</code>, dacă se dorește accesarea mai multor controale grafice (fiind necesar ca instanțierea obiectului să fie realizată tot pe firul care gestionează interfața grafică);</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> folosind un obiect de tip <a href="http://developer.android.com/reference/android/os/AsyncTask.html" class="urlextern" title="http://developer.android.com/reference/android/os/AsyncTask.html"  rel="nofollow">AsyncTask</a>, procesarea în rețea putând fi realizată în metoda <code>doInBackground()</code>, iar accesul la obiectele interfeței grafice fiind acordat în metodele <code>onProgressUpdate()</code> (invocată în mod automat de fiecare dată când se apelează metoda <code>publishProgress()</code>) și <code>onPostExecute()</code>.</div>
+</li>
+</ol>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/fir_de_executie_dedicat_comunicatie_prin_retea.png%3Fw=600&amp;tok=4ee5ae" class="mediacenter" alt="" width="600" />
+</p>
+
+</div>
+
+<h4 id="exemplu">Exemplu</h4>
+<div class="level4">
+
+<p>
+Se dorește interogarea serverului National Institute of Standards &amp; Technology, care oferă un serviciu de interogare a datei și orei curente, cu o precizie ridicată, conform <a href="https://tools.ietf.org/html/rfc867" class="urlextern" title="https://tools.ietf.org/html/rfc867"  rel="nofollow">Daytime Protocol (RFC-867)</a>.
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/01day_time_protocol.png%3Fw=400&amp;tok=f8c102" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+În acest sens, se va deschide un socket TCP, prin interogarea serverului disponibil la adresa <a href="time-b.nist.gov.html" class="wikilink2" title="eim:laboratoare:time-b.nist.gov" rel="nofollow">time-b.nist.gov</a>, pe portul 13, în cadrul unui fir de execuție separat (clasa <code>NISTCommunicationThread</code>). Întrucât nu este necesară decât operația de primire a unor date, se va crea doar un obiect de tip <code>BufferedReader</code>, citindu-se două linii (una fiind vidă - așadar ignorată, cealaltă conținând informațiile necesare, care se doresc a fi afișate). Întrucât modificarea conținutului unui control grafic nu poate fi realizată decât din contextul firului de execuție în care a fost creat, acesta va fi obținut prin parametrul metodei <code>post()</code> a obiectului respectiv, doar aici fiind permisă asocierea conținutului solicitat. În momentul în care datele au fost preluate, socket-ul TCP poate fi închis. Pe fiecare eveniment de tip apăsare a butonului se va crea un fir de execuție dedicat în care se va instanția un obiect de tip <code>Socket</code>.
+</p>
+
+<p>
+De remarcat faptul că obiectele interfeței grafice sunt definite ca membrii protejați ai clasei activitate, întrucât accesul acestea trebuie să poată fi accesate și din clasele interne, fără a se mai obține referința către ele prin metoda <code>findViewById()</code>, care depreciază performanțele aplicației Android.
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/eim/laboratoare/laborator06%3Fcodeblock=15" title="Download Snippet" class="mediafile mf_java">DayTimeProtocolActivity.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">package</span> <span class="co2">ro.pub.cs.systems.eim.lab06.daytimeprotocol.views</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">android.os.AsyncTask</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.support.v7.app.AppCompatActivity</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.os.Bundle</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.util.Log</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.view.View</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.widget.Button</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.widget.TextView</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">java.io.BufferedReader</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.io.IOException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.net.Socket</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.net.UnknownHostException</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">ro.pub.cs.systems.eim.lab06.daytimeprotocol.R</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">ro.pub.cs.systems.eim.lab06.daytimeprotocol.general.Constants</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">ro.pub.cs.systems.eim.lab06.daytimeprotocol.general.Utilities</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> DayTimeProtocolActivity <span class="kw1">extends</span> AppCompatActivity <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+button"><span class="kw3">Button</span></a> getInformationButton<span class="sy0">;</span>
+  <span class="kw1">private</span> TextView daytimeProtocolTextView<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw1">class</span> NISTCommunicationAsyncTask <span class="kw1">extends</span> AsyncTask<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+void"><span class="kw3">Void</span></a>, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+void"><span class="kw3">Void</span></a>, String<span class="sy0">&gt;</span> <span class="br0">&#123;</span>
+&nbsp;
+    @Override
+    <span class="kw1">protected</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> doInBackground<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+void"><span class="kw3">Void</span></a>... <span class="me1">params</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> dayTimeProtocol <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+      <span class="kw1">try</span> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a><span class="br0">&#40;</span>Constants.<span class="me1">NIST_SERVER_HOST</span>, Constants.<span class="me1">NIST_SERVER_PORT</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedreader"><span class="kw3">BufferedReader</span></a> bufferedReader <span class="sy0">=</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a>.<span class="me1">getReader</span><span class="br0">&#40;</span>socket<span class="br0">&#41;</span><span class="sy0">;</span>
+        bufferedReader.<span class="me1">readLine</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        dayTimeProtocol <span class="sy0">=</span> bufferedReader.<span class="me1">readLine</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        Log.<span class="me1">d</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;The server returned: &quot;</span> <span class="sy0">+</span> dayTimeProtocol<span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+unknownhostexception"><span class="kw3">UnknownHostException</span></a> unknownHostException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        Log.<span class="me1">d</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, unknownHostException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          unknownHostException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        Log.<span class="me1">d</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span>
+      <span class="kw1">return</span> dayTimeProtocol<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    @Override
+    <span class="kw1">protected</span> <span class="kw4">void</span> onPostExecute<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> result<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      daytimeProtocolTextView.<span class="me1">setText</span><span class="br0">&#40;</span>result<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">private</span> ButtonClickListener buttonClickListener <span class="sy0">=</span> <span class="kw1">new</span> ButtonClickListener<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">private</span> <span class="kw1">class</span> ButtonClickListener <span class="kw1">implements</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+button"><span class="kw3">Button</span></a>.<span class="me1">OnClickListener</span> <span class="br0">&#123;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> onClick<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+view"><span class="kw3">View</span></a> view<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      NISTCommunicationAsyncTask nistCommunicationAsyncTask <span class="sy0">=</span> <span class="kw1">new</span> NISTCommunicationAsyncTask<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      nistCommunicationAsyncTask.<span class="me1">execute</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onCreate<span class="br0">&#40;</span>Bundle savedInstanceState<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onCreate</span><span class="br0">&#40;</span>savedInstanceState<span class="br0">&#41;</span><span class="sy0">;</span>
+    setContentView<span class="br0">&#40;</span>R.<span class="me1">layout</span>.<span class="me1">activity_day_time_protocol</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    daytimeProtocolTextView <span class="sy0">=</span> <span class="br0">&#40;</span>TextView<span class="br0">&#41;</span>findViewById<span class="br0">&#40;</span>R.<span class="me1">id</span>.<span class="me1">daytime_protocol_text_view</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    getInformationButton <span class="sy0">=</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+button"><span class="kw3">Button</span></a><span class="br0">&#41;</span>findViewById<span class="br0">&#40;</span>R.<span class="me1">id</span>.<span class="me1">get_information_button</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    getInformationButton.<span class="me1">setOnClickListener</span><span class="br0">&#40;</span>buttonClickListener<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+
+<h3 class="sectionedit10" id="serverul">Serverul</h3>
+<div class="level3">
+
+<p>
+Un sever poate “aștepta” conexiuni de clienți prin intermediul unei instanțe a clasei <a href="http://developer.android.com/reference/java/net/ServerSocket.html" class="urlextern" title="http://developer.android.com/reference/java/net/ServerSocket.html"  rel="nofollow">ServerSocket</a>, care poate primi ca parametrii:
+</p>
+<ul>
+<li class="level1"><div class="li"> o adresă - dacă nu este furnizată se folosește adresa mașinii / dispozitivului pe care a fost rulată, putând fi obținută prin metoda <code>getInetAddress()</code>;</div>
+</li>
+<li class="level1"><div class="li"> un port - dacă nu este specificat (sau se transmite valoarea 0), sistemul de operare va genera o astfel de valoare (care poate fi obținută ulterior prin metoda <code>getLocalPort()</code>.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">Se recomandă să se utilizeze un port cu o valoare în afara celor rezervate (0 - 1023). Totuși, folosirea acestor porturi este posibilă în cazul dispozitivele mobile pentru care există drepturi de root, după ce se acordă drepturi privilegiate aplicației Android.
+</div></p>
+</p>
+
+<p>
+Pentru ca un client să se poată conecta la server, pe obiectul <code>ServerSocket</code> trebuie să se apeleze metoda <a href="http://developer.android.com/reference/java/net/ServerSocket.html#accept%28%29" class="urlextern" title="http://developer.android.com/reference/java/net/ServerSocket.html#accept%28%29"  rel="nofollow">accept()</a>, care se blochează ascultând invocările care ar putea fi realizate. În momentul în care este detectată o solicitare, metoda o tratează, returnând un obiect de tip <code>Socket</code> prin care este realizată comunicarea propriu-zisă.
+</p>
+
+<p>
+De obicei, un server invocă metoda <code>accept()</code> într-o buclă, atâta timp cât se află în execuție. În momentul în care a fost obținut un obiect de tip <code>Socket</code>, se recomandă ca acesta să fie transmis unui alt fir de execuție care să gestioneze comunicația cu clientul, în caz contrar putându-se înregistra latențe în tratarea altor solicitări de conexiune. Mai mult, având în vedere faptul că acestea sunt plasate într-un obiect de tip coadă (FIFO), în momentul în care aceasta este completată, nu vor mai fi acceptate alte cereri de conexiune, acestea fiind respinse cu motivul <em>Connection refused</em>.
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/comunicatia_client_server.png%3Fw=800&amp;tok=bd3f79" class="mediacenter" alt="" width="800" />
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="exemplu_1_server_cu_un_sigur_fir_de_executie">Exemplu 1. Server cu un sigur fir de execuție</h3>
+<div class="level3">
+
+<p>
+Se implementează o aplicație Android cu un singur câmp text prin care se controlează:
+</p>
+<ul>
+<li class="level1"><div class="li"> diferite operații asupra serverului:</div>
+<ul>
+<li class="level2"><div class="li"> pornire: se transmite șirul de caractere <code>Start Server</code>;</div>
+</li>
+<li class="level2"><div class="li"> oprire: se transmite șirul de caractere <code>Stop Server</code>;</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> mesajul care va fi transmis clienților care se conectează.</div>
+</li>
+</ul>
+
+<p>
+Astfel, serverul va accepta invocări de la clienți între momentele la care s-au introdus șirurile de caractere <code>Start Server</code>, respectiv <code>Stop Server</code>. Cât timp serverul este activ (ascultă solicitări de la clienți), se pot specifica orice valoare în câmpul text, acesta fiind transmis prin intermediul canalului de comunicație.
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/eim/laboratoare/laborator06%3Fcodeblock=16" title="Download Snippet" class="mediafile mf_xml">activity_single_threaded.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;LinearLayout</span> <span class="re0">xmlns:android</span>=<span class="st0">&quot;http://schemas.android.com/apk/res/android&quot;</span></span>
+<span class="sc3">  <span class="re0">xmlns:tools</span>=<span class="st0">&quot;http://schemas.android.com/tools&quot;</span></span>
+<span class="sc3">  <span class="re0">android:layout_width</span>=<span class="st0">&quot;match_parent&quot;</span></span>
+<span class="sc3">  <span class="re0">android:layout_height</span>=<span class="st0">&quot;match_parent&quot;</span></span>
+<span class="sc3">  <span class="re0">android:orientation</span>=<span class="st0">&quot;vertical&quot;</span></span>
+<span class="sc3">  <span class="re0">tools:context</span>=<span class="st0">&quot;ro.pub.cs.systems.eim.lab06.singlethreadedserver.views.SingleThreadedActivity&quot;</span> <span class="re2">&gt;</span></span>
+&nbsp;
+  <span class="sc3"><span class="re1">&lt;EditText</span></span>
+<span class="sc3">    <span class="re0">android:id</span>=<span class="st0">&quot;@+id/server_text_edit_text&quot;</span></span>
+<span class="sc3">    <span class="re0">android:layout_width</span>=<span class="st0">&quot;match_parent&quot;</span></span>
+<span class="sc3">    <span class="re0">android:layout_height</span>=<span class="st0">&quot;wrap_content&quot;</span></span>
+<span class="sc3">    <span class="re0">android:inputType</span>=<span class="st0">&quot;text&quot;</span> <span class="re2">/&gt;</span></span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;/LinearLayout<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+În momentul în care se pornește serverul, se deschide un obiect de tipul <code>ServerSocket</code>. Ulterior, în cadrul unui ciclu, se așteaptă invocări de la clienți, prin intermediul metodei <code>accept()</code>, care deschide un obiect <code>Socket</code> prin intermediul căruia se transmite textul stocat în controlul grafic corespunzător (după ce se obține fluxul de ieșire atașat). Se impune închiderea canalului de comunicație după ce acesta nu mai este necesar.
+</p>
+
+<p>
+În momentul în care se oprește serverul, se închide obiectul de tipul <code>ServerSocket</code>, ceea ce va genera o excepție <code>java.net.SocketException</code> în cadrul metodei blocante <code>accept()</code>, invalidându-se și condiția care asigura execuția ciclului pe care erau tratate solicitările de conexiune provenite de la clienți.
+</p>
+
+<p>
+<p><div class="noteclassic">Repornirea serverului, astfel încât să accepte din nou invocări de la clienți, presupune crearea unui nou fir de execuție (cel vechi nu poate fi refolosit).
+</div></p>
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/eim/laboratoare/laborator06%3Fcodeblock=17" title="Download Snippet" class="mediafile mf_java">SingleThreadedServer.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">import</span> <span class="co2">java.io.IOException</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.io.PrintWriter</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.net.ServerSocket</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">java.net.Socket</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">android.app.Activity</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.os.Bundle</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.text.Editable</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.text.TextWatcher</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.util.Log</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.view.Menu</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.view.MenuItem</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.widget.EditText</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> SingleThreadedActivity <span class="kw1">extends</span> Activity <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> EditText serverTextEditText<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> ServerThread singleThreadedServer<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> ServerTextContentWatcher serverTextContentWatcher <span class="sy0">=</span> <span class="kw1">new</span> ServerTextContentWatcher<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">private</span> <span class="kw1">class</span> ServerTextContentWatcher <span class="kw1">implements</span> TextWatcher <span class="br0">&#123;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> beforeTextChanged<span class="br0">&#40;</span>CharSequence charSequence, <span class="kw4">int</span> start, <span class="kw4">int</span> count, <span class="kw4">int</span> after<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> onTextChanged<span class="br0">&#40;</span>CharSequence charSequence, <span class="kw4">int</span> start, <span class="kw4">int</span> before, <span class="kw4">int</span> count<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>charSequence.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">equals</span><span class="br0">&#40;</span>Constants.<span class="me1">SERVER_START</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        singleThreadedServer <span class="sy0">=</span> <span class="kw1">new</span> ServerThread<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        singleThreadedServer.<span class="me1">startServer</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>charSequence.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">equals</span><span class="br0">&#40;</span>Constants.<span class="me1">SERVER_STOP</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        singleThreadedServer.<span class="me1">stopServer</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> afterTextChanged<span class="br0">&#40;</span>Editable editable<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw1">class</span> ServerThread <span class="kw1">extends</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> <span class="br0">&#123;</span>
+&nbsp;
+    <span class="kw1">private</span> <span class="kw4">boolean</span> isRunning<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+serversocket"><span class="kw3">ServerSocket</span></a> serverSocket<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw4">void</span> startServer<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      isRunning <span class="sy0">=</span> <span class="kw2">true</span><span class="sy0">;</span>
+      start<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw4">void</span> stopServer<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      isRunning <span class="sy0">=</span> <span class="kw2">false</span><span class="sy0">;</span>
+      <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+runnable"><span class="kw3">Runnable</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        @Override
+        <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          <span class="kw1">try</span> <span class="br0">&#123;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span>serverSocket <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+              serverSocket.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+            Log.<span class="me1">v</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;stopServer() method invoked &quot;</span><span class="sy0">+</span>serverSocket<span class="br0">&#41;</span><span class="sy0">;</span>
+          <span class="br0">&#125;</span> <span class="kw1">catch</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span><span class="sy0">+</span>ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+              ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="br0">&#125;</span>
+          <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span><span class="br0">&#41;</span>.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">try</span> <span class="br0">&#123;</span>
+        serverSocket <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+serversocket"><span class="kw3">ServerSocket</span></a><span class="br0">&#40;</span>Constants.<span class="me1">SERVER_PORT</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">while</span> <span class="br0">&#40;</span>isRunning<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket <span class="sy0">=</span> serverSocket.<span class="me1">accept</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          Log.<span class="me1">v</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;Connection opened with &quot;</span><span class="sy0">+</span>socket.<span class="me1">getInetAddress</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot;:&quot;</span><span class="sy0">+</span>socket.<span class="me1">getLocalPort</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+printwriter"><span class="kw3">PrintWriter</span></a> printWriter <span class="sy0">=</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a>.<span class="me1">getWriter</span><span class="br0">&#40;</span>socket<span class="br0">&#41;</span><span class="sy0">;</span>
+          printWriter.<span class="me1">println</span><span class="br0">&#40;</span>serverTextEditText.<span class="me1">getText</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          socket.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          Log.<span class="me1">v</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;Connection closed&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span><span class="sy0">+</span>ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onCreate<span class="br0">&#40;</span>Bundle savedInstanceState<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onCreate</span><span class="br0">&#40;</span>savedInstanceState<span class="br0">&#41;</span><span class="sy0">;</span>
+    setContentView<span class="br0">&#40;</span>R.<span class="me1">layout</span>.<span class="me1">activity_single_threaded</span><span class="br0">&#41;</span><span class="sy0">;</span>	
+&nbsp;
+    serverTextEditText <span class="sy0">=</span> <span class="br0">&#40;</span>EditText<span class="br0">&#41;</span>findViewById<span class="br0">&#40;</span>R.<span class="me1">id</span>.<span class="me1">server_text_edit_text</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    serverTextEditText.<span class="me1">addTextChangedListener</span><span class="br0">&#40;</span>serverTextContentWatcher<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/02single_threaded_server.png%3Fw=400&amp;tok=642979" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Prin intermediul utilitarului <code>nc</code> (apelat cu adresa Internet și portul serverului) se poate interoga mesajul care a fost transmis. De asemenea, comanda <code>time</code> măsoară timpul în care a fost executată operația respectivă.
+</p>
+<pre class="code">student@eim2016:~$ nc 192.168.56.101 2016
+Hello, EIM Student!
+student@eim2016:~$ time nc 192.168.56.101 2016
+Hello, EIM Student!
+
+real    0m0.009s
+user    0m0.000s
+sys     0m0.000s</pre>
+
+<p>
+Fiecare comunicație dintre client și server este tratată secvențial, ceea ce poate determina latențe semnificative în cazul în care sunt înregistrate mai multe solicitări de acest tip concomitent. 
+</p>
+
+<p>
+De asemenea, în momentul în care coada în care sunt stocate este completată, o cerere poate fi refuzată.
+</p>
+
+</div>
+
+<h3 class="sectionedit12" id="exemplu_2_server_cu_fire_de_executie_dedicate_pentru_fiecare_canal_de_comunicatie_in_parte">Exemplu 2. Server cu fire de execuție dedicate pentru fiecare canal de comunicație în parte</h3>
+<div class="level3">
+
+<p>
+Pentru ca serverul să poată trata corespunzător solicitările venite de la clienți, fără a se înregistra latențe semnificative sau cereri refuzate, mai ales în situația în care traficul prin canalul de comunicație cu fiecare dintre aceștia este intens, se impune definirea mai multor fire de execuție:
+</p>
+<ul>
+<li class="level1"><div class="li"> un fir de execuție pe care serverul așteaptă invocările;</div>
+</li>
+<li class="level1"><div class="li"> câte un fir de execuție pentru comunicația cu fiecare client în parte.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/scalabilitate_invocari_clienti.png%3Fw=800&amp;tok=014c42" class="mediacenter" alt="" width="800" />
+</p>
+
+<p>
+Astfel, atunci când este înregistrată o solicitare venită din partea unui client (metoda <code>accept()</code> furnizează un obiect <code>Socket</code> corespunzător canalului de comunicație), se creează un fir de execuție care va gestiona comunicația dintre client și server, fără ca aceasta să aibă un impact asupra capacității serverului de a răspunde la alte cereri, venite din partea altor clienți, și asupra comunicației dintre acestea.
+</p>
+<pre class="code java"><span class="kw1">private</span> <span class="kw1">class</span> CommunicationThread <span class="kw1">extends</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> <span class="br0">&#123;</span>
+  <span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> CommunicationThread<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">this</span>.<span class="me1">socket</span> <span class="sy0">=</span> socket<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">v</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;Connection opened with &quot;</span><span class="sy0">+</span>socket.<span class="me1">getInetAddress</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">+</span><span class="st0">&quot;:&quot;</span><span class="sy0">+</span>socket.<span class="me1">getLocalPort</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+printwriter"><span class="kw3">PrintWriter</span></a> printWriter <span class="sy0">=</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a>.<span class="me1">getWriter</span><span class="br0">&#40;</span>socket<span class="br0">&#41;</span><span class="sy0">;</span>
+      printWriter.<span class="me1">println</span><span class="br0">&#40;</span>serverTextEditText.<span class="me1">getText</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      socket.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      Log.<span class="me1">v</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;Connection closed&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span><span class="sy0">+</span>ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw1">private</span> <span class="kw1">class</span> ServerThread <span class="kw1">extends</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> <span class="br0">&#123;</span>
+  <span class="kw1">private</span> <span class="kw4">boolean</span> isRunning<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+serversocket"><span class="kw3">ServerSocket</span></a> serverSocket<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> startServer<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    isRunning <span class="sy0">=</span> <span class="kw2">true</span><span class="sy0">;</span>
+    start<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> stopServer<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    isRunning <span class="sy0">=</span> <span class="kw2">false</span><span class="sy0">;</span>
+    <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+runnable"><span class="kw3">Runnable</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      @Override
+      <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw1">try</span> <span class="br0">&#123;</span>
+          <span class="kw1">if</span> <span class="br0">&#40;</span>serverSocket <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            serverSocket.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          <span class="br0">&#125;</span>
+          Log.<span class="me1">v</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;stopServer() method invoked &quot;</span><span class="sy0">+</span>serverSocket<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span> <span class="kw1">catch</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span><span class="sy0">+</span>ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span><span class="br0">&#41;</span>.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      serverSocket <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+serversocket"><span class="kw3">ServerSocket</span></a><span class="br0">&#40;</span>Constants.<span class="me1">SERVER_PORT</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">while</span> <span class="br0">&#40;</span>isRunning<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket <span class="sy0">=</span> serverSocket.<span class="me1">accept</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">new</span> CommunicationThread<span class="br0">&#40;</span>socket<span class="br0">&#41;</span>.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span><span class="sy0">+</span>ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h2 class="sectionedit13" id="activitate_de_laborator">Activitate de Laborator</h2>
+<div class="level2">
+
+<p>
+<strong>1.</strong> În contul Github personal, să se creeze un depozit denumit &#039;Laborator06&#039;. Inițial, acesta trebuie să fie gol (nu trebuie să bifați nici adăugarea unui fișier <code>README.md</code>, nici a fișierului <code>.gitignore</code> sau a a fișierului <code>LICENSE</code>).
+</p>
+
+<p>
+<strong>2.</strong> Să se cloneze în directorul de pe discul local conținutul depozitului la distanță de la <a href="https://www.github.com/eim2016/Laborator06" class="urlextern" title="https://www.github.com/eim2016/Laborator06"  rel="nofollow">https://www.github.com/eim2016/Laborator06</a>. 
+</p>
+
+<p>
+În urma acestei operații, directorul Laborator06 va trebui să se conțină directoarele <code>labtasks</code>, <code>samples</code> și <code>solutions</code>. 
+</p>
+<pre class="code">student@eim2016:~$ git clone https://www.github.com/eim2016/Laborator06.git</pre>
+
+<p>
+<strong>3.</strong> Să se încarce conținutul descărcat în cadrul depozitului &#039;Laborator06&#039; de pe contul Github personal. 
+</p>
+<pre class="code">student@eim2016:~$ cd Laborator06
+student@eim2016:~/Laborator06$ git remote add Laborator06_perfectstudent https://github.com/perfectstudent/Laborator06
+student@eim2016:~/Laborator06$ git push Laborator06_perfectstudent master</pre>
+
+<p>
+<strong>4.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectul <code>FTPServerWelcomeMessage</code> din directorul <code>labtasks</code>.
+</p>
+
+<p>
+Se cere să se implementeze o aplicație Android care citește mesajul de întâmpinare transmis în momentul în care se realizează o conexiune către un server <abbr title="File Transfer Protocol">FTP</abbr>. 
+</p>
+
+<p>
+Adresa Internet a serverului <abbr title="File Transfer Protocol">FTP</abbr> la care se dorește să se realizeze conexiunea va fi introdusă de utilizator, iar portul curent este 21 (reținut în <code>Constants.<abbr title="File Transfer Protocol">FTP</abbr>_PORT</code>).
+</p>
+
+<p>
+În cazul în care mesajul de întâmpinare conține mai multe linii, mesajul este precedat de șirul de caractere <code>220-</code> (reținut în <code>Constants.<abbr title="File Transfer Protocol">FTP</abbr>_MULTILINE_START_CODE</code>). Mesajul se încheie fie cu șirul de caractere <code>220</code>, fie cu un șir de caractere precedat de <code>220 </code> (valori stocate în <code>Constants.<abbr title="File Transfer Protocol">FTP</abbr>_MULTILINE_END_CODE1</code>, respectiv <code>Constants.<abbr title="File Transfer Protocol">FTP</abbr>_MULTILINE_END_CODE2</code>).
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/03ftp_server_welcome_message.png%3Fw=400&amp;tok=049521" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Operațiile care trebuie realizate pe metoda <code>doInBackground()</code> a firului de execuție ce gestionează comunicația cu serverul <abbr title="File Transfer Protocol">FTP</abbr> sunt:
+</p>
+<ol>
+<li class="level1"><div class="li"> deschiderea unui socket care primește ca parametrii:</div>
+<ol>
+<li class="level2"><div class="li"> adresa Internet a serverului <abbr title="File Transfer Protocol">FTP</abbr> (precizată anterior de utilizator, preluată din câmpul text <code>FTPServerAddressEditText</code>, transmis ca parametru al metodei - <code>params[0]</code>)</div>
+</li>
+<li class="level2"><div class="li"> portul 21 (preluat din <code>Constants.<abbr title="File Transfer Protocol">FTP</abbr>_PORT</code>).</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> obținerea fluxului de intrare atașat socket-ului, printr-un apel al metodei <code>Utilities.getBufferedReader()</code>;</div>
+</li>
+<li class="level1"><div class="li"> citirea unei linii de pe fluxul de intrare:</div>
+<ol>
+<li class="level2"><div class="li"> dacă aceasta începe cu șirul de caractere <code>220-</code> (preluat din <code>Constants.<abbr title="File Transfer Protocol">FTP</abbr>_MULTILINE_START_CODE</code>), mesajul este analizat;</div>
+<ol>
+<li class="level3"><div class="li"> se citesc linii de pe fluxul de intrare atașat socket-ului cât timp valoarea:</div>
+<ol>
+<li class="level4"><div class="li"> nu este egală cu <code>220</code> (preluat din <code>Constants.<abbr title="File Transfer Protocol">FTP</abbr>_MULTILINE_END_CODE1</code>);</div>
+</li>
+<li class="level4"><div class="li"> nu începe cu <code>220 </code> (preluat din <code>Constants.<abbr title="File Transfer Protocol">FTP</abbr>_MULTILINE_END_CODE2</code>);</div>
+</li>
+</ol>
+</li>
+<li class="level3"><div class="li"> valoarea primită de la serverul <abbr title="File Transfer Protocol">FTP</abbr> este inclusă în câmpul text <code>welcomeMEssageTextView</code> (informația se transmite, pe măsură ce este primită, prin metoda <code>publishProgress()</code> care face să se invoce automat metoda de callback <code>onProgressUpdate()</code> executată pe firul de execuție principal al aplicației Android, la care se oferă acces la controalele grafice);</div>
+</li>
+</ol>
+</li>
+<li class="level2"><div class="li"> altfel, mesajul este ignorat.</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> închiderea socket-ului.</div>
+</li>
+</ol>
+
+<p>
+Să se verifice mesajul afișat în momentul în care se realizează o conexiune la serverul <a href="ftp.ngc.com.html" class="wikilink2" title="eim:laboratoare:ftp.ngc.com" rel="nofollow">ftp.ngc.com</a>.
+</p>
+
+<p>
+<strong>5.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectul <code>SingleThreadedServer</code> din directorul <code>labtasks</code>.
+</p>
+
+<p>
+Acesta reprezintă o aplicație Android care implementează un server ce ascultă pe un port (2016, în <code>Constants.SERVER_PORT</code>) solicitări de conexiune provenite de la clienți.
+</p>
+
+<p>
+Pe același fir de execuție pe care se face așteptarea, este realizată și transmiterea mesajului către client, preluat dintr-un câmp text.
+</p>
+
+<p>
+Pornirea serverului se face prin introducerea în câmpul text a șirului de caractere <code>Start Server</code>.
+</p>
+
+<p>
+Oprirea serverului se face prin introducerea în câmpul text a șirului de caractere <code>Stop Server</code>.
+</p>
+
+<p>
+Preluarea invocărilor de la clienți este realizată doar atâta timp cât serverul se află în execuție.
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="linux">Linux</h3>
+<div class="level3">
+
+<p>
+Citirea mesajelor se face cu <code>nc</code> care primește ca parametrii adresa Internet și portul serverului de pe dispozitivul Android. Prin utilitarul <code>time</code> se verifică durata operației respective.
+</p>
+<pre class="code">student@eim2016:~$ nc 192.168.56.101 2016
+Hello, EIM Student!
+student@eim2016:~$ time nc 192.168.56.101 2016
+Hello, EIM Student!
+
+real    0m0.009s
+user    0m0.000s
+sys     0m0.000s</pre>
+
+</div>
+
+<h3 class="sectionedit15" id="windows">Windows</h3>
+<div class="level3">
+
+<p>
+Citirea mesajelor se face cu <code>telnet</code> care primește ca parametrii adresa Internet și portul serverului de pe dispozitivul Android.
+</p>
+
+<p>
+În situația în care Telnet nu este disponibil, se accesează <em>Control Panel</em> → <em>Programs and Features</em> → <em>Turn Windows Features on or off</em>, selectându-se produsul <em>Telnet Client</em>.
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/telnet01_windows81.png%3Fw=300&amp;tok=7e3767" class="mediacenter" alt="" width="300" />
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/telnet02_windows81.png%3Fw=600&amp;tok=b7f6a8" class="mediacenter" alt="" width="600" />
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/telnet03_windows81.png" class="mediacenter" alt="" />
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/telnet04_windows81.png%3Fw=400&amp;tok=fd9a02" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/telnet05_windows81.png%3Fw=400&amp;tok=698d23" class="mediacenter" alt="" width="400" />
+</p>
+<pre class="code">C:\Users\Student&gt; telnet 192.168.56.101 2016
+Start Server
+
+Connection to host lost.
+C:\Users\Student&gt; telnet 192.168.56.101 2016
+Connecting To 192.168.56.101...Could not open connection to the host, on port 2016: Connect failed</pre>
+
+</div>
+<div class="level2">
+
+<p>
+<strong>a)</strong> Să se trimită aplicația Android în fundal prin apăsarea tastei <em>Home</em>. Verificați conectivitatea cu serverul. De ce sunt tratate cererile în continuare?
+</p>
+
+<p>
+<strong>b)</strong> Să se apese tasta <em>Back</em>. De ce sunt tratate cererile în continuare după ce aplicația Android este distrusă? Ce se întâmplă în momentul în care se dorește să se repornească aplicația Android? Cum ar putea fi remediată această problemă?
+</p>
+
+<p>
+Aplicația Android este distrusă, însă resursele utilizate de acestea nu sunt eliberate, motiv pentru care serverul continuă să gestioneze solicitările primite de la clienți.
+</p>
+
+<p>
+Astfel, în momentul în care se dorește să se repornească aplicația Android, se va genera o excepție, întrucât portul pe care se dorește să asculte serverul invocările de la clienți este deja ocupat.
+</p>
+<pre class="code">04-06 00:00:00.000: E/Single Threaded Server(934): An exception has occurred: bind failed: EADDRINUSE (Address already in use)
+04-06 00:00:00.000: W/System.err(934): java.net.BindException: bind failed: EADDRINUSE (Address already in use)
+04-06 00:00:00.000: W/System.err(934):     at libcore.io.IoBridge.bind(IoBridge.java:89)
+04-06 00:00:00.000: W/System.err(934):     at java.net.PlainSocketImpl.bind(PlainSocketImpl.java:150)
+04-06 00:00:00.000: W/System.err(934):     at java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:100)
+04-06 00:00:00.000: W/System.err(934):     at java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:69)</pre>
+
+<p>
+O soluție ar putea fi eliberarea resurselor pe metoda <code>onDestroy()</code>.
+</p>
+<pre class="code java">@Override
+<span class="kw1">public</span> <span class="kw4">void</span> onDestroy<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onDestroy</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>serverThread <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    serverThread.<span class="me1">stopServer</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+<strong>c)</strong> Să se simuleze faptul că operația de comunicare dintre client și server durează o perioadă de timp mai mare (spre exemplu, 3 secunde). Ce se întâmplă în momentul în care există mai multe solicitări trimise simultan de mai mulți clienți (din console diferite)? Monitorizați timpul de răspuns în această situație.
+</p>
+
+<p>
+Metoda <code>Thread.sleep()</code>, primind ca parametru un interval de timp (exprimat în milisecunde) simulează o așteptare, după care execuția aplicației Android este reluată în mod normal.
+</p>
+<pre class="code java"><span class="kw1">try</span> <span class="br0">&#123;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a>.<span class="me1">sleep</span><span class="br0">&#40;</span><span class="nu0">3000</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> interruptedException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, interruptedException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    interruptedException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+<strong>d)</strong> Să se implementeze comunicația pentru fiecare conexiune dintre client și server pe un fir de execuție separat, astfel încât pe server, gestiunea solicitărilor provenite de la clienți să nu fie afectată.
+</p>
+
+<p>
+<strong>6.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectul <code>ClientServerCommunication</code> din directorul <code>labtasks</code>.
+</p>
+
+<p>
+Acesta reprezintă o aplicație Android având două fragmente, implementând atât un server cât și un client:
+</p>
+<ol>
+<li class="level1"><div class="li"> serverul dispune de un câmp text prin intermediul căruia:</div>
+<ol>
+<li class="level2"><div class="li"> pot fi realizate diferite operații asupra sa:</div>
+<ol>
+<li class="level3"><div class="li"> pornire, prin introducerea mesajului <em>Start Server</em>;</div>
+</li>
+<li class="level3"><div class="li"> oprire, prin introducerea mesajului <em>Stop Server</em>.</div>
+</li>
+</ol>
+</li>
+<li class="level2"><div class="li"> se poate preciza un mesaj care să fie transmis către client prin intermediul canalului de comunicație;</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> clientul dispune de două câmpuri text, prin care se precizează parametrii de conexiune la server (adresa de Internet / portul) precum și un buton prin intermediul căruia se realizează legătura propriu-zisă, fiind preluată informația din cadrul canalului de comunicație și afișată corespunzător.</div>
+</li>
+</ol>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/04client_server_communication.png%3Fw=400&amp;tok=542a47" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+<strong>a)</strong> Să se implementeze funcționalitatea serverului.
+</p>
+
+<p>
+În clasa <code>ComunicationThread</code> din fragmentul asociat serverului:
+</p>
+<ol>
+<li class="level1"><div class="li"> se obține o referință către fluxul de ieșire asociat socket-ului, prin intermediul metodei ajutătoare <code>Utilities.getWriter()</code>;</div>
+</li>
+<li class="level1"><div class="li"> se scrie o linie conținând textul din <code>serverTextEditText</code>.</div>
+</li>
+</ol>
+
+<p>
+<strong>b)</strong> Să se implementeze funcționalitatea clientului.
+</p>
+
+<p>
+În clasa <code>ClientAsyncTask</code> din fragmentul asociat serverului:
+</p>
+<ol>
+<li class="level1"><div class="li"> se resetează conținutul câmpului text <code>serverMessageTextView</code>, astfel încât acesta să conțină șirul vid; acest lucru este realizat înainte de a rula firul de execuție dedicat, așadar pe metoda <code>onPreExecute()</code>;</div>
+</li>
+<li class="level1"><div class="li"> se obțin parametrii de conexiune la server (adresa de Internet, obținută din câmpul text <code>serverAddressEditText</code> și portul, obținut din câmpul text <code>serverPortEditText</code>); aceștia sunt transmiși prin intermediul argumentelor metodei <code>doInBackground()</code>;</div>
+</li>
+<li class="level1"><div class="li"> se deschide un socket, folosind configurația precizată de utilizator;</div>
+</li>
+<li class="level1"><div class="li"> se obține o referință către fluxul de intrare asociat socket-ului, prin intermediul metodei ajutătoare <code>Utilities.getReader()</code>;</div>
+</li>
+<li class="level1"><div class="li"> se citesc linii din contextul canalului de comunicație, atâta timp cât nu se întâlnește <code><abbr title="End of file">EOF</abbr></code> (nu se întoarce valoarea <code>null</code>), valoarea fiind concatenată la câmpul text <code>serverMessageTextView</code>; acest lucru este realizat prin transmiterea liniilor către firul de execuție principal - al interfeței grafice - (unde controalele grafice sunt accesibile), prin intermediul metodei <code>publishProgress()</code> care determină apelul metodei de callback <code>onPublishProgress()</code>;</div>
+</li>
+<li class="level1"><div class="li"> se închide socketul.</div>
+</li>
+</ol>
+
+<p>
+<p><div class="noteimportant">Accesul la controalele grafice trebuie să fie realizat numai din contextul firului de execuție asociat interfeței cu utilizatorul.
+</div></p>
+</p>
+
+<p>
+<strong>c)</strong> Să se pornească serverul (se introduce textul <em>Start Server</em>). În client, să se verifice valoarea furnizată în cazul în care se introduc valorile <code>127.0.0.1</code> / <code>2016</code>, respectiv <code>localhost</code> / <code>2016</code>. 
+</p>
+
+<p>
+Să se oprească serverul (se introduce textul <em>Stop Server</em>). Să se verifice ce valori sunt furnizate în această situație.
+</p>
+
+<p>
+<strong>d)</strong> (doar Linux) Să se creeze o listă cu procesele care rulează la momentul curent, textul putând fi obținut, linie cu linie, prin intermediul unei conexiuni pe portul 2016, serverul fiind astfel simulat pe mașina fizică.
+</p>
+<pre class="code">student@eim2016:~$ ps a | while read x; do echo &quot;$x&quot; | nc -l 2016; done</pre>
+
+<p>
+<p><div class="notetip">Pe mașinile Debian, comanda <code>nc</code> se rulează cu opțiunea suplimentară <code>-p</code> pentru a se indica portul pe care se dorește ca acesta să accepte invocările.
+</div></p>
+</p>
+
+<p>
+Să se folosească clientul pentru a citi, linie cu linie, valorile furnizate de script-ul anterior. Va trebui precizată adresa mașinii fizice (în funcție de configurația folosită) și portul 2016.
+</p>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/05client_server_communication.png%3Fw=400&amp;tok=c4e66f" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+<strong>7.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectul <code>PheasantGame</code> din directorul <code>labtasks</code>.
+</p>
+
+<p>
+Acesta reprezintă o aplicație Android care implementează jocul Fazan în limba engleză, atât partea de server, cât și partea de client.
+</p>
+
+<p>
+Vor fi folosite următoarele <strong>reguli de joc</strong>:
+</p>
+<ol>
+<li class="level1"><div class="li"> clientul trimite un cuvânt serverului;</div>
+</li>
+<li class="level1"><div class="li"> serverul verifică dacă nu s-a solicitat terminarea jocului, situație în care continuă analiza termenului respectiv;</div>
+</li>
+<li class="level1"><div class="li"> dacă s-a primit un cuvânt care are prefixul așteptat, termenul existând în limba engleză, se caută un alt cuvânt care începe cu ultimele 2 litere ale termenului:</div>
+<ol>
+<li class="level2"><div class="li"> dacă există un astfel de cuvânt, acesta fiind transmis înapoi clientului;</div>
+</li>
+<li class="level2"><div class="li"> altfel, se semnalează faptul că jocul s-a terminat;</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> altfel, se trimite înapoi cuvântul primit pentru a semnala faptul că există o problemă.</div>
+</li>
+</ol>
+
+<p>
+<img src="../../_media/eim/laboratoare/laborator06/06pheasant_game.png%3Fw=400&amp;tok=0f870b" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Astfel, serverul va avea următoarea funcționare:
+</p>
+<ol>
+<li class="level1"><div class="li"> dacă se primește <em>End Game</em> (stocat în <code>Constants.END_GAME</code>), pentru a se indica faptul că nu se mai dorește continuarea jocului sau clientul a fost închis (nu găsește nici un cuvânt cu prefixul solicitat), serverul își termină execuția;</div>
+</li>
+<li class="level1"><div class="li"> altfel, serverul verifică dacă termenul care a fost primit reprezintă un cuvânt valid în limba engleză (accesând în acest sens pagina Internet <a href="http://www.wordhippo.com/what-is/words-starting-with/" class="urlextern" title="http://www.wordhippo.com/what-is/words-starting-with/"  rel="nofollow">http://www.wordhippo.com/what-is/words-starting-with/</a>) - se folosește metoda <code>Utilities.wordValidation()</code>;</div>
+<ol>
+<li class="level2"><div class="li"> dacă termenul este valid:</div>
+<ol>
+<li class="level3"><div class="li"> verifică dacă termenul începe cu prefixul solicitat (ultimele 2 litere ale cuvântului pe care l-a trimis anterior) - în acest sens, trebuie reținut cel mai recent cuvânt transmis / prefixul așteptat;</div>
+<ol>
+<li class="level4"><div class="li"> în caz afirmativ:</div>
+<ol>
+<li class="level5"><div class="li"> identifică prefixul cuvântului pe care trebuie să îl formeze (ultimele 2 litere ale cuvântului primit);</div>
+</li>
+<li class="level5"><div class="li"> realizează o interogare la nivelul paginii Internet <a href="http://www.wordhippo.com/what-is/words-starting-with/" class="urlextern" title="http://www.wordhippo.com/what-is/words-starting-with/"  rel="nofollow">http://www.wordhippo.com/what-is/words-starting-with/</a> pentru a obține lista cuvintelor care respectă constrângerea respectivă - se folosește metoda <code>Utilities.getWordListStartingWith()</code> care furnizează un obiect <code>List&lt;String&gt;</code>;</div>
+<ol>
+<li class="level6"><div class="li"> dacă lista conține unul sau mai multe cuvinte, face o alegere întâmplătoare și se transmite clientului;</div>
+</li>
+<li class="level6"><div class="li"> dacă lista nu conține nici un cuvânt, transmite clientului șirul de caractere <em>End Game</em> (stocat în <code>Constants.END_GAME</code>), pentru a indica faptul că a fost închis (nu găsește nici un cuvânt cu prefixul solicitat);</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li class="level4"><div class="li"> în caz negativ, transmite înapoi cuvântul pe care l-a primit;</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li class="level2"><div class="li"> dacă termenul nu este valid, trimite înapoi cuvântul pe care l-a primit.</div>
+</li>
+</ol>
+</li>
+</ol>
+
+<p>
+<p><div class="noteimportant">Este posibil ca un cuvânt care există în limba engleză să nu fie marcat ca valid, datorită faptului că se inspectează numai prima pagină dintre cele care conțin lista de cuvinte precedate de un anumit prefix.
+</div></p>
+</p>
+
+<p>
+Similar, clientul va avea următoarea funcționare:
+</p>
+<ol>
+<li class="level1"><div class="li"> dacă termenul din câmpul text <code>wordEditText</code> are mai mult de două caractere, este trimis clientului;</div>
+</li>
+<li class="level1"><div class="li"> se primește o valoare de la server:</div>
+<ol>
+<li class="level2"><div class="li"> dacă se primește <em>End Game</em>, se invalidează controalele grafice, astfel încât jocul să nu poată fi continuat;</div>
+</li>
+<li class="level2"><div class="li"> dacă s-a primit alt cuvânt decât cel trimis anterior, se determină prefixul cu care trebuie format termenul și se afișează în câmpul text <code>wordEditText</code>;</div>
+</li>
+<li class="level2"><div class="li"> dacă s-a primit același cuvânt cu cel trimis anterior, înseamnă că termenul nu a fost corect, astfel încât trebuie format un cuvânt cu același prefix ca anterior, acesta fiind afișat în câmpul text <code>wordEdiTtext</code>;</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> altfel, se afișează un mesaj de eroare.</div>
+</li>
+</ol>
+
+<p>
+Informațiile cu privire la șirurile de caractere care au fost trimise, respectiv primite, vor fi jurnalizate în câmpurile text <code>serverHistoryTextView</code> și <code>clientHistoryTextView</code>.
+</p>
+
+<p>
+<strong>8.</strong>  Să se încarce modificările realizate în cadrul depozitului &#039;Laborator06&#039; de pe contul Github personal, folosind un mesaj sugestiv. 
+</p>
+<pre class="code">student@eim2016:~/Laborator06$ git add *
+student@eim2016:~/Laborator06$ git commit -m &quot;implemented taks for laboratory 06&quot;
+student@eim2016:~/Laborator06$ git push Laborator02_perfectstudent master</pre>
+
+</div>
+
+<h2 class="sectionedit16" id="resurse_utile">Resurse Utile</h2>
+<div class="level2">
+
+<p>
+<a href="http://developer.android.com/training/basics/network-ops/connecting.html" class="urlextern" title="http://developer.android.com/training/basics/network-ops/connecting.html"  rel="nofollow">Connecting to the Network</a><br/>
+
+<a href="http://developer.android.com/training/basics/network-ops/managing.html" class="urlextern" title="http://developer.android.com/training/basics/network-ops/managing.html"  rel="nofollow">Managing Network Usage</a><br/>
+
+<a href="http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118199545.html" class="urlextern" title="http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118199545.html"  rel="nofollow">Wei Meng LEE, Beginning Android 4 Application Development, Wiley, 2012</a> - capitolul 10, <em>Networking</em>, subcapitolul <em>How to connect to a Socket server</em><br/>
+
+<a href="http://www.amazon.com/Professional-Android-4-Application-Development/dp/1118102274" class="urlextern" title="http://www.amazon.com/Professional-Android-4-Application-Development/dp/1118102274"  rel="nofollow">Reto MEIER, Professional Android for Application Development, John Wiley &amp; Sons, 2012</a> - capitolul 16 (<em>Bluetooth, NFC, Networks and Wi-Fi</em>), subcapitolele <em>Managing Network and Internet Connectivity</em>, <em>Transferring Data using Wi-Fi Direct</em><br/>
+
+<a href="http://www.coreservlets.com/android-tutorial/" class="urlextern" title="http://www.coreservlets.com/android-tutorial/"  rel="nofollow">Android Programming Tutorials - Core Servlets</a> - secțiunea <em>Networking I: General Techniques</em><br/>
+
+<a href="http://android.rosedu.org/wiki/laborator-07-servicii-de-retea#socketi" class="urlextern" title="http://android.rosedu.org/wiki/laborator-07-servicii-de-retea#socketi"  rel="nofollow">Dezvoltarea Aplicațiilor pentru Android</a> - partea a II-a, Sockeți<br/>
+
+<a href="http://developer.android.com/guide/components/processes-and-threads.html" class="urlextern" title="http://developer.android.com/guide/components/processes-and-threads.html"  rel="nofollow">Processes and Threads</a><br/>
+
+<a href="http://developer.android.com/reference/java/net/ServerSocket.html" class="urlextern" title="http://developer.android.com/reference/java/net/ServerSocket.html"  rel="nofollow">ServerSocket</a><br/>
+
+<a href="http://developer.android.com/reference/java/net/Socket.html" class="urlextern" title="http://developer.android.com/reference/java/net/Socket.html"  rel="nofollow">Socket</a>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="informatii_administrative">Informaţii Administrative</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../informatii/regulament.html" class="wikilink1" title="eim:informatii:regulament">Regulament</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../informatii/anunturi.html" class="wikilink1" title="eim:informatii:anunturi">Anunțuri</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../informatii/calendar.html" class="wikilink1" title="eim:informatii:calendar">Calendar</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../informatii/catalog.html" class="wikilink1" title="eim:informatii:catalog">Catalog</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../informatii/impartirea_pe_semigrupe.html" class="wikilink1" title="eim:informatii:impartirea_pe_semigrupe">Împărțirea pe Semigrupe</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Informaţii Administrative" [1-222] -->
+<h1 class="sectionedit2" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+
+<ul>
+<li class="level1"><div class="li"> <a href="../../_media/eim/curs/01.intro-eim.pdf" class="urlextern" title="http://ocw.cs.pub.ro/courses/_media/eim/curs/01.intro-eim.pdf"  rel="nofollow"> 01.intro-eim.pdf </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/eim/curs/02.03.media_access.pdf" class="urlextern" title="http://ocw.cs.pub.ro/courses/_media/eim/curs/02.03.media_access.pdf"  rel="nofollow"> 02.03.media_access.pdf  </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/eim/curs/04.05.telecom_systems.pdf" class="urlextern" title="http://ocw.cs.pub.ro/courses/_media/eim/curs/04.05.telecom_systems.pdf"  rel="nofollow"> 04.05.telecom_systems.pdf  </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/eim/curs/06.07.wlan.pdf" class="urlextern" title="http://ocw.cs.pub.ro/courses/_media/eim/curs/06.07.wlan.pdf"  rel="nofollow"> 06.07.wlan.pdf  </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/eim/curs/08.net.pdf" class="urlextern" title="http://ocw.cs.pub.ro/courses/_media/eim/curs/08.net.pdf"  rel="nofollow"> 08.net.pdf  </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/eim/curs/09.voip.pdf" class="urlextern" title="http://ocw.cs.pub.ro/courses/_media/eim/curs/09.voip.pdf"  rel="nofollow"> 09.voip.pdf  </a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/eim/curs/10.location.pdf" class="urlextern" title="http://ocw.cs.pub.ro/courses/_media/eim/curs/10.location.pdf"  rel="nofollow"> 10.location.pdf  </a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cursuri" [223-1025] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+
+<ul>
+<li class="level1"><div class="li"> <a href="laborator01.html" class="wikilink1" title="eim:laboratoare:laborator01">Laborator 01. Introducere in Programarea Android</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator02.html" class="wikilink1" title="eim:laboratoare:laborator02">Laborator 02. Structura unei Aplicații (I) - Activități</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator03.html" class="wikilink1" title="eim:laboratoare:laborator03">Laborator 03. Proiectarea Interfețelor Grafice</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator04.html" class="wikilink1" title="eim:laboratoare:laborator04">Laborator 04. Structura unei Aplicații (II) - Intenții &amp; Fragmente</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator05.html" class="wikilink1" title="eim:laboratoare:laborator05">Laborator 05. Structura unei Aplicații (III) - Servicii</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="laborator06.html" class="wikilink1" title="eim:laboratoare:laborator06">Laborator 06. Comunicația prin Sockeți TCP</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator07.html" class="wikilink1" title="eim:laboratoare:laborator07">Laborator 07. Invocarea de Servicii Web prin Protocolul HTTP</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator08.html" class="wikilink1" title="eim:laboratoare:laborator08">Laborator 08. Implementarea Serviciilor de Rețea</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator09.html" class="wikilink1" title="eim:laboratoare:laborator09">Laborator 09. Gestiunea Apelurilor Telefonice folosind SIP &amp; VoIP</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator10.html" class="wikilink1" title="eim:laboratoare:laborator10">Laborator 10. Utilizarea Serviciilor de Localizare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator11.html" class="wikilink1" title="eim:laboratoare:laborator11">Laborator 11. (OPȚIONAL) Transmiterea de Notificări folosind Serviciul Google Cloud Messaging</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [1026-2133] -->
+<h1 class="sectionedit4" id="colocvii">Colocvii</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../colocvii/colocviu01.html" class="wikilink1" title="eim:colocvii:colocviu01">Colocviu 1</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../colocvii/colocviu02.html" class="wikilink1" title="eim:colocvii:colocviu02">Colocviu 2</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Colocvii" [2134-2244] -->
+<h1 class="sectionedit5" id="resurse">Resurse</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../reading.html" class="wikilink1" title="eim:reading">Documentație Examen</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Resurse" [2245-2309] -->
+<h1 class="sectionedit6" id="tutoriale">Tutoriale</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../tutoriale/java.html" class="wikilink1" title="eim:tutoriale:java">Java</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../tutoriale/sdk_android.html" class="wikilink1" title="eim:tutoriale:sdk_android">SDK Android</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../tutoriale/eclipse.html" class="wikilink1" title="eim:tutoriale:eclipse">Eclipse</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../tutoriale/android_studio.html" class="wikilink1" title="eim:tutoriale:android_studio">Android Studio</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../tutoriale/genymotion.html" class="wikilink1" title="eim:tutoriale:genymotion">Genymotion</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../tutoriale/android_virtual_device.html" class="wikilink1" title="eim:tutoriale:android_virtual_device">Android Virtual Device</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../tutoriale/git.html" class="wikilink1" title="eim:tutoriale:git">Git</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../tutoriale/google_play_services.html" class="wikilink1" title="eim:tutoriale:google_play_services">Google Play Services în Genymotion</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Tutoriale" [2310-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator06.html#laborator_06_comunicatia_prin_socketi_tcp">Laborator 06. Comunicația prin Sockeți TCP</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator06.html#realizarea_conexiunii_intre_o_masina_fizica_si_dispozitivul_mobil">Realizarea Conexiunii între o Mașină Fizică și Dispozitivul Mobil</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator06.html#dispozitiv_fizic">Dispozitiv Fizic</a></div></li>
+<li class="level3"><div class="li"><a href="laborator06.html#dispozitiv_virtual_emulator">Dispozitiv Virtual (Emulator)</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="laborator06.html#genymotion">Genymotion</a></div></li>
+<li class="level4"><div class="li"><a href="laborator06.html#android_virtual_device">Android Virtual Device</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator06.html#mecanisme_pentru_comunicatia_prin_retea_in_android">Mecanisme pentru Comunicația prin Rețea în Android</a></div></li>
+<li class="level2"><div class="li"><a href="laborator06.html#programarea_de_retea_folosind_socketi_tcp_in_android">Programarea de Rețea folosind Sockeți TCP în Android</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator06.html#clientul">Clientul</a></div></li>
+<li class="level3"><div class="li"><a href="laborator06.html#utilizarea_unui_fir_de_executie_dedicat_pentru_comunicatia_prin_retea">Utilizarea unui Fir de Execuție Dedicat pentru Comunicația prin Rețea</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="laborator06.html#exemplu">Exemplu</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="laborator06.html#serverul">Serverul</a></div></li>
+<li class="level3"><div class="li"><a href="laborator06.html#exemplu_1_server_cu_un_sigur_fir_de_executie">Exemplu 1. Server cu un sigur fir de execuție</a></div></li>
+<li class="level3"><div class="li"><a href="laborator06.html#exemplu_2_server_cu_fire_de_executie_dedicate_pentru_fiecare_canal_de_comunicatie_in_parte">Exemplu 2. Server cu fire de execuție dedicate pentru fiecare canal de comunicație în parte</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator06.html#activitate_de_laborator">Activitate de Laborator</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator06.html#linux">Linux</a></div></li>
+<li class="level3"><div class="li"><a href="laborator06.html#windows">Windows</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator06.html#resurse_utile">Resurse Utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          eim/laboratoare/laborator06.txt · Last modified: 2016/04/08 07:53 by tmp.andrei.cojocaru          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="laborator06%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="laborator06%3Fdo=media&amp;ns=eim%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="laborator06.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=eim%253Alaboratoare%253Alaborator06&amp;1479899465" width="2" height="1" alt="" /></div>
+</body>
+</html>

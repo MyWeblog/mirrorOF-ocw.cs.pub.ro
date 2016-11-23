@@ -1,0 +1,219 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>ndk:courses:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-04-08T22:38:23+0300"/>
+<meta name="keywords" content="ndk,courses,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=ndk:courses"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../ndk/courses/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ndk:courses';var JSINFO = {"id":"ndk:courses:07","namespace":"ndk:courses","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#debugging_and_profiling">07. Debugging and Profiling</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#lecture">Lecture</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#practical">Practical</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="07.html#task_1_-_set_up_debugging">Task 1 - Set up debugging</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#task_2_-_integrating_debugging_with_eclipse">Task 2 - Integrating debugging with Eclipse</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#task_3_-_checkjni">Task 3 - CheckJNI</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#task_4_-_libc_debug_mode">Task 4 - LibC debug mode</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#task_5_-_profiling">Task 5 - Profiling</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="debugging_and_profiling">07. Debugging and Profiling</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Description: Debugging tools and techniques on NDK</div>
+</li>
+<li class="level1"><div class="li"> Practical part: Debugging NDK apps</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "07. Debugging and Profiling" [1-136] -->
+<h3 class="sectionedit2" id="lecture">Lecture</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="../../../../_media/ndk/courses/lecture-7.pdf" class="media mediafile mf_pdf" title="ndk:courses:lecture-7.pdf (2.4 MB)"> Lecture Slides</a></div>
+</li>
+</ul>
+
+<p>
+<iframe title="" src="../../../../_media/ndk/courses/lecture-7.pdf" style="width:98%; height:400px"></iframe>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Lecture" [137-278] -->
+<h3 class="sectionedit3" id="practical">Practical</h3>
+<div class="level3">
+
+<p>
+Archive: <a href="../../../../_media/ndk/courses/lab-7.zip" class="media mediafile mf_zip" title="ndk:courses:lab-7.zip (568.4 KB)">lab-7.zip</a>
+</p>
+
+</div>
+
+<h4 id="task_1_-_set_up_debugging">Task 1 - Set up debugging</h4>
+<div class="level4">
+
+<p>
+To be able to debug native code using GDB, a special flag must be passed to ndk-build. If you compile manually, you must pass NDK_DEBUG=1 in the command line (or set it as an environment variable).
+</p>
+<pre class="code">ndk-build NDK_DEBUG=1 NDK_PROJECT_PATH=/path/to/project</pre>
+
+<p>
+or add
+</p>
+<pre class="code">android:debuggable=&quot;true&quot;</pre>
+
+<p>
+to the &lt;application&gt; tag in AndroidManifest.xml.
+</p>
+
+<p>
+Additionally, you should add -g to LOCAL_CFLAGS in Android.mk and APP_OPTIM = debug in Application.mk.
+</p>
+
+<p>
+To start a native debug session, run
+</p>
+<pre class="code">ndk-gdb --project=/path/to/project</pre>
+
+<p>
+You can add the –start paramater to make ndk-gdb start the application.
+<p><div class="notewarning">
+I had issues with running ndk-gdb outside the project folder, since it tried to use a relative path.
+
+</div></p>
+</p>
+
+<p>
+<a href="../../../../_media/ndk/courses/gdbrefcard.pdf" class="media mediafile mf_pdf" title="ndk:courses:gdbrefcard.pdf (74.8 KB)">GDB Quick Reference</a>
+</p>
+
+</div>
+
+<h4 id="task_2_-_integrating_debugging_with_eclipse">Task 2 - Integrating debugging with Eclipse</h4>
+<div class="level4">
+
+<p>
+To debug native code directly from eclipse you must add a new Debug Configuration for each project. To do this, select <strong>Run &gt; Debug Configurations</strong> from the top menu. Select <strong>Android Native Application</strong> from the left panel, and click the <strong>New</strong> button. Select your project as the <strong>Project</strong> target. Make the correct debugger is set in the <strong>Debugger</strong> tab (it should be ${NdkGdb} or a path to ndk-gdb.
+</p>
+
+<p>
+You can add a breakpoint by double clicking on the left bar in the editor area or navigating to the desired line and pressing <strong>Ctrl+Shift+B</strong>.
+</p>
+
+<p>
+Then, start the project with the new debug configuration. When the code is reached, the current perspective should change to debug perspective and Eclipse should be able to help you debug. Check the debug toolbar.
+</p>
+
+<p>
+<p><div class="notewarning">You must set target=android-&lt;version&gt; in project.properties to be the same as android:targetSdkVersion in the AndroidManifest.xml file.
+</div></p>
+</p>
+
+</div>
+
+<h4 id="task_3_-_checkjni">Task 3 - CheckJNI</h4>
+<div class="level4">
+
+<p>
+To enable checking of JNI, if it is not already enabled
+</p>
+<pre class="code">adb shell setprop debug.checkjni 1</pre>
+
+<p>
+CheckJNI is already enable on emulators. CheckJNI shows detailed information about problems (bad pointers, wrong allocations, incompatible types, JNI calls in a critical section, etc).
+</p>
+
+</div>
+
+<h4 id="task_4_-_libc_debug_mode">Task 4 - LibC debug mode</h4>
+<div class="level4">
+
+<p>
+Memory issues can be detected with LibC debug mode. To enable this mode:
+</p>
+<pre class="code">adb shell setprop libc.debug.malloc &lt;value&gt;</pre>
+
+<p>
+where value:
+</p>
+<ul>
+<li class="level1"><div class="li"> 1 Leak detection</div>
+</li>
+<li class="level1"><div class="li"> 5 Detect overruns - fill allocated memory</div>
+</li>
+<li class="level1"><div class="li"> 10 Detect overruns - fill memory and add sentinels</div>
+</li>
+</ul>
+
+<p>
+There is a better alternative to this: Valgrind, but it requires root permission to install.
+</p>
+
+</div>
+
+<h4 id="task_5_-_profiling">Task 5 - Profiling</h4>
+<div class="level4">
+
+<p>
+<p><div class="noteimportant">This works only on ARM for now
+</div></p>
+</p>
+
+<p>
+Android uses gprof for profiling. To enable gprog you have to add <strong>-pg</strong> to LOCAL_CFLAGS, however, on Android this is not enough, since some symbols will be missing. You have to add <a href="https://code.google.com/p/android-ndk-profiler/" class="urlextern" title="https://code.google.com/p/android-ndk-profiler/"  rel="nofollow">https://code.google.com/p/android-ndk-profiler/</a> to the project.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Practical" [279-] --></div>
+</body>
+</html>

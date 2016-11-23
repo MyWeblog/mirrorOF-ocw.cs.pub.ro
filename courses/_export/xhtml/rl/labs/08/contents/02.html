@@ -1,0 +1,202 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:08:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-11-21T09:05:00+0200"/>
+<meta name="keywords" content="rl,labs,08,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/08/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:08:contents';var JSINFO = {"id":"rl:labs:08:contents:02","namespace":"rl:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_blocare_servicii_necriptate">2. [5p] Blocare servicii necriptate</h3>
+<div class="level3">
+
+<p>
+După cum ați observat la punctul anterior, traficul pentru protocoalele telnet și <abbr title="File Transfer Protocol">FTP</abbr> este trafic în clar, necriptat, putându-se afla cu ușurință credențialele unui anumit cont și comenzile rulate.
+</p>
+
+<p>
+Ne propunem să blocăm accesul de la stația <code>red</code> către stația <code>green</code> pentru aceste servicii, configurând ruterul dintre cele două stații, adică stația <code>host</code>. Practic vom configura pe stația <code>host</code> opțiuni de firewall cu ajutorul utilitarului <code>iptables</code>.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Prezentare scurtă iptables (dați click)
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Prezentare scurtă iptables (dați click)
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+<code>iptables</code> este un utilitar Linux care oferă și rol de firewall software. <code>iptables</code> folosește suportul nucleului pentru a intercepta pachete de rețea în diverse puncte ale trecerii acestora prin nucleu și a efectua acțiuni asupra acestora. Astfel de acțiuni sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> acceptarea pachetului (<code>ACCEPT</code>)</div>
+</li>
+<li class="level1"><div class="li"> respingerea pachetului (<code>REJECT</code>)</div>
+</li>
+<li class="level1"><div class="li"> aruncarea pachetului (<code>DROP</code>), similar cu respingerea dar nu se transmite nici o notificare de respingere către cel care a transmis pachetul inițial</div>
+</li>
+</ul>
+
+<p>
+O diagramă a drumului urmat de un pachet de rețea în nucleu este <a href="http://upload.wikimedia.org/wikipedia/commons/8/8f/Diagrama_linux_netfilter_iptables.gif" class="urlextern" title="http://upload.wikimedia.org/wikipedia/commons/8/8f/Diagrama_linux_netfilter_iptables.gif"  rel="nofollow">aici</a>.
+</p>
+
+<p>
+Comanda <code>iptables</code> înseamnă lucrul cu reguli de filtrare de la nivelul nucleului. În mod obișnuit se va preciza:
+</p>
+<ul>
+<li class="level1"><div class="li"> tipul de operație pe regulă (adăugare, ștergere, înlocuire, inserare)</div>
+</li>
+<li class="level1"><div class="li"> punctul din nucleul în care trebuie să se găsească pachetul pentru a se aplica regula</div>
+</li>
+<li class="level1"><div class="li"> regula în sine</div>
+</li>
+</ul>
+
+<p>
+De exemplu, comanda de mai jos are semnificația descrisă în continuare:
+</p>
+<pre class="code bash">iptables <span class="re5">-A</span> FORWARD <span class="re5">-d</span> green <span class="re5">-p</span> tcp <span class="re5">--dport</span> telnet <span class="re5">-j</span> REJECT</pre>
+<ul>
+<li class="level1"><div class="li"> <code>-A</code>: se adaugă regulă (este vorba de <em>append</em>, se adaugă la finalul listei de reguli);</div>
+</li>
+<li class="level1"><div class="li"> <code>FORWARD</code>: regula se aplică pachetelor care vor fi rutate; alte variante sunt <code>INPUT</code> (pachetele primite direct de sistem) și <code>OUTPUT</code> (pachetele care pleacă de la sistem);</div>
+</li>
+<li class="level1"><div class="li"> <code>-d green</code>: sunt selectate pachetele care au ca destinație adresa stației <code>green</code>;</div>
+</li>
+<li class="level1"><div class="li"> <code>-p tcp</code>: pachetele selectate sunt pachete TCP;</div>
+</li>
+<li class="level1"><div class="li"> <code>--dport telnet</code>: portul TCP destinație este portul specific protocolului telnet (adică portul <code>23</code>, identificat din fișierul <code>/etc/services</code>)</div>
+</li>
+<li class="level1"><div class="li"> <code>-j REJECT</code>: pachetul este respins</div>
+</li>
+</ul>
+
+<p>
+În tabela de filtrare aferentă <code>iptables</code> vom avea, așadar, o listă de reguli care sunt parcurse secvențial. Partea <code>-A FORWARD</code> identifică lanțul de reguli, partea <code>-d green -p tcp --dport telnet</code> este partea de <strong>match</strong> (ce pachete fac match pe regulă), iar partea <code>-j REJECT</code> este partea de <strong>acțiune</strong> (ce face regula cu pachetul).
+</p>
+</div></div>
+<p>
+Autentificați-vă prin SSH ca <code>root</code> pe stația <code>host</code>. Pentru a bloca accesul la serviciul telnet (port 23) destinat stației <code>green</code>, rulați pe stația <code>host</code> comanda de mai jos. Comanda adaugă regula <code>iptables</code> corespunzătoare.
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-A</span> FORWARD <span class="re5">-d</span> green <span class="re5">-p</span> tcp <span class="re5">--dport</span> telnet <span class="re5">-j</span> REJECT</pre>
+
+<p>
+Pentru a verifica adăugarea regulii de mai sus, rulați pe stația <code>host</code> comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-L</span> FORWARD
+Chain FORWARD <span class="br0">&#40;</span>policy ACCEPT<span class="br0">&#41;</span>
+target     prot opt <span class="kw3">source</span>               destination         
+REJECT     tcp  <span class="re5">--</span>  anywhere             green                tcp dpt:telnet reject-with icmp-port-unreachable</pre>
+
+<p>
+Pentru a afișa informații și despre pachetele prelucrate și interfețele folosite, rulați pe stația <code>host</code> comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-L</span> FORWARD <span class="re5">-v</span>
+Chain FORWARD <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">0</span>     <span class="nu0">0</span> REJECT     tcp  <span class="re5">--</span>  any    any     anywhere             green                tcp dpt:telnet reject-with icmp-port-unreachable</pre>
+
+<p>
+Pentru a afișa informații în format numeric (pentru nume de stații și nume de porturi), rulați pe stația <code>host</code> comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-L</span> FORWARD <span class="re5">-v</span> <span class="re5">-n</span>
+Chain FORWARD <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">0</span>     <span class="nu0">0</span> REJECT     tcp  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            192.168.2.2          tcp dpt:<span class="nu0">23</span> reject-with icmp-port-unreachable</pre>
+
+<p>
+De acum înainte recomandăm folosirea acestor opțiuni (<code>-v -n</code>) pentru listarea regulilor <code>iptables</code>.
+</p>
+
+<p>
+Pentru a verifica blocarea traficului telnet către <code>green</code>, rulați pe stația <code>red</code> comanda
+</p>
+<pre class="code bash">telnet green</pre>
+
+<p>
+Vă apare un mesaj de forma
+</p>
+<pre class="code">Trying 192.168.2.2...
+telnet: Unable to connect to remote host: Connection refused</pre>
+
+<p>
+ semnificând faptul că se încearcă realizarea conexiunii dar conexiunea este respinsă
+</p>
+
+<p>
+Pentru a vedea că regula de blocare a funcționat, rulați din nou pe stația <code>host</code> comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-L</span> FORWARD <span class="re5">-v</span> <span class="re5">-n</span>
+Chain FORWARD <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">2</span>   <span class="nu0">120</span> REJECT     tcp  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            192.168.2.2          tcp dpt:<span class="nu0">23</span> reject-with icmp-port-unreachable</pre>
+
+<p>
+Observați, în output-ul comenzii, că există acum valori diferite de 0 în coloana <code>pkts</code> și <code>bytes</code>, semn că au fost pachete prelucrate de această regulă, deci blocate.
+</p>
+
+<p>
+Pentru a verifica funcționarea în continuare a altor conexiuni (diferite de telnet) de la <code>red</code> la <code>green</code>, rulați pe stația <code>red</code> comenzile
+</p>
+<pre class="code bash"><span class="kw2">ftp</span> green
+<span class="kw2">ssh</span> <span class="re5">-l</span> student green</pre>
+
+<p>
+Dorim să blocăm și celălalt serviciu necriptat, <abbr title="File Transfer Protocol">FTP</abbr>. Adăugați o regulă <code>iptables</code> similară pentru a bloca, pe stația <code>host</code>, traficul <abbr title="File Transfer Protocol">FTP</abbr> destinat stației <code>green</code>. După adăugarea regulii folosiți <code>iptables -L FORWARD -n -v</code> pentru a valida adăugarea regulii.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru această regulă puteți transmite argumentul <code>21</code> opțiunii <code>--dport</code> sau chiar numele <code>ftp</code>. Asocierea între port (număr) și protocol (nume) se găsește în fișierul <code>/etc/services</code>.
+
+</div></p>
+</p>
+
+<p>
+De pe stația <code>red</code> verificați blocarea traficului <abbr title="File Transfer Protocol">FTP</abbr> către stația green folosind comanda
+</p>
+<pre class="code bash"><span class="kw2">ftp</span> green</pre>
+
+</div>
+</div>
+</body>
+</html>

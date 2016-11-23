@@ -1,0 +1,272 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    02. [15p] Configurare server de PPPoE    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-01-09T16:47:01+0200"/>
+<meta name="keywords" content="rl,labs,12,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=rl:labs:12:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/rl/labs/12/contents/02.html"/>
+<link rel="canonical" href="02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:12:contents';var JSINFO = {"id":"rl:labs:12:contents:02","namespace":"rl:labs:12:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/rl/"><img height="70" src="../../../../res/sigla_rl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="02%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="02%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_configurare_server_de_pppoe">02. [15p] Configurare server de PPPoE</h3>
+<div class="level3">
+
+<p>
+Pentru a putea autentifica stațiile <code>red</code>, <code>green</code> și <code>blue</code> vom folosi stația <code>host</code> pe post de server de autentificare. Pentru acest lucru vom instala un server de PPPoE:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">apt-get update</span>
+<span class="co4">root@host:~# </span><span class="kw2">apt-get install</span> pppoe</pre>
+
+<p>
+<p><div class="noteimportant">
+Încărcați modulul de kernel <code>pppoe</code> pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>modprobe pppoe</pre>
+
+<p>
+În general, acest pas nu este necesar pentru că este realizat automat. În situația noastră însă, containerele nu pot încărca automat modulul pentru că nu au permisiuni de alterare a nucleului. De aceea încărcăm modulul de kernel în sistemul fizic și va fi ulterior prezent și în containere.
+
+</div></p>
+</p>
+
+<p>
+Configurarea serverului de PPPoE presupune, minimal, doi pași:
+</p>
+<ol>
+<li class="level1"><div class="li"> configurarea credențialelor pentru fiecare client PPPoE (username și parolă)</div>
+</li>
+<li class="level1"><div class="li"> configurarea spațiului de adrese IP disponibile clienților PPPoE</div>
+</li>
+</ol>
+
+<p>
+Un client PPPoE este o stație ce solicită o adresă IP pentru conectare.
+</p>
+
+<p>
+În cazul PPP(oE) există două protocoale de autentificare: CHAP (<em>Challenge-Handshake Authentication Protocol</em> și PAP (<em>Password Authentication Protocol</em>). Întrucât CHAP este considerat mai sigur, vom folosi CHAP.
+</p>
+
+<p>
+Configurarea credențialelor CHAP pentru clienții PPPoE este realizată în fișierul <code>/etc/ppp/chap-secrets</code>. Vom configura parole și nume de utilizator simple, cu uz didactic, conținând chiar numele stațiilor. Într-un scenariu real, parolele vor fi complexe pentru a preveni ghicirea lor. Edităm fișierul <code>/etc/ppp/chap-secrets</code> cu parolele pentru conturile celor trei stații de tip container; acesta va avea în final forma de mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>chap-secrets
+<span class="co0"># Secrets for authentication using CHAP</span>
+<span class="co0"># client        server  secret                  IP addresses</span>
+<span class="kw2">red</span>             <span class="sy0">*</span>       <span class="kw2">red</span>                     <span class="sy0">*</span>
+green           <span class="sy0">*</span>       green                   <span class="sy0">*</span>
+blue            <span class="sy0">*</span>       blue                    <span class="sy0">*</span></pre>
+
+<p>
+Cele patru coloane din cadrul fișierului <code>/etc/ppp/chap-secrets</code> reprezintă:
+</p>
+<ul>
+<li class="level1"><div class="li"> prima coloană (<code>client</code>) este username-ul clientului (<code>red</code>, <code>green</code>, <code>blue</code>);</div>
+</li>
+<li class="level1"><div class="li"> a doua coloană (<code>server</code>) se referă la serverul PPP ce va fi folosi autentificarea (în cazul nostru am folosit <code>*</code>, adică orice server, implicit și cel de PPPoE);</div>
+</li>
+<li class="level1"><div class="li"> a treia coloană (<code>secret</code>) este parola (<code>red</code>, <code>green</code>, <code>blue</code>);</div>
+</li>
+<li class="level1"><div class="li"> a patra coloană (<code>IP addresses</code>) se referă la adresele IP ce pot folosi aceste credențiale și este folosită în general în conexiuni VPN peste Internet (am folosit <code>*</code> întrucât în cazul PPPoE nu avem adresă IP sursă; este folosit direct protocolul Ethernet).</div>
+</li>
+</ul>
+
+<p>
+Pentru fiecare conexiune PPPoE dorim să alocăm automat adresele IP clienților. Serverul de PPPoE poate face acest lucru implicit fără a mai fi nevoie instalarea unui server de DHCP. Trebuie să definim spațiul de adrese IP în fișierul <code>/etc/ppp/ipaddress_pool</code> la fel ca mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool
+192.168.0.2-<span class="nu0">5</span></pre>
+
+<p>
+Modul în care definim spațiul de adrese IP este: prima adresă IP alocabilă urmată de caracterul <code>-</code> și limita superioară a ultimului octet.
+</p>
+
+<p>
+După configurarea credențialelor de autentificare și a spațiului de adrese, vom putea porni serverul de PPPoE și vom verifica pornirea sa:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options
+<span class="co4">root@host:~# </span><span class="kw2">ps</span> <span class="re5">-ef</span> <span class="sy0">|</span> <span class="kw2">grep</span> pppoe-server
+root     <span class="nu0">10706</span>     <span class="nu0">1</span>  <span class="nu0">0</span> Dec29 ?        00:00:00 pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options</pre>
+
+<p>
+Semnificația parametrilor este după cum urmează:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-C isp</code> - numele serverului PPPoE;</div>
+</li>
+<li class="level1"><div class="li"> <code>-L 192.168.0.1</code> - adresa IP a serverului de PPPoE (cu aceasta adresă vor comunica stațiile de tip client);</div>
+</li>
+<li class="level1"><div class="li"> <code>-p /etc/ppp/ipaddress_pool</code> - fișierul în care este specificat spațiul de adrese IP ce vor fi furnizate clienților;</div>
+</li>
+<li class="level1"><div class="li"> <code>-I br0</code> - interfața pe care ascultă (în acest caz este interfața de tip bridge <code>br0</code>, interfață la care sunt conectate toate containerele);</div>
+</li>
+<li class="level1"><div class="li"> <code>-O /etc/ppp/options</code> - opțiunile serverului PPPoE; le vom folosi pe cele implicite.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">
+Dacă, pe parcursul laboratorului, aveți probleme la configurarea PPPoE, este posibil să fie nevoie să reporniți serverul:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>pkill <span class="re5">-f</span> pppoe-server
+<span class="co4">root@host:~# </span>pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="navigare">Navigare</h1>
+<div class="level1">
+
+<p>
+<strong><a href="../../12.html" class="wikilink1" title="rl:labs:12">Laboratorul 12</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "rl:labs:12:meta:nav" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:meta:nav">
+<div class="level1">
+
+<div><div id="nojs_indexmenu_448790093583560c88b00a" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="rl:labs:12:contents:01">01. [15p] Necesitatea autentificării în rețeaua locală</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="02.html" class="wikilink1" title="rl:labs:12:contents:02">02. [15p] Configurare server de PPPoE</a></span></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="rl:labs:12:contents:03">03. [20p] Configurare client de PPPoE pe stația red</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="rl:labs:12:contents:04">04. [20p] Configurare client de PPPoE pe stațiile green și blue</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="rl:labs:12:contents:05">05. [10p] Acces la Internet pentru clienții PPPoE</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="rl:labs:12:contents:06">06. [20p] Configurare manuală a unui client PPPoE</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="rl:labs:12:contents:07">07. [BONUS - 10p] Autentificare prin RADIUS pentru server de PPPoE</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "rl:labs:12:meta:nav" [0-] --></div>
+<div class="level1">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          rl/labs/12/contents/02.txt · Last modified: 2014/01/09 16:47 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="02%3Fdo=media&amp;ns=rl%253Alabs%253A12%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="02.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=rl%253Alabs%253A12%253Acontents%253A02&amp;1479893192" width="2" height="1" alt="" /></div>
+</body>
+</html>

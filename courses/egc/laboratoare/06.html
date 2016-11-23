@@ -1,0 +1,564 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laboratorul 06    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="date" content="2016-11-20T17:33:57+0200"/>
+<meta name="keywords" content="egc,laboratoare,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=egc:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="http://ocw.cs.pub.ro/courses/_export/xhtml/egc/laboratoare/06"/>
+<link rel="canonical" href="06.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='egc:laboratoare';var JSINFO = {"id":"egc:laboratoare:06","namespace":"egc:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="http://ocw.cs.pub.ro/courses/egc/laboratoare/06?do=recent"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="http://ocw.cs.pub.ro/courses/egc/laboratoare/06?do=login&amp;sectok=f62420cf5b01253da4b50505d148181b"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="laboratorul_06">Laboratorul 06</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit2" id="banda_grafica">Banda Grafica</h3>
+<div class="level3">
+
+<p>
+Banda Grafica este un lant de operatii executate de procesoarele GPU. Unele dintre aceste operatii sunt descrise in programe numite SHADER-e, care sunt scrise de programator si transmise la GPU pentru a fi executate de procesoarele acestuia. Pentru a le deosebi de alte operatii executate in banda grafica, pe care programatorul nu le poate modifica, SHADER-ele sunt numite „etape programabile”. Ele dau o mare flexibilitate in crearea de imagini statice sau dinamice cu efecte complexe redate in timp real (apa, nori, foc etc).
+</p>
+
+<p>
+Folosind OpenGL sunt transmise la <strong>GPU</strong>: coordonatele varfurilor, matricile de transformare a varfurilor (M: modelare, V: vizualizare, P: proiectie, MV: modelare-vizualizare, MVP: modelare-vizualizare-proiectie), topologia primitivelor, texturi si ale date.
+</p>
+
+<p>
+<img src="http://ocw.cs.pub.ro/courses/_media/egc/laboratoare/banda_grafica.png?w=500&amp;tok=8364cb" class="mediacenter" alt="" width="500" />
+</p>
+
+<p>
+1. In <strong>etapa programabila VERTEX SHADER</strong> se transforma coordonatele unui varf, folosind matricea MVP, (din coordonate obiect) in coordonate de decupare (clip coordinates). De asemenea, pot fi efectuate si calcule de iluminare la nivel de varf. Programul VERTEX SHADER este executat in paralel pentru un numar foarte mare de varfuri.
+</p>
+
+<p>
+2. Urmeaza o <strong>etapa fixa</strong>, in care sunt efectuate urmatoarele operatii: 
+* asamblarea primitivelor folosind varfurile transformate in vertex shader si topologia primitivelor;
+* eliminarea fetelor nevizibile;
+* decuparea primitivelor la frontiera volumului vizual canonic;
+* impartirea perspectiva, prin care se calculeaza coordonatele dispozitiv normalizate ale varfurilor:  xd = xc/w; yd = yc/w;zd = zc/w, unde [xc,yc,zc,w] reprezinta coordonatele unui varf in sistemul coordonatelor de decupare;
+* transformarea fereastra–poarta: din fereastra (-1, -1) – (1, 1) in viewport-ul definit de programator.
+</p>
+
+<p>
+3. Urmatoarea etapa este <strong>Rasterizarea</strong>. Aceasta include:
+</p>
+<ul>
+<li class="level1"><div class="li"> calculul adreselor pixelilor in care se afiseaza fragmentele primitivelor (bucatele de primitive de dimensiune egala cu a unui pixel);</div>
+</li>
+<li class="level1"><div class="li"> calculul culorii fiecarui fragment, pentru care este apelat programul <strong>FRAGMENT SHADER</strong></div>
+</li>
+<li class="level1"><div class="li"> in etapa programabila <strong>FRAGMENT SHADER</strong> se calculeaza culoarea unui fragment pe baza geometriei si a texturilor; programul <strong>FRAGMENT SHADER</strong> este executat in paralel pentru un numar mare de fragmente.</div>
+</li>
+<li class="level1"><div class="li"> testul de vizibilitate la nivel de fragment (algoritmul z-buffer);</div>
+</li>
+<li class="level1"><div class="li"> operatii raster, de exemplu pentru combinarea culorii fragmentului cu aceea existenta pentru pixelul in care se afiseaza fragmentul.</div>
+</li>
+</ul>
+
+<p>
+Rezultatul etapei de rasterizare este o <strong>imagine</strong> memorata in <em>„frame buffer”</em>.
+</p>
+
+<p>
+<p><div class="noteclassic">Incepand cu a 5-a generatie GPU si OpenGL 3.x, intre etapele 2 si 3 exista inca o etapa programabila, numita <em>„Geometry shader”</em>.
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="shader_opengl">Shader OpenGL</h3>
+<div class="level3">
+
+<p>
+<em class="u">Pentru implementarea de programe SHADER in OpenGL se foloseste limbajul dedicat GLSL (GL Shading Language).</em>
+</p>
+
+<p>
+Legarea unui shader la programul care foloseste OpenGL este o operatie complicata, de aceea va este oferit codul prin care se incarca un shader.
+</p>
+
+<p>
+Un <em class="u"><strong>VERTEX SHADER</strong></em> e un program care se executa pentru <em class="u"><strong>FIECARE</strong></em> vertex trimis catre banda grafica. Rezultatul transformarilor, care reprezinta coordonata post-proiectie a vertexului procesat, trebuie scris in variabila standard <strong><a href="https://www.opengl.org/wiki/Built-in_Variable_(GLSL)#Vertex_shader_outputs" class="urlextern" title="https://www.opengl.org/wiki/Built-in_Variable_(GLSL)#Vertex_shader_outputs"  rel="nofollow"> gl_Position </a></strong> care e folosita apoi de banda grafica. Un vertex shader are tot timpul o functie numita main. Un exemplu de vertex shader:
+</p>
+<pre class="code glsl"><span class="co2">#version 330</span>
+&nbsp;
+layout<span class="br0">&#40;</span>location <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="kw2">in</span> <span class="kw3">vec3</span> v_position<span class="sy0">;</span>
+&nbsp;
+<span class="co1">// Uniform properties</span>
+<span class="kw2">uniform</span> <span class="kw3">mat4</span> Model<span class="sy0">;</span>
+<span class="kw2">uniform</span> <span class="kw3">mat4</span> View<span class="sy0">;</span>
+<span class="kw2">uniform</span> <span class="kw3">mat4</span> Projection<span class="sy0">;</span>
+&nbsp;
+<span class="kw3">void</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw6">gl_Position</span> <span class="sy0">=</span> Projection <span class="sy0">*</span> View <span class="sy0">*</span> Model <span class="sy0">*</span> <span class="kw3">vec4</span><span class="br0">&#40;</span>v_position<span class="sy0">,</span> <span class="nu0">1.0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Un <em class="u"><strong>FRAGMENT SHADER</strong></em> e un program ce este executat pentru <em class="u"><strong>FIECARE</strong></em> fragment generat de rasterizator. Fragment shader are o functie numita main. Un exemplu de fragment shader:
+</p>
+<pre class="code glsl"><span class="co2">#version 330</span>
+&nbsp;
+layout<span class="br0">&#40;</span>location <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="kw2">out</span> <span class="kw3">vec4</span> out_color<span class="sy0">;</span>
+&nbsp;
+<span class="kw3">void</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    out_color <span class="sy0">=</span> <span class="kw3">vec4</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit4" id="cum_legam_un_obiect_geometric_la_shader">Cum legam un obiect geometric la shader?</h3>
+<div class="level3">
+
+<p>
+Legarea intre obiecte (mesh, linii etc.) si shadere se face prin atribute. Datorita multelor versiuni de OpenGL exista multe metode prin care se poate face aceasta legare. In laborator vom invata metoda specifica OpenGL 3.3 si OpenGL 4.1. Metodele mai vechi nu mai sunt utilizate decat in atunci cand hardware-ul utilizat impune restrictii de <abbr title="Application Programming Interface">API</abbr>.
+</p>
+
+<p>
+<abbr title="Application Programming Interface">API</abbr>-ul OpenGL modern (3.3+) utilizeaza metoda de legare bazata pe <a href="https://www.opengl.org/wiki/Layout_Qualifier_(GLSL)" class="urlextern" title="https://www.opengl.org/wiki/Layout_Qualifier_(GLSL)"  rel="nofollow">layout-uri</a>. In aceasta metoda se folosesc pipe-uri ce leaga un atribut din OpenGL de un nume de atribut in shader.
+</p>
+<pre class="code cpp">glEnableVertexAttribArray<span class="br0">&#40;</span><span class="nu0">2</span><span class="br0">&#41;</span><span class="sy4">;</span>	
+glVertexAttribPointer<span class="br0">&#40;</span><span class="nu0">2</span>, <span class="nu0">3</span>, GL_FLOAT, GL_FALSE, <span class="kw3">sizeof</span><span class="br0">&#40;</span>VertexFormat<span class="br0">&#41;</span>, <span class="br0">&#40;</span><span class="kw4">void</span><span class="sy2">*</span><span class="br0">&#41;</span><span class="nu0">0</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+<p>
+Prima comanda seteaza pipe-ul cu numarul 2 ca fiind utilizat. 
+A doua comanda descrie structura datelor in cadrul VBO-ului astfel:
+</p>
+<ul>
+<li class="level1"><div class="li"> pe pipe-ul <strong>2</strong> se primesc 3 float-uri (argument 3) pe care nu le normalizam (argument 4)</div>
+</li>
+<li class="level1"><div class="li"> argumentul 5 numit si <strong>stride</strong>, identifica pasul de citire (in bytes) in cadrul VBO-ului pentru a obtine urmatorul atribut</div>
+</li>
+<li class="level1"><div class="li"> argumentul 6 identifica offsetul inital din cadrul buffer-ul legat la GL_ARRAY_BUFFER (VBO)</div>
+</li>
+</ul>
+
+<p>
+In <em class="u">Vertex Shader</em> vom primi atributul respectiv pe pipe-ul cu indexul specificat la legare, astfel:
+</p>
+<pre class="code glsl">layout<span class="br0">&#40;</span>location <span class="sy0">=</span> <span class="nu0">2</span><span class="br0">&#41;</span> <span class="kw2">in</span> <span class="kw3">vec3</span> vertex_attribute_name<span class="sy0">;</span></pre>
+
+<p>
+Mai multe informatii se pot gasi pe pagina de documentatie <a href="https://www.opengl.org/wiki/Layout_Qualifier_(GLSL)#Vertex_shader_attribute_index" class="urlextern" title="https://www.opengl.org/wiki/Layout_Qualifier_(GLSL)#Vertex_shader_attribute_index"  rel="nofollow"> Vertex Shader attribute index</a>.
+</p>
+
+<p>
+<p><div class="notetip">Pentru mai multe detalii puteti accesa:
+</p>
+<ul>
+<li class="level1"><div class="li"> <abbr title="Application Programming Interface">API</abbr>-ul de OpenGL aici: <a href="https://www.opengl.org/sdk/docs/man/" class="urlextern" title="https://www.opengl.org/sdk/docs/man/"  rel="nofollow">https://www.opengl.org/sdk/docs/man/</a> </div>
+</li>
+<li class="level1"><div class="li"> <abbr title="Application Programming Interface">API</abbr>-ul pentru GLSL aici: <a href="https://www.opengl.org/sdk/docs/manglsl/" class="urlextern" title="https://www.opengl.org/sdk/docs/manglsl/"  rel="nofollow">https://www.opengl.org/sdk/docs/manglsl/</a> </div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="cum_trimitem_date_generale_la_un_shader">Cum trimitem date generale la un shader?</h3>
+<div class="level3">
+
+<p>
+La un shader putem trimite date de la CPU prin variabile uniforme. Se numesc uniforme pentru ca <em class="u">nu variaza pe durata executiei shader-ului</em>. Ca sa putem trimite date la o variabila din shader trebuie sa obtinem locatia variabilei in programul shader cu functia <a href="https://www.opengl.org/sdk/docs/man4/html/glGetUniformLocation.xhtml" class="urlextern" title="https://www.opengl.org/sdk/docs/man4/html/glGetUniformLocation.xhtml"  rel="nofollow"> glGetUniformLocation</a>:
+</p>
+<pre class="code cpp"><span class="kw4">int</span> location <span class="sy1">=</span> glGetUniformLocation<span class="br0">&#40;</span><span class="kw4">int</span> shader_program, <span class="st0">&quot;uniform_variable_name_in_shader&quot;</span><span class="br0">&#41;</span><span class="sy2">**</span></pre>
+<ul>
+<li class="level1"><div class="li"> <strong>shader_program</strong> reprezinta ID-ul programului shader compilat pe placa video</div>
+</li>
+<li class="level1"><div class="li"> in cadrul framework-ului de laborator ID-ul se poate obtine apeland functia <code>shader→GetProgramID()</code> sau direct accesand vriabila membru <code>shader→program</code></div>
+</li>
+</ul>
+
+<p>
+Apoi, dupa ce avem locatia (care reprezinta un offset/pointer) putem trimite la acest pointer informatie cu functii de tipul <a href="https://www.opengl.org/sdk/docs/man4/html/glUniform.xhtml" class="urlextern" title="https://www.opengl.org/sdk/docs/man4/html/glUniform.xhtml"  rel="nofollow"> glUniform</a>:
+</p>
+<pre class="code cpp"><span class="co1">//void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)</span>
+glm<span class="sy4">::</span><span class="me2">mat4</span> matrix<span class="br0">&#40;</span><span class="nu17">1.0f</span><span class="br0">&#41;</span><span class="sy4">;</span>
+glUniformMatrix4fv<span class="br0">&#40;</span>location, <span class="nu0">1</span>, GL_FALSE, glm<span class="sy4">::</span><span class="me2">value_ptr</span><span class="br0">&#40;</span>matrix<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co1">// void glUniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)</span>
+glUniform4f<span class="br0">&#40;</span>location, <span class="nu0">1</span>, <span class="nu17">0.5f</span>, <span class="nu17">0.3f</span>, <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co1">//void glUniform3i(GLint location, GLint v0, GLint v1, GLint v2)</span>
+glUniform3i<span class="br0">&#40;</span>location, <span class="nu0">1</span>, <span class="nu0">2</span>, <span class="nu0">3</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co1">//void glUniform3fv(GLint location, GLsizei count, const GLfloat *value)</span>
+glm<span class="sy4">::</span><span class="me2">vec3</span> color <span class="sy1">=</span> glm<span class="sy4">::</span><span class="me2">vec3</span><span class="br0">&#40;</span><span class="nu17">1.0f</span>, <span class="nu17">0.5f</span>, <span class="nu17">0.8f</span><span class="br0">&#41;</span><span class="sy4">;</span>
+glUniform3fv<span class="br0">&#40;</span>location, <span class="nu0">1</span>, glm<span class="sy4">::</span><span class="me2">value_ptr</span><span class="br0">&#40;</span>color<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+<p>
+Functiile <strong>glUniform</strong> sunt de forma <strong>glUniform[Matrix?]NT[v?]</strong> (regex) unde:
+</p>
+<ul>
+<li class="level1"><div class="li"> Matrix - in cazul in care e prezent identifica o matrice</div>
+</li>
+<li class="level1"><div class="li"> N - reprezinta numarul de variabile de tipul <strong>T</strong> ce vor fi trimise:</div>
+<ul>
+<li class="level2"><div class="li"> <strong>1, 2, 3, 4</strong> in cazul tipurilor simple</div>
+</li>
+<li class="level2"><div class="li"> pentru matrici mai exista si <strong>2&times;3, 2&times;4, 3&times;2, 3&times;4, 4&times;2, 4&times;3</strong></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> T - reprezinta tipul variabilelor trimise</div>
+<ul>
+<li class="level2"><div class="li"> <strong>ui</strong> - unsigned int</div>
+</li>
+<li class="level2"><div class="li"> <strong>i</strong> - int</div>
+</li>
+<li class="level2"><div class="li"> <strong>f</strong> - float</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> v - datele sunt specificate printr-un vector, se da adresa de memorie a primei valori din vector</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit6" id="comunicarea_intre_shadere-le_opengl">Comunicarea intre shadere-le OpenGL</h2>
+<div class="level2">
+
+<p>
+In general pipeline-ul programat este alcatuit din mai multe programe shader. In cadrul cursului de EGC vom utiliza doar <em class="u">Vertex Shader</em> si <em class="u">Fragment Shader</em>. OpenGL ofera posibilitatea de a comunica date intre programele shader consecutive prin intermendiul atributelor <strong>in</strong> si <strong>out</strong>
+</p>
+
+<p>
+<p><div class="noteimportant">
+In metoda specifica OpenGL 3.3 numele de atribut <strong>attribute_name</strong> trebuie sa fie acelasi atat in <em class="u">Vertex Shader</em> cat si in <em class="u">Fragment Shader</em> pentru a se stie legatura intre input/output.
+
+</div></p>
+</p>
+
+<p>
+Vertex Shader:
+</p>
+<pre class="code glsl"><span class="co2">#version 330  // GLSL version of shader (GLSL 330 means OpenGL 3.3 API)</span>
+&nbsp;
+<span class="kw2">out</span> <span class="kw3">vec3</span> attribute_name<span class="sy0">;</span></pre>
+
+<p>
+Fragment Shader:
+</p>
+<pre class="code glsl"><span class="kw2">in</span> <span class="kw3">vec3</span> attribute_name<span class="sy0">;</span></pre>
+
+<p>
+<p><div class="noteimportant">
+In caz ca avem support pentru GLSL 410 (OpenGL 4.1) se poate specifica si locatia attributului astfel, caz in care doar locatiile vor fi folosite pentru a lega iesirea unui <em class="u">Vertex Shader</em> de intrarea la <em class="u">Fragment Shader</em> si nu numele atributului. <br/>
+
+Mai multe detalii se pot obtine de la: <a href="https://www.opengl.org/wiki/Layout_Qualifier_(GLSL)#Program_separation_linkage" class="urlextern" title="https://www.opengl.org/wiki/Layout_Qualifier_(GLSL)#Program_separation_linkage"  rel="nofollow"> Program separation linkage </a>
+
+</div></p>
+</p>
+
+<p>
+Vertex Shader:
+</p>
+<pre class="code glsl"><span class="co2">#version 410  // GLSL 410 (OpenGL 4.1 API)</span>
+&nbsp;
+layout<span class="br0">&#40;</span>location <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="kw2">out</span> <span class="kw3">vec4</span> vertex_out_attribute_name<span class="sy0">;</span></pre>
+
+<p>
+Fragment Shader:
+</p>
+<pre class="code glsl"><span class="co2">#version 410</span>
+&nbsp;
+layout<span class="br0">&#40;</span>location <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="kw2">in</span> <span class="kw3">vec4</span> fragment_in_attribute_name<span class="sy0">;</span></pre>
+
+</div>
+
+<h3 class="sectionedit7" id="cerinte_laborator">Cerinte laborator</h3>
+<div class="level3">
+
+<p>
+<p><div class="notetip">
+</p>
+
+<p>
+tasta <strong>F5</strong> - reincarca shaderele in timpul rularii aplicatiei. Nu este nevoie sa opriti aplicatia intrucat shaderele sunt <em class="u">compilate si rulate de catre placa video</em> si nu au legatura cu codul sursa C++ propriu zis.
+</p>
+
+<p>
+
+</div></p>
+</p>
+<ol>
+<li class="level1"><div class="li"> Descarcati <a href="https://github.com/UPB-Graphics/Framework-EGC/archive/master.zip" class="urlextern" title="https://github.com/UPB-Graphics/Framework-EGC/archive/master.zip"  rel="nofollow">framework-ul de laborator</a></div>
+</li>
+<li class="level1"><div class="li"> Completati functia <code>RenderSimpleMesh</code> astfel inca sa trimiteti corect valorile uniform catre Shader</div>
+<ul>
+<li class="level2"><div class="li"> Se interogeaza locatia uniformelor “Model”, “View” si “Projection”</div>
+</li>
+<li class="level2"><div class="li"> Folosind <code>glUniformMatrix4fv</code> sa se trimita matricile corespunzatoare catre shader</div>
+</li>
+<li class="level2"><div class="li"> Daca ati completat corect functia ar trebui sa vedeti un cub pe centrul ecranului rottit 45 grade in jurul lui Y si colorat variat</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Completati Vertex Shaderul</div>
+<ul>
+<li class="level2"><div class="li"> Se declara atributele de intrare pentru <code>Vertex Shader</code> folosind layout location <pre class="code glsl">	layout<span class="br0">&#40;</span>location <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="kw2">in</span> <span class="kw3">vec3</span> v_position<span class="sy0">;</span>
+	<span class="co1">// same for the rest of the attributes</span></pre>
+</div>
+</li>
+<li class="level2"><div class="li"> Se declara atributele de iesire catre <code>Fragment Shader</code> <pre class="code glsl">	<span class="kw2">out</span> <span class="kw3">vec3</span> frag_color<span class="sy0">;</span>
+	<span class="co1">// same for other attributes</span></pre>
+</div>
+</li>
+<li class="level2"><div class="li"> Se salveza valorile de iesire in <code>main()</code> <pre class="code glsl">	frag_color <span class="sy0">=</span> vertex_color<span class="sy0">;</span>
+	<span class="co1">// same for other attributes</span></pre>
+</div>
+</li>
+<li class="level2"><div class="li"> Se calculeaza pozitia in clip space a vertexului primit folosind matricile Model, View, Projection <pre class="code glsl">	<span class="kw6">gl_Position</span> <span class="sy0">=</span> Projection <span class="sy0">*</span> View <span class="sy0">*</span> Model <span class="sy0">*</span> <span class="kw3">vec4</span><span class="br0">&#40;</span>v_position<span class="sy0">,</span> <span class="nu0">1.0</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Completati Fragment Shaderul</div>
+<ul>
+<li class="level2"><div class="li"> Se primesc valorile atributelor trimise de la <code>Vertex Shader</code></div>
+</li>
+<li class="level2"><div class="li"> Valoarea de intrare ale fiecarui atribut e calculata prin interpolare liniara intre vertexii ce formeaza patch-ul definit la desenare (triunghi, linie) <pre class="code glsl">	<span class="kw2">in</span> <span class="kw3">vec3</span> frag_color<span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level2"><div class="li"> Se calculeaza valoarea fragmentului (pixelului) de output <pre class="code glsl">	out_color <span class="sy0">=</span> <span class="kw3">vec4</span><span class="br0">&#40;</span>frag_color<span class="sy0">,</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Sa se primeasca toate atributele trimise de catre vertex shader conform locatiilor utilizate in functia <code>Laborator6::CreateMesh</code></div>
+</li>
+<li class="level1"><div class="li"> Sa se utilizeze normala vertexilor pe post de culoare de output in cadrul Fragment Shader-ului</div>
+<ul>
+<li class="level2"><div class="li"> Inspectati de asemenea structura <code>VertexFormat</code> pentru a intelege ceea ce se trimite pe fiecare pipe</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Sa se interschimbe <strong>pipe-ul 1</strong> cu <strong>pipe-ul 3</strong>. Trimiteti normala pe <strong>pipe-ul 3</strong> si culoarea vertexului pe <strong>pipe-ul 1</strong></div>
+<ul>
+<li class="level2"><div class="li"> Se inspecteaza rezultatul obtinut</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="info_curs">Info curs</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../index.html" class="wikilink1" title="egc">Elemente de Grafică pe Calculator</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Info curs" [1-38] -->
+<h1 class="sectionedit2" id="egc">EGC</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../seria_ca.html" class="wikilink1" title="egc:seria_ca">Seria CA</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../seria_cb.html" class="wikilink1" title="egc:seria_cb">Seria CB</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../seria_cc.html" class="wikilink1" title="egc:seria_cc">Seria CC</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "EGC" [39-123] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="01.html" class="wikilink1" title="egc:laboratoare:01">Laboratorul 01</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="02.html" class="wikilink1" title="egc:laboratoare:02">Laboratorul 02</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="03.html" class="wikilink1" title="egc:laboratoare:03">Laboratorul 03</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="04.html" class="wikilink1" title="egc:laboratoare:04">Laboratorul 04</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="05.html" class="wikilink1" title="egc:laboratoare:05">Laboratorul 05</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="06.html" class="wikilink1" title="egc:laboratoare:06">Laboratorul 06</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="07.html" class="wikilink1" title="egc:laboratoare:07">Laboratorul 07</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [124-421] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_136213711258355a91f2909" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../teme/01.html" class="wikilink1" title="egc:teme:01">Tema 1: Geometry Wars</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/02.html" class="wikilink1" title="egc:teme:02">Tema 2: Build and Survive</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [422-464] -->
+<h1 class="sectionedit5" id="resurse">Resurse</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../resurse.html" class="wikilink1" title="egc:resurse">Resurse Utile</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Resurse" [465-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="06.html#laboratorul_06">Laboratorul 06</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="06.html#banda_grafica">Banda Grafica</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#shader_opengl">Shader OpenGL</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#cum_legam_un_obiect_geometric_la_shader">Cum legam un obiect geometric la shader?</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#cum_trimitem_date_generale_la_un_shader">Cum trimitem date generale la un shader?</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="06.html#comunicarea_intre_shadere-le_opengl">Comunicarea intre shadere-le OpenGL</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="06.html#cerinte_laborator">Cerinte laborator</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          egc/laboratoare/06.txt · Last modified: 2016/11/20 17:33 by gabriel.ivanica          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="http://ocw.cs.pub.ro/courses/egc/laboratoare/06?do=media&amp;ns=egc%3Alaboratoare"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="06.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="http://ocw.cs.pub.ro/courses/lib/exe/indexer.php?id=egc%3Alaboratoare%3A06&amp;1479891602" width="2" height="1" alt="" /></div>
+</body>
+</html>

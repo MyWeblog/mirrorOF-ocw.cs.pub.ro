@@ -1,0 +1,536 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>ep:laboratoare:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-26T00:23:48+0300"/>
+<meta name="keywords" content="ep,laboratoare,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=ep:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../ep/laboratoare/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ep:laboratoare';var JSINFO = {"id":"ep:laboratoare:01","namespace":"ep:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="01.html#tutorial_01">Tutorial 01</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="01.html#tutorial_objectives">00 Tutorial objectives</a></div></li>
+<li class="level2"><div class="li"><a href="01.html#introduction_to_performance_monitoring">01 Introduction to Performance Monitoring</a></div></li>
+<li class="level2"><div class="li"><a href="01.html#introducing_the_cpu">02 Introducing the CPU</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="01.html#context_switches">Context Switches</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#the_run_queue">The Run Queue</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#cpu_utilisation">CPU Utilisation</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="01.html#cpu_performance_monitoring">03 CPU Performance Monitoring</a></div></li>
+<li class="level2"><div class="li"><a href="01.html#introducing_virtual_memory">04 Introducing Virtual Memory</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="01.html#virtual_memory_pages">Virtual Memory Pages</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#kernel_memory_paging">Kernel Memory Paging</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#the_page_frame_reclaim_algorithm_pfra">The Page Frame Reclaim Algorithm (PFRA)</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#kswapd">kswapd</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#kernel_paging_with_pdflush">Kernel Paging with pdflush</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="01.html#exercises">Exercises</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="01.html#ex_00">Ex 00</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#ex_01">Ex 01</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#ex02">Ex02</a></div></li>
+<li class="level3"><div class="li"><a href="01.html#ex03">Ex03</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="tutorial_01">Tutorial 01</h1>
+<div class="level1">
+
+<p>
+The material for this tutorial was taken from Darren Hoch’s “Linux System and Performance Monitoring”. You can access it at: <a href="http://ufsdump.org/papers/oscon2009-linux-monitoring.pdf" class="urlextern" title="http://ufsdump.org/papers/oscon2009-linux-monitoring.pdf"  rel="nofollow">http://ufsdump.org/papers/oscon2009-linux-monitoring.pdf</a>.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Tutorial 01" [1-217] -->
+<h2 class="sectionedit2" id="tutorial_objectives">00 Tutorial objectives</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Offer an introduction to Performance Monitoring</div>
+</li>
+<li class="level1"><div class="li"> Get you acquainted with the vmstat command and its output</div>
+</li>
+<li class="level1"><div class="li"> Get you to use simple commands for monitoring the performance of the CPU and Memory</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "00 Tutorial objectives" [218-456] -->
+<h2 class="sectionedit3" id="introduction_to_performance_monitoring">01 Introduction to Performance Monitoring</h2>
+<div class="level2">
+
+<p>
+Performance tuning is the process of finding bottlenecks in a system and tuning the operating system to eliminate these bottlenecks. Many administrators believe that performance tuning can be a “cook book” approach, which is to say that setting some parameters in the kernel will simply solve a problem. This is not the case. Performance tuning is about achieving balance between the different sub-systems of an <abbr title="Operating System">OS</abbr>. These sub-systems include: CPU, Memory, IO and Network.
+</p>
+
+<p>
+These sub-systems are all highly dependent on each other. Any one of them with high utilisation can easily cause problems in the other. In order to apply changes to tune a system, the location of the bottleneck must be located. Although one sub-system appears to be causing the problems, it may be as a result of overload on another sub-system.
+</p>
+
+<p>
+In order to choose where to start looking for tuning bottlenecks, it is important to understand the behaviour of the system under analysis. The application stack of any system is often broken down into two types:
+</p>
+<ul>
+<li class="level1"><div class="li"> IO Bound</div>
+<ul>
+<li class="level2"><div class="li"> An IO bound application requires heavy use of memory and the underlying storage system.</div>
+</li>
+<li class="level2"><div class="li"> This is due to the fact that an IO bound application is processing (in memory) large amounts of data.</div>
+</li>
+<li class="level2"><div class="li"> An IO bound application does not require much of the CPU or network (unless the storage system is on a network).</div>
+</li>
+<li class="level2"><div class="li"> IO bound applications use CPU resources to make IO requests and then often go into a sleep state.</div>
+</li>
+<li class="level2"><div class="li"> Database applications are often considered IO bound applications.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> CPU Bound</div>
+<ul>
+<li class="level2"><div class="li"> A CPU bound application requires heavy use of the CPU.</div>
+</li>
+<li class="level2"><div class="li"> CPU bound applications require the CPU for batch processing and/or mathematical calculations.</div>
+</li>
+<li class="level2"><div class="li"> High volume web servers, mail servers, and any kind of rendering server are often considered CPU bound applications</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+System utilisation is contingent on administrator expectations and system specifications. The only way to understand if a system is having performance issues is to understand what is expected of the system. What kind of performance should be expected and what do those numbers look like? The only way to establish this is to create a baseline. Statistics must be available for a system under acceptable performance so it can be compared later against unacceptable performance. When dealing with a system under heavy utilisation, it needs to be determined whether the system is managing or not.
+</p>
+
+<p>
+<strong>Go through <span class="curid"><a href="../../../../ep/laboratoare/01.html#exercises" class="wikilink1" title="ep:laboratoare:01">Ex00</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "01 Introduction to Performance Monitoring" [457-2998] -->
+<h2 class="sectionedit4" id="introducing_the_cpu">02 Introducing the CPU</h2>
+<div class="level2">
+
+<p>
+The CPU utilisation is dependent on what resources are attempting to access it. The kernel has a scheduler that is responsible for scheduling two kinds of resources: threads (single or multi) and interrupts. The scheduler assigns different priorities to different resources. The following list outlines the priorities from the highest to the lowest:
+</p>
+<ul>
+<li class="level1"><div class="li"> Interrupts – Devices tell the kernel that they are done processing. For example, a NIC delivers a packet or a hard drive provides an IO request.</div>
+</li>
+<li class="level1"><div class="li"> Kernel (System) Processes – All kernel processing is handled at this level of priority.</div>
+</li>
+<li class="level1"><div class="li"> User Processes – This space is often referred to as “userland”. All software applications run in the user space. This space has the lowest priority in the kernel scheduling mechanism.</div>
+</li>
+</ul>
+
+<p>
+In order to understand how the kernel manages these different resources, a few key concepts need to be introduced. The following sections introduce context switches, run queues, and utilisation.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "02 Introducing the CPU" [2999-4020] -->
+<h3 class="sectionedit5" id="context_switches">Context Switches</h3>
+<div class="level3">
+
+<p>
+Most modern processors can only run one process (single threaded) or thread at a time. The n-way Hyper threaded processors have the ability to run n threads at a time. Still, the Linux kernel views each processor core on a dual core chip as an independent processor. For example, a system with one dual core processor is reported as two individual processors by the Linux kernel.
+</p>
+
+<p>
+A standard Linux kernel can run anywhere from 50 to 50,000 process threads at once. With only one CPU, the kernel has to schedule and balance these process threads. Each thread has an allotted time quantum to spend on the processor. Once a thread has either passed the time quantum or has been preempted by something with a higher priority (hardware interrupts, for example), that thread is placed back into a queue while the higher priority thread is placed on the processor. This switching of threads is referred to as a context switch.
+</p>
+
+<p>
+Every time the kernel conducts a context switch, resources are devoted to moving that thread off of the CPU registers and into a queue. The higher the volume of context switches on a system, the more work the kernel has to do in order to manage the scheduling of processes.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Context Switches" [4021-5244] -->
+<h3 class="sectionedit6" id="the_run_queue">The Run Queue</h3>
+<div class="level3">
+
+<p>
+Each CPU maintains a run queue of threads. Ideally, the scheduler should be constantly running and executing threads. Process threads are either in a sleep state (blocked and waiting on IO) or they are runnable. If the CPU sub-system is heavily utilised, then it is possible that the kernel scheduler can’t keep up with the demand of the system. As a result, runnable processes start to fill up a run queue. The larger the run queue, the longer it will take for process threads to execute.
+</p>
+
+<p>
+A very popular term called “load” is often used to describe the state of the run queue. The system load is a combination of the amount of process threads currently executing along with the amount of threads in the CPU run queue. If two threads were executing on a dual core system and 4 were in the run queue, then the load would be 6. Utilities such as <strong>top</strong> report load averages over the course of 1, 5, and 15 minutes.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "The Run Queue" [5245-6191] -->
+<h3 class="sectionedit7" id="cpu_utilisation">CPU Utilisation</h3>
+<div class="level3">
+
+<p>
+The CPU utilisation is an important metric for measuring a system’s behaviour. Most performance monitoring tools divide the CPU utilisation into the following categories:
+</p>
+<ul>
+<li class="level1"><div class="li"> User Time – The percentage of time a CPU spends executing process threads in the user space.</div>
+</li>
+<li class="level1"><div class="li"> System Time – The percentage of time the CPU spends executing kernel threads and interrupts.</div>
+</li>
+<li class="level1"><div class="li"> Wait IO – The percentage of time a CPU spends idle because ALL process threads are blocked waiting for IO requests to complete.</div>
+</li>
+<li class="level1"><div class="li"> Idle – The percentage of time a processor spends in a completely idle state.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "CPU Utilisation" [6192-6807] -->
+<h2 class="sectionedit8" id="cpu_performance_monitoring">03 CPU Performance Monitoring</h2>
+<div class="level2">
+
+<p>
+Understanding how well a CPU is performing is a matter of interpreting the run queue, its utilisation, and the amount of context switching performed. Although performance is relative to baseline statistics, in the absence of these statistics, the following general performance expectations of a system can be used as a guideline:
+</p>
+<ul>
+<li class="level1"><div class="li"> Run Queues – A run queue should not have more than 3 threads queued per processor. For example, a dual processor system should not have more than 6 threads in the run queue.</div>
+</li>
+<li class="level1"><div class="li"> CPU Utilisation – A fully utilised CPU should have the following utilisation distribution:</div>
+<ul>
+<li class="level2"><div class="li"> 65% – 70% User Time</div>
+</li>
+<li class="level2"><div class="li"> 30% - 35% System Time</div>
+</li>
+<li class="level2"><div class="li"> 0% - 5% Idle Time</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Context Switches – The amount of context switches is directly relevant to CPU utilisation. As long as the CPU sustains the previously presented utilisation distribution, it is acceptable to have a high amount of context switches.</div>
+</li>
+</ul>
+
+<p>
+The following two examples give interpretations of the outputs generated by <strong>vmstat</strong>.
+</p>
+
+<p>
+Example – Sustained CPU Utilisation
+</p>
+
+<p>
+<a href="../../../../_detail/ep/laboratoare/ep1_poz1.png%3Fid=ep%253Alaboratoare%253A01.html" class="media" title="ep:laboratoare:ep1_poz1.png"><img src="../../../../_media/ep/laboratoare/ep1_poz1.png%3Fw=550&amp;tok=bdf197" class="mediacenter" alt="" width="550" /></a>
+</p>
+
+<p>
+The following observations can be made based on the output:
+</p>
+<ul>
+<li class="level1"><div class="li"> There are a high amount of interrupts (in) and a low amount of context switches. It appears that a single process is making requests to hardware devices.</div>
+</li>
+<li class="level1"><div class="li"> To further prove the presence of a single application, the user (us) time is constantly at 85% and above. Along with the low amount of context switches, the process comes on the processor and stays on the processor.</div>
+</li>
+<li class="level1"><div class="li"> The run queue is just about at the limits of acceptable performance. On a couple occasions, it goes beyond acceptable limits.</div>
+</li>
+</ul>
+
+<p>
+Example – Overloaded Scheduler
+</p>
+
+<p>
+<a href="../../../../_detail/ep/laboratoare/ep1_poz2.png%3Fid=ep%253Alaboratoare%253A01.html" class="media" title="ep:laboratoare:ep1_poz2.png"><img src="../../../../_media/ep/laboratoare/ep1_poz2.png%3Fw=550&amp;tok=b2c533" class="mediacenter" alt="" width="550" /></a>
+</p>
+
+<p>
+The following observations can be made based on the output:
+</p>
+<ul>
+<li class="level1"><div class="li"> There are a high amount of interrupts (in) and a low amount of context switches. It appears that a single process is making requests to hardware devices.</div>
+</li>
+<li class="level1"><div class="li"> To further prove the presence of a single application, the user (us) time is constantly at 85% and above. Along with the low amount of context switches, the process comes on the processor and stays on the processor.</div>
+</li>
+<li class="level1"><div class="li"> The run queue is just about at the limits of acceptable performance. On a couple occasions, it goes beyond acceptable limits.</div>
+</li>
+</ul>
+
+<p>
+<strong>Go through <span class="curid"><a href="../../../../ep/laboratoare/01.html#exercises" class="wikilink1" title="ep:laboratoare:01">Ex01</a></span></strong>
+</p>
+
+<p>
+Takeaway actions for monitoring the CPU performance
+</p>
+<ul>
+<li class="level1"><div class="li"> Checking the system run queue and making sure there are no more than 3 runnable threads per processor</div>
+</li>
+<li class="level1"><div class="li"> Making sure the CPU utilization is split between 70/30 between user and system</div>
+</li>
+<li class="level1"><div class="li"> Knowing that when the CPU spends more time in system mode, it is more than likely overloaded and trying to reschedule priorities</div>
+</li>
+<li class="level1"><div class="li"> CPU bound process always get penalized while I/O process are rewarded</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "03 CPU Performance Monitoring" [6808-9650] -->
+<h2 class="sectionedit9" id="introducing_virtual_memory">04 Introducing Virtual Memory</h2>
+<div class="level2">
+
+<p>
+Virtual memory uses a disk as an extension of RAM so that the effective size of usable memory grows correspondingly. The kernel will write the contents of a currently unused block of memory to the hard disk so that the memory can be used for another purpose. When the original contents are needed again, they are read back into memory. This is all made completely transparent to the user; programs running under Linux only see the larger amount of memory available and don&#039;t notice that parts of them reside on the disk from time to time. Of course, reading and writing the hard disk is slower (on the order of a thousand times slower) than using real memory, so the programs don&#039;t run as fast. The part of the hard disk that is used as virtual memory is called the swap space.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "04 Introducing Virtual Memory" [9651-10472] -->
+<h3 class="sectionedit10" id="virtual_memory_pages">Virtual Memory Pages</h3>
+<div class="level3">
+
+<p>
+Virtual memory is divided into pages. Each virtual memory page on the X86 architecture is 4KB. When the kernel writes memory to and from disk, it writes memory in pages. The kernel writes memory pages to both the swap device and the file system.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Virtual Memory Pages" [10473-10751] -->
+<h3 class="sectionedit11" id="kernel_memory_paging">Kernel Memory Paging</h3>
+<div class="level3">
+
+<p>
+Memory paging is a normal activity not to be confused with memory swapping. Memory paging is the process of syncing memory back to disk at normal intervals. Over time, applications will grow to consume all of memory. At some point, the kernel must scan memory and reclaim unused pages to be allocated to other applications.
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Kernel Memory Paging" [10752-11108] -->
+<h3 class="sectionedit12" id="the_page_frame_reclaim_algorithm_pfra">The Page Frame Reclaim Algorithm (PFRA)</h3>
+<div class="level3">
+
+<p>
+The PFRA is responsible for freeing memory. The PFRA selects which memory pages to free by page type. Page types are listed below:
+</p>
+<ul>
+<li class="level1"><div class="li"> Unreclaimable – locked, kernel, reserved pages</div>
+</li>
+<li class="level1"><div class="li"> Swappable – anonymous memory pages</div>
+</li>
+<li class="level1"><div class="li"> Syncable – pages backed by a disk file</div>
+</li>
+<li class="level1"><div class="li"> Discardable – static pages, discarded pages</div>
+</li>
+</ul>
+
+<p>
+All but the “unreclaimable” pages may be reclaimed by the PFRA.
+</p>
+
+<p>
+There are two main functions in the PFRA. These include the kswapd kernel thread and the “Low On Memory Reclaiming” function.
+</p>
+
+</div>
+<!-- EDIT12 SECTION "The Page Frame Reclaim Algorithm (PFRA)" [11109-11680] -->
+<h3 class="sectionedit13" id="kswapd">kswapd</h3>
+<div class="level3">
+
+<p>
+The <strong>kswapd</strong> daemon is responsible for ensuring that memory stays free. It monitors the <strong>pages_high</strong> and <strong>pages_low</strong> watermarks in the kernel. If the amount of free memory is below <strong>pages_low</strong>, the <strong>kswapd</strong> process starts a scan to attempt to free 32 pages at a time. It repeats this process until the amount of free memory is above the <strong>pages_high</strong> watermark. 
+</p>
+
+<p>
+The <strong>kswapd</strong> thread performs the following actions:
+</p>
+<ul>
+<li class="level1"><div class="li"> If the page is unmodified, it places the page on the free list.</div>
+</li>
+<li class="level1"><div class="li"> If the page is modified and backed by a filesystem, it writes the contents of the page to disk.</div>
+</li>
+<li class="level1"><div class="li"> If the page is modified and not backed up by any filesystem (anonymous), it writes the contents of the page to the swap device.</div>
+</li>
+<li class="level1"><div class="li"> </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT13 SECTION "kswapd" [11681-12432] -->
+<h3 class="sectionedit14" id="kernel_paging_with_pdflush">Kernel Paging with pdflush</h3>
+<div class="level3">
+
+<p>
+The <strong>pdflush</strong> daemon is responsible for synchronizing any pages associated with a file on a filesystem back to disk. In other words, when a file is modified in memory, the <strong>pdflush</strong> daemon writes it back to disk.
+</p>
+
+<p>
+The <strong>pdflush</strong> daemon starts synchronizing dirty pages back to the filesystem when 10% of the pages in memory are dirty. This is due to a kernel tuning parameter called <strong>vm.dirty_background_ratio</strong>.
+</p>
+
+<p>
+The <strong>pdflush</strong> daemon works independently of the PFRA under most circumstances. When the kernel invokes the LMR (Low on Memory Reclaiming) algorithm, the LMR specifically forces <strong>pdflush</strong> to flush dirty pages in addition to other page freeing routines.
+</p>
+
+<p>
+The <strong>vmstat</strong> utility reports on virtual memory usage in addition to CPU usage. The following fields in the <strong>vmstat</strong> output are relevant to virtual memory: Swapd, Free, Buff, Cache, So, Si, Bo, Bi (use <em>man vmstat</em> to read their description).
+</p>
+
+<p>
+The following <strong>vmstat</strong> output demonstrates heavy utilization of virtual memory during an I/O application spike:
+</p>
+
+<p>
+<a href="../../../../_detail/ep/laboratoare/ep1_poz3.png%3Fid=ep%253Alaboratoare%253A01.html" class="media" title="ep:laboratoare:ep1_poz3.png"><img src="../../../../_media/ep/laboratoare/ep1_poz3.png%3Fw=550&amp;tok=ebdc7e" class="mediacenter" alt="" width="550" /></a>
+</p>
+
+<p>
+The following observations can be made based on this output:
+</p>
+<ul>
+<li class="level1"><div class="li"> A large amount of disk blocks are paged in (<em>bi</em>) from the filesystem. This is evident in the fact that the cache of data in process address spaces (<em>cache</em>) grows.</div>
+</li>
+<li class="level1"><div class="li"> During this period, the amount of free memory (<em>free</em>) remains steady at 17MB even though data is paging in from the disk to consume free RAM.</div>
+</li>
+<li class="level1"><div class="li"> To maintain the free list, <strong>kswapd</strong> steals memory from the read/write buffers (<em>buff</em>) and assigns it to the free list. This is evident in the gradual decrease of the buffer cache (buff).</div>
+</li>
+<li class="level1"><div class="li"> The <strong>kswapd</strong> process then writes dirty pages to the swap device (<em>so</em>). This is evident in the fact that the amount of virtual memory utilized gradually increases (<em>swpd</em>).</div>
+</li>
+</ul>
+
+<p>
+<strong>Go through <span class="curid"><a href="../../../../ep/laboratoare/01.html#exercises" class="wikilink1" title="ep:laboratoare:01">Ex02</a></span> and <span class="curid"><a href="../../../../ep/laboratoare/01.html#exercises" class="wikilink1" title="ep:laboratoare:01">Ex03</a></span></strong>
+</p>
+
+<p>
+Conclusions on monitoring the virtual memory performance:
+</p>
+<ul>
+<li class="level1"><div class="li"> The less major page faults on a system, the better response times achieved as the system is leveraging memory caches over disk caches.</div>
+</li>
+<li class="level1"><div class="li"> Low amounts of free memory are a good sign that caches are effectively used unless there are sustained writes to the swap device and disk.</div>
+</li>
+<li class="level1"><div class="li"> If a system reports any sustained activity on the swap device, it means there is a memory shortage on the system</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT14 SECTION "Kernel Paging with pdflush" [12433-14841] -->
+<h2 class="sectionedit15" id="exercises">Exercises</h2>
+<div class="level2">
+
+<p>
+<a href="../../../../_media/ep/laboratoare/ep01_scripts.zip" class="media mediafile mf_zip" title="ep:laboratoare:ep01_scripts.zip (698 B)">ep1_ex_scripts</a>
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Exercises" [14842-14917] -->
+<h3 class="sectionedit16" id="ex_00">Ex 00</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Run <strong>vmstat</strong> on your machine with a 1 second delay between updates. Let it run for approximately 10 seconds. Notice the CPU utilisation by looking at the (<em>id</em>) column.</div>
+</li>
+<li class="level1"><div class="li"> Run <em>ex00.py</em> script. Then run <strong>vmstat</strong> as before. What do you notice in this case?</div>
+</li>
+<li class="level1"><div class="li"> Without opening <em>ex00.py</em>, is there anything you can deduce regarding the script?</div>
+</li>
+<li class="level1"><div class="li"> Have a look inside <em>ex00.py</em>.</div>
+</li>
+<li class="level1"><div class="li"> How would you get the system to be 100% utilised with the CPU no longer being idle? Try it.</div>
+</li>
+</ul>
+
+<p>
+The <strong>vmstat</strong> utility provides a good low-overhead view of system performance. Since <strong>vmstat</strong> is such a low-overhead tool, it is practical to have it running even on heavily loaded servers when it is needed to monitor the system’s health.
+</p>
+
+</div>
+<!-- EDIT16 SECTION "Ex 00" [14918-15669] -->
+<h3 class="sectionedit17" id="ex_01">Ex 01</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Open <em>ex01.py</em>. What does it do?</div>
+</li>
+<li class="level1"><div class="li"> Try running it firstly for a number up to 998, and then for any larger number. What is the problem?</div>
+</li>
+<li class="level1"><div class="li"> Run <em>ex01b.py</em> instead, for a large number (e.g. 10,000). Use the <strong>vmstat</strong> command to check the CPU usage. Try to explain what is happening.</div>
+</li>
+</ul>
+
+<p>
+Hint: Use the <strong>mpstat</strong> command to monitor each individual core. The <strong>mpstat</strong> command provides the same CPU utilization statistics as <strong>vmstat</strong>, but <strong>mpstat</strong> breaks the statistics out on a per processor basis.
+</p>
+<ul>
+<li class="level1"><div class="li"> What do you think is causing this behaviour?</div>
+</li>
+<li class="level1"><div class="li"> Comment line 14 (the print call) and the run the script again noticing its behaviour.</div>
+</li>
+</ul>
+
+<p>
+Run both <em>ex00.py</em> and <em>ex01b.py</em> simultaneously, and use <strong>vmstat</strong> and <strong>mpstat</strong> to monitor what is going on.
+</p>
+
+</div>
+<!-- EDIT17 SECTION "Ex 01" [15670-16454] -->
+<h3 class="sectionedit18" id="ex02">Ex02</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Use the <strong>stress</strong> command to stress the RAM module using 2 processes, with each about 300MiB in size (command: <em>stress -m 2 –vm-bytes  300M</em>). Use the <strong>vmstat</strong> utility to see the effects on the memory and CPU.</div>
+</li>
+<li class="level1"><div class="li"> For stressing the RAM, the CPU also has to do a lot of work. And as a result, if the used processes were more or equal to the available cores, then they will use 100% of your CPU power. Test this.</div>
+</li>
+<li class="level1"><div class="li"> Stressing both the CPU and memory in the same time and set a timeout (e.g. <em>stress -c 2 -m 2 -t 20s</em>)</div>
+</li>
+</ul>
+
+<p>
+Read more about stress here: <a href="http://www.hecticgeek.com/2012/11/stress-test-your-ubuntu-computer-with-stress/" class="urlextern" title="http://www.hecticgeek.com/2012/11/stress-test-your-ubuntu-computer-with-stress/"  rel="nofollow">http://www.hecticgeek.com/2012/11/stress-test-your-ubuntu-computer-with-stress/</a>
+</p>
+
+</div>
+<!-- EDIT18 SECTION "Ex02" [16455-17110] -->
+<h3 class="sectionedit19" id="ex03">Ex03</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Generate an array of random integers, having a length of 10,000,000. Write a function for sorting this array without using built-in sorting functions. Monitor the behaviour of the system, in terms of CPU and memory utilisation, while running your code.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT19 SECTION "Ex03" [17111-] --></div>
+</body>
+</html>

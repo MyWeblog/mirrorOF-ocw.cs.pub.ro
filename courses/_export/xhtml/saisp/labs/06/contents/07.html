@@ -1,0 +1,158 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:06:contents:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-11T21:00:08+0300"/>
+<meta name="keywords" content="saisp,labs,06,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:06:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/06/contents/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:06:contents';var JSINFO = {"id":"saisp:labs:06:contents:07","namespace":"saisp:labs:06:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_instalare_si_configurare_sistem_distribuit_de_fisiere_glusterfs">07. [10p] Instalare și configurare sistem distribuit de fișiere GlusterFS</h3>
+<div class="level3">
+
+<p>
+<p><div class="notewarning">
+Inainte de a trece mai departe, modificati inapoi, in <code>/etc/apt/sources.list</code>, toate aparitiile lui <code>wheezy</code> in <code>jessie</code>, apoi efectuati <code>apt-get update</code>.
+
+</div></p>
+</p>
+
+<p>
+În instalarea și configurația sistemului de fișiere GlusterFS vom considera ca sisteme de stocare stațiile <code>storage1</code> cu discul <code>/dev/sdc</code> și <code>storage3</code> cu discul <code>/dev/sdc</code>. Înainte de a instala server-ele aferente sistemului de fișiere GlusterFS, trebuie să formatăm discurile ce vor intra în componența sistemului de fișiere. Recomandată este folosirea sistemului de fișiere <code>XFS</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> xfsprogs
+<span class="co4">root@storage1:~# </span><span class="kw2">fdisk</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdc
+Command <span class="br0">&#40;</span>m <span class="kw1">for</span> <span class="kw3">help</span><span class="br0">&#41;</span>: n
+&nbsp;
+<span class="co4">root@storage1:~# </span>mkfs.xfs <span class="sy0">/</span>dev<span class="sy0">/</span>sdc1
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">fdisk</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdc
+Command <span class="br0">&#40;</span>m <span class="kw1">for</span> <span class="kw3">help</span><span class="br0">&#41;</span>: n
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">apt-get install</span> xfsprogs
+<span class="co4">root@storage3:~# </span>mkfs.xfs <span class="sy0">/</span>dev<span class="sy0">/</span>sdc1</pre>
+
+<p>
+Vom monta cele 2 partiții în <code>/export</code> pe fiecare stație în parte:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span><span class="kw3">export</span>
+<span class="co4">root@storage1:~# </span><span class="kw3">echo</span> <span class="st0">&quot;/dev/sdc1 /export xfs defaults 1 2&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab
+<span class="co4">root@storage1:~# </span><span class="kw2">mount</span> <span class="re5">-a</span>
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span><span class="kw3">export</span>
+<span class="co4">root@storage3:~# </span><span class="kw3">echo</span> <span class="st0">&quot;/dev/sdc1 /export xfs defaults 1 2&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab
+<span class="co4">root@storage3:~# </span><span class="kw2">mount</span> <span class="re5">-a</span></pre>
+
+<p>
+Vom instala serverul GlusterFS pe ambele stații după care vom configura comunicația dintre acestea:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> glusterfs-server
+<span class="co4">root@storage3:~# </span><span class="kw2">apt-get install</span> glusterfs-server
+&nbsp;
+<span class="co4">root@storage1:~# </span>gluster peer probe storage3
+peer probe: success
+<span class="co4">root@storage1:~# </span>gluster peer status
+Number of Peers: <span class="nu0">1</span>
+&nbsp;
+Hostname: storage3
+Port: <span class="nu0">24007</span>
+Uuid: ba15f574-bcf3-<span class="nu0">4608</span>-<span class="nu0">8173</span>-da43857771ff
+State: Peer <span class="kw1">in</span> Cluster <span class="br0">&#40;</span>Connected<span class="br0">&#41;</span></pre>
+
+<p>
+Este suficient să configurăm legătura doar pe unul din servere. Următorul pas este reprezentat de crearea volumului care va fi exportat de acest sistem de fișiere:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>gluster volume create saispvol1 transport tcp storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1 storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+volume create: saispvol1: success: please start the volume to access data
+&nbsp;
+<span class="co4">root@storage1:~# </span>gluster volume info
+&nbsp;
+Volume Name: saispvol1
+Type: Distribute
+Volume ID: 6b9fdea1-e6ea-44a0-af2a-d10c47e8939d
+Status: Created
+Number of Bricks: <span class="nu0">2</span>
+Transport-type: tcp
+Bricks:
+Brick1: storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Brick2: storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1</pre>
+
+<p>
+Se observă că s-a creat volumul cu numele <code>saispvol1</code>, folosind protocolul <code>tcp</code> ca protocol de transport, iar acest volum este format din 2 <code>brick</code>-uri (aceste <code>brick</code>-uri sunt practic discurile formatate cu <code>XFS</code> anterior).
+Înainte de a porni volumul vom permite accesul tuturor adreselor IP din rețeaua noastră:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>gluster volume <span class="kw1">set</span> saispvol1 auth.allow 192.168.1.<span class="sy0">*</span>
+volume set: success</pre>
+
+<p>
+Vom porni volumul:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span> gluster volume start  saispvol1
+volume start: saispvol1: success
+<span class="co4">root@storage1:~# </span>gluster volume info
+&nbsp;
+Volume Name: saispvol1
+Type: Distribute
+Volume ID: 6b9fdea1-e6ea-44a0-af2a-d10c47e8939d
+Status: Started
+Number of Bricks: <span class="nu0">2</span>
+Transport-type: tcp
+Bricks:
+Brick1: storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Brick2: storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Options Reconfigured:
+auth.allow: 192.168.1.<span class="sy0">*</span></pre>
+
+<p>
+Pentru a putea testa sistemul distribuit construit anterior, trebuie să montăm partiția exportată pe client. Vom instala clientul pentru GlusterFS pe stația <code>storage2</code> și vom monta sistemul de fișiere folosind tipul <code>glusterfs</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">apt-get install</span> glusterfs-client
+<span class="co4">root@storage2:~# </span><span class="kw2">mount</span> <span class="re5">-t</span> glusterfs storage1:<span class="sy0">/</span>saispvol1 <span class="sy0">/</span>export<span class="sy0">/</span>
+<span class="co4">root@storage2:~# </span><span class="kw2">df</span> <span class="re5">-h</span> <span class="sy0">|</span><span class="kw2">grep</span> <span class="kw3">export</span>
+storage1:<span class="sy0">/</span>saispvol1  189M   11M  179M   <span class="nu0">6</span><span class="sy0">%</span> <span class="sy0">/</span><span class="kw3">export</span></pre>
+
+<p>
+Observați dimensiunea de <code>189M</code> sistemului de fișiere aceasta fiind practic suma dintre cele două discuri puse la dispozitie de stațiile <code>storage1</code> și <code>storage2</code>. Practic datele se vor distribui pe aceste 2 partiții.
+</p>
+
+</div>
+</div>
+</body>
+</html>

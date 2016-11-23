@@ -1,0 +1,112 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:03:contents:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-03-16T17:52:41+0200"/>
+<meta name="keywords" content="saisp,labs,03,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:03:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/03/contents/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:03:contents';var JSINFO = {"id":"saisp:labs:03:contents:07","namespace":"saisp:labs:03:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_nrpe_nagios_remote_plugin_executor">07. [15p] NRPE (Nagios Remote Plugin Executor)</h3>
+<div class="level3">
+
+<p>
+Pentru a putea colecta date despre diferite stații la distanță, uneori trebuie să executăm anumite comenzi pe acele stații. Până acum toate verificările făcute cu Nagios au fost prin interogări de servicii. Dacă dorim să aflăm spre exemplu spațiul liber de pe disc trebuie să executăm o comandă pe acea stație. Nagios vine cu un plugin numit NRPE care poate fi instalat pe orice server din rețea cu scopul de a colecta datele dorite (folosirea procesorului, memoriei, discului, exact ca intrarea implicită <code>localhost</code> din Nagios).
+</p>
+
+<p>
+Vom instala pe <code>gateway</code> pachetul <code>nagios-nrpe-server</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">apt-get install</span> nagios-nrpe-server</pre>
+
+<p>
+Trebuie să permitem stației monitor să se conecteze la serverul NRPE modificând intrarea <code>allowed_hosts</code> din fișierul <code>/etc/nagios/nrpe.cfg</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>nagios<span class="sy0">/</span>nrpe.cfg <span class="sy0">|</span><span class="kw2">grep</span> <span class="nu0">192.168</span>
+<span class="re2">allowed_hosts</span>=192.168.1.4</pre>
+
+<p>
+Apoi, reporniti serviciul <code>nagios-nrpe-server</code> pe statia <code>gateway</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>nagios-nrpe-server restart</pre>
+
+<p>
+Pe stația <code>monitor</code> va trebui instalat plugin-ul pentru NRPE al Nagios:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">apt-get install</span> nagios-nrpe-plugin</pre>
+
+<p>
+Pe <code>monitor</code>, vom configura serviciul NRPE pentru a ne trimite alerte în cazul în care încărcarea procesului de pe  stația <code>gateway</code> este în limite maxime:
+</p>
+<pre class="code">root@monitor:/etc/nagios3/conf.d# cat gateway.cfg
+[...]
+define service{
+        use                             generic-service         ; Name of service template to use
+        host_name                       gateway
+        service_description             NRPE Service
+        check_command                   check_nrpe_1arg!check_load
+        contact_groups                  coleg
+        }</pre>
+
+<p>
+Observați în interfața grafică noul serviciu adăugat (încărcarea procesorului - <code>load average</code>). Modificați pe stația <code>gateway</code> valorile parametrilor la care sunt generate notificările de <code>warning</code> și <code>critical</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>nagios<span class="sy0">/</span>nrpe.cfg <span class="sy0">|</span><span class="kw2">grep</span> check_load
+<span class="kw3">command</span><span class="br0">&#91;</span>check_load<span class="br0">&#93;</span>=<span class="sy0">/</span>usr<span class="sy0">/</span>lib<span class="sy0">/</span>nagios<span class="sy0">/</span>plugins<span class="sy0">/</span>check_load <span class="re5">-w</span> <span class="nu0">5</span>,<span class="nu0">1</span>,<span class="nu0">0.5</span> <span class="re5">-c</span> <span class="nu0">15</span>,<span class="nu0">10</span>,<span class="nu0">5</span></pre>
+
+<p>
+Pentru a varia încărcarea procesorului, rulați programul CPU intensive de mai jos timp de 5 minute și observați cum se modifică valorile raportate de Nagios (îl opriți cu <code>Ctrl+c</code>):
+</p>
+<pre class="code bash">root<span class="sy0">@</span>gateway~<span class="co0"># cat loop.sh</span>
+<span class="co0">#!/bin/bash</span>
+<span class="re2">i</span>=<span class="nu0">0</span>
+<span class="kw1">while</span> <span class="kw2">true</span>
+<span class="kw1">do</span>
+    <span class="re2">i</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span>i++<span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw1">done</span></pre>
+
+<p>
+În mod analog, folosind NRPE, verificați starea încărcării memoriei și a discului de pe stația <code>gateway</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

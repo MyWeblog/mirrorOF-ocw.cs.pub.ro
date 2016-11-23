@@ -1,0 +1,153 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:01:contents:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-22T17:32:00+0200"/>
+<meta name="keywords" content="saisp,labs,01,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:01:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/01/contents/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:01:contents';var JSINFO = {"id":"saisp:labs:01:contents:07","namespace":"saisp:labs:01:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_suport_de_ldap_in_dokuwiki">07. [15p] Configurare suport de LDAP în DokuWiki</h3>
+<div class="level3">
+
+<p>
+Folosind conturile de mai sus putem realiza autentificarea în diverse servicii care folosesc ca backend de autentificare LDAP. Un astfel de serviciu este wiki-ul de tipul DokuWiki.
+</p>
+
+<p>
+Pe stația client este instalat și configurat serverul web Apache cu suport PHP și pachetul <code>php5-ldap</code> care oferă implementarea clientului de LDAP în PHP. Alte module (<code>userdir</code>, <code>ssl</code>) sunt configurate și activate.
+</p>
+
+<p>
+Vom configura o instanță de DokuWiki în contul utilizatorului <code>student</code> de pe stația client. În directorul home al utilizatorului <code>student</code> găsiți creat directorul <code>public_html/dokuwiki/</code> unde vom instala instanța de DokuWiki. Pentru instalarea instanței intrăm în directorul <code>admin-public.git/dokuwiki/</code> din directorul home al utilizatorului <code>student</code> și rulăm scriptul de instalare <code>dw-install</code>. Întâi rulăm scriptul fără argumente ca să vedem ce opțiuni sunt disponibile:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>admin-public.git<span class="sy0">/</span>dokuwiki$ .<span class="sy0">/</span>dw-install
+DokuWiki basic installation script
+  Usage:
+    .<span class="sy0">/</span>dw-install installation-directory download-url wiki-url
+  Sample usage:
+    .<span class="sy0">/</span>dw-install ~<span class="sy0">/</span>public_html<span class="sy0">/</span>dw-test<span class="sy0">/</span> http:<span class="sy0">//</span>www.splitbrain.org<span class="sy0">/</span>_media<span class="sy0">/</span>projects<span class="sy0">/</span>dokuwiki<span class="sy0">/</span>dokuwiki-<span class="nu0">2011</span>-05-25a.tgz http:<span class="sy0">//</span>swarm.cs.pub.ro<span class="sy0">/</span>~razvan<span class="sy0">/</span>dw-test</pre>
+
+<p>
+Apoi rulăm scriptul pentru realizarea instalării efective:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>admin-public.git<span class="sy0">/</span>dokuwiki$ .<span class="sy0">/</span>dw-install ~<span class="sy0">/</span>public_html<span class="sy0">/</span>dokuwiki<span class="sy0">/</span> http:<span class="sy0">//</span>download.dokuwiki.org<span class="sy0">/</span>src<span class="sy0">/</span>dokuwiki<span class="sy0">/</span>dokuwiki-stable.tgz http:<span class="sy0">//</span>192.168.0.3<span class="sy0">/</span>~student<span class="sy0">/</span>dokuwiki
+&nbsp;
+<span class="sy0">*</span> Logging information to <span class="sy0">/</span>tmp<span class="sy0">/</span>tmp.anntIlR19E.
+<span class="sy0">*</span> Using download <span class="kw2">link</span> http:<span class="sy0">//</span>download.dokuwiki.org<span class="sy0">/</span>src<span class="sy0">/</span>dokuwiki<span class="sy0">/</span>dokuwiki-stable.tgz
+  <span class="sy0">*</span> Downloading DokuWiki ... done.
+<span class="sy0">*</span> Preparing installation folder <span class="sy0">/</span>home<span class="sy0">/</span>student<span class="sy0">/</span>public_html<span class="sy0">/</span>dokuwiki<span class="sy0">/</span> ... done.
+<span class="sy0">*</span> Installing plugins
+  <span class="sy0">*</span> Installing plugin: Creole ... done.
+  <span class="sy0">*</span> Installing plugin: Google Analytics ... done.
+  <span class="sy0">*</span> Installing plugin: Include ... done.
+  <span class="sy0">*</span> Installing plugin: Index-Menu ... done.
+  <span class="sy0">*</span> Installing plugin: Display-Wiki-Page ...done.
+  <span class="sy0">*</span> Installing plugin: authsplit ...done.
+  <span class="sy0">*</span> Installing plugin: authchained ...done.
+&nbsp;
+Installation complete.
+<span class="nu0">1</span>. Open <span class="kw1">in</span> web browser: http:<span class="sy0">//</span>192.168.0.3<span class="sy0">/</span>~student<span class="sy0">/</span>dokuwiki<span class="sy0">/</span>install.php
+<span class="nu0">2</span>. Fill required information to <span class="kw3">complete</span> the basic installation.
+<span class="nu0">3</span>. Remove <span class="sy0">/</span>home<span class="sy0">/</span>student<span class="sy0">/</span>public_html<span class="sy0">/</span>dokuwiki<span class="sy0">//</span>install.php.bak file.
+<span class="nu0">4</span>. Run:
+   .<span class="sy0">/</span>dw-post-install <span class="sy0">/</span>home<span class="sy0">/</span>student<span class="sy0">/</span>public_html<span class="sy0">/</span>dokuwiki<span class="sy0">/</span> <span class="sy0">/</span>~student<span class="sy0">/</span>dokuwiki<span class="sy0">/</span></pre>
+
+<p>
+Apoi parcurgem pașii de mai sus (1, 2, 3, 4) ca să definitivăm instalarea. În acest moment, la adresa <a href="http://192.168.0.3/~student/dokuwiki/" class="urlextern" title="http://192.168.0.3/~student/dokuwiki/"  rel="nofollow">http://192.168.0.3/~student/dokuwiki/</a> poate fi accesat wiki-ul. Se poate face autentificarea cu utilizatorul indicat la pasul 1, în interfața web de instalare/configurare a DokuWiki.
+</p>
+
+<p>
+Pentru a realiza suport de autentificare prin LDAP folosim <a href="https://www.dokuwiki.org/plugin:authldap" class="urlextern" title="https://www.dokuwiki.org/plugin:authldap"  rel="nofollow">indicațiile de pe site-ul DokuWiki</a>.
+</p>
+
+<p>
+Pentru început, adăugăm în fișierul de configurare <code>/home/student/public_html/dokuwiki/conf/local.php</code> suportul pentru autentificarea LDAP, prin adăugarea liniilor:
+</p>
+<pre class="code php"><span class="re0">$conf</span><span class="br0">&#91;</span><span class="st_h">'authtype'</span><span class="br0">&#93;</span>       <span class="sy0">=</span> <span class="st_h">'authldap'</span><span class="sy0">;</span>
+<span class="re0">$conf</span><span class="br0">&#91;</span><span class="st_h">'plugin'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'authldap'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'server'</span><span class="br0">&#93;</span>      <span class="sy0">=</span> <span class="st_h">'ldaps://192.168.0.2'</span><span class="sy0">;</span>
+<span class="re0">$conf</span><span class="br0">&#91;</span><span class="st_h">'plugin'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'authldap'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'version'</span><span class="br0">&#93;</span>     <span class="sy0">=</span> <span class="nu0">3</span><span class="sy0">;</span>
+<span class="re0">$conf</span><span class="br0">&#91;</span><span class="st_h">'plugin'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'authldap'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'usertree'</span><span class="br0">&#93;</span>    <span class="sy0">=</span> <span class="st_h">'dc=labs,dc=cs,dc=pub,dc=ro'</span><span class="sy0">;</span>
+<span class="re0">$conf</span><span class="br0">&#91;</span><span class="st_h">'plugin'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'authldap'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'grouptree'</span><span class="br0">&#93;</span>   <span class="sy0">=</span> <span class="st_h">'dc=labs,dc=cs,dc=pub,dc=ro'</span><span class="sy0">;</span>
+<span class="re0">$conf</span><span class="br0">&#91;</span><span class="st_h">'plugin'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'authldap'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'userfilter'</span><span class="br0">&#93;</span>  <span class="sy0">=</span> <span class="st_h">'(&amp;(uid=%{user})(objectClass=posixAccount))'</span><span class="sy0">;</span>
+<span class="re0">$conf</span><span class="br0">&#91;</span><span class="st_h">'plugin'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'authldap'</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="st_h">'groupfilter'</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st_h">'(&amp;(objectClass=posixGroup)(|(gidNumber=%{gid})(memberUID=%{user})))'</span><span class="sy0">;</span></pre>
+
+<p>
+Dacă reaccesăm acum pagina instanței de wiki (<a href="http://192.168.0.3/~student/dokuwiki/" class="urlextern" title="http://192.168.0.3/~student/dokuwiki/"  rel="nofollow">http://192.168.0.3/~student/dokuwiki/</a>), vom primi mesajul “User authentication is temporarily unavailable. If this situation persists, please inform your Wiki Admin.” Pentru a rezolva această problemă activăm suportul pentru LDAP în fișierul <code>/home/student/public_html/dokuwiki/conf/plugins.local.php</code> și activăm linia corespunzătoare modulului LDAP:
+</p>
+<pre class="code php"><span class="re0">$plugins</span><span class="br0">&#91;</span><span class="st_h">'authldap'</span><span class="br0">&#93;</span>  <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span></pre>
+
+<p>
+<p><div class="noteimportant">
+Întrucât fișierul <code>/home/student/public_html/dokuwiki/conf/plugins.local.php</code> este posibil deținut de utilizatorul <code>www-data</code>, nu-l veți putea modifica. Îl puteți în schimb șterge. Pentru a-l putea edita urmați pașii
+</p>
+<ol>
+<li class="level1"><div class="li"> Creați o copie a fișierului.</div>
+</li>
+<li class="level1"><div class="li"> Ștergeți fișierul.</div>
+</li>
+<li class="level1"><div class="li"> Redenumiți copia în numele fișierului.</div>
+</li>
+<li class="level1"><div class="li"> Editați fișierul.</div>
+</li>
+</ol>
+
+<p>
+Comenzile sunt următoarele:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>dokuwiki<span class="sy0">/</span>conf$ <span class="kw2">cp</span> plugins.local.php tmp.plugins.php
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>dokuwiki<span class="sy0">/</span>conf$ <span class="kw2">rm</span> plugins.local.php 
+rm: remove write-protected regular <span class="kw2">file</span> ‘plugins.local.php’? y
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>dokuwiki<span class="sy0">/</span>conf$ <span class="kw2">mv</span> tmp.plugins.php plugins.local.php
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>dokuwiki<span class="sy0">/</span>conf$ <span class="kw2">vi</span> plugins.local.php</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+În acest moment configurația este finalizată, iar autentificarea pe instanța de wiki (accesibilă la <a href="http://192.168.0.3/~student/dokuwiki/" class="urlextern" title="http://192.168.0.3/~student/dokuwiki/"  rel="nofollow">http://192.168.0.3/~student/dokuwiki/</a>) va putea fi realizată folosind conturile de utilizatori LDAP adăugate atnterior.
+</p>
+
+</div>
+</div>
+</body>
+</html>

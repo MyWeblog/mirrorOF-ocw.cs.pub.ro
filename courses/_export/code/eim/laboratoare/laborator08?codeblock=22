@@ -1,0 +1,133 @@
+    
+    
+
+public class ChatClient {
+  private Socket  socket  = null;
+  
+  private SendThread    sendThread    = null;
+  private ReceiveThread receiveThread = null;
+  
+  private BlockingQueue<String> messageQueue        = new ArrayBlockingQueue<String>(Constants.MESSAGE_QUEUE_CAPACITY);
+  private List<Message>         conversationHistory = new ArrayList<Message>();
+  
+  public ChatClient(final String host, final int port) {
+    try {
+      socket = new Socket(host, port);
+    } catch (IOException ioException) {
+      Log.e(Constants.TAG, "An exception has occurred while creating the socket: " + ioException.getMessage());
+      if (Constants.DEBUG) {
+        ioException.printStackTrace();
+      }
+    }
+    if (socket != null) {
+      startThreads();
+    }
+  }
+  
+  public ChatClient(Context context, Socket socket) {
+    this.socket  = socket;
+    if (socket != null) {
+      startThreads();
+    }
+  }
+  
+  public void sendMessage(String message) {
+    try {
+      messageQueue.put(message);
+    } catch (InterruptedException interruptedException) {
+      Log.e(Constants.TAG, "An exception has occurred: " + interruptedException.getMessage());
+      if (Constants.DEBUG) {
+        interruptedException.printStackTrace();
+      }
+    }
+  }
+  
+  private class SendThread extends Thread {
+    @Override
+    public void run() {
+      PrintWriter printWriter = Utilities.getWriter(socket);
+      if (printWriter != null) {
+        try {
+          while (!Thread.currentThread().isInterrupted()) {
+            String content = messageQueue.take();
+            if (content != null) {
+              printWriter.println(content);
+              printWriter.flush();
+              Message message = new Message(content, Constants.MESSAGE_TYPE_SENT);
+              conversationHistory.add(message);
+              // display the message in the graphic user interface
+            }
+          }
+        } catch (InterruptedException interruptedException) {
+          Log.e(Constants.TAG, "An exception has occurred: " + interruptedException.getMessage());
+          if (Constants.DEBUG) {
+            interruptedException.printStackTrace();
+          }
+        }
+      }
+    }
+    
+    public void stopThread() {
+      interrupt();
+    }
+  }
+  
+  private class ReceiveThread extends Thread {
+    @Override
+    public void run() {
+      BufferedReader bufferedReader = Utilities.getReader(socket);
+      if (bufferedReader != null) {
+        try {
+          while (!Thread.currentThread().isInterrupted()) {
+            String content = bufferedReader.readLine();
+            if (content != null) {
+              Message message = new Message(content, Constants.MESSAGE_TYPE_RECEIVED);
+              conversationHistory.add(message);
+              // display the message in the graphic user interface
+            }
+          }
+        } catch (IOException ioException) {
+          Log.e(Constants.TAG, "An exception has occurred: " + ioException.getMessage());
+          if (Constants.DEBUG) {
+            ioException.printStackTrace();
+          }
+        }
+      }
+    }
+    
+    public void stopThread() {
+      interrupt();
+    }
+  }
+  
+  public void setConversationHistory(List<Message> conversationHistory) {
+    this.conversationHistory = conversationHistory;
+  }
+  
+  public List<Message> getConversationHistory() {
+    return conversationHistory;
+  }
+  
+  public void startThreads() {
+    sendThread = new SendThread();
+    sendThread.start();
+    
+    receiveThread = new ReceiveThread();
+    receiveThread.start();
+  }
+  
+  public void stopThreads() {
+    sendThread.stopThread();
+    receiveThread.stopThread();
+    try {
+      if (socket != null) {
+        socket.close();
+      }
+    } catch (IOException ioException) {
+      Log.e(Constants.TAG, "An exception has occurred while closing the socket: " + ioException.getMessage());
+      if (Constants.DEBUG) {
+        ioException.printStackTrace();
+      }
+    }
+  }
+}

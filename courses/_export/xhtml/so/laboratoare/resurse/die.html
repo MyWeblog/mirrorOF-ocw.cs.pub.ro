@@ -1,0 +1,153 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so:laboratoare:resurse:die</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-04T00:27:49+0200"/>
+<meta name="keywords" content="so,laboratoare,resurse,die"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../feed.php%3Fmode=list&amp;ns=so:laboratoare:resurse"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="die.html"/>
+<link rel="canonical" href="../../../../../so/laboratoare/resurse/die.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so:laboratoare:resurse';var JSINFO = {"id":"so:laboratoare:resurse:die","namespace":"so:laboratoare:resurse","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="die.html#macro-ul_die">Macro-ul DIE</a></div></li>
+<li class="level3"><div class="li"><a href="die.html#dezavantaje">Dezavantaje</a></div></li>
+<li class="level3"><div class="li"><a href="die.html#alta_abordare">Altă abordare</a></div></li>
+<li class="level3"><div class="li"><a href="die.html#concluzie">Concluzie</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="macro-ul_die">Macro-ul DIE</h3>
+<div class="level3">
+
+<p>
+Macrou-ul DIE folosit în sursele din laborator e util pentru verificarea codului de eroare întors de un apel de sistem.
+</p>
+
+<p>
+Exemplu de utilizare:
+</p>
+<pre class="code c">fd <span class="sy0">=</span> open<span class="br0">&#40;</span><span class="st0">&quot;some file&quot;</span><span class="sy0">,</span> O_CREAT<span class="sy0">,</span> <span class="nu8">0644</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+DIE<span class="br0">&#40;</span>fd <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="sy0">,</span> <span class="st0">&quot;invalid file descriptor&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Macro-ul DIE este definit în fișierul <code>util/utils.h</code> din arhiva laboratorului și arată în felul următor:
+</p>
+<pre class="code c"><span class="co2">#define DIE(assertion, call_description)				\
+	do {								\
+		if (assertion) {					\
+			fprintf(stderr, &quot;(%s, %d): &quot;,			\
+					__FILE__, __LINE__);		\
+			perror(call_description);			\
+			exit(EXIT_FAILURE);				\
+		}							\
+	} while (0)</span></pre>
+
+</div>
+<!-- EDIT1 SECTION "Macro-ul DIE" [1-640] -->
+<h3 class="sectionedit2" id="dezavantaje">Dezavantaje</h3>
+<div class="level3">
+
+<p>
+Dacă verificarea specificată prin <code>assertion</code> eșuează, se afișează detalii despre eroare și se iese imediat din program, deci <strong>nu se eliberează resursele</strong>.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Dezavantaje" [641-831] -->
+<h3 class="sectionedit3" id="alta_abordare">Altă abordare</h3>
+<div class="level3">
+
+<p>
+O abordare mai profesionistă, dar un pic mai complexă, presupune folosirea intrucțiunii <strong>goto</strong>.
+Exemplu:
+</p>
+<pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+<span class="co2">#include &lt;stdlib.h&gt;</span>
+<span class="co2">#include &lt;sys/types.h&gt;</span>
+<span class="co2">#include &lt;sys/stat.h&gt;</span>
+<span class="co2">#include &lt;fcntl.h&gt;</span>
+<span class="co2">#include &lt;unistd.h&gt;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> fd1<span class="sy0">,</span> fd2<span class="sy0">;</span>
+&nbsp;
+	fd1 <span class="sy0">=</span> open<span class="br0">&#40;</span><span class="st0">&quot;file1&quot;</span><span class="sy0">,</span> O_CREAT <span class="sy0">|</span> O_RDWR<span class="sy0">,</span> <span class="nu8">0644</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>fd1 <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/perror.html"><span class="kw3">perror</span></a><span class="br0">&#40;</span><span class="st0">&quot;open file1 failed&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">goto</span> exit_1<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	fd2 <span class="sy0">=</span> open<span class="br0">&#40;</span><span class="st0">&quot;file2&quot;</span><span class="sy0">,</span> O_CREAT <span class="sy0">|</span> O_RDWR<span class="sy0">,</span> <span class="nu8">0644</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>fd2 <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/perror.html"><span class="kw3">perror</span></a><span class="br0">&#40;</span><span class="st0">&quot;open file2 failed&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">goto</span> exit_2<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+<span class="coMULTI">/* ... rest of the code ...*/</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+&nbsp;
+exit_2<span class="sy0">:</span>
+	close<span class="br0">&#40;</span>fd1<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+exit_1<span class="sy0">:</span>
+	<span class="kw1">return</span> <span class="sy0">-</span><span class="nu0">1</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT3 SECTION "Altă abordare" [832-1455] -->
+<h3 class="sectionedit4" id="concluzie">Concluzie</h3>
+<div class="level3">
+
+<p>
+Pentru că aplicațiile din laborator urmăresc în primul rând formarea deprinderii de a verifica <strong>mereu</strong> codul de eroare întors de apelurile de sistem, puteți folosi macro-ul DIE în rezolvarea task-urilor din laborator.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Concluzie" [1456-] --></div>
+</body>
+</html>

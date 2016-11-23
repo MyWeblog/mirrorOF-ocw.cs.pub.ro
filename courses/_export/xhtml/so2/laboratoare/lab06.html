@@ -1,0 +1,795 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:laboratoare:lab06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-27T18:53:01+0300"/>
+<meta name="keywords" content="so2,laboratoare,lab06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="lab06.html"/>
+<link rel="canonical" href="../../../../so2/laboratoare/lab06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab06","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab06.html#laborator_6_-_actiuni_amanabile">Laborator 6 - Acțiuni amânabile</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab06.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab06.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab06.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab06.html#notiuni_generale">Noțiuni generale</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab06.html#locking">Locking</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab06.html#api_linux">API Linux</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab06.html#softirq-uri">Softirq-uri</a></div></li>
+<li class="level3"><div class="li"><a href="lab06.html#tasklets">Tasklets</a></div></li>
+<li class="level3"><div class="li"><a href="lab06.html#timere">Timere</a></div></li>
+<li class="level3"><div class="li"><a href="lab06.html#locking_softirq-uri">Locking softirq-uri</a></div></li>
+<li class="level3"><div class="li"><a href="lab06.html#workqueues">Workqueues</a></div></li>
+<li class="level3"><div class="li"><a href="lab06.html#kernel_threads">Kernel threads</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab06.html#resurse_utile">Resurse utile</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab06.html#linux">Linux</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_6_-_actiuni_amanabile">Laborator 6 - Acțiuni amânabile</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 6 - Acțiuni amânabile" [1-49] -->
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">familiarizarea cu primitivele ce oferă suport pentru execuția codului la momente ulterioare de timp</div>
+</li>
+<li class="level1"><div class="li">implementare unor task-uri uzuale ce au nevoie de ele</div>
+</li>
+<li class="level1"><div class="li">înțelegerea particularităților legate de sincronizarea cu aceste primitive</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Obiectivele laboratorului" [50-333] -->
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">softirq</div>
+</li>
+<li class="level1"><div class="li">tasklet</div>
+</li>
+<li class="level1"><div class="li"><code>struct tasklet_struct</code></div>
+</li>
+<li class="level1"><div class="li">bottom-half handlers</div>
+</li>
+<li class="level1"><div class="li"><code>jiffies</code>, <code>HZ</code></div>
+</li>
+<li class="level1"><div class="li">timer</div>
+</li>
+<li class="level1"><div class="li"><code>struct timer_list</code></div>
+</li>
+<li class="level1"><div class="li"><code>spin_lock_bh</code>, <code>spin_unlock_bh</code></div>
+</li>
+<li class="level1"><div class="li">workqueue</div>
+</li>
+<li class="level1"><div class="li"><code>struct work_struct</code></div>
+</li>
+<li class="level1"><div class="li">kernel thread</div>
+</li>
+<li class="level1"><div class="li">events/x</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Cuvinte cheie" [334-602] -->
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-slides.pdf"  rel="nofollow">Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow">SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Materiale ajutătoare" [603-819] -->
+<h2 class="sectionedit5" id="notiuni_generale">Noțiuni generale</h2>
+<div class="level2">
+
+<p>
+Acțiunile amânabile sunt primitive kernel care oferă posibilitatea de a planifica execuția de cod pentru un moment ulterior de timp. Acțiunile astfel planificate pot rula fie în context proces, fie în context întrerupere, în funcție de tipul de acțiune amânabilă. Acțiunile amânabile sunt folosite pentru a rezolva câteva probleme fundamentale ce apar în kernel:
+</p>
+<ul>
+<li class="level1"><div class="li">trebuie să putem planifica execuția unor acțiuni în viitor (timere);</div>
+</li>
+<li class="level1"><div class="li">timpul de execuție a rutinei de tratare a întreruperii trebuie să fie cât mai mic;</div>
+</li>
+<li class="level1"><div class="li">în context întrerupere nu putem folosi apeluri blocante.</div>
+</li>
+</ul>
+
+<p>
+Kernel thread-urile nu sunt în sine o acțiune amânabilă, dar pot fi folosite pentru a complementa mecanismul de acțiuni amânabile. În general, kernel thread-urile se folosesc ca “worker-i” ce prelucrează evenimente a căror execuție conține apeluri blocante.
+</p>
+
+<p>
+Asupra tuturor tipurilor de acțiuni amânabile se pot aplica trei tipuri de operații:
+</p>
+<ul>
+<li class="level1"><div class="li">inițializarea: fiecare tip este descris de o structură ale cărei câmpuri vor trebui inițializate; la inițializare se stabilește și funcția de tratare a acțiunii;</div>
+</li>
+<li class="level1"><div class="li">planificarea: planifică execuția rutinei de tratare a acțiunii imediat ce acest lucru este posibil (sau după expirarea unui timeout);</div>
+</li>
+<li class="level1"><div class="li">mascarea: atunci când o acțiune este dezactivată, rutina de tratare nu va rula, chiar dacă acțiunea a fost planificată; la activare, dacă acțiunea a fost planificată, va fi rulată rutina de tratare.</div>
+</li>
+</ul>
+
+<p>
+Acțiunile amânabile sunt folosite de obicei pentru a complementa funcționalitatea întreruperilor. Rutina de tratare a unei întreruperi trebuie să se execute rapid, dar de cele mai multe ori operațiile care trebuie executate nu respectă această cerință. Pentru a rezolva această problemă, din rutina de tratare a întreruperii se planifică o acțiune amânabilă, pentru a rula la un moment ulterior și a executa restul operațiilor necesare.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Noțiuni generale" [820-2803] -->
+<h3 class="sectionedit6" id="locking">Locking</h3>
+<div class="level3">
+
+<p>
+Pentru sincronizarea între cod ce rulează în context proces (A) și cod ce rulează în context întrerupere (B) cu handlere ale unor acțiuni amânabile avem nevoie de un locking mai special. Se vor folosi primitive de tip spinlock augmentate cu dezactivarea acțiunilor amânabile pe procesorul curent în (A), iar în (B) doar primitive de tip spinlock. Pe Linux, de exemplu, se folosesc apelurile <code>spin_lock_bh</code> și <code>spin_unlock_bh</code>. Pentru un rezumat al situațiilor în care trebuie folosită sincronizarea, consultați <a href="http://www.kernel.org/pub/linux/kernel/people/rusty/kernel-locking/c214.html#MINIMUM-LOCK-REQIREMENTS" class="urlextern" title="http://www.kernel.org/pub/linux/kernel/people/rusty/kernel-locking/c214.html#MINIMUM-LOCK-REQIREMENTS"  rel="nofollow">acest link</a>.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Locking" [2804-3474] -->
+<h2 class="sectionedit7" id="api_linux">API Linux</h2>
+<div class="level2">
+
+<p>
+Primitivele ce stau la baza acțiunilor amânabile în Linux sunt kernel thread-urile și softirq-urile. Pe baza kernel thread-urilor sunt implementate cozile de sarcini (workqueues), iar pe baza softirq-urilor tasklets. Bottom-half handlers a fost prima implementare de acțiuni amânabile în Linux, dar între timp a fost înlocuită de softirq-uri. De aceea unele din funcțiile prezentate conțin <code>bh</code> în nume.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "API Linux" [3475-3917] -->
+<h3 class="sectionedit8" id="softirq-uri">Softirq-uri</h3>
+<div class="level3">
+
+<p>
+Softirq-urile nu pot fi folosite de către device drivere, ele sunt rezervate pentru diverse subsisteme ale kernelului. Din această cauză există un număr fix de softirq-uri definite la momentul compilării. Pentru kernelul <a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L342" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L342"  rel="nofollow">3.13</a> avem următoarele softirq-uri:
+</p>
+<pre class="code c"><span class="kw2">enum</span>
+<span class="br0">&#123;</span>
+        HI_SOFTIRQ<span class="sy0">=</span><span class="nu0">0</span><span class="sy0">,</span>
+        TIMER_SOFTIRQ<span class="sy0">,</span>
+        NET_TX_SOFTIRQ<span class="sy0">,</span>
+        NET_RX_SOFTIRQ<span class="sy0">,</span>
+        BLOCK_SOFTIRQ<span class="sy0">,</span>
+        BLOCK_IOPOLL_SOFTIRQ<span class="sy0">,</span>
+        TASKLET_SOFTIRQ<span class="sy0">,</span>
+        SCHED_SOFTIRQ<span class="sy0">,</span>
+        HRTIMER_SOFTIRQ<span class="sy0">,</span>
+        RCU_SOFTIRQ<span class="sy0">,</span>
+&nbsp;
+        NR_SOFTIRQS
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Scopul fiecăruia este:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>HI_SOFTIRQ</code> și <code>TASKLET_SOFTIRQ</code> - rularea tasklets;</div>
+</li>
+<li class="level1"><div class="li"><code>TIMER_SOFTIRQ</code> - rularea timerelor;</div>
+</li>
+<li class="level1"><div class="li"><code>NET_TX_SOFIRQ</code> și <code>NET_RX_SOFTIRQ</code> - folosite de către subsistemul de networking;</div>
+</li>
+<li class="level1"><div class="li"><code>BLOCK_SOFTIRQ</code> - folosit de către subsistemul de IO;</div>
+</li>
+<li class="level1"><div class="li"><code>BLOCK_IOPOLL_SOFTIRQ</code> - folosit de către subsistemul de IO pentru a crește performanța în momentul în care handler-ul iopoll este invocat;</div>
+</li>
+<li class="level1"><div class="li"><code>SCHED_SOFTIRQ</code> - load balancing;</div>
+</li>
+<li class="level1"><div class="li"><code>HRTIMER_SOFTIRQ</code> - implementarea timerelor de mare precizie <sup><a href="lab06.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>;</div>
+</li>
+<li class="level1"><div class="li"><code>RCU_SOFTIRQ</code> - implementarea mecanismelor de tip RCU <sup><a href="lab06.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup>.</div>
+</li>
+</ul>
+
+<p>
+Prioritare sunt softirq-urile de tip HI_SOFTIRQ, urmate în ordine de celelalte softirq-uri definite; cele de tip <code>RCU_SOFTIRQ</code> au cea mai mică prioritate.
+</p>
+
+<p>
+Softirq-urile rulează în context întrerupere, astfel încât din cadrul lor nu se pot apela funcții blocante. Dacă tratarea evenimentelor semnalizate din softirq-uri necesită apeluri către astfel de funcții, se pot planifica workqueue-uri care să execute aceste apeluri blocante.
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Softirq-uri" [3918-6507] -->
+<h3 class="sectionedit9" id="tasklets">Tasklets</h3>
+<div class="level3">
+
+<p>
+Un tasklet este caracterizat prin structura <a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L420" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L420"  rel="nofollow">struct tasklet_struct</a>.
+Un tasklet preinițializat se definește astfel:
+</p>
+<pre class="code c"><span class="kw4">void</span> handler<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">long</span> data<span class="br0">&#41;</span><span class="sy0">;</span>
+DECLARE_TASKLET<span class="br0">&#40;</span>tasklet<span class="sy0">,</span> handler<span class="sy0">,</span> data<span class="br0">&#41;</span><span class="sy0">;</span>
+DECLARE_TASKLET_DISABLED<span class="br0">&#40;</span>tasklet<span class="sy0">,</span> handler<span class="sy0">,</span> data<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+sau dacă dorim să inițializăm manual tasklet-ul:
+</p>
+<pre class="code c"><span class="kw4">void</span> handler<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">long</span> data<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">struct</span> tasklet_struct tasklet<span class="sy0">;</span>
+&nbsp;
+tasklet_init<span class="br0">&#40;</span><span class="sy0">&amp;</span>tasklet<span class="sy0">,</span> handler<span class="sy0">,</span> data<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Parametrul <code>data</code> va fi trimis handler-ului în momentul în care acesta se va executa.
+</p>
+
+<p>
+Programarea de tasklets pentru rulare se numeste planificare. Tasklets se planifica peste softirq-uri. Planificarea de tasklets se face cu:
+</p>
+<pre class="code c"><span class="kw4">void</span> tasklet_schedule<span class="br0">&#40;</span><span class="kw4">struct</span> tasklet_struct <span class="sy0">*</span>tasklet<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> tasklet_hi_schedule<span class="br0">&#40;</span><span class="kw4">struct</span> tasklet_struct <span class="sy0">*</span>tasklet<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Pentru <code>tasklet_schedule</code> se planifică un softirq de tip TASKLET_SOFTIRQ, iar pentru <code>tasklet_hi_schedule</code> se planifică un softirq de tip HI_SOFTIRQ.
+</p>
+
+<p>
+Dacă un tasklet a fost planificat de mai multe ori și nu a rulat între planificări, el va rula o singură data:
+</p>
+<pre class="code c">tasklet_schedule<span class="br0">&#40;</span><span class="sy0">&amp;</span>tasklet<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* presupunem ca tasklet-ul nu a rulat inca */</span>
+&nbsp;
+tasklet_schedule<span class="br0">&#40;</span><span class="sy0">&amp;</span>tasklet<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* in aceste condiții tasklet-ul va rula o singura data */</span></pre>
+
+<p>
+O dată ce tasklet-ul a rulat, el poate fi replanificat, și va rula după replanificare:
+</p>
+<pre class="code c">tasklet_schedule<span class="br0">&#40;</span><span class="sy0">&amp;</span>tasklet<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* presupunem ca tasklet-ul planificat a rulat */</span>
+&nbsp;
+tasklet_schedule<span class="br0">&#40;</span><span class="sy0">&amp;</span>tasklet<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* in aceste condiții tasklet-ul va rula la un moment ulterior de timp */</span></pre>
+
+<p>
+Tasklets se pot replanifica din interiorul handler-ului și vor rula la un moment de timp ulterior după ieșirea din handler.
+</p>
+
+<p>
+Tasklets pot fi mascați de la rulare. Mascarea tasklets se face cu:
+</p>
+<pre class="code c"><span class="kw4">void</span> tasklet_enable<span class="br0">&#40;</span><span class="kw4">struct</span> tasklet_struct <span class="sy0">*</span>tasklet<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> tasklet_disable<span class="br0">&#40;</span><span class="kw4">struct</span> tasklet_struct <span class="sy0">*</span>tasklet<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Intrucât tasklets sunt planificați peste softirq-uri, în codul asociat nu pot fi folosite apeluri blocante.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Tasklets" [6508-8593] -->
+<h3 class="sectionedit10" id="timere">Timere</h3>
+<div class="level3">
+
+<p>
+Un caz particular de acțiuni amânabile, dar foarte des folosite, sunt timer-ele: <a href="http://lxr.free-electrons.com/source/include/linux/timer.h?v=3.13#L12" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/timer.h?v=3.13#L12"  rel="nofollow">struct timer_list</a>.
+În Linux, timer-ele rulează din context întrerupere, fiind implementate cu ajutorul softirq-urilor.
+</p>
+
+<p>
+Pentru a putea fi folosit, un timer trebuie mai întâi inițializat apelând <a href="http://lxr.free-electrons.com/source/include/linux/timer.h?v=3.13#L152" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/timer.h?v=3.13#L152"  rel="nofollow">setup_timer</a>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/sched.h&gt;</span>
+&nbsp;
+<span class="kw4">void</span> setup_timer<span class="br0">&#40;</span><span class="kw4">struct</span> timer_list <span class="sy0">*</span>timer<span class="sy0">,</span>
+                 <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span><span class="kw2">function</span><span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">long</span><span class="br0">&#41;</span><span class="sy0">,</span>
+                 <span class="kw4">unsigned</span> <span class="kw4">long</span> data<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcția de mai sus inițializează câmpurile interne ale structurii și asociază <code>function</code> ca rutina de tratare a timerului; parametrul <code>data</code> va fi transmis funcției de tratare. Intrucât timer-ele sunt planificate peste softirq-uri, în codul asociat funcției de tratare nu pot fi folosite apeluri blocante.
+</p>
+
+<p>
+Planificarea unui timer se face cu <a href="http://lxr.free-electrons.com/source/kernel/timer.c?v=3.13#L832" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/timer.c?v=3.13#L832"  rel="nofollow">mod_timer</a>:
+</p>
+<pre class="code c"><span class="kw4">int</span> mod_timer<span class="br0">&#40;</span><span class="kw4">struct</span> timer_list <span class="sy0">*</span>timer<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> expires<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+unde <code>expires</code> este timpul (din viitor) la care să se ruleze funcția de tratare. Funcția poate fi folosită pentru a planifica sau pentru a replanifica un timer.
+</p>
+
+<p>
+Unitatea în care se măsoară timpul pentru aceste tipuri de timere este <code>jiffie</code> <sup><a href="lab06.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup>. Valoarea în timp absolut a unui jiffie este dependentă de platformă, și se poate afla cu ajutorul macroului <code>HZ</code> care definește numărul de jiffies pentru 1 secundă. Pentru a transforma între un interval de timp în jiffies (<code>jiffies_value</code>) și un interval în secunde (<code>seconds_value</code>) se folosesc următoarele formule:
+</p>
+<pre class="code c">jiffies_value <span class="sy0">=</span> seconds_value <span class="sy0">*</span> HZ<span class="sy0">;</span>
+seconds_value <span class="sy0">=</span> jiffies_value <span class="sy0">/</span> HZ<span class="sy0">;</span></pre>
+
+<p>
+În kernel există un contor care conține numarul de jiffies de la ultimul boot, ce poate fi accesat prin variabila <code>jiffies</code>. Astfel, atunci când este nevoie să se calculeze un timp in viitor se poate folosi această variabilă:
+</p>
+<pre class="code c"><span class="co2">#include  &lt;linux/jiffies.h&gt;</span>
+&nbsp;
+<span class="kw4">unsigned</span> <span class="kw4">long</span> current_jiffies<span class="sy0">,</span> next_jiffies<span class="sy0">;</span>
+<span class="kw4">unsigned</span> <span class="kw4">long</span> seconds <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+&nbsp;
+current_jiffies <span class="sy0">=</span> jiffies<span class="sy0">;</span>
+next_jiffies <span class="sy0">=</span> jiffies <span class="sy0">+</span> seconds <span class="sy0">*</span> HZ<span class="sy0">;</span>  <span class="coMULTI">/* 'seconds' seconds in the future  */</span></pre>
+
+<p>
+Pentru a opri un timer se folosesc funcțiile <a href="http://lxr.free-electrons.com/source/kernel/timer.c?v=3.13#L948" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/timer.c?v=3.13#L948"  rel="nofollow">del_timer</a> și <a href="http://lxr.free-electrons.com/source/kernel/timer.c?v=3.13#L1007" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/timer.c?v=3.13#L1007"  rel="nofollow">del_timer_sync</a>:
+</p>
+<pre class="code c"><span class="kw4">int</span> del_timer<span class="br0">&#40;</span><span class="kw4">struct</span> timer_list <span class="sy0">*</span>timer<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> del_timer_sync<span class="br0">&#40;</span><span class="kw4">struct</span> timer_list <span class="sy0">*</span>timer<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcțiile se pot apela atât pentru un timer planificat cât și pentru un timer neplanificat. Funcția <a href="http://lxr.free-electrons.com/source/kernel/timer.c?v=3.13#L1007" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/timer.c?v=3.13#L1007"  rel="nofollow">del_timer_sync</a> este folosită pentru a elimina race-urile ce pot apărea pe sisteme multiprocesor, întrucât la terminarea apelului se garantează că funcția de tratare a timer-ului nu rulează pe niciun procesor.
+</p>
+
+<p>
+O greșeală frecventă a folosirii timer-elor este aceea că se uită oprirea timerelor pornite. De exemplu, <strong>înainte de descărcarea unui modul trebuie să oprim timerele</strong>, pentru că dacă un timer expiră după descărcarea modului, funcția de tratare nu va mai fi încărcată în kernel și se va genera un kernel oops.
+</p>
+
+<p>
+Secvența uzuală folosită pentru inițializarea și planificarea unui timeout de <code>seconds</code> secunde este:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/sched.h&gt;</span>
+&nbsp;
+<span class="kw4">void</span> timer_function<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">long</span> arg<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> timer_list timer<span class="sy0">;</span>
+<span class="kw4">unsigned</span> <span class="kw4">long</span> seconds <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+&nbsp;
+setup_timer<span class="br0">&#40;</span><span class="sy0">&amp;</span>timer<span class="sy0">,</span> timer_function<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+mod_timer<span class="br0">&#40;</span><span class="sy0">&amp;</span>timer<span class="sy0">,</span> jiffies <span class="sy0">+</span> seconds <span class="sy0">*</span> HZ<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+iar pentru oprirea acestuia:
+</p>
+<pre class="code c">del_timer_sync<span class="br0">&#40;</span><span class="sy0">&amp;</span>timer<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT10 SECTION "Timere" [8594-12695] -->
+<h3 class="sectionedit11" id="locking_softirq-uri">Locking softirq-uri</h3>
+<div class="level3">
+
+<p>
+Pentru a masca softirq-urile (inclusiv timerele sau taskleții) puteți folosi funcțiile <a href="http://lxr.free-electrons.com/source/kernel/softirq.c?v=3.13#L125" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/softirq.c?v=3.13#L125"  rel="nofollow">local_bh_disable</a> / <a href="http://lxr.free-electrons.com/source/kernel/softirq.c?v=3.13#L186" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/softirq.c?v=3.13#L186"  rel="nofollow">local_bh_enable</a>:
+</p>
+<pre class="code c"><span class="kw4">void</span> local_bh_disable<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> local_bh_enable<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<strong>Atenție!</strong> Aceste primitive vor dezactiva softirq-urile doar pe procesorul local. Sunt permise construcții imbricate, reactivarea efectivă a softirq-urilor făcându-se doar atunci când toate apelurile <code>local_bh_disable()</code> au fost complementate de apeluri <code>local_bh_enable()</code>:
+</p>
+<pre class="code c"><span class="coMULTI">/* presupunem că avem softirq-urile nemascate */</span>
+&nbsp;
+local_bh_disable<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="coMULTI">/* softirq-urile sunt acum mascate */</span>
+&nbsp;
+local_bh_disable<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="coMULTI">/* softirq-urile rămân mascate */</span>
+&nbsp;
+local_bh_enable<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="coMULTI">/* softirq-urile rămân mascate */</span>
+&nbsp;
+local_bh_enable<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="coMULTI">/* softirq-urile sunt acum nemascate */</span></pre>
+
+<p>
+Pentru situațiile în care trebuie să mascați softirq-urile dar și să folosiți lock-uri puteți folosi funcțiile de mai jos, definite în <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L296" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L296"  rel="nofollow">linux/spinlock.h</a> <sup><a href="lab06.html#fn__4" id="fnt__4" class="fn_top">4)</a></sup>. Funcțiile <code>*_lock_bh()</code> vor dezactiva softirq-urile, iar apoi vor efectua operația de <em>lock</em>. Funcțiile <code>*_unlock_bh()</code> vor efectua operația de <em>unlock</em> și apoi vor reactiva softirq-urile.
+</p>
+<pre class="code c"><span class="kw4">void</span> spin_lock_bh<span class="br0">&#40;</span>spinlock_t <span class="sy0">*</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> spin_unlock_bh<span class="br0">&#40;</span>spinlock_t <span class="sy0">*</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> read_lock_bh<span class="br0">&#40;</span>rwlock_t <span class="sy0">*</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> read_unlock_bh<span class="br0">&#40;</span>rwlock_t <span class="sy0">*</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> write_lock_bh<span class="br0">&#40;</span>rwlock_t <span class="sy0">*</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> write_unlock_bh<span class="br0">&#40;</span>rwlock_t <span class="sy0">*</span>lock<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT11 SECTION "Locking softirq-uri" [12696-14479] -->
+<h3 class="sectionedit12" id="workqueues">Workqueues</h3>
+<div class="level3">
+
+<p>
+Puteți folosi workqueue-uri pentru a planifica acțiuni care să ruleze în context proces. Unitatea de bază cu care se lucrează poartă denumirea de <strong>work</strong>. Există două structuri care definesc o sarcină:  <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L100" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L100"  rel="nofollow">struct work_struct</a> (pentru a planifica o sarcină să ruleze la un moment ulterior de timp) și <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L113" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L113"  rel="nofollow">struct delayed_work</a> (pentru a putea planifica o sarcină să ruleze după cel puțin un interval de timp dat). O sarcină de tipul <code>struct delayed_work</code> folosește un <code>timer</code> pentru a rula după intervalul de timp specificat; funcțiile pentru lucrul cu acest tip de sarcini sunt similare cu cele pentru <code>struct work_struct</code>, dar conțin <code>delayed</code> în numele funcției. O sarcină se poate inițializa cu ajutorul următoarelor macrodefiniții:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/workqueue.h&gt;</span>
+&nbsp;
+DECLARE_WORK<span class="br0">&#40;</span>name<span class="sy0">,</span> <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span><span class="kw2">function</span><span class="br0">&#41;</span><span class="br0">&#40;</span> <span class="kw4">struct</span> work_struct <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+DECLARE_DELAYED_WORK<span class="br0">&#40;</span>name<span class="sy0">,</span> <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span><span class="kw2">function</span><span class="br0">&#41;</span><span class="br0">&#40;</span> <span class="kw4">struct</span> work_struct <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+INIT_WORK<span class="br0">&#40;</span><span class="kw4">struct</span> work_struct <span class="sy0">*</span>work<span class="sy0">,</span> <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span><span class="kw2">function</span><span class="br0">&#41;</span><span class="br0">&#40;</span> <span class="kw4">struct</span> work_struct <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+INIT_DELAYED_WORK<span class="br0">&#40;</span><span class="kw4">struct</span> delayed_work <span class="sy0">*</span>work<span class="sy0">,</span> <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span><span class="kw2">function</span><span class="br0">&#41;</span><span class="br0">&#40;</span> <span class="kw4">struct</span> work_struct <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<code>DECLARE_WORK</code> și <code>DECLARE_DELAYED_WORK</code> declară și inițializează sarcina, iar <code>INIT_WORK</code> și <code>INIT_DELAYED_WORK</code> inițializează o sarcină deja declarată.
+</p>
+
+<p>
+Secvența următoare declară și inițializează o sarcină:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/workqueue.h&gt;</span>
+&nbsp;
+<span class="kw4">void</span> my_work_handler<span class="br0">&#40;</span><span class="kw4">struct</span> work_struct <span class="sy0">*</span>work<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+DECLARE_WORK<span class="br0">&#40;</span>my_work<span class="sy0">,</span> my_work_handler<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+sau, dacă dorim să inițializăm manual sarcina:
+</p>
+<pre class="code c"><span class="kw4">void</span> my_work_handler<span class="br0">&#40;</span><span class="kw4">struct</span> work_struct <span class="sy0">*</span>work<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> work_struct my_work<span class="sy0">;</span>
+&nbsp;
+INIT_WORK<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_work<span class="sy0">,</span> my_work_handler<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Odată declarată și inițializată, putem planifica sarcina folosind funcțiile <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L555" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L555"  rel="nofollow">schedule_work</a> și <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L586" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L586"  rel="nofollow">schedule_delayed_work</a>:
+</p>
+<pre class="code c">schedule_work<span class="br0">&#40;</span><span class="kw4">struct</span> work_struct <span class="sy0">*</span>work<span class="br0">&#41;</span><span class="sy0">;</span>
+schedule_delayed_work<span class="br0">&#40;</span><span class="kw4">struct</span> delayed_work <span class="sy0">*</span>work<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> delay<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcția <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L586" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L586"  rel="nofollow">schedule_delayed_work</a> poate fi folosită pentru a planifica un work pentru execuție cu o întârziere de minim <code>delay</code>; întârzierea este dată în <a href="lab06.html#timere" title="so2:laboratoare:lab06 ↵" class="wikilink1">jiffies</a>.
+</p>
+
+<p>
+Sarcinile nu pot fi mascate.
+</p>
+
+<p>
+O sarcină planificată cu întârziere, dar care nu a rulat încă, poate fi anulată apelând <a href="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L2987" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L2987"  rel="nofollow">cancel_delayed_work_sync</a>:
+</p>
+<pre class="code c"><span class="kw4">int</span> cancel_delayed_work_sync<span class="br0">&#40;</span><span class="kw4">struct</span> delayed_work <span class="sy0">*</span>work<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Apelul nu face decât să oprească execuția ulterioară a sarcinii; dacă funcția asociată sarcinii este deja în execuție la momentul apelului, aceasta va rula în continuare.
+</p>
+
+<p>
+Putem să așteptăm terminarea rulării sarcinilor din coada folosind <a href="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L3039" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L3039"  rel="nofollow">flush_scheduled_work</a>:
+</p>
+<pre class="code c"><span class="kw4">void</span> flush_scheduled_work<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Această funcție este blocantă și, din această cauză, nu poate fi folosită din context întrerupere. La execuția acestei funcții se va aștepta terminarea tuturor sarcinilor din coadă existente la momentul apelului; pentru sarcinile planificate cu întârziere trebuie apelată funcția <code>cancel_delayed_work</code> înainte de apelul <code>flush_scheduled_work</code>.
+</p>
+
+<p>
+În fine, următoarele funcții pot fi folosite pentru a planifica sarcini pe un anumit procesor (<a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L571" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L571"  rel="nofollow">schedule_delayed_work_on</a>), respectiv pe toate procesoarele (<a href="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L3002" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L3002"  rel="nofollow">schedule_on_each_cpu</a>):
+</p>
+<pre class="code c"><span class="kw4">int</span> schedule_delayed_work_on<span class="br0">&#40;</span><span class="kw4">int</span> cpu<span class="sy0">,</span> <span class="kw4">struct</span> delayed_work <span class="sy0">*</span>work<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> delay<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> schedule_on_each_cpu<span class="br0">&#40;</span><span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span>func<span class="br0">&#41;</span><span class="br0">&#40;</span> <span class="kw4">struct</span> work_struct <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+O secvența uzuală de inițializare și planificare a unei sarcini este următoarea:
+</p>
+<pre class="code c"><span class="kw4">void</span> my_work_handler<span class="br0">&#40;</span><span class="kw4">struct</span> work_struct <span class="sy0">*</span>work<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> work_struct my_work<span class="sy0">;</span>
+&nbsp;
+INIT_WORK<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_work<span class="sy0">,</span> my_work_handler<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+schedule_work<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_work<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+iar pentru așteptarea terminării sarcinii:
+</p>
+<pre class="code c">flush_scheduled_work<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+După cum se poate observa, funcția <code>my_work_handler</code> primește drept parametru sarcina care se execută. Pentru a putea accesa date private ale modulului, se poate folosi macrodefiniția <a href="http://lxr.free-electrons.com/source/include/linux/kernel.h?v=3.13#L784" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kernel.h?v=3.13#L784"  rel="nofollow">container_of</a> <sup><a href="lab06.html#fn__5" id="fnt__5" class="fn_top">5)</a></sup>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> my_device_data <span class="br0">&#123;</span>
+        <span class="kw4">struct</span> work_struct my_work<span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> my_work_handler<span class="br0">&#40;</span><span class="kw4">struct</span> work_struct <span class="sy0">*</span>work<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data <span class="sy0">=</span> container_of<span class="br0">&#40;</span>work<span class="sy0">,</span> <span class="kw4">struct</span> my_device_data<span class="sy0">,</span> my_work<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Sarcinile planificate cu funcțiile discutate mai sus vor rula în contextul unui kernel thread denumit <strong>events/x</strong>, unde <strong>x</strong> este numărul procesorului pe care rulează kernel thread-ul. Kernelul va crea la inițializare câte un kernel thread pentru fiecare procesor prezent în sistem:
+</p>
+<pre class="code">$ ps -e
+  PID TTY          TIME CMD
+    1 ?        00:00:00 init
+    2 ?        00:00:00 ksoftirqd/0
+    3 ?        00:00:00 events/0    &lt;--- kernel thread-ul peste care rulează workqueue-urile
+    4 ?        00:00:00 khelper
+    5 ?        00:00:00 kthread
+    7 ?        00:00:00 kblockd/0
+    8 ?        00:00:00 kacpid
+...</pre>
+
+<p>
+Funcțiile declarate mai sus folosesc o coadă de sarcini predefinită (numită <strong>events</strong>), iar acestea rulează in contextul thread-ului  <strong>events/x</strong>, după cum s-a precizat mai sus. Deși aceasta este suficientă in majoritatea cazurilor, este o resursă partajată și întârzieri mari în funcțiile asociate sarcinilor pot cauza întârzieri celorlalți utilizatori ai cozii. Din acest motiv, există funcții pentru crearea de cozi de sarcini suplimentare.
+</p>
+
+<p>
+O coada de sarcini este reprezentată de <a href="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L228" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L228"  rel="nofollow">struct workqueue_struct</a>. Poate fi creată cu ajutorul funcțiilor:
+</p>
+<pre class="code c"><span class="kw4">struct</span> workqueue_struct <span class="sy0">*</span>create_workqueue<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span>name<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">struct</span> workqueue_struct <span class="sy0">*</span>create_singlethread_workqueue<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span>name<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcția <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L452" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L452"  rel="nofollow">create_workqueue</a> folosește câte un thread pentru fiecare procesor din sistem, iar <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L457" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L457"  rel="nofollow">create_singlethread_workqueue</a> folosește un singur thread.
+</p>
+
+<p>
+Pentru a adăuga o sarcina in coada suplimentară se vor folosi funcțiile <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L497" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L497"  rel="nofollow">queue_work</a> și <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L513" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L513"  rel="nofollow">queue_delayed_work</a>:
+</p>
+<pre class="code c"><span class="kw4">int</span> queue_work<span class="br0">&#40;</span><span class="kw4">struct</span> workqueue_struct <span class="sy0">*</span>queue<span class="sy0">,</span> <span class="kw4">struct</span> work_struct <span class="sy0">*</span>work<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> queue_delayed_work<span class="br0">&#40;</span><span class="kw4">struct</span> workqueue_struct <span class="sy0">*</span>queue<span class="sy0">,</span>
+                       <span class="kw4">struct</span> delayed_work <span class="sy0">*</span>work<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> delay<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcția <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L513" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L513"  rel="nofollow">queue_delayed_work</a> poate fi folosită pentru a planifica un work pentru execuție cu o întârziere de minim <code>delay</code>; întârzierea este dată în <a href="lab06.html#timere" title="so2:laboratoare:lab06 ↵" class="wikilink1">jiffies</a>.
+</p>
+
+<p>
+Pentru a aștepta terminarea sarcinilor din coadă se apelează <a href="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L2597" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L2597"  rel="nofollow">flush_workqueue</a>:
+</p>
+<pre class="code c"><span class="kw4">void</span> flush_workqueue<span class="br0">&#40;</span><span class="kw4">struct</span> workqueue_struct <span class="sy0">*</span>queue<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+iar pentru a distruge coada <a href="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L4266" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/workqueue.c?v=3.13#L4266"  rel="nofollow">destroy_workqueue</a>:
+</p>
+<pre class="code c"><span class="kw4">void</span> destroy_workqueue<span class="br0">&#40;</span><span class="kw4">struct</span> workqueue_struct <span class="sy0">*</span>queue<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Următoarea secvență declară și inițializează o coadă suplimentară de sarcini, declară și inițializează o sarcină și o adaugă în coadă:
+</p>
+<pre class="code c"><span class="kw4">void</span> my_work_handler<span class="br0">&#40;</span><span class="kw4">struct</span> work_struct <span class="sy0">*</span>work<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> work_struct my_work<span class="sy0">;</span>
+<span class="kw4">struct</span> workqueue_struct <span class="sy0">*</span>my_workqueue<span class="sy0">;</span>
+&nbsp;
+my_workqueue <span class="sy0">=</span> create_singlethread_workqueue<span class="br0">&#40;</span><span class="st0">&quot;my_workqueue&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+INIT_WORK<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_work<span class="sy0">,</span> my_work_handler<span class="br0">&#41;</span><span class="sy0">;</span>
+queue_work<span class="br0">&#40;</span>my_workqueue<span class="sy0">,</span> <span class="sy0">&amp;</span>my_work<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Pentru așteptarea terminării sarcinilor din coadă se va apela:
+</p>
+<pre class="code c">flush_workqueue<span class="br0">&#40;</span>my_workqueue<span class="br0">&#41;</span><span class="sy0">;</span>
+destroy_workqueue<span class="br0">&#40;</span>my_workqueue<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Sarcinile planificate cu aceste funcții vor rula în contextul unei nou kernel thread denumit <strong>my_workqueue</strong>, numele dat la crearea cozii de sarcini cu apelul <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L457" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L457"  rel="nofollow">create_singlethread_workqueue</a>.
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Workqueues" [14480-23360] -->
+<h3 class="sectionedit13" id="kernel_threads">Kernel threads</h3>
+<div class="level3">
+
+<p>
+Kernel thread-urile au apărut din necesitatea de a rula cod în context proces din kernel. Kernel thread-urile stau la baza mecanismului de workqueue. În esență, un kernel thread este un thread ce rulează în contextul procesului init și nu rulează decât în kernel-mode. Din acest motiv, un kernel thread nu are asociat informații precum un spațiu de adresă user.
+</p>
+
+<p>
+Pentru a crea un kernel thread, se apelează funcția <a href="http://lxr.free-electrons.com/source/kernel/kthread.c?v=3.13#L245" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kthread.c?v=3.13#L245"  rel="nofollow">kthread_create_on_node</a> sau <a href="http://lxr.free-electrons.com/source/kernel/kthread.c?v=3.13#L355" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kthread.c?v=3.13#L355"  rel="nofollow">kthread_create_on_cpu</a>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/kthread.h&gt;</span>
+&nbsp;
+<span class="kw4">struct</span> task_struct <span class="sy0">*</span>kthread_create_on_node<span class="br0">&#40;</span><span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>threadfn<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span>data<span class="br0">&#41;</span><span class="sy0">,</span>
+                                   <span class="kw4">void</span> <span class="sy0">*</span>data<span class="sy0">,</span> <span class="kw4">int</span> node<span class="sy0">,</span>
+                                   <span class="kw4">const</span> <span class="kw4">char</span> namefmt<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy0">,</span>
+                                   ...<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> task_struct <span class="sy0">*</span>kthread_create_on_cpu<span class="br0">&#40;</span><span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>threadfn<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span>data<span class="br0">&#41;</span><span class="sy0">,</span>
+                                   <span class="kw4">void</span> <span class="sy0">*</span>data<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">int</span> cpu<span class="sy0">,</span>
+                                   <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span>namefmt<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+unde:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>threadfn</code> este o funcția ce va fi rulată de kernel thread</div>
+</li>
+<li class="level1"><div class="li"><code>data</code> este un parametru ce va fi trimis funcției</div>
+</li>
+<li class="level1"><div class="li"><code>namefmt</code> reprezintă numele kernel thread-ului, așa cum este el afișat în <code>ps</code>/<code>top</code>; poate conține secvențe <code>%d</code>, <code>%s</code> etc. care vor fi inlocuite conform semnificației standard <code>printf</code>.</div>
+</li>
+</ul>
+
+<p>
+De exemplu, următorul apel:
+</p>
+<pre class="code c">kthread_create_on_node<span class="br0">&#40;</span>f<span class="sy0">,</span> NULL<span class="sy0">,</span> <span class="sy0">-</span><span class="nu0">1</span><span class="sy0">,</span> <span class="st0">&quot;%skthread%d&quot;</span><span class="sy0">,</span> <span class="st0">&quot;my&quot;</span><span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+va crea un kernel thread cu numele <strong>mykthread0</strong>.
+</p>
+
+<p>
+Kernel thread-ul creat cu această funcție va fi oprit, în starea <code>TASK_INTERRUPTIBLE</code>. Pentru a porni kernel thread-ul se va apela funcția <a href="http://lxr.free-electrons.com/source/kernel/sched/core.c?v=3.13#L1674" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/sched/core.c?v=3.13#L1674"  rel="nofollow">wake_up_process</a>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/sched.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> wake_up_process<span class="br0">&#40;</span><span class="kw4">struct</span> task_struct <span class="sy0">*</span>p<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Alternativ, se poate folosi macro-ul <a href="http://lxr.free-electrons.com/source/include/linux/kthread.h?v=3.13#L22" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kthread.h?v=3.13#L22"  rel="nofollow">kthread_run</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> task_struct <span class="sy0">*</span>kthread_run<span class="br0">&#40;</span><span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>threadfn<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span>data<span class="br0">&#41;</span><span class="sy0">,</span>
+                                <span class="kw4">void</span> <span class="sy0">*</span>data<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">char</span> namefmt<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy0">,</span> ...<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+pentru a crea și porni un kernel thread.
+</p>
+
+<p>
+Chiar dacă restricțiile de programare pentru funcția ce rulează în cadrul kernel thread-ului sunt mai relaxate și programarea se apropie mai mult de programarea în userspace, există, totuși, câteva limitări de care trebuie să ținut cont. Vom enumera mai jos acțiunile care se pot sau nu se pot face dintr-un kernel thread:
+</p>
+<ul>
+<li class="level1"><div class="li">nu se poate accesa spațiul de adresă utilizator (nici măcar cu funcții gen <code>copy_from_user</code>, <code>copy_to_user</code>) pentru că un kernel thread nu are un spațiu utilizator și este planificat pentru execuție indiferent de procesul din user-space;</div>
+</li>
+<li class="level1"><div class="li">nu se poate implementa cod busy waiting cu o durata mare de timp; dacă aveți un kernel compilat fără opțiunea de preemptivitate, respectivul cod va rula fără a putea fi preemptat de alte procese/kernel thread-uri și, în acest mod, veți “bloca” sistemul;</div>
+</li>
+<li class="level1"><div class="li">puteți chema operații blocante din kernel thread;</div>
+</li>
+<li class="level1"><div class="li">puteți folosi spinlock-uri, dar, dacă durata de ținere a lock-ului este mare, se recomandă folosirea de semafoare.</div>
+</li>
+</ul>
+
+<p>
+Terminarea unui kernel thread se face voluntar, din interiorul funcției ce rulează în kernel thread, prin apelarea funcției:
+</p>
+<pre class="code c">fastcall NORET_TYPE <span class="kw4">void</span> do_exit<span class="br0">&#40;</span><span class="kw4">long</span> code<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Datorită limitărilor existente, cea mai mare parte din implementările funcțiilor ce rulează în kernel thread-uri folosesc același model. Mai jos prezentăm o posibilă implementare a aceastui model:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/kthread.h&gt;</span>
+&nbsp;
+<span class="co1">// semafor folosit pentru a semnaliza kernel thread-ului ca are evenimente de procesat</span>
+<span class="kw4">struct</span> semaphore sem<span class="sy0">;</span>
+&nbsp;
+<span class="co1">// lista de evenimente de procesat de kernel thread</span>
+<span class="kw4">struct</span> list_head lista_evenimente<span class="sy0">;</span>
+&nbsp;
+<span class="co1">// structura ce descrie evenimentul de procesat</span>
+<span class="kw4">struct</span> eveniment <span class="br0">&#123;</span>
+    <span class="kw4">struct</span> list_head lh<span class="sy0">;</span>
+    <span class="co1">// ...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> my_thread_f<span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span>data<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+   <span class="kw1">while</span> <span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+       down<span class="br0">&#40;</span><span class="sy0">&amp;</span>sem<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+       spin_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock_lista<span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="kw1">while</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> lista_evenimente.<span class="me1">next</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+           <span class="kw4">struct</span> eveniment <span class="sy0">*</span>ev <span class="sy0">=</span> list_entry<span class="br0">&#40;</span>i<span class="sy0">,</span> <span class="kw4">struct</span> eveniment<span class="sy0">,</span> lh<span class="br0">&#41;</span><span class="sy0">;</span>
+           list_del<span class="br0">&#40;</span>i<span class="br0">&#41;</span><span class="sy0">;</span>
+           spin_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock_lista<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+           <span class="coMULTI">/* procesare eveniment */</span>
+           <span class="co1">// ...</span>
+&nbsp;
+           <span class="coMULTI">/* daca se cere terminarea kernel thread-ului */</span>
+           <span class="kw1">if</span> <span class="br0">&#40;</span>ev<span class="sy0">-&gt;</span>...<span class="br0">&#41;</span>
+               <span class="kw2">break</span><span class="sy0">;</span>
+           spin_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock_lista<span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="br0">&#125;</span>
+       spin_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock_lista<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+   <span class="br0">&#125;</span>
+&nbsp;
+   do_exit<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">// ...</span>
+&nbsp;
+   <span class="co1">// initializare si pornire kthread</span>
+   kthread_run<span class="br0">&#40;</span>my_thread_f<span class="sy0">,</span> NULL<span class="sy0">,</span> <span class="st0">&quot;%skthread%d&quot;</span><span class="sy0">,</span> <span class="st0">&quot;my&quot;</span><span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">// ...</span></pre>
+
+<p>
+Cu modelul prezentat mai sus, comunicarea de cereri către kernel thread se face astfel:
+</p>
+<pre class="code c"><span class="kw4">void</span> trimite_cerere<span class="br0">&#40;</span><span class="kw4">struct</span> eveniment <span class="sy0">*</span>ev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    spin_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock_lista<span class="br0">&#41;</span><span class="sy0">;</span>
+    list_add<span class="br0">&#40;</span><span class="sy0">&amp;</span>ev<span class="sy0">-&gt;</span>lh<span class="sy0">,</span> <span class="sy0">&amp;</span>lista_evenimente<span class="br0">&#41;</span><span class="sy0">;</span>
+    spin_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock_lista<span class="br0">&#41;</span><span class="sy0">;</span>
+    up<span class="br0">&#40;</span><span class="sy0">&amp;</span>sem<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT13 SECTION "Kernel threads" [23361-28326] -->
+<h2 class="sectionedit14" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT14 SECTION "Resurse utile" [28327-28353] -->
+<h3 class="sectionedit15" id="linux">Linux</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch07.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch07.pdf"  rel="nofollow">Linux Device Drivers, 3rd ed., Ch. 7: Time, Delays, and  Deferred Work</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://tldp.org/LDP/lkmpg/2.6/html/x1211.html" class="urlextern" title="http://tldp.org/LDP/lkmpg/2.6/html/x1211.html"  rel="nofollow">Scheduling Tasks</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/23634/" class="urlextern" title="http://lwn.net/Articles/23634/"  rel="nofollow">Driver porting: the workqueue interface</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/211279/" class="urlextern" title="http://lwn.net/Articles/211279/"  rel="nofollow">Workqueues get a rework</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/65178/" class="urlextern" title="http://lwn.net/Articles/65178/"  rel="nofollow">Kernel threads made easy</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.kernel.org/pub/linux/kernel/people/rusty/kernel-locking/index.html" class="urlextern" title="http://www.kernel.org/pub/linux/kernel/people/rusty/kernel-locking/index.html"  rel="nofollow"> Unreliable Guide to Locking</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT15 SECTION "Linux" [28354-] --><div class="footnotes">
+<div class="fn"><sup><a href="lab06.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+jiffie – începând cu 2.6.21, arhitectura tratării timerelor a fost complet rescrisă; se așteaptă ca in viitor și jiffie-ul să dispară. Pentru detalii consultați <a href="http://lwn.net/Articles/223185/" class="urlextern" title="http://lwn.net/Articles/223185/"  rel="nofollow">Clockevents and dyntick</a> și  <a href="http://lxr.free-electrons.com/source/Documentation/timers/hrtimers.txt?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/timers/hrtimers.txt?v=3.13"  rel="nofollow">Documentation/timers/hrtimers.txt</a></div>
+<div class="fn"><sup><a href="lab06.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+read-copy update – un mecanism prin care operațile distructive (ex: ștergerea unui element dintr-o listă înlănțuită) se fac în două etape: eliminarea referințelor către datele de șters și ștergerea propriu-zisă, care se face numai după ce este sigur că nimeni nu le mai folosește. Avantajul este că accesarea datelor se poate face fără sincronizare. Pentru mai multe informații citiți documentația <a href="http://lxr.free-electrons.com/source/Documentation/RCU/rcu.txt?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/RCU/rcu.txt?v=3.13"  rel="nofollow">RCU</a> din kernelul Linux</div>
+<div class="fn"><sup><a href="lab06.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+jiffie – începând cu 2.6.21, arhitectura tratării timerelor a fost complet rescrisă; se așteaptă ca în viitor și jiffie-ul să dispară. Pentru detalii consultați <a href="http://lwn.net/Articles/223185/" class="urlextern" title="http://lwn.net/Articles/223185/"  rel="nofollow">Clockevents and dyntick</a> și  <a href="http://lxr.free-electrons.com/source/Documentation/timers/hrtimers.txt?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/timers/hrtimers.txt?v=3.13"  rel="nofollow">Documentation/timers/hrtimers.txt</a></div>
+<div class="fn"><sup><a href="lab06.html#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+spinlock – pentru mai multe detalii despre folosirea spinlock-urilor, revedeți <a href="../../../../so2/laboratoare/lab03.html#spinlock-uri" class="wikilink1" title="so2:laboratoare:lab03">Laboratorul 3</a></div>
+<div class="fn"><sup><a href="lab06.html#fnt__5" id="fn__5" class="fn_bot">5)</a></sup> 
+container_of – un exemplu de utilizare pentru macrodefiniția <code>container_of</code> este la parcurgerea <a href="../../../../so2/laboratoare/lab03.html#liste" class="wikilink1" title="so2:laboratoare:lab03">listelor</a> din kernel</div>
+</div>
+</div>
+</body>
+</html>

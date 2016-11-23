@@ -1,0 +1,494 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laboratorul 06.    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-04-02T18:41:47+0300"/>
+<meta name="keywords" content="bd,laboratoare,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=bd:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/bd/laboratoare/06.html"/>
+<link rel="canonical" href="06.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='bd:laboratoare';var JSINFO = {"id":"bd:laboratoare:06","namespace":"bd:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="06%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="06%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="laboratorul_06">Laboratorul 06.</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit2" id="subcereri">Subcereri</h3>
+<div class="level3">
+
+<p>
+Subcererile sunt interogari continute in clauza WHERE sau HAVING ale unei declatatii SQL.
+</p>
+
+</div>
+
+<h4 id="subcereri_ascunse">Subcereri ascunse</h4>
+<div class="level4">
+
+<p>
+O subcerere este o declaratie SELECT care este ascunsa in interiorul altei declaratii SELECT si care intoarce rezultate intermediare.
+</p>
+
+<p>
+Exemplu:
+</p>
+<pre class="code">   SELECT column1, column2, ...
+   FROM table
+   WHERE column =
+                  (SELECT column
+                   FROM table
+                   WHERE condition)</pre>
+
+<p>
+Subcererea este adesea referita ca <code>subselect</code> sau <code>SELECT interior</code>.
+In general, subcererea se executa prima si rezultatul sau este folosit pentru a completa conditia cererii principale sau a cererii externe.Folosirea subcererilor permite consruirea de comenzi puternice pornind de la unele simple. Cererea ascunsa poate fi foarte   folositoare cind este nevoie sa fie selectate linii dintr-o tabela printr-o conditie ce depinde de date din propria tabela.
+</p>
+
+</div>
+
+<h5 id="subcereri_ce_intorc_o_singura_linie">Subcereri ce intorc o singura linie</h5>
+<div class="level5">
+
+<p>
+Pentru a gasi angajatul care cistiga salariul minim din companie (salariul minim este o valoare necunoscuta), trebuie parcursi doi pasi:
+1) Gasirea salariului minim:
+</p>
+<pre class="code">   SELECT MIN(SAL)
+   FROM EMP;</pre>
+<pre class="code">   MIN(SAL)
+  ----------
+     800
+ </pre>
+
+<p>
+2) Gasirea angajatului care cistiga salariul minim:
+</p>
+<pre class="code">   SELECT ENAME, JOB, SAL
+   FROM EMP
+   WHERE SAL = (cel mai mic salariu care este cunoscut)</pre>
+
+<p>
+Putem combina cele doua cereri ca o subcerere ascunsa:
+</p>
+<pre class="code">   SELECT ENAME, JOB, SAL
+   FROM EMP
+   WHERE SAL = (SELECT MIN(SAL)
+                FROM EMP);</pre>
+<pre class="code">   ENAME     JOB      SAL
+  -------   ------   -----
+  SMITH     CLERK     800</pre>
+
+<p>
+Cum sint prelucrate subcererile ascunse ?
+</p>
+
+<p>
+O declarartie SELECT poate fi considerata ca un bloc de cerere. Exemplul de mai sus consta din doua blocuri de cerere: cererea principala si cererea interioara. Declaratia SELECT interioara sau blocul de cerere este executata prima, producind un rezultat al cererii: 800. Blocul de cerere principal este apoi prelucrat si foloseste valoarea intoarsa de cererea interioara pentru a completa conditia de cautare. In final, cererea principala va arata astfel:
+</p>
+<pre class="code">   SELECT ENAME, SAL, DEPTNO
+   FROM EMP
+   WHERE SAL = 800;</pre>
+
+<p>
+In exemplul de mai sus, 800 este o valoare unica. Subcererea care a intors valoarea 800 se numeste subcerere ce intoarce o singura linie. Cind o subcerere intoarce doar o linie, va fi folosit un operator logic sau un operator de comparatie. Spre exemplu: <code>=</code>
+</p>
+
+<p>
+Exemplu: Gasiti toti angajatii care au aceeasi functie ca BLAKE.
+</p>
+<pre class="code">   SELECT ENAME, JOB
+   FROM EMP
+   WHERE JOB = (SELECT JOB
+                FROM EMP
+                WHERE ENAME = &#039;BLAKE&#039;);</pre>
+<pre class="code">   ENAME       JOB
+  -------     -----
+   JONES     MANAGER
+   BLAKE     MANAGER
+   CLARK     MANAGER</pre>
+
+<p>
+Cererea interioara intoarce functia lui BLAKE, care este folosita in partea dreapta a clauzei WHERE di cererea principala (dupa operatorul de comparatie).
+</p>
+
+</div>
+
+<h5 id="subcereri_ce_intorc_mai_mult_de_o_linie">Subcereri ce intorc mai mult de o linie</h5>
+<div class="level5">
+
+<p>
+Exemplu: Gasiti toti angajatii care au salariul egal cu salariul minim din fiecare departament.
+</p>
+<pre class="code">   SELECT ENAME, SAL, DEPTNO
+   FROM EMP
+   WHERE SAL IN
+                (SELECT MIN(SAL)
+                 FROM EMP
+                 GROUP BY DEPTNO);</pre>
+<pre class="code">   ENAME        SAL        DEPTNO
+  -------      -----      ---------
+  SMITH         800          20
+  JAMES         950          30
+  MILLER       1300          10</pre>
+
+<p>
+Observati ca, cererea interioara are clauza GROUP BY. Aceast lucru inseamna ca va intoarce mai mult decit o valoare. Din acest motiv este nevoie sa folosim un operator de comparatie multi linie. In acest caz se foloseste operatorul IN, intrucat rezulta o lista de valori.
+</p>
+
+</div>
+
+<h5 id="compararea_mai_multor_valori">Compararea mai multor valori</h5>
+<div class="level5">
+
+<p>
+Exemplu: Urmatoarea cerere ggaseste angajatii care cistiga salariul cel mai mic din departamentul lor.
+</p>
+<pre class="code">   SELECT ENAME, SAL, DEPTNO
+   FROM EMP
+   WHERE (SAL, DEPTNO) IN
+                           (SELECT MIN(SAL), DEPTNO
+                            FROM EMP
+                            GROUP BY DEPTNO);</pre>
+<pre class="code">   ENAME       SAL      DEPTNO
+  -------     -----    ---------
+   SMITH       800        20
+   JAMES       950        30
+   MILLER     1300        10</pre>
+
+<p>
+Cererea de mai sus compara o pereche de coloane.
+</p>
+
+<p>
+<p><div class="notetip">
+Coloanele din partea stinga a conditiei de cautare sint in paranteze si fiecare coloana este separata printr-o virgula. 
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notewarning">
+Coloanele listate in clauza SELECT a subcererii trebuie sa fie in aceeasi ordine ca si lista coloanelor dintre paranteze din clauza WHERE a cererii externe. 
+</p>
+
+<p>
+Coloanele intoarse de cererea interioara trebuie, de asemenea sa se potriveasca in numar si tip de date cu coloanele cu care ele sunt comparate in cererea externa.
+</p>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Spre exemplu :
+</p>
+<pre class="code">   ...WHERE (numcolumn, charcolumn) =
+            (SELECT datecolumn, numcolumn, charcolumn ...</pre>
+
+<p>
+nu este permis.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="subcereri_corelate">Subcereri corelate</h3>
+<div class="level3">
+
+<p>
+O subcerere corelata este o subcerere care este executata pentru fiecare linie candidat considerata de cererea principala si care la executie foloseste o valoare dintr-o coloana din cererea exterioara. Subcererea corelata sa fie prelucrata intr-un mod diferit fata de subcererea ascunsa obisnuita.
+</p>
+
+<p>
+O subcerere corelata este identificata prin folosirea unei coloane a cererii exterioare in clauza predicatului cererii interioare.
+</p>
+
+<p>
+Pasii de executie ai unei subcereri corelate:
+</p>
+<ol>
+<li class="level1"><div class="li"> Se obtine linia candidat. (obtinuta de cererea exterioara)</div>
+</li>
+<li class="level1"><div class="li"> Se executa cererea interioara folosind valoarea liniei candidat</div>
+</li>
+<li class="level1"><div class="li"> Se folosesc valorile rezultate din cererea interioara pentru a pastra sau pentru a inlatura linia candidat</div>
+</li>
+<li class="level1"><div class="li"> Se repeta pina nu mai ramine nici o linie candidat.</div>
+</li>
+</ol>
+
+<p>
+Desi subcererea corelata se executa repetat, o data pentru fiecare linie in cererea principala, aceasta nu inseamna ca subcererile corelate sint mai putin eficiente ca subcererile necorelate obisnuite.
+</p>
+
+<p>
+Exemplu: Gasiti angajatii care primesc un salariu mai mare ca salariul mediu al departamentului lor:
+</p>
+<pre class="code">   SELECT EMPNO, ENAME, SAL, DEPTNO
+   FROM EMP E
+   WHERE SAL &gt; (SELECT AVG(SAL)
+                FROM EMP
+                WHERE DEPTNO = E.DEPTNO)
+   ORDER BY DEPTNO;</pre>
+<pre class="code">   EMPNO      ENAME       SAL       DEPTNO
+  -------    -------     ------    --------
+   7839       KING        5000        10
+   7566       JONES       2975        20
+   7788       SCOTT       3000        20
+   7902       FORD        3000        20
+   7499       ALLEN       1600        30
+   7698       BLAKE       2850        30</pre>
+
+<p>
+<p><div class="notetip">
+</p>
+
+<p>
+Alias-ul este necesar doar pentru a indeparta ambiguitatea pentru numele coloanelor.
+</p>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Comenzile UPDATE pot contine si ele subcereri corelate :
+</p>
+<pre class="code">   UPDATE EMP E
+   SET (SAL, COMM) = (SELECT AVG(SAL) * 1.1, AVG(COMM)
+                      FROM EMP
+                      WHERE DEPTNO = E.DEPTNO)
+       HIREDATE = &#039;11-JUN-85&#039;;</pre>
+
+</div>
+
+<h3 class="sectionedit4" id="exercitii">Exerciții</h3>
+<div class="level3">
+
+<p>
+<p><div class="noteclassic">
+Exercițiile nu sunt identice între 2 ședințe de laborator. Diferențele sunt date de <code>parametrii adiționali</code> prezenți în fiecare dintre ele, ce vor fi descriși de laborant în cadrul fiecărui laborator.
+
+</div></p>
+</p>
+<ol>
+<li class="level1"><div class="li"> Folosind subcereri afisati numele si <code>parametrii aditionali</code> persoanelor care se afla in randul angajatilor care primesc comision. </div>
+</li>
+<li class="level1"><div class="li"> Obtineti media salariilor angajatilor care fac parte din departamentul 30 (folosind subcereri), si care indeplinesc <code>parametrii aditionali</code>.</div>
+</li>
+<li class="level1"><div class="li"> Selectati numele si functia angajatilor care au numarul maxim de aparitii ale literei E in <code>parametri aditionali</code>.</div>
+</li>
+<li class="level1"><div class="li"> Afisati numele si <code>parametrii aditionali</code> pentru angajatii care au salariul egal cu cel mai mic salariu din departamentul sefului lor. </div>
+</li>
+<li class="level1"><div class="li"> Afisati numele departamentelor impreuna cu gradul maxim de salarizare din departamentul respectiv si <code>parametri aditionali</code>. </div>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit5" id="bibliografie">Bibliografie</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> <strong>Alexandru Boicea</strong> -<em> Oracle SQL SQL Plus</em>, Editura Printech </div>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_105395132758355a88c1b82" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../cursuri/01.html" class="wikilink1" title="bd:cursuri:01">Cursul 01.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/02.html" class="wikilink1" title="bd:cursuri:02">Cursul 02.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/03.html" class="wikilink1" title="bd:cursuri:03">Cursul 03.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/04.html" class="wikilink1" title="bd:cursuri:04">Cursul 04.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/05.html" class="wikilink1" title="bd:cursuri:05">Cursul 05.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/06.html" class="wikilink1" title="bd:cursuri:06">Cursul 06.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/07.html" class="wikilink1" title="bd:cursuri:07">Cursul 07.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/08.html" class="wikilink1" title="bd:cursuri:08">Cursul 08.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/09.html" class="wikilink1" title="bd:cursuri:09">Cursul 09.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/10.html" class="wikilink1" title="bd:cursuri:10">Cursul 10.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/11.html" class="wikilink1" title="bd:cursuri:11">Cursul 11.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/12.html" class="wikilink1" title="bd:cursuri:12">Cursul 12.</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Cursuri" [1-49] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_195490492458355a88c3abe" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="bd:laboratoare:01">Laboratorul 01.</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="bd:laboratoare:02">Laboratorul 02.</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="bd:laboratoare:03">Laboratorul 03</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="bd:laboratoare:04">Laboratorul 04.</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="bd:laboratoare:05">Laboratorul 05.</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="06.html" class="wikilink1" title="bd:laboratoare:06">Laboratorul 06.</a></span></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="bd:laboratoare:07">Laboratorul 07.</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="bd:laboratoare:08">Laboratorul 08.</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="bd:laboratoare:09">Laboratorul 09.</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="bd:laboratoare:10">Laboratorul 10.</a></div></li>
+<li class="level1"><div class="li"><a href="11.html" class="wikilink1" title="bd:laboratoare:11">Test de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="12.html" class="wikilink1" title="bd:laboratoare:12">Laboratorul 12.</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [50-108] -->
+<h1 class="sectionedit3" id="resurse">Resurse</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT3 SECTION "Resurse" [109-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="06.html#laboratorul_06">Laboratorul 06.</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="06.html#subcereri">Subcereri</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="06.html#subcereri_ascunse">Subcereri ascunse</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="06.html#subcereri_corelate">Subcereri corelate</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#exercitii">Exerciții</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#bibliografie">Bibliografie</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          bd/laboratoare/06.txt · Last modified: 2014/04/02 18:41 by andreea.urzica          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="06%3Fdo=media&amp;ns=bd%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="06.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=bd%253Alaboratoare%253A06&amp;1479891592" width="2" height="1" alt="" /></div>
+</body>
+</html>

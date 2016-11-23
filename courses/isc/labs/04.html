@@ -1,0 +1,575 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 04 - Cryptography    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-08-04T16:03:38+0300"/>
+<meta name="keywords" content="isc,labs,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=isc:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/isc/labs/04.html"/>
+<link rel="canonical" href="04.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='isc:labs';var JSINFO = {"id":"isc:labs:04","namespace":"isc:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="04%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="04%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="lab_04_-_cryptography">Lab 04 - Cryptography</h2>
+<div class="level2">
+
+</div>
+
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://www.di-mgt.com.au/crt.html" class="urlextern" title="http://www.di-mgt.com.au/crt.html"  rel="nofollow">Chinese remainder theorem - Broadcast attack</a></div>
+</li>
+<li class="level1"><div class="li"><a href="https://en.wikipedia.org/wiki/Fermat%27s_factorization_method" class="urlextern" title="https://en.wikipedia.org/wiki/Fermat%27s_factorization_method"  rel="nofollow">Fermat factorisation</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://factordb.com/" class="urlextern" title="http://factordb.com/"  rel="nofollow">Factor DB</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="overview">Overview</h2>
+<div class="level2">
+
+<p>
+ <strong>AES (Advanced Encryption Standard)</strong> is a symmetric encryption algorithm. It was designed to be efficient in both hardware and software, and supports a block length of 128 bits and key lengths of 128, 192, and 256 bits.
+</p>
+
+<p>
+ Most block cipher modes require a unique binary sequence, often called an initialization vector (IV), for each encryption operation. The IV has to be non-repeating and, for some modes, random as well. The initialization vector is used to ensure distinct ciphertexts are produced even when the same plaintext is encrypted multiple times independently with the same key. Block ciphers have one or more block size(s), but during transformation the block size is always fixed. Block cipher modes operate on whole blocks and require that the last part of the data be padded to a full block if it is smaller than the current block size. There are, however, modes that do not require padding because they effectively use a block cipher as a stream cipher; such ciphers are capable of encrypting arbitrarily long sequences of bytes or bits.
+</p>
+
+<p>
+ The simplest of the encryption modes is the ECB (Electronic Codebook) mode. The message is divided into blocks, and each block is encrypted separately. The disadvantage of this method is that identical plaintext blocks are encrypted into identical ciphertext blocks. This mode does not requires an IV.
+</p>
+
+<p>
+In CBC (Cipher Block Chaining) mode, each block of plaintext is XORed with the previous ciphertext block before being encrypted. This way, each ciphertext block depends on all plaintext blocks processed up to that point. To make each message unique, an initialization vector must be used in the first block
+</p>
+
+<p>
+ <strong>RSA</strong> is an asymmetric cryptographic algorithm. It is based on the fact that finding the factors of an integer is hard.
+</p>
+
+<p>
+ RSA involves a public key and private key. The public key can be known to everyone, it is used to encrypt messages. Messages encrypted using the public key can only be decrypted with the private key. The keys for the RSA algorithm are generated the following way:
+</p>
+<ol>
+<li class="level1"><div class="li"> Choose two different large random prime numbers <em><strong>p</strong></em> and <em><strong>q</strong></em></div>
+</li>
+<li class="level1"><div class="li"> Calculate <em><strong>n = pq</strong></em></div>
+<ul>
+<li class="level2"><div class="li"> <em><strong>n</strong></em> is the modulus for the public key and the private keys</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Calculate the totient: <em><strong>phi (n)=(p-1)(q-1)</strong></em>.</div>
+</li>
+<li class="level1"><div class="li"> Choose an integer <em><strong>e</strong></em> such that 1 &lt; <em><strong>e</strong></em> &lt; <em><strong>phi(n)</strong></em>, and <em><strong>e</strong></em> is coprime to <em><strong>e</strong></em> </div>
+<ul>
+<li class="level2"><div class="li"> <em><strong>e</strong></em> is released as the public key exponent</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Compute <em><strong>d</strong></em> to satisfy the congruence relation <em><strong>d*e ≡ 1 (mod(phi(n))) </strong></em></div>
+<ul>
+<li class="level2"><div class="li"> <em><strong>d</strong></em> is kept as the private key exponent</div>
+</li>
+</ul>
+</li>
+</ol>
+
+<p>
+The public key is made of the modulus <em><strong>n</strong></em> and the public (or encryption) exponent <em><strong>e</strong></em>.
+</p>
+
+<p>
+The private key is made of the modulus <em><strong>n</strong></em> and the private (or decryption) exponent <em><strong>d</strong></em> which must be kept secret.
+</p>
+
+<p>
+Encrypting a message: <em><strong>c = m ^ e (mod n)</strong></em>
+</p>
+
+<p>
+Decrypting a message: <em><strong>m = c ^ d (mod n)</strong></em>
+</p>
+
+<p>
+Example:
+</p>
+
+<p>
+p = 29, q = 31
+</p>
+
+<p>
+n = p *  q = 29 * 31 = 899
+</p>
+
+<p>
+phi = (p -1) * (q – 1) = (29 – 1) * (31 – 1) = 840
+</p>
+
+<p>
+e = 11
+</p>
+
+<p>
+d * e ≡ 1 mod phi ⇒ (d * 11) / phi will give us a remainder of one.
+</p>
+
+<p>
+(611 * 11) = 6721 and 6721 / 840 = 8 with remainder 1 ⇒ d = 611
+</p>
+
+<p>
+C = M^e mod n
+</p>
+
+<p>
+C = 11911 mod 899 = 595
+</p>
+
+<p>
+M = C^d mod n
+</p>
+
+<p>
+M = 595611 mod 899 = 119
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="exercises">Exercises</h2>
+<div class="level2">
+
+</div>
+
+<h4 id="aes">1. AES</h4>
+<div class="level4">
+
+<p>
+ <a href="https://drive.google.com/open?id=0B_sFoQMHYxA4NzVCMEFUM3JxMXc" class="urlextern" title="https://drive.google.com/open?id=0B_sFoQMHYxA4NzVCMEFUM3JxMXc"  rel="nofollow"> This file</a> was encrypted using the following code. Can you decrypt it?
+</p>
+<pre class="code">
+from Crypto.Cipher import AES
+from Crypto import Random
+
+BLOCK_SIZE = 32
+PADDING = &#039;#&#039;
+iv = &quot;\x00&quot; * 16
+
+def encrypt(key, iv, data):
+    aes = AES.new(key, AES.MODE_CBC, iv)
+    data = aes.encrypt(data)
+    return data
+
+def pad(s):
+    return s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING 
+
+
+key = Random.new().read(BLOCK_SIZE)
+
+with open(&#039;plain.jpg&#039;, &#039;rb&#039;) as f:
+    data = f.read()
+
+enc = encrypt(key, iv, pad(data))
+
+f_out = open(&quot;secret.enc&quot;, &#039;wb&#039;)
+f_out.write(key)
+f_out.write(enc)
+f_out.close()
+</pre>
+
+</div>
+
+<h4 id="aes_ecb">2. AES ECB</h4>
+<div class="level4">
+
+<p>
+ It is recommended NOT to encrypt more than one block with AES in ECB mode, but in order to understand why, an image with the following header was encrypted. The encrypted photo cand be found <a href="https://drive.google.com/open?id=0B_sFoQMHYxA4TUFNY1JkQzZsdFU" class="urlextern" title="https://drive.google.com/open?id=0B_sFoQMHYxA4TUFNY1JkQzZsdFU"  rel="nofollow">here</a>. Is it possible to figure out what the initial image was?
+</p>
+<pre class="code">42 4D 66 CA D7 00 00 00 00 00 36 00 00 00 28 00 00 00 D0 07 00 00 35 09 00 00 01 00 18 00 00 00 00 00 30 CA D7 00 74 12 00 00 74 12 00 00 00 00 00 00 00 00 00 00</pre>
+
+</div>
+
+<h4 id="rsa_-_known_factorisation">3. RSA - Known factorisation</h4>
+<div class="level4">
+
+<p>
+ In order to decrypt the ciphertext, you need to factorize n into p and q, compute phi and find d. 
+</p>
+<pre class="code">c = 28822365203577929536184039125870638440692316100772583657817939349051546473185
+n = 70736025239265239976315088690174594021646654881626421461009089480870633400973
+e = 3</pre>
+
+</div>
+
+<h4 id="rsa_-_fermat_factorization">4. RSA - Fermat Factorization</h4>
+<div class="level4">
+
+<p>
+ It is recomended to use gmpy2 for the factorization.
+</p>
+<ul>
+<li class="level1"><div class="li">is_square(x) returns True if x is a perfect square, False otherwise.</div>
+</li>
+<li class="level1"><div class="li">isqrt(x) returns the integer square root of an integer x. x must be &gt;= 0.</div>
+</li>
+<li class="level1"><div class="li">invert(x, m) returns y such that x * y == 1 modulo m, or 0 if no such y exists.</div>
+</li>
+</ul>
+<pre class="code">c = 654564125967811572957608485461509223541781197895608920296825435452302563551217882689453762450350456257099687251554693360645992257362168460115089842875072530869254099617858153458510730488327127628978127748004507636893613507344065845140647694349616219705757465949239924311260160127009283418952554522720051840260714703523494071411559772701875928237248989122625648657235677768486515417771976078417365256201505968603934443986411140514722785883888625061210731765750448
+n = 1209143407476550975641959824312993703149920344437422193042293131572745298662696284279928622412441255652391493241414170537319784298367821654726781089600780498369402167443363862621886943970468819656731959468058528787895569936536904387979815183897568006750131879851263753496120098205966442010445601534305483783759226510120860633770814540166419495817666312474484061885435295870436055727722073738662516644186716532891328742452198364825809508602208516407566578212780807
+e = 65537</pre>
+
+</div>
+
+<h4 id="rsa_-_broadcast_attack">5. RSA - Broadcast Attack</h4>
+<div class="level4">
+<pre class="code">n1 = 0xa8688af04ce3d0b93d04219391054740f10272ab96706cb98f852d8123e93853dfa4c4cf1fbb61cd632a2dad437e25003d545cded563e20581b6738a8080ac23
+n2 = 0x70b2de4871351f2736f6f98eaed99ae6a68dd02954c536ebefdd553e7c7cf3003991bad6081061d04a6513e3d0db8be164f8e2e8e51deb1469832600957b7fe9
+n3 = 0x586b8bccfa79b1a4e1332bccb897df08ad8e1867cee01ba003c74d861fd84ffe3cef3b652d45282bc18a6a11ca001f06500b78763932ae8044dfc21b6288fc91
+c1 = 0x352cf1b545414223ce9ef6897258be836a282b5bf5d9050a7329bc0cabf8c700fbe2f4fef2a2d936eb08961406b1a2d6f288d18892e851ebe5afddb48723e89d
+c2 = 0x1701b013a055ae8843ccfabceb1b29f79e676e2add6ca8256d893c754c1269820024ccd897d56f16d51f71023294d6d0ec30aaf1f9b07739bb9dfb7e3cb5ddb
+c3 = 0x46f96866b9751c6492fe72f0169421e906915aab1065bc89d1712b086392f31585f4b409f645f968c918a1b16863bfadf95298f932ed30e52089a536146aae82
+e = 3  </pre>
+
+</div>
+
+<h3 class="sectionedit5" id="solutions">Solutions:</h3>
+<div class="level3">
+
+</div>
+
+<h5 id="aes1">1. AES</h5>
+<div class="level5">
+<pre class="code">
+from Crypto.Cipher import AES
+from Crypto import Random
+
+BLOCK_SIZE = 32
+PADDING = &#039;#&#039;
+iv = &quot;\x00&quot; * 16
+
+def decrypt(key, iv, data):
+    aes = AES.new(key, AES.MODE_CBC, iv)
+    data = aes.decrypt(data)
+    return data
+
+with open(&#039;secret.enc&#039;, &#039;rb&#039;) as f:
+    data = f.read()
+
+extr_key = data[:32]
+extr_data = data[32:]
+f_dec = open(&quot;decr.jpg&quot;, &#039;wb&#039;)
+f_dec.write(decrypt(extr_key, iv, extr_data).rstrip(PADDING))
+f_dec.close()
+</pre>
+
+</div>
+
+<h5 id="rsa_-_known_factorisation1">3. RSA - Known factorisation</h5>
+<div class="level5">
+
+<p>
+ P and q can be obtained by factorising n on Factor DB
+</p>
+<pre class="code">
+#!/usr/bin/env python
+import gmpy2
+
+c = 48150432592505707552503950434421170873397025541574547497460326222962564730297
+n = 70736025239265239976315088690174594021646654881626421461009089480870633400973
+e = 3
+p = 296805874594538235115008173244022912163
+q = 238324208831434331628131715304428889871
+
+phi = (p-1)*(q-1)
+d = gmpy2.invert(e, phi) 
+
+pt = pow(c, d, n)
+print( &quot;plaintext: &quot; + hex(pt)[2:].decode(&quot;hex&quot;))
+</pre>
+
+</div>
+
+<h5 id="rsa_-_fermat_factorization1">4. RSA - Fermat Factorization</h5>
+<div class="level5">
+<pre class="code">
+#!/usr/bin/env python
+import gmpy2
+from math import ceil
+from decimal import Decimal
+
+def fermat(n):
+	a = gmpy2.isqrt(n) + 1
+	b2 = a * a - n
+
+	while not gmpy2.is_square(b2):
+	    a = a + 1
+	    b2 = a * a - n
+
+	b = gmpy2.isqrt(b2)
+	return (a+b, a-b)
+
+c = 654564125967811572957608485461509223541781197895608920296825435452302563551217882689453762450350456257099687251554693360645992257362168460115089842875072530869254099617858153458510730488327127628978127748004507636893613507344065845140647694349616219705757465949239924311260160127009283418952554522720051840260714703523494071411559772701875928237248989122625648657235677768486515417771976078417365256201505968603934443986411140514722785883888625061210731765750448
+n = 1209143407476550975641959824312993703149920344437422193042293131572745298662696284279928622412441255652391493241414170537319784298367821654726781089600780498369402167443363862621886943970468819656731959468058528787895569936536904387979815183897568006750131879851263753496120098205966442010445601534305483783759226510120860633770814540166419495817666312474484061885435295870436055727722073738662516644186716532891328742452198364825809508602208516407566578212780807
+e = 65537
+
+p, q = fermat(n)
+
+phi = (p-1)*(q-1)
+d = gmpy2.invert(e, phi) 
+
+pt = pow(c, d, n)
+print( &quot;plaintext: &quot; + hex(pt)[2:].decode(&quot;hex&quot;))
+</pre>
+
+</div>
+
+<h5 id="rsa_-_broadcast_attack1">5. RSA - Broadcast Attack</h5>
+<div class="level5">
+<pre class="code">
+#!/usr/bin/python
+import gmpy2
+import gmpy
+
+n1 = 0xa8688af04ce3d0b93d04219391054740f10272ab96706cb98f852d8123e93853dfa4c4cf1fbb61cd632a2dad437e25003d545cded563e20581b6738a8080ac23
+n2 = 0x70b2de4871351f2736f6f98eaed99ae6a68dd02954c536ebefdd553e7c7cf3003991bad6081061d04a6513e3d0db8be164f8e2e8e51deb1469832600957b7fe9
+n3 = 0x586b8bccfa79b1a4e1332bccb897df08ad8e1867cee01ba003c74d861fd84ffe3cef3b652d45282bc18a6a11ca001f06500b78763932ae8044dfc21b6288fc91
+c1 = 0x352cf1b545414223ce9ef6897258be836a282b5bf5d9050a7329bc0cabf8c700fbe2f4fef2a2d936eb08961406b1a2d6f288d18892e851ebe5afddb48723e89d
+c2 = 0x1701b013a055ae8843ccfabceb1b29f79e676e2add6ca8256d893c754c1269820024ccd897d56f16d51f71023294d6d0ec30aaf1f9b07739bb9dfb7e3cb5ddb
+c3 = 0x46f96866b9751c6492fe72f0169421e906915aab1065bc89d1712b086392f31585f4b409f645f968c918a1b16863bfadf95298f932ed30e52089a536146aae82
+e = 3
+
+N = n1*n2*n3
+N1 = n2*n3
+N2 = n1*n3
+N3 = n1*n2
+d1 = gmpy2.invert(N1, n1)
+d2 = gmpy2.invert(N2, n2)
+d3 = gmpy2.invert(N3, n3)
+res = c1*N1*d1 + c2*N2*d2 + c3*N3*d3
+s = int(res % N)
+pt, perf = gmpy.root(s, e)
+print( &quot;plaintext: &quot; + hex(pt)[2:].decode(&quot;hex&quot;))</pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_189901642758355a9c044d9" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../lectures/01.html" class="wikilink1" title="isc:lectures:01">Lecture 01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/02.html" class="wikilink1" title="isc:lectures:02">Lecture 02 - Access control</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/03.html" class="wikilink1" title="isc:lectures:03">Lecture 03 - Hardware Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/04.html" class="wikilink1" title="isc:lectures:04">Lecture 04 - Cryptography</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/05.html" class="wikilink1" title="isc:lectures:05">Lecture 05 - Operating System Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/06.html" class="wikilink1" title="isc:lectures:06">Lecture 06 - Application Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/07.html" class="wikilink1" title="isc:lectures:07">Lecture 07 - Network Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/08.html" class="wikilink1" title="isc:lectures:08">Lecture 08 - Web Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/09.html" class="wikilink1" title="isc:lectures:09">Lecture 09 - Forensics</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/10.html" class="wikilink1" title="isc:lectures:10">Lecture 10 - Usable Security</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Lectures" [1-52] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_70951996558355a9c06417" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="isc:labs:01">Lab 01  - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="isc:labs:02">Lab 02 - Access control</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="isc:labs:03">Lab 03 - Hardware Security</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="04.html" class="wikilink1" title="isc:labs:04">Lab 04 - Cryptography</a></span></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="isc:labs:05">Lab 05 - Operating System Security</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="isc:labs:06">Lab 06 - Application Security</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="isc:labs:07">Lab 07 - Network Security</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="isc:labs:08">Lab 08 - Web Security</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="isc:labs:09">Lab 09 - Forensics</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="isc:labs:10">Lab 10 - Usable Security</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [53-96] -->
+<h1 class="sectionedit3" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_52956586258355a9c08357" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/1.html" class="wikilink1" title="isc:assignments:1">Homework 1</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/2.html" class="wikilink1" title="isc:assignments:2">Homework 2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Assignments" [97-156] -->
+<h1 class="sectionedit4" id="support">Support</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_22837834058355a9c0a294" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/resources.html" class="wikilink1" title="isc:info:resources">Useful resources</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Support" [157-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="04.html#lab_04_-_cryptography">Lab 04 - Cryptography</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#overview">Overview</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#exercises">Exercises</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="04.html#aes">1. AES</a></div></li>
+<li class="level4"><div class="li"><a href="04.html#aes_ecb">2. AES ECB</a></div></li>
+<li class="level4"><div class="li"><a href="04.html#rsa_-_known_factorisation">3. RSA - Known factorisation</a></div></li>
+<li class="level4"><div class="li"><a href="04.html#rsa_-_fermat_factorization">4. RSA - Fermat Factorization</a></div></li>
+<li class="level4"><div class="li"><a href="04.html#rsa_-_broadcast_attack">5. RSA - Broadcast Attack</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="04.html#solutions">Solutions:</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          isc/labs/04.txt · Last modified: 2016/08/04 16:03 by filip.munteanu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="04%3Fdo=media&amp;ns=isc%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="04.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=isc%253Alabs%253A04&amp;1479891612" width="2" height="1" alt="" /></div>
+</body>
+</html>

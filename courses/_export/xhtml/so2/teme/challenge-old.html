@@ -1,0 +1,236 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:teme:challenge-old</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-12T23:20:19+0200"/>
+<meta name="keywords" content="so2,teme,challenge-old"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so2:teme"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="challenge-old.html"/>
+<link rel="canonical" href="../../../../so2/teme/challenge-old.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:teme';var JSINFO = {"id":"so2:teme:challenge-old","namespace":"so2:teme","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="challenge-old.html#tema_1_-_kprobe_based_tracer">Tema 1 - Kprobe based tracer</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="challenge-old.html#obiectivele_temei">Obiectivele temei</a></div></li>
+<li class="level2"><div class="li"><a href="challenge-old.html#enunt">Enunț</a></div></li>
+<li class="level2"><div class="li"><a href="challenge-old.html#detalii_de_implementare">Detalii de implementare</a></div></li>
+<li class="level2"><div class="li"><a href="challenge-old.html#testare">Testare</a></div></li>
+<li class="level2"><div class="li"><a href="challenge-old.html#resurse_de_suport">Resurse de suport</a></div></li>
+<li class="level2"><div class="li"><a href="challenge-old.html#suport_intrebari_si_clarificari">Suport, întrebări și clarificări</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="tema_1_-_kprobe_based_tracer">Tema 1 - Kprobe based tracer</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> Termen de predare: <strong>Miercuri, 26 Martie 2014, ora 23:00</strong></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Tema 1 - Kprobe based tracer" [1-108] -->
+<h2 class="sectionedit2" id="obiectivele_temei">Obiectivele temei</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> dobândirea de cunoştinţe legate de instrumentarea funcţiilor din nucleul Linux (mecanismul <code>kprobes</code>)</div>
+</li>
+<li class="level1"><div class="li"> obţinerea de cunoştinţe legate de interacţiunea cu sistemul de fişiere <code>/proc</code> din nucleul Linux.</div>
+</li>
+<li class="level1"><div class="li"> obținerea de deprinderi de lucru cu structurile de date specifice nucleului Linux (<code>hash</code>, <code>list</code>).</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Obiectivele temei" [109-470] -->
+<h2 class="sectionedit3" id="enunt">Enunț</h2>
+<div class="level2">
+
+<p>
+Realizați un inspector de operații de kernel.
+</p>
+
+<p>
+Prin acest inspector ne propunem să interceptăm:
+</p>
+<ul>
+<li class="level1"><div class="li"> apelurile <code>kmalloc</code> și <code>kfree</code></div>
+</li>
+<li class="level1"><div class="li"> apelul <code>schedule</code></div>
+</li>
+<li class="level1"><div class="li"> apelurile <code>up</code> și <code>down_interruptible</code></div>
+</li>
+<li class="level1"><div class="li"> apelurile <code>mutex_lock</code> și <code>mutex_unlock</code></div>
+</li>
+</ul>
+
+<p>
+Inspectorul va reține, la nivel de proces, numărul de apeluri pentru fiecare dintre funcțiile de mai sus. În plus, pentru apelurile <code>kmalloc</code> şi <code>kfree</code> se afișează cantitatea totală de memorie alocată și eliberată.
+</p>
+
+<p>
+Inspectorul va fi implementat ca un modul de kernel cu numele <code>tracer.ko</code>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Enunț" [471-1063] -->
+<h2 class="sectionedit4" id="detalii_de_implementare">Detalii de implementare</h2>
+<div class="level2">
+
+<p>
+Interceptarea se va face întregistrând câte o probă (<code>kprobe</code>) pentru fiecare din funcţiile de mai sus. Inspectorul va reține o listă/hash de procese monitorizate și va contabiliza informațiile de mai sus pentru aceste procese.
+</p>
+
+<p>
+Pentru controlul listei/hash-ului de procese monitorizate, se va folosi un char device denumit <code>/dev/tracer</code>, cu majorul <code>10</code> și minorul <code>42</code>. Acesta va expune o interfață ioctl cu două argumente:
+</p>
+<ul>
+<li class="level1"><div class="li"> primul argument reprezintă cererea către subsistemul de monitorizare.</div>
+<ul>
+<li class="level2"><div class="li"> <code>TRACER_ADD_PROCESS</code></div>
+</li>
+<li class="level2"><div class="li"> <code>TRACER_REMOVE_PROCESS</code></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> al doilea argument reprezintă PID-ul procesului pentru care se va executa cererea de monitorizare.</div>
+</li>
+</ul>
+
+<p>
+Pentru a putea crea un char device cu majorul <code>10</code> va trebui să folosiţi interfaţa <a href="http://lxr.linux.no/#linux+v3.8.3/include/linux/miscdevice.h#L52" class="urlextern" title="http://lxr.linux.no/#linux+v3.8.3/include/linux/miscdevice.h#L52"  rel="nofollow"> miscdevice</a> din kernel. Definiţiile macro-urilor aferente se găsesc în <a href="http://elf.cs.pub.ro/so2/res/teme/challenge-util/tracer.h" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/challenge-util/tracer.h"  rel="nofollow"> header-ul tracer.h</a>
+</p>
+
+<p>
+Întrucât funcţia <code>kmalloc</code> este inline pentru instrumentarea cantităţii de memorie allocate se va inspecta funcţia <code>__kmalloc</code>, astfel:
+</p>
+<ul>
+<li class="level1"><div class="li"> se va folosi o probă de tip <code>kretprobe</code>, care va reţine cantitatea de memorie alocată şi adresa zonei de memorie alocată.</div>
+</li>
+<li class="level1"><div class="li"> se vor folosi câmpurile <code>.entry_handler</code> şi <code>.handler</code> din structura <code>kretprobe</code></div>
+</li>
+</ul>
+
+<p>
+Întrucât funcţia <code>kfree</code> primeşte doar adresa zonei de memorie ce urmează a fi eliberată, pentru a determina cantitatea totală de memorie eliberată va trebui pe baza adresei zonei să determinăm dimensiunea ei. Acest lucru este posibil întrucât există o asociere adresa - dimensiune făcută la inspectarea funcţiei <code>__kmalloc</code>. 
+</p>
+
+<p>
+Pentru toate celelalte funcţii se va folosi o probă de tipul <code>jprobe</code>. Kernel-ul din mașina virtuală are opțiunea <code>CONFIG_DEBUG_LOCK_ALLOC</code> activată unde simbolul <code>mutex_lock</code> este un macro care se expandează la <code>mutex_lock_nested</code>. Astfel, pentru a obține informații despre funcția <code>mutex_lock</code> va trebui să instrumentați funcția <code>mutex_lock_nested</code>.
+</p>
+
+<p>
+Procesele care au fost adăugate în listă/hash și care își încheie execuția vor fi eliminate din listă/hash. De asemenea un proces va fi eliminat din lista/hash în urma operaţiei TRACER_REMOVE_PROCESS.
+</p>
+
+<p>
+Informațiile reținute de inspector vor fi afișate prin intermediul sistemului de fișiere procfs, în fişierul <code>/proc/tracer</code>. Pentru fiecare proces monitorizat se creează o intrare în fişierul <code>/proc/tracer</code> având ca şi prim câmp PID-ul procesului. Intrarea va fi de tipul read-only, și o operație de citire pe aceasta va afișa rezultatele reținute. Un exemplu de afișare a conținutului intrării este:
+</p>
+<pre class="code">$cat /proc/tracer
+PID   kmalloc kfree kmalloc_mem kfree_mem  sched   up     down  lock   unlock
+42    12      12    2048        2048        124    2      2     9      9
+1099  0       0     0           0           1984   0      0     0      0
+1244  0       0     0           0           1221   100   1023   1023   1002
+1337  123     99    125952      101376      193821 992   81921  7421   6392</pre>
+
+</div>
+<!-- EDIT4 SECTION "Detalii de implementare" [1064-4257] -->
+<h2 class="sectionedit5" id="testare">Testare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">Corectarea temelor se va realiza automat cu ajutorul unei <a href="http://elf.cs.pub.ro/so2/res/teme/so2-kprobe-based-checker.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/so2-kprobe-based-checker.zip"  rel="nofollow"> suite de teste publice</a>.</div>
+</li>
+<li class="level1"><div class="li">Indicații despre utilizarea suitei de teste se găsesc în fișierul <code>README</code> din cadrul arhivei.</div>
+</li>
+<li class="level1"><div class="li">Pentru evaluare și corectare tema va fi uploadată folosind <a href="https://elf.cs.pub.ro/vmchecker/ui" class="urlextern" title="https://elf.cs.pub.ro/vmchecker/ui"  rel="nofollow"> interfața vmchecker</a>.</div>
+</li>
+<li class="level1"><div class="li">Suita de teste conține un set de teste. Trecerea unui test conduce la obținerea punctajului aferent acestuia.</div>
+<ul>
+<li class="level2"><div class="li">În urma rulării testelor, se va acorda, în mod automat, un punctaj total. Punctajul total maxim este de 100 de puncte, pentru o temă care trece toate testele.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li">Pot exista penalizări în caz de întârzieri sau pentru neajunsuri de implementare sau de stil.</div>
+</li>
+<li class="level1"><div class="li">Penalizările pentru neajunsuri de implementare pot constitui maxim 10 puncte din nota finală a temei.</div>
+<ul>
+<li class="level2"><div class="li">Pe lângă penalizările precizate în cadrul <a href="http://elf.cs.pub.ro/so2/wiki/teme/general" class="urlextern" title="http://elf.cs.pub.ro/so2/wiki/teme/general"  rel="nofollow"> listei de depunctări</a>, se vor avea în vedere următoarele elemente:</div>
+<ul>
+<li class="level3"><div class="li"><strong>-2</strong>: omiterea eliminării corespunzătoare a resurselor (kprobes, intrări în <code>/proc</code>)</div>
+</li>
+<li class="level3"><div class="li"><strong>-2</strong>: probleme de sincronizare la date folosite de mai multe instanțe de execuție (spre exemplu, lista/tabela de hash cu procese)</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Testare" [4258-5563] -->
+<h2 class="sectionedit6" id="resurse_de_suport">Resurse de suport</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <code>Documentation/kprobes.txt</code> - descrierea subsystemului kprobes din sursele nucleului Linux.</div>
+</li>
+<li class="level1"><div class="li"> <code>samples/kprobes/</code> - câteva exemple de folosire a kprobes din sursele nucleului Linux.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Resurse de suport" [5564-5786] -->
+<h2 class="sectionedit7" id="suport_intrebari_si_clarificari">Suport, întrebări și clarificări</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">Pentru întrebări legate de temă puteți consulta <a href="http://news.gmane.org/gmane.education.region.romania.operating-systems-design" class="urlextern" title="http://news.gmane.org/gmane.education.region.romania.operating-systems-design"  rel="nofollow"> arhivele</a> listei de discuții sau puteți trimite un <a href="mailto:&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;">e-mail</a> (trebuie să fiți <a href="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2" class="urlextern" title="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2"  rel="nofollow"> înregistrați</a>).</div>
+</li>
+<li class="level1"><div class="li">Vă rugăm să urmăriți și să respectați <a href="../../../../so2/resurse/lista-discutii.html#mailing-list-guidelines" class="urlextern" title="http://ocw.cs.pub.ro/courses/so2/resurse/lista-discutii#mailing-list-guidelines"  rel="nofollow"> indicațiile de utilizare a listei</a>.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Suport, întrebări și clarificări" [5787-] --></div>
+</body>
+</html>

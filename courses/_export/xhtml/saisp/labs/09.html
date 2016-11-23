@@ -1,0 +1,587 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-02-28T23:46:25+0200"/>
+<meta name="keywords" content="saisp,labs,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="09.html"/>
+<link rel="canonical" href="../../../../saisp/labs/09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs';var JSINFO = {"id":"saisp:labs:09","namespace":"saisp:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="laborator_9_accelerarea_accesului_web">Laborator 9. Accelerarea accesului web</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 9. Accelerarea accesului web" [12-65] -->
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Folosirea Varnish pentru accelarea accesului web</div>
+</li>
+<li class="level1"><div class="li"> Configurarea Varnish</div>
+</li>
+<li class="level1"><div class="li"> Scenarii de folosire Varnish</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cunoștințe și abilități ce vor fi dobândite" [66-240] -->
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+Pentru a pregăti configurația de laborator va trebui să descărcați pe mașina fizică (<code>mjolnir</code>), în directorul <code>saisp/</code>, arhiva laboratorului:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">wget</span> <span class="re5">--user</span>=user-curs <span class="re5">--ask-password</span> http:<span class="sy0">//</span>repository.grid.pub.ro<span class="sy0">/</span>cs<span class="sy0">/</span>saisp<span class="sy0">/</span>laboratoare<span class="sy0">/</span>lab-09.zip
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">unzip</span> lab-09.zip</pre>
+
+<p>
+În urma dezarhivării rezultă două fișiere imagine KVM (format <code>qcow2</code>, <code>web.qcow2</code> și <code>varnish.qcow2</code>) și un script de pornire a mașinilor virtuale (<code>xlr8-start-kvm</code>). Fișierul imagine de bază <code>base.qcow2</code> este deja în directorul <code>saisp/</code> și este baza pentru celelalte două fișiere imagine: <code>web.qcow2</code> și <code>varnish.qcow2</code>.
+</p>
+
+<p>
+Puteți urma pașii de mai sus pentru a descărca infrastructura KVM pentru laborator pentru lucru acasă.
+</p>
+
+<p>
+Pentru pornirea celor două mașini virtuale (una cu serverul web, alta cu instanța Varnish) rulați scriptul de pornire:
+</p>
+<pre class="code">student@mjolnir:~/saisp$ ./xlr8-start-kvm</pre>
+
+<p>
+Vor porni cele două mașini virtuale KVM pentru laborator.
+</p>
+
+<p>
+Pentru accesarea celor două mașini folosiți SSH către adresele IP aferente fiecăreia. Pentru conectarea la mașina virtuală pentru serverul web folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.0.2</pre>
+
+<p>
+iar pentru conectarea la instanța Varnish folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.0.3</pre>
+
+<p>
+Parola pe cele două mașini virtuale este <code>student</code> atât pentru utilizatorul <code>root</code> cât și pentru utilizatorul <code>student</code>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Pregătire infrastructură de laborator" [241-1837] -->
+<h2 class="sectionedit4" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/09.html" class="wikilink1" title="saisp:labs:09">Laboratorul 9</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "saisp:labs:09:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_1106758259583567bccbbf1" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/01.html" class="wikilink1" title="saisp:labs:09:contents:01">01. [20p] Utilitate Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/02.html" class="wikilink1" title="saisp:labs:09:contents:02">02. [20p] Configurare Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/03.html" class="wikilink1" title="saisp:labs:09:contents:03">03. [15p] Statistici în Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/04.html" class="wikilink1" title="saisp:labs:09:contents:04">04. [15p] Caching în Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/05.html" class="wikilink1" title="saisp:labs:09:contents:05">05. [15p] Utilizare VCL</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/06.html" class="wikilink1" title="saisp:labs:09:contents:06">06. [15p] Servire de mai multe servere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/07.html" class="wikilink1" title="saisp:labs:09:contents:07">07. [BONUS - 10p] Load balancing în Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/08.html" class="wikilink1" title="saisp:labs:09:contents:08">08. [BONUS - 10p] Configurare Nginx ca reverse proxy</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/09.html" class="wikilink1" title="saisp:labs:09:contents:09">09. [BONUS - 10p] Configurare Squid</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 PLUGIN_INCLUDE_END "saisp:labs:09:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Navigare" [1838-1952] -->
+<h2 class="sectionedit7" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 PLUGIN_INCLUDE_START "saisp:labs:09:contents:01" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:01">
+
+<h3 class="sectionedit10" id="p_utilitate_varnish">01. [20p] Utilitate Varnish</h3>
+<div class="level3">
+
+<p>
+Dorim să urmărim efectul folosirii Varnish față de accesarea directă a unui server web. Vom folosi utilitarul <code>httperf</code> pentru a evalua comportamentul accesului web folosind Varnish sau fără Varnish.
+</p>
+
+<p>
+Pe mașina virtuală <code>varnish</code> (accesibilă folosind <code>ssh -l root 192.168.0.3</code>) este instalat Varnish. Este configurat să asculte conexiuni pe portul 80, lucru pe care îl putem verifica folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@varnish:~# </span><span class="kw2">netstat</span> <span class="re5">-tlpn</span> <span class="sy0">|</span> <span class="kw2">grep</span> varnish
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">80</span>              0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">2366</span><span class="sy0">/</span>varnishd
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 127.0.0.1:<span class="nu0">6082</span>          0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">2364</span><span class="sy0">/</span>varnishd
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">80</span>                   :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">2366</span><span class="sy0">/</span>varnishd
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> ::<span class="nu0">1</span>:<span class="nu0">6082</span>                :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">2364</span><span class="sy0">/</span>varnishd</pre>
+
+<p>
+Portul <code>6082</code> este portul de administrare. Configurația aferentă se găsește în fișierul <code>/etc/default/varnish</code>. Putem folosi un editor/viewer sau comanda de mai jos pentru a investiga configurația:
+</p>
+<pre class="code bash"><span class="co4">root@varnish:~# </span><span class="kw2">grep</span> <span class="re5">-A</span> <span class="nu0">4</span> DAEMON_OPTS <span class="sy0">/</span>etc<span class="sy0">/</span>default<span class="sy0">/</span>varnish <span class="sy0">|</span> <span class="kw2">grep</span> <span class="re5">-v</span> <span class="st_h">'^#'</span>
+<span class="re5">--</span>
+<span class="re5">--</span>
+<span class="re2">DAEMON_OPTS</span>=<span class="st0">&quot;-a :80 <span class="es1">\
+</span>             -T localhost:6082 <span class="es1">\
+</span>             -f /etc/varnish/default.vcl <span class="es1">\
+</span>             -S /etc/varnish/secret <span class="es1">\
+</span>             -s malloc,256m&quot;</span>
+<span class="re5">--</span>
+<span class="re5">--</span></pre>
+
+<p>
+Pentru a urmări utilitatea folosirii Varnish, vrem să ne conectăm la un server pe legătură directă și prin intermediul Varnish. Alegem serverul <code>ocw.cs.pub.ro</code>. Pentru aceasta, serviciul Varnish a fost configurat să folosească pe post de back end <code>ocw.cs.pub.ro</code>. Putem consulta această configurație în fișierul <code>/etc/varnish/default.vcl</code> folosind un editor/viewer sau comanda de mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@varnish:~# </span><span class="kw2">grep</span> <span class="re5">-A</span> <span class="nu0">3</span> <span class="st_h">'backend default'</span> <span class="sy0">/</span>etc<span class="sy0">/</span>varnish<span class="sy0">/</span>default.vcl 
+backend default <span class="br0">&#123;</span>
+    .host = <span class="st0">&quot;ocw.cs.pub.ro&quot;</span>;
+    .port = <span class="st0">&quot;80&quot;</span>;
+<span class="br0">&#125;</span></pre>
+
+<p>
+Configurația de mai sus înseamnă că pentru cererile venite către serviciul Varnish se vor realiza cereri mai departe către serverul <code>ocw.cs.pub.ro</code>. Cererile vor fi cache-urite astfel încât viitoare cereri vor fi servite direct din cache.
+</p>
+
+<p>
+Evaluarea o vom face de pe sistemul gazdă (<code>mjolnir</code>). Pentru acesta va trebui să configurăm sistemul astfel încât cererile către <code>ocw.cs.pub.ro</code> să ajungă la mașina virtuală <code>varnish</code>. Pentru aceasta, folosiți un editor și adăugați în fișierul <code>/etc/hosts</code> linia:
+</p>
+<pre class="code">192.168.0.3	ocw.cs.pub.ro</pre>
+
+<p>
+Cu linia de mai sus, cererile către <code>ocw.cs.pub.ro</code> vor ajunge la mașina virtulă <code>varnish</code>. Putem verifica acest lucru folosind comanda:
+</p>
+<pre class="code">student@mjolnir:~$ ping ocw.cs.pub.ro
+PING ocw.cs.pub.ro (192.168.0.3) 56(84) bytes of data.
+64 bytes from ocw.cs.pub.ro (192.168.0.3): icmp_seq=1 ttl=64 time=0.361 ms
+^C</pre>
+
+<p>
+Pentru început puteți să vă conectați din browserul de pe stația gazdă (<code>mjolnir</code>) și să accesați <abbr title="Uniform Resource Locator">URL</abbr>-ul aferent: <code>http://ocw.cs.pub.ro</code>. O să vedeți că primul acces durează mai mult dar viitoarele accese ale aceleiași pagini sunt mai rapide.
+</p>
+
+<p>
+Pentru a evalua acest lucru, instalați utilitarul <code>httperf</code> pe stația gazdă folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">sudo</span> <span class="kw2">apt-get install</span> httperf</pre>
+
+<p>
+Apoi măsurați conexiunile realizate pentru pagina de la <abbr title="Uniform Resource Locator">URL</abbr>-ul <code>http://ocw.cs.pub.ro</code> folosidn comanda:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span>httperf <span class="re5">--server</span>=ocw.cs.pub.ro <span class="re5">--wsess</span>=<span class="nu0">2000</span>,<span class="nu0">10</span>,<span class="nu0">2</span> <span class="re5">--rate</span> <span class="nu0">300</span> <span class="re5">--timeout</span> <span class="nu0">5</span></pre>
+
+<p>
+Observați în output informații precum <code>Connection rate</code>, <code>Request rate</code>, <code>Net I/O</code>.
+</p>
+
+<p>
+Ca să comparăm trebuie să ne conectăm în mod direct la serverul <code>ocw.cs.pub.ro</code>. Pentru acesta ștergeți (sau comentați) linia adăugată anterior în fișierul <code>/etc/hosts</code> și rulați din nou comanda <code>httperf</code> de mai sus. Observați diferențele parametrilor și, astfel, utilitatea folosirii Varnish ca accelerator pentru conexiuni web.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "01. [20p] Utilitate Varnish" [1-] --><!-- EDIT9 PLUGIN_INCLUDE_END "saisp:labs:09:contents:01" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT11 PLUGIN_INCLUDE_START "saisp:labs:09:contents:02" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:02">
+
+<h3 class="sectionedit13" id="p_configurare_varnish">02. [20p] Configurare Varnish</h3>
+<div class="level3">
+
+<p>
+Ne propunem să configurăm Varnish ca front-end pentru un server web configurat de noi. Pentru aceasta vom configura instanța Varnish de pe mașina virtuală <code>varnish</code> ca front end pentru serverul web de pe mașina virtuală <code>web</code> și apoi vom face măsurători.
+</p>
+
+<p>
+Pentru început, configurați instanța Varnish de pe mașina virtuală <code>varnish</code> să folosească pe post de back end serviciul web de pe mașina virtuală web.
+</p>
+
+<p>
+<p><div class="notetip">
+Serviciul web de pe mașina virtuală ascultă conexiuni pe portul <code>80</code> la adresa IP <code>192.168.0.2</code>.
+</p>
+
+<p>
+După configurarea Varnish serviciul trebuie repornit folosind comanda
+</p>
+<pre class="code">root@varnish:~# service varnish restart</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Pentru a testa conectați-vă din browser-ul de pe stația gazdă la adresa serverului Varnish: <a href="http://192.168.0.3/" class="urlextern" title="http://192.168.0.3/"  rel="nofollow">http://192.168.0.3/</a>. Dacă totul a mers cum trebuie va apărea o pagină cu mesajul <em>Say hello to my little friend!</em>.
+</p>
+
+<p>
+Același mesaj poate fi accesat direct de la serverul web: <a href="http://192.168.0.2/" class="urlextern" title="http://192.168.0.2/"  rel="nofollow">http://192.168.0.2/</a>, doar că nu va mai trece prin serverul Varnish.
+</p>
+
+<p>
+Pentru a măsura durata transferului cu și fără Varnish, folosiți <code>httperf</code> pe stația gazdă (<code>mjolnir</code>) pentru a descărca un fișier dintre cele accesibile la adresa <a href="http://192.168.0.3/data/" class="urlextern" title="http://192.168.0.3/data/"  rel="nofollow">http://192.168.0.3/data/</a> (sau <a href="http://192.168.0.2/data/" class="urlextern" title="http://192.168.0.2/data/"  rel="nofollow">http://192.168.0.2/data/</a>); de indicat este să folosiți fișierul <code>10M.dat</code> de dimesiunea cea mai mare. Folosiți conectarea la ambele servere (cu și fără suport Varnish) pentru a face diferența.
+</p>
+
+<p>
+În timpul în care rulați <code>httperf</code> urmăriți folosind <code>htop</code> încărcarea pe cele două mașini virtuale. Observați încărcarea serverului Varnish atunci când acesta este folosit, sau a serverului Apache la conexiunile directe.
+</p>
+
+<p>
+<p><div class="notetip">
+Folosiți opțiunea <code>--uri</code> la <code>httperf</code> ca să precizați pagina care să fie accesată. În cazul nostru ar fi vorba de <a href="http://192.168.0.2/data/10M.dat" class="urlextern" title="http://192.168.0.2/data/10M.dat"  rel="nofollow">http://192.168.0.2/data/10M.dat</a> sau <a href="http://192.168.0.3/data/10M.dat" class="urlextern" title="http://192.168.0.3/data/10M.dat"  rel="nofollow">http://192.168.0.3/data/10M.dat</a>.
+
+</div></p>
+</p>
+
+<p>
+Observati diferența de <code>Request rate</code> între conexiunea directă la serverul web și conexiunea prin intermediul serverului Varnish.
+</p>
+
+</div>
+<!-- EDIT13 SECTION "02. [20p] Configurare Varnish" [1-] --><!-- EDIT12 PLUGIN_INCLUDE_END "saisp:labs:09:contents:02" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT14 PLUGIN_INCLUDE_START "saisp:labs:09:contents:03" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:03">
+
+<h3 class="sectionedit16" id="p_statistici_in_varnish">03. [15p] Statistici în Varnish</h3>
+<div class="level3">
+
+<p>
+Ca să urmărim starea serviciului Varnish dispunem de câteva utilitare de analiză și monitorizare a acestuia. Acestea sunt, respectiv, <code>varnishlog</code>, <code>varnishstat</code> și <code>varnishhist</code>.
+</p>
+
+<p>
+Toate afișează informații despre serviciul Varnish din momentul rulării comenzii, nu și dinainte.
+</p>
+
+<p>
+Comanda <code>varnishlog</code> afișează informații despre conexiunile realizate la serviciul Varnish. Rulați comanda <code>varnishlog</code> și apoi realizați conexiuni la serviciu. Urmăriți informații despre aceste conexiuni în output-ul comenzii. Informațiile afișate sunt bogate; putem să filtrăm din acestea. De exemplu, dacă rulăm comanda
+</p>
+<pre class="code"># varnishlog -O -i RxURL</pre>
+
+<p>
+va fi afișat doar <abbr title="Uniform Resource Locator">URL</abbr> de receive (ceea ce i-a fost solicitat serviciului Varnish).
+</p>
+
+<p>
+Comanda <code>varnishstat</code> afișează informații despre starea serviciului. Output-ul ocupă un ecran și este actualizat periodic. Porniți comanda, realizați conexiuni către serviciul Varnish și urmăriți actualizarea output-ului. Urmăriți linia <code>Hitrate ratio</code>.
+</p>
+
+<p>
+Comanda <code>varnishhist</code> afișează o histogramă a timpului de servire a cererilor. Pe partea orizontală sunt prezentați timpii de servire, la scară logaritmică. Accesele care nu ajung în cache apar cu <code>#</code> (diez) iar cele care ajung în cache apar cu <code>|</code> (pipe). Realizați mai multe conexiuni diferite (de exemplu la cele trei fișiere de dimensiuni diferite) și observați output-ul afișat de comandă. Observați că este foarte mic timpul de servire din cache față de cel de servire inițială, prin interogarea serverului web.
+</p>
+
+<p>
+Folosiți comanda <code>varnishlog</code> pentru a afișa doar cererile către fișierul <code>/data/100k.dat</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Folosiți opțiunea <code>-m</code> a <code>varnishlog</code>. Urmăriți și exemplele din pagina de manual a comenzii <code>varnishlog</code>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT16 SECTION "03. [15p] Statistici în Varnish" [1-] --><!-- EDIT15 PLUGIN_INCLUDE_END "saisp:labs:09:contents:03" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT17 PLUGIN_INCLUDE_START "saisp:labs:09:contents:04" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:04">
+
+<h3 class="sectionedit19" id="p_caching_in_varnish">04. [15p] Caching în Varnish</h3>
+<div class="level3">
+
+<p>
+Vrem să vedem cum se comportă cache-ul în Varnish. Intrările în Varnish sunt cache-uite pentru o perioadă de timp înainte să expire. După expirarea timpului respectiv, se realizează o nouă cerere către serverul web pentru obținerea din nou a paginii.
+</p>
+
+<p>
+Timpul de viață al cache-ului este dat de o variabilă TTL internă a Varnish. Valoarea sa este în mod implicit configurată la <code>120</code> de secunde. Putem determina acest lucru prin intermediul comenzii:
+</p>
+<pre class="code">root@varnish:~# varnishadm param.show default_ttl</pre>
+
+<p>
+Valorea implicită, afișată de comanda de mai sus este <code>120</code> de secunde. Această valoare poate fi configurată în fișierul <code>/etc/default/varnish</code>; este vorba de directiva <code>VARNISH_TTL</code>.
+</p>
+
+<p>
+Ca să urmărim expirarea cache-ului, vom folosi comanda <code>varnishlog</code> în forma de mai jos:
+</p>
+<pre class="code">root@varnish:~# varnishlog -i VCL_Call</pre>
+
+<p>
+Apoi facem cereri către fișierele cu extensia <code>.dat</code> menționate în exercițiul anterior.
+</p>
+
+<p>
+Observăm că apare un mesaj ce conține cuvântul <code>miss</code> atunci când informația nu se găsește în cache, și apoi un mesaj ce conține cuvântul <code>hit</code> când informația este în cache. După <code>120</code> de secunde cache-ul va expira și atunci un acces va genera un <code>miss</code>.
+</p>
+
+<p>
+După ce ați generat un mesaj <code>miss</code> pe fișierul <code>100k.dat</code>, adică informația nu era, dar acum este, în cache, rescrieți fișierul pe serverul web, în directorul <code>/var/www/data/100k.dat</code> folosind comanda:
+</p>
+<pre class="code">root@web:/var/www/html/data# dd if=/dev/urandom of=100k.dat bs=100k count=1</pre>
+
+<p>
+Apoi accesați din nou fișierul și urmăriți output-ul comenzii <code>varnishlog</code>. Veți observa că fișierul a fost obținut din cache. Până când cache-ul nu expiră orice modificare a fișierului nu va fi vizibilă în cache.
+</p>
+
+<p>
+Pentru a preveni rămânerea în cache a unui obiect dat, se poate folosi <a href="https://www.varnish-cache.org/docs/3.0/tutorial/purging.html" class="urlextern" title="https://www.varnish-cache.org/docs/3.0/tutorial/purging.html"  rel="nofollow">purging sau banning</a>. După ce au ajuns în cache fișierele cu extensia <code>.dat</code>, faceți ban acelor fișiere pentru a fi recitite de pe server.
+</p>
+
+<p>
+<p><div class="notetip">
+Urmăriți indicațiile de <a href="https://www.varnish-cache.org/docs/3.0/tutorial/purging.html#bans" class="urlextern" title="https://www.varnish-cache.org/docs/3.0/tutorial/purging.html#bans"  rel="nofollow">aici</a>. Folosiți comanda <code>varnishadm</code> pentru a accesa CLI-ul de configurare Varnish.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT19 SECTION "04. [15p] Caching în Varnish" [1-] --><!-- EDIT18 PLUGIN_INCLUDE_END "saisp:labs:09:contents:04" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT20 PLUGIN_INCLUDE_START "saisp:labs:09:contents:05" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:05">
+
+<h3 class="sectionedit22" id="p_utilizare_vcl">05. [15p] Utilizare VCL</h3>
+<div class="level3">
+
+<p>
+Pentru a realiza configurări în Varnish se folosește sintaxa <a href="https://www.varnish-cache.org/docs/3.0/reference/vcl.html" class="urlextern" title="https://www.varnish-cache.org/docs/3.0/reference/vcl.html"  rel="nofollow">VCL</a> (<em>Varnish Configuration Language</em>). Aceasta permite încărcarea dinamică de configurații într-o instanța Varnish în rulare.
+</p>
+
+<p>
+Folosind fișierul de configurare <code>/etc/varnish/default.vcl</code>, configurați un TTL de 1 oră pentru fișierele din directorul <code>/data/</code> servite de Varnish. Celelalte fișiere/pagini servite vor folosi valoarea implicită a TTL-ului (de <code>120</code> de secunde).
+</p>
+
+<p>
+<p><div class="notetip">
+Urmăriți indicațiile de <a href="http://stackoverflow.com/a/10346942" class="urlextern" title="http://stackoverflow.com/a/10346942"  rel="nofollow">aici</a>.
+</p>
+
+<p>
+Reporniți serviciul <code>varnish</code> după realizarea configurației.
+
+</div></p>
+</p>
+
+<p>
+Așteptați 3-4 minute după primul acces la o pagină din directorul <code>/data/</code> și apoi reaccesați-o. O configurație corectă va înseamna un <code>hit</code> în pagină (cache-ul de o oră nu va fi expirat).
+</p>
+
+</div>
+<!-- EDIT22 SECTION "05. [15p] Utilizare VCL" [1-] --><!-- EDIT21 PLUGIN_INCLUDE_END "saisp:labs:09:contents:05" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT23 PLUGIN_INCLUDE_START "saisp:labs:09:contents:06" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:06">
+
+<h3 class="sectionedit25" id="p_servire_de_mai_multe_servere">06. [15p] Servire de mai multe servere</h3>
+<div class="level3">
+
+<p>
+Dorim ca serviciul Varnish să accelereze accesul web atât către serverul web din mașina virtuală <code>web</code> cât și către <code>ocw.cs.pub.ro</code>. Pentru aceasta trebuie să fie configurate două back end-uri.
+</p>
+
+<p>
+Configurați cele două back end-uri astfel încât dacă <abbr title="Uniform Resource Locator">URL</abbr>-ul începe cu <code>/courses/</code> să fie servit de back end-ul de <code>ocw.cs.pub.ro</code>, altfel să fie servit de back end-ul mașinii virtuale <code>web</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Porniți de la <a href="https://www.varnish-cache.org/docs/3.0/tutorial/advanced_backend_servers.html" class="urlextern" title="https://www.varnish-cache.org/docs/3.0/tutorial/advanced_backend_servers.html"  rel="nofollow">documentația Varnish</a>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT25 SECTION "06. [15p] Servire de mai multe servere" [1-] --><!-- EDIT24 PLUGIN_INCLUDE_END "saisp:labs:09:contents:06" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT26 PLUGIN_INCLUDE_START "saisp:labs:09:contents:07" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:07">
+
+<h3 class="sectionedit28" id="bonus_-_10p_load_balancing_in_varnish">07. [BONUS - 10p] Load balancing în Varnish</h3>
+<div class="level3">
+
+<p>
+Dorim să facem load balancing (denumit și <a href="https://www.varnish-cache.org/docs/3.0/tutorial/advanced_backend_servers.html#directors" class="urlextern" title="https://www.varnish-cache.org/docs/3.0/tutorial/advanced_backend_servers.html#directors"  rel="nofollow">directors</a> în Varnish). Înainte de această configurare, opriți mașina virtuală <code>web</code> și creați o copie a imaginii <code>web.qcow2</code> într-un alt fișier, de exemplu <code>web-copy.qcow2</code>. Apoi editați scriptul <code>xlr8-start-kvm</code> pentru a porni o nouă mașina <code>web</code>, cu altă adresă IP. Această mașină web este al doilea back end.
+</p>
+
+<p>
+<p><div class="notetip">
+Porniți doar copia mașinii virtuale, ca să nu aveți conflict de adresă IP. Apoi schimbați adresa IP în <code>192.168.0.4</code> în fișierul <code>/etc/network/interfaces</code>.
+</p>
+
+<p>
+Schimbați adresa MAC a copiei mașinii virtuale în scriptul <code>xlr8-start-kvm</code> ca să fie diferită de adresele MAC ale celorlalte mașini virtuale.
+</p>
+
+<p>
+În scriptul <code>xlr8-start-kvm</code> folosiți o nouă interfață TAP, de exemplu <code>tap3</code>, și stabiliți un nou port VNC, de exemplu <code>:3</code>.
+
+</div></p>
+</p>
+
+<p>
+Configurați Varnish pe mașina virtuală <code>varnish</code> să folosească cele două servere web de pe celelalte două mașini virtuale în load balancing de tip round robin.
+</p>
+
+<p>
+<p><div class="notetip">
+Va trebui să configurați directorul pe post de backend folosind <code>set req.backend …</code>. Urmăriți și exemplul de <a href="http://opentsdb.net/docs/build/html/user_guide/utilities/varnish.html" class="urlextern" title="http://opentsdb.net/docs/build/html/user_guide/utilities/varnish.html"  rel="nofollow">aici</a>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT28 SECTION "07. [BONUS - 10p] Load balancing în Varnish" [1-] --><!-- EDIT27 PLUGIN_INCLUDE_END "saisp:labs:09:contents:07" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT29 PLUGIN_INCLUDE_START "saisp:labs:09:contents:08" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:08">
+
+<h3 class="sectionedit31" id="bonus_-_10p_configurare_nginx_ca_reverse_proxy">08. [BONUS - 10p] Configurare Nginx ca reverse proxy</h3>
+<div class="level3">
+
+<p>
+Nginx este un server web care poate îndeplini un rol de <a href="http://reviewsignal.com/blog/2013/08/29/reverse-proxy-and-cache-server-with-nginx/" class="urlextern" title="http://reviewsignal.com/blog/2013/08/29/reverse-proxy-and-cache-server-with-nginx/"  rel="nofollow">reverse proxy and cache server</a> la fel ca Varnish. Instalați și configurați Nginx pe stația <code>varnish</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Nginx ascultă în mod implicit conexiuni pe portul <code>80</code>. Cel mai bine configurați serviciul Varnish să asculte conexiuni pe alt port (<code>8080</code> de exemplu).
+</p>
+
+<p>
+Urmăriți și indicațiile de <a href="http://serverfault.com/a/68160" class="urlextern" title="http://serverfault.com/a/68160"  rel="nofollow">aici</a>. Trebuie să folosiți directiva <code>listen</code> pentru a configura portul pe care ascultă conexiuni Nginx.
+
+</div></p>
+</p>
+
+<p>
+De pe stația gazdă (<code>mjolnir</code>) folosiți utilitarul <code>httperf</code> pentru a măsură performanța Nginx ca reverse proxy față de Varnish.
+</p>
+
+</div>
+<!-- EDIT31 SECTION "08. [BONUS - 10p] Configurare Nginx ca reverse proxy" [1-] --><!-- EDIT30 PLUGIN_INCLUDE_END "saisp:labs:09:contents:08" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT32 PLUGIN_INCLUDE_START "saisp:labs:09:contents:09" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:09">
+
+<h3 class="sectionedit34" id="bonus_-_10p_configurare_squid">09. [BONUS - 10p] Configurare Squid</h3>
+<div class="level3">
+
+<p>
+Configurați <a href="http://www.squid-cache.org/" class="urlextern" title="http://www.squid-cache.org/"  rel="nofollow">Squid</a> ca forward proxy pe mașina virtuală <code>web</code> și apoi configurați browserul local să folosească Squid ca proxy.
+</p>
+
+<p>
+<p><div class="notetip">
+Pachetul aferent este <code>squid3</code>.
+</p>
+
+<p>
+Urmăriți și indicațiile de <a href="http://www.server-world.info/en/note?os=Debian_7.0&amp;p=squid" class="urlextern" title="http://www.server-world.info/en/note?os=Debian_7.0&amp;p=squid"  rel="nofollow">aici</a>.
+
+</div></p>
+</p>
+
+<p>
+Pentru verificare, accesați din browser anumite adrese și urmăriți fișierul de jurnalizare al Squid: <code>/var/log/squid3/access.log</code>.
+</p>
+
+</div>
+<!-- EDIT34 SECTION "09. [BONUS - 10p] Configurare Squid" [1-] --><!-- EDIT33 PLUGIN_INCLUDE_END "saisp:labs:09:contents:09" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT35 PLUGIN_INCLUDE_START "saisp:labs:09:contents:sidebar" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:contents:sidebar">
+
+<h3 class="sectionedit37" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/09.html" class="wikilink1" title="saisp:labs:09">Laboratorul 9</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT38 PLUGIN_INCLUDE_START "saisp:labs:09:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:09:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_1106758259583567bccbbf1" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/01.html" class="wikilink1" title="saisp:labs:09:contents:01">01. [20p] Utilitate Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/02.html" class="wikilink1" title="saisp:labs:09:contents:02">02. [20p] Configurare Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/03.html" class="wikilink1" title="saisp:labs:09:contents:03">03. [15p] Statistici în Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/04.html" class="wikilink1" title="saisp:labs:09:contents:04">04. [15p] Caching în Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/05.html" class="wikilink1" title="saisp:labs:09:contents:05">05. [15p] Utilizare VCL</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/06.html" class="wikilink1" title="saisp:labs:09:contents:06">06. [15p] Servire de mai multe servere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/07.html" class="wikilink1" title="saisp:labs:09:contents:07">07. [BONUS - 10p] Load balancing în Varnish</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/08.html" class="wikilink1" title="saisp:labs:09:contents:08">08. [BONUS - 10p] Configurare Nginx ca reverse proxy</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/09/contents/09.html" class="wikilink1" title="saisp:labs:09:contents:09">09. [BONUS - 10p] Configurare Squid</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT39 PLUGIN_INCLUDE_END "saisp:labs:09:meta:nav" [0-] --></div>
+<div class="level4">
+
+</div>
+<!-- EDIT37 SECTION "Navigare" [1-] --><!-- EDIT36 PLUGIN_INCLUDE_END "saisp:labs:09:contents:sidebar" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Exerciții" [1953-] --></div>
+</body>
+</html>

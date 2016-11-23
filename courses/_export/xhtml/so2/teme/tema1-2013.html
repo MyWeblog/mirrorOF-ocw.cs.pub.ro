@@ -1,0 +1,591 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:teme:tema1-2013</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-12T22:47:18+0200"/>
+<meta name="keywords" content="so2,teme,tema1-2013"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so2:teme"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="tema1-2013.html"/>
+<link rel="canonical" href="../../../../so2/teme/tema1-2013.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:teme';var JSINFO = {"id":"so2:teme:tema1-2013","namespace":"so2:teme","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="tema1-2013.html#tema_1_-_interceptare_apeluri_de_sistem">Tema 1 - Interceptare apeluri de sistem</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="tema1-2013.html#scopul_temei">Scopul temei</a></div></li>
+<li class="level2"><div class="li"><a href="tema1-2013.html#enunt">Enunț</a></div></li>
+<li class="level2"><div class="li"><a href="tema1-2013.html#precizari_linux">Precizări Linux</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tema1-2013.html#exportarea_tabelei_de_apeluri_de_sistem">Exportarea tabelei de apeluri de sistem</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="tema1-2013.html#precizari_windows">Precizări Windows</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tema1-2013.html#schita_pentru_interceptarea_apelurilor_de_sistem_in_windows">Schiță pentru interceptarea apelurilor de sistem în Windows</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="tema1-2013.html#testare">Testare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tema1-2013.html#linux">Linux</a></div></li>
+<li class="level3"><div class="li"><a href="tema1-2013.html#windows">Windows</a></div></li>
+<li class="level3"><div class="li"><a href="tema1-2013.html#depunctari">Depunctări</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="tema1-2013.html#intrebari">Întrebări</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tema1-2013.html#faq">FAQ</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="tema_1_-_interceptare_apeluri_de_sistem">Tema 1 - Interceptare apeluri de sistem</h1>
+<div class="level1">
+
+<p>
+Termen de predare: <strong>Joi, 21 Martie 2013, ora 23:00 </strong>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Tema 1 - Interceptare apeluri de sistem" [1-112] -->
+<h2 class="sectionedit2" id="scopul_temei">Scopul temei</h2>
+<div class="level2">
+
+<p>
+Monitorizarea apelurilor de sistem venite din partea proceselor, prin crearea unui interceptor de apeluri de sistem în kernel.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Scopul temei" [113-267] -->
+<h2 class="sectionedit3" id="enunt">Enunț</h2>
+<div class="level2">
+
+<p>
+Să se scrie un modul de kernel <strong>sci</strong> care să intercepteze, la cerere, apeluri de sistem. Pentru apelurile de sistem interceptate, modulul trebuie să poată monitoriza anumite procese ce fac apeluri și să le jurnalizeze în syslog.
+</p>
+
+<p>
+La inserare, modulul va rezerva un apel de sistem nefolosit (<code>MY_SYSCALL_NO</code>) și va aștepta următoarele instrucțiuni (comenzi) din userspace prin respectivul apel:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>REQUEST_SYSCALL_INTERCEPT</code> pentru a intercepta un apel de sistem </div>
+</li>
+<li class="level1"><div class="li"><code>REQUEST_SYSCALL_RELEASE</code> pentru a renunța la interceptarea unui apel de sistem </div>
+</li>
+<li class="level1"><div class="li"><code>REQUEST_START_MONITOR</code> pentru a porni monitorizarea unui apel de sistem (ce a fost în prealabil interceptat) pentru un anumit proces </div>
+</li>
+<li class="level1"><div class="li"><code>REQUEST_STOP_MONITOR</code> pentru a opri monitorizarea unui apel de sistem (ce a fost în prealabil interceptat) pentru un anumit proces </div>
+</li>
+</ul>
+
+<p>
+Rutina de tratare a apelului rezervat va avea urmatoarea semnătură: 
+</p>
+<pre class="code C"><span class="kw4">long</span> my_syscall<span class="br0">&#40;</span><span class="kw4">int</span> cmd<span class="sy0">,</span> <span class="kw4">int</span> syscall<span class="sy0">,</span> <span class="kw4">int</span> pid<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+unde:
+</p>
+<ul>
+<li class="level1"><div class="li"><strong>cmd</strong> este comanda așteptată din userspace</div>
+</li>
+<li class="level1"><div class="li"><strong>syscall</strong> este numărul apelului de sistem la care se referă operația</div>
+</li>
+<li class="level1"><div class="li"><strong>pid</strong> este PID-ul procesului pentru care se dorește pornirea sau oprirea monitorizării. PID-ul este necesar doar pentru operațiile de monitorizare și va fi ignorat pentru operațiile de interceptare.</div>
+</li>
+</ul>
+
+<p>
+Interceptarea unui apel de sistem se referă la faptul că modulul va înlocui intrarea din tabela de apeluri de sistem, astfel încât toate apelurile ulterioare să “trecă prin modul” (și să ajungă în cele din urmă la apelul de sistem original). 
+</p>
+
+<p>
+Monitorizarea se refera la faptul că modulul va loga în userspace informații despre proces și apel de sistem: numărul apelului de sistem, parametrii apelului de sistem, codul de eroare întors de apelul de sistem (cel original), PID-ul procesului. 
+</p>
+
+<p>
+Monitorizarea se poate face pentru un proces sau pentru toate procesele (caz în care <strong>pid</strong> este 0).
+</p>
+
+<p>
+Înainte de a efectua operațiile cerute din userspace, modulul va trebui să facă verificări de consistență, drepturi, stare și să semnaleze, daca este cazul, condițiile de eroare:
+</p>
+<ul>
+<li class="level1"><div class="li"> verificări asupra drepturilor [eroare: permisiune/access refuzat]:</div>
+<ul>
+<li class="level2"><div class="li"> doar procesele ce aparțin utilizatorului privilegiat vor putea intercepta sau deintercepta un apel de sistem</div>
+</li>
+<li class="level2"><div class="li"> doar procesele ce aparțin utilizatorului privilegiat pot porni sau opri monitorizarea unui apel de sistem pentru toate PID-urile</div>
+</li>
+<li class="level2"><div class="li"> procesele ce aparțin de un utilizator neprivilegiat vor putea opri sau porni monitorizarea unui apel de sistem doar pentru procesele sale</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> verificări de consistență [eroare: parametru nevalid]:</div>
+<ul>
+<li class="level2"><div class="li"> numărul apelului de sistem (se consideră nevalide apelurile <code>MY_SYSCALL_NO</code> și <code>__NR_exit_group</code>)</div>
+</li>
+<li class="level2"><div class="li"> PID-ul procesului</div>
+</li>
+<li class="level2"><div class="li"> un apel de sistem ce nu a fost interceptat nu poate fi deinterceptat</div>
+</li>
+<li class="level2"><div class="li"> nu se poate monitoriza un apel de sistem care nu a fost interceptat</div>
+</li>
+<li class="level2"><div class="li"> monitorizarea pentru un proces/apel de sistem nu poate fi oprită dacă, în prealabil, nu a fost pornită</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> verificări de stare [eroare: ocupat]:</div>
+<ul>
+<li class="level2"><div class="li"> un apel de sistem deja interceptat nu poate fi interceptat din nou</div>
+</li>
+<li class="level2"><div class="li"> monitorizarea nu poate fi pornită de două ori pentru același apel de sistem și pid</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> alte verificări:</div>
+<ul>
+<li class="level2"><div class="li"> modulul trebuie să verifice codul de eroare al funcțiilor apelate și, în cazul în care nu poate continua, să transmită utilizatorului cauza (exemplu: nu se mai poate aloca memorie)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li">cazuri speciale:</div>
+<ul>
+<li class="level2"><div class="li"> modulul trebuie să oprească monitorizarea pentru procesele care s-au terminat</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Se impune folosirea unei <strong>liste pentru menținerea informațiilor despre procesele monitorizate</strong>. Folosirea unui vector de dimensiune fixă se consideră neadecvată pentru că timpul de căutare va fi similar, complexitatea implementării va fi similară, vectorul va avea un număr limitat de intrări. Se recomandă folosirea structurilor existente în kernel.
+</p>
+
+<p>
+Pentru că numărul de apeluri de sistem este în general mic (250-300 apeluri de sistem), dar și pentru o latență cât mai mica introdusă de interceptare, se recomandă ca <strong>informațiile despre apelurile de sistem interceptate să se țină într-un vector</strong>.
+</p>
+
+<p>
+Pentru interceptarea de apeluri de sistem revedeți informațiile prezentate în <a href="../../../../so2/cursuri/curs02.html" class="wikilink1" title="so2:cursuri:curs02">Cursul 2</a>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Enunț" [268-4648] -->
+<h2 class="sectionedit4" id="precizari_linux">Precizări Linux</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Precizări Linux" [4649-4678] -->
+<h3 class="sectionedit5" id="exportarea_tabelei_de_apeluri_de_sistem">Exportarea tabelei de apeluri de sistem</h3>
+<div class="level3">
+
+<p>
+<p><div class="noteimportant">Dacă aveți ultima mașină virtuală de pe site (kernel <code>3.7.8-s02 #3</code>), modificările sunt deja făcute.  Recomandăm ca, în caz contrar, să luați mașina de pe pagina de <a href="../../../../so2/resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">mașini virtuale</a>.
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> tabela cu apelurile de sistem este exportată pentru module doar în 2.4; pentru 2.6 va trebui sa exportați manual această tabelă, adăugând în fișierul <code>arch/x86/kernel/i386_ksyms_32.c</code> următoarele linii:</div>
+</li>
+</ul>
+<pre class="code C"><span class="kw2">extern</span> <span class="kw4">void</span><span class="sy0">*</span> sys_call_table<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy0">;</span>
+EXPORT_SYMBOL<span class="br0">&#40;</span>sys_call_table<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+De asemenea, va trebuie să modificați <code>arch/x86/kernel/syscall_32.c</code> pentru a face tabela writable:
+</p>
+<pre class="code">- const sys_call_ptr_t sys_call_table[__NR_syscall_max+1] = {
++ sys_call_ptr_t sys_call_table[__NR_syscall_max+1] = {</pre>
+
+<p>
+În plus, pentru că macro-ul <code>NR_syscalls</code> nu mai este definit în nucleu, va trebui să definiți o variabilă specială care să conțină numărul de apeluri de sistem în <code>arch/x86/kernel/entry_32.S</code>. Nucleul mașinii virtuale definește variabila <code>my_nr_syscalls</code> în acest sens.
+</p>
+<pre class="code C">ENTRY<span class="br0">&#40;</span>my_nr_syscalls<span class="br0">&#41;</span>
+.<span class="kw4">long</span>    nr_syscalls</pre>
+
+<p>
+De asemenea, trebuie exportată variabila de mai sus în <code>arch/x86/kernel/i386_ksyms_32.c</code>:
+</p>
+<pre class="code C"><span class="kw2">extern</span> <span class="kw4">long</span> my_nr_syscalls<span class="sy0">;</span>
+EXPORT_SYMBOL<span class="br0">&#40;</span>my_nr_syscalls<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Imaginea de pe site are făcute aceste modificări;
+</p>
+<ul>
+<li class="level1"><div class="li">pentru a folosi în modulul vostru cele două variabile exportate (<code>sys_call_table</code> și <code>my_nr_syscalls</code>) va trebui să le marcați cu extern:<pre class="code C"><span class="kw2">extern</span> <span class="kw4">void</span> <span class="sy0">*</span>sys_call_table<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy0">;</span>
+<span class="kw2">extern</span> <span class="kw4">long</span> my_nr_syscalls<span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">cum kernel-ul 2.6 este preemptiv, trebuie să protejați accesul la datele comune; este indicat să folosiți spinlock-uri </div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">se impune să se folosească apelul de sistem 0 pentru <code>my_syscall</code>, care în prezent nu mai este folosit</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">utilizatorul privilegiat va fi <code>root</code> (uid 0)</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">pentru determinarea uid-ului unui proces folosiți câmpul <strong>cred</strong> din structura ce identifică procesul (<code>struct task_struct</code>) </div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"><code>task_struct</code>-ul procesului curent este dat de macroul <strong>current</strong></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">pentru <code>task_struct</code>-ul unui proces oarecare folosiți funcțiile <strong>pid_task()</strong> și <strong>find_vpid()</strong></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">logarea apelului de sistem se va face cu macro-ul <strong>log_syscall</strong> definit în <code>sci_lin.h</code> (fișierul se găsește în arhiva de teste)</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">pentru eliminarea proceselor ce s-au terminat va trebui să interceptați apelul de sistem <strong>exit_group</strong> în funcția de inițializare a modulului; în funcția de cleanup a modulului trebuie deinterceptat apelul de sistem;</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">codurile de eroare ce trebuie întoarse sunt:</div>
+<ul>
+<li class="level2"><div class="li"> <code>-EINVAL</code> pentru parametru invalid</div>
+</li>
+<li class="level2"><div class="li"> <code>-EBUSY</code> pentru ocupat</div>
+</li>
+<li class="level2"><div class="li"> <code>-EPERM</code> pentru access refuzat</div>
+</li>
+<li class="level2"><div class="li"> <code>-ENOMEM</code> pentru memorie insuficientă</div>
+</li>
+<li class="level2"><div class="li"> <code>0</code> pentru succes</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Exportarea tabelei de apeluri de sistem" [4679-7538] -->
+<h2 class="sectionedit6" id="precizari_windows">Precizări Windows</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">datorită faptului că accesul la tabelele de apeluri de sistem este dependent de versiunea/build-ul sistemului de operare, tema trebuie rezolvată pentru mașina virtuală de pe site; este foarte probabil ca funcțiile helper puse la dispoziție în <code>sci_win.h</code> (fișierul se găsește în arhiva de teste) să nu funcționeze pe alte versiuni</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">tabelele de apeluri de sistem pot fi accesate din descriptorii asociați, definiți de :<pre class="code C"><span class="kw4">struct</span> std KeServiceDescriptorTable<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="sy0">;</span>
+<span class="kw4">struct</span> std <span class="sy0">*</span>KeServiceDescriptorTableShadow<span class="sy0">;</span></pre>
+
+<p>
+ Structura <code>std</code> este definită în <code>sci_win.h</code>
+</p>
+</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">la inițializarea modului, va trebui să chemați funcția <strong>get_shadow()</strong> care va inițializa descriptorul pentru tabela shadow; asta pentru că tabela shadow nu este exportată de către kernel</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">pentru că nu există apeluri de sistem nefolosite în Windows, va trebui să înlocuiți tabela de apeluri de sistem cu una nouă, în care să adaugați apelul de sistem propriu; atenție, trebuie să înlocuiți tabelele de apeluri de sistem atât în descriptorul principal cât și în shadow</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">numărul apelului de sistem <strong>my_syscall</strong> a fost definit în <code>sci_win.h</code> la <strong>MY_SYSCALL_NO</strong>; puteți presupune că această valoare este întotdeauna mai mare decât numărul de apeluri de sistem prezente</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">trebuie tratate doar apelurile de sistem din tabela 0</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">pentru determinarea utilizatorului unui process folosiți funcțiile <strong>GetUserOf(pid)</strong> și <strong>GetCurrentUser</strong>, funcții definite în <code>sci_win.h</code>; pentru a verifica dacă doi utilizatori sunt identici folosiți funcția <strong>CheckUsers</strong></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">utilizatorul privilegiat se consideră utilizatorul cu dreptul de încărcat / scos module din kernel; puteți verifica dacă procesul curent aparține de un utilizator privilegiat cu funcția <strong>UserAdmin</strong>, definită în <code>sci_win.h</code></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">logarea apelului de sistem se va face prin logarea de pachete <code>struct packet_log</code> definite în <code>sci_win.h</code>, pachete ce vor fi încapsulate în câmpul <strong>DumpData</strong> al unei intrări de log (vezi <strong>IoWriteErrorLogEntry</strong>) cu codul de eroare 0</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">pentru că W2K, WXP, W2k3 sunt preemtive în kernel, trebui să folosiți spinlock-uri pentru a vă proteja de race-uri; folosiți pe cât posibil funcții <strong>Interlocked* </strong></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">de la XP se marchează tabela de apeluri de sistem ca read-only; folosiți macrourile <strong>WPOFF</strong> și <strong>WPON</strong> (definite în <code>sci_win.h</code>) pentru a opri, respectiv porni protecția la scriere</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">pentru eliminarea proceselor ce s-au terminat din structurile folosite vedeți <strong>PsSetCreateProcessNotifyRoutine</strong></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">codurile de eroare ce trebuie întoarse sunt:</div>
+<ul>
+<li class="level2"><div class="li"> <code>STATUS_INVALID_PARAMETER</code> pentru parametru invalid</div>
+</li>
+<li class="level2"><div class="li"> <code>STATUS_DEVICE_BUSY</code> pentru ocupat</div>
+</li>
+<li class="level2"><div class="li"> <code>STATUS_ACCESS_DENIED</code> pentru access refuzat</div>
+</li>
+<li class="level2"><div class="li"> <code>STATUS_NO_MEMORY</code> pentru memorie insuficientă</div>
+</li>
+<li class="level2"><div class="li"> <code>STATUS_SUCCESS</code> pentru succes</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Precizări Windows" [7539-10463] -->
+<h3 class="sectionedit7" id="schita_pentru_interceptarea_apelurilor_de_sistem_in_windows">Schiță pentru interceptarea apelurilor de sistem în Windows</h3>
+<div class="level3">
+<pre class="code c">NTSTATUS <span class="br0">&#40;</span><span class="sy0">*</span>f<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+NTSTATUS interceptor<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">int</span> syscall<span class="sy0">,</span> param_size<span class="sy0">,</span> syscall_table<span class="sy0">;</span>
+    <span class="kw4">int</span> syscall_index<span class="sy0">,</span> r<span class="sy0">;</span>
+    <span class="kw4">void</span> <span class="sy0">*</span>old_stack<span class="sy0">,</span> <span class="sy0">*</span>new_stack<span class="sy0">;</span>
+&nbsp;
+    _asm mov syscall<span class="sy0">,</span> eax
+&nbsp;
+    syscall_table <span class="sy0">=</span> syscall <span class="sy0">&gt;&gt;</span> <span class="nu0">12</span><span class="sy0">;</span>
+    syscall_index <span class="sy0">=</span> syscall <span class="sy0">&amp;</span> <span class="nu12">0x0000FFF</span><span class="sy0">;</span>
+    param_size <span class="sy0">=</span> KeServiceDescriptorTable<span class="br0">&#91;</span>syscall_table<span class="br0">&#93;</span>.<span class="me1">spt</span><span class="br0">&#91;</span>syscall_index<span class="br0">&#93;</span><span class="sy0">;</span>
+&nbsp;
+    _asm mov old_stack<span class="sy0">,</span> ebp
+    _asm add old_stack<span class="sy0">,</span> <span class="nu0">8</span>
+    _asm sub esp<span class="sy0">,</span> param_size
+    _asm mov new_stack<span class="sy0">,</span> esp
+&nbsp;
+    RtlCopyMemory<span class="br0">&#40;</span>new_stack<span class="sy0">,</span> old_stack<span class="sy0">,</span> param_size<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    r <span class="sy0">=</span> f<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    DbgPrint<span class="br0">&#40;</span><span class="st0">&quot;syscall %d returns %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> syscall<span class="sy0">,</span> r<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> r<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> intercept<span class="br0">&#40;</span><span class="kw4">int</span> syscall<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">int</span> syscall_table<span class="sy0">,</span> syscall_index<span class="sy0">;</span>
+&nbsp;
+    syscall_table <span class="sy0">=</span> syscall <span class="sy0">&gt;&gt;</span> <span class="nu0">12</span><span class="sy0">;</span>
+    syscall_index <span class="sy0">=</span> syscall <span class="sy0">&amp;</span> <span class="nu12">0x0000FFF</span><span class="sy0">;</span>
+    f <span class="sy0">=</span> KeServiceDescriptorTable<span class="br0">&#91;</span>syscall_table<span class="br0">&#93;</span>.<span class="me1">st</span><span class="br0">&#91;</span>syscall_index<span class="br0">&#93;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* save service descriptor table entry to f */</span>
+&nbsp;
+    KeServiceDescriptorTable<span class="br0">&#91;</span>syscall_table<span class="br0">&#93;</span>.<span class="me1">st</span><span class="br0">&#91;</span>syscall_index<span class="br0">&#93;</span> <span class="sy0">=</span> interceptor<span class="sy0">;</span>
+    KeServiceDescriptorTableShadow<span class="br0">&#91;</span>syscall_table<span class="br0">&#93;</span>.<span class="me1">st</span><span class="br0">&#91;</span>syscall_index<span class="br0">&#93;</span> <span class="sy0">=</span> interceptor<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT7 SECTION "Schiță pentru interceptarea apelurilor de sistem în Windows" [10464-11567] -->
+<h2 class="sectionedit8" id="testare">Testare</h2>
+<div class="level2">
+
+<p>
+Pentru simplificarea procesului de corectare al temelor, dar și pentru a reduce greșelile temelor trimise, corectarea temelor se va face automat cu ajutorul unor teste publice (<a href="http://elf.cs.pub.ro/so2/res/teme/tema1-checker-lin.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/tema1-checker-lin.zip"  rel="nofollow">Linux</a>, <a href="http://elf.cs.pub.ro/so2/res/teme/tema1-checker-win.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/tema1-checker-win.zip"  rel="nofollow">Windows</a>). Testele presupun că numele modului de kernel este denumit <code>sci</code> atât pe Linux cât și pe Windows. 
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Testare" [11568-12009] -->
+<h3 class="sectionedit9" id="linux">Linux</h3>
+<div class="level3">
+
+<p>
+Testul se folosește de utilizatorul <code>nobody</code> care ar trebui să existe pe toate sistemele Linux. Din această cauză testul trebuie să fie plasat intr-un director public.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Linux" [12010-12202] -->
+<h3 class="sectionedit10" id="windows">Windows</h3>
+<div class="level3">
+
+<p>
+Utilizatorul cu care veți rula testul trebuie să aibă drepturile “Act as part of the operating system”, “Create a token object” și “Replace a process level token”. Pentru a configura aceste drepturi: Start → Control Panel → Administrative Tools → Local Security Policy → Local Policies → User Rights Assignments. 
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Windows" [12203-12545] -->
+<h3 class="sectionedit11" id="depunctari">Depunctări</h3>
+<div class="level3">
+
+<p>
+Depunctările generale pentru teme se găsesc pe pagina de <a href="../../../../so2/teme/general.html" class="wikilink1" title="so2:teme:general"> Indicații generale</a>.
+</p>
+
+<p>
+Depunctări pentru probleme constatate în implementarea temei prezente: 
+</p>
+<ul>
+<li class="level1"><div class="li">-0.5 implementare incorectă a cerințelor temei</div>
+</li>
+<li class="level1"><div class="li">-0.2 nu se implementează eliminarea proceselor care s-au terminat</div>
+</li>
+<li class="level1"><div class="li">-1.0 nu se folosesc liste în implementare</div>
+</li>
+<li class="level1"><div class="li">-0.2 lipsă sincronizări sau sincronizare incompletă / incorectă</div>
+<ul>
+<li class="level2"><div class="li"> -0.1 lipsă sincronizare accces lista procese</div>
+</li>
+<li class="level2"><div class="li"> -0.1 lipsă sincronizare vector de apeluri de sistem</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li">-0.1 utilizare funcții la nivele IRQL necorespunzatoare</div>
+</li>
+<li class="level1"><div class="li">-0.0 observații</div>
+</li>
+<li class="level1"><div class="li">-0.1 pentru fiecare test picat</div>
+</li>
+</ul>
+
+<p>
+În cazuri excepționale (tema trece testele prin nerespectarea cerințelor) și în cazul în care tema nu trece toate testele se poate scădea mai mult decât este menționat mai sus.
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Depunctări" [12546-13398] -->
+<h2 class="sectionedit12" id="intrebari">Întrebări</h2>
+<div class="level2">
+
+<p>
+Pentru întrebări legate de temă puteți consulta <a href="http://news.gmane.org/gmane.education.region.romania.operating-systems-design" class="urlextern" title="http://news.gmane.org/gmane.education.region.romania.operating-systems-design"  rel="nofollow"> arhivele</a> listei de discuții sau puteți trimite un <a href="mailto:&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;">e-mail</a> (trebuie să fiți <a href="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2" class="urlextern" title="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2"  rel="nofollow"> înregistrați</a>).
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Întrebări" [13399-13742] -->
+<h3 class="sectionedit13" id="faq">FAQ</h3>
+<div class="level3">
+
+<p>
+Q: Ce ar trebui să se întample în următoarele situații:
+</p>
+<ol>
+<li class="level1"><div class="li"> s-a cerut monitorizarea tuturor proceselor, și apoi se cere demonitorizarea unui proces specific.</div>
+</li>
+<li class="level1"><div class="li"> s-a cerut monitorizarea tuturor proceselor, și apoi se cere monitorizarea unui proces specific.</div>
+</li>
+<li class="level1"><div class="li"> s-a cerut monitorizarea unui proces specific, și apoi se cere demonitorizarea tuturor.</div>
+</li>
+</ol>
+
+<p>
+A: Nu se vor testa asemenea condiții. Este recomandată o abordare simplă, în care pid=0 este considerat la fel ca PID -ul celorlalte procese. <sup><a href="tema1-2013.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+<br/>
+
+<br/>
+
+Q: La tema 1 pe windows, structura std este un pic ambiguă. Ce înseamna fiecare câmp ?
+</p>
+<pre class="code C"><span class="kw4">struct</span> std <span class="br0">&#123;</span>
+  <span class="kw4">void</span> <span class="sy0">**</span>st<span class="sy0">;</span>             <span class="coMULTI">/* service table */</span>
+  <span class="kw4">int</span> <span class="sy0">*</span>ct<span class="sy0">;</span>               <span class="coMULTI">/* counter table */</span>
+  <span class="kw4">int</span> ls<span class="sy0">;</span>                <span class="coMULTI">/* last service no */</span>
+  <span class="kw4">unsigned</span> <span class="kw4">char</span> <span class="sy0">*</span>spt<span class="sy0">;</span>    <span class="coMULTI">/* service parameter table */</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+A:
+</p>
+<pre class="code C"> <span class="kw4">void</span> <span class="sy0">**</span>st<span class="sy0">;</span>    <span class="coMULTI">/* service table */</span> </pre>
+
+<p>
+Un pointer la service call table, un vector de adrese ale handlerelor
+pentru fiecare system call, indexat dupa id-ul system call-ului.
+</p>
+<pre class="code C"> <span class="kw4">int</span> <span class="sy0">*</span>ct<span class="sy0">;</span>        <span class="coMULTI">/* counter table */</span> </pre>
+
+<p>
+Pentru profiling, folosit doar în debug builds. Un pointer la un
+vector de countere, indexat tot după id-ul system call-ului, care
+numară de câte ori a fost apelat fiecare system call.
+</p>
+<pre class="code C"> <span class="kw4">int</span> ls<span class="sy0">;</span>            <span class="coMULTI">/* last service no */</span> </pre>
+
+<p>
+Numărul de intrări din service table / counter table / service parameter table.
+</p>
+<pre class="code C"> <span class="kw4">unsigned</span> <span class="kw4">char</span> <span class="sy0">*</span>spt<span class="sy0">;</span>    <span class="coMULTI">/* service parameter table */</span> </pre>
+
+<p>
+Numărul de bytes ocupați de argumentele fiecarui system call.
+</p>
+
+<p>
+Pentru dispatcher-ul vostru nu veți folosi decât service table și last
+service no, dar când creați noua tabelă este nevoie să duplicați și
+service parameter table.
+</p>
+
+<p>
+Pentru mai multe informatii vezi [1], descrierea
+KeAddSystemServiceTable [2] si trap.asm, sursa dispatcher-ului de
+system calls pentru windows [3].
+</p>
+<ol>
+<li class="level1"><div class="li"> <a href="http://www.honeynet.org/node/438" class="urlextern" title="http://www.honeynet.org/node/438"  rel="nofollow">http://www.honeynet.org/node/438</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://koala.cs.pub.ro/lxr/wrk/ntos/ke/miscc.c#L729" class="urlextern" title="http://koala.cs.pub.ro/lxr/wrk/ntos/ke/miscc.c#L729"  rel="nofollow">http://koala.cs.pub.ro/lxr/wrk/ntos/ke/miscc.c#L729</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://koala.cs.pub.ro/lxr/wrk/ntos/ke/i386/trap.asm" class="urlextern" title="http://koala.cs.pub.ro/lxr/wrk/ntos/ke/i386/trap.asm"  rel="nofollow">http://koala.cs.pub.ro/lxr/wrk/ntos/ke/i386/trap.asm</a></div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT13 SECTION "FAQ" [13743-] --><div class="footnotes">
+<div class="fn"><sup><a href="tema1-2013.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<a href="http://cursuri.cs.pub.ro/pipermail/pso/2009-March/003030.html" class="urlextern" title="http://cursuri.cs.pub.ro/pipermail/pso/2009-March/003030.html"  rel="nofollow">http://cursuri.cs.pub.ro/pipermail/pso/2009-March/003030.html</a></div>
+</div>
+</div>
+</body>
+</html>

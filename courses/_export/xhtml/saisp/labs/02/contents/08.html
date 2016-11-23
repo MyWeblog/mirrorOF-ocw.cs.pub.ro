@@ -1,0 +1,169 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:02:contents:08</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-03T14:06:40+0200"/>
+<meta name="keywords" content="saisp,labs,02,contents,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:02:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="08.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/02/contents/08.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:02:contents';var JSINFO = {"id":"saisp:labs:02:contents:08","namespace":"saisp:labs:02:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_acl_in_serverul_de_ldap">08. [10p] Configurare ACL în serverul de LDAP</h3>
+<div class="level3">
+
+<p>
+Pentru a securiza operațiile către serverul de LDAP acesta folosește liste de control al accesului (<abbr title="Access Control List">ACL</abbr> – <em>Access Control Lists</em>). Acestea oferă administratorului posibilitatea de a alege ce operații pot fi realizate de un utilizator.
+</p>
+
+<p>
+În cadrul serverului OpenLDAP configurarea <abbr title="Access Control List">ACL</abbr>-urilor se realizează în cadrul bazei de date <code>olcDatabase={1}hdb,cn=config</code>. Pentru a observa <abbr title="Access Control List">ACL</abbr>-urile configurate implicit folosim, pe stația server, comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span>  olcAccess
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">olcDatabase</span>=<span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb,<span class="re2">cn</span>=config
+olcAccess: <span class="br0">&#123;</span><span class="nu0">0</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=userPassword,shadowLastChange by self <span class="kw2">write</span> by anonymous auth by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">write</span> by <span class="sy0">*</span> none
+olcAccess: <span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=loginShell,gecos by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=example,dc=com&quot;</span> <span class="kw2">write</span> by self <span class="kw2">write</span> by <span class="sy0">*</span> <span class="kw2">read</span>
+olcAccess: <span class="br0">&#123;</span><span class="nu0">2</span><span class="br0">&#125;</span>to dn.base=<span class="st0">&quot;&quot;</span> by <span class="sy0">*</span> <span class="kw2">read</span>
+olcAccess: <span class="br0">&#123;</span><span class="nu0">3</span><span class="br0">&#125;</span>to <span class="sy0">*</span> by self <span class="kw2">write</span> by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">write</span> by <span class="sy0">*</span> <span class="kw2">read</span></pre>
+
+<p>
+Fiecare intrare este prefixată de un index care înseamnă ordinea în care sunt prelucrate: <code>{0}</code>, <code>{1}</code>, <code>{2}</code>, <code>{3}</code>. Cele patru reguli au următorul efect:
+</p>
+<ol>
+<li class="level1"><div class="li"> Atributele <code>userPassword</code>, respectiv <code>shadowLastChange</code> pot fi</div>
+<ul>
+<li class="level2"><div class="li"> scrise de deținător (<code>self</code>)</div>
+</li>
+<li class="level2"><div class="li"> folosite pentru autentificare de anonim</div>
+</li>
+<li class="level2"><div class="li"> scrise de admin</div>
+</li>
+<li class="level2"><div class="li"> fără drepturi pentru ceilați</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Atributul <code>loginShell</code> poate fi modificat de admin și de deținător și citit de oricine.</div>
+</li>
+<li class="level1"><div class="li"> Oricine poate citi intrările din întreaga bază de date LDAP.</div>
+</li>
+<li class="level1"><div class="li"> Celelalte atribute pot fi modificate de deținător și de admin și pot fi citite de oricine.</div>
+</li>
+</ol>
+
+<p>
+Dorim să ascundem adresa de e-mail a oricărui utilizator și să facem să fie modificată chiar de acesta. Pentru aceasta va trebui să adăugăm o regulă de forma:
+</p>
+<pre class="code">access to mail
+   by self write
+   by dn=&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot; write
+   by * none</pre>
+
+<p>
+Pentru aceasta vom crea un fișier LDIF care să conțină informațiile de mai jos:
+</p>
+<dl class="file">
+<dt><a href="../../../../../code/saisp/labs/02/contents/08%3Fcodeblock=2" title="Download Snippet" class="mediafile mf_ldif">acl-mail-hidden.ldif</a></dt>
+<dd><pre class="code file none">dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+add: olcAccess
+olcAccess: {1}to attrs=mail by dn=&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot; write by self write by * none</pre>
+</dd></dl>
+
+<p>
+Apoi încărcăm fișierul de configurare LDIF în LDAP:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapadd <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-f</span> acl-mail-hidden.ldif 
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+modifying entry <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span></pre>
+
+<p>
+ și validăm noua configurație:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span>  olcAccess
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">olcDatabase</span>=<span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb,<span class="re2">cn</span>=config
+olcAccess: <span class="br0">&#123;</span><span class="nu0">0</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=userPassword,shadowLastChange by self <span class="kw2">write</span> by anonymou
+ s auth by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">write</span> by <span class="sy0">*</span> none
+olcAccess: <span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=mail by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">write</span> 
+ by self <span class="kw2">write</span> by <span class="sy0">*</span> none
+olcAccess: <span class="br0">&#123;</span><span class="nu0">2</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=loginShell,gecos by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=example,dc=com&quot;</span> wri
+ te by self <span class="kw2">write</span> by <span class="sy0">*</span> <span class="kw2">read</span>
+olcAccess: <span class="br0">&#123;</span><span class="nu0">3</span><span class="br0">&#125;</span>to dn.base=<span class="st0">&quot;&quot;</span> by <span class="sy0">*</span> <span class="kw2">read</span>
+olcAccess: <span class="br0">&#123;</span><span class="nu0">4</span><span class="br0">&#125;</span>to <span class="sy0">*</span> by self <span class="kw2">write</span> by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">w</span>
+ rite by <span class="sy0">*</span> <span class="kw2">read</span></pre>
+
+<p>
+Am inserat astfel o nouă regulă pe poziția <code>{1}</code>, celelalte reguli deplasându-se o poziție în jos.
+</p>
+
+<p>
+De pe stația client validăm regula: interogăm intrarea aferentă <code>uid=zeratul</code> făcând bind cu <code>uid=raynor</code> și cu <code>uid=zeratul</code>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Parola utilizatorului <code>zeratul</code> trebuie setata folosind <code>ldappasswd</code>.
+</p>
+
+<p>
+Revedeti Laboratorul 1: <a href="../../../../../../saisp/labs/01/contents/06.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06"  rel="nofollow">http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06</a>
+
+</div></p>
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-D</span> <span class="re2">uid</span>=raynor,<span class="re2">ou</span>=Raiders,<span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro <span class="re5">-w</span> student <span class="re2">uid</span>=zeratul mail
+dn: <span class="re2">uid</span>=zeratul,<span class="re2">ou</span>=Nerazim,<span class="re2">o</span>=Protoss,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+<span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-D</span> <span class="re2">uid</span>=zeratul,<span class="re2">ou</span>=Nerazim,<span class="re2">o</span>=Protoss,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro <span class="re5">-w</span> student <span class="re2">uid</span>=zeratul mail
+dn: <span class="re2">uid</span>=zeratul,<span class="re2">ou</span>=Nerazim,<span class="re2">o</span>=Protoss,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+mail: zeratul<span class="sy0">@</span>void.protoss.mil</pre>
+
+<p>
+Observăm că dacă facem bind cu <code>uid=raynor</code> nu avem acces la adresa de e-mail a <code>uid=zeratul</code>, dar avem la bind cu <code>uid=zeratul</code>; o intrare are acces la propria adresă de e-mail.
+</p>
+
+</div>
+</div>
+</body>
+</html>

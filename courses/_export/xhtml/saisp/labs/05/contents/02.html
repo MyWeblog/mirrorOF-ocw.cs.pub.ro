@@ -1,0 +1,89 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:05:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-23T21:48:33+0200"/>
+<meta name="keywords" content="saisp,labs,05,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:05:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/05/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:05:contents';var JSINFO = {"id":"saisp:labs:05:contents:02","namespace":"saisp:labs:05:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_lvs-tun_tunneling">02. [20p] LVS-TUN (tunneling)</h3>
+<div class="level3">
+
+<p>
+In continuare, vom configura directorul pentru a folosi modul LVS-TUN. Apoi, vom observa diferentele fata de LVS-DR.
+</p>
+
+<p>
+Analog punctului anterior, definiti serviciul HTTP pe director, apoi cele doua realservere in modul tunneling (folositi parametrul <code>-i</code>).
+</p>
+
+<p>
+Pentru ca realserverele sa poata interpreta corect pachetele primite de la director, trebuie sa configuram cate o interfata tunel, de tip <strong>ipip</strong>, pe fiecare dintre acestea.
+</p>
+
+<p>
+Interfata tunel trebuie sa aiba aceeasi adresa IP cu adresa virtuala a directorului.
+</p>
+<pre class="code">root@saisp-vm-2:~# ip tunnel add tun0 mode ipip local 10.0.0.20
+root@saisp-vm-2:~# ip addr add 10.0.0.1/24 dev tun0
+root@saisp-vm-2:~# ip link set tun0 up</pre>
+<pre class="code">root@saisp-vm-3:~# ip tunnel add tun0 mode ipip local 10.0.0.30
+root@saisp-vm-3:~# ip addr add 10.0.0.1/24 dev tun0
+root@saisp-vm-3:~# ip link set tun0 up</pre>
+
+<p>
+Porniti, din nou, Wireshark si realizati o captura pe interfata <strong>br0</strong> a masinii fizice. Observati pachetele incapsulate si diferentele fata de LVS-DR.
+</p>
+
+<p>
+Stergeti resursa HTTP definita anterior pe director.
+</p>
+
+<p>
+Stergeti interfetele tunel create pe realservere:
+</p>
+<pre class="code">root@saisp-vm-2:~# ip tunnel del tun0</pre>
+<pre class="code">root@saisp-vm-3:~# ip tunnel del tun0</pre>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,143 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:04:contents:00</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-10-24T12:52:01+0300"/>
+<meta name="keywords" content="rl,labs,04,contents,00"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:04:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="00.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/04/contents/00.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:04:contents';var JSINFO = {"id":"rl:labs:04:contents:00","namespace":"rl:labs:04:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_vlan-uri_in_cisco_ios">00. [5p] VLAN-uri în Cisco IOS</h3>
+<div class="level3">
+
+<p>
+Rețelele locale virtuale (<em>Virtual Local Area Networks</em> – VLANs) sunt moduri de a realiza o separație logică a unei rețele locale (<abbr title="Local Area Network">LAN</abbr>) în mai multe subrețele pe aceeași infrastructură fizică. Separația este realizată la nivelul Legătură de Date prin introducerea unui câmp suplimentar în antetul de nivel 2. VLAN-urile sunt identificate în cadrul frame-ului printr-un VLAN ID.
+</p>
+
+<p>
+Configurarea VLAN-urilor se realizează pe switch-uri, mai exact pe interfețele/porturile switch-urilor. Stațiile nu au cunoaștere despre existența unor VLAN-uri; perspectiva lor este aceea a unei rețele locale, adică rețeaua virtuală aferentă unui VLAN ID. O stație se va găsi în VLAN-ul specific portului la care este conectată (configurație existentă pe switch).
+</p>
+
+<p>
+În topologia Packet Tracer de la <a href="../../../../../../_media/rl/labs/04/contents/rl_lab-04_introducere-vlan.pkt" class="media mediafile mf_pkt" title="rl:labs:04:contents:rl_lab-04_introducere-vlan.pkt (6.4 KB)">această adresă</a> stațiile <code>PC0</code> și <code>PC2</code> fac parte din VLAN-ul <code>10</code>, iar stațiile <code>PC1</code> și <code>PC3</code> din VLAN-ul <code>20</code>. Observați că pot comunica doar două câte două, deși adresele lor IP sunt din același spațiu de adrese.
+</p>
+
+<p>
+Configurarea celor două VLAN-uri a fost realizată pe switch-ul <code>Switch0</code>. Pentru a investiga configurația de VLAN-uri de pe switch-ul <code>Switch0</code>, rulați comenzile de mai jos și urmăriți output-ul acestora. Pentru a accesa intefața de configurare a switch-ului, urmații pașii:
+</p>
+<ol>
+<li class="level1"><div class="li"> Dați click pe switch.</div>
+</li>
+<li class="level1"><div class="li"> Accesați tab-ul <code>CLI</code>.</div>
+</li>
+<li class="level1"><div class="li"> Apăsați tasta <code>Enter</code> pentru a apărea promptul de transmitere de comenzi pentru switch.</div>
+</li>
+<li class="level1"><div class="li"> Folosiți comanda <code>enable</code> (urmată de apăsarea tastei <code>Enter</code>) pentru a accesa modul privilegiat de configurare a switch-ului.</div>
+</li>
+</ol>
+
+<p>
+Comanda <code>show vlan brief</code><sup><a href="00.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup> afișează informații despre VLAN-uri:
+</p>
+<pre class="code">Switch0#show vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa4/1, Fa5/1
+10   zece                             active    Fa0/1, Fa2/1
+20   douazeci                         active    Fa1/1, Fa3/1
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active  </pre>
+
+<p>
+Urmăriți că VLAN-ul cu ID-ul <code>10</code> (denumit și <code>zece</code>) conține porturile <code>Fa0/1</code> și <code>Fa2/1</code> adică porturile aferente stațiilor <code>PC0</code> și <code>PC2</code>. La fel, VLAN-ul cu ID-ul <code>20</code> (denumit și <code>douăzeci</code>) conține porturile <code>Fa1/1</code> și <code>Fa3/1</code> adică porturile aferente stațiilor <code>PC1</code> și <code>PC3</code>.
+</p>
+
+<p>
+Pentru a observa configurația curentă a switch-ului, folosiți comanda <code>show running-config</code>:
+</p>
+<pre class="code">Switch0#show running-config
+Building configuration...
+
+Current configuration : 697 bytes
+!
+version 12.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Switch0
+!
+no ip domain-lookup
+!
+spanning-tree mode pvst
+!
+interface FastEthernet0/1
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet1/1
+ switchport access vlan 20
+ switchport mode access
+!
+interface FastEthernet2/1
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet3/1
+ switchport access vlan 20
+ switchport mode access
+!
+[...]</pre>
+
+<p>
+Din output-ul comenzii observați că porturile sunt configurate în modul acces în VLAN-urile respective. Comenzile <code>switchport mode access</code> respectiv <code>switchport access VLAN &lt;VLAN-ID&gt;</code> au fost rulate în modul de configurare a fiecărui port pentru a adăuga respectivul port la VLAN.
+</p>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="00.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+mai multe detalii la <a href="http://www.cisco.com/en/US/docs/ios/lanswitch/command/reference/lsw_s2.html" class="urlextern" title="http://www.cisco.com/en/US/docs/ios/lanswitch/command/reference/lsw_s2.html"  rel="nofollow">http://www.cisco.com/en/US/docs/ios/lanswitch/command/reference/lsw_s2.html</a></div>
+</div>
+</div>
+</body>
+</html>

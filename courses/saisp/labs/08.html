@@ -1,0 +1,981 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 8. Virtualizare nativă    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-02-28T23:46:13+0200"/>
+<meta name="keywords" content="saisp,labs,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=saisp:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/saisp/labs/08.html"/>
+<link rel="canonical" href="08.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs';var JSINFO = {"id":"saisp:labs:08","namespace":"saisp:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="08%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="08%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+
+
+<h1 class="sectionedit1" id="laborator_8_virtualizare_nativa">Laborator 8. Virtualizare nativă</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Prezentarea unei soluții de virtualizare nativă: KVM</div>
+</li>
+<li class="level1"><div class="li"> Administrarea mașinilor virtuale ce rulează folosind un hypervisor KVM</div>
+</li>
+<li class="level1"><div class="li"> Multiplicarea mașinilor virtuale folosind paradigma copy-on-write (cow)</div>
+</li>
+<li class="level1"><div class="li"> Modalități de interconectare a mașinilor virtuale</div>
+</li>
+<li class="level1"><div class="li"> Soluții de administrare centralizată a mașinilor virtuale</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+Pentru a pregăti configurația de laborator va trebui să descărcați pe mașina fizică (<code>mjolnir</code>), în directorul <code>saisp/</code>, arhiva laboratorului:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">wget</span> <span class="re5">--user</span>=user-curs <span class="re5">--ask-password</span> http:<span class="sy0">//</span>repository.grid.pub.ro<span class="sy0">/</span>cs<span class="sy0">/</span>saisp<span class="sy0">/</span>laboratoare<span class="sy0">/</span>lab-08.zip
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">unzip</span> lab-08.zip</pre>
+
+<p>
+În urma dezarhivării rezultă un fișier <code>.iso</code>. Imaginea de bază <code>base.qcow2</code> este deja în directorul <code>saisp/</code> și va fi folosită pe parcursul laboratorului.
+</p>
+
+<p>
+Puteți urma pașii de mai sus pentru a descărca infrastructura KVM pentru laborator pentru lucru acasă.
+</p>
+
+<p>
+<p><div class="noteclassic">
+În cadrul laboratorului veți lucra cu o mașină virtuală KVM ce are următoarele credențiale de acces (<code>username:parola</code>):
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>root:student</code></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Folosiți în cadrul acestui laborator doar utilizatorul privilegiat (<code>root</code>).
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="08.html" class="wikilink1" title="saisp:labs:08">Laboratorul 8</a></span></strong>
+</p>
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_144181157258355ba70a760" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="08/contents/01.html" class="wikilink1" title="saisp:labs:08:contents:01">01. [15p] Kernel-based Virtual Machine (KVM)</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/02.html" class="wikilink1" title="saisp:labs:08:contents:02">02. [10p] Copy-on-write virtual storage</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/03.html" class="wikilink1" title="saisp:labs:08:contents:03">03. [10p] Adăugare resurse la o mașină virtuală KVM</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/04.html" class="wikilink1" title="saisp:labs:08:contents:04">04. [10p] Multiplicare mașini virtuale folosind o singură image de bază</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/05.html" class="wikilink1" title="saisp:labs:08:contents:05">05. [10p] Conversie disk virtual între diferite formate</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/06.html" class="wikilink1" title="saisp:labs:08:contents:06">06. [15p] Interconectare mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/07.html" class="wikilink1" title="saisp:labs:08:contents:07">07. [10p] Conectarea mașinilor virtuale la rețeaua publică</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/08.html" class="wikilink1" title="saisp:labs:08:contents:08">08. [15p] Managementul mașinilor virtuale KVM folosind virsh</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/09.html" class="wikilink1" title="saisp:labs:08:contents:09">09. [5p] Rularea mașinilor virtuale de către un utilizator neprivilegiat</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/10.html" class="wikilink1" title="saisp:labs:08:contents:10">10. [BONUS - 10p] Migrarea mașinilor virtuale între noduri</a></div></li>
+</ul>
+</div></div>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+
+<h2 class="sectionedit7" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:01">
+
+<h3 class="sectionedit10" id="p_kernel-based_virtual_machine_kvm">01. [15p] Kernel-based Virtual Machine (KVM)</h3>
+<div class="level3">
+
+<p>
+Virtualizarea este folosită pe scară largă în centrele de date întrucât oferă flexibilitate foarte mare în managementul resurselor. Pentru a nu afecta perfomanța, producătorii de procesoare au introdus facilități de virtualizare pentru a permite sistemelor de operare să ruleze nemodificate. Entitatea software care folosește aceste facilități se numește <strong>hypervisor</strong>. KVM este un hypervisor ce oferă suport pentru virtualizarea nativă (implementează facilități de virtualizare). În continuare vom prezenta modul de lucru cu soluția implementată de KVM.
+</p>
+
+<p>
+Trebuie să verificăm dacă hardware-ul are suport pentru <strong>virtualizare nativă</strong> (mai poartă denumirea și de <strong>extensie de virtualizare</strong>). Numele extensiilor de virtualizare diferă de la un producător la altul astfel:
+</p>
+<ul>
+<li class="level1"><div class="li"> INTEL - <strong>vmx</strong> (Virtual Machine eXtensions)</div>
+</li>
+<li class="level2"><div class="li"> AMD - <strong>svm</strong> (Secure Virtual Machine)</div>
+</li>
+</ul>
+
+<p>
+Pentru a verifica prezența extensiilor de mai sus trebuie să ne uităm în <code>/proc/cpuinfo</code> dacă câmpul <em>Flags</em> conține numele extensiei (<strong>vmx</strong> pentru Intel sau <strong>svm</strong> pentru AMD):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~$ </span><span class="kw2">cat</span> <span class="sy0">/</span>proc<span class="sy0">/</span>cpuinfo <span class="sy0">|</span><span class="kw2">grep</span> vmx
+flags           : ... ds_cpl <span class="sy0">**</span>vmx<span class="sy0">**</span> smx...</pre>
+
+<p>
+Pentru a folosi KVM trebuie să instalăm pachetul <code>qemu-kvm</code>, <strong>qemu</strong> fiind utilitarul din userspace ce porneste mașinile virtuale și transmite parametri doriți hypervisorului:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">apt-get install</span> qemu-kvm
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Înainte de a porni o mașina virtuală bazată pe KVM, trebuie să verificăm dacă modulul de kernel este încărcat:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">lsmod</span><span class="sy0">|</span><span class="kw2">grep</span> kvm
+kvm_intel             <span class="nu0">121968</span>  <span class="nu0">0</span>
+kvm                   <span class="nu0">287572</span>  <span class="nu0">1</span> kvm_intel</pre>
+
+<p>
+Observați în acest caz folosirea unei arhitecturi Intel. Pentru fiecare arhitectură există un modul separat. Încărcarea modului de kernel atrage după sine crearea unui device <code>/dev/kvm</code> prin care se controlează modulul de kernel folosind operații de tip <code>ioctl</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ls</span> <span class="re5">-l</span> <span class="sy0">/</span>dev<span class="sy0">/</span>kvm
+crw-rw---T <span class="nu0">1</span> root kvm <span class="nu0">10</span>, <span class="nu0">232</span> Jan  <span class="nu0">5</span> <span class="nu0">21</span>:<span class="nu0">34</span> <span class="sy0">/</span>dev<span class="sy0">/</span>kvm</pre>
+
+<p>
+Pentru a porni o mașină virtuală vom folosi comanda <code>kvm</code>. Utilizatorul care execută comanda (dorește să pornească o mașină virtuală) trebuie să fie cel privilegiat (<code>root</code>) sau să facă parte din grupul setat ca owner pe device-ul <code>/dev/kvm</code> (în cazul de fată <code>kvm</code>). În cadrul laboratorului vom lucra cu utilizatorul privilegiat, dacă nu se specifică altfel.
+</p>
+
+<p>
+Vom crea o mașină virtuală având 256MB RAM (parametrul <code>-m</code>), 2 procesoare (numărul este dat de parametrul <code>-smp</code>) și va avea ca dispozitiv de stocare o imagine virtuală denumită <code>base.qcow2</code> (mai multe detalii în exercițiul următor), specificată cu parametrul <code>-hda</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">256</span> <span class="re5">-smp</span> <span class="nu0">2</span></pre>
+
+<p>
+În acest moment se va deschide o fereastră în care se va afișa output-ul consolei mașinii virtuale (veți vedea cum bootează). Verificați că resursele mașinii virtuale coincid cu parametri trimiși comenzii <code>kvm</code> inspectând sistemul de fișiere <code>/proc</code>.
+</p>
+
+<p>
+Deschidem o nouă consolă și vom afișa numărul de thread-uri <code>kvm</code> prezente în sistem:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ps</span> <span class="re5">-eLf</span> <span class="sy0">|</span><span class="kw2">grep</span> kvm</pre>
+
+<p>
+Opriți rularea mașinii virtuale rulând <code>Ctrl+c</code> în consola unde ați rulat comanda <code>kvm</code>. Porniți-o din nou cu 4 procesoare și 512MB RAM.
+</p>
+
+<p>
+Deschidem o nouă consolă și vom afișa numărul de thread-uri <code>kvm</code> prezente în sistem:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ps</span> <span class="re5">-eLf</span> <span class="sy0">|</span><span class="kw2">grep</span> kvm</pre>
+
+<p>
+Observați că fiecare nou procesor adăugat în mașina virtuală crește numărul thread-urilor <code>kvm</code> în sistemul gazdă (numărul de thread-uri este mai mare decât numărul de procesoare din cauza existenței unor <em>thread-uri de management</em> necesare procesului <code>kvm</code>).
+</p>
+
+</div>
+
+<h4 id="exportare_display_prin_vnc">Exportare display prin VNC</h4>
+<div class="level4">
+
+<p>
+De cele mai multe ori nu dorim deschiderea unei console în sesiunea curentă ci dorim rularea mașinii în background, iar la nevoie să putem accesa consola acesteia. Acest lucru este posibil folosind parametrul <code>-vnc</code> al comenzii <code>kvm</code> care va porni un server de VNC prin care se va exporta consola mașinii virtuale:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">512</span> <span class="re5">-smp</span> <span class="nu0">4</span> <span class="re5">-vnc</span> :<span class="nu0">1</span></pre>
+
+<p>
+Observați în continuare că procesul <code>kvm</code> nu a intrat în background. Pentru acest lucru trebuie să mai adăugăm parametroul <code>-daemonize</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">512</span> <span class="re5">-smp</span> <span class="nu0">4</span> <span class="re5">-vnc</span> :<span class="nu0">1</span> <span class="re5">-daemonize</span></pre>
+
+<p>
+Parametrul <code>-vnc :1</code> activează serverul VNC pe portul <strong>1</strong> al protocolului. Pentru a afla portul TCP pe care ascultă serverul de VNC prin care este exportată consola trebuie să adunați <strong>5900</strong> la numărul pe care l-ați pus parametrului <code>-vnc</code>, în cazul nostru <code>5901</code>. Pentru a verifica acest lucru executați comanda <code>netstat</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">netstat</span> <span class="re5">-ntpl</span></pre>
+
+<p>
+În acest moment mașina virtuală KVM rulează în background, singura modalitate de interacțiune cu aceasta fiind prin consola VNC. Ne vom conecta la portul <code>5901</code> folosind utilitarul <code>vncviewer</code> (instalați-l dacă este cazul folosind <code>apt-get install xtightvncviewer</code>):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>vncviewer localhost:<span class="nu0">5901</span></pre>
+
+<p>
+Închideți mașina virtuală executând comanda <code>poweroff</code> în consola acesteia. Porniți-o din nou având 256MB RAM și 2 procesoare, tot în background (<code>-daemonize</code>). Găsiți o modalitate de a opri mașina virtuală executând o comanda pe mașina fizică (cea pe care lucrați voi).
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:02">
+
+<h3 class="sectionedit13" id="p_copy-on-write_virtual_storage">02. [10p] Copy-on-write virtual storage</h3>
+<div class="level3">
+
+<p>
+La punctul anterior am pornit o mașină virtuală ce avea o imagine a disk-ului deja construită. Ați observat extensia specifică a imaginii <code>.qcow2</code> (<em>QEMU Copy-on-write</em>). Acest tip de imagine virtuală ne permite să multiplicăm o mașină virtuală folosind o imagine de bază read-only. Pentru fiecare mașină virtuală pornită se va crea un fișier doar cu modificările aduse de aceasta imaginii de bază. Mai multe despre multiplicare vom vedea în următoarele exerciții
+</p>
+
+<p>
+În continuare vom crea o imagine <code>.qcow</code> pe care vom porni instalarea unui sistem de operare. Utilitarul cu ajutorul căruia se crează astfel de imagini  este <code>qemu-img</code> (dacă nu există, instalați-l folosind comanda <code>apt-get install qemu-utils</code>):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>qemu-img create <span class="re5">-f</span> qcow2 virtualdisk.qcow2 1G
+Formatting <span class="st_h">'virtualdisk.qcow2'</span>, <span class="re2">fmt</span>=qcow2 <span class="re2">size</span>=<span class="nu0">1073741824</span> <span class="re2">encryption</span>=off <span class="re2">cluster_size</span>=<span class="nu0">65536</span> </pre>
+
+<p>
+Se observă că utilitarul <code>qemu-img</code> primește ca prim parametru o comandă (<code>create</code>). Pentru comanda <code>create</code> am specificat tipul dorit de imagine (<code>qcow2</code>), numele disk-ului virtual și dimensiunea maximă a acestuia (<code>1G</code>).
+</p>
+
+<p>
+Dorim să instalăm un sistem de operare folosind un CD de instalare (fomat <code>.iso</code>). Comanda <code>kvm</code> ne permite să adăugăm un nou dispozitiv de tip <em>cdrom</em> în care să fie încărcată. Folosiți imaginea CD-ului Debian din arhiva descărcată (fișierul <code>debian-7.3.0-amd64-netinst.iso</code>) și porniți o mașină virtuală cu disk-ul virtual creat anterior și un dispozitiv de tip <em>cdrom</em>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> virtualdisk.qcow2 <span class="re5">-cdrom</span> debian-7.3.0-amd64-netinst.iso <span class="re5">-m</span> <span class="nu0">256</span> <span class="re5">-smp</span> <span class="nu0">2</span></pre>
+
+<p>
+Mașina virtuala va porni de pe CD întrucât nu va găsi nici un bootloader pe disk-ul virtual. Porniți instalarea sistemului de operare folosind pașii impliciți. Din acest punct instalarea decurge ca în cazul unui sistem fizic obișnuit.
+</p>
+
+<p>
+O dată începută instalarea, închideți mașina virtuală folosind una din metodele găsite/prezentate anterior și ștergeți imaginea nou creată.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:03">
+
+<h3 class="sectionedit16" id="p_adaugare_resurse_la_o_masina_virtuala_kvm">03. [10p] Adăugare resurse la o mașină virtuală KVM</h3>
+<div class="level3">
+
+<p>
+O configurație uzuală a unei mașini virtuale este formată de obicei dintr-un disk virtual principal de dimensiuni reduse unde este instalat sistemul de operare și un disk virtual secundar unde se stochează datele efective.
+</p>
+
+<p>
+Creați un nou disk virtual în format <code>qcow2</code> de dimensiune 1G pe care să îl atașați unei mașini virtuale ce are ca disk principal <code>base.qcow2</code> (unde se află sistemul de operare). Mașina virtuală va avea 256MB RAM și 2 procesoare. <strong>Hint</strong>: <code>-hdb</code>.
+</p>
+
+<p>
+Observați că dimensiunea fișierului <code>qcow2</code> este foarte mică acesta extinzându-se pe măsură ce se vor scrie date:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ls</span> <span class="re5">-hl</span> nume_fisier.qcow2</pre>
+
+<p>
+După ce ați pornit mașina virtuală, verificați existența disk-ului secundar adăugat folosind comanda <code>ls /dev/sdb</code>. Creați 2 partiții de câte 500MB fiecare și formatațile folosind sistemul de fișiere <code>ext4</code>. Montați partițiile noi create și scrieți câte un fișier de 100MB pe acestea.
+</p>
+
+<p>
+Verificați dimensiunea imaginii create și observați că a crescut.
+</p>
+
+<p>
+Închideți mașina virtuală și stergeți imaginea creată.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:04">
+
+<h3 class="sectionedit19" id="p_multiplicare_masini_virtuale_folosind_o_singura_image_de_baza">04. [10p] Multiplicare mașini virtuale folosind o singură image de bază</h3>
+<div class="level3">
+
+<p>
+Folosind imaginea <code>base.qcow2</code> dorim să pornim două mașini virtuale fără a crea două copii ale acesteia. Pentru acest lucru putem folosi conceptul <em>copy-on-write</em> specific acestui de tip de imagini (<code>qcow2</code>).
+</p>
+
+<p>
+Pentru a crea o nouă imagine ce reține doar diferențele față de imaginea de bază folosim comanda <code>create</code> a utilitarului <code>qemu-img</code> cu parametrul <code>-b</code> care va specifica baza de la care va porni noua imagine:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>qemu-img create <span class="re5">-f</span> qcow2 <span class="re5">-b</span> base.qcow2 sda-vm1.qcow2
+Formatting <span class="st_h">'sda-vm1.qcow2'</span>, <span class="re2">fmt</span>=qcow2 <span class="re2">size</span>=<span class="nu0">2147483648</span> <span class="re2">backing_file</span>=<span class="st_h">'base.qcow2'</span> <span class="re2">encryption</span>=off <span class="re2">cluster_size</span>=<span class="nu0">65536</span>
+<span class="co4">root@saisp:~# </span><span class="kw2">ls</span> <span class="re5">-lh</span> sda<span class="sy0">*</span>
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root 1.4G Jan <span class="nu0">29</span> <span class="nu0">19</span>:01 base.qcow2
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root 193K Jan <span class="nu0">29</span> <span class="nu0">19</span>:01 sda-vm1.qcow2</pre>
+
+<p>
+Afișați dimensiunea ambelor imagini.
+</p>
+
+<p>
+Porniți o nouă mașină virtuală folosind imaginea <code>sda-vm1.qcow2</code>.
+</p>
+
+<p>
+Creați un fișier pe 100 <abbr title="Megabyte">MB</abbr> în mașina virtuală. Afișați dimensiunea imaginilor (<code>base.qcow2</code> și <code>sda-vm1.qcow2</code>) și observați faptul că <code>base.qcow2</code> a rămas constant , iar <code>sda-vm1.qcow2</code> a crescut).
+</p>
+
+<p>
+Închideți mașina virtuală și ștergeți imaginea creată (<code>sda-vm1.qcow2</code>).
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:05">
+
+<h3 class="sectionedit22" id="p_conversie_disk_virtual_intre_diferite_formate">05. [10p] Conversie disk virtual între diferite formate</h3>
+<div class="level3">
+
+<p>
+O altă comandă des folosită a utilitarului <code>qemu-img</code> este <code>convert</code>. Avem la dispozitie o imagine in format <code>.qcow2</code> și dorim 
+obținerea unei imagini în formatul <code>.vmdk</code> (format specific mașinilor virtuale VMware) sau <code>.vdi</code> (format specific mașinilor virtuale VirtualBox), fără a fi nevoiți să reinstalăm sistemul de operare pe o nouă imagine:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>qemu-img convert <span class="re5">-O</span> vdi base.qcow2 base.vdi</pre>
+
+<p>
+Parametrul <code>-O</code> specifică formatul imaginii obținute (<code>vdi</code>). Observați că nu a fost necesară specificarea formatului imaginii de intrare (<code>-f</code>), <code>qemu-img</code> fiind capabil să detecteze acest lucru.
+</p>
+
+<p>
+Creați o nouă mașină virtuală folosind VirtualBox și configurați folosirea disk-ului obținut anterior.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:06">
+
+<h3 class="sectionedit25" id="p_interconectare_masini_virtuale">06. [15p] Interconectare mașini virtuale</h3>
+<div class="level3">
+
+<p>
+Creați 2 imagini de disk pornind de la imaginea de baza <code>base.qcow2</code> cu numele <code>sda-vm1.qcow2</code> și <code>sda-vm2.qcow2</code>.
+</p>
+
+<p>
+Până în acest moment am creat mașini virtuale fără nici o legătură către Internet. Dorim să asigurăm accesul la Internet pentru acestea. Pentru acest lucru trebuie să adăugăm la crearea mașinii virtuale o interfață de rețea cu ajutorul parametrului &#039;-net&#039;:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> sda-vm1.qcow2 <span class="re5">-m</span> <span class="nu0">256</span> <span class="re5">-smp</span> <span class="nu0">2</span> <span class="re5">-net</span> nic,<span class="re2">model</span>=e1000,<span class="re2">macaddr</span>=00:<span class="nu0">11</span>:<span class="nu0">22</span>:<span class="nu0">33</span>:<span class="nu0">44</span>:<span class="nu0">55</span> <span class="re5">-net</span> tap,<span class="re2">ifname</span>=tap-vm1</pre>
+
+<p>
+<p><div class="notewarning">Obligatoriu trebuie să porniți mașina virtuală ca utilizator privilegiat pentru a putea să fie create interfețele de tip <code>tap</code>.
+</div></p>
+</p>
+
+<p>
+<p><div class="notewarning">Ignorați warning-ul referitor la <code>tap</code>.
+</div></p>
+</p>
+
+<p>
+Cu ajutorul primei opțiuni <code>-net nic</code> specificăm proprietățile interfeței din mașina virtuală (în cazul de față se dorește emularea unei interfațe Intel e1000 cu adresa MAC <code>00:11:22:33:44:55</code>).
+</p>
+
+<p>
+Toate opțiunile adăugate nu sunt obligatorii (dacă nu se specifică se folosesc valori implicite). A doua opțiune <code>-net tap</code> specifică tipul interfeței virtuale din mașina fizică ce are corespondență 1 la 1 cu interfața din mașina virtuală (tot traficul trimis pe interfața <code>eth0</code> de pe masina virtuala ajunge pe interfața <code>tap-vm1</code> în mașina fizică). De asemenea toți parametri sunt opționali.
+</p>
+
+<p>
+Porniți o a doua mașină virtuală folosind imaginea <code>sda-vm2.qcow2</code> și adăugați-i o interfață de rețea cu adresa MAC <code>AA:11:22:33:44:55</code> ce are corespondență în mașina fizică o interfață de tip <code>tap</code> cu numele <code>tap-vm2</code>.
+</p>
+<pre class="code">root@saisp:~# kvm -hda sda-vm2.qcow2 -m 256 -smp 2 -net nic,model=e1000,macaddr=AA:11:22:33:44:55 -net tap,ifname=tap-vm2</pre>
+
+<p>
+Modificați hostname-urile mașinilor la <code>VM1</code>, respectiv <code>VM2</code>:
+</p>
+<pre class="code bash"><span class="co4">root@VM:~# </span><span class="kw2">hostname</span> VM1
+<span class="co4">root@VM:~# </span><span class="kw2">su</span> -
+<span class="co4">root@VM1:~# </span>
+&nbsp;
+<span class="co4">root@VM:~# </span><span class="kw2">hostname</span> VM2
+<span class="co4">root@VM:~# </span><span class="kw2">su</span> -
+<span class="co4">root@VM2:~# </span></pre>
+
+<p>
+Logați-vă din nou ca <code>root</code> pentru a se modifica prompt-ul.
+</p>
+
+<p>
+În acest moment am creat 2 legături virtuale între instanțele KVM și mașina fizică. În mod uzual se dorește ca mașinile virtuale și mașina fizică să aparțină aceleiași rețele. Pentru acest lucru avem nevoie de un <em>switch virtual</em> în care să conectăm legăturile create anterior (<code>tap-vm1</code> și <code>tap-vm2</code>) împreună cu mașina fizică. <em>Switch-ul virtual</em> poate fi emulat folosind conceptul de  <em>bridge</em> din kernelul de Linux. 
+</p>
+
+<p>
+Vom crea bridge-ul/switch-ul virtual denumit <code>brX</code>, unde <code>X</code> va fi <code>0</code> (<em>br</em> urmat de un index):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>brctl addbr br0
+<span class="co4">root@saisp:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev br0 up</pre>
+
+<p>
+<p><div class="noteimportant">Întotdeauna, nu uitați să ridicați nivelul 2 al bridge-ului
+</div></p>
+Vom conecta cele două interfețe virtuale <code>tap-vm1</code> și <code>tap-vm2</code> in bridge:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>brctl addif br0 tap-vm1
+<span class="co4">root@saisp:~# </span>brctl addif br0 tap-vm2</pre>
+
+<p>
+Configurați pe interfața <code>br0</code> adresa IP <code>192.168.1.1/24</code>, iar pe mașinile virtuale adresele IP <code>192.168.1.2/24</code>, respectiv <code>192.168.1.3/24</code>. Verificați conectivitatea între cele 3 adrese IP folosind comanda <code>ping</code>.
+</p>
+
+<p>
+În acest moment avem conectivitate între toate cele host-uri (<code>saisp</code>, <code>VM1</code>, <code>VM2</code>). Pentru a asigura conectivitatea la Internet trebuie să activăm rutarea și translatarea de adrese (NAT) pe mașina fizică:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw3">echo</span> <span class="nu0">1</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>proc<span class="sy0">/</span>sys<span class="sy0">/</span>net<span class="sy0">/</span>ipv4<span class="sy0">/</span>ip_forward
+<span class="co4">root@saisp:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-o</span> ethX <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+unde <code>ethX</code> este placa de retea de pe masina fizica.
+</p>
+
+<p>
+Ne mai rămâne să configurăm ruta implicită și serverul de <abbr title="Domain Name System">DNS</abbr> pe mașinile virtuale. Conectați-vă folosind SSH la mașinile virtuale și adăugați ca rută implicită adresa <code>192.168.1.1</code> (mașina fizică) și ca server de <abbr title="Domain Name System">DNS</abbr> <code>8.8.8.8</code>. Verificați cu ajutorul comenzii <code>ping</code> că site-ul <code><a href="http://www.google.ro" class="urlextern" title="http://www.google.ro"  rel="nofollow">www.google.ro</a></code> răspunde la cereri.
+</p>
+
+<p>
+Scoatem interfețele <code>tap-vm1</code> și <code>tap-vm2</code> din bridge, după care îl ștergem pe acesta:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>brctl delif br0 tap-vm1
+<span class="co4">root@saisp:~# </span>brctl delif br0 tap-vm2
+<span class="co4">root@saisp:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev br0 down
+<span class="co4">root@saisp:~# </span>brctl delbr br0</pre>
+
+<p>
+Închideți mașinile virtuale și ștergeți imaginile create (<code>sda-vm1.qcow2</code> și <code>sda-vm2.qcow2</code>).
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:07">
+
+<h3 class="sectionedit28" id="p_conectarea_masinilor_virtuale_la_reteaua_publica">07. [10p] Conectarea mașinilor virtuale la rețeaua publică</h3>
+<div class="level3">
+
+<p>
+Un scenariu uzual este reprezentat de cazul în care pe mașinile virtuale se activează diverse servicii publice (exemplu: WEB). În acest caz nu este suficient să activăm translatarea de adrese pe mașina fizică, ci trebuie să conectăm mașina virtuală direct la rețeaua publică.
+</p>
+
+<p>
+Porniți o nouă mașină virtuală KVM având o interfață de rețea cu adresa MAC 00:11:22:33:44:XX, unde XX reprezintă numărul vostru din catalogul de SAISP.
+</p>
+
+<p>
+Pe mașina fizică, creați un nou bridge <code>br1</code> în care adăugați interfața <code>tap-vm</code> și interfața <code>eth0</code>. Pe mașina virtuală executați comanda <code>dhclient eth0</code>. Observați adresa IP obținută direct din rețeaua facultății.
+</p>
+
+<p>
+Pentru a avea în continuare acces la Internet pe mașina fizică executați comenzile <code>ip addr flush dev eth0</code> (șterge adresa IP de pe interfață) și  <code>dhclient br1</code> întrucât interfața principală este acum conectată în bridge la nivel 2 și nu mai poate oferi și servicii de nivel 3 (IP).
+</p>
+
+<p>
+Intrebați pe unul din colegi adresa IP obținută pe mașina virtuală și conectați-vă la aceasta prin SSH. Observați că practic vă puteți conecta la orice mașină virtuală a oricărui coleg.
+</p>
+
+<p>
+Eliminați din bridge interfațele <code>tap-vm</code> și <code>eth0</code>, ștergeți bridge-ul <code>br1</code>, executați comanda <code>dhclient eth0</code> și închideți mașina virtuală:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>brctl delif br1 tap-vm
+<span class="co4">root@saisp:~# </span>brctl delif br1 eth0
+<span class="co4">root@saisp:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev br1 down
+<span class="co4">root@saisp:~# </span>brctl delbr br1
+<span class="co4">root@saisp:~# </span>dhclient eth0</pre>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:08">
+
+<h3 class="sectionedit31" id="p_managementul_masinilor_virtuale_kvm_folosind_virsh">08. [15p] Managementul mașinilor virtuale KVM folosind virsh</h3>
+<div class="level3">
+
+<p>
+Pentru a ușura managementul mașinilor virtuale a fost dezvoltată o bibliotecă de interacțiune cu acestea ce poartă denumirea de <code>libvirt</code>. Această bibliotecă oferă o interfață de programare comună pentru mai multe tehnologii (e.g.: KVM, LXC) fiind folosită de majoritatea tehnologiilor open-source de Cloud (e.g.: OpenStack, oVirt).
+</p>
+
+<p>
+Pentru administratorii de rețea a fost dezvoltată o consolă numită <code>virsh</code> ce folosește interfața oferită de <code>libvirt</code> pentru interacțiunea cu mașinile virtuale.
+</p>
+
+<p>
+Pentru a putea folosi facilitățile oferite de <code>libvirt</code> trebuie să instalăm pachetele <code>libvirt-bin</code>, <code>virtinst</code>, <code>virt-viewer</code> și <code>virt-top</code>. De asemenea dacă utilizatorul e diferit de cel privilegiat trebuie adăugat în grupul <code>libvirtd</code> (ca si la <code>kvm</code>). În exemplul următor vom folosi utilizatorul privilegiat <code>root</code>.
+</p>
+
+<p>
+În primul pas trebuie să activăm serviciul de networking al <code>libvirt</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>virsh <span class="re5">-c</span> qemu:<span class="sy0">///</span>system net-start default</pre>
+
+<p>
+Pentru a crea o mașină virtuală folosim utilitarul <code>virt-install</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>virt-install <span class="re5">--connect</span> qemu:<span class="sy0">///</span>system <span class="re5">--name</span> VM1 <span class="re5">--hvm</span> <span class="re5">--ram</span> <span class="nu0">256</span> <span class="re5">--disk</span> <span class="re2">path</span>=base.qcow2,<span class="re2">format</span>=qcow2 <span class="re5">--network</span> <span class="re2">network</span>=default <span class="re5">--vnc</span> <span class="re5">--import</span></pre>
+
+<p>
+Semnificația parametrilor este după cum urmează:
+</p>
+<pre class="code bash">   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--connect</span> qemu:<span class="sy0">///</span>system<span class="st_h">''</span>  - conectarea la sistemul <span class="kw3">local</span>
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--name</span> VM1<span class="st_h">''</span> - numele mașinii virtuale
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--hvm</span><span class="st_h">''</span> - să se folosească virtualizarea hardware <span class="br0">&#40;</span>altfel se face emulare folosind QEMU, fără KVM<span class="br0">&#41;</span>
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--ram</span> <span class="nu0">256</span><span class="st_h">''</span> - cantitatea de memorie
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--disk</span> <span class="re2">path</span>=base.qcow2,<span class="re2">format</span>=qcow2<span class="st_h">''</span> - discul folosit și formatul acestuia
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--network</span> <span class="re2">network</span>=default<span class="st_h">''</span> - adăugare interfață de rețea cu proprietățile implicite
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--vnc</span><span class="st_h">''</span> - să <span class="kw3">export</span> consola VNC
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--import</span><span class="st_h">''</span> - să folosească imaginea deja creată <span class="st_h">''</span>base.qcow2<span class="st_h">''</span>, să NU creeze alta</pre>
+
+<p>
+În acest moment s-a creat un fișier de configurație XML al mașinii virtuale care poate fi vizualizat în <code>/etc/libvirt/qemu/VM1.xml</code>.
+</p>
+
+<p>
+Consola mașinii virtuale s-a deschis, programul <code>virt-inst</code> rămânând să ruleze. Folositi <code>CTRL+C</code> pentru a incheia instalarea masinii virtuale.
+</p>
+
+<p>
+Pentru a controla mașina virtuală vom folosi consola <code>virsh</code>. Ne conectăm la daemon-ul local cu ajutorul lui <code>virsh</code> și vom afișa mașinile virtuale existente folosind comanda <code>list</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>virsh <span class="re5">--connect</span> qemu:<span class="sy0">///</span>system
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+virsh<span class="sy0">&gt;</span> list
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  <span class="nu0">2</span> VM1                  running</pre>
+
+<p>
+Observați starea mașinii virtuale și Id-ul acesteia (<code>2</code>). Pe baza Id-ului veți realiza toate operațiile.
+</p>
+
+<p>
+Dorim să aflăm portul VNC al mașinii virtuale cu ajutorul comenzii <code>vncdisplay</code> urmat de Id-ul mașinii virtuale:
+</p>
+<pre class="code bash">virsh <span class="co0"># vncdisplay 2</span>
+:<span class="nu0">0</span></pre>
+
+<p>
+Deschideți o nouă consolă și conectați-vă la aceasta prin VNC folosind utilitarul <code>vncviewer</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>vncviewer :<span class="nu0">0</span></pre>
+
+<p>
+Inchideți consola. <strong>ATENTIE</strong>: Mașina virtuala va continua să ruleze în background!
+</p>
+
+<p>
+Opriți mașina virtuală cu ajutorul comenzii <code>shutdown</code> urmată de Id-ul acesteia:
+</p>
+<pre class="code bash">virsh <span class="co0"># shutdown 2</span>
+Domain <span class="nu0">2</span> is being shutdown
+&nbsp;
+virsh <span class="co0"># list</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  <span class="nu0">2</span> VM1                  running
+&nbsp;
+virsh <span class="co0"># list</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span></pre>
+
+<p>
+Pentru a afișa toate mașinile virtuale indiferent de starea lor folosiți opțiunea <code>–all</code> a comenzii <code>list</code>:
+</p>
+<pre class="code bash">virsh <span class="co0"># list --all</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  - VM1                  shut off</pre>
+
+<p>
+Vom porni mașina virtuală VM1 folosind comanda <code>start</code> urmată de numele mașinii:
+</p>
+<pre class="code bash">virsh <span class="co0"># start VM1</span>
+Domain VM1 started
+&nbsp;
+virsh <span class="co0"># list</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  <span class="nu0">3</span> VM1                  running</pre>
+
+<p>
+Observați că Id-urile se alocă la pornirea mașinilor virtuale.
+</p>
+
+<p>
+Executați comanda <code>destroy</code> pe Id-ul mașinii virtuale. Observați că mașina virtuală s-a închis, <strong>NU</strong> s-a șters.
+</p>
+<pre class="code bash">virsh <span class="co0"># destroy 3</span>
+Domain <span class="nu0">3</span> destroyed
+virsh <span class="co0"># list --all</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  - VM1                  shut off</pre>
+
+<p>
+În echipe de câte doi, faceți schimb de adrese IP și asigurați accesul SSH fără parolă între calculatoarele voastre, folosind utilizatorul privilegiat <code>root</code>.
+</p>
+
+<p>
+Conectați-vă cu <code>virsh</code> la calculatorului colegului și listați mașinile virtuale disponibile. La adresa de conectare folosiți parametrul: 
+</p>
+<pre class="code bash">qemu+ssh:<span class="sy0">//</span><span class="re1">$ADRESA_IP_COLEG</span><span class="sy0">/</span>system</pre>
+
+<p>
+Porniți mașina creată de el și conectați-vă prin VNC la aceasta. Acesta este unul dintre cele mai utilizate cazuri în care aveți un server cu suport de virtualizare și doriți să rulați de la distanță mai multe mașini virtuale.
+</p>
+
+<p>
+Ștergeți mașina virtuală definită folosind comanda <code>undefine</code> urmată de numele mașinii virtuale:
+</p>
+<pre class="code bash">virsh <span class="co0"># undefine VM1</span>
+Domain VM1 has been undefined
+virsh <span class="co0"># list</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  <span class="nu0">6</span> VM1                  running</pre>
+
+<p>
+Observați că mașina virtuală încă mai rulează. Ea va dispare complet după ce o închidem:
+</p>
+<pre class="code bash">virsh <span class="co0"># shutdown 6</span>
+Domain <span class="nu0">6</span> is being shutdown
+virsh <span class="co0"># list --all</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span></pre>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:09">
+
+<h3 class="sectionedit34" id="p_rularea_masinilor_virtuale_de_catre_un_utilizator_neprivilegiat">09. [5p] Rularea mașinilor virtuale de către un utilizator neprivilegiat</h3>
+<div class="level3">
+
+<p>
+Creați un nou grup în sistem <code>kvm-users</code> și un utilizator ce aparține acestui grup. Configurați sistemul astfel încât utilizatorii din grupul <code>kvm-users</code> să poate rula mașini virtuale KVM. (<strong>Hint</strong>: <a href="08/contents/01.html" class="wikilink1" title="saisp:labs:08:contents:01">01. [15p] Kernel-based Virtual Machine (KVM)</a>)
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:10">
+
+<h3 class="sectionedit37" id="bonus_-_10p_migrarea_masinilor_virtuale_intre_noduri">10. [BONUS - 10p] Migrarea mașinilor virtuale între noduri</h3>
+<div class="level3">
+
+<p>
+În echipe de câte doi, dorim să realizăm migrarea unei mașini virtuale (<em>live migration</em>) de pe o mașină fizică pe alta. Unul dintre voi va fi sursa, iar celălalt destinația.
+</p>
+
+<p>
+Pe calculatorul sursă creați directorul <code>/vm</code> și exportați-l prin NFS. Pe calculatorul destinație montați directorul exportat tot în /vm și asigurați-vă că îl puteți accesa.
+</p>
+
+<p>
+Pe calculatorul sursă copiați imaginea <code>base.qcow2</code> în directorul <code>/vm</code> și porniți o mașină virtuală KVM în background (<code>-daemonize</code>), având o consolă VNC. Realizați migrarea acesteia către destinație urmărind tutorialul de <a href="http://www.linux-kvm.org/page/Migration" class="urlextern" title="http://www.linux-kvm.org/page/Migration"  rel="nofollow">aici</a>.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:contents:sidebar">
+
+<h3 class="sectionedit40" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="08.html" class="wikilink1" title="saisp:labs:08">Laboratorul 8</a></span></strong>
+</p>
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:08:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_144181157258355ba70a760" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="08/contents/01.html" class="wikilink1" title="saisp:labs:08:contents:01">01. [15p] Kernel-based Virtual Machine (KVM)</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/02.html" class="wikilink1" title="saisp:labs:08:contents:02">02. [10p] Copy-on-write virtual storage</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/03.html" class="wikilink1" title="saisp:labs:08:contents:03">03. [10p] Adăugare resurse la o mașină virtuală KVM</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/04.html" class="wikilink1" title="saisp:labs:08:contents:04">04. [10p] Multiplicare mașini virtuale folosind o singură image de bază</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/05.html" class="wikilink1" title="saisp:labs:08:contents:05">05. [10p] Conversie disk virtual între diferite formate</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/06.html" class="wikilink1" title="saisp:labs:08:contents:06">06. [15p] Interconectare mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/07.html" class="wikilink1" title="saisp:labs:08:contents:07">07. [10p] Conectarea mașinilor virtuale la rețeaua publică</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/08.html" class="wikilink1" title="saisp:labs:08:contents:08">08. [15p] Managementul mașinilor virtuale KVM folosind virsh</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/09.html" class="wikilink1" title="saisp:labs:08:contents:09">09. [5p] Rularea mașinilor virtuale de către un utilizator neprivilegiat</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/10.html" class="wikilink1" title="saisp:labs:08:contents:10">10. [BONUS - 10p] Migrarea mașinilor virtuale între noduri</a></div></li>
+</ul>
+</div></div>
+
+</div>
+</div>
+<div class="level4">
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="laborator">Laborator</h1>
+<div class="level1">
+
+<p>
+<strong><span class="curid"><a href="08.html" class="wikilink1" title="saisp:labs:08">Laboratorul 8</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:08:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:08:meta:nav">
+<div class="level1">
+
+<div><div id="nojs_indexmenu_144181157258355ba70a760" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="08/contents/01.html" class="wikilink1" title="saisp:labs:08:contents:01">01. [15p] Kernel-based Virtual Machine (KVM)</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/02.html" class="wikilink1" title="saisp:labs:08:contents:02">02. [10p] Copy-on-write virtual storage</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/03.html" class="wikilink1" title="saisp:labs:08:contents:03">03. [10p] Adăugare resurse la o mașină virtuală KVM</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/04.html" class="wikilink1" title="saisp:labs:08:contents:04">04. [10p] Multiplicare mașini virtuale folosind o singură image de bază</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/05.html" class="wikilink1" title="saisp:labs:08:contents:05">05. [10p] Conversie disk virtual între diferite formate</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/06.html" class="wikilink1" title="saisp:labs:08:contents:06">06. [15p] Interconectare mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/07.html" class="wikilink1" title="saisp:labs:08:contents:07">07. [10p] Conectarea mașinilor virtuale la rețeaua publică</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/08.html" class="wikilink1" title="saisp:labs:08:contents:08">08. [15p] Managementul mașinilor virtuale KVM folosind virsh</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/09.html" class="wikilink1" title="saisp:labs:08:contents:09">09. [5p] Rularea mașinilor virtuale de către un utilizator neprivilegiat</a></div></li>
+<li class="level1"><div class="li"><a href="08/contents/10.html" class="wikilink1" title="saisp:labs:08:contents:10">10. [BONUS - 10p] Migrarea mașinilor virtuale între noduri</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:08:meta:nav" [0-] --></div>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator" [1-118] -->
+<h1 class="sectionedit4" id="curs">Curs</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "saisp:sidebar" [0-] --><div class="plugin_include_content plugin_include__saisp:sidebar">
+
+<h2 class="sectionedit7" id="informatii_generale_saisp">Informații generale SAISP</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Informații generale SAISP" [1-156] -->
+<h2 class="sectionedit8" id="resurse">Resurse</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_112447311758355ba80b708" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/cs-curs-pub.ro.html" class="wikilink1" title="saisp:res:cs-curs-pub.ro">cs.curs.pub.ro</a></div></li>
+<li class="level1"><div class="li"><a href="../res/feed.html" class="wikilink1" title="saisp:res:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../res/sala-laborator.html" class="wikilink1" title="saisp:res:sala-laborator">Sală de laborator</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT8 SECTION "Resurse" [157-204] -->
+<h2 class="sectionedit9" id="informatii_saisp_2015-2016">Informații SAISP 2015-2016</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_34737169558355ba80d64a" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../2015-2016/calendar.html" class="wikilink1" title="saisp:2015-2016:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/catalog.html" class="wikilink1" title="saisp:2015-2016:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/echipa.html" class="wikilink1" title="saisp:2015-2016:echipa">Echipă</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/impartire-semigrupe.html" class="wikilink1" title="saisp:2015-2016:impartire-semigrupe">Împărțire pe semigrupe</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/orar.html" class="wikilink1" title="saisp:2015-2016:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/regulament.html" class="wikilink1" title="saisp:2015-2016:regulament">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT9 SECTION "Informații SAISP 2015-2016" [205-278] -->
+<h2 class="sectionedit10" id="cursuri">Cursuri</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_119509643158355ba80f584" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="saisp:courses:01">Curs 01 - Serviciul LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="saisp:courses:02">Curs 02 - Administrarea LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="saisp:courses:03">Curs 03 - Monitorizarea rețelei</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="saisp:courses:04">Curs 04 - Gestiunea scalabilă a dispozitivelor de stocare</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="saisp:courses:05">Curs 05 - Redundanță și load balancing</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="saisp:courses:06">Curs 06 - Sisteme de fișiere în rețea</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/07.html" class="wikilink1" title="saisp:courses:07">Curs 07 - Virtualizarea bazată pe containere</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/08.html" class="wikilink1" title="saisp:courses:08">Curs 08 - Virtualizare nativă</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/09.html" class="wikilink1" title="saisp:courses:09">Curs 09 - Accelerarea accesului web</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/10.html" class="wikilink1" title="saisp:courses:10">Curs 10 - Automatizarea scalabilă a sistemelor</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/11.html" class="wikilink1" title="saisp:courses:11">Curs 11 - Controlul traficului</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/12.html" class="wikilink1" title="saisp:courses:12">2015 - Curs 12 - Surpriză</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT10 SECTION "Cursuri" [279-330] -->
+<h2 class="sectionedit11" id="laboratoare">Laboratoare</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_60088497958355ba8114c2" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="01.html" class="indexmenu_idx_head">Laborator 1. Serviciul LDAP</a></div></li>
+<li class="closed"><div class="li"><a href="02.html" class="indexmenu_idx_head">Laborator 2. Administrarea LDAP</a></div></li>
+<li class="closed"><div class="li"><a href="03.html" class="indexmenu_idx_head">Laborator 3. Monitorizarea rețelei</a></div></li>
+<li class="closed"><div class="li"><a href="04.html" class="indexmenu_idx_head">Laborator 4. Gestiunea scalabilă a dispozitivelor de stocare</a></div></li>
+<li class="closed"><div class="li"><a href="05.html" class="indexmenu_idx_head">Laborator 5. Redundanță și load balancing</a></div></li>
+<li class="closed"><div class="li"><a href="06.html" class="indexmenu_idx_head">Laborator 6. Sisteme de fișiere în rețea</a></div></li>
+<li class="closed"><div class="li"><a href="07.html" class="indexmenu_idx_head">Laborator 7. Virtualizarea bazată pe containere</a></div></li>
+<li class="closed"><div class="li"><span class="curid"><a href="08.html" class="indexmenu_idx_head">Laborator 8. Virtualizare nativă</a></span></div></li>
+<li class="closed"><div class="li"><a href="09.html" class="indexmenu_idx_head">Laborator 9. Accelerarea accesului web</a></div></li>
+<li class="closed"><div class="li"><a href="10.html" class="indexmenu_idx_head">Laboratorul 10. Automatizarea scalabila a sistemelor</a></div></li>
+<li class="closed"><div class="li"><a href="11.html" class="indexmenu_idx_head">Laborator 11. Controlul traficului</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT11 SECTION "Laboratoare" [331-] --><!-- EDIT6 PLUGIN_INCLUDE_END "saisp:sidebar" [0-] --></div>
+<div class="level1">
+
+</div>
+<!-- EDIT4 SECTION "Curs" [119-] -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/08.txt · Last modified: 2016/02/28 23:46 by alexandru.carp          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="08%3Fdo=media&amp;ns=saisp%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="08.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A08&amp;1479891880" width="2" height="1" alt="" /></div>
+</body>
+</html>

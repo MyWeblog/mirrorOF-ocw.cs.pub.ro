@@ -1,0 +1,151 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:02:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-10-10T13:59:30+0300"/>
+<meta name="keywords" content="rl,labs,02,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:02:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/02/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:02:contents';var JSINFO = {"id":"rl:labs:02:contents:04","namespace":"rl:labs:02:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_intrari_statice_in_tabela_de_comutare">04. [20p] Intrări statice în tabela de comutare</h3>
+<div class="level3">
+
+<p>
+Până în acest punct am observat cum se poate popula dinamic o tabela de comutare a unui switch. Ați văzut că în tabela de comutare intrările erau marcate cu <code>DYNAMIC</code> în dreptul coloanei <code>Type</code>.
+</p>
+
+<p>
+Tabela de comutare se poate popula și static cu intrări predefinite pentru un anumit port. Dorim să configurăm intrări statice în tabela de comutare a unui switch.
+</p>
+
+<p>
+Pentru a putea configura un echipament Cisco, trebuie să intrăm în modul de configurare. Din contul de administrare (nu uitați: ”#” la sfârșitul prompt-ului) executați comanda
+</p>
+<pre class="code">configure terminal</pre>
+
+<p>
+Astfel veți intra în modul de configurare. Acest mod îl veți recunoaște prin adăugarea sufixului <code>(config)</code> la prompt-ul CLI-ului. În acest mod puteți doar să realizați configurări, nu puteți vizualiza parametrii switch-ului (ex.: afișarea tabelei de comutare). Pentru a vă întoarce în modul anterior folosiți comanda
+</p>
+<pre class="code">exit</pre>
+
+<p>
+sau combinația de taste <code>Ctrl+z</code>.
+</p>
+
+<p>
+Comanda prin care se poate configura o intrare statică în tabela de comutare este
+</p>
+<pre class="code">mac-address-table static AAAA.BBBB.CCCC vlan Z interface FastEthernet X/Y</pre>
+
+<p>
+Parametrii sunt după cum urmează:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>AAAA.BBBB.CCCC</code>: adresa MAC. Trebuie să fie obligatoriu în această formă. Pe alte sisteme de operare o veți găsi sub forma: <code>AA:AA:BB:BB:CC:CC</code>.</div>
+</li>
+<li class="level1"><div class="li"> <code>Z</code>: numărul VLAN-ului. În cazul de față vom folosi <strong>1</strong>. Detalii despre VLAN-uri vom prezenta în laboratoarele viitoare.</div>
+</li>
+<li class="level1"><div class="li"> <code>X/Y</code>: indexul portului din switch pentru care doriți asocierea.</div>
+</li>
+</ul>
+
+<p>
+În topologia de la <a href="../../../../../../_media/rl/labs/02/contents/rl_2013-2014_laborator-02_04.pkt" class="media mediafile mf_pkt" title="rl:labs:02:contents:rl_2013-2014_laborator-02_04.pkt (6.3 KB)">această adresă</a> avem un switch și 4 calculatoare. Încărcați fișierul conținând topologia în PacketTracer și așteptați rularea STP: porturile switch-ului trebuie să lumineze verde, <strong>nu</strong> portocaliu.
+</p>
+
+<p>
+Dorim să configurăm o intrare statică pentru stația PC1, stație conectată pe portul <code>FastEthernet3/1</code> (sau <code>Fa3/1</code>) din switch și care are adresa MAC <code>0090.0C1A.03DE</code>. Pentru aceasta, rulați comenzile de mai jos:
+</p>
+<pre class="code">Switch&gt;enable
+Switch#show mac-address-table 
+          Mac Address Table
+-------------------------------------------
+
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+
+Switch#configure terminal
+Switch(config)#mac-address-table static 0090.0C1A.03DE vlan 1 interface FastEthernet 3/1
+Switch(config)#exit
+Switch#
+Switch#show mac-address-table 
+          Mac Address Table
+-------------------------------------------
+
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+
+   1    0090.0c1a.03de    STATIC      Fa3/1
+Switch#</pre>
+
+<p>
+Trimiteți un pachet de la stația PC0 la stația PC1. Afișați tabela de comutare folosind comanda
+</p>
+<pre class="code">show mac-address-table</pre>
+
+<p>
+Se observă tipul <code>STATIC</code> pentru intrarea cu adresa MAC a stației PC1 și intrarea de tipul <code>DYNAMIC</code> pentru adresa MAC a stației PC0.
+</p>
+
+<p>
+Creați încă o intrare statică pentru stația PC2 după modelul de mai sus. Verificați conectivitatea cu toate celelalte stații.
+</p>
+
+<p>
+Goliți tabela de comutare folosind comanda
+</p>
+<pre class="code">clear mac-address-table</pre>
+
+<p>
+Creați o intrare statică pentru portul din switch aferent stației PC3, dar în loc sa puneți adresa MAC a stației PC3, puneți o adresă MAC nevalidă (care nu există în rețeaua locală). Afișați tabela de comutare. Testați conectivitatea stației PC3 cu celelalte stații și afișați din nou tabela de comuntare. Observați prezența a două intrări MAC pe același port, una statică (introdusă mai devreme) și alta dinamică (adresa MAC a stației PC3).
+</p>
+
+<p>
+O intrare statică are avantajul permanenței. În absența traficului, o intrare dinamică este ștearsă din tabela de comuntare după câteva minute. O intrare statică poate fi ștearsă doar explicit, prin folosirea comenzii <code>clear mac-address-table</code>.
+</p>
+
+<p>
+Dacă dorim să configurăm acces exclusiv al stației PC3 în tabela de comutare, trebuie folosite comenzi de <a href="http://www.cisco.com/en/US/docs/switches/datacenter/sw/4_1/nx-os/security/configuration/guide/sec_portsec.html" class="urlextern" title="http://www.cisco.com/en/US/docs/switches/datacenter/sw/4_1/nx-os/security/configuration/guide/sec_portsec.html"  rel="nofollow">port security</a>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

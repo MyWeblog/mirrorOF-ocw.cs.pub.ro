@@ -1,0 +1,534 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    A08 - IPSec Remote Access    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-06-01T20:53:18+0300"/>
+<meta name="keywords" content="sred,labs,asa,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=sred:labs:asa"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../_export/xhtml/sred/labs/asa/08.html"/>
+<link rel="canonical" href="08.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sred:labs:asa';var JSINFO = {"id":"sred:labs:asa:08","namespace":"sred:labs:asa","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../../index.html"><img height="70" src="../../../res/sigla_sred.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../systems/index.html"/><img height="70" src="../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="08%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="08%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="a08_-_ipsec_remote_access">A08 - IPSec Remote Access</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="topology">Topology</h2>
+<div class="level2">
+
+<p>
+<a href="../../../_detail/sred/labs/asa/asa_topology_08.png%3Fid=sred%253Alabs%253Aasa%253A08.html" class="media" title="sred:labs:asa:asa_topology_08.png"><img src="../../../_media/sred/labs/asa/asa_topology_08.png" class="mediacenter" title=" " alt=" " /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit3" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit4" id="basic_setup">1. Basic Setup</h3>
+<div class="level3">
+
+<p>
+In this task you will configure basic connectivity to prepare the topology for IPSec Remote-Access configuration.
+</p>
+
+</div>
+
+<h4 id="a_asa_setup">A. ASA Setup</h4>
+<div class="level4">
+
+<p>
+Configure the ASA with the following parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> Interface Gi2 as inside with the IP address 192.168.1.1/24</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# interface gigabit 2
+Atlas(config-if)# ip address 192.168.1.1 255.255.255.0
+Atlas(config-if)# nameif inside
+INFO: Security level for &quot;inside&quot; set to 100 by default.
+Atlas(config-if)# no shutdown</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="b_router_setup">B. Router Setup</h4>
+<div class="level4">
+
+<p>
+Configure router <strong>R3</strong> with the following parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> IP address: 192.168.1.100/24</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">R3(config)#int fastethernet 0/0
+R3(config-if)#ip address 192.168.1.100 255.255.255.0
+R3(config-if)#no shutdown</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Default route with next-hop 192.168.1.1 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">R3(config)#ip route 0.0.0.0 0.0.0.0 192.168.1.1</pre>
+
+
+</div></div>
+
+</div>
+
+<h3 class="sectionedit5" id="ipsec_remote-access">2. IPSec Remote-Access</h3>
+<div class="level3">
+
+<p>
+In this task you will configure Remote-Access VPN between the <strong>ASA</strong> and <strong>R3</strong>.
+</p>
+
+</div>
+
+<h4 id="a_isakmp">A. ISAKMP</h4>
+<div class="level4">
+
+<p>
+Activate ISAKMP on the ASA interface.
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# crypto ikev1 enable inside</pre>
+
+
+</div></div>
+
+<p>
+Define an ISAKMP policy with the following parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> Encryption: 3DES</div>
+</li>
+<li class="level1"><div class="li"> Hashing: SHA</div>
+</li>
+<li class="level1"><div class="li"> Authentication: PSK</div>
+</li>
+<li class="level1"><div class="li"> Diffie-Hellman: Group 2</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning"> Remember to use ASA8.4 <code>crypto ikev1</code> commands instead of the older <code>isakmp</code> 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# crypto ikev1 policy 10
+Atlas(config-isakmp-policy)# encryption 3des
+Atlas(config-isakmp-policy)# hash sha
+Atlas(config-isakmp-policy)# authentication pre-share
+Atlas(config-isakmp-policy)# group 2</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="b_tunnel-group">B. Tunnel-group</h4>
+<div class="level4">
+
+<p>
+Define a remote-access tunnel-group. Use <code>cisco123</code> for the PSK.
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# tunnel-group MY_TUNNEL type remote-access
+Atlas(config)# tunnel-group MY_TUNNEL ipsec-attributes
+Atlas(config-tunnel-ipsec)# ikev1 pre-shared-key cisco123</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="c_enable_nem">C. Enable NEM</h4>
+<div class="level4">
+
+<p>
+Enable NEM (Network Extension Mode) tunnels for the default group policy.
+</p>
+
+<p>
+<p><div class="noteclassic"> You will need to add the <code>enable nem</code> command to the default group policy. For more information refer to <a href="http://www.cisco.com/en/US/tech/tk583/tk372/technologies_configuration_example09186a0080809222.shtml" class="urlextern" title="http://www.cisco.com/en/US/tech/tk583/tk372/technologies_configuration_example09186a0080809222.shtml"  rel="nofollow"> EasyVPN Example</a> 
+</div></p>
+<p><div class="noteclassic"> The default group policy <strong>DfltGrpPolicy</strong> is used by default by all tunnel-groups. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# group-policy DfltGrpPolicy attributes 
+Atlas(config-group-policy)# nem enable</pre>
+</div></div>
+
+</div>
+
+<h4 id="d_transform_set">D. Transform set</h4>
+<div class="level4">
+
+<p>
+Configure a new transform set. Use <strong>ESP-3DES</strong> for encryption and <strong>MD5-HMAC</strong> for authentication.
+</p>
+
+<p>
+<p><div class="notewarning"> Remember that in ASA8.4 you will have to specify that the transform-set applies to <strong>ikev1</strong>. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# ipsec ikev1 transform-set MY_TRANSFORM esp-3des esp-md5-hmac</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="e_dynamic_crypto-map">E. Dynamic crypto-map</h4>
+<div class="level4">
+
+<p>
+Configure a dynamic crypto map that uses the transform set defined above.
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# crypto dynamic-map MY_DYNAMIC_MAP 10 set ikev1 transform-set MY_TRANSFORM</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="f_static_crypto-map">F. Static crypto-map</h4>
+<div class="level4">
+
+<p>
+Configure a static crypto map that uses the dynamic crypto map defined above.
+</p>
+
+<p>
+Apply the crypto map on the <code>inside</code> interface.
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# crypto map MY_MAP 65535 ipsec-isakmp dynamic MY_DYNAMIC_MAP
+Atlas(config)# crypto map MY_MAP interface inside</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="g_user_accounts">G. User accounts</h4>
+<div class="level4">
+
+<p>
+Create a new user called <code>cisco</code> with password <code>sred</code>. This will be later be used by the router during the xauth step.
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">Atlas(config)# username cisco password sred</pre>
+
+
+</div></div>
+
+</div>
+
+<h3 class="sectionedit6" id="ipsec_ra_client">3. IPSec RA Client</h3>
+<div class="level3">
+
+<p>
+In this task you will configure a cisco VPN Client.
+</p>
+
+</div>
+
+<h4 id="a_ezvpn_client_setup">A. EZVPN Client setup</h4>
+<div class="level4">
+
+<p>
+Configure <strong>R3</strong> as a hardware VPN client.
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">R3(config)#crypto ipsec client ezvpn EZVPN
+R3(config-crypto-ezvpn)#connect auto
+R3(config-crypto-ezvpn)#group MY_TUNNEL key cisco123
+R3(config-crypto-ezvpn)#mode network-extension
+R3(config-crypto-ezvpn)#peer 192.168.1.1
+
+R3(config)#interface fastethernet 0/0
+R3(config-if)#crypto ipsec client ezvpn EZVPN outside
+</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="b_inside_network_setup">B. Inside network setup</h4>
+<div class="level4">
+
+<p>
+On <strong>R3</strong>, create the <code>Loopback0</code> interface using IP address 10.0.0.1/24.
+</p>
+<div class="solution"><div class="solution_title"><span class="title_text">Rezolvare</span></div><div class="solution_contents"> <pre class="code">R3(config)#interface loopback 0
+R3(config-if)#ip address 10.0.0.1 255.255.255.0
+R3(config-if)#crypto ipsec client ezvpn EZVPN inside
+R3(config-if)#
+*Mar  1 00:22:22.015: %CRYPTO-6-ISAKMP_ON_OFF: ISAKMP is ON</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="c_client_insideoutside_networks">C. Client inside/outside networks</h4>
+<div class="level4">
+
+<p>
+In NEM mode, the EZVPN client needs to know which interface is the inside (the trusted network) and which interface is the outside (the untrusted network). The tunnel will be built over the untrusted network.
+</p>
+
+<p>
+On <strong>R3</strong>, configure the <code>FastEthernet0/0</code> interface as outside and the <code>Loopback0</code> interface as inside.
+</p>
+
+</div>
+
+<h4 id="d_xauth">D. xauth</h4>
+<div class="level4">
+
+<p>
+Provide xauth credentials using the <code>crypto ipsec client ezvpn xauth EZVPN</code> exec mode command.
+</p>
+
+</div>
+
+<h4 id="e_test">E. Test</h4>
+<div class="level4">
+
+<p>
+Test that the isakmp and ipsec SAs are successfully created on the ASA.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="fortigate_activities">FortiGate Activities</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_69300522158355bbcb8839" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../fortigate/01.html" class="wikilink1" title="sred:labs:fortigate:01">F01 - Basic Setup</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/02.html" class="wikilink1" title="sred:labs:fortigate:02">F02 - Basic Policies</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/04.html" class="wikilink1" title="sred:labs:fortigate:04">F04 - Advanced Policies</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/05.html" class="wikilink1" title="sred:labs:fortigate:05">F05 - Routing</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/07.html" class="wikilink1" title="sred:labs:fortigate:07">F07 - IPSec site-to-site</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/08.html" class="wikilink1" title="sred:labs:fortigate:08">F08 - SSL VPN</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/10.html" class="wikilink1" title="sred:labs:fortigate:10">F10 - Practice Exam</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "FortiGate Activities" [1-72] -->
+<h1 class="sectionedit2" id="asa_activities">ASA Activities</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_150065536158355bbcba777" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="sred:labs:asa:01">A01 - Basic Setup</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="sred:labs:asa:02">A02 - Basic Policies</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="sred:labs:asa:03">A03 - NAT</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="sred:labs:asa:04">A04 - Advanced Policies</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="sred:labs:asa:05">A05 - VLANs and Routing</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="sred:labs:asa:06">A06 - Security Contexts</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="sred:labs:asa:07">A07 - IPSec site-to-site</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="08.html" class="wikilink1" title="sred:labs:asa:08">A08 - IPSec Remote Access</a></span></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="sred:labs:asa:09">A09 - High Availability</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="sred:labs:asa:10">A10 - Practice exam</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "ASA Activities" [73-134] -->
+<h1 class="sectionedit3" id="courses">Courses</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_12380004258355bbcbc6b7" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../courses/course-01.html" class="wikilink1" title="sred:courses:course-01">C01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-02.html" class="wikilink1" title="sred:courses:course-02">C02 - Basic Firewalling</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-03.html" class="wikilink1" title="sred:courses:course-03">C03 - NAT</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-04.html" class="wikilink1" title="sred:courses:course-04">C04 - Advanced Firewalling</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-05.html" class="wikilink1" title="sred:courses:course-05">C05 - Routing and Switching</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-06.html" class="wikilink1" title="sred:courses:course-06">C06 - Virtual Firewalling</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-07.html" class="wikilink1" title="sred:courses:course-07">C07 - Basic VPNs</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-08.html" class="wikilink1" title="sred:courses:course-08">C08 - Advanced VPNs</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-09.html" class="wikilink1" title="sred:courses:course-09">C09 - High Availability</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Courses" [135-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="08.html#a08_-_ipsec_remote_access">A08 - IPSec Remote Access</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="08.html#topology">Topology</a></div></li>
+<li class="level2"><div class="li"><a href="08.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="08.html#basic_setup">1. Basic Setup</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="08.html#a_asa_setup">A. ASA Setup</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#b_router_setup">B. Router Setup</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="08.html#ipsec_remote-access">2. IPSec Remote-Access</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="08.html#a_isakmp">A. ISAKMP</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#b_tunnel-group">B. Tunnel-group</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#c_enable_nem">C. Enable NEM</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#d_transform_set">D. Transform set</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#e_dynamic_crypto-map">E. Dynamic crypto-map</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#f_static_crypto-map">F. Static crypto-map</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#g_user_accounts">G. User accounts</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="08.html#ipsec_ra_client">3. IPSec RA Client</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="08.html#a_ezvpn_client_setup">A. EZVPN Client setup</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#b_inside_network_setup">B. Inside network setup</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#c_client_insideoutside_networks">C. Client inside/outside networks</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#d_xauth">D. xauth</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#e_test">E. Test</a></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          sred/labs/asa/08.txt · Last modified: 2015/06/01 20:53 by mihai.bucicoiu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="08%3Fdo=media&amp;ns=sred%253Alabs%253Aasa.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="08.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../feed.php" title="Recent changes RSS feed"><img src="../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../lib/exe/indexer.php%3Fid=sred%253Alabs%253Aasa%253A08&amp;1479891900" width="2" height="1" alt="" /></div>
+</body>
+</html>

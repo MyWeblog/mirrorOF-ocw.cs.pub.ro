@@ -1,0 +1,93 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:04:contents:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-17T00:48:39+0200"/>
+<meta name="keywords" content="saisp,labs,04,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:04:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/04/contents/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:04:contents';var JSINFO = {"id":"saisp:labs:04:contents:05","namespace":"saisp:labs:04:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_creare_array_raid0">05. [10p] Creare array RAID0</h3>
+<div class="level3">
+
+<p>
+Ne propunem să mai facem, temporar, un array RAID0 care conține două partiții fizice; array-ul se va numi <code>/dev/md1</code> și va conține partițiile <code>/dev/sdb2</code> și <code>/dev/sdc2</code>. Ulterior vom șterge configurația.
+</p>
+
+<p>
+Creăm array-ul de tip <code>RAID0</code> conținând cele două partiții:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span>mdadm <span class="re5">--create</span> <span class="sy0">/</span>dev<span class="sy0">/</span>md1 <span class="re5">--level</span>=<span class="nu0">0</span> <span class="re5">--raid-devices</span>=<span class="nu0">2</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdb2 <span class="sy0">/</span>dev<span class="sy0">/</span>sdc2
+mdadm: Defaulting to version <span class="nu0">1.2</span> metadata
+mdadm: array <span class="sy0">/</span>dev<span class="sy0">/</span>md1 started.</pre>
+
+<p>
+Urmărim configurația creată prin intermediul fișierului <code>/proc/mdstat</code>:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>proc<span class="sy0">/</span>mdstat
+Personalities : <span class="br0">&#91;</span>raid0<span class="br0">&#93;</span>
+md1 : active raid0 sdc2<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> sdb2<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>
+      <span class="nu0">2095104</span> blocks super <span class="nu0">1.2</span> 512k chunks
+&nbsp;
+md0 : active raid0 sdb1<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> sdd1<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> sdc1<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>
+      <span class="nu0">3139584</span> blocks super <span class="nu0">1.2</span> 512k chunks
+&nbsp;
+unused devices: <span class="sy0">&lt;</span>none<span class="sy0">&gt;</span></pre>
+
+<p>
+Array-ul <code>/dev/md1</code> este un array de tip RAID0.
+</p>
+
+<p>
+Ca să revenim în configurația inițială, vom șterge array-ul și vom anula configurația de pe cele două partiții folosind comenzile de mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@raid:~# </span>mdadm <span class="re5">--stop</span> <span class="sy0">/</span>dev<span class="sy0">/</span>md1
+mdadm: stopped <span class="sy0">/</span>dev<span class="sy0">/</span>md1
+<span class="co4">root@raid:~# </span>mdadm <span class="re5">--zero-superblock</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdb2
+<span class="co4">root@raid:~# </span>mdadm <span class="re5">--zero-superblock</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdc2</pre>
+
+<p>
+În acest moment array-ul a fost dezactivat și putem folosi partițiile <code>/dev/sdb2</code> și <code>/dev/sdc2</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

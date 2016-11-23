@@ -1,0 +1,316 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:teme:tema5</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-15T13:26:51+0300"/>
+<meta name="keywords" content="so2,teme,tema5"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so2:teme"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="tema5.html"/>
+<link rel="canonical" href="../../../../so2/teme/tema5.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:teme';var JSINFO = {"id":"so2:teme:tema5","namespace":"so2:teme","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="tema_5_-_transport_protocol">Tema 5 - Transport Protocol</h1>
+<div class="level1">
+
+<p>
+Termen de predare: <strong>Marți, 24 Mai 2016, ora 23:00 </strong>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Tema 5 - Transport Protocol" [12-109] -->
+<h2 class="sectionedit2" id="obiectivele_temei">Obiectivele temei</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Dobândirea de cunoștințe legate de funcționarea subsistemului de networking în nucleul Linux.</div>
+</li>
+<li class="level1"><div class="li"> Obținerea de deprinderi de lucru cu structurile de bază din subsistemul de networking în Linux.</div>
+</li>
+<li class="level1"><div class="li"> Aprofundarea noțiunilor legate de protocoale de comunicație și rețelistică prin implementarea unui protocol într-o stivă de protocoale existentă.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Obiectivele temei" [110-505] -->
+<h2 class="sectionedit3" id="enunt">Enunț</h2>
+<div class="level2">
+
+<p>
+Implementați, în nucleul Linux, un protocol numit STP (SO2 Transport Protocol) de nivel rețea și transport care funcționează pe bază de datagrame (nu este orientat conexiune și nu deține elemente de control al fluxului).
+</p>
+
+<p>
+Protocolul STP are rolul unui protocol de nivel transport (multiplexare pe bază de porturi) dar funcționează la nivelul 3 (Rețea) din <a href="http://en.wikipedia.org/wiki/OSI_model" class="urlextern" title="http://en.wikipedia.org/wiki/OSI_model"  rel="nofollow"> stiva OSI</a>, peste nivelul Legătură de Date.
+</p>
+
+<p>
+Antetul STP este definit de structura <code>struct stp_header</code>:
+</p>
+<pre class="code">struct stp_header {
+        __be16 dst;
+        __be16 src;
+        __be16 len;
+        __u8 flags;
+        __u8 csum;
+};</pre>
+
+<p>
+unde
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>len</code> este lungimea pachetului în octeți (inclusiv header-ul);</div>
+</li>
+<li class="level1"><div class="li"> <code>dst</code> și <code>src</code> sunt porturile destinație, respectiv sursă;</div>
+</li>
+<li class="level1"><div class="li"> <code>flags</code> conține diverse flag-uri, pe moment nefolosite (marcate <em>reserved</em>);</div>
+</li>
+<li class="level1"><div class="li"> <code>csum</code> este suma de control (<em>checksum</em>) a întregului pachet incluzând headerul; suma de control este calculată prin SAU exclusiv (XOR) între toți octeții.</div>
+</li>
+</ul>
+
+<p>
+Sockeții care folosesc acest protocol vor folosi familia <code>AF_STP</code>.
+</p>
+
+<p>
+Protocolul trebuie să funcționeze direct peste Ethernet. Porturile folosite sunt între 1 si 65535. Portul 0 nu este folosit.
+</p>
+
+<p>
+Definiția structurilor și macro-urile aferente STP se găsește în <a href="http://elf.cs.pub.ro/so2/res/teme/stp.h" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/stp.h"  rel="nofollow"> header-ul stp.h</a>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Enunț" [506-1923] -->
+<h2 class="sectionedit4" id="detalii_de_implementare">Detalii de implementare</h2>
+<div class="level2">
+
+<p>
+Trebuie înregistrată o structură de tip <a href="http://lxr.free-electrons.com/source/include/linux/net.h?v=3.13#L190" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/net.h?v=3.13#L190"  rel="nofollow"> net_proto_family</a>, care să ofere operația de creat sockeți de tip STP. Sockeții proaspăt creați nu vor fi asociați cu nici un port si nici o interfață și nu pot primi/trimite pachete. În această funcție, trebuie inițializat <a href="http://lxr.linux.no/#linux+v3.13/include/linux/net.h#L118" class="urlextern" title="http://lxr.linux.no/#linux+v3.13/include/linux/net.h#L118"  rel="nofollow"> câmpul ops al socket-ului</a> cu lista de operații specifice familiei STP. Acest câmp referă o structură <a href="http://lxr.free-electrons.com/source/include/linux/net.h?v=3.13#L128" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/net.h?v=3.13#L128"  rel="nofollow"> proto_ops</a> care trebuie să includă urmatoarele funcții:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>release</code>: eliberează un socket de tip STP;</div>
+</li>
+<li class="level1"><div class="li"> <code>bind</code>: asociază un socket cu un port/interfață pe care se vor primi/trimite pachete.</div>
+<ul>
+<li class="level2"><div class="li"> Pot exista sockeți bind-uiți doar pe un port (nu și pe o interfață).</div>
+</li>
+<li class="level2"><div class="li"> Dacă există un socket deja bind-uit cu un port și o interfață, nu se poate bind-ui un al doilea socket pe același port (cu sau fără o interfață) și viceversa.</div>
+</li>
+<li class="level2"><div class="li"> Sockeții asociați doar cu un port vor putea primi pachetele trimise către acel port pe toate interfețele (analog cu sockeții UDP asociați doar cu un port). Acești sockeți nu pot trimite pachete pentru că nu se poate specifica interfața pe care să fie trimise prin <abbr title="Application Programming Interface">API</abbr>-ul standard de sockeți.</div>
+</li>
+<li class="level2"><div class="li"> Se va aprecia folosirea unui hashtable pentru bind în loc de alte structuri de date (listă, array, …). În nucleu există implementări de funcții pentru hash-table-uri în <a href="http://lxr.linux.no/linux+v3.13/include/linux/list.h" class="urlextern" title="http://lxr.linux.no/linux+v3.13/include/linux/list.h"  rel="nofollow"> header-ul list.h</a>. (căutați după <code>hlist_add_head</code>).</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <code>connect</code>: asociază un socket cu un port și o adresă hardware/MAC remote către care se vor trimite/dinspre care se vor primi pachete. Acest lucru ar trebui sa permită operații de <code>send</code>/<code>write</code> pe socket în loc de <code>sendmsg</code>/<code>recvmsg</code> sau <code>sendto</code>/<code>recvfrom</code>. Odată conectați cu un host, sockeții nu vor mai accepta pachete decât de la host-ul respectiv. Odată conectați, sockeții nu mai pot fi “deconectați”.</div>
+</li>
+<li class="level1"><div class="li"> <code>sendmsg</code>, <code>recvmsg</code>: se trimite, respectiv se primește o datagramă pe un socket STP.</div>
+<ul>
+<li class="level2"><div class="li"> Pentru partea de <em>receive</em>, metainformații despre host-ul care a trimis pachetul se pot păstra în <a href="http://lxr.linux.no/#linux+v3.13/include/linux/skbuff.h#L424" class="urlextern" title="http://lxr.linux.no/#linux+v3.13/include/linux/skbuff.h#L424"  rel="nofollow"> sk_buff în câmpul cb</a>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <code>poll</code>: va trebui folosită funcția predefinită <code>datagram_poll</code>.</div>
+</li>
+<li class="level1"><div class="li"> Pentru restul operațiilor vor trebui folosite stub-urile predefinite în kernel (<code>sock_no_*</code>).</div>
+</li>
+</ul>
+
+<p>
+Operațiile pe sockeți folosesc un tip de adrese numit <code>sockaddr_stp</code>, tip definit în <a href="http://elf.cs.pub.ro/so2/res/teme/stp.h" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/stp.h"  rel="nofollow"> header-ul temei</a>. Pentru operația de <em>bind</em> se vor lua în considerare doar portul și indexul interfeței pe care se bind-uiește socketul. Pentru operația de <em>receive</em> se vor completa doar câmpurile <code>addr</code> și <code>port</code> din structură cu adresa MAC a host-ului care a trimis pachetul și cu portul de pe care a fost trimis. De asemenea, la trimiterea unui pachet, host-ul destinație se va obține din câmpurile <code>addr</code> și <code>port</code> ale acestei structuri.
+</p>
+
+<p>
+Trebuie să înregistrați o structură <a href="http://lxr.free-electrons.com/source/include/linux/netdevice.h?v=3.13#L1660" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/netdevice.h?v=3.13#L1660"  rel="nofollow"> packet_type</a>, folosind apelul <a href="http://lxr.free-electrons.com/source/net/core/dev.c?v=3.13#L384" class="urlextern" title="http://lxr.free-electrons.com/source/net/core/dev.c?v=3.13#L384"  rel="nofollow"> dev_add_pack</a> pentru a putea primi pachete STP de pe layer-ul de rețea.
+</p>
+
+<p>
+Protocolul va trebui să ofere o interfață prin sistemul de fișiere <code>/proc</code> pentru statistici despre pachetele trimise/primite. Fișierul trebuie să se numească <code>/proc/net/stp_stats</code>, specificat prin macro-ul <code>STP_PROC_FULL_FILENAME</code> din <a href="http://elf.cs.pub.ro/so2/res/teme/stp.h" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/stp.h"  rel="nofollow"> header-ul temei</a>. Formatul trebuie să fie de tip tabel simplu cu 2 rânduri: pe primul rând header-ul tabelului, iar pe al doilea rând statisticile corespunzătoare coloanelor. Coloanele tabelului trebuie să fie, în ordine:
+</p>
+<pre class="code">        RxPkts HdrErr CsumErr NoSock NoBuffs TxPkts</pre>
+
+<p>
+unde:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>RxPkts</code> - numărul de pachete primite.</div>
+</li>
+<li class="level1"><div class="li"> <code>HdrErr</code> - numărul de pachete primite cu erori în header (pachete prea scurte sau cu porturi sursă sau destinație 0).</div>
+</li>
+<li class="level1"><div class="li"> <code>CsumErr</code> - numărul de pachete primite cu erori de checksum.</div>
+</li>
+<li class="level1"><div class="li"> <code>NoSock</code> - numărul de pachete primite pentru care nu s-a găsit un socket destinație.</div>
+</li>
+<li class="level1"><div class="li"> <code>NoBuffs</code> - numărul de pachete primite care nu au putut fi recepționate pentru că coada de receive a socket-ului era plină.</div>
+</li>
+<li class="level1"><div class="li"> <code>TxPkts</code> - numărul de pachete trimise.</div>
+</li>
+</ul>
+
+<p>
+Pentru crearea, respectiv ștergerea intrării precizate de <code>STP_PROC_FULL_FILENAME</code> recomandăm folosirea funcțiilor <a href="http://lxr.free-electrons.com/source/include/linux/proc_fs.h?v=3.13#L30" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/proc_fs.h?v=3.13#L30"  rel="nofollow"> proc_create</a> și <a href="http://lxr.free-electrons.com/source/fs/proc/generic.c?v=3.13#L588" class="urlextern" title="http://lxr.free-electrons.com/source/fs/proc/generic.c?v=3.13#L588"  rel="nofollow"> proc_remove</a>.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Detalii de implementare" [1924-6856] -->
+<h3 class="sectionedit5" id="exemple_de_implementari_de_protocoale">Exemple de implementări de protocoale</h3>
+<div class="level3">
+
+<p>
+Pentru exemple de implementare de protocoale, vă sugerăm în special implementarea de sockeți PF_PACKET din <a href="http://lxr.free-electrons.com/source/net/packet/af_packet.c?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/net/packet/af_packet.c?v=3.13"  rel="nofollow"> net/packet/af_packet.c</a> și diversele funcții din <a href="http://lxr.free-electrons.com/source/net/ipv4/udp.c?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/net/ipv4/udp.c?v=3.13"  rel="nofollow"> implementarea UDP</a> sau <a href="http://lxr.free-electrons.com/source/net/ipv4/af_inet.c?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/net/ipv4/af_inet.c?v=3.13"  rel="nofollow"> implementarea IP</a>.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Exemple de implementări de protocoale" [6857-7314] -->
+<h3 class="sectionedit6" id="tcpdump">tcpdump</h3>
+<div class="level3">
+
+<p>
+Pentru depanarea pachetelor trimise, puteți folosi utilitarul <code>tcpdump</code>. Testele folosesc interfața de loopback; pentru a urmări pachetele trimise puteți folosi o linie de comandă de forma:
+</p>
+<pre class="code">tcpdump -i lo -XX</pre>
+
+<p>
+Puteți folosi o versiune statică de <a href="http://elf.cs.pub.ro/so2/res/teme/tcpdump" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/tcpdump"  rel="nofollow"> tcpdump</a>.  Pentru a o avea în PATH în mașina virtuală, copiați acest fișier în <code>qemu-vm/fsimg/bin</code>.  Creați directorul dacă nu există.  Nu uitați să dați fișierului tcpdump permisiuni de execuție:
+</p>
+<pre class="code"># In directorul qemu-vm
+mkdir fsimg/bin
+wget http://elf.cs.pub.ro/so2/res/teme/tcpdump -O fsimg/bin/tcpdump
+chmod 755 fsimg/bin/tcpdump</pre>
+
+</div>
+<!-- EDIT6 SECTION "tcpdump" [7315-8013] -->
+<h2 class="sectionedit7" id="testare">Testare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Modulul se va numi <code>af_stp.ko</code>.</div>
+</li>
+<li class="level1"><div class="li"> Corectarea temelor se va realiza automat cu ajutorul unei <a href="http://elf.cs.pub.ro/so2/res/teme/5-stp.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/5-stp.zip"  rel="nofollow"> suite de teste publice</a>.</div>
+</li>
+<li class="level1"><div class="li"> Indicații despre utilizarea suitei de teste se găsesc în fișierul <code>README</code> din cadrul arhivei.</div>
+</li>
+<li class="level1"><div class="li"> Pentru evaluare și corectare tema va fi uploadată folosind <a href="https://elf.cs.pub.ro/vmchecker/ui" class="urlextern" title="https://elf.cs.pub.ro/vmchecker/ui"  rel="nofollow"> interfața vmchecker</a>.</div>
+</li>
+<li class="level1"><div class="li"> Suita de teste conține un set de teste. Trecerea unui test conduce la obținerea punctajului aferent acestuia.</div>
+<ul>
+<li class="level2"><div class="li"> În urma rulării testelor, se va acorda, în mod automat, un punctaj total. Punctajul total maxim este de 100 de puncte, pentru o temă care trece toate testele.</div>
+</li>
+<li class="level2"><div class="li"> Cele 100 de puncte corespund la 1.5 puncte din cadrul notei finale la SO2.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Pot exista penalizări în caz de întârzieri sau pentru neajunsuri de implementare sau de stil.</div>
+</li>
+<li class="level1"><div class="li"> Penalizările pentru neajunsuri de implementare pot constitui maxim 1 punct din nota finală a temei.</div>
+<ul>
+<li class="level2"><div class="li"> Pe lângă penalizările precizate în cadrul <a href="http://elf.cs.pub.ro/so2/wiki/teme/general" class="urlextern" title="http://elf.cs.pub.ro/so2/wiki/teme/general"  rel="nofollow"> listei de depunctări</a>, se vor avea în vedere următoarele elemente:</div>
+<ul>
+<li class="level3"><div class="li"> <strong>-0.2</strong>: omiterea eliminării corespunzătoare a resurselor (sockeți, intrări în <code>/proc</code>)</div>
+</li>
+<li class="level3"><div class="li"> <strong>-0.2</strong>: probleme de sincronizare la date folosite de mai multe instanțe de execuție (spre exemplu, vectorul/tabela hash cu sockeți STP)</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Testare" [8014-9438] -->
+<h2 class="sectionedit8" id="resurse_de_suport">Resurse de suport</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Cursuri</div>
+<ul>
+<li class="level2"><div class="li"> <a href="../../../../../so2/cursuri/curs10.html" class="urlextern" title="http://ocw.cs.pub.ro/so2/cursuri/curs10"  rel="nofollow"> Curs 10 - Gestiunea rețelei</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Laboratoare</div>
+<ul>
+<li class="level2"><div class="li"> <a href="../../../../../so2/laboratoare/lab10.html" class="urlextern" title="http://ocw.cs.pub.ro/so2/laboratoare/lab10"  rel="nofollow"> Laborator 10 - Networking</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Sursele nucleului Linux</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://lxr.linux.no/linux+v3.10/net/packet/af_packet.c" class="urlextern" title="http://lxr.linux.no/linux+v3.10/net/packet/af_packet.c"  rel="nofollow"> Implementarea sockeților PF_PACKET</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://lxr.linux.no/linux+v3.10/net/ipv4/udp.c" class="urlextern" title="http://lxr.linux.no/linux+v3.10/net/ipv4/udp.c"  rel="nofollow"> Implementarea protocolului UDP</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://lxr.linux.no/linux+v3.10/net/ipv4/af_inet.c" class="urlextern" title="http://lxr.linux.no/linux+v3.10/net/ipv4/af_inet.c"  rel="nofollow"> Implementarea protocolului IP</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Understanding Linux Network Internals</div>
+<ul>
+<li class="level2"><div class="li"> Capitolele 8-13</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/teme/stp.h" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/stp.h"  rel="nofollow"> Header-ul cu structurile/macro-urile aferente protocolului</a></div>
+</li>
+<li class="level1"><div class="li"> Teste</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/teme/5-stp.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/5-stp.zip"  rel="nofollow"> Arhiva de teste</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="https://vmchecker.cs.pub.ro/" class="urlextern" title="https://vmchecker.cs.pub.ro/"  rel="nofollow"> Interfața de upload vmchecker</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://news.gmane.org/gmane.education.region.romania.operating-systems-design" class="urlextern" title="http://news.gmane.org/gmane.education.region.romania.operating-systems-design"  rel="nofollow"> Lista de discuții a cursului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Resurse de suport" [9439-10417] -->
+<h2 class="sectionedit9" id="suport_intrebari_si_clarificari">Suport, întrebări și clarificări</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Pentru întrebări legate de temă puteți consulta <a href="http://news.gmane.org/gmane.education.region.romania.operating-systems-design" class="urlextern" title="http://news.gmane.org/gmane.education.region.romania.operating-systems-design"  rel="nofollow"> arhivele</a> listei de discuții sau puteți trimite un <a href="mailto:&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;">e-mail</a> (trebuie să fiți <a href="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2" class="urlextern" title="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2"  rel="nofollow"> înregistrați</a>).</div>
+</li>
+<li class="level1"><div class="li"> Vă rugăm să urmăriți și să respectați <a href="http://elf.cs.pub.ro/so2/wiki/resurse/lista-discutii#mailing-list-guidelines" class="urlextern" title="http://elf.cs.pub.ro/so2/wiki/resurse/lista-discutii#mailing-list-guidelines"  rel="nofollow"> indicațiile de utilizare a listei</a>.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT9 SECTION "Suport, întrebări și clarificări" [10418-] --></div>
+</body>
+</html>

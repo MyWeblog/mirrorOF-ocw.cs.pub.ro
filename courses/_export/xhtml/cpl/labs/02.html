@@ -1,0 +1,543 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cpl:labs:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-05T23:18:24+0300"/>
+<meta name="keywords" content="cpl,labs,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cpl:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../cpl/labs/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs';var JSINFO = {"id":"cpl:labs:02","namespace":"cpl:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="02.html#introduction_to_bison">02. Introduction to Bison</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="02.html#nice_to_read">Nice to read</a></div></li>
+<li class="level2"><div class="li"><a href="02.html#prezentare_teoretica">Prezentare teoretică</a></div></li>
+<li class="level2"><div class="li"><a href="02.html#instalare_bison">Instalare bison</a></div></li>
+<li class="level2"><div class="li"><a href="02.html#utilizare_bison">Utilizare bison</a></div></li>
+<li class="level2"><div class="li"><a href="02.html#structura_fisierului_de_specificatii">Structura fișierului de specificații</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="02.html#sectiunea_de_declaratii_c">Secțiunea de declarații C</a></div></li>
+<li class="level3"><div class="li"><a href="02.html#sectiunea_de_declaratii_bison">Secțiunea de declarații Bison</a></div></li>
+<li class="level3"><div class="li"><a href="02.html#sectiunea_de_reguli_gramaticale">Secțiunea de reguli gramaticale</a></div></li>
+<li class="level3"><div class="li"><a href="02.html#sectiunea_de_cod_c">Secțiunea de cod C</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="02.html#flex_si_bisonyacc">Flex și bison/yacc</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="02.html#conflicte_si_ambiguitati">Conflicte și ambiguități</a></div></li>
+<li class="level1"><div class="li"><a href="02.html#instructiuni_compilare_si_executie_folosind_flex_si_bison">Instrucțiuni compilare și execuție folosind flex și bison</a></div></li>
+<li class="level1"><div class="li"><a href="02.html#exercitii_de_laborator_13p">Exerciții de laborator (13p)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="02.html#exercitiul_1_-_simple-ops_5p">Exercițiul 1 - simple-ops (5p)</a></div></li>
+<li class="level2"><div class="li"><a href="02.html#exercitiul_2_-_variables_5p">Exercițiul 2 - variables (5p)</a></div></li>
+<li class="level2"><div class="li"><a href="02.html#exercitiul_3_bonus_-_3p">Exercițiul 3 (bonus - 3p)</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="introduction_to_bison">02. Introduction to Bison</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "02. Introduction to Bison" [1-41] -->
+<h2 class="sectionedit2" id="nice_to_read">Nice to read</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://linux.die.net/man/1/bison" class="urlextern" title="http://linux.die.net/man/1/bison"  rel="nofollow">Bison</a> manual</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://web.iitd.ac.in/~sumeet/flex__bison.pdf" class="urlextern" title="http://web.iitd.ac.in/~sumeet/flex__bison.pdf"  rel="nofollow">flex &amp; bison</a> O&#039;Reilly book</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Nice to read" [42-204] -->
+<h2 class="sectionedit3" id="prezentare_teoretica">Prezentare teoretică</h2>
+<div class="level2">
+
+<p>
+<a href="../../../../_detail/cpl/labs/compilare.png%3Fid=cpl%253Alabs%253A02.html" class="media" title="cpl:labs:compilare.png"><img src="../../../../_media/cpl/labs/compilare.png%3Fw=600&amp;tok=5da30c" class="mediacenter" alt="" width="600" /></a>
+</p>
+
+<p>
+<code>Bison</code> este un generator de analizoare sintactice. Acesta primește la intrare gramatica unui limbaj pe care o translatează într-un parser pentru acel limbaj. Gramaticile pentru <code>bison</code> sunt descrise folosind o variantă a BNF (Backus Naur Form). Gramaticile BNF pot fi folosite pentru limbaje independente de context. Parserele generate cu <code>Bison</code> pot folosi una din urmatoarele metode de parsare:
+</p>
+<ul>
+<li class="level1"><div class="li"> LALR(1) - Look Ahead Left to Right with a one-token lookahead</div>
+</li>
+<li class="level1"><div class="li"> GLR - Generalized Left to Right </div>
+</li>
+</ul>
+
+<p>
+Majoritatea parserelor folosesc LALR(1), care are mai putine capabilitati, insa este semnificativ mai rapid si mai usor de folosit decat GLR. Si noi vom genera tot parsere LALR.
+</p>
+
+<p>
+<code>Bison</code> este varianta GNU a <code>yacc</code> (Yet Another Compiler-Compiler).
+</p>
+
+<p>
+Fișierul de intrare, ce conține gramatica, are extensia <code>.y</code> (este o convenție). Implicit, programul C generat are același nume ca fișierul de specificație, însă extensia <code>.y</code> se schimbă în <code>.tab.c</code>. 
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Prezentare teoretică" [205-1255] -->
+<h2 class="sectionedit4" id="instalare_bison">Instalare bison</h2>
+<div class="level2">
+
+<p>
+În cadrul acestui laborator vom folosi pachetul <code>bison</code> standard oferit de distribuție. Pentru mașina virtuală CPL pusă la dispoziție versiunea pachetului <code>bison</code> este <code>3.0.2</code>.
+</p>
+<pre class="code">sudo apt-get install bison</pre>
+
+</div>
+<!-- EDIT4 SECTION "Instalare bison" [1256-1515] -->
+<h2 class="sectionedit5" id="utilizare_bison">Utilizare bison</h2>
+<div class="level2">
+<pre class="code bash"><span class="kw2">bison</span> <span class="br0">&#91;</span>OPTIONS<span class="br0">&#93;</span> <span class="kw2">file</span></pre>
+
+<p>
+Comanda dispune de o varietate de parametri și opțiuni (<a href="http://linux.die.net/man/1/bison" class="urlextern" title="http://linux.die.net/man/1/bison"  rel="nofollow">man bison</a>) dintre care amintim:
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>-t</em> - activarea modului debugging; variabila globală <code>yydebug</code> trebuie să fie setată pe o valoare nenulă, implicit având valoarea 0</div>
+</li>
+<li class="level1"><div class="li"> <em>-v</em> - generează un fișier de ieșire suplimentar ce conține o descriere detaliată a stărilor analizorului și a acțiunilor preconizate pentru fiecare atom din șirul de intrare; tot aici sunt descrise și conflictele depistate la generarea analizorului; numele fișierului este același cu numele fișierului cu cod C, dar cu extensia <code>.output</code> în loc de <code>.tab.c</code></div>
+</li>
+<li class="level1"><div class="li"> <em>-o</em> - schimbă numele implicit al fișierului de ieșire</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Utilizare bison" [1516-2305] -->
+<h2 class="sectionedit6" id="structura_fisierului_de_specificatii">Structura fișierului de specificații</h2>
+<div class="level2">
+
+<p>
+Fișierul de specificații este format din patru secțiuni:
+</p>
+<pre class="code bash"><span class="sy0">%</span><span class="br0">&#123;</span>                         <span class="sy0">//</span> sau <span class="sy0">%</span>code <span class="br0">&#123;</span>
+C declarations
+<span class="sy0">%</span><span class="br0">&#125;</span> 
+Bison declarations 
+<span class="sy0">%%</span> 
+grammar rules  
+<span class="sy0">%%</span> 
+C code</pre>
+
+<p>
+Utilizatorul trebuie să definească cel puțin trei funcții C:
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>main</em> - din care se apelează <code>yyparse</code></div>
+</li>
+<li class="level1"><div class="li"> <em>yylex</em> - apelată de <code>yyparse</code> pentru obținerea atomilor lexicali</div>
+</li>
+<li class="level1"><div class="li"> <em>yyerror</em> - apelată de <code>yyparse</code> pentru afișarea mesajelor de eroare</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Structura fișierului de specificații" [2306-2820] -->
+<h3 class="sectionedit7" id="sectiunea_de_declaratii_c">Secțiunea de declarații C</h3>
+<div class="level3">
+
+<p>
+Secțiunea de declarații C conține
+</p>
+<ul>
+<li class="level1"><div class="li"> include (s), macro (s) </div>
+</li>
+<li class="level1"><div class="li"> declarații de variabile </div>
+</li>
+<li class="level1"><div class="li"> prototipuri de funcții. </div>
+</li>
+</ul>
+
+<p>
+Codul C este inclus în fișierul .c generat așa cum a fost scris în această secțiune, fără modificări.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Secțiunea de declarații C" [2821-3097] -->
+<h3 class="sectionedit8" id="sectiunea_de_declaratii_bison">Secțiunea de declarații Bison</h3>
+<div class="level3">
+
+<p>
+Regulile unei gramatici conțin terminali și neterminali. În gramatica acceptată de <code>bison</code> vom denumi terminalii tokeni. Ei sunt rezultatul analizei lexicale (În cazul de față făcută cu ajutorul <code>flex</code>). 
+În această secțiune se vor defini:
+</p>
+<ul>
+<li class="level1"><div class="li"> tokenii </div>
+</li>
+</ul>
+<pre class="code C"><span class="sy0">%</span>token <span class="sy0">&lt;</span>tip<span class="sy0">&gt;</span> nume1 nume2</pre>
+<ul>
+<li class="level1"><div class="li"> simbolul de start al gramaticii (opțional)</div>
+</li>
+</ul>
+<pre class="code C"><span class="sy0">%</span>start <span class="sy0">&lt;</span>tip<span class="sy0">&gt;</span> nume  </pre>
+
+<p>
+<p><div class="noteclassic">
+Dacă nu este declarat explicit, simbolul de start va fi neterminalul de la stânga primei reguli a gramaticii. 
+
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> neterminalii</div>
+</li>
+</ul>
+
+<p>
+Aceștia vor fi declarați numai dacă se vor defini mai multe tipuri pentru yylval, cum vom vedea mai jos.
+</p>
+<pre class="code C"><span class="sy0">%</span>type	<span class="sy0">&lt;</span>tip<span class="sy0">&gt;</span> nume1 nume2 ...</pre>
+<ul>
+<li class="level1"><div class="li"> Unui token i se poate asocia o valoare în acțiunile din lexer, și se poate transmite către parser prin variabila yylval. Implicit, yylval este de tip <code>int</code>. În general, este nevoie să returnăm mai multe tipuri de valori, nu doar int. Tipurile de valori ce pot fi returnate sunt specificate tot în această secțiune într-un <code>union</code>. Odată ce am definit mai multe tipuri pentru tokeni, avem nevoie de tipuri și pentru neterminali.</div>
+</li>
+</ul>
+<pre class="code C"><span class="sy0">%</span><span class="kw4">union</span> <span class="br0">&#123;</span>
+<span class="kw4">int</span> int_value<span class="sy0">;</span>
+<span class="kw4">char</span><span class="sy0">*</span> str_value<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În exemplu am pus tipuri de bază, dar pot fi și tipuri definite de utilizator. În acest caz, tipurile pentru tokeni și pentru neterminali pot fi: int_value și str_value. 
+</p>
+<pre class="code C"><span class="sy0">%</span>token	<span class="sy0">&lt;</span>int_value<span class="sy0">&gt;</span>	INTEGER
+<span class="sy0">%</span>token  <span class="sy0">&lt;</span>str_value<span class="sy0">&gt;</span>	STR
+<span class="sy0">%</span>type	<span class="sy0">&lt;</span>int_value<span class="sy0">&gt;</span>	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/exp.html"><span class="kw3">exp</span></a></pre>
+
+<p>
+Dacă este suficient să întoarcem valori de tip int, și nu definim un union de tipuri, atunci <code>&lt;token_type&gt;</code> este omis în declararea tokenilor.
+</p>
+<ul>
+<li class="level1"><div class="li"> Precedența %left. Aceasta va fi detaliată intr-un subcapitol ulterior.</div>
+</li>
+</ul>
+
+<p>
+O listă completă cu simbolurile <code>bison</code> găsiți <a href="http://www.gnu.org/software/bison/manual/html_node/Table-of-Symbols.html" class="urlextern" title="http://www.gnu.org/software/bison/manual/html_node/Table-of-Symbols.html"  rel="nofollow">aici</a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Secțiunea de declarații Bison" [3098-4986] -->
+<h3 class="sectionedit9" id="sectiunea_de_reguli_gramaticale">Secțiunea de reguli gramaticale</h3>
+<div class="level3">
+
+<p>
+O producție a gramaticii de forma:
+</p>
+<pre class="code C">A <span class="sy0">-&gt;</span> B1B2...<span class="me1">Bn</span></pre>
+
+<p>
+în <code>bison</code> va fi scrisă astfel:
+</p>
+<pre class="code C">A <span class="sy0">:</span> B1B2...<span class="me1">Bn</span> <span class="sy0">;</span></pre>
+
+<p>
+unde A, rezultatul, este un neterminal, iar B1..Bn sunt o succesiune de terminali și neterminali. 
+</p>
+<pre class="code C">expr <span class="sy0">:</span>  expr ‘<span class="sy0">+</span>’ expr <span class="sy0">;</span></pre>
+
+<p>
+Dacă există mai multe reguli pentru același rezultat, fie pot fi scrise separat, fie pot fi separate de &#039;|&#039;, ca mai jos:
+</p>
+<pre class="code C">expr
+<span class="sy0">:</span> NUM <span class="br0">&#123;</span> $$ <span class="sy0">=</span> $<span class="nu19">1</span><span class="sy0">;</span><span class="br0">&#125;</span>
+<span class="sy0">|</span> expr ‘<span class="sy0">+</span>’ expr <span class="br0">&#123;</span> $$ <span class="sy0">=</span> $<span class="nu19">1</span> <span class="sy0">+</span> $<span class="nu19">3</span><span class="sy0">;</span><span class="br0">&#125;</span>
+<span class="sy0">;</span></pre>
+
+<p>
+Ca și regulile lexicale, regulile gramaticii pot să aibă o acțiune asociată, ce reprezintă cod C. Sintaxa este
+</p>
+<pre class="code C"><span class="br0">&#123;</span>C statements<span class="br0">&#125;</span></pre>
+
+<p>
+<p><div class="noteclassic">Bison nu verifică corectitudinea codului C din acțiuni ci doar îl copiaza în fișierul .c al parserului, unde va fi verificat de compilatorul de C. Așadar erorile de C vor fi raportate abia la compilarea parserului.
+</div></p>
+Acțiunea poate fi plasată la sfârșitul unei alternative sau chiar în interiorul acesteia.
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>$$</code> reprezinta rezultatul, adica valoarea ce va fi atribuită neterminaului de la stânga regulii, cel la care se va reduce regula.</div>
+</li>
+<li class="level1"><div class="li"> <code>$n</code> este al n-lea termen din regula sintactica.</div>
+</li>
+</ul>
+
+<p>
+Acțiunile definite în mijlocul unei reguli se folosesc numai în anumite situații, pot folosi doar simboluri anterioare acesteia (fiindcă se execută înainte ca simbolurile următoare regulii să fie parsați) și sunt o sursă de conflicte. Vom reveni asupra acestora în laboratorul următor.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Secțiunea de reguli gramaticale" [4987-6494] -->
+<h3 class="sectionedit10" id="sectiunea_de_cod_c">Secțiunea de cod C</h3>
+<div class="level3">
+
+<p>
+Secțiunea de cod C trebuie să conțină:
+</p>
+<ul>
+<li class="level1"><div class="li"> definiția funcției <code>yyerror</code> cu prototipul:</div>
+</li>
+</ul>
+<pre class="code C"><span class="kw4">void</span> yyerror<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>s<span class="br0">&#41;</span></pre>
+<ul>
+<li class="level1"><div class="li"> definiția funcției <code>main</code> care conține un apel către <code>yyparse()</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT10 SECTION "Secțiunea de cod C" [6495-6735] -->
+<h2 class="sectionedit11" id="flex_si_bisonyacc">Flex și bison/yacc</h2>
+<div class="level2">
+
+<p>
+Vom vedea acum cum comunică analizorul lexical (flex) cu analizorul sintactic (bison).
+<code>Bison</code> generează un parser, din <code>nume_gram.y</code>, în fișierul <code>nume_gram.tab.c</code> și un fișier header <code>nume_gram.tab.h</code>. În fișierul header fiecare token are asociat un numar. Fișierul de intrare pentru lex (.l) include fișierul header (cu extensia <code>.tab.h</code>) și folosește numerele atribuite tokenilor în acest fisier.
+<a href="../../../../_detail/cpl/labs/flex_bison.png%3Fid=cpl%253Alabs%253A02.html" class="media" title="cpl:labs:flex_bison.png"><img src="../../../../_media/cpl/labs/flex_bison.png%3Fw=600&amp;tok=479e1e" class="mediacenter" alt="" width="600" /></a>
+</p>
+
+<p>
+Intrarea pentru <code>bison</code> este un șir de tokeni furnizat de flex prin funcția yylex(). 
+</p>
+
+<p>
+Numerele asociate tokenilor:
+</p>
+<ul>
+<li class="level1"><div class="li"> Numărul unui token literal este valoarea sa <abbr title="American Standard Code for Information Interchange">ASCII</abbr> </div>
+</li>
+</ul>
+<pre class="code C"><span class="br0">&#91;</span><span class="sy0">-+</span><span class="br0">&#93;</span>               <span class="kw1">return</span> <span class="sy0">*</span>yytext<span class="sy0">;</span></pre>
+
+<p>
+va returna valoarea <abbr title="American Standard Code for Information Interchange">ASCII</abbr> a caracterului ‘-’ (45), respectiv valoarea <abbr title="American Standard Code for Information Interchange">ASCII</abbr> a caracterului ‘+’ (43)
+</p>
+<ul>
+<li class="level1"><div class="li"> Ceilalți tokeni primesc numere începând cu 257</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic">Token-ul <code>error</code> este rezervat pentru tratarea erorilor
+</div></p>
+</p>
+
+<p>
+Să presupunem că avem o gramatică care definește token-ul INTEGER și acesta a primit valoarea 258 în fișierul header nume_gram.tab.h.
+Fiecare apariție a instrucțiunii “return INTEGER” din fișierul .l va fi înlocuită, în acest caz cu “return 258”.
+Pentru a obține tokenii, bison apelează funcția yylex. Altfel spus, fișierul cu extensia .tab.h atribuie fiecărui token/terminal un identificator unic de tip int. Cum acest header este inclus în fisierul *.l, numele tokenilor sunt înlocuite cu identificatorul unic.
+</p>
+
+<p>
+Dacă un token are asociată o valoare, aceasta poate fi transmisă către parser prin variabila <code>yylval</code>.
+(în cazul nostru un int) 
+</p>
+
+<p>
+<p><div class="noteclassic">Atenție: Nu faceți confuzie între id-ul token-ului dat de bison (identificator unic) și valoarea pe care o trimite din yylex.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Flex și bison/yacc" [6736-8519] -->
+<h1 class="sectionedit12" id="conflicte_si_ambiguitati">Conflicte și ambiguități</h1>
+<div class="level1">
+
+<p>
+<strong>Conflictele</strong> sunt rezultatul unei gramatici ambigue. Conflictele pot fi fie shift/reduce, fie reduce/reduce
+</p>
+<ul>
+<li class="level1"><div class="li"> Într-un conflict shift/reduce acțiunea implicită este cea de shift.</div>
+</li>
+<li class="level1"><div class="li"> Într-un conflict reduce/reduce acțiunea implicită este de a reduce folosind prima regulă aplicabilă a gramaticii.</div>
+</li>
+</ul>
+
+<p>
+Exemplu de conflict shift/reduce datorat ambiguității <code>dangling else</code>:
+</p>
+
+<p>
+Când token-ul <code>else</code> este citit și devine token-ul lookahead, ceea ce a fost deja citit se potrivește pe prima regulă și ar putea fi redus. Dar, este de asemenea legal să shiftam else-ul, pentru ca șirul de tokeni de la intrare s-ar putea potrivi pe a doua regulă. 
+Deoarece parser-ul preferă sa shifteze, else-ul va fi atașat if-ului cel mai imbricat. 
+</p>
+
+<p>
+Dacă parser-ul ar alege să reducă, atunci când poate, și nu să shifteze, else-ul va fi atașat if-ului exterior(primul).
+</p>
+<pre class="code C">if_stmt<span class="sy0">:</span>
+  <span class="st0">&quot;if&quot;</span> expr <span class="st0">&quot;then&quot;</span> stmt
+<span class="sy0">|</span> <span class="st0">&quot;if&quot;</span> expr <span class="st0">&quot;then&quot;</span> stmt <span class="st0">&quot;else&quot;</span> stmt
+<span class="sy0">;</span></pre>
+
+<p>
+Cu această gramatică, secvența de intrare <code>if (exp1) if (exp2) stmt1 else stmt2</code> poate fi parsată în 2 moduri diferite:
+</p>
+<pre class="code C">Cazul <span class="nu0">1</span><span class="sy0">:</span> <span class="kw1">if</span> <span class="br0">&#40;</span>e1<span class="br0">&#41;</span> <span class="br0">&#123;</span> <span class="kw1">if</span> <span class="br0">&#40;</span>e2<span class="br0">&#41;</span> s1 <span class="kw1">else</span> s2 <span class="br0">&#125;</span>
+&nbsp;
+Cazul <span class="nu0">2</span><span class="sy0">:</span> <span class="kw1">if</span> <span class="br0">&#40;</span>e1<span class="br0">&#41;</span> <span class="br0">&#123;</span> <span class="kw1">if</span> <span class="br0">&#40;</span>e2<span class="br0">&#41;</span> s1 <span class="br0">&#125;</span> <span class="kw1">else</span> s2</pre>
+
+<p>
+Acesta este un asa zis conflict shift/reduce legitim. Există cazuri în care gramatica generează astfel de conflicte pentru că a fost scrisa ambiguu, deși se putea scrie și într-o formă neambiguă. În aceste cazuri se recomandă rescriere regulilor cu conflicte.
+</p>
+<pre class="code C">expr
+<span class="sy0">:</span> expr ’<span class="sy0">+</span>’ expr
+<span class="sy0">|</span> expr ’<span class="sy0">*</span>’ expr
+<span class="sy0">|</span> ’<span class="sy0">-</span>’ expr
+<span class="sy0">|</span> ID
+<span class="sy0">|</span> NUMBER
+<span class="sy0">;</span></pre>
+
+<p>
+Gramatica expresiilor generează conflicte când uitam să implementăm asociativitatea și precedența tokenilor.
+Sunt 2 moduri de a specifica precedența și asociativitatea pentru o gramatică: implicit și explicit. Când o specificăm implicit trebuie să introducem un simbol neterminal pentru fiecare nivel de precedenta. Iată mai jos soluția implicită:
+</p>
+<pre class="code C">expr
+<span class="sy0">:</span> expr <span class="st0">'+'</span> factor
+<span class="sy0">|</span> factor 
+<span class="sy0">;</span>
+&nbsp;
+factor
+<span class="sy0">:</span> factor <span class="st0">'*'</span> term
+<span class="sy0">|</span> term
+<span class="sy0">;</span>
+&nbsp;
+term
+<span class="sy0">:</span> <span class="st0">'-'</span> term   
+<span class="sy0">|</span> ID
+<span class="sy0">|</span> NUMBER
+<span class="sy0">;</span></pre>
+
+<p>
+Gramatica devine mai stufoasă, dar neambiguă. Metoda explicită presupune folosirea explicită a regulilor de precedență suportate de Bison.
+</p>
+
+<p>
+<strong>Asociativitatea</strong> și <strong>precedența</strong> pot fi specificate în următorul mod:
+</p>
+<ul>
+<li class="level1"><div class="li"> Pentru asociativitate se pot folosi: <code>%left</code>, <code>%right</code>, <code>%nonassoc</code></div>
+</li>
+<li class="level1"><div class="li"> Precedența operatorilor binari:</div>
+<ul>
+<li class="level2"><div class="li"> Se specifică asociativitatea folosind <code>%left</code></div>
+</li>
+<li class="level2"><div class="li"> Operatorii din același grup au aceeași precedență, iar între grupuri, precedența crește în jos.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Pentru a stabili precedența operatorilor unari se foloseste <code>%prec</code>. Acesta schimbă precedența unei reguli la precedența tokenului următor.</div>
+</li>
+</ul>
+<pre class="code C"><span class="sy0">%</span>left ’<span class="sy0">+</span>’ ’<span class="sy0">-</span>’
+<span class="sy0">%</span>left ’<span class="sy0">*</span>’ ’<span class="sy0">/</span>’
+...
+<span class="me1">expr</span>
+<span class="sy0">:</span> expr ’<span class="sy0">+</span>’ expr
+<span class="sy0">|</span> expr ’<span class="sy0">*</span>’ expr
+<span class="sy0">|</span> ’<span class="sy0">-</span>’ expr <span class="sy0">%</span>prec ’<span class="sy0">*</span>’
+<span class="sy0">|</span> ID
+<span class="sy0">;</span></pre>
+
+<p>
+<strong>Exercițiu</strong>: Încercați să rezolvați conflictul shift/reduce pentru <code>dangling else</code> folosind reguli de precedență.
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Conflicte și ambiguități" [8520-11542] -->
+<h1 class="sectionedit13" id="instructiuni_compilare_si_executie_folosind_flex_si_bison">Instrucțiuni compilare și execuție folosind flex și bison</h1>
+<div class="level1">
+<pre class="code bash"><span class="kw2">bison</span> –d ex1.y
+<span class="kw2">flex</span> ex1.l
+<span class="kw2">cc</span> lex.yy.c ex1.tab.c –o ex1
+.<span class="sy0">/</span>ex1 input_file</pre>
+
+</div>
+<!-- EDIT13 SECTION "Instrucțiuni compilare și execuție folosind flex și bison" [11543-11716] -->
+<h1 class="sectionedit14" id="exercitii_de_laborator_13p">Exerciții de laborator (13p)</h1>
+<div class="level1">
+
+<p>
+În rezolvarea laboratorului folosiți arhiva de sarcini <a href="../../../../_media/cpl/labs/lab02_simple_ops.zip" class="media mediafile mf_zip" title="cpl:labs:lab02_simple_ops.zip (2.7 KB)"> lab02_simple_ops.zip </a>
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Exerciții de laborator (13p)" [11717-11879] -->
+<h2 class="sectionedit15" id="exercitiul_1_-_simple-ops_5p">Exercițiul 1 - simple-ops (5p)</h2>
+<div class="level2">
+
+<p>
+Intrați în directorul <code>1-simple-ops</code>. <code>calc.y</code> si <code>calc.l</code> sunt analizorul lexical și cel sintactic pentru un calculator care poate evalua expresii aritmetice cu operanzi întregi și operatori &#039;+&#039; si &#039;*&#039;. Expresiile sunt citite dintr-un fișier de intrare (de exemplu <code>add-mul-test</code>), fiecare expresie se încheie cu &#039;;&#039;. Generați cu comanda <code>make</code> fișierul executabil și rulați testul <code>add-mul-test</code>.
+Modificați apoi calculatorul astfel încât să accepte și operatorii &#039;-&#039; și &#039;/&#039;. Pentru a verifica implementarea, rulați testul <code>div-sub-test</code>.
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Exercițiul 1 - simple-ops (5p)" [11880-12498] -->
+<h2 class="sectionedit16" id="exercitiul_2_-_variables_5p">Exercițiul 2 - variables (5p)</h2>
+<div class="level2">
+
+<p>
+Extindeți exercițiul anterior astfel încât calculatorul să accepte instrucțiuni de atribuire și variabile și să poată evalua expresii care conțin variabile cărora le-a fost atribuită o valoare. Pentru a implementa această extensie, veți avea nevoie de o <strong>tabelă de simboli</strong> cu ajutorul căreia să țineți minte variabilele cărora li s-a atribuit o valoare și din care să citiți valoarea curentă a unei variabile în cazul în care variabila este operand al unei expresii. Tabela de simboli o puteți implementa folosind <code>std::map&lt;char *, int&gt;</code>. 
+</p>
+
+</div>
+<!-- EDIT16 SECTION "Exercițiul 2 - variables (5p)" [12499-13116] -->
+<h2 class="sectionedit17" id="exercitiul_3_bonus_-_3p">Exercițiul 3 (bonus - 3p)</h2>
+<div class="level2">
+
+<p>
+Extindeți exercițiul anterior astfel încât calculatorul să accepte parantezarea expresiilor și operatorul unar minus (-), având în vedere prioritatea operatorilor.
+</p>
+
+</div>
+<!-- EDIT17 SECTION "Exercițiul 3 (bonus - 3p)" [13117-] --></div>
+</body>
+</html>

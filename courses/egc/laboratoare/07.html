@@ -1,0 +1,665 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laboratorul 07    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="date" content="2016-11-21T08:56:35+0200"/>
+<meta name="keywords" content="egc,laboratoare,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=egc:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="http://ocw.cs.pub.ro/courses/_export/xhtml/egc/laboratoare/07"/>
+<link rel="canonical" href="07.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='egc:laboratoare';var JSINFO = {"id":"egc:laboratoare:07","namespace":"egc:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="http://ocw.cs.pub.ro/courses/egc/laboratoare/07?do=recent"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="http://ocw.cs.pub.ro/courses/egc/laboratoare/07?do=login&amp;sectok=f62420cf5b01253da4b50505d148181b"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="laboratorul_07">Laboratorul 07</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit2" id="iluminare_folosind_glsl">Iluminare folosind GLSL</h3>
+<div class="level3">
+
+<p>
+Lumina este un factor foarte important in redarea cat mai realista a unei scene 3D. Impreuna cu proprietatile de material ale unui obiect, lumina determina modalitatea in care obiectul este afisat in scena 3D.
+</p>
+
+<p>
+Exista mai multe modele empirice pentru calculul reflexiei luminii intr-un punct al unei suprafete: Phong, Blinn-Phong, Oren-Nayar, Cook-Torrance, Lambert, etc (la curs veti discuta despre modelul Lambert si despre modelul Phong).
+</p>
+
+<p>
+De asemenea, exista mai multe modele de shading, care specifica metoda de implementare a modelului de calcul al reflexiei luminii. Mai exact, modelul de shading specifica unde se evalueaza modelul de reflexie. Daca vrem sa calculam iluminarea pentru o suprafata poligonala:
+</p>
+<ul>
+<li class="level1"><div class="li"> in modelul de shading Lambert, se calculeaza o singura culoare pentru un poligon al suprafetei</div>
+</li>
+<li class="level1"><div class="li"> in modelul de shading Gouraud, se calculeaza cate o culoare pentru fiecare varf al unui poligon. Apoi, culorile fragmentelor poligonului se calculeaza prin interpolare intre varfuri (interpolarea liniara a culorilor varfurilor, pentru fragmentele de pe laturi si interpolare liniara intre culorile capetelor fiecarui segment interior, pentru fragmentele interioare poligonului). Calcularea culorilor varfurilor se poate efectua in vertex shader.</div>
+</li>
+<li class="level1"><div class="li"> in modelul de shading Phong, se calculeaza cate o normala pentru fiecare varf al unui poligon. Apoi, pentru fiecare fragment se determina o normala prin interpolare intre normalele din varfuri. Astfel, se calculeaza o culoare pentru fiecare fragment al unui poligon (in fragment shader)</div>
+</li>
+</ul>
+
+<p>
+<a href="http://ocw.cs.pub.ro/courses/_detail/egc/laboratoare/lab07/iluminareglsl.png?id=egc%3Alaboratoare%3A07" class="media" title="egc:laboratoare:lab07:iluminareglsl.png"><img src="http://ocw.cs.pub.ro/courses/_media/egc/laboratoare/lab07/iluminareglsl.png?w=300&amp;tok=3b21bb" class="mediacenter" alt="" width="300" /></a>
+Figura 1. Diferite modele de shading: Lambert (o culoare per primitiva), Gouraud (o culoare per varf), Phong (o culoare per fragment)
+</p>
+
+<p>
+In acest laborator sa va discuta modelul de shading Gouraud peste modelul de reflexie Phong.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="modelul_phong_pentru_calculul_reflexiei_luminii">Modelul Phong pentru calculul reflexiei luminii</h3>
+<div class="level3">
+
+<p>
+Ca model de reflexie vom prezenta in continuare un model care extinde modelul de reflexie Phong si care contine toate cele 4 componente care pot fi folosite pentru a calcula iluminarea. 
+Pentru a obtine astfel culoarea intr-un punct al unei suprafete vom avea urmatoarele componente :
+</p>
+<ul>
+<li class="level1"><div class="li"> Componenta emisiva</div>
+</li>
+<li class="level1"><div class="li"> Componenta ambientala</div>
+</li>
+<li class="level1"><div class="li"> Componenta difuza</div>
+</li>
+<li class="level1"><div class="li"> Componenta speculara</div>
+</li>
+</ul>
+
+<p>
+Contributia fiecarei componente este calculata ca o combinatie dintre proprietatile de material ale obiectului (factorul de stralucire, culoarea materialului) si proprietatile sursei de lumina (culoarea sursei de lumina, pozitia sursei de lumina).
+</p>
+
+<p>
+Astfel culoarea finala a unui punct apartinand unei suprafete este:
+</p>
+<pre class="code glsl">     culoare <span class="sy0">=</span> emisiva <span class="sy0">+</span> ambientala <span class="sy0">+</span> difuza <span class="sy0">+</span> speculara</pre>
+
+<p>
+In cele ce urmeaza prezentam pe scurt ce reprezinta cele 4 componente si cum pot fi calculate.
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="componenta_emisiva">Componenta emisiva</h3>
+<div class="level3">
+
+<p>
+Aceasta reprezinta lumina emisa de un obiect si nu tine cont de nici o sursa de lumina. Daca un obiect care are o anumita culoare emisiva s-ar afla intr-o scena complet intunecata atunci el ar aparea exact cu aceasta culoare.
+</p>
+
+<p>
+O utilizare des intalnita pentru componenta emisiva este aceea de a simula stralucirea unui obiect.
+</p>
+
+<p>
+Avem astfel:
+</p>
+<pre class="code glsl">     emisiva <span class="sy0">=</span> Ke</pre>
+
+<p>
+<p><div class="notetip">
+</p>
+<ul>
+<li class="level1"><div class="li"> Ke – culoarea emisiva a materialului</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="componenta_ambientala">Componenta ambientala</h3>
+<div class="level3">
+
+<p>
+Aceasta reprezinta lumina reflectata de catre obiectele din scena de atat de multe ori incat pare sa vina de peste tot.
+</p>
+
+<p>
+Astfel lumina ambientala nu vine dintr-o directie anume, aparand ca si cum ar veni din toate directiile. Din aceasta cauza componenta ambientala este independenta de pozitia sursei de lumina.
+</p>
+
+<p>
+Componenta ambientala depinde de culoarea de material ambientala a suprafetei obiectului si de culoarea ambientala a luminii.
+</p>
+
+<p>
+Similar componentei emisive, componenta ambientala este o constanta (se poate extinde modelul atribuind fiecarei lumini din scena o culoare ambientala).
+</p>
+
+<p>
+Avem astfel:
+</p>
+<pre class="code glsl">     ambientala <span class="sy0">=</span> Ka <span class="sy0">*</span> culoareaAmbientalaGlobala</pre>
+
+<p>
+<p><div class="notetip">
+</p>
+<ul>
+<li class="level1"><div class="li"> Ka – culoarea ambientala de material a obiectului</div>
+</li>
+<li class="level1"><div class="li"> culoareaAmbientalaGlobala – culoarea ambientala a luminii</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="componenta_difuza">Componenta difuza</h3>
+<div class="level3">
+
+<p>
+Aceasta reprezinta lumina reflectata de suprafata obiectului in mod egal in toate directiile.
+</p>
+
+<p>
+Cantitatea de lumina reflectata este proportionala cu unghiul de incidenta al razei de lumina cu suprafata obiectului.
+</p>
+
+<p>
+<a href="http://ocw.cs.pub.ro/courses/_detail/egc/laboratoare/lab07/difuza.jpg?id=egc%3Alaboratoare%3A07" class="media" title="egc:laboratoare:lab07:difuza.jpg"><img src="http://ocw.cs.pub.ro/courses/_media/egc/laboratoare/lab07/difuza.jpg?w=300&amp;tok=e9970a" class="mediacenter" alt="" width="300" /></a>
+</p>
+
+<p>
+Avem astfel: 
+</p>
+<pre class="code glsl">     difuza <span class="sy0">=</span> Kd <span class="sy0">*</span> culoareLumina <span class="sy0">*</span> <span class="kw5">max</span> <span class="br0">&#40;</span>N ∙ L<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span></pre>
+
+<p>
+<p><div class="notetip">
+</p>
+<ul>
+<li class="level1"><div class="li"> Kd - culoarea de material difuza a obiectului </div>
+</li>
+<li class="level1"><div class="li"> culoareLumina – culoarea difuza a luminii </div>
+</li>
+<li class="level1"><div class="li"> N – normala la suprafata (normalizata) </div>
+</li>
+<li class="level1"><div class="li"> L – vectorul directei luminii incidente (normalizat)</div>
+</li>
+<li class="level1"><div class="li"> max (N ∙ L,0) – produsul scalar N ∙ L reprezinta masura unghiului dintre acesti 2 vectori; astfel daca i este mai mare decat π/2 valoarea produsului scalar va fi mai mica decat 0, acest lucru insemnand ca suprafata nu primeste lumina ( sursa de lumina se afla in spatele suprafetei ) si de aici si formula care asigura ca in acest caz suprafata nu primeste lumina difuza</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit7" id="componenta_speculara">Componenta speculara</h3>
+<div class="level3">
+
+<p>
+Un reflector perfect, de exemplu o oglinda, reflecta lumina numai intr-o singura directie <em>R</em>, care este simetrica cu <em>L</em> fata de normala la suprafata . Deci numai un observator situat exact pe directia respectiva va percepe raza reflectata.
+</p>
+
+<p>
+<a href="http://ocw.cs.pub.ro/courses/_detail/egc/laboratoare/lab07/specular.jpg?id=egc%3Alaboratoare%3A07" class="media" title="egc:laboratoare:lab07:specular.jpg"><img src="http://ocw.cs.pub.ro/courses/_media/egc/laboratoare/lab07/specular.jpg?w=300&amp;tok=4b8596" class="mediacenter" alt="" width="300" /></a>
+</p>
+
+<p>
+Componenta speculara reprezinta lumina reflectata de suprafata obiectului numai in jurul acestei directii, <em>R</em>.
+</p>
+
+<p>
+In modelul Phong se aproximeaza scaderea rapida a intensitatii luminii reflectate atunci cand <em>α</em> creşte prin <em>cos(α)^n</em>, unde n este exponentul de reflexie speculară al materialului (shininess).
+</p>
+
+<p>
+Astfel avem:
+</p>
+<pre class="code glsl">     speculara <span class="sy0">=</span> Ks <span class="sy0">*</span> culoareLumina <span class="sy0">*</span> primesteLumina <span class="sy0">*</span> <span class="br0">&#40;</span><span class="kw5">max</span><span class="br0">&#40;</span>V ∙ R<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">^</span>n</pre>
+
+<p>
+O altă formulare a modelului Phong se bazează pe vectorul median, notat cu <em>H</em>. El face unghiuri egale cu <em>L</em>  şi cu  <em>V</em>. Dacă suprafaţa ar fi orientată astfel încât normala sa  să aibă direcţia lui  <em>H</em>, atunci  observatorul  ar  percepe  lumina speculară  maximă (deoarece ar fi pe direcţia razei reflectate specular).
+</p>
+
+<p>
+<a href="http://ocw.cs.pub.ro/courses/_detail/egc/laboratoare/lab07/specular1.jpg?id=egc%3Alaboratoare%3A07" class="media" title="egc:laboratoare:lab07:specular1.jpg"><img src="http://ocw.cs.pub.ro/courses/_media/egc/laboratoare/lab07/specular1.jpg?w=300&amp;tok=8f2438" class="mediacenter" alt="" width="300" /></a>
+</p>
+
+<p>
+Termenul care exprimă reflexia speculară este în acest  caz: 
+</p>
+<pre class="code glsl">     <span class="br0">&#40;</span>Nu · Hu<span class="br0">&#41;</span><span class="sy0">^</span>n</pre>
+
+<p>
+<p><div class="notetip">
+</p>
+<ul>
+<li class="level1"><div class="li"> Hu = (Lu+Vu) (normalizat)</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Atunci când sursa de lumină şi observatorul sunt la infinit, utilizarea termenului <em>Nu · Hu</em>  este avantajoasă deoarece <em>Hu</em> este constant.
+</p>
+
+<p>
+Dupa cum se observa, fata de celelalte 3 componente, componenta speculara depinde si de pozitia observatorului. Daca observatorul nu se afla intr-o pozitie unde poate vedea razele reflectate atunci nu va vedea reflexie speculara pentru zona respectiva. De asemenea, nu va vedea reflexie speculara daca lumina se afla in spatele suprafetei.
+</p>
+
+<p>
+Tinand cont de toate acestea avem pentru componenta speculara urmatoarea formula: 
+</p>
+<pre class="code glsl">     speculara <span class="sy0">=</span> Ks <span class="sy0">*</span> culoareLumina <span class="sy0">*</span> primesteLumina <span class="sy0">*</span> <span class="br0">&#40;</span><span class="kw5">max</span><span class="br0">&#40;</span>N ∙ H<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">^</span>n</pre>
+
+<p>
+<p><div class="notetip">
+</p>
+<ul>
+<li class="level1"><div class="li"> Ks - culoarea de material speculara a obiectului</div>
+</li>
+<li class="level1"><div class="li"> culoareLumina – culoarea speculara a luminii</div>
+</li>
+<li class="level1"><div class="li"> N – normala la suprafata (normalizata)</div>
+</li>
+<li class="level1"><div class="li"> L – vectorul directei luminii incidente (normalizat)</div>
+</li>
+<li class="level1"><div class="li"> H – vectorul median (normalizat)</div>
+</li>
+<li class="level1"><div class="li"> primesteLumina – 1 daca N ∙ L este mai mare decat 0, 0 in caz contrar</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="atenuarea_intensitatii_luminii">Atenuarea intensitatii luminii</h3>
+<div class="level3">
+
+<p>
+Atunci  când sursa de lumină punctiformă este suficient de îndepărtată de obiectele scenei vizualizate, vectorul  <em>L</em>  este acelaşi în orice punct. Sursa de lumină este numită în acest caz direcţională. Aplicând modelul pentru vizualizarea a două suprafeţe paralele construite din acelaşi material, se va  obţine o aceeaşi intensitate (unghiul dintre <em>L</em> şi normală este acelaşi pentru cele două suprafeţe). Dacă proiecţiile suprafeţelor se suprapun în  imagine,  atunci ele nu se  vor  distinge.  Aceasta deoarece în  model nu se ţine cont de faptul că intensitatea luminii descreşte proporţional cu inversul pătratului distanţei de la sursa de lumină la obiect. Deci, obiectele mai îndepărtate de sursă sunt mai slab luminate. O posibilă corecţie a  modelului, care poate fi aplicata pentru surse pozitionale (la distanta finita de scena) este: 
+</p>
+<pre class="code">   culoareObiect = emisiva + ambientala + factorAtenuare * ( difuza + speculara )</pre>
+
+<p>
+<p><div class="notetip">
+</p>
+<ul>
+<li class="level1"><div class="li"> factorAtenuare = 1/d^2 este o funcţie de atenuare</div>
+</li>
+<li class="level1"><div class="li"> d este distanţa de la sursă la punctul de pe suprafaţă considerat</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Corecţia de mai sus nu satisface cazurile în care sursa este foarte îndepărtată. De asemenea, dacă sursa este la distanţă foarte mică de scenă, intensităţile obţinute pentru două suprafeţe cu acelaşi unghi  <em>i</em>, între <em>L</em> şi <em>N</em>, vor fi mult diferite. 
+</p>
+
+<p>
+O aproximare mai bună este următoarea:
+</p>
+<pre class="code glsl">     factorAtenuare <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">/</span><span class="br0">&#40;</span>Kc <span class="sy0">+</span> Kl<span class="sy0">*</span>d <span class="sy0">+</span> Kq<span class="sy0">*</span>d2<span class="br0">&#41;</span></pre>
+
+<p>
+<p><div class="notetip">
+</p>
+<ul>
+<li class="level1"><div class="li"> Kc - factorul de atenuare constant</div>
+</li>
+<li class="level1"><div class="li"> Kl - factorul de atenuare liniar</div>
+</li>
+<li class="level1"><div class="li"> Kq - factorul de atenuare patratic</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="detalii_de_implementare">Detalii de implementare</h3>
+<div class="level3">
+
+<p>
+Pentru simplitate, in cadrul laboratorului vom implementa modelul de shading Gouraud (in vertex shader):
+</p>
+<ul>
+<li class="level1"><div class="li"> Se vor calcula practic doar componentele difuze si speculare asa cum au fost prezentate anterior; componenta emisiva nu va fi folosita iar calculul componentei ambientale va fi simplificat astfel incat sa nu mai trebuiasca trimis nimic din program catre shader (mai multe detalii la punctul 3).</div>
+</li>
+<li class="level1"><div class="li"> Vom folosi ca materiale pentru obiecte doar culoarea de material difuza si speculara (transmise din program catre shader) : Ks si Kd.</div>
+</li>
+<li class="level1"><div class="li"> In shader vom aproxima lumina ambientala cu o culoareAmbientalaGlobala care va fi o constanta in shader iar in loc de Ka (constanta de material ambientala a obiectului) vom folosi Kd (constanta de material difuza a obiectului).</div>
+</li>
+<li class="level1"><div class="li"> Culoarea luminii (difuza si speculara) va fi alba, deci culoareLumina va fi 1 si nu va mai fi necesar sa fie folosita la inmultirile din formulele de calcul pentru componentele difuza si speculara.</div>
+</li>
+<li class="level1"><div class="li"> Calculele de iluminare se vor face in world space deci inainte de fi folosite, pozitia si normala vor trebui aduse din object space in world space. Acest lucru se poate face astfel:</div>
+<ul>
+<li class="level2"><div class="li">   pentru position: <pre class="code glsl"><span class="kw3">vec3</span> world_pos <span class="sy0">=</span> <span class="br0">&#40;</span>model_matrix <span class="sy0">*</span> <span class="kw3">vec4</span><span class="br0">&#40;</span>v_position<span class="sy0">,</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">.</span><span class="me1">xyz</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level2"><div class="li">   pentru normala: <pre class="code glsl"><span class="kw3">vec3</span> world_normal <span class="sy0">=</span> <span class="kw5">normalize</span><span class="br0">&#40;</span> <span class="kw3">mat3</span><span class="br0">&#40;</span>model_matrix<span class="br0">&#41;</span> <span class="sy0">*</span> v_normal <span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Vectorul directiei luminii L: <pre class="code glsl"><span class="kw3">vec3</span> L <span class="sy0">=</span> <span class="kw5">normalize</span><span class="br0">&#40;</span> light_position <span class="sy0">-</span> world_pos <span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Vectorul directiei din care priveste observatorul V: <pre class="code glsl"><span class="kw3">vec3</span> V <span class="sy0">=</span> <span class="kw5">normalize</span><span class="br0">&#40;</span> eye_position <span class="sy0">-</span> world_pos <span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Vectorul median H: <pre class="code glsl"><span class="kw3">vec3</span> H <span class="sy0">=</span> <span class="kw5">normalize</span><span class="br0">&#40;</span> L <span class="sy0">+</span> V <span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">
+Functii GLSL utile care pot fi folosite pentru implementarea modelului de iluminare
+</p>
+<ul>
+<li class="level1"><div class="li"> normalize(V) – normalizeaza vectorul V </div>
+</li>
+<li class="level1"><div class="li"> normalize(L+V) – normalizeaza vectorul obtinut prin L+V </div>
+</li>
+<li class="level1"><div class="li"> normalize(X1-X2) - returneaza un vector de directie normalizat avand doua puncte X1 si X2</div>
+</li>
+<li class="level1"><div class="li"> dot(N,L) – calculeaza produsul scalar dintre N si L</div>
+</li>
+<li class="level1"><div class="li"> pow(L, shininess) – calculeaza L la puterea shininess</div>
+</li>
+<li class="level1"><div class="li"> max(N,V) – returneaza maximul dintre N si V</div>
+</li>
+<li class="level1"><div class="li"> distance(P1,P2) – returneaza distanta euclidiana dintre punctele P1 si P2 </div>
+</li>
+<li class="level1"><div class="li"> reflect(L,N) - calculeaza vectorul de reflexie pornind de la incidenta L si normala N</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="cerinte_laborator">Cerinte laborator</h3>
+<div class="level3">
+
+<p>
+<p><div class="notetip">
+</p>
+
+<p>
+tasta <strong>F5</strong> - reincarca shaderele in timpul rularii aplicatiei. Nu este nevoie sa opriti aplicatia intrucat shaderele sunt <em class="u">compilate si rulate de catre placa video</em> si nu au legatura cu codul sursa C++ propriu zis.
+</p>
+
+<p>
+
+</div></p>
+</p>
+<ol>
+<li class="level1"><div class="li"> Descarcati <a href="https://github.com/UPB-Graphics/Framework-EGC/archive/master.zip" class="urlextern" title="https://github.com/UPB-Graphics/Framework-EGC/archive/master.zip"  rel="nofollow">framework-ul de laborator</a></div>
+</li>
+<li class="level1"><div class="li"> Completati functia <code>RenderSimpleMesh</code> astfel inca sa trimiteti corect valorile uniform catre Shader:</div>
+<ul>
+<li class="level2"><div class="li"> Pozitia luminii</div>
+</li>
+<li class="level2"><div class="li"> Pozitia camerei</div>
+</li>
+<li class="level2"><div class="li"> Proprietatile de material (Kd, Ks, Shininess, Culoare obiect)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Implementati iluminarea in Vertex Shader</div>
+<ul>
+<li class="level2"><div class="li"> Vectorii N, V, L si pozitia in spatiul global</div>
+</li>
+<li class="level2"><div class="li"> Componenta ambientala</div>
+</li>
+<li class="level2"><div class="li"> Componenta difuza</div>
+</li>
+<li class="level2"><div class="li"> Componenta speculara (atat in varianta de baza cat si folosind vectorul median)</div>
+</li>
+<li class="level2"><div class="li"> Factor de atenuare</div>
+</li>
+<li class="level2"><div class="li"> Culoarea finala</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Completati Fragment Shaderul astfel incat sa aplicati iluminarea calculata in Vertex Shader</div>
+</li>
+<li class="level1"><div class="li"> Colorati sfera si planul din scena (de ex: sfera - albastru, planul - gri)</div>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="info_curs">Info curs</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../index.html" class="wikilink1" title="egc">Elemente de Grafică pe Calculator</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Info curs" [1-38] -->
+<h1 class="sectionedit2" id="egc">EGC</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../seria_ca.html" class="wikilink1" title="egc:seria_ca">Seria CA</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../seria_cb.html" class="wikilink1" title="egc:seria_cb">Seria CB</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../seria_cc.html" class="wikilink1" title="egc:seria_cc">Seria CC</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "EGC" [39-123] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="01.html" class="wikilink1" title="egc:laboratoare:01">Laboratorul 01</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="02.html" class="wikilink1" title="egc:laboratoare:02">Laboratorul 02</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="03.html" class="wikilink1" title="egc:laboratoare:03">Laboratorul 03</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="04.html" class="wikilink1" title="egc:laboratoare:04">Laboratorul 04</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="05.html" class="wikilink1" title="egc:laboratoare:05">Laboratorul 05</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="06.html" class="wikilink1" title="egc:laboratoare:06">Laboratorul 06</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="07.html" class="wikilink1" title="egc:laboratoare:07">Laboratorul 07</a></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [124-421] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_46317782858355a927a72b" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../teme/01.html" class="wikilink1" title="egc:teme:01">Tema 1: Geometry Wars</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/02.html" class="wikilink1" title="egc:teme:02">Tema 2: Build and Survive</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [422-464] -->
+<h1 class="sectionedit5" id="resurse">Resurse</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../resurse.html" class="wikilink1" title="egc:resurse">Resurse Utile</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Resurse" [465-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#laboratorul_07">Laboratorul 07</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#iluminare_folosind_glsl">Iluminare folosind GLSL</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#modelul_phong_pentru_calculul_reflexiei_luminii">Modelul Phong pentru calculul reflexiei luminii</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#componenta_emisiva">Componenta emisiva</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#componenta_ambientala">Componenta ambientala</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#componenta_difuza">Componenta difuza</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#componenta_speculara">Componenta speculara</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#atenuarea_intensitatii_luminii">Atenuarea intensitatii luminii</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#detalii_de_implementare">Detalii de implementare</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#cerinte_laborator">Cerinte laborator</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          egc/laboratoare/07.txt · Last modified: 2016/11/21 08:56 by alexandru.gradinaru          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="http://ocw.cs.pub.ro/courses/egc/laboratoare/07?do=media&amp;ns=egc%3Alaboratoare"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="07.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="http://ocw.cs.pub.ro/courses/lib/exe/indexer.php?id=egc%3Alaboratoare%3A07&amp;1479891602" width="2" height="1" alt="" /></div>
+</body>
+</html>

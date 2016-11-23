@@ -1,0 +1,844 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-02-28T23:45:51+0200"/>
+<meta name="keywords" content="saisp,labs,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../saisp/labs/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs';var JSINFO = {"id":"saisp:labs:06","namespace":"saisp:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="laborator_6_sisteme_de_fisiere_in_retea">Laborator 6. Sisteme de fișiere în rețea</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 6. Sisteme de fișiere în rețea" [12-70] -->
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Configurarea unui server și a unui client de NFS (Network File System)</div>
+</li>
+<li class="level1"><div class="li"> Folosirea protocolului iSCSI pentru a exporta block-device-uri</div>
+</li>
+<li class="level1"><div class="li"> Configurarea unui client iSCSI</div>
+</li>
+<li class="level1"><div class="li"> Instalarea și configurarea unui sistem de fișiere distribuit (Ceph/GlusterFS)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cunoștințe și abilități ce vor fi dobândite" [71-396] -->
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+În cadrul acestui laborator vom folosi o topologie formată din trei mașini virtuale (<code>storage1</code>, <code>storage2</code> și <code>storage3</code>). Acestea vor avea roluri diferite (server sau client) de-a lungul exercițiilor.
+</p>
+
+<p>
+Pentru a pregăti configurația de laborator va trebui să descărcați pe mașina fizică (<code>mjolnir</code>), în directorul <code>saisp/</code>, arhiva laboratorului:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">wget</span> <span class="re5">--user</span>=user-curs <span class="re5">--ask-password</span> http:<span class="sy0">//</span>repository.grid.pub.ro<span class="sy0">/</span>cs<span class="sy0">/</span>saisp<span class="sy0">/</span>laboratoare<span class="sy0">/</span>lab-06.zip
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">unzip</span> lab-06.zip</pre>
+
+<p>
+În urma dezarhivării rezultă 3 fișiere imagine KVM (format <code>qcow2</code>, <code>storage1.qcow2</code>, <code>storage2.qcow2</code> și <code>storage3.qcow2</code>) și un script de pornire a topologiei (<code>lab06-start</code>). Imaginea de bază <code>base.qcow2</code> este deja în directorul <code>saisp/</code> și este baza pentru celelalte fișiere. În arhiva există alte 6 fișiere imagine KVM asociate disc-urilor secundare de pe mașinile virtule (<code>storage1-hdb.qcow2</code>, <code>storage1-hdc.qcow2</code>, <code>storage2-hdb.qcow2</code>, <code>storage2-hdc.qcow2</code>, <code>storage3-hdb.qcow2</code>, <code>storage3-hdc.qcow2</code>).
+</p>
+
+<p>
+Puteți urma pașii de mai sus pentru a descărca infrastructura KVM pentru laborator pentru lucru acasă.
+</p>
+
+<p>
+Pentru pornirea topologiei de mai sus, rulați scriptul <code>lab03-start</code>:
+</p>
+<pre class="code">student@mjolnir:~/saisp$ ./lab06-start</pre>
+
+<p>
+Pentru accesarea celor trei mașini (<code>storage1</code>, <code>storage2</code> și <code>storage3</code>) folosiți SSH către adresele IP aferente fiecăreia (<code>192.168.1.X</code>, unde <code>X</code> este egal cu indexul storage-ului). Pentru conectarea la mașina virtuală pentru <code>storage1</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.1.1</pre>
+
+<p>
+pentru conectarea la <code>storage2</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.1.2</pre>
+
+<p>
+iar pentru conectarea la <code>storage3</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.1.3</pre>
+
+<p>
+Parola pe cele trei mașini virtuale este <code>student</code> atât pentru utilizatorul <code>root</code> cât și pentru utilizatorul <code>student</code>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Pregătire infrastructură de laborator" [397-2515] -->
+<h2 class="sectionedit4" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/06.html" class="wikilink1" title="saisp:labs:06">Laboratorul 6</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "saisp:labs:06:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_213607289583567a5076a6" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/00.html" class="wikilink1" title="saisp:labs:06:contents:00">00. [5p] Configurarea rezolvării numelor pentru servere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/01.html" class="wikilink1" title="saisp:labs:06:contents:01">01. [10p] Partajarea de fișiere folosind protocolul NFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/02.html" class="wikilink1" title="saisp:labs:06:contents:02">02. [10p] Exportarea unei partitii folosind NFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/03.html" class="wikilink1" title="saisp:labs:06:contents:03">03. [10p] Montarea automată a sistemului de fișiere NFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/04.html" class="wikilink1" title="saisp:labs:06:contents:04">04. [15p] Configurarea unei sesiuni iSCSI client-server</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/05.html" class="wikilink1" title="saisp:labs:06:contents:05">05. [10p] Restricționarea accesului la dispozitivile logice (LUN)</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/06.html" class="wikilink1" title="saisp:labs:06:contents:06">06. [20p] LIO backstore as a physical block device</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/07.html" class="wikilink1" title="saisp:labs:06:contents:07">07. [10p] Instalare și configurare sistem distribuit de fișiere GlusterFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/08.html" class="wikilink1" title="saisp:labs:06:contents:08">08. [10p] Replicarea datelor folosind GlusterFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/09.html" class="wikilink1" title="saisp:labs:06:contents:09">09. [BONUS - 10p] Instalarea și configurarea sistemului distribuit de fișiere Ceph</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 PLUGIN_INCLUDE_END "saisp:labs:06:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Navigare" [2516-2630] -->
+<h2 class="sectionedit7" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 PLUGIN_INCLUDE_START "saisp:labs:06:contents:00" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:00">
+
+<h3 class="sectionedit10" id="p_configurarea_rezolvarii_numelor_pentru_servere">00. [5p] Configurarea rezolvării numelor pentru servere</h3>
+<div class="level3">
+
+<p>
+În cele mai multe configurații ale serverelor și clienților de stocare este necesară folosirea numelor (<code>hostname</code>) acestora pentru adresare și nu adresa IP. Această configurare poate fi făcută direct în serviciul de <abbr title="Domain Name System">DNS</abbr>, dar acest lucru are un dezavantaj: dacă serviciul de <abbr title="Domain Name System">DNS</abbr> are o problemă, sistemul de stocare nu va mai functiona. O practică des întâlnită este configurarea statică pe fiecare mașină de stocare a numelor celorlalte servere de stocare. Acest lucru se realizează în fișierul <code>/etc/hosts</code>.
+</p>
+
+<p>
+Configurați pentru stațiile <code>storage1</code>, <code>storage2</code> și <code>storage3</code> posibilitatea de a se adresa una pe cealaltă folosind numele lor (Hint: <code>man hosts</code>).
+</p>
+
+</div>
+<!-- EDIT10 SECTION "00. [5p] Configurarea rezolvării numelor pentru servere" [1-] --><!-- EDIT9 PLUGIN_INCLUDE_END "saisp:labs:06:contents:00" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT11 PLUGIN_INCLUDE_START "saisp:labs:06:contents:01" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:01">
+
+<h3 class="sectionedit13" id="p_partajarea_de_fisiere_folosind_protocolul_nfs">01. [10p] Partajarea de fișiere folosind protocolul NFS</h3>
+<div class="level3">
+
+<p>
+În general, în centrele de date, dezvoltarea puterii de calcul a fost realizată pe orizontală (scale-out), preferându-se achiziționarea mai multor sisteme cu putere de calcul medie decât super-calculatoare integrate. S-a pus problema ca datele stocate să fie accesibile din orice nod al rețelei. Un serviciu ce poate oferi această facilitate este NFS (Network File System). În arhitectura <code>NFS</code> există un server de stocare care va pune la dispoziție un subset al ierarhiei sale de directoare altor stații numite în continuare clienți.
+</p>
+
+<p>
+Vom instala serverul de NFS pe stația <code>storage1</code> (pe distribuții Debian-based pachetul poartă numele <code>nfs-kernel-server</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> nfs-kernel-server</pre>
+
+<p>
+Vom crea un director <code>/nfs</code> cu un fișier <code>test-nfs</code> în acesta:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span>nfs
+<span class="co4">root@storage1:~# </span><span class="kw3">echo</span> <span class="kw3">test</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>test-nfs</pre>
+
+<p>
+Toate directoarele exportate către clienți vor fi configurate în fișierul <code>/etc/exports</code>. Vom exporta directorul <code>/nfs</code> creat anterior:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>exports <span class="sy0">|</span><span class="kw2">grep</span> <span class="sy0">/</span>nfs
+<span class="sy0">/</span>nfs    192.168.1.2<span class="br0">&#40;</span>rw,<span class="kw2">sync</span>,no_subtree_check<span class="br0">&#41;</span></pre>
+
+<p>
+Pe prima poziție se află directorul care va fi exportat (<code>/nfs</code>), pe a doua poziție se află adresa IP a clientului care va putea accesa acest director, iar în paranteză se află diferite atribute:
+</p>
+<ul>
+<li class="level1"><div class="li"> rw (read/write) - ierarhia de directoare va putea fi citită și scrisă</div>
+</li>
+<li class="level1"><div class="li"> sync - toate datele scrise de către clienți vor ajunge la server în momentul apelului de sistem. Nu se va stoca informația în buffere. Acest lucru este necesar în momentul în care mai multe entități folosesc același director exportat pentru a asigura consistența</div>
+</li>
+<li class="level1"><div class="li"> no_subtree_check - la accesarea oricărui fișier din sistemul de directoare nu se face nici o verificare asupra existenței acelei căi de acces. Acest lucru crește performanța serviciului NFS, dar poate cauza probleme în situații în care un client accesează un anume fișier, iar altul îl redenumește</div>
+</li>
+</ul>
+
+<p>
+După configurarea fișierului <code>/etc/exports</code> trebuie resetat serviciul NFS:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>nfs-kernel-server restart</pre>
+
+<p>
+Pentru a testa funcționalitatea vom crea directorul <code>/nfs</code> pe stația <code>storage2</code> și vom monta directorul exportat de <code>storage1</code> (este necesar să aveți instalat pachetul <code>nfs-common</code>):
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">apt-get install</span> nfs-common
+nfs-common is already the newest version.
+<span class="co4">root@storage2:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span>nfs
+<span class="co4">root@storage2:~# </span><span class="kw2">mount</span> <span class="re5">-t</span> nfs storage1:<span class="sy0">/</span>nfs <span class="sy0">/</span>nfs
+<span class="co4">root@storage2:~# </span><span class="kw2">ls</span> <span class="re5">-l</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>
+total <span class="nu0">4</span>
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root <span class="nu0">5</span> Mar <span class="nu0">29</span> <span class="nu0">16</span>:<span class="nu0">52</span> test-nfs</pre>
+
+<p>
+În general, este o bună practică să montăm directorul exportat în aceeași ierarhie și pe client, pentru ca sistemul de stocare să fie transparent utilizatorilor, indiferent de nodul folosit.
+</p>
+
+<p>
+Încercați să creați un nou fișier sau să scrieți în fișierul existent:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">touch</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>test-nfs2
+touch: cannot <span class="kw2">touch</span> ‘<span class="sy0">/</span>nfs<span class="sy0">/</span>test-nfs2’: Permission denied</pre>
+
+<p>
+Implicit serverul de NFS nu permite modificarea ierarhiei de directoare exportate dacă aceasta aparține utilizatorului privilegiat <code>root</code>. Pentru a permite acest lucru trebuie adăugată opțiunea <code>no_root_squash</code> la exportarea directorului și resetarea serverului de NFS:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>exports <span class="sy0">|</span><span class="kw2">grep</span> squash
+<span class="sy0">/</span>nfs    192.168.1.2<span class="br0">&#40;</span>rw,<span class="kw2">sync</span>,no_subtree_check,no_root_squash<span class="br0">&#41;</span>
+<span class="co4">root@storage1:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>nfs-kernel-server restart</pre>
+
+<p>
+Observați faptul că acum putem modifica ierarhia de directoare:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">touch</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>test-nfs2
+<span class="co4">root@storage2:~# </span><span class="kw2">ls</span> <span class="re5">-l</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>
+total <span class="nu0">4</span>
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root <span class="nu0">5</span> Mar <span class="nu0">29</span> <span class="nu0">16</span>:<span class="nu0">52</span> test-nfs
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root <span class="nu0">0</span> Mar <span class="nu0">29</span> <span class="nu0">17</span>:<span class="nu0">14</span> test-nfs2</pre>
+
+<p>
+Montați directorul <code>/nfs</code> și pe stația <code>storage3</code>. Nu uitați să adăugați adresa IP a acesteia în fișierul de configurare al serverului NFS și să îl resetați pe acesta (Hint: <code>man exports; /IP networks</code>).
+</p>
+
+</div>
+<!-- EDIT13 SECTION "01. [10p] Partajarea de fișiere folosind protocolul NFS" [1-] --><!-- EDIT12 PLUGIN_INCLUDE_END "saisp:labs:06:contents:01" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT14 PLUGIN_INCLUDE_START "saisp:labs:06:contents:02" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:02">
+
+<h3 class="sectionedit16" id="p_exportarea_unei_partitii_folosind_nfs">02. [10p] Exportarea unei partitii folosind NFS</h3>
+<div class="level3">
+
+<p>
+Stația <code>storage3</code> are un disc <code>/dev/sdb</code> ce se dorește a fi partajat cu celelalte două stații, iar calea comună de acces pentru toate 3 stațiile va fi <code>/nfs-storage3</code>. Realizați configurațiile necesare pentru pentru a partaja discul <code>/dev/sdb</code> de pe <code>storage3</code> urmând pașii:
+</p>
+<ul>
+<li class="level1"><div class="li"> creati o partitie pe discul /dev/sdb</div>
+</li>
+<li class="level1"><div class="li"> formatați partitia creata cu un sistem de fișiere la alegere</div>
+</li>
+<li class="level1"><div class="li"> montați partitia pe stația <code>storage3</code> în directorul <code>/nfs-storage3</code></div>
+</li>
+<li class="level1"><div class="li"> exportați directorul <code>/nfs-storage3</code> folosind prin serviciul de NFS</div>
+</li>
+<li class="level1"><div class="li"> montați pe stațiile <code>storage1</code> și <code>storage2</code> directorul exportat de <code>storage3</code> și creați câte un fișier de pe fiecare</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT16 SECTION "02. [10p] Exportarea unei partitii folosind NFS" [1-] --><!-- EDIT15 PLUGIN_INCLUDE_END "saisp:labs:06:contents:02" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT17 PLUGIN_INCLUDE_START "saisp:labs:06:contents:03" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:03">
+
+<h3 class="sectionedit19" id="p_montarea_automata_a_sistemului_de_fisiere_nfs">03. [10p] Montarea automată a sistemului de fișiere NFS</h3>
+<div class="level3">
+
+<p>
+Dorim ca montarea sistemul de fișiere NFS să fie realizată automat după un restart al mașinii virtuale. Acest lucru se poate realiza după același principiu al sistemelor de fișiere obișnuite, folosind fișierul <code>/etc/fstab</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab<span class="sy0">|</span><span class="kw2">grep</span> storage3
+storage3:<span class="sy0">/</span>nfs-storage3  <span class="sy0">/</span>nfs-storage3   nfs     auto    <span class="nu0">0</span>       <span class="nu0">0</span></pre>
+
+<p>
+Realizați configurația necesară pentru a monta automat sistemele de fișiere NFS pe stația <code>storage2</code>, exportate de stațiile <code>storage1</code> și <code>storage3</code>.
+</p>
+
+</div>
+<!-- EDIT19 SECTION "03. [10p] Montarea automată a sistemului de fișiere NFS" [1-] --><!-- EDIT18 PLUGIN_INCLUDE_END "saisp:labs:06:contents:03" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT20 PLUGIN_INCLUDE_START "saisp:labs:06:contents:04" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:04">
+
+<h3 class="sectionedit22" id="p_configurarea_unei_sesiuni_iscsi_client-server">04. [15p] Configurarea unei sesiuni iSCSI client-server</h3>
+<div class="level3">
+
+<p>
+Într-un sistem de tipul Cluster/Grid, deseori este necesară accesarea unui block-device de distanță, iar operațiile suportate să fie aceleași ca și cazul în care respectivul block-device (disc) este conectat local, direct la placa de bază a stației respective. Acest lucru este posibil prin protocolul <code>iSCSI</code> care împachetează toate comenzile protocolului de comunicație cu discuri <code>SCSI</code> în pachete IP. Astfel este posibilă accesarea la distanță a oricărui disc, ba chiar partajarea acestuia între mai multe entități, nivelul de granularitate fiind blocul de date (nu mai există sistem de fișiere ca în cazul protocolului NFS).
+</p>
+
+<p>
+În nomenclatura iSCSI, serverul ce pune la dispoziția clientului diferite block-device-uri poartă numele de <code>target</code>. Pe Linux, target-ul iSCSI implicit inclus în nucleu se numește <code>Linux IO</code>. Vom instala serverul de iSCSI pe stația <code>storage1</code> (pachetul poartă numele de <code>targetcli</code> cu opțiunea <code>–no-install-recommends</code> pentru a nu instala pachete recomandate, întrucât dimensiunea acestora este foarte mare).:
+</p>
+
+<p>
+<p><div class="notewarning">
+Inainte de a instala <code>targetcli</code>, modificati, in <code>/etc/apt/sources.list</code>, toate aparitiile lui <code>jessie</code> in <code>wheezy</code>, apoi efectuati <code>apt-get update</code>.
+
+</div></p>
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> <span class="re5">--no-install-recommends</span> targetcli</pre>
+
+<p>
+<code>targetcli</code> este un <code>command line interface</code> creat pentru management-ul serverului de iSCSI (<code>target</code>) pe Linux. Target-ul LIO de pe Linux este capabil să exporte discuri ce au mediu de stocare discuri fizice sau fișiere. Vom deschide <code>targetcli</code> pe stația <code>storage1</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>targetcli
+Warning: Could not load preferences <span class="kw2">file</span> <span class="sy0">/</span>root<span class="sy0">/</span>.targetcli<span class="sy0">/</span>prefs.bin.
+targetcli GIT_VERSION <span class="br0">&#40;</span>rtslib GIT_VERSION<span class="br0">&#41;</span>
+Copyright <span class="br0">&#40;</span>c<span class="br0">&#41;</span> <span class="nu0">2011</span>-<span class="nu0">2013</span> by Datera, Inc.
+All rights reserved.
+Loaded iscsi_target_mod kernel module.
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="sy0">/&gt;</span> <span class="kw2">ls</span>
+o- <span class="sy0">/</span> ............................................... <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+  o- backstores .................................... <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- fileio ......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- iblock ......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- pscsi .......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- rd_dr .......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- rd_mcp ......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  o- ib_srpt ................................. <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- iscsi ................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- loopback ................................ <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- qla2xxx ................................. <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- tcm_fc .................................. <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span></pre>
+
+<p>
+Cu ajutorul comenzii <code>ls</code> vedem toate configurațiile de la un moment dat. Acestea sunt organizate ca o ierarhie de fișiere. Observați toate tipurile de <code>backstores</code> care pot fi exportate. Noi vom lucra cu tipul <code>fileio</code> (fișiere) și <code>iblock</code> (discuri fizice).
+Dorim să creăm un <code>backstore</code> de tipul <code>fileio</code>:
+</p>
+<pre class="code bash"><span class="sy0">/&gt;</span> <span class="kw3">cd</span> backstores
+<span class="sy0">/</span>backstores<span class="sy0">&gt;</span> <span class="kw3">cd</span> fileio
+<span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> <span class="kw3">help</span> create
+SYNTAX
+  create name file_or_dev <span class="br0">&#91;</span><span class="kw2">size</span><span class="br0">&#93;</span> <span class="br0">&#91;</span>generate_wwn<span class="br0">&#93;</span> <span class="br0">&#91;</span>buffered<span class="br0">&#93;</span></pre>
+
+<p>
+Observați că putem să explorăm ierarhia de configurații folosind comanda <code>cd</code>. Am folosit comanda <code>help create</code> pentru a vedea ce opțiuni avem pentru crearea unui <code>backstore</code>. Vom crea un backstore de dimensiunea 100M ce are ca suport fișierul <code>/disk1.img</code>:
+</p>
+<pre class="code bash"><span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> create disk1 <span class="sy0">/</span>disk1.img 100MB
+Generating a wwn serial.
+Not using buffered mode.
+Created fileio disk1.</pre>
+
+<p>
+Următorul pas va fi să creăm un <code>IQN</code> (iSCSI Qualified Name) pentru target-ul nostru în subierarhia de configurare <code>iscsi</code>:
+</p>
+<pre class="code bash"><span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> <span class="kw3">cd</span> <span class="sy0">/</span>iscsi
+<span class="sy0">/</span>iscsi<span class="sy0">&gt;</span> <span class="kw3">help</span> create
+SYNTAX
+  create <span class="br0">&#91;</span>wwn<span class="br0">&#93;</span>
+<span class="sy0">/</span>iscsi<span class="sy0">&gt;</span> create
+Created target iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d.
+Selected TPG Tag <span class="nu0">1</span>.
+Successfully created TPG <span class="nu0">1</span>.</pre>
+
+<p>
+În continuare vom dezactiva autentificarea asociată cu acest <code>IQN</code>. Vom folosi comanda <code>cd</code> urmată de valoarea <code>IQN</code> generată pentru a intra în modul de configurare ale acesteia (puteți folosi <code>auto-complete</code>):
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">&gt;</span> <span class="kw3">cd</span> iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d<span class="sy0">/</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20....25e09e86bb4d<span class="sy0">&gt;</span> <span class="kw2">ls</span>
+o- iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d .......... <span class="br0">&#91;</span><span class="nu0">1</span> TPG<span class="br0">&#93;</span>
+  o- tpgt1 ........................................................... <span class="br0">&#91;</span>enabled<span class="br0">&#93;</span>
+    o- acls ........................................................... <span class="br0">&#91;</span><span class="nu0">0</span> ACLs<span class="br0">&#93;</span>
+    o- luns ........................................................... <span class="br0">&#91;</span><span class="nu0">0</span> LUNs<span class="br0">&#93;</span>
+    o- portals ..................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Portals<span class="br0">&#93;</span></pre>
+
+<p>
+Observați că trebuie să mergem pe intrarea <code>tpgt1</code> (este un tag intern asociat IQN-ului). Aici vom configura parametrii de autentificare:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20....25e09e86bb4d<span class="sy0">&gt;</span> <span class="kw3">cd</span> tpgt1<span class="sy0">/</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw1">set</span> parameter <span class="re2">AuthMethod</span>=None
+Parameter AuthMethod is now <span class="st_h">'None'</span>.
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw1">set</span> attribute <span class="re2">authentication</span>=<span class="nu0">0</span>
+Parameter authentication is now <span class="st_h">'0'</span>.</pre>
+
+<p>
+<p><div class="noteclassic">In cazul in care nu puteti configura <code>AuthMethod</code>, este suficient sa configurati doar <code>authentication</code>.
+</div></p>
+</p>
+
+<p>
+Observați alte 3 sub-categorii de configurații:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>acls</code> - filtrarea accesului </div>
+</li>
+<li class="level1"><div class="li"> <code>luns</code> (Logical Unit Number) - dispozitiv logic adresat de client</div>
+</li>
+<li class="level1"><div class="li"> <code>portals</code> - nivelul rețea prin care se va face legătura la target</div>
+</li>
+</ul>
+
+<p>
+În concluzie trebuie să creăm cel puțin un <code>portal</code> pentru accesul la IQN prin rețea:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw3">cd</span> portals
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...tpgt1<span class="sy0">/</span>portals<span class="sy0">&gt;</span> create
+Using default IP port <span class="nu0">3260</span>
+Automatically selected IP address 192.168.1.1.
+Successfully created network portal 192.168.1.1:<span class="nu0">3260</span>.
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...tpgt1<span class="sy0">/</span>portals<span class="sy0">&gt;</span> <span class="kw3">cd</span> ..</pre>
+
+<p>
+Observați că automat a selectat adresa IP a interfeței <code>eth0</code> și portul <code>3260</code>. Vom crea un dispozitiv logic cu ajutorul căruia vom referenția backstore-ul:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw3">cd</span> luns
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">&gt;</span> create <span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">/</span>disk1
+Selected LUN <span class="nu0">0</span>.
+Successfully created LUN <span class="nu0">0</span>.</pre>
+
+<p>
+În submeniul <code>acls</code> va trebuie să înregistrăm clienții iSCSI folosind <code>IQN</code>-ul acestora. Deocamdată nu știm <code>IQN-ul</code> clienților, îl vom configura după ce instalăm clienții de iSCSI. Să vizualizăm configurația actuală:
+</p>
+<pre class="code bash"><span class="sy0">/&gt;</span> <span class="kw2">ls</span>
+o- <span class="sy0">/</span> .................................................................................... <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+  o- backstores ......................................................................... <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- fileio .............................................................. <span class="br0">&#91;</span><span class="nu0">1</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> <span class="sy0">|</span> o- disk1 ......................................................... <span class="br0">&#91;</span><span class="sy0">/</span>disk1.img activated<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- iblock .............................................................. <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- pscsi ............................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- rd_dr ............................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- rd_mcp .............................................................. <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  o- ib_srpt ...................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- iscsi ......................................................................... <span class="br0">&#91;</span><span class="nu0">1</span> Target<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d ..................... <span class="br0">&#91;</span><span class="nu0">1</span> TPG<span class="br0">&#93;</span>
+  <span class="sy0">|</span>   o- tpgt1 ...................................................................... <span class="br0">&#91;</span>enabled<span class="br0">&#93;</span>
+  <span class="sy0">|</span>     o- acls ...................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> ACLs<span class="br0">&#93;</span>
+  <span class="sy0">|</span>     o- luns ....................................................................... <span class="br0">&#91;</span><span class="nu0">1</span> LUN<span class="br0">&#93;</span>
+  <span class="sy0">|</span>     <span class="sy0">|</span> o- lun0 ................................................. <span class="br0">&#91;</span>fileio<span class="sy0">/</span>disk1 <span class="br0">&#40;</span><span class="sy0">/</span>disk1.img<span class="br0">&#41;</span><span class="br0">&#93;</span>
+  <span class="sy0">|</span>     o- portals ................................................................. <span class="br0">&#91;</span><span class="nu0">1</span> Portal<span class="br0">&#93;</span>
+  <span class="sy0">|</span>       o- 192.168.1.1:<span class="nu0">3260</span> ............................................. <span class="br0">&#91;</span>OK, iser disabled<span class="br0">&#93;</span>
+  o- loopback ..................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- qla2xxx ...................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- tcm_fc ....................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span></pre>
+
+<p>
+Înainte să realizăm configurația clientului de iSCSI, vom salva configurația target-ului pentru a se păstra în cazul unui restart al serverului:
+</p>
+<pre class="code bash"><span class="sy0">/&gt;</span> saveconfig
+WARNING: Saving storage1 current configuration to disk will overwrite your boot settings.
+The current target configuration will become the default boot config.
+Are you sure? Type <span class="st_h">'yes'</span>: <span class="kw2">yes</span></pre>
+
+<p>
+Pe sistemele Linux, clienții iSCSI trebuie să instaleze pachetul <code>open-iscsi</code> care conține comanda <code>iscsiadm</code>. Vom instala acest pachet pe stația <code>storage2</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">apt-get install</span> open-iscsi</pre>
+
+<p>
+Vom genera un <code>IQN</code> pentru stația <code>storage2</code> folosind comanda <code>iscsi-iname</code> și vom pune numele în fișierul <code>/etc/iscsi/initiatorname.iscsi</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span>iscsi-iname
+<span class="co4">root@storage2:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>iscsi<span class="sy0">/</span>initiatorname.iscsi
+<span class="re2">InitiatorName</span>=iqn.2005-03.org.open-iscsi:fc35d7d3fc24</pre>
+
+<p>
+Apoi, reporniti serviciul <code>open-iscsi</code>:
+</p>
+<pre class="code">root@storage2:~# service open-iscsi restart</pre>
+
+<p>
+Înainte de a termina configurarea clientului, trebuie să adăugăm IQN-ul clientului <code>storage2</code> în <abbr title="Access Control List">ACL</abbr>-ul target-ului. Pe stația <code>storage1</code>. Nu uitați să salvați configurația:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>targetcli
+<span class="sy0">/&gt;</span> <span class="kw3">cd</span> <span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw3">cd</span> acls
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>acls<span class="sy0">&gt;</span> <span class="kw3">help</span> create
+SYNTAX
+  create wwn <span class="br0">&#91;</span>add_mapped_luns<span class="br0">&#93;</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>acls<span class="sy0">&gt;</span> create iqn.2005-03.org.open-iscsi:fc35d7d3fc24
+Successfully created Node ACL <span class="kw1">for</span> iqn.2005-03.org.open-iscsi:fc35d7d3fc24
+Created mapped LUN <span class="nu0">0</span>.
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>acls<span class="sy0">&gt;</span> <span class="kw3">cd</span> <span class="sy0">/</span>
+<span class="sy0">/&gt;</span> saveconfig
+<span class="sy0">/&gt;</span> saveconfig
+WARNING: Saving storage1 current configuration to disk will overwrite your boot settings.
+The current target configuration will become the default boot config.
+Are you sure? Type <span class="st_h">'yes'</span>: <span class="kw2">yes</span></pre>
+
+<p>
+Ne întoarcem la configurația clientului <code>storage2</code>. În primul rând clientul trebuie să verifice dacă există vreun target la adresa IP/hostname-ul serverului:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span>iscsiadm <span class="re5">--mode</span> discovery <span class="re5">--type</span> st <span class="re5">--portal</span> 192.168.1.1
+192.168.1.1:<span class="nu0">3260</span>,<span class="nu0">1</span> iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d</pre>
+
+<p>
+Observați noțiunea de <code>portal</code> folosită și la client (la server am creat portal-ul <code>192.168.1.1</code>). <code>–type</code> se referă la tipul pachetului folosit pentru <code>discovery</code> (<code>st=send target</code>).
+</p>
+
+<p>
+Comanda <code>iscsiadm -m node -L all</code> va face încerca să se autentifice automat la toate target-ul descoperite folosind modul <code>discovery</code> al comenzii <code>iscsiadm</code> (<code>–mode discovery</code>):
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span>iscsiadm <span class="re5">-m</span> node <span class="re5">-L</span> all
+Logging <span class="kw1">in</span> to <span class="br0">&#91;</span>iface: default, target: iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d, portal: 192.168.1.1,<span class="nu0">3260</span><span class="br0">&#93;</span> <span class="br0">&#40;</span>multiple<span class="br0">&#41;</span>
+Login to <span class="br0">&#91;</span>iface: default, target: iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d, portal: 192.168.1.1,<span class="nu0">3260</span><span class="br0">&#93;</span> successful.</pre>
+
+<p>
+Pentru a inspecta sesiunile active vom folosi modul <code>session</code> al utilitarului <code>iscsi</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span> iscsiadm <span class="re5">-m</span> session
+tcp: <span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> 192.168.1.1:<span class="nu0">3260</span>,<span class="nu0">1</span> iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d <span class="br0">&#40;</span>non-flash<span class="br0">&#41;</span></pre>
+
+<p>
+Pentru a vedea informații detaliate despre o sesiuni vom folosi parametrul <code>-P</code> al comenzii urmat de nivelul de verbozitate (<code>1</code>, <code>2</code> sau <code>3</code>):
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span> iscsiadm <span class="re5">-m</span> session <span class="re5">-P</span> <span class="nu0">1</span>
+Target: iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d <span class="br0">&#40;</span>non-flash<span class="br0">&#41;</span>
+        Current Portal: 192.168.1.1:<span class="nu0">3260</span>,<span class="nu0">1</span>
+        Persistent Portal: 192.168.1.1:<span class="nu0">3260</span>,<span class="nu0">1</span>
+                <span class="sy0">**********</span>
+                Interface:
+                <span class="sy0">**********</span>
+                Iface Name: default
+                Iface Transport: tcp
+                Iface Initiatorname: iqn.2005-03.org.open-iscsi:fc35d7d3fc24
+                Iface IPaddress: 192.168.1.2
+                Iface HWaddress: <span class="sy0">&lt;</span>empty<span class="sy0">&gt;</span>
+                Iface Netdev: <span class="sy0">&lt;</span>empty<span class="sy0">&gt;</span>
+                SID: <span class="nu0">1</span>
+                iSCSI Connection State: LOGGED IN
+                iSCSI Session State: LOGGED_IN
+                Internal iscsid Session State: NO CHANGE</pre>
+
+<p>
+În acest moment utilitarul <code>iscsiadm</code> a mai adăugat un disc pe client <code>/dev/sdd</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">dmesg</span><span class="sy0">|</span><span class="kw2">tail</span> <span class="re5">-10</span>
+<span class="br0">&#91;</span><span class="nu0">10654.656653</span><span class="br0">&#93;</span> scsi2 : iSCSI Initiator over TCP<span class="sy0">/</span>IP
+<span class="br0">&#91;</span><span class="nu0">10654.914445</span><span class="br0">&#93;</span> scsi <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: Direct-Access     LIO-ORG  FILEIO           <span class="nu0">4.0</span>  PQ: <span class="nu0">0</span> ANSI: <span class="nu0">5</span>
+<span class="br0">&#91;</span><span class="nu0">10654.915060</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: Attached scsi generic sg3 <span class="kw3">type</span> <span class="nu0">0</span>
+<span class="br0">&#91;</span><span class="nu0">10654.918771</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: <span class="br0">&#91;</span>sdd<span class="br0">&#93;</span> <span class="nu0">204800</span> <span class="nu0">512</span>-byte logical blocks: <span class="br0">&#40;</span><span class="nu0">104</span> MB<span class="sy0">/</span><span class="nu0">100</span> MiB<span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="nu0">10654.921415</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: <span class="br0">&#91;</span>sdd<span class="br0">&#93;</span> Write Protect is off
+<span class="br0">&#91;</span><span class="nu0">10654.921418</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: <span class="br0">&#91;</span>sdd<span class="br0">&#93;</span> Mode Sense: <span class="nu0">43</span> 00 00 08
+<span class="br0">&#91;</span><span class="nu0">10654.922477</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: <span class="br0">&#91;</span>sdd<span class="br0">&#93;</span> Write cache: disabled, <span class="kw2">read</span> cache: enabled, doesn<span class="st_h">'t support DPO or FUA
+[10654.931024]  sdd: unknown partition table
+[10654.936476] sd 2:0:0:0: [sdd] Attached SCSI disk</span></pre>
+
+<p>
+Observați că discul e adăugat ca și un disc normal, conectat direct la stația respectivă.
+</p>
+
+<p>
+Creați o tabelă de partiții și formatați discul cu un sistem de fișiere. Montați sistemul de fișiere creat și realizați operații de citire/scriere.
+</p>
+
+<p>
+Același LUN nu se poate monta pe 2 clienți diferiți decât dacă se folosește un sistem de fișiere <code>shared</code> (ex.: VMFS de la VMware - vezi <a href="../../../../saisp/courses/06.html" class="wikilink1" title="saisp:courses:06">Curs 06 - Sisteme de fișiere în rețea</a>).
+</p>
+
+</div>
+<!-- EDIT22 SECTION "04. [15p] Configurarea unei sesiuni iSCSI client-server" [1-] --><!-- EDIT21 PLUGIN_INCLUDE_END "saisp:labs:06:contents:04" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT23 PLUGIN_INCLUDE_START "saisp:labs:06:contents:05" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:05">
+
+<h3 class="sectionedit25" id="p_restrictionarea_accesului_la_dispozitivile_logice_lun">05. [10p] Restricționarea accesului la dispozitivile logice (LUN)</h3>
+<div class="level3">
+
+<p>
+Vom mai crea un nou <code>LUN</code> ce are ca <code>backstore</code> tot un fișier:
+</p>
+<pre class="code bash"><span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> create disk2 <span class="sy0">/</span>disk2.img 100M
+Generating a wwn serial.
+Not using buffered mode.
+Created fileio disk2.
+<span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> <span class="kw3">cd</span> <span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">/</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">&gt;</span></pre>
+
+<p>
+Vom mai crea încă un <code>LUN</code> asociat backstore-ului <code>disk2.img</code>:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">&gt;</span> create <span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">/</span>disk2 <span class="nu0">1</span>
+Successfully created LUN <span class="nu0">1</span>.
+Created mapped LUN <span class="nu0">1</span> <span class="kw1">in</span> node ACL iqn.2005-03.org.open-iscsi:fc35d7d3fc24</pre>
+
+<p>
+Observați că în mod implicit acesta s-a adăugat automat pentru clientul <code>storage2</code> (la IQN-ul acestuia). Dorim să scoatem această mapare:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">&gt;</span> <span class="kw3">cd</span> ..<span class="sy0">/</span>acls<span class="sy0">/</span>iqn.2005-03.org.open-iscsi:fc35d7d3fc24
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...:fc35d7d3fc24<span class="sy0">&gt;</span> <span class="kw2">ls</span>
+o- iqn.2005-03.org.open-iscsi:fc35d7d3fc24 ........................................... <span class="br0">&#91;</span><span class="nu0">2</span> Mapped LUNs<span class="br0">&#93;</span>
+  o- mapped_lun0 ......................................................................... <span class="br0">&#91;</span>lun0 <span class="br0">&#40;</span>rw<span class="br0">&#41;</span><span class="br0">&#93;</span>
+  o- mapped_lun1 ......................................................................... <span class="br0">&#91;</span>lun1 <span class="br0">&#40;</span>rw<span class="br0">&#41;</span><span class="br0">&#93;</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...:fc35d7d3fc24<span class="sy0">&gt;</span> delete <span class="nu0">1</span>
+Deleted Mapped LUN <span class="nu0">1</span>.</pre>
+
+</div>
+<!-- EDIT25 SECTION "05. [10p] Restricționarea accesului la dispozitivile logice (LUN)" [1-] --><!-- EDIT24 PLUGIN_INCLUDE_END "saisp:labs:06:contents:05" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT26 PLUGIN_INCLUDE_START "saisp:labs:06:contents:06" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:06">
+
+<h3 class="sectionedit28" id="p_lio_backstore_as_a_physical_block_device">06. [20p] LIO backstore as a physical block device</h3>
+<div class="level3">
+
+<p>
+Creați un <code>backstore</code> de tip physical device (Hint: <code>iblock</code>) folosind discul <code>/dev/sdb</code> de pe stația <code>storage1</code>. Asociați <code>backstore</code>-ul creat cu un LUN și montați-l pe stația <code>storage3</code>. Nu uitați să mapați IQN-ul stației <code>storage3</code> la noul LUN.
+</p>
+
+<p>
+<p><div class="notewarning">Implicit, clientul creat de voi va avea acces la toate LUN-urile. Permiteți accesul doar pentru <code>LUN 2</code>. Eliminați de asemenea <code>LUN 2</code> de la IQN-ul stației <code>storage2</code>.
+</div></p>
+</p>
+
+</div>
+<!-- EDIT28 SECTION "06. [20p] LIO backstore as a physical block device" [1-] --><!-- EDIT27 PLUGIN_INCLUDE_END "saisp:labs:06:contents:06" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT29 PLUGIN_INCLUDE_START "saisp:labs:06:contents:07" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:07">
+
+<h3 class="sectionedit31" id="p_instalare_si_configurare_sistem_distribuit_de_fisiere_glusterfs">07. [10p] Instalare și configurare sistem distribuit de fișiere GlusterFS</h3>
+<div class="level3">
+
+<p>
+<p><div class="notewarning">
+Inainte de a trece mai departe, modificati inapoi, in <code>/etc/apt/sources.list</code>, toate aparitiile lui <code>wheezy</code> in <code>jessie</code>, apoi efectuati <code>apt-get update</code>.
+
+</div></p>
+</p>
+
+<p>
+În instalarea și configurația sistemului de fișiere GlusterFS vom considera ca sisteme de stocare stațiile <code>storage1</code> cu discul <code>/dev/sdc</code> și <code>storage3</code> cu discul <code>/dev/sdc</code>. Înainte de a instala server-ele aferente sistemului de fișiere GlusterFS, trebuie să formatăm discurile ce vor intra în componența sistemului de fișiere. Recomandată este folosirea sistemului de fișiere <code>XFS</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> xfsprogs
+<span class="co4">root@storage1:~# </span><span class="kw2">fdisk</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdc
+Command <span class="br0">&#40;</span>m <span class="kw1">for</span> <span class="kw3">help</span><span class="br0">&#41;</span>: n
+&nbsp;
+<span class="co4">root@storage1:~# </span>mkfs.xfs <span class="sy0">/</span>dev<span class="sy0">/</span>sdc1
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">fdisk</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdc
+Command <span class="br0">&#40;</span>m <span class="kw1">for</span> <span class="kw3">help</span><span class="br0">&#41;</span>: n
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">apt-get install</span> xfsprogs
+<span class="co4">root@storage3:~# </span>mkfs.xfs <span class="sy0">/</span>dev<span class="sy0">/</span>sdc1</pre>
+
+<p>
+Vom monta cele 2 partiții în <code>/export</code> pe fiecare stație în parte:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span><span class="kw3">export</span>
+<span class="co4">root@storage1:~# </span><span class="kw3">echo</span> <span class="st0">&quot;/dev/sdc1 /export xfs defaults 1 2&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab
+<span class="co4">root@storage1:~# </span><span class="kw2">mount</span> <span class="re5">-a</span>
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span><span class="kw3">export</span>
+<span class="co4">root@storage3:~# </span><span class="kw3">echo</span> <span class="st0">&quot;/dev/sdc1 /export xfs defaults 1 2&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab
+<span class="co4">root@storage3:~# </span><span class="kw2">mount</span> <span class="re5">-a</span></pre>
+
+<p>
+Vom instala serverul GlusterFS pe ambele stații după care vom configura comunicația dintre acestea:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> glusterfs-server
+<span class="co4">root@storage3:~# </span><span class="kw2">apt-get install</span> glusterfs-server
+&nbsp;
+<span class="co4">root@storage1:~# </span>gluster peer probe storage3
+peer probe: success
+<span class="co4">root@storage1:~# </span>gluster peer status
+Number of Peers: <span class="nu0">1</span>
+&nbsp;
+Hostname: storage3
+Port: <span class="nu0">24007</span>
+Uuid: ba15f574-bcf3-<span class="nu0">4608</span>-<span class="nu0">8173</span>-da43857771ff
+State: Peer <span class="kw1">in</span> Cluster <span class="br0">&#40;</span>Connected<span class="br0">&#41;</span></pre>
+
+<p>
+Este suficient să configurăm legătura doar pe unul din servere. Următorul pas este reprezentat de crearea volumului care va fi exportat de acest sistem de fișiere:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>gluster volume create saispvol1 transport tcp storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1 storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+volume create: saispvol1: success: please start the volume to access data
+&nbsp;
+<span class="co4">root@storage1:~# </span>gluster volume info
+&nbsp;
+Volume Name: saispvol1
+Type: Distribute
+Volume ID: 6b9fdea1-e6ea-44a0-af2a-d10c47e8939d
+Status: Created
+Number of Bricks: <span class="nu0">2</span>
+Transport-type: tcp
+Bricks:
+Brick1: storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Brick2: storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1</pre>
+
+<p>
+Se observă că s-a creat volumul cu numele <code>saispvol1</code>, folosind protocolul <code>tcp</code> ca protocol de transport, iar acest volum este format din 2 <code>brick</code>-uri (aceste <code>brick</code>-uri sunt practic discurile formatate cu <code>XFS</code> anterior).
+Înainte de a porni volumul vom permite accesul tuturor adreselor IP din rețeaua noastră:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>gluster volume <span class="kw1">set</span> saispvol1 auth.allow 192.168.1.<span class="sy0">*</span>
+volume set: success</pre>
+
+<p>
+Vom porni volumul:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span> gluster volume start  saispvol1
+volume start: saispvol1: success
+<span class="co4">root@storage1:~# </span>gluster volume info
+&nbsp;
+Volume Name: saispvol1
+Type: Distribute
+Volume ID: 6b9fdea1-e6ea-44a0-af2a-d10c47e8939d
+Status: Started
+Number of Bricks: <span class="nu0">2</span>
+Transport-type: tcp
+Bricks:
+Brick1: storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Brick2: storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Options Reconfigured:
+auth.allow: 192.168.1.<span class="sy0">*</span></pre>
+
+<p>
+Pentru a putea testa sistemul distribuit construit anterior, trebuie să montăm partiția exportată pe client. Vom instala clientul pentru GlusterFS pe stația <code>storage2</code> și vom monta sistemul de fișiere folosind tipul <code>glusterfs</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">apt-get install</span> glusterfs-client
+<span class="co4">root@storage2:~# </span><span class="kw2">mount</span> <span class="re5">-t</span> glusterfs storage1:<span class="sy0">/</span>saispvol1 <span class="sy0">/</span>export<span class="sy0">/</span>
+<span class="co4">root@storage2:~# </span><span class="kw2">df</span> <span class="re5">-h</span> <span class="sy0">|</span><span class="kw2">grep</span> <span class="kw3">export</span>
+storage1:<span class="sy0">/</span>saispvol1  189M   11M  179M   <span class="nu0">6</span><span class="sy0">%</span> <span class="sy0">/</span><span class="kw3">export</span></pre>
+
+<p>
+Observați dimensiunea de <code>189M</code> sistemului de fișiere aceasta fiind practic suma dintre cele două discuri puse la dispozitie de stațiile <code>storage1</code> și <code>storage2</code>. Practic datele se vor distribui pe aceste 2 partiții.
+</p>
+
+</div>
+<!-- EDIT31 SECTION "07. [10p] Instalare și configurare sistem distribuit de fișiere GlusterFS" [1-] --><!-- EDIT30 PLUGIN_INCLUDE_END "saisp:labs:06:contents:07" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT32 PLUGIN_INCLUDE_START "saisp:labs:06:contents:08" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:08">
+
+<h3 class="sectionedit34" id="p_replicarea_datelor_folosind_glusterfs">08. [10p] Replicarea datelor folosind GlusterFS</h3>
+<div class="level3">
+
+<p>
+Demontați sistemul de fișiere de pe stația <code>storage2</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">umount</span> <span class="sy0">/</span><span class="kw3">export</span></pre>
+
+<p>
+Opriți și ștergeți volumul <code>saispvol1</code>, iar apoi ștergeți brick-urile create pe fiecare din stațiile <code>storage1</code> și <code>storage3</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>gluster volume stop saispvol1
+<span class="co4">root@storage1:~# </span>gluster volume delete saispvol1
+Deleting volume will erase all information about the volume. Do you want to <span class="kw3">continue</span>? <span class="br0">&#40;</span>y<span class="sy0">/</span>n<span class="br0">&#41;</span> y
+volume delete: saispvol1: success
+<span class="co4">root@storage1:~# </span><span class="kw2">rm</span> <span class="re5">-rf</span> <span class="sy0">/</span>export<span class="sy0">/</span>brick1<span class="sy0">/</span>
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">rm</span> <span class="re5">-rf</span> <span class="sy0">/</span>export<span class="sy0">/</span>brick1<span class="sy0">/</span></pre>
+
+<p>
+Creați din nou volumul <code>saispvol1</code> adăugând parametrul suplimentar <code>replica 2</code> după numele volumului în comanda de creare. Montați sistemul de fișiere pe stația <code>storage2</code>. Ce observați?
+</p>
+
+</div>
+<!-- EDIT34 SECTION "08. [10p] Replicarea datelor folosind GlusterFS" [1-] --><!-- EDIT33 PLUGIN_INCLUDE_END "saisp:labs:06:contents:08" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT35 PLUGIN_INCLUDE_START "saisp:labs:06:contents:09" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:09">
+
+<h3 class="sectionedit37" id="bonus_-_10p_instalarea_si_configurarea_sistemului_distribuit_de_fisiere_ceph">09. [BONUS - 10p] Instalarea și configurarea sistemului distribuit de fișiere Ceph</h3>
+<div class="level3">
+
+<p>
+Pe stația <code>storage2</code> instalați și configurați cluster-ul Ceph urmărind acest <a href="http://eu.ceph.com/docs/wip-6919/start/quick-start/" class="urlextern" title="http://eu.ceph.com/docs/wip-6919/start/quick-start/"  rel="nofollow"> tutorial</a>.
+</p>
+
+<p>
+După ce ați instalat cluster-ul Ceph, creați un block-device RBD (Rados Block Device) pe care să îl formatați și montați (Hint: <a href="http://eu.ceph.com/docs/wip-6919/start/quick-rbd/" class="urlextern" title="http://eu.ceph.com/docs/wip-6919/start/quick-rbd/"  rel="nofollow">tutorial</a>).
+</p>
+
+<p>
+Un alt tutorial despre Ceph puteti gasi <a href="http://www.mad-hacking.net/documentation/linux/ha-cluster/storage-area-network/ceph-install.xml" class="urlextern" title="http://www.mad-hacking.net/documentation/linux/ha-cluster/storage-area-network/ceph-install.xml"  rel="nofollow">aici</a>.
+</p>
+
+</div>
+<!-- EDIT37 SECTION "09. [BONUS - 10p] Instalarea și configurarea sistemului distribuit de fișiere Ceph" [1-] --><!-- EDIT36 PLUGIN_INCLUDE_END "saisp:labs:06:contents:09" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT38 PLUGIN_INCLUDE_START "saisp:labs:06:contents:sidebar" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:contents:sidebar">
+
+<h3 class="sectionedit40" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/06.html" class="wikilink1" title="saisp:labs:06">Laboratorul 6</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT41 PLUGIN_INCLUDE_START "saisp:labs:06:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_213607289583567a5076a6" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/00.html" class="wikilink1" title="saisp:labs:06:contents:00">00. [5p] Configurarea rezolvării numelor pentru servere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/01.html" class="wikilink1" title="saisp:labs:06:contents:01">01. [10p] Partajarea de fișiere folosind protocolul NFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/02.html" class="wikilink1" title="saisp:labs:06:contents:02">02. [10p] Exportarea unei partitii folosind NFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/03.html" class="wikilink1" title="saisp:labs:06:contents:03">03. [10p] Montarea automată a sistemului de fișiere NFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/04.html" class="wikilink1" title="saisp:labs:06:contents:04">04. [15p] Configurarea unei sesiuni iSCSI client-server</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/05.html" class="wikilink1" title="saisp:labs:06:contents:05">05. [10p] Restricționarea accesului la dispozitivile logice (LUN)</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/06.html" class="wikilink1" title="saisp:labs:06:contents:06">06. [20p] LIO backstore as a physical block device</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/07.html" class="wikilink1" title="saisp:labs:06:contents:07">07. [10p] Instalare și configurare sistem distribuit de fișiere GlusterFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/08.html" class="wikilink1" title="saisp:labs:06:contents:08">08. [10p] Replicarea datelor folosind GlusterFS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/06/contents/09.html" class="wikilink1" title="saisp:labs:06:contents:09">09. [BONUS - 10p] Instalarea și configurarea sistemului distribuit de fișiere Ceph</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT42 PLUGIN_INCLUDE_END "saisp:labs:06:meta:nav" [0-] --></div>
+<div class="level4">
+
+</div>
+<!-- EDIT40 SECTION "Navigare" [1-] --><!-- EDIT39 PLUGIN_INCLUDE_END "saisp:labs:06:contents:sidebar" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Exerciții" [2631-] --></div>
+</body>
+</html>

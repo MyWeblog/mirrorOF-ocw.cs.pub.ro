@@ -1,0 +1,27 @@
+    
+    
+
+#!/usr/bin/env python
+
+import sys
+import re
+from datetime import datetime
+
+
+def main():
+    for line in open("user-results.csv", "rt"):
+        line = line.rstrip("\n")
+        uid, school, date, points = line.split(",")
+        date_compare = datetime.strptime("2015-04-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+        try:
+            date_in_format = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+        except:
+            continue
+        if re.match("[^\.]+\.c", uid):
+            if int(points) >= 500:
+                if date_in_format > date_compare:
+                    print "%s,%s,%s" % (uid,date,points)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

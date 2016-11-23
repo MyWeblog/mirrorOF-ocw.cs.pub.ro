@@ -1,0 +1,156 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:07:contents:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-18T17:14:18+0300"/>
+<meta name="keywords" content="saisp,labs,07,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:07:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/07/contents/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:07:contents';var JSINFO = {"id":"saisp:labs:07:contents:07","namespace":"saisp:labs:07:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_interactiune_folosind_virsh">07. [20p] Interactiune folosind Virsh</h3>
+<div class="level3">
+
+<p>
+Virsh este capabil sa gestioneze si containere LXC. Deosebirea este ca nu tine seama de fisierul de configurare creat de <strong>lxc-create</strong>, ci foloseste propriul fisier de configurare, in format <strong>XML</strong>.
+</p>
+
+<p>
+Creati un nou container, de tip <code>debian</code>, cu numele <code><strong>ct3</strong></code>. <strong>Nu</strong> porniti containerul.
+</p>
+
+<p>
+Creati un fisier XML ce va fi folosit in Virsh, dupa modelul de mai jos:
+</p>
+<pre class="code xml"><span class="sc3"><span class="re1">&lt;domain</span> <span class="re0">type</span>=<span class="st0">'lxc'</span><span class="re2">&gt;</span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>NUME_CONTAINER<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;memory<span class="re2">&gt;</span></span></span>500000<span class="sc3"><span class="re1">&lt;/memory<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;os<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;type<span class="re2">&gt;</span></span></span>exe<span class="sc3"><span class="re1">&lt;/type<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;init<span class="re2">&gt;</span></span></span>/sbin/init<span class="sc3"><span class="re1">&lt;/init<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;/os<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;vcpu<span class="re2">&gt;</span></span></span>1<span class="sc3"><span class="re1">&lt;/vcpu<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;clock</span> <span class="re0">offset</span>=<span class="st0">'utc'</span><span class="re2">/&gt;</span></span>
+  <span class="sc3"><span class="re1">&lt;on_poweroff<span class="re2">&gt;</span></span></span>destroy<span class="sc3"><span class="re1">&lt;/on_poweroff<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;on_reboot<span class="re2">&gt;</span></span></span>restart<span class="sc3"><span class="re1">&lt;/on_reboot<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;on_crash<span class="re2">&gt;</span></span></span>destroy<span class="sc3"><span class="re1">&lt;/on_crash<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;devices<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;interface</span> <span class="re0">type</span>=<span class="st0">'network'</span><span class="re2">&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;source</span> <span class="re0">network</span>=<span class="st0">'default'</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;/interface<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;console</span> <span class="re0">type</span>=<span class="st0">'pty'</span> <span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;filesystem</span> <span class="re0">type</span>=<span class="st0">'mount'</span><span class="re2">&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;source</span> <span class="re0">dir</span>=<span class="st0">'CALE_CATRE_ROOTFS'</span><span class="re2">/&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;target</span> <span class="re0">dir</span>=<span class="st0">'/'</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;/filesystem<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;/devices<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/domain<span class="re2">&gt;</span></span></span></pre>
+
+<p>
+Porniti virsh, conectandu-va la <abbr title="Uniform Resource Identifier">URI</abbr>-ul corespunzator LXC:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>virsh <span class="re5">-c</span> lxc:<span class="sy0">///</span>
+Welcome to virsh, the virtualization interactive terminal.
+&nbsp;
+Type:  <span class="st_h">'help'</span> <span class="kw1">for</span> <span class="kw3">help</span> with commands
+       <span class="st_h">'quit'</span> to quit
+&nbsp;
+virsh <span class="co0"># </span></pre>
+
+<p>
+In Virsh, efectuati urmatoarele operatii:
+</p>
+<ul>
+<li class="level1"><div class="li"> definiti containerul, folosind fisierul XML creat:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># define ct3.xml</span>
+Domain ct3 defined from ct3.xml</pre>
+<ul>
+<li class="level1"><div class="li"> porniti reteaua virtuala, folosind comanda <code>net-start default</code></div>
+</li>
+<li class="level1"><div class="li"> porniti containerul:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># start ct3</span>
+Domain ct3 started</pre>
+<ul>
+<li class="level1"><div class="li"> conectati-va la consola containerului:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># console ct3</span>
+Connected to domain ct3
+Escape character is ^<span class="br0">&#93;</span></pre>
+
+<p>
+<p><div class="noteclassic">Parola de root nu este setata, deci nu va veti putea loga.
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> deconectati-va de la consola, folosind combinatia de taste <code><strong>Ctrl+]</strong></code></div>
+</li>
+<li class="level1"><div class="li"> listati informatii despre container:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># dominfo ct3</span>
+Id:             <span class="nu0">2603</span>
+Name:           ct3
+UUID:           27f50e10-99dc-44ce-827d-ed8888115eb4
+OS Type:        exe
+State:          running
+CPU<span class="br0">&#40;</span>s<span class="br0">&#41;</span>:         <span class="nu0">1</span>
+CPU time:       0.5s
+Max memory:     <span class="nu0">500000</span> KiB
+Used memory:    <span class="nu0">12564</span> KiB
+Persistent:     <span class="kw2">yes</span>
+Autostart:      disable
+Managed save:   unknown
+Security model: none
+Security DOI:   <span class="nu0">0</span></pre>
+<ul>
+<li class="level1"><div class="li"> opriti, apoi stergeti containerul:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># shutdown ct3</span>
+virsh <span class="co0"># undefine ct3</span></pre>
+
+</div>
+</div>
+</body>
+</html>

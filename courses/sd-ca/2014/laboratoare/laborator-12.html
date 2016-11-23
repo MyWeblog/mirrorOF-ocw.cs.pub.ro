@@ -1,0 +1,534 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 12 - Multimi disjuncte - Union-Find    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-02-17T13:40:27+0200"/>
+<meta name="keywords" content="sd-ca,2014,laboratoare,laborator-12"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=sd-ca:2014:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../_export/xhtml/sd-ca/2014/laboratoare/laborator-12.html"/>
+<link rel="canonical" href="laborator-12.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sd-ca:2014:laboratoare';var JSINFO = {"id":"sd-ca:2014:laboratoare:laborator-12","namespace":"sd-ca:2014:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../../index.html"><img height="70" src="../../../res/sigla_sd.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="laborator-12%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="laborator-12%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_12_-_multimi_disjuncte_-_union-find">Laborator 12 - Multimi disjuncte - Union-Find</h1>
+<div class="level1">
+
+<p>
+Responsabili:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="mailto:&#x61;&#x6e;&#x64;&#x72;&#x65;&#x69;&#x2e;&#x70;&#x61;&#x72;&#x76;&#x75;&#x40;&#x63;&#x74;&#x69;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x61;&#x6e;&#x64;&#x72;&#x65;&#x69;&#x2e;&#x70;&#x61;&#x72;&#x76;&#x75;&#x40;&#x63;&#x74;&#x69;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;"> Andrei Pârvu</a> (2014)</div>
+</li>
+<li class="level1"><div class="li"> <a href="mailto:&#x6d;&#x75;&#x67;&#x75;&#x72;&#x65;&#x6c;&#x2e;&#x61;&#x6e;&#x64;&#x72;&#x65;&#x69;&#x63;&#x61;&#x40;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x6d;&#x75;&#x67;&#x75;&#x72;&#x65;&#x6c;&#x2e;&#x61;&#x6e;&#x64;&#x72;&#x65;&#x69;&#x63;&#x61;&#x40;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;"> Mugurel Ionut Andreica</a> (2013)</div>
+</li>
+<li class="level1"><div class="li"> <a href="mailto:&#x65;&#x6c;&#x69;&#x61;&#x6e;&#x61;&#x2e;&#x74;&#x69;&#x72;&#x73;&#x61;&#x40;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x65;&#x6c;&#x69;&#x61;&#x6e;&#x61;&#x2e;&#x74;&#x69;&#x72;&#x73;&#x61;&#x40;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;"> Eliana Tîrșa</a> (2013)</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit2" id="obiective">Obiective</h2>
+<div class="level2">
+
+<p>
+În urma parcurgerii acestui laborator, studentul va fi capabil să:
+</p>
+<ul>
+<li class="level1"><div class="li">înţeleagă structura de date “disjoint sets”;</div>
+</li>
+<li class="level1"><div class="li">înţeleagă operațiile Union și Find ce pot fi aplicate asupra structurii</div>
+</li>
+<li class="level1"><div class="li">folosească mulțimile disjuncte pentru a rezolva o serie de aplicații</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="notiuni_teoretice">Noțiuni teoretice</h2>
+<div class="level2">
+
+<p>
+Structura de date “mulțimi disjuncte” consideră că, inițial, există <code>N</code> elemente distincte (numerotate de la <code>1</code> la <code>N</code>), fiecare făcând parte dintr-o mulțime separată. Structura suportă două operații:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>Union(x,y)</code>: unește mulțimea din care face parte elementul <code>x</code> cu mulțimea din care face parte elementul <code>y</code>. În urma unirii, elementele din cele două mulțimi vor face parte din aceeași mulțime.</div>
+</li>
+<li class="level1"><div class="li"><code>Find(x)</code>: întoarce un identificator al mulțimii din care face parte elementul <code>x</code>. Operația <code>Find</code> are urmatoarele proprietăți:</div>
+<ul>
+<li class="level2"><div class="li">dacă <code>x</code> și <code>y</code> sunt elemente din aceeași mulțime, atunci <code>Find(x)=Find(y)</code>.</div>
+</li>
+<li class="level2"><div class="li">dacă <code>x</code> și <code>y</code> sunt elemente din mulțimi diferite, atunci <code>Find(x)!=Find(y)</code>.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Una dintre implementările posibile pentru structura de mulțimi disjuncte este cea de a reprezenta fiecare mulțime sub forma unui arbore (un arbore general, nu binar). Pentru fiecare element <code>x</code> se va pastra o valoare <code>parent[x]</code> (inițial, <code>parent[x]</code> este <code>0</code> pentru toate elementele <code>x</code>).
+</p>
+
+<p>
+Operația <code>Find(x)</code> pornește de la elementul <code>x</code> și urcă în sus în arbore, folosind legăturile <code>element - parent[element]</code>, până când ajunge la un element <code>rx</code> pentru care <code>parent[rx]=0</code>. <code>Find(x)</code> va returna acest element <code>rx</code>. <code>rx</code> este, practic, rădăcina arborelui ce reprezintă mulțimea respectivă. Să observăm că dacă două elemente <code>x</code> și <code>y</code> sunt în aceeași mulțime, atunci atât <code>Find(x)</code>, cât și <code>Find(y)</code>, vor returna aceeași valoare (întrucât ambele elemente fac parte din același arbore, se va ajunge la același element radacină).
+</p>
+
+<p>
+Operația <code>Union(x,y)</code> începe prin a calcula elementele <code>rx=Find(x)</code> și <code>ry=Find(y)</code>. Dacă <code>rx=ry</code>, atunci elementele <code>x</code> și <code>y</code> sunt deja în aceeași mulțime și nu mai este necesar să efectuăm alte operații. Dacă <code>rx!=ry</code> atunci este suficient să setăm părintele unuia dintre reprezentanți ca fiind celălalt reprezentant: de ex., setăm <code>parent[rx]=ry</code>.
+</p>
+
+<p>
+Este evident că eficiența acestei implementări a structurii de date “mulțimi disjuncte” depinde de înalțimea arborilor formați. Cu cât un arbore are o adâncime mai mare, cu atât operația <code>Find</code> va avea un timp de execuție mai mare. Intrucât operația <code>Union</code> utilizează intern operația <code>Find</code>, înalțimea arborilor afectează și eficiența operației <code>Union</code>.
+</p>
+
+<p>
+Varianta prezentată mai sus reprezintă versiunea “de baza” a structurii de date “mulțimi disjuncte” și există scenarii de utilizare în care această implementare are o eficiență scăzută (se formează arbori cu înalțimi foarte mari). De exemplu, dacă efectuăm, în ordine, operațiile <code>Union(1,2), Union(1,3), …, Union(1,N)</code>, se obține un “arbore-linie”: <code>parent[1]=2, parent[2]=3, …, parent[N-1]=N</code>.
+</p>
+
+<p>
+Pentru a evita astfel de situații, în practica, există două tipuri de euristici ce pot fi utilizate (independent sau împreună).
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="euristica_union-by-size">Euristica &quot;Union-by-Size&quot;</h3>
+<div class="level3">
+
+<p>
+Pentru fiecare element <code>x</code>, se mai pastrează o valoare <code>size[x]</code>, ce reprezintă numarul de noduri din subarborele a cărui rădăcină este nodul <code>x</code>. Aceasta valoare va fi păstrată actualizată doar pentru acele elemente <code>x</code> care sunt rădăcini de arbore (adică au <code>parent[x]=0</code>). Inițial, vom avea <code>size[x]=1</code> pentru fiecare element <code>x</code>.
+</p>
+
+<p>
+In cazul operației <code>Union</code>, după ce determinăm reprezentanții <code>rx</code> și <code>ry</code> (și aceștia sunt diferiți), avem de ales între a seta <code>parent[rx]=ry</code> și <code>parent[ry]=rx</code>. Vom alege noua rădăcină a arborelui mulțimii “unite”, ca fiind acel nod care are valoarea <code>size</code> mai mare. De exemplu, dacă <code>size[rx]&gt;size[ry]</code> atunci vom seta <code>parent[ry]=rx</code> și actualizăm <code>size[rx]=size[rx]+size[ry]</code> (deoarece doar <code>rx</code> a mai rămas rădăcina de arbore, dintre <code>rx</code> și <code>ry</code>).
+</p>
+
+<p>
+In felul acesta, se garantează că înălțimea oricărui arbore cu <code>M</code> elemente în el este de ordinul <code>log(M)</code> (logaritm în baza <code>2</code> din <code>M</code>).
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="euristica_compresia_drumului">Euristica &quot;Compresia drumului&quot;</h3>
+<div class="level3">
+
+<p>
+Să considerăm o operație <code>Find(x)</code>. Se pornește de la elementul <code>x</code> și se parcurg elementele <code>x, parent[x], parent[parent[x]], …, rx</code> (<code>rx</code> este rădăcina arborelui din care face parte nodul <code>x</code>). Să presupunem că elementele parcurse sunt <code>a1, a2, …, ak</code> (unde <code>a1=x</code> și <code>ak=rx</code>). După determinarea lui <code>rx</code> putem seta <code>parent[a1]=rx, parent[a2]=rx, …, parent[ak-1]=rx</code>. Mai exact, putem lega toate elementele prin care am trecut direct de rădăcina arborelui. In felul acesta, dacă apelăm <code>Find(y)</code> în viitor, unde <code>y</code> este un element din aceeași mulțime ca și <code>x</code>, care se află într-unul din subarborii elementelor <code>a1, …, ak-1</code>, drumul de la <code>y</code> la rădăcină va fi mai scurt (și, deci, operația <code>Find(y)</code> va fi mai rapidă).
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="aplicatii">Aplicatii</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit7" id="algoritmul_lui_kruskal">Algoritmul lui Kruskal</h3>
+<div class="level3">
+
+<p>
+Considerăm un graf cu <code>N</code> noduri și <code>M</code> muchii. Fiecare muchie <code>(i,j)</code> (între nodurile <code>i</code> și <code>j</code>) are un cost <code>c(i,j)</code>. Se dorește determinarea unui <code>arbore parțial de cost minim</code>. Un arbore parțial de cost minim constă dintr-o submulțime de <code>N-1</code> muchii care leagă toate cele <code>N</code> noduri ale grafului și al caror cost total este minim.
+</p>
+
+<p>
+Algoritmul lui Kruskal funcționează în felul următor. Se sortează crescător după cost cele <code>M</code> muchii ale grafului (în cazul în care există mai multe muchii de cost egal, acestea pot fi considerate în orice ordine). Apoi se inițializează o structură de tip “mulțimi disjuncte” cu <code>N</code> elemente. In continuare se parcurg cele <code>M</code> muchii ale grafului în ordinea crescătoare a costului.
+</p>
+
+<p>
+Să presupunem că am ajuns la muchia <code>(i,j)</code>. Dacă <code>Find(i)!=Find(j)</code> atunci vom adauga muchia <code>(i,j)</code> la arborele parțial de cost minim și vom apela <code>Union(i,j)</code>. Dacă <code>Find(i)=Find(j)</code> atunci mergem mai departe (înseamnă că nodurile <code>i</code> și <code>j</code> sunt deja legate între ele prin niște muchii ale arborelui parțial de cost minim și putem ignora muchia <code>(i,j)</code>).
+</p>
+
+<p>
+La final, dacă graful este conex, muchiile selectate formează un arbore parțial de cost minim. Dacă graful nu este conex, muchiile selectate de algoritm formează câte un arbore parțial de cost minim în fiecare componentă conexă a grafului.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="determinarea_componentelor_conexe_ale_unui_graf">Determinarea componentelor conexe ale unui graf</h3>
+<div class="level3">
+
+<p>
+Se consideră un graf neorientat cu <code>N</code> noduri și <code>M</code> muchii. Dorim să determinăm componentele conexe ale acestui graf.
+</p>
+
+<p>
+Se inițializează o structură de date de tip “mulțimi disjuncte” cu <code>N</code> elemente. Vom considera muchiile grafului în orice ordine. Pentru orice muchie <code>(i,j)</code> vom apela <code>Union(i,j)</code>. La final, dacă avem <code>Find(i)=Find(j)</code> pentru două noduri <code>i</code> și <code>j</code>, atunci aceste două noduri fac parte din aceeași componentă conexă a grafului.
+</p>
+
+</div>
+
+<h2 class="sectionedit9" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+<p>
+Porniți exercițiile de la header-ul următor
+</p>
+<pre class="code c++"><span class="co2">#ifndef __DSUF_H</span>
+<span class="co2">#define __DSUF_H</span>
+&nbsp;
+class DisjointSetsUnionFind <span class="br0">&#123;</span>
+  public<span class="sy0">:</span>
+    <span class="kw4">int</span> N<span class="sy0">;</span>
+&nbsp;
+    DisjointSetsUnionFind<span class="br0">&#40;</span><span class="kw4">int</span> N<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      this<span class="sy0">-&gt;</span>N <span class="sy0">=</span> N<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    virtual <span class="kw4">void</span> Union<span class="br0">&#40;</span><span class="kw4">int</span> x<span class="sy0">,</span> <span class="kw4">int</span> y<span class="br0">&#41;</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+    virtual <span class="kw4">int</span> Find<span class="br0">&#40;</span><span class="kw4">int</span> x<span class="br0">&#41;</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co2">#endif</span></pre>
+
+<p>
+1. [1p] Definiţi o clasă ce extinde clasa <code>DisjointSetsUnionFind</code> și care implementează funcțiile virtuale <code>Union</code> și <code>Find</code>:
+</p>
+<ul>
+<li class="level1"><div class="li">[0.5p] implementați euristica <code>union-by-size</code> în funcția <code>Union</code></div>
+</li>
+<li class="level1"><div class="li">[0.5p] implementați euristica <code>compresia drumului</code> în funcția <code>Find</code></div>
+</li>
+</ul>
+
+<p>
+Puteți porni de la codul de mai jos, unde operațiile <code>Union</code> și <code>Find</code> sunt implementate în varianta de bază (fară niciuna din cele două euristici):
+</p>
+<pre class="code c++"><span class="co2">#ifndef __BASIC_DSUF_H</span>
+<span class="co2">#define __BASIC_DSUF_H</span>
+&nbsp;
+<span class="co2">#include &lt;stdlib.h&gt;</span>
+&nbsp;
+class BasicDisjointSetsUnionFind<span class="sy0">:</span> public DisjointSetsUnionFind <span class="br0">&#123;</span>
+  public<span class="sy0">:</span>
+    <span class="kw4">int</span> <span class="sy0">*</span>parent<span class="sy0">;</span>
+&nbsp;
+    BasicDisjointSetsUnionFind<span class="br0">&#40;</span><span class="kw4">int</span> N<span class="br0">&#41;</span><span class="sy0">:</span> DisjointSetsUnionFind<span class="br0">&#40;</span>N<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      parent <span class="sy0">=</span> new <span class="kw4">int</span><span class="br0">&#91;</span>N <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#93;</span><span class="sy0">;</span>
+      <span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> i <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> i <span class="sy0">&lt;=</span> N<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        parent<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw4">void</span> Union<span class="br0">&#40;</span><span class="kw4">int</span> x<span class="sy0">,</span> <span class="kw4">int</span> y<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>x <span class="sy0">&lt;=</span> <span class="nu0">0</span> <span class="sy0">||</span> x <span class="sy0">&gt;</span> N <span class="sy0">||</span> y <span class="sy0">&lt;=</span> <span class="nu0">0</span> <span class="sy0">||</span> y <span class="sy0">&gt;</span> N<span class="br0">&#41;</span>
+        <span class="kw1">return</span><span class="sy0">;</span>
+      <span class="kw4">int</span> rx <span class="sy0">=</span> Find<span class="br0">&#40;</span>x<span class="br0">&#41;</span><span class="sy0">,</span> ry <span class="sy0">=</span> Find<span class="br0">&#40;</span>y<span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>rx <span class="sy0">!=</span> ry<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        parent<span class="br0">&#91;</span>rx<span class="br0">&#93;</span> <span class="sy0">=</span> ry<span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw4">int</span> Find<span class="br0">&#40;</span><span class="kw4">int</span> x<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>x <span class="sy0">&lt;=</span> <span class="nu0">0</span> <span class="sy0">||</span> x <span class="sy0">&gt;</span> N<span class="br0">&#41;</span>
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+      <span class="kw1">while</span> <span class="br0">&#40;</span>parent<span class="br0">&#91;</span>x<span class="br0">&#93;</span> <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+        x <span class="sy0">=</span> parent<span class="br0">&#91;</span>x<span class="br0">&#93;</span><span class="sy0">;</span>
+      <span class="kw1">return</span> x<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    ~BasicDisjointSetsUnionFind<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      delete<span class="br0">&#91;</span><span class="br0">&#93;</span> parent<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co2">#endif</span></pre>
+
+<p>
+2. [4p] Implementaţi algoritmul lui Kruskal utilizând clasa pentru mulțimi disjuncte definită la punctul anterior. Din fișierul de intrare <code>kruskal.in</code> se citesc următoarele date, în ordine:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>N</code> = numarul de noduri ale grafului</div>
+</li>
+<li class="level1"><div class="li"><code>M</code> = numarul de muchii ale grafului</div>
+</li>
+<li class="level1"><div class="li">cele <code>M</code> muchii, sub forma <code>a b c</code>, având semnificația că există muchie între nodurile <code>a</code> și <code>b</code>, având costul <code>c</code></div>
+</li>
+</ul>
+
+<p>
+Afisați pe ecran costul arborelui parțial de cost minim și muchiile ce il compun.
+</p>
+<dl class="code">
+<dt><a href="../../../_export/code/sd-ca/2014/laboratoare/laborator-12%3Fcodeblock=2" title="Download Snippet" class="mediafile mf_in">kruskal.in</a></dt>
+<dd><pre class="code c++"><span class="nu0">7</span> <span class="nu0">9</span>
+<span class="nu0">1</span> <span class="nu0">2</span> <span class="nu0">1</span>
+<span class="nu0">1</span> <span class="nu0">3</span> <span class="nu0">2</span>
+<span class="nu0">2</span> <span class="nu0">4</span> <span class="nu0">4</span>
+<span class="nu0">3</span> <span class="nu0">4</span> <span class="nu0">1</span>
+<span class="nu0">4</span> <span class="nu0">5</span> <span class="nu0">3</span>
+<span class="nu0">5</span> <span class="nu0">7</span> <span class="nu0">6</span>
+<span class="nu0">4</span> <span class="nu0">7</span> <span class="nu0">2</span>
+<span class="nu0">4</span> <span class="nu0">6</span> <span class="nu0">5</span>
+<span class="nu0">3</span> <span class="nu0">6</span> <span class="nu0">3</span></pre>
+</dd></dl>
+
+<p>
+<a href="../../../_detail/sd-ca/laboratoare/kruskal.in.png%3Fid=sd-ca%253A2014%253Alaboratoare%253Alaborator-12.html" class="media" title="sd-ca:laboratoare:kruskal.in.png"><img src="../../../_media/sd-ca/laboratoare/kruskal.in.png%3Fw=120&amp;tok=a0967d" class="media" alt="" width="120" /></a>
+</p>
+
+<p>
+3. [4p] Determinați componentele conexe ale unui graf utilizând clasa pentru mulțimi disjuncte definită la punctul <code>1</code>. Din fișierul de intrare <code>componente.in</code> se citesc următoarele date, în ordine:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>N</code> = numarul de noduri ale grafului</div>
+</li>
+<li class="level1"><div class="li"><code>M</code> = numarul de muchii ale grafului</div>
+</li>
+<li class="level1"><div class="li">cele <code>M</code> muchii, sub forma <code>a b</code>, având semnificația că există muchie între nodurile <code>a</code> și <code>b</code></div>
+</li>
+</ul>
+
+<p>
+Afisați pe ecran numarul <code>C</code> de componente conexe. Pe următoarele <code>C</code> linii veți afisa nodurile grafului ce fac parte din fiecare componentă conexă (câte o componentă conexă pe fiecare linie).
+</p>
+
+<p>
+<code>Hint:</code> După parcurgerea tuturor muchiilor și efectuarea operațiilor <code>Union</code> corespunzătoare fiecarei muchii a grafului, grupați nodurile grafului în funcție de rezultatul funcției <code>Find</code>. Utilizați un <code>Hashtable</code> pentru a realiza această grupare. Considerați că funcție de hash chiar funcția <code>Find</code>. Toate nodurile introduse în <code>Hashtable</code> care au aceeași valoare a funcției <code>Find</code> sunt în aceeași componentă conexă.
+</p>
+<dl class="code">
+<dt><a href="../../../_export/code/sd-ca/2014/laboratoare/laborator-12%3Fcodeblock=3" title="Download Snippet" class="mediafile mf_in">componente.in</a></dt>
+<dd><pre class="code c++"><span class="nu0">9</span> <span class="nu0">7</span>
+<span class="nu0">1</span> <span class="nu0">2</span>
+<span class="nu0">2</span> <span class="nu0">3</span>
+<span class="nu0">4</span> <span class="nu0">5</span>
+<span class="nu0">4</span> <span class="nu0">6</span>
+<span class="nu0">5</span> <span class="nu0">6</span>
+<span class="nu0">5</span> <span class="nu0">7</span>
+<span class="nu0">8</span> <span class="nu0">9</span></pre>
+</dd></dl>
+
+<p>
+<a href="../../../_detail/sd-ca/laboratoare/componente.in.png%3Fid=sd-ca%253A2014%253Alaboratoare%253Alaborator-12.html" class="media" title="sd-ca:laboratoare:componente.in.png"><img src="../../../_media/sd-ca/laboratoare/componente.in.png%3Fw=200&amp;tok=63ed79" class="media" alt="" width="200" /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit10" id="resurse">Resurse</h2>
+<div class="level2">
+
+<p>
+[1] <a href="http://en.wikipedia.org/wiki/Disjoint-set_data_structure" class="urlextern" title="http://en.wikipedia.org/wiki/Disjoint-set_data_structure"  rel="nofollow"> Disjoint-set data structure</a>
+</p>
+
+<p>
+[2] <a href="http://en.wikipedia.org/wiki/Kruskal's_algorithm" class="urlextern" title="http://en.wikipedia.org/wiki/Kruskal&#039;s_algorithm"  rel="nofollow"> Algoritmul lui Kruskal</a>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+<ul>
+<li class="level1"><div class="li"> <a href="../../regulament.html" class="wikilink1" title="sd-ca:regulament">Reguli generale și de notare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../catalog.html" class="wikilink1" title="sd-ca:catalog">Catalog</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../concursuri.html" class="wikilink1" title="sd-ca:concursuri">Concursuri</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../calendar.html" class="wikilink1" title="sd-ca:calendar">Calendar</a></div>
+</li>
+</ul>
+
+<h1 class="sectionedit1" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="laborator-01.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-01">Laborator 1 - Introducere in C++</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-02.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-02">Laborator 2 - Noțiuni de C++</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-03.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-03">Laborator 3 - Stive</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-04.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-04">Laborator 4 - Cozi</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-05.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-05">Laborator 5 - Liste generice</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-06.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-06">Laborator 6 - HashTable</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-07.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-07">Laborator 7 - Grafuri</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-08.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-08">Laborator 8 - Arbori Binari</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-09.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-09">Laborator 9 - Arbori Binari de Căutare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-10.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-10">Laborator 10 - Heap-uri</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-11.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-11">Laborator 11 - Treap-uri</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="laborator-12.html" class="wikilink1" title="sd-ca:2014:laboratoare:laborator-12">Laborator 12 - Mulțimi Disjuncte</a></span></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Laboratoare" [234-1477] -->
+<h1 class="sectionedit2" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/teme-01.html" class="wikilink1" title="sd-ca:2014:teme:teme-01">Tema 1</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/teme-02.html" class="wikilink1" title="sd-ca:2014:teme:teme-02">Tema 2</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/teme-03.html" class="wikilink1" title="sd-ca:2014:teme:teme-03">Tema 3</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/teme-04.html" class="wikilink1" title="sd-ca:2014:teme:teme-04">Tema 4</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Teme" [1478-1653] -->
+<h1 class="sectionedit3" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_83320610458355e5810c77" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../resurse/debugging.html" class="wikilink1" title="sd-ca:resurse:debugging">Debugging</a></div></li>
+<li class="level1"><div class="li"><a href="../../resurse/visualization.html" class="wikilink1" title="sd-ca:resurse:visualization">Data Structure Visualization</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Resurse" [1654-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-12.html#laborator_12_-_multimi_disjuncte_-_union-find">Laborator 12 - Multimi disjuncte - Union-Find</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-12.html#obiective">Obiective</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-12.html#notiuni_teoretice">Noțiuni teoretice</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-12.html#euristica_union-by-size">Euristica &quot;Union-by-Size&quot;</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#euristica_compresia_drumului">Euristica &quot;Compresia drumului&quot;</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-12.html#aplicatii">Aplicatii</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-12.html#algoritmul_lui_kruskal">Algoritmul lui Kruskal</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#determinarea_componentelor_conexe_ale_unui_graf">Determinarea componentelor conexe ale unui graf</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-12.html#exercitii">Exerciții</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-12.html#resurse">Resurse</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          sd-ca/2014/laboratoare/laborator-12.txt · Last modified: 2015/02/17 13:40 by alexandru.olteanu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="laborator-12%3Fdo=media&amp;ns=sd-ca%253A2014%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="laborator-12.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../feed.php" title="Recent changes RSS feed"><img src="../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../lib/exe/indexer.php%3Fid=sd-ca%253A2014%253Alaboratoare%253Alaborator-12&amp;1479892568" width="2" height="1" alt="" /></div>
+</body>
+</html>

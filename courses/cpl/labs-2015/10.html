@@ -1,0 +1,545 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    10. Optimizations with LLVM    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T07:34:40+0300"/>
+<meta name="keywords" content="cpl,labs-2015,10"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cpl:labs-2015"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cpl/labs-2015/10.html"/>
+<link rel="canonical" href="10.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs-2015';var JSINFO = {"id":"cpl:labs-2015:10","namespace":"cpl:labs-2015","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cpl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="10%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="10%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="optimizations_with_llvm">10. Optimizations with LLVM</h2>
+<div class="level2">
+
+</div>
+
+<h2 class="sectionedit2" id="introducere">Introducere</h2>
+<div class="level2">
+
+<p>
+În LLVM optimizările sunt implementate sub formă de <a href="http://llvm.org/docs/Passes.html" class="urlextern" title="http://llvm.org/docs/Passes.html"  rel="nofollow">Pass</a>-uri care traversează programul pentru a-l analiza și a-l transforma. Obținerea de informații despre program prin analiza fluxului de <a href="../labs/09.html#tipuri_de_probleme" class="wikilink1" title="cpl:labs:09">date</a> sau de <a href="../labs/08.html" class="wikilink1" title="cpl:labs:08">control</a> constituie un pas important în implementarea optimizărilor.
+</p>
+
+<p>
+Pentru a aplica o anumită selecție de optimizări se poate folosi tool-ul <a href="http://llvm.org/docs/CommandGuide/opt.html" class="urlextern" title="http://llvm.org/docs/CommandGuide/opt.html"  rel="nofollow">opt</a> prezentat și <a href="../labs/llvm-pass.html" class="wikilink1" title="cpl:labs:llvm-pass">aici</a>. Pentru a integra o optimizare nouă în sursele LLVM (fără să mai fim nevoiți să specificăm biblioteca dinamică la runtime) se va folosi <a href="http://llvm.org/docs/CommandGuide/llvm-build.html" class="urlextern" title="http://llvm.org/docs/CommandGuide/llvm-build.html"  rel="nofollow">sistemul de build</a> din llvm și pașii descriși în exemplul de <a href="../labs/llvm-pass.html#integrarea_unui_pas_in_llvm" class="wikilink1" title="cpl:labs:llvm-pass">aici</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit3" id="afisarea_informatiilor_de_debug">Afișarea informațiilor de debug</h2>
+<div class="level2">
+
+<p>
+Informațiile de debug, pot fi afișate rulând utilitarul <code>opt</code> cu parametrul <code>-debug</code>. Pentru a filtra informațiile de debug doar pentru un anumit pas, se folosește parametrul <code>-debug-only=<em>&lt;nume_pass&gt;</em></code>. De exemplu, pentru a filtra doar log-urile optimizării hello, se rulează comanda:
+</p>
+<pre class="code bash">opt <span class="re5">-hello</span> <span class="re5">-debug-only</span>=hello hello.bc</pre>
+
+</div>
+
+<h2 class="sectionedit4" id="ssa">SSA</h2>
+<div class="level2">
+
+<p>
+Un program este reprezentat în forma SSA dacă fiecărei variabile i se atribuie o valoare doar o singură dată şi fiecare folosire a variabilei este dominată de definiţia ei.
+</p>
+
+<p>
+Un program poate fi convertit în forma <a href="http://en.wikipedia.org/wiki/Static_single_assignment_form" class="urlextern" title="http://en.wikipedia.org/wiki/Static_single_assignment_form"  rel="nofollow">SSA</a> prin:
+</p>
+<ul>
+<li class="level1"><div class="li"> asocierea de nume unice variabilelor de fiecare dată când li se atribuie o valoare</div>
+</li>
+<li class="level1"><div class="li"> înlocuirea numelor de variabile cu numele unice atunci când variabilele sunt folosite.</div>
+</li>
+</ul>
+
+<p>
+Exemple
+</p>
+<div class="table sectionedit5"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Program inițial </th><th class="col1"> Program în forma SSA </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> <pre class="code c">V <span class="sy0">=</span> <span class="nu0">4</span><span class="sy0">;</span>
+  <span class="sy0">=</span> V <span class="sy0">+</span> <span class="nu0">5</span><span class="sy0">;</span>
+V <span class="sy0">=</span> <span class="nu0">6</span><span class="sy0">;</span>
+  <span class="sy0">=</span> V <span class="sy0">+</span> <span class="nu0">7</span><span class="sy0">;</span></pre>
+</td><td class="col1"> <pre class="code c">V0 <span class="sy0">=</span> <span class="nu0">4</span><span class="sy0">;</span>
+   <span class="sy0">=</span> V0 <span class="sy0">+</span> <span class="nu0">5</span><span class="sy0">;</span>
+V1 <span class="sy0">=</span> <span class="nu0">6</span><span class="sy0">;</span>
+   <span class="sy0">=</span> V1 <span class="sy0">+</span> <span class="nu0">7</span><span class="sy0">;</span></pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <pre class="code c"><span class="kw1">if</span> <span class="br0">&#40;</span>...<span class="br0">&#41;</span>
+    X <span class="sy0">=</span> <span class="nu0">5</span><span class="sy0">;</span>
+<span class="kw1">else</span>
+    X <span class="sy0">=</span> <span class="nu0">3</span><span class="sy0">;</span>
+&nbsp;
+Y <span class="sy0">=</span> X<span class="sy0">;</span></pre>
+</td><td class="col1"> <pre class="code c"><span class="kw1">if</span> <span class="br0">&#40;</span>...<span class="br0">&#41;</span>
+    X0 <span class="sy0">=</span> <span class="nu0">5</span><span class="sy0">;</span>
+<span class="kw1">else</span>
+    X1 <span class="sy0">=</span> <span class="nu0">3</span><span class="sy0">;</span>
+X2 <span class="sy0">=</span> O<span class="br0">&#40;</span>X0<span class="sy0">,</span> X1<span class="br0">&#41;</span><span class="sy0">;</span>
+Y0 <span class="sy0">=</span> X2<span class="sy0">;</span></pre>
+</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> <pre class="code c">j <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+<span class="kw1">while</span> <span class="br0">&#40;</span>j <span class="sy0">&lt;</span> X<span class="br0">&#41;</span>
+    <span class="sy0">++</span>j<span class="sy0">;</span>
+N <span class="sy0">=</span> j<span class="sy0">;</span></pre>
+
+<p>
+ care se mai poate scrie şi 
+</p>
+<pre class="code c">    j <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>j <span class="sy0">&gt;=</span> X<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> E<span class="sy0">;</span>
+S<span class="sy0">:</span>
+    j <span class="sy0">=</span> j <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>j <span class="sy0">&lt;</span> X<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> S<span class="sy0">;</span>
+E<span class="sy0">:</span>
+    N <span class="sy0">=</span> j<span class="sy0">;</span></pre>
+</td><td class="col1"> <pre class="code c">    j0 <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>j0 <span class="sy0">&gt;=</span> X0<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> E<span class="sy0">;</span>
+S<span class="sy0">:</span>
+    j1 <span class="sy0">=</span> O<span class="br0">&#40;</span>j0<span class="sy0">,</span> j2<span class="br0">&#41;</span><span class="sy0">;</span>
+    j2 <span class="sy0">=</span> j1 <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>j2 <span class="sy0">&lt;</span> X0<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> S<span class="sy0">;</span>
+E<span class="sy0">:</span>
+    j3 <span class="sy0">=</span> O<span class="br0">&#40;</span>j0<span class="sy0">,</span> j2<span class="br0">&#41;</span><span class="sy0">;</span>
+    N0 <span class="sy0">=</span> j3<span class="sy0">;</span>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;</pre>
+</td>
+	</tr>
+</table></div>
+
+<p>
+Într-un basic block B având N predecesori P<sub>1</sub>, P<sub>2</sub>, …, P<sub>N</sub>, prin X = O(V<sub>1</sub>, V<sub>2</sub>, …, V<sub>n</sub>) se înțelege că variabila <code>X</code> va avea valoarea V<sub>j</sub> dacă fluxul de control intră în blocul B din blocul P<sub>j</sub>, 1⇐j⇐N.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="ierarhia_de_clase_in_llvm">Ierarhia de clase în LLVM</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> clasa <a href="http://llvm.org/docs/ProgrammersManual.html#Instruction" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#Instruction"  rel="nofollow">Instruction</a> este subclasă a</div>
+<ul>
+<li class="level2"><div class="li"> clasei <a href="http://llvm.org/docs/ProgrammersManual.html#User" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#User"  rel="nofollow">User</a> care este subclasă a</div>
+</li>
+<li class="level2"><div class="li"> clasei <a href="http://llvm.org/docs/ProgrammersManual.html#Value" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#Value"  rel="nofollow">Value</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Mai jos este un exemplu de instrucțiune (Instruction). Ea este şi utilizator (User) ale variabilelor (Value) a şi b. În acelaşi timp reprezintă şi definirea variabilei (Value) c.
+</p>
+<pre class="code asm"><span class="sy1">%</span>c = <span class="kw1">add</span> i32 <span class="sy1">%</span>a<span class="sy1">,</span> <span class="sy1">%</span>b</pre>
+
+<p>
+<a href="http://llvm.org/docs/ProgrammersManual.html#iterate-chains" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#iterate-chains"  rel="nofollow">Aici</a> este un exemplu de cum pot fi parcurşi toţi utilizatorii unei variabile.
+</p>
+
+<p>
+<a href="http://llvm.org/docs/ProgrammersManual.html#iterate-function" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#iterate-function"  rel="nofollow">Aici</a> este un exemplu de cum pot fi parcurse toate basic block-urile dintr-o funcţie.
+</p>
+
+<p>
+<a href="http://llvm.org/docs/ProgrammersManual.html#iterate-basicblock" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#iterate-basicblock"  rel="nofollow">Aici</a> este un exemplu de cum pot fi parcurse toate instrucţiunile dintr-un basic block.
+</p>
+
+<p>
+<a href="http://llvm.org/docs/ProgrammersManual.html#iterate-institer" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#iterate-institer"  rel="nofollow">Aici</a> este un exemplu de cum pot fi parcurse toate instrucţiunile dintr-o funcţie.
+</p>
+
+<p>
+<a href="http://llvm.org/docs/ProgrammersManual.html#iterate-preds" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#iterate-preds"  rel="nofollow">Aici</a> este un exemplu de cum pot fi parcurşi toţi predecesorii şi succesorii unui basic block.
+</p>
+
+<p>
+<a href="http://llvm.org/docs/ProgrammersManual.html#isa" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#isa"  rel="nofollow">Aici</a> este un exemplu de cast folosit la exerciţiul 3.
+</p>
+
+<p>
+<a href="http://llvm.org/docs/ProgrammersManual.html#dss-valuemap" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#dss-valuemap"  rel="nofollow">Aici</a> este o scurtă descriere a structurii de date ValueMap folosită la exerciţiul 3.
+</p>
+
+<p>
+<a href="http://llvm.org/docs/ProgrammersManual.html#dss-bitvector" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#dss-bitvector"  rel="nofollow">Aici</a> este o scurtă descriere a structurii de date BitVector folosită la exerciţiul 3.
+</p>
+
+</div>
+
+<h1 class="sectionedit7" id="exercitii_de_laborator_10p">Exerciții de laborator (10p)</h1>
+<div class="level1">
+
+<p>
+<p><div class="noteclassic">
+Laboratorul este compus dintr-o exerciții practice care includ analiza formei SSA și implementarea unor optimizări.
+Înainte de începerea exercițiilor downloadați arhiva de <a href="../../_media/cpl/labs/lab10.zip" class="media mediafile mf_zip" title="cpl:labs:lab10.zip (5.2 KB)">aici</a>.
+</p>
+
+<p>
+Compilati exercitiile cu -O0 pentru a nu lasa compilatorul sa aplice optimizari.
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit8" id="exercitiul_1">Exercițiul 1</h2>
+<div class="level2">
+
+<p>
+Generaţi reprezentarea intermediară în forma SSA pentru sursa C de mai jos.
+</p>
+<ul>
+<li class="level1"><div class="li"> obţineţi reprezentarea intermediară neoptimizată şi observaţi structura codului generat:</div>
+</li>
+</ul>
+<pre class="code bash">clang <span class="re5">-S</span> <span class="re5">-emit-llvm</span> t.c</pre>
+<ul>
+<li class="level1"><div class="li"> transformaţi programul în format <a href="http://llvm.org/docs/BitCodeFormat.html" class="urlextern" title="http://llvm.org/docs/BitCodeFormat.html"  rel="nofollow">bytecode</a> utilizând <a href="http://llvm.org/docs/CommandGuide/" class="urlextern" title="http://llvm.org/docs/CommandGuide/"  rel="nofollow">ghidul de comenzi</a> LLVM</div>
+</li>
+<li class="level2"><div class="li"> aplicaţi optimizarea mem2reg pentru a obţine o reprezentare în forma SSA cu noduri phi</div>
+</li>
+<li class="level2"><div class="li"> transformaţi înapoi programul optimizarea din forma bytecode în format lizibil şi observaţi structura codului intermediar</div>
+</li>
+<li class="level2"><div class="li"> <dl class="file">
+<dt><a href="../../_export/code/cpl/labs-2015/10%3Fcodeblock=10" title="Download Snippet" class="mediafile mf_c">test.c</a></dt>
+<dd><pre class="code file c"><span class="co2">#include &lt;stdlib.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> test<span class="br0">&#40;</span><span class="kw4">int</span> X<span class="sy0">,</span> <span class="kw4">int</span> Y<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw4">int</span> Z <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>X <span class="sy0">==</span> Y<span class="br0">&#41;</span> Z <span class="sy0">=</span> Z <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+  <span class="kw1">else</span> Z <span class="sy0">=</span> Z <span class="sy0">+</span> <span class="nu0">2</span><span class="sy0">;</span>
+  Z <span class="sy0">=</span> Z <span class="sy0">+</span> <span class="nu0">3</span><span class="sy0">;</span>
+  <span class="kw1">return</span> Z<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  test<span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/atoi.html"><span class="kw3">atoi</span></a><span class="br0">&#40;</span>argv<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">,</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/atoi.html"><span class="kw3">atoi</span></a><span class="br0">&#40;</span>argv<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit9" id="exercitiul_2">Exercițiul 2</h2>
+<div class="level2">
+
+<p>
+Folosind codul din fişierul <code>Hello2.cpp</code> din archiva laboratorului, urmăriţi modul în care pot fi implementată simple constant propagation în LLVM.
+</p>
+<ul>
+<li class="level1"><div class="li"> cum se obţine numele unui basic block?</div>
+</li>
+<li class="level1"><div class="li"> cum poate fi identificată o instrucţiune inutilă?</div>
+</li>
+<li class="level1"><div class="li"> identificaţi metoda responsabilă pentru constant folding</div>
+</li>
+<li class="level1"><div class="li"> cum se înlocuiesc apariţiile viitoare ale variabilei în cauză cu o constantă?</div>
+</li>
+<li class="level1"><div class="li"> de ce se adaugă din nou în worklist unele instrucţiuni?</div>
+</li>
+<li class="level1"><div class="li"> realizaţi un fişier de test (urmând paşii de la exerciţiul 1) pentru a ilustra beneficiile acestui pas. Rulaţi acest pas pe exemplul ales.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit10" id="exercitiul_3">Exercițiul 3</h2>
+<div class="level2">
+
+<p>
+Implementaţi <a href="http://en.wikipedia.org/wiki/Live_variable_analysis" class="urlextern" title="http://en.wikipedia.org/wiki/Live_variable_analysis"  rel="nofollow">analiza live variables</a>. Algoritmul este explicat clar şi concis în Dragon book dar şi în slide-urile de <a href="http://infolab.stanford.edu/~ullman/dragon/slides4.pdf" class="urlextern" title="http://infolab.stanford.edu/~ullman/dragon/slides4.pdf"  rel="nofollow">aici</a>. Puteţi pleca de la fişierul <code>Hello3.cpp</code> din arhiva laboratorului. Pentru implementare, urmăriţi şi instrucţiunile din cod.
+</p>
+<ul>
+<li class="level1"><div class="li"> ce reprezintă gen(B)/def(B)? Dar kill/use?</div>
+</li>
+<li class="level1"><div class="li"> explicaţi ecuaţia de flux pentru in(B)</div>
+</li>
+<li class="level1"><div class="li"> cum arată laticea? Indexaţi instrucţiunile pentru a putea reprezenta un element din latice ca vector de biţi (1)</div>
+</li>
+<li class="level1"><div class="li"> implementaţi calculul def (2) şi use (3)</div>
+</li>
+<li class="level1"><div class="li"> rulaţi pe fişierul de intrare generat la exerciţiul 1</div>
+</li>
+<li class="level1"><div class="li"> implementaţi algoritmul Killdal (4)</div>
+</li>
+</ul>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_cpl">Informații generale CPL</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_141716508758357906b6f06" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/documentatie.html" class="wikilink1" title="cpl:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../info/lista-discutii.html" class="wikilink1" title="cpl:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../info/trimitere-teme.html" class="wikilink1" title="cpl:info:trimitere-teme">Trimitere teme</a></div></li>
+<li class="level1"><div class="li"><a href="../info/vm.html" class="wikilink1" title="cpl:info:vm">Mașina virtuală</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale CPL" [12-86] -->
+<h1 class="sectionedit2" id="informatii_cpl_2016-2017">Informații CPL 2016-2017</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_211760513658357906b7eab" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../meta/notare/reguli-notare.html" class="wikilink1" title="cpl:meta:notare:reguli-notare">Notare</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../meta/anunturi.html" class="wikilink1" title="cpl:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/calendar.html" class="wikilink1" title="cpl:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/catalog.html" class="wikilink1" title="cpl:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/examen.html" class="wikilink1" title="cpl:meta:examen">Examen</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/need-to-know.html" class="wikilink1" title="cpl:meta:need-to-know">CPL Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/orar.html" class="wikilink1" title="cpl:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații CPL 2016-2017" [87-155] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_94947804158357906b8e50" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../labs/01.html" class="wikilink1" title="cpl:labs:01">01. Introduction to Flex</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/02.html" class="wikilink1" title="cpl:labs:02">02. Introduction to Bison</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/03.html" class="wikilink1" title="cpl:labs:03">03. Bison Advanced</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/04.html" class="wikilink1" title="cpl:labs:04">04. Introduction to LLVM</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/05.html" class="wikilink1" title="cpl:labs:05">05. LLVM IR - C++ API</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/06.html" class="wikilink1" title="cpl:labs:06">06. Code generation. Structure of data and objects in memory</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/07.html" class="wikilink1" title="cpl:labs:07">07. Code generation. Function calls and stack frames</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/08.html" class="wikilink1" title="cpl:labs:08">08. LLVM backend</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/09.html" class="wikilink1" title="cpl:labs:09">09. LLVM Passes - displaying code structure</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/10.html" class="wikilink1" title="cpl:labs:10">10. LLVM Passes - code analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/11.html" class="wikilink1" title="cpl:labs:11">11. LLVM Passes - code optimizations</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/12.html" class="wikilink1" title="cpl:labs:12">12. Linkers and Loaders</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/llvm-pass.html" class="wikilink1" title="cpl:labs:llvm-pass">LLVM Passes</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [156-209] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_137532899158357906b9de8" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="cpl:courses:01">Cursul 01. Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="cpl:courses:02">Cursul 02. Analiză sintatică LL</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="cpl:courses:03">Cursul 03. Analiză sintatică LR</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="cpl:courses:04">Cursul 04. Analiză semantică</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="cpl:courses:05">Cursul 05. Generarea codului obiect. Arhitectura setului de instrucțiuni</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="cpl:courses:06">Cursul 06. Generarea apelurilor de funcții și a codului orientat obiect.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/07.html" class="wikilink1" title="cpl:courses:07">Cursul 07. Optimizări. Analiza fluxului de control (CFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/08.html" class="wikilink1" title="cpl:courses:08">Cursul 08. Analiza fluxului de date (DFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/09.html" class="wikilink1" title="cpl:courses:09">Cursul 09. Analiza fluxului de date. Forma SSA. Extragerea codului invariant din bucle. Variabile de inducție.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/10.html" class="wikilink1" title="cpl:courses:10">Cursul 10. Arhitectura Calculatoarelor. Dependență. Planificarea instrucțiunilor</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/11.html" class="wikilink1" title="cpl:courses:11">Cursul 11. Garbage Collection</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/12.html" class="wikilink1" title="cpl:courses:12">Cursul 12. Alocarea de registre. Linkers.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/13.html" class="wikilink1" title="cpl:courses:13">Cursul 13. Just in Time Compilers (JIT)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [210-262] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_49712239358357906bad84" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../teme/concurs.html" class="wikilink1" title="cpl:teme:concurs">Concurs</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/general.html" class="wikilink1" title="cpl:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema1.html" class="wikilink1" title="cpl:teme:tema1">Tema de casă 1 - Analiza sintactică</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema2.html" class="wikilink1" title="cpl:teme:tema2">Tema de casă 2 - Generarea de cod</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema3.html" class="wikilink1" title="cpl:teme:tema3">Tema de casa 3 - Backend</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [263-310] -->
+<h1 class="sectionedit6" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_81998631458357906bbd2a" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/materiale.html" class="wikilink1" title="cpl:res:materiale">Nice to read</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 SECTION "Resurse" [311-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="10.html#optimizations_with_llvm">10. Optimizations with LLVM</a></div></li>
+<li class="level2"><div class="li"><a href="10.html#introducere">Introducere</a></div></li>
+<li class="level2"><div class="li"><a href="10.html#afisarea_informatiilor_de_debug">Afișarea informațiilor de debug</a></div></li>
+<li class="level2"><div class="li"><a href="10.html#ssa">SSA</a></div></li>
+<li class="level2"><div class="li"><a href="10.html#ierarhia_de_clase_in_llvm">Ierarhia de clase în LLVM</a></div></li>
+<li class="level1"><div class="li"><a href="10.html#exercitii_de_laborator_10p">Exerciții de laborator (10p)</a></div></li>
+<li class="level2"><div class="li"><a href="10.html#exercitiul_1">Exercițiul 1</a></div></li>
+<li class="level2"><div class="li"><a href="10.html#exercitiul_2">Exercițiul 2</a></div></li>
+<li class="level2"><div class="li"><a href="10.html#exercitiul_3">Exercițiul 3</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cpl/labs-2015/10.txt · Last modified: 2016/10/04 07:34 by bogdan.nitulescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="10%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="10%3Fdo=media&amp;ns=cpl%253Alabs-2015.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="10.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cpl%253Alabs-2015%253A10&amp;1479899398" width="2" height="1" alt="" /></div>
+</body>
+</html>

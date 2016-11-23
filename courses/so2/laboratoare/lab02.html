@@ -1,0 +1,1528 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 2 - Module de kernel și debugging    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-02T18:41:07+0200"/>
+<meta name="keywords" content="so2,laboratoare,lab02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/laboratoare/lab02.html"/>
+<link rel="canonical" href="lab02.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab02","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab02%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab02%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_2_-_module_de_kernel_si_debugging">Laborator 2 - Module de kernel și debugging</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> crearea unor module simple</div>
+</li>
+<li class="level1"><div class="li"> descrierea procesului de compilare a surselor unui modul</div>
+</li>
+<li class="level1"><div class="li"> prezentarea modului în care un modul poate fi adăugat în kernel</div>
+</li>
+<li class="level1"><div class="li"> prezentarea metodelor de depanare a modulelor kernel</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> built-in, loadable</div>
+</li>
+<li class="level1"><div class="li"> make, kbuild</div>
+</li>
+<li class="level1"><div class="li"> insmod, rmmod</div>
+</li>
+<li class="level1"><div class="li"> printk, dyndbg</div>
+</li>
+<li class="level1"><div class="li"> objdump, addr2line, netconsole</div>
+</li>
+<li class="level1"><div class="li"> KDB, Kprobes, Jprobes, Kretprobes</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab02-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab02-slides.pdf"  rel="nofollow">Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow">SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="notiuni_generale">Noțiuni generale</h2>
+<div class="level2">
+
+<p>
+Un kernel monolitic, deși mai rapid decât un microkernel, are dezavantajul lipsei de modularitate și extensibilitate. La kernel-ele monolitice moderne, acest lucru a fost rezolvat prin utilizarea de module de kernel. Un modul de kernel (sau modul de kernel încărcabil) este un fișier obiect care conține cod ce poate extinde funcționalitatea kernel-ului în timp real (este încărcat la nevoie); când un modul de kernel nu mai este necesar, acesta poate fi descărcat. Cea mai mare parte a driver-elor de dispozitiv (<em>device drivers</em>) sunt utilizate în forma de module de kernel.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="module_kernel_in_linux">Module kernel în Linux</h2>
+<div class="level2">
+
+<p>
+Pentru dezvoltarea de device drivere în Linux, se recomandă descărcarea surselor nucleului, configurarea și compilarea acestora, iar apoi instalarea versiunii compilate pe mașina de test/dezvoltare.
+</p>
+
+</div>
+
+<h3 class="sectionedit7" id="un_exemplu_de_modul_kernel">Un exemplu de modul kernel</h3>
+<div class="level3">
+
+<p>
+În cele ce urmează, prezentăm un exemplu foarte simplu de modul kernel. La încărcarea în kernel, acesta va genera mesajul “Hi”. La descărcarea modulului din kernel, se va genera mesajul “Bye”. 
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/so2/laboratoare/lab02%3Fcodeblock=0" title="Download Snippet" class="mediafile mf_c">hello_lin.c</a></dt>
+<dd><pre class="code file c"><span class="co2">#include &lt;linux/kernel.h&gt;</span>
+<span class="co2">#include &lt;linux/init.h&gt;</span>
+<span class="co2">#include &lt;linux/module.h&gt;</span>
+&nbsp;
+MODULE_DESCRIPTION<span class="br0">&#40;</span><span class="st0">&quot;My kernel module&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+MODULE_AUTHOR<span class="br0">&#40;</span><span class="st0">&quot;Me&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+MODULE_LICENSE<span class="br0">&#40;</span><span class="st0">&quot;GPL&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> dummy_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        printk<span class="br0">&#40;</span> KERN_DEBUG <span class="st0">&quot;Hi<span class="es1">\n</span>&quot;</span> <span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> dummy_exit<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        printk<span class="br0">&#40;</span> KERN_DEBUG <span class="st0">&quot;Bye<span class="es1">\n</span>&quot;</span> <span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+module_init<span class="br0">&#40;</span>dummy_init<span class="br0">&#41;</span><span class="sy0">;</span>
+module_exit<span class="br0">&#40;</span>dummy_exit<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</dd></dl>
+
+<p>
+Mesajele generate nu vor fi afișate la consolă, ci vor fi salvate într-o zonă de memorie special rezervată pentru acest lucru, de unde vor fi extrase de către daemonul de loguri (<em>syslog</em>). Pentru a afișa mesajele de kernel, puteți să folosiți comanda <em>dmesg</em> sau să inspectați logurile:
+</p>
+<pre class="code bash"><span class="co0"># cat /var/log/syslog | tail -2</span>
+Feb <span class="nu0">20</span> <span class="nu0">13</span>:<span class="nu0">57</span>:<span class="nu0">38</span> asgard kernel: Hi
+Feb <span class="nu0">20</span> <span class="nu0">13</span>:<span class="nu0">57</span>:<span class="nu0">43</span> asgard kernel: Bye
+&nbsp;
+<span class="co0"># dmesg | tail -2</span>
+Hi
+Bye</pre>
+
+</div>
+
+<h3 class="sectionedit8" id="compilarea_modulelor_kernel">Compilarea modulelor kernel</h3>
+<div class="level3">
+
+<p>
+Compilarea unui modul kernel diferă de compilarea unui program obișnuit. În primul rând, trebuie folosite alte headere. De asemenea, modulul nu trebuie legat de biblioteci. Și, nu în ultimul rând, modulul trebuie compilat cu aceleași opțiuni ca și nucleul în care vom încărca modulul. Din aceste motive există o metodă standard de compilare (kbuild). Această metodă necesită folosirea a două fișiere: un fișier <code>Makefile</code> și un fișier <code>Kbuild</code>.
+</p>
+
+<p>
+În continuare, este prezentat un exemplu de fișier <code>Makefile</code>:
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/so2/laboratoare/lab02%3Fcodeblock=2" title="Download Snippet" class="mediafile mf_">Makefile</a></dt>
+<dd><pre class="code file make">KDIR <span class="sy0">=</span> <span class="sy0">/</span>lib<span class="sy0">/</span>modules<span class="sy0">/</span>`uname <span class="sy0">-</span>r`<span class="sy0">/</span>build
+&nbsp;
+kbuild<span class="sy0">:</span>
+        make <span class="sy0">-</span>C <span class="sy0">$</span><span class="br0">&#40;</span><span class="re2">KDIR</span><span class="br0">&#41;</span> M<span class="sy0">=</span>`pwd`
+&nbsp;
+clean<span class="sy0">:</span>
+        make <span class="sy0">-</span>C <span class="sy0">$</span><span class="br0">&#40;</span><span class="re2">KDIR</span><span class="br0">&#41;</span> M<span class="sy0">=</span>`pwd` clean</pre>
+</dd></dl>
+
+<p>
+și exemplul de fișier <code>Kbuild</code> asociat, folosit la compilarea unui modul:
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/so2/laboratoare/lab02%3Fcodeblock=3" title="Download Snippet" class="mediafile mf_">Kbuild</a></dt>
+<dd><pre class="code file make">EXTRA_CFLAGS <span class="sy0">=</span> <span class="sy0">-</span>Wall <span class="sy0">-</span>g
+&nbsp;
+obj<span class="sy0">-</span>m        <span class="sy0">=</span> modul<span class="sy0">.</span>o</pre>
+</dd></dl>
+
+<p>
+După cum se observă, invocarea make pe fișierul Makefile din exemplul prezentat va duce la invocarea make în directorul cu sursele kernelului (<em>/lib/modules/`uname -r`/build</em>) și cu referință la directorul curent (<em>M=`pwd`</em>). Acest proces duce în cele din urmă la citirea fișierului Kbuild din directorul curent și la compilarea modulului conform instrucțiunilor din acest fișier.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pentru laborator și în temele de casă vom configura diferit variabila internă <code>KDIR</code>, în conformitate cu specificațiile <a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">mașinii virtuale</a>:
+</p>
+<pre class="code">KDIR = /usr/src/linux-so2
+[...]</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Un fișier Kbuild conține una sau mai multe directive pentru compilarea unui modul de kernel. Cel mai simplu exemplu de astfel de directivă este <em>obj-m = modul.o</em>. În urma acestei directive, va fi creat un modul de kernel <em>modul.ko</em> (ko - kernel object), plecând de la fișierul <em>modul.o</em>. <em>modul.o</em> va fi creat plecând de la <em>modul.c</em> sau <em>modul.S</em>. Toate aceste fișiere se găsesc în directorul în care se află și Kbuild.
+</p>
+
+<p>
+Un exemplu de fișier Kbuild care folosește mai multe sub-module este prezentat mai jos:
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/so2/laboratoare/lab02%3Fcodeblock=5" title="Download Snippet" class="mediafile mf_">Kbuild</a></dt>
+<dd><pre class="code file make">EXTRA_CFLAGS <span class="sy0">=</span> <span class="sy0">-</span>Wall <span class="sy0">-</span>g
+&nbsp;
+obj<span class="sy0">-</span>m        <span class="sy0">=</span> supermodul<span class="sy0">.</span>o
+supermodul<span class="sy0">-</span>y <span class="sy0">=</span> modul<span class="sy0">-</span>a<span class="sy0">.</span>o modul<span class="sy0">-</span>b<span class="sy0">.</span>o</pre>
+</dd></dl>
+
+<p>
+Pentru exemplul de mai sus, pașii efectuați la compilare sunt:
+</p>
+<ul>
+<li class="level1"><div class="li">se vor compila sursele modul-a.c, modul-b.c, rezultând fișierele obiect modul-a.o și modul-b.o</div>
+</li>
+<li class="level1"><div class="li">modul-a.o și modul-b.o vor fi apoi legate în supermodul.o</div>
+</li>
+<li class="level1"><div class="li">din supermodul.o se va crea modulul supermodul.ko</div>
+</li>
+</ul>
+
+<p>
+Sufixul țintelor din Kbuild determină modul în care sunt folosite, astfel:
+</p>
+<ul>
+<li class="level1"><div class="li">m (module) reprezintă o țintă pentru module de kernel încărcabile</div>
+</li>
+<li class="level1"><div class="li">y (yes) reprezintă o țintă pentru fișiere obiect ce vor fi compilate ca apoi să fie linkate în cadrul unui modul ($(nume_modul)-y) sau în cadrul kernel-ului (obj-y)</div>
+</li>
+<li class="level1"><div class="li">orice alt sufix de țintă va fi ignorat de Kbuild și nu va fi compilat</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">
+Aceste sufixe sunt folosite pentru a configura ușor kernel-ul prin rularea comenzii <code>make menuconfig</code> sau direct prin editarea fișierului <code>.config</code>. Acest fișier setează o serie de variabile ce sunt folosite pentru a stabili ce feature-uri sunt adăugate la kernel în momentul build-ului. Spre exemplu, în primul laborator, în momentul adăugării suportului pentru BTRFS cu ajutorul <code>make menuconfig</code>, se adăuga în fișierul <code>.config</code> linia: <strong>CONFIG_BTRFS_FS=y</strong>. Kbuild-ul pentru BTRFS conține linia <strong>obj-$(CONFIG_BTRFS_FS) := btrfs.o</strong>, ce devine <strong>obj-y := btrfs.o</strong>. Astfel, se va compila obiectul <code>btrfs.o</code> și va fi linkat în cadrul kernel-ului. Înaintea setării variabilei linia devenea <strong>obj- := btrfs.o</strong> și deci era ignorată, iar kernel-ul era build-at fără suport BTRFS.
+
+</div></p>
+</p>
+
+<p>
+Pentru mai multe detalii, consultați fișierul <a href="http://lxr.free-electrons.com/source/Documentation/kbuild/makefiles.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/kbuild/makefiles.txt"  rel="nofollow"> makefiles.txt</a> și fișierul <a href="http://lxr.free-electrons.com/source/Documentation/kbuild/modules.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/kbuild/modules.txt"  rel="nofollow"> modules.txt</a> din cadrul surselor kernel-ului.
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="incarcareadescarcarea_unui_modul_de_kernel">Încărcarea/descărcarea unui modul de kernel</h3>
+<div class="level3">
+
+<p>
+Pentru a încărca un modul în kernel, se folosește utilitarul <code>insmod</code>. Acest utilitar primește ca parametru calea către fișierul .ko în care a fost compilat și link-editat modulul. Descărcarea modulului din kernel se face cu ajutorul comenzii <code>rmmod</code>, care primește ca parametru numele modulului.
+</p>
+<pre class="code bash"><span class="co0"># insmod modul.ko</span>
+&nbsp;
+<span class="co0"># rmmod modul</span></pre>
+
+<p>
+La încărcarea modulului în kernel va fi executată rutina specificată ca parametru macroului <em>module_init</em>. Similar, la descărcarea modulului va fi executată rutina specificată ca parametru macroului <em>module_exit</em>.
+</p>
+
+<p>
+Un exemplu complet de compilare și încărcare/descărcare modul este prezentat în continuare:
+</p>
+<pre class="code bash">faust:~<span class="sy0">/</span>lab-01<span class="sy0">/</span>modul-lin<span class="co0"># ls</span>
+Kbuild  Makefile  modul.c
+&nbsp;
+faust:~<span class="sy0">/</span>lab-01<span class="sy0">/</span>modul-lin<span class="co0"># make</span>
+<span class="kw2">make</span> <span class="re5">-C</span> <span class="sy0">/</span>lib<span class="sy0">/</span>modules<span class="sy0">/`</span><span class="kw2">uname</span> -r<span class="sy0">`/</span>build <span class="re2">M</span>=<span class="sy0">`</span><span class="kw3">pwd</span><span class="sy0">`</span>
+<span class="kw2">make</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>: Entering directory <span class="sy0">`/</span>usr<span class="sy0">/</span>src<span class="sy0">/</span>linux-2.6.28.4<span class="st_h">'
+  LD      /root/lab-01/modul-lin/built-in.o
+  CC [M]  /root/lab-01/modul-lin/modul.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/lab-01/modul-lin/modul.mod.o
+  LD [M]  /root/lab-01/modul-lin/modul.ko
+make[1]: Leaving directory `/usr/src/linux-2.6.28.4'</span>
+&nbsp;
+faust:~<span class="sy0">/</span>lab-01<span class="sy0">/</span>modul-lin<span class="co0"># ls</span>
+built-in.o  Kbuild  Makefile  modul.c  Module.markers
+modules.order  Module.symvers  modul.ko  modul.mod.c
+modul.mod.o  modul.o
+&nbsp;
+faust:~<span class="sy0">/</span>lab-01<span class="sy0">/</span>modul-lin<span class="co0"># insmod modul.ko</span>
+&nbsp;
+faust:~<span class="sy0">/</span>lab-01<span class="sy0">/</span>modul-lin<span class="co0"># dmesg | tail -1</span>
+Hi
+&nbsp;
+faust:~<span class="sy0">/</span>lab-01<span class="sy0">/</span>modul-lin<span class="co0"># rmmod modul</span>
+&nbsp;
+faust:~<span class="sy0">/</span>lab-01<span class="sy0">/</span>modul-lin<span class="co0"># dmesg | tail -2</span>
+Hi
+Bye</pre>
+
+<p>
+Informații despre modulele încărcate în kernel se pot afla cu ajutorul comenzii <code>lsmod</code>, prin inspectarea fișierului <code>/proc/modules</code> sau a directorului <code>/sys/module</code>.
+</p>
+
+</div>
+
+<h2 class="sectionedit10" id="kernel_debugging">Kernel debugging</h2>
+<div class="level2">
+
+<p>
+Depanarea unui modul de kernel este mult mai complicată decât depanarea unui program obișnuit. În primul rând, o greșeală într-un modul kernel poate duce la blocarea întregului sistem. Depanarea este din această cauză mult încetinită. Pentru a evita secvențele de reboot, se recomandă instalarea unei mașini virtuale și utilizarea <em>snapshot-urilor</em>. 
+</p>
+
+<p>
+Atunci când un modul ce conține bug-uri este inserat în kernel, se va genera în cele din urmă un <a href="http://en.wikipedia.org/wiki/Linux_kernel_oops" class="urlextern" title="http://en.wikipedia.org/wiki/Linux_kernel_oops"  rel="nofollow">kernel oops</a>. Un <em>kernel oops</em> reprezintă o operație invalidă detectată de nucleu și poate fi generată doar de către acesta. Pentru o versiune stabilă de kernel, aceasta înseamnă, aproape sigur, că modulul conține un bug. După apariția oops-ului, kernelul va continua să funcționeze.
+</p>
+
+<p>
+Foarte importantă la apariția unui <em>kernel oops</em> este salvarea mesajului generat. După cum s-a precizat anterior, mesajele generate de kernel se salvează în loguri și pot fi afișate cu comanda <code>dmesg</code>. Pentru a fi siguri că nu se pierde un <em>kernel oops</em>, se recomandă inserarea/testarea modulului kernel direct din consolă, sau verificarea periodică a mesajelor de kernel. De remarcat este faptul că un <em>oops</em> poate apărea din cauza unei erori de programare, dar și a unei erori hardware.
+</p>
+
+<p>
+În cazul în care apare o eroare fatală, după care sistemul nu mai poate reveni la o stare stabilă, se generează un <a href="http://en.wikipedia.org/wiki/Kernel_panic" class="urlextern" title="http://en.wikipedia.org/wiki/Kernel_panic"  rel="nofollow"> kernel panic</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="exemplu_de_kernel_oops">Exemplu de kernel oops</h3>
+<div class="level3">
+
+<p>
+Fie următorul modul de kernel care conține un bug pentru generarea unui <em>oops</em>:
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/so2/laboratoare/lab02%3Fcodeblock=8" title="Download Snippet" class="mediafile mf_c">debug_lin.c</a></dt>
+<dd><pre class="code file c"><span class="coMULTI">/*
+  * Oops generating kernel module
+  */</span>
+&nbsp;
+<span class="co2">#include &lt;linux/kernel.h&gt;</span>
+<span class="co2">#include &lt;linux/module.h&gt;</span>
+<span class="co2">#include &lt;linux/init.h&gt;</span>
+&nbsp;
+MODULE_DESCRIPTION <span class="br0">&#40;</span><span class="st0">&quot;Oops&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+MODULE_LICENSE <span class="br0">&#40;</span><span class="st0">&quot;GPL&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+MODULE_AUTHOR <span class="br0">&#40;</span><span class="st0">&quot;PSO&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co2">#define OP_READ         0</span>
+<span class="co2">#define OP_WRITE        1</span>
+<span class="co2">#define OP_OOPS         OP_WRITE</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_oops_init <span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">int</span> <span class="sy0">*</span>a<span class="sy0">;</span>
+&nbsp;
+        a <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">int</span> <span class="sy0">*</span><span class="br0">&#41;</span> <span class="nu12">0x00001234</span><span class="sy0">;</span>
+<span class="co2">#if OP_OOPS == OP_WRITE</span>
+        <span class="sy0">*</span>a <span class="sy0">=</span> <span class="nu0">3</span><span class="sy0">;</span>
+<span class="co2">#elif OP_OOPS == OP_READ</span>
+        printk <span class="br0">&#40;</span>KERN_ALERT <span class="st0">&quot;value = %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">*</span>a<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co2">#else</span>
+<span class="co2">#error &quot;Unknown op for oops!&quot;</span>
+<span class="co2">#endif</span>
+&nbsp;
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> my_oops_exit <span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+module_init <span class="br0">&#40;</span>my_oops_init<span class="br0">&#41;</span><span class="sy0">;</span>
+module_exit <span class="br0">&#40;</span>my_oops_exit<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</dd></dl>
+
+<p>
+Inserarea acestui modul in kernel va genera un <em>oops</em>:
+</p>
+<pre class="code">faust:~/lab-01/modul-oops# insmod oops.ko
+[...]
+
+faust:~/lab-01/modul-oops# dmesg | tail -32
+BUG: unable to handle kernel paging request at 00001234
+IP: [&lt;c89d4005&gt;] my_oops_init+0x5/0x20 [oops]
+  *de = 00000000
+Oops: 0002 [#1] PREEMPT DEBUG_PAGEALLOC
+last sysfs file: /sys/devices/virtual/net/lo/operstate
+Modules linked in: oops(+) netconsole ide_cd_mod pcnet32 crc32 cdrom [last unloaded: modul]
+
+Pid: 4157, comm: insmod Not tainted (2.6.28.4 #2) VMware Virtual Platform
+EIP: 0060:[&lt;c89d4005&gt;] EFLAGS: 00010246 CPU: 0
+EIP is at my_oops_init+0x5/0x20 [oops]
+EAX: 00000000 EBX: fffffffc ECX: c89d4300 EDX: 00000001
+ESI: c89d4000 EDI: 00000000 EBP: c5799e24 ESP: c5799e24
+ DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 0068
+Process insmod (pid: 4157, ti=c5799000 task=c665c780 task.ti=c5799000)
+Stack:
+ c5799f8c c010102d c72b51d8 0000000c c5799e58 c01708e4 00000124 00000000
+ c89d4300 c5799e58 c724f448 00000001 c89d4300 c5799e60 c0170981 c5799f8c
+ c014b698 00000000 00000000 c5799f78 c5799f20 00000500 c665cb00 c89d4300
+Call Trace:
+ [&lt;c010102d&gt;] ? _stext+0x2d/0x170
+ [&lt;c01708e4&gt;] ? __vunmap+0xa4/0xf0
+ [&lt;c0170981&gt;] ? vfree+0x21/0x30
+ [&lt;c014b698&gt;] ? load_module+0x19b8/0x1a40
+ [&lt;c035e965&gt;] ? __mutex_unlock_slowpath+0xd5/0x140
+ [&lt;c0140da6&gt;] ? trace_hardirqs_on_caller+0x106/0x150
+ [&lt;c014b7aa&gt;] ? sys_init_module+0x8a/0x1b0
+ [&lt;c0140da6&gt;] ? trace_hardirqs_on_caller+0x106/0x150
+ [&lt;c0240a08&gt;] ? trace_hardirqs_on_thunk+0xc/0x10
+ [&lt;c0103407&gt;] ? sysenter_do_call+0x12/0x43
+Code: &lt;c7&gt; 05 34 12 00 00 03 00 00 00 5d c3 eb 0d 90 90 90 90 90 90 90 90
+EIP: [&lt;c89d4005&gt;] my_oops_init+0x5/0x20 [oops] SS:ESP 0068:c5799e24
+---[ end trace 2981ce73ae801363 ]---</pre>
+
+<p>
+Deși relativ criptic, mesajul oferit de kernel la apariția unui <em>oops</em> oferă informații prețioase despre eroarea apărută. Prima linie:
+</p>
+<pre class="code">BUG: unable to handle kernel paging request at 00001234
+IP: [&lt;c89d4005&gt;] my_oops_init+0x5/0x20 [oops]</pre>
+
+<p>
+ne spune cauza și adresa instrucțiunii care a generat eroarea. În cazul de față este vorba de un acces invalid la memorie.
+</p>
+
+<p>
+Linia următoare:
+</p>
+<pre class="code">Oops: 0002 [#1] PREEMPT DEBUG_PAGEALLOC</pre>
+
+<p>
+ne spune că este vorba de primul oops (<code>#1</code>). Acest lucru este important în contextul în care un oops poate duce la apariția altor <em>oops-uri</em>. De obicei, doar primul <em>oops</em> este relevant. Mai mult, codul <em>oops-ului</em> (<code>0002</code>) oferă informații despre tipul erorii (în memory manager → <a href="http://lxr.free-electrons.com/source/arch/x86/mm/fault.c?v=3.19#L26" class="urlextern" title="http://lxr.free-electrons.com/source/arch/x86/mm/fault.c?v=3.19#L26"  rel="nofollow"> fault.c</a>):
+</p>
+<pre class="code C">  <span class="sy0">*</span>bit <span class="nu0">0</span> <span class="sy0">==</span> <span class="nu0">0</span> means no page found<span class="sy0">,</span> <span class="nu0">1</span> means protection fault
+  <span class="sy0">*</span>bit <span class="nu0">1</span> <span class="sy0">==</span> <span class="nu0">0</span> means read<span class="sy0">,</span> <span class="nu0">1</span> means write
+  <span class="sy0">*</span>bit <span class="nu0">2</span> <span class="sy0">==</span> <span class="nu0">0</span> means kernel<span class="sy0">,</span> <span class="nu0">1</span> means user<span class="sy0">-</span>mode</pre>
+
+<p>
+În cazul de față avem un acces de tip scriere care a generat <em>oops-ul</em> (bitul 1 este 1).
+</p>
+
+<p>
+În continuare se afișează un dump al registrelor. Se decodifică valoarea EIP (instruction pointer) și se observă că bug-ul a apărut în cadrul funcției my_oops_init cu un offset de 5 octeți (<code>EIP: [&lt;c89d4005&gt;] my_oops_init+0x5</code>). Mesajul prezintă și conținutul stivei și un backtrace al apelurilor de până atunci.
+</p>
+
+<p>
+În cazul în care se generează un apel invalid de citire (<code>#define OP_OOPS   OP_READ</code>), mesajul va fi asemănător. Va diferi codul de <em>oops</em>, care acum ar avea valoarea <code>0000</code>:
+</p>
+<pre class="code">faust:~/lab-01/modul-oops# dmesg | tail -33
+BUG: unable to handle kernel paging request at 00001234
+IP: [&lt;c89c3016&gt;] my_oops_init+0x6/0x20 [oops]
+  *de = 00000000
+Oops: 0000 [#1] PREEMPT DEBUG_PAGEALLOC
+last sysfs file: /sys/devices/virtual/net/lo/operstate
+Modules linked in: oops(+) netconsole pcnet32 crc32 ide_cd_mod cdrom
+
+Pid: 2754, comm: insmod Not tainted (2.6.28.4 #2) VMware Virtual Platform
+EIP: 0060:[&lt;c89c3016&gt;] EFLAGS: 00010292 CPU: 0
+EIP is at my_oops_init+0x6/0x20 [oops]
+EAX: 00000000 EBX: fffffffc ECX: c89c3380 EDX: 00000001
+ESI: c89c3010 EDI: 00000000 EBP: c57cbe24 ESP: c57cbe1c
+ DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 0068
+Process insmod (pid: 2754, ti=c57cb000 task=c66ec780 task.ti=c57cb000)
+Stack:
+ c57cbe34 00000282 c57cbf8c c010102d c57b9280 0000000c c57cbe58 c01708e4
+ 00000124 00000000 c89c3380 c57cbe58 c5db1d38 00000001 c89c3380 c57cbe60
+ c0170981 c57cbf8c c014b698 00000000 00000000 c57cbf78 c57cbf20 00000580
+Call Trace:
+ [&lt;c010102d&gt;] ? _stext+0x2d/0x170
+ [&lt;c01708e4&gt;] ? __vunmap+0xa4/0xf0
+ [&lt;c0170981&gt;] ? vfree+0x21/0x30
+ [&lt;c014b698&gt;] ? load_module+0x19b8/0x1a40
+ [&lt;c035d083&gt;] ? printk+0x0/0x1a
+ [&lt;c035e965&gt;] ? __mutex_unlock_slowpath+0xd5/0x140
+ [&lt;c0140da6&gt;] ? trace_hardirqs_on_caller+0x106/0x150
+ [&lt;c014b7aa&gt;] ? sys_init_module+0x8a/0x1b0
+ [&lt;c0140da6&gt;] ? trace_hardirqs_on_caller+0x106/0x150
+ [&lt;c0240a08&gt;] ? trace_hardirqs_on_thunk+0xc/0x10
+ [&lt;c0103407&gt;] ? sysenter_do_call+0x12/0x43
+Code: &lt;a1&gt; 34 12 00 00 c7 04 24 54 30 9c c8 89 44 24 04 e8 58 a0 99 f7 31
+EIP: [&lt;c89c3016&gt;] my_oops_init+0x6/0x20 [oops] SS:ESP 0068:c57cbe1c
+---[ end trace 45eeb3d6ea8ff1ed ]---</pre>
+
+</div>
+
+<h4 id="objdump">objdump</h4>
+<div class="level4">
+
+<p>
+Informații detaliate despre instrucțiunea care a generat oops-ul pot fi aflate folosind utilitarul <code>objdump</code> de inspecție a unui cod obiect. Opțiunile utile de folosit sunt <code>-d</code> pentru dezasamblarea codului și <code>-S</code> pentru intercalarea codului C în cod în limbaj de asamblare. Pentru o decodificare eficientă avem însă nevoie de adresa unde a fost încarcat modulul de kernel. Aceasta poate fi regasită în <code>/proc/modules</code>.
+</p>
+
+<p>
+Prezentăm în continuare un exemplu de utilizare a objdump pe modulul de mai sus pentru a identifica instrucțiunea care a generat oops-ul:
+</p>
+<pre class="code">faust:~/lab-01/modul-oops# cat /proc/modules
+oops 1280 1 - Loading 0xc89d4000
+netconsole 8352 0 - Live 0xc89ad000
+pcnet32 33412 0 - Live 0xc895a000
+ide_cd_mod 34952 0 - Live 0xc8903000
+crc32 4224 1 pcnet32, Live 0xc888a000
+cdrom 34848 1 ide_cd_mod, Live 0xc886d000
+
+faust:~/lab-01/modul-oops# objdump -dS --adjust-vma=0xc89d4000 oops.ko
+
+oops.ko:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+c89d4000 &lt;init_module&gt;:
+#define OP_READ         0
+#define OP_WRITE        1
+#define OP_OOPS         OP_WRITE
+
+static int my_oops_init (void)
+{                             
+c89d4000:       55                      push   %ebp
+#else                                              
+#error &quot;Unknown op for oops!&quot;                      
+#endif
+
+        return 0;
+}
+c89d4001:       31 c0                   xor    %eax,%eax
+#define OP_READ         0
+#define OP_WRITE        1
+#define OP_OOPS         OP_WRITE
+
+static int my_oops_init (void)
+{
+c89d4003:       89 e5                   mov    %esp,%ebp
+        int *a;
+
+        a = (int *) 0x00001234;
+#if OP_OOPS == OP_WRITE
+        *a = 3;
+c89d4005:       c7 05 34 12 00 00 03    movl   $0x3,0x1234
+c89d400c:       00 00 00
+#else
+#error &quot;Unknown op for oops!&quot;
+#endif
+
+        return 0;
+}
+c89d400f:       5d                      pop    %ebp
+c89d4010:       c3                      ret
+c89d4011:       eb 0d                   jmp    c89c3020 &lt;cleanup_module&gt;
+c89d4013:       90                      nop
+c89d4014:       90                      nop
+c89d4015:       90                      nop
+c89d4016:       90                      nop
+c89d4017:       90                      nop
+c89d4018:       90                      nop
+c89d4019:       90                      nop
+c89d401a:       90                      nop
+c89d401b:       90                      nop
+c89d401c:       90                      nop
+c89d401d:       90                      nop
+c89d401e:       90                      nop
+c89d401f:       90                      nop
+
+c89d4020 &lt;cleanup_module&gt;:
+
+static void my_oops_exit (void)
+{
+c89d4020:       55                      push   %ebp
+c89d4021:       89 e5                   mov    %esp,%ebp
+}
+c89d4023:       5d                      pop    %ebp
+c89d4024:       c3                      ret
+c89d4025:       90                      nop
+c89d4026:       90                      nop
+c89d4027:       90                      nop</pre>
+
+<p>
+Se observă că instrucțiunea care a generat oops-ul (cea de la adresa <code>c89d4005</code> identificată anterior) este:
+</p>
+<pre class="code">c89d4005:       c7 05 34 12 00 00 03    movl   $0x3,0x1234</pre>
+
+<p>
+adică exact cum era de așteptat - stocarea valorii <code>3</code> la adresa <code>0x0001234</code>.
+</p>
+
+<p>
+Fișierul <code>/proc/modules</code> este folosit pentru a afla adresa unde este încărcat un modul de kernel. Opțiunea <code>–adjust-vma</code> permite afișarea instrucțiunilor relativ la adresa <code>0xc89d4000</code>. Opțiunea <code>-l</code> afișează numărul fiecărei linii din codul sursă intercalat cu codul în limbaj de asamblare.
+</p>
+
+</div>
+
+<h4 id="addr2line">addr2line</h4>
+<div class="level4">
+
+<p>
+O modalitate mai simplistă de a găsi codul care a generat un oops este de a folosi utilitarul addr2line:
+</p>
+<pre class="code">faust:~/lab-01/modul-oops# addr2line -e oops.o 0x5
+/root/lab-01/modul-oops/oops.c:23</pre>
+
+<p>
+unde <code>0x5</code> este valoarea contorului program (EIP = <code>c89d4005</code>) la care s-a generat kernel oops, minus adresa de bază a modulului (<code>0xc89c4000</code>), conform <code>/proc/modules</code>.
+</p>
+
+</div>
+
+<h4 id="netconsole">netconsole</h4>
+<div class="level4">
+
+<p>
+Netconsole este un utilitar care permite logarea mesajelor de debug din kernel prin intermediul rețelei. Acest lucru este folositor atunci când sistemul de logging pe disk nu funcționează, când nu sunt disponibile porturi seriale sau
+când terminalul nu răspunde la comenzi. Netconsole vine sub forma unui modul de kernel.
+</p>
+
+<p>
+Pentru a funcționa, acesta are nevoie de următorii parametri:
+</p>
+<ul>
+<li class="level1"><div class="li">portul, adresa IP și numele interfeței sursă ale stației pe care se face debug</div>
+</li>
+<li class="level1"><div class="li">portul, adresa MAC și adresa IP a mașinii către care vor fi trimise mesajele de debug</div>
+</li>
+</ul>
+
+<p>
+Acești parametri pot fi configurați atunci când modulul este inserat în kernel, sau, chiar în timp ce modulul este inserat dacă acesta a fost compilat cu opțiunea CONFIG_NETCONSOLE_DYNAMIC.
+</p>
+
+<p>
+Un exemplu de configurare în momentul inserării este următorul:
+</p>
+<pre class="code">alice:~# modprobe netconsole \
+&gt;  6666@192.168.191.130/eth0,6000@192.168.191.1/00:50:56:c0:00:08</pre>
+
+<p>
+Astfel, mesajele de debug de pe stația ce are adresa 192.168.191.130 vor fi trimise pe interfața eth0, având ca port sursă 6666. Mesajele vor fi trimise către 192.168.191.1, ce are adresa MAC 00:50:56:c0:00:08 , pe portul 6000.
+</p>
+
+<p>
+Mesajele pot fi ascultate pe stația destinație folosind <code>netcat</code>:
+</p>
+<pre class="code">bob:~# nc -l -p 6666 -u</pre>
+
+<p>
+Alternativ, stația destinație poate configura <code>syslogd</code> pentru a intercepta aceste mesaje. Mai multe informații puteți găsi <a href="http://koala.cs.pub.ro/lxr/#linux26/Documentation/networking/netconsole.txt" class="urlextern" title="http://koala.cs.pub.ro/lxr/#linux26/Documentation/networking/netconsole.txt"  rel="nofollow"> aici</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit12" id="logging">Logging</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="printk_debugging">Printk Debugging</h4>
+<div class="level4">
+
+<p>
+<code>The two oldest and most useful debugging aids are Your brain and Printf</code>
+</p>
+
+<p>
+Pentru depanare, cel mai adesea se folosește un mijloc primitiv, dar destul de eficient: afișarea de mesaje (printk debugging). Deși se poate folosi și un debugger, în general acesta nu este foarte folositor: bug-urile simple (variabile neinițializate, probleme la gestiunea memoriei etc.) pot fi ușor localizate cu ajutorul mesajelor de control si mesajului de oops decodificat de către kernel.
+</p>
+
+<p>
+La bugurile mai complexe, nici chiar un debugger nu ne poate ajuta prea mult dacă nu se înțelege foarte bine structura sistemului de operare. La depanarea unui modul de kernel intervin o mulțime de necunoscute în ecuație: contexte multiple (avem mai multe procese și threaduri ce rulează la un moment dat), întreruperi, memorie virtuală etc.
+</p>
+
+<p>
+Pentru afișarea mesajelor din kernel către user space se poate folosi <code>printk</code> <sup><a href="lab02.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>. Acesta este similar ca funcționalitate lui <code>printf</code>; singura diferență constă în faptul că mesajul transmis se poate prefixa cu un șir de forma ”&lt;n&gt;”, unde n indică nivelul (loglevel-ul) erorii și are valori între 0 și 7. În loc de ”&lt;n&gt;”, nivelurile pot fi codificate și prin constante simbolice:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>KERN_EMERG</code> - n = 0</div>
+</li>
+<li class="level1"><div class="li"><code>KERN_ALERT</code> - n = 1</div>
+</li>
+<li class="level1"><div class="li"><code>KERN_CRIT</code> - n = 2</div>
+</li>
+<li class="level1"><div class="li"><code>KERN_ERR</code> - n = 3</div>
+</li>
+<li class="level1"><div class="li"><code>KERN_WARNING</code> - n = 4</div>
+</li>
+<li class="level1"><div class="li"><code>KERN_NOTICE</code> - n = 5</div>
+</li>
+<li class="level1"><div class="li"><code>KERN_INFO</code> - n = 6</div>
+</li>
+<li class="level1"><div class="li"><code>KERN_DEBUG</code> - n = 7</div>
+</li>
+</ul>
+
+<p>
+Definițiile tuturor loglevel-urilor se găsesc în <a href="http://www.cs.fsu.edu/~baker/devices/lxr/http/source/linux/include/linux/kernel.h" class="urlextern" title="http://www.cs.fsu.edu/~baker/devices/lxr/http/source/linux/include/linux/kernel.h"  rel="nofollow">linux/kernel.h</a>. Practic, aceste loglevel-uri sunt utilizate de sistem pentru a ruta mesajele trimise către diverse output-uri: consolă, fișiere log din <code>/var/log</code> etc.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pentru a afișa mesajele trimise cu <code>printk</code> în user space, trebuie ca nivelul folosit la apelul <code>printk</code> să fie prioritar valorii variabilei <a href="http://lxr.free-electrons.com/source/include/linux/printk.h?v=3.13#L38" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/printk.h?v=3.13#L38"  rel="nofollow">console_loglevel</a> <sup><a href="lab02.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup>. Adică nivelul de logging să fie mai mic strict decât nivelul variabilei <a href="http://lxr.free-electrons.com/source/include/linux/printk.h?v=3.13#L38" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/printk.h?v=3.13#L38"  rel="nofollow">console_loglevel</a>. De exemplu, dacă variabila <code>console_loglevel</code> are valoarea <code>5</code> (specifică valorii <code>KERN_NOTICE</code>) doar mesajele cu loglevel-ul mai mic strict decât <code>5</code> (adică <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code> și <code>4</code>, adică <code>KERN_EMERG</code>, <code>KERN_ALERT</code>, <code>KERN_CRIT</code>, <code>KERN_ERR</code>, <code>KERN_WARNING</code>) vor fi afișate <sup><a href="lab02.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup>.
+
+</div></p>
+</p>
+
+<p>
+Mesajele redirectate la consolă pot fi utile pentru a vizualiza rapid efectul execuției codului inserat în kernel, însă ele nu mai sunt așa folositoare în cazul în care în kernel apare o eroare irecuperabilă, iar sistemul îngheață. În acest caz, trebuie consultate log-urile sistemului, deoarece în ele se păstrează informațiile între restart-uri ale sistemului. Acestea se găsesc în <code>/var/log</code> <sup><a href="lab02.html#fn__4" id="fnt__4" class="fn_top">4)</a></sup> și sunt fișiere text, populate cu informație de <code>syslogd</code> și <code>klogd</code> pe parcursul rulării kernelului. <code>syslogd</code> și <code>klogd</code> preiau la rândul lor informațiile din sistemul virtual de fișiere montat în <code>/proc</code>. În principiu, cu <code>syslogd</code> și <code>klogd</code> pornite, toate mesajele venite de la kernel vor ajunge în <code>/var/log/kern.log</code>.
+</p>
+
+<p>
+O variantă mai simplă pentru etapa de debugging este folosirea fișierului <code>/var/log/debug</code>. Acesta este populat numai cu mesajele <code>printk</code> venite de la kernel cu loglevel-ul <code>KERN_DEBUG</code>.
+</p>
+
+<p>
+Având în vedere faptul că un kernel de producție (similar celui pe care probabil îl rulăm și noi :P) conține doar cod de release, modulul nostru este printre puținele care trimit mesaje prefixate cu <code>KERN_DEBUG</code>. În acest fel, putem naviga ușor prin informațiile din <code>/var/log/debug</code>, găsind mesajele corespunzatoare unei sesiuni de debug pentru modulul nostru.
+</p>
+
+<p>
+Un exemplu de utilizare ar fi urmatorul:
+</p>
+<ul>
+<li class="level1"><div class="li">se curăță fișierul debug de informațiile anterioare (sau, eventual, se face un backup):</div>
+</li>
+</ul>
+<pre class="code bash"><span class="kw3">echo</span> <span class="st0">&quot;New debug session&quot;</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>debug</pre>
+<ul>
+<li class="level1"><div class="li">se rulează testul/testele</div>
+</li>
+<li class="level1"><div class="li">dacă nu apare o eroare critică, care să cauzeze un kernel panic, se consultă output-ul</div>
+</li>
+<li class="level1"><div class="li">dacă apare o eroare critică, iar mașina nu mai raspunde decat la restart, atunci se repornește sistemul, și se consultă <code>/var/log/debug</code></div>
+</li>
+</ul>
+
+<p>
+Formatul mesajelor trebuie, evident, să conțină toate informațiile de interes pentru a depista eroarea, însă inserarea în cod a “printk-urilor” care să ofere informații detaliate poate fi la fel de time-consuming ca și scrierea codului pentru rezolvarea problemei. De aceea se face de obicei un trade-off între completitudinea mesajelor de debugging afișate folosind printk și timpul necesar pentru inserarea acestor mesaje în text.
+</p>
+
+<p>
+O variantă foarte simplă, puțin costisitoare din punctul de vedere al timpului necesar pentru inserarea printk-urilor, și care oferă posibilitatea analizării fluxului de instrucțiuni în cazul testelor, este cea a folosirii constantelor predefinite <code>__FILE__</code>, <code>__LINE__</code> și <code>__func__</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>__FILE__</code> este înlocuită, la compilare, de către compilator, cu numele fișierului sursă în care se găsește la momentul respectiv.</div>
+</li>
+<li class="level1"><div class="li"><code>__LINE__</code> este înlocuită, la compilare, de către compilator, cu numărul liniei pe care se găsește instrucțiunea curentă în cadrul fișierului sursă curent.</div>
+</li>
+<li class="level1"><div class="li"><code>__func__</code> / <code>__FUNCTION__</code> este înlocuită, la compilare, de către compilator, cu numele funcției în care se găsește instrucțiunea curentă.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"><strong>Observație</strong>: <code>__LINE__</code> și <code>__FILE__</code> fac parte din specificațiile standardului ANSI C; <code>__func__</code> face parte din specificațiile C99; <code>__FUNCTION__</code> reprezintă o extensie GNU C și nu este portabilă; însă, având în vedere că scriem cod pentru kernelul de Linux, o putem folosi fără probleme.</div>
+</li>
+</ul>
+
+<p>
+Se poate folosi în acest caz următoarea macrodefiniție:
+</p>
+<pre class="code cpp"><span class="co2">#define PRINT_DEBUG    \
+        printk(KERN_DEBUG &quot;[%s]:FUNC:%s:LINE:%d\n&quot;, __FILE__ , __FUNCTION__ , __LINE__)</span></pre>
+
+<p>
+Apoi, în fiecare punct în care dorim să vedem dacă este “atins” în execuție, inserăm PRINT_DEBUG; aceasta este o modalitate simplă și rapidă, și poate da roade analizând cu atenție output-ul oferit.
+</p>
+
+<p>
+Pentru a vedea mesajele afișate cu <code>printk</code>, dar care nu apar la consolă, se folosește comanda <a href="http://www.linfo.org/dmesg.html" class="urlextern" title="http://www.linfo.org/dmesg.html"  rel="nofollow">  dmesg</a>. 
+</p>
+
+<p>
+Pentru a șterge toate mesajele anterioare dintr-un fișier de log, se rulează <code>cat /dev/null &gt; /var/log/debug</code>. Pentru a șterge mesajele afișate de comanda <code>dmesg</code>, se folosește <code>dmesg -c</code>.
+</p>
+
+</div>
+
+<h4 id="dynamic_debugging">Dynamic debugging</h4>
+<div class="level4">
+
+<p>
+Depanarea dinamică <a href="https://www.kernel.org/doc/Documentation/dynamic-debug-howto.txt" class="urlextern" title="https://www.kernel.org/doc/Documentation/dynamic-debug-howto.txt"  rel="nofollow"> dyndbg</a> permite activarea/dezactivarea în mod dinamic a mesajelor de debug. Spre deosebire de <code>printk</code>, oferă opțiuni mai avansate de filtrare a mesajelor pe care dorim să le afișăm - foarte util în cazul unor module complexe sau pentru depanarea subsistemelor. Astfel, se reduce semnificativ cantitatea de mesaje afișate, rămânând doar cele relevante pentru contextul depanării. Pentru activarea dyndbg, kernelul trebuie compilat cu opțiunea <code>CONFIG_DYNAMIC_DEBUG</code>. Odata configurat, apelurile <code>pr_debug()</code>, <code>dev_dbg()</code> și <code>print_hex_dump_debug()</code>, <code>print_hex_dump_bytes()</code> pot fi activate dinamic per callsite.
+</p>
+
+<p>
+Pentru filtrarea mesajelor sau vizualizarea filtrelor existente se va folosi fișierul <code>/sys/kernel/debug/dynamic_debug/control</code> din cadrul sistemului de fișiere <code>debugfs</code> (unde <code>/sys/kernel/debug</code> este calea la care a fost montat debugfs).
+</p>
+<pre class="code bash"><span class="kw2">mount</span> <span class="re5">-t</span> debugfs none <span class="sy0">/</span>debug</pre>
+
+<p>
+<a href="http://www.linuxforu.com/2010/10/debugging-linux-kernel-with-debugfs/" class="urlextern" title="http://www.linuxforu.com/2010/10/debugging-linux-kernel-with-debugfs/"  rel="nofollow"> Debugfs</a> este un sistem de fișiere simplu, folosit ca interfață între kernel-space și user-space pentru a configura diferite opțiuni de debug. Orice utilitar de debug își poate crea și folosi propriile fișiere/directoare în debugfs.
+</p>
+
+<p>
+De exemplu, pentru afișarea filtrelor existente în dyndbg se va folosi:
+</p>
+<pre class="code bash"><span class="kw2">cat</span> <span class="sy0">/</span>debug<span class="sy0">/</span>dynamic_debug<span class="sy0">/</span>control</pre>
+
+<p>
+iar pentru activarea mesajului de debug de la linia 1603 din fișierul svcsock.c:
+</p>
+<pre class="code bash"><span class="kw3">echo</span> <span class="st_h">'file svcsock.c line 1603 +p'</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>debug<span class="sy0">/</span>dynamic_debug<span class="sy0">/</span>control</pre>
+
+<p>
+<p><div class="noteimportant">
+Fișierul <code>/debug/dynamic_debug/control</code> nu este un fișier obișnuit. Afișarea lui duce la afișarea setărilor dyndbg asupra filtrelor. Scrierea în el cu echo va duce la modificarea acestor setări (nu va realiza efectiv o scriere). Atenție la faptul că fișierul conține setări pentru mesajele de debug dyndbg. Nu se face logging în acest fișier.
+
+</div></p>
+</p>
+
+<p>
+Opțiuni dyndbg:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>func</strong> - doar mesajele de debug din funcțiile care au același nume cu cel definit în filtru.</div>
+</li>
+</ul>
+<pre class="code bash">    <span class="kw3">echo</span> <span class="st_h">'func svc_tcp_accept +p'</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>debug<span class="sy0">/</span>dynamic_debug<span class="sy0">/</span>control</pre>
+<ul>
+<li class="level1"><div class="li"> <strong>file</strong> - numele fișierului(elor) pentru care dorim să afișăm mesajele de debug. Poate fi doar numele sursei, dar și calea absolută sau calea relativă la kernel-tree.</div>
+</li>
+</ul>
+<pre class="code bash">    <span class="kw2">file</span> svcsock.c
+    <span class="kw2">file</span> kernel<span class="sy0">/</span>freezer.c
+    <span class="kw2">file</span> <span class="sy0">/</span>usr<span class="sy0">/</span>src<span class="sy0">/</span>packages<span class="sy0">/</span>BUILD<span class="sy0">/</span>sgi-enhancednfs-<span class="nu0">1.4</span><span class="sy0">/</span>default<span class="sy0">/</span>net<span class="sy0">/</span>sunrpc<span class="sy0">/</span>svcsock.c</pre>
+<ul>
+<li class="level1"><div class="li"> <strong>module</strong> - numele modulului.</div>
+</li>
+</ul>
+<pre class="code bash"> module sunrpc </pre>
+<ul>
+<li class="level1"><div class="li"> <strong>format</strong> - doar mesajele al căror format de afișare conține șirul specificat.</div>
+</li>
+</ul>
+<pre class="code bash"> format <span class="st0">&quot;nfsd: SETATTR&quot;</span> </pre>
+<ul>
+<li class="level1"><div class="li"> <strong>line</strong> - linia sau liniile pentru care dorim să activăm apelurile de debug.</div>
+</li>
+</ul>
+<pre class="code bash"> <span class="co0"># activează mesajele de debug între liniile 1603 și 1605 din fișierul svcsock.c</span>
+ <span class="kw3">echo</span> <span class="st_h">'file svcsock.c line 1603-1605 +p'</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>sys<span class="sy0">/</span>kernel<span class="sy0">/</span>debug<span class="sy0">/</span>dynamic_debug<span class="sy0">/</span>control
+ <span class="co0"># activează mesajele de debug de la începutul fișierului până la linia 1605</span>
+ <span class="kw3">echo</span> <span class="st_h">'file svcsock.c line -1605 +p'</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>sys<span class="sy0">/</span>kernel<span class="sy0">/</span>debug<span class="sy0">/</span>dynamic_debug<span class="sy0">/</span>control</pre>
+
+<p>
+Pe lângă opțiunile de mai sus, pot fi specificate și o serie de flaguri ce pot fi adăugate, eliminate sau setate cu operatorii +,- sau =.
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>p</strong>  activează apelurile <code>pr_debug()</code>.</div>
+</li>
+<li class="level1"><div class="li"> <strong>f</strong>  include numele funcției în mesajul printat.</div>
+</li>
+<li class="level1"><div class="li"> <strong>l</strong>  include numărul liniei în mesajul printat.</div>
+</li>
+<li class="level1"><div class="li"> <strong>m</strong>  include numele modulului în mesajul printat.</div>
+</li>
+<li class="level1"><div class="li"> <strong>t</strong>  include ID-ul threadului dacă nu e apelat din context întrerupere.</div>
+</li>
+<li class="level1"><div class="li"> <strong>_</strong>  niciun flag nu este setat.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit13" id="kdbkernel_debugger">KDB: Kernel debugger</h3>
+<div class="level3">
+
+<p>
+Kernel debugger-ul s-a dovedit a fi foarte util pentru a facilita procesul de dezvoltare și depanare. Unul dintre avantajele majore ale acestuia fiind posibilitatea de a face live debugging. Astfel, putem monitoriza în timp real accesele la memorie sau chiar modifica zone de memorie în cadrul procesului de debug. Acesta a fost integrat în mainline începând cu versiunea 2.6.26-rc1. KDB nu este un “source debugger”, dar pentru o analiză completă poate fi folosit în paralel cu gdb și fișiere de simboluri - vezi <a href="lab01.html#depanare" class="wikilink1" title="so2:laboratoare:lab01">Depanare</a>.
+</p>
+
+<p>
+Pentru a folosi KDB, trebuie să aveți una din următoarele opțiuni:
+</p>
+<ul>
+<li class="level1"><div class="li"> tastatură non-usb + consolă vga text</div>
+</li>
+<li class="level1"><div class="li"> serial port console</div>
+</li>
+<li class="level1"><div class="li"> USB EHCI debug port</div>
+</li>
+</ul>
+
+<p>
+În laborator vom folosi o serială legată la gazdă. Comanda de mai jos va activa KDB prin serială:
+</p>
+<pre class="code"> echo ttyS0 &gt; /sys/module/kgdboc/parameters/kgdboc </pre>
+
+<p>
+KDB este un “stop mode debugger”. Astfel, când suntem în debug mode, toate celelalte procese sunt oprite. Pentru a “forța” intrarea în KDB în timpul execuției se poate folosi următoarea comandă <a href="http://en.wikipedia.org/wiki/Magic_SysRq_key" class="urlextern" title="http://en.wikipedia.org/wiki/Magic_SysRq_key"  rel="nofollow">SysRq</a>
+</p>
+<pre class="code"> echo g &gt; /proc/sysrq-trigger </pre>
+
+<p>
+KDB permite numeroase comenzi pentru a controla și defini în detaliu contextul sistemului depanat.
+</p>
+<ul>
+<li class="level1"><div class="li"> lsmod, ps, kill, dmesg, env, bt (backtrace)</div>
+</li>
+<li class="level1"><div class="li"> dump trace logs</div>
+</li>
+<li class="level1"><div class="li"> utilizare hardware breakpoints sau modificare memorie</div>
+</li>
+</ul>
+
+<p>
+Pentru o descriere a tuturor comenzilor disponibile puteți apela <code>help</code> din shell-ul KDB. În exemplul de mai jos, puteți observa un exemplu de utilizare KDB ce seteaza un hardware breakpoint pentru a monitoriza modificările variabilei mVar.
+</p>
+<pre class="code bash"><span class="co0"># trigger KDB</span>
+<span class="kw3">echo</span> g <span class="sy0">&gt;</span> <span class="sy0">/</span>proc<span class="sy0">/</span>sysrq-trigger
+<span class="co0"># breakpoint la accesul de scriere al variabilei mVar</span>
+kdb<span class="sy0">&gt;</span> bph mVar dataw
+<span class="co0"># revenire din KDB</span>
+kdb<span class="sy0">&gt;</span> go</pre>
+
+</div>
+
+<h3 class="sectionedit14" id="tracing">Tracing</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="kprobes">Kprobes</h4>
+<div class="level4">
+
+<p>
+<code>Kprobes</code> permite instrumentarea dinamică a oricărei funcții din kernel pentru a colecta informații de debug într-un mod cât mai puțin invaziv. Cu kprobe, putem seta breakpoints la aproape orice adresă din kernel și configura handlere ce vor fi invocate în aceste puncte. Pot fi folosite trei tipuri de probe: <code>Kprobes</code>, <code>Jprobes</code> și <code>Kretprobes</code> (sau probe de return).
+</p>
+<ol>
+<li class="level1"><div class="li"> O <code>Kprobe</code> poate fi inserată la orice adresă (instrucțiune) din kernel și putem specifica handlere ce vor fi apelate înainte sau după execuția instrucțiunii.</div>
+</li>
+<li class="level1"><div class="li"> <code>Jprobe</code> va fi adăugată la entry-pointul unei funcții, utilă pentru a monitoriza argumentele funcțiilor.</div>
+</li>
+<li class="level1"><div class="li"> O probă de return (<code>Kretprobe</code>) va fi apelată la întoarcerea dintr-o funcție, unde putem analiza rezultatul întors de aceasta.</div>
+</li>
+</ol>
+
+<p>
+De cele mai multe ori se va realiza instrumentarea cu kprobe prin intermediul unui modul. Funcția module_init va instala una sau mai multe probe care vor fi dezactivate apoi în module_exit. Înregistrarea unei probe (e.x. <code>register_kprobe()</code>) presupune specificarea adresei la care aceasta va fi inserată și a unui handler ce va fi apelat când se ajunge la adresa setată. Pentru mai multe detalii despre modul de funcționare <code>Kprobe</code>, <code>Jprobe</code> sau <code>Kretprobe</code>, expandați secțiunea de mai jos.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Afișați detalii implementare Kprobe
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ascundeți detalii implementare Kprobe
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+<strong>Kprobe</strong>
+</p>
+<ol>
+<li class="level1"><div class="li"> La înregistrarea unei probe, <code>Kprobes</code> face o copie a instrucțiunii de la adresa specificată (instrucțiunea pe care dorim să o instrumentăm) și înlocuiește primii bytes cu o instrucțiune de breakpoint (e.g. int3).</div>
+</li>
+<li class="level1"><div class="li"> Când procesorul ajunge la instrucțiunea de breakpoint, se execută un trap și controlul revine la <code>Kprobes</code> (printr-un mecanism de tipul <a href="http://lwn.net/Articles/160953/" class="urlextern" title="http://lwn.net/Articles/160953/"  rel="nofollow"> notifier_call_chain</a>). În acest punct, <code>Kprobes</code> va executa pre_handler-ul asociat probei.</div>
+</li>
+<li class="level1"><div class="li"> După pre-handler, Kprobes execută instrucțiunea instrumentată, urmată post_handler-ul asociat.</div>
+</li>
+<li class="level1"><div class="li"> Execuția continuă cu următoarea instrucțiune după cea instrumentată.</div>
+</li>
+</ol>
+
+<p>
+<strong>Jprobe</strong>
+</p>
+
+<p>
+JProbe este implementat prin inserarea unei kprobe la entry-pointul funcției. Folosește un mecanism de mirroring pentru a permite accesul la argumentele funcției instrumentate. Se așteaptă ca handler-ul înregistrat:
+</p>
+<ul>
+<li class="level1"><div class="li"> să aibă aceeași semnătură (lista de argumente și return type) ca funcția instrumentată.</div>
+</li>
+<li class="level1"><div class="li"> să se termine mereu cu apelarea funcției <code>jprobe_return()</code>.</div>
+</li>
+</ul>
+
+<p>
+Când se ajunge la un breakpoint, <code>Kprobes</code> face o copie a registrelor și a stivei, setând apoi instruction pointerul către handlerul înregistrat. Astfel, handlerul va fi apelat în aceeași stare (registre și stivă) ca funcția instrumentată. La ieșirea din handler, <code>jprobe_return()</code> restaurează conținutul inițial al stivei și al registrelor și continuă execuția cu funcția instrumentată.
+</p>
+
+<p>
+<strong>Kretprobe</strong>
+</p>
+
+<p>
+La înregistrarea unei probe de return, <code>Kprobes</code> instalează un kprobe la intrarea în funcția instrumentată. Acest kprobe are rolul de a salva o copie a adresei de return și de a înlocui adresa de return cu adresa unei porțiuni aleatoare de cod - o “trambulină” (e.x. o instrucțiune nop). Astfel, funcția instrumentată se va întoarce în codul din “trambulină”.
+</p>
+
+<p>
+La inițializare, <code>Kprobes</code> setează un breakpoint la adresa acestei “trambuline”. La acest breakpoint se va apela handlerul asociat kretprobe, si se va reseta IP-ul la adresa de return salvată anterior (adresa de return inițială a funcției instrumentate).
+</p>
+
+<p>
+<a href="../../_detail/so2/wiki/kretprobe.png%3Fid=so2%253Alaboratoare%253Alab02.html" class="media" title="so2:wiki:kretprobe.png"><img src="../../_media/so2/wiki/kretprobe.png%3Fw=700&amp;h=297&amp;tok=8e0a05" class="media" alt="" width="700" height="297" /></a>
+</p>
+</div></div>
+<p>
+<br/>
+
+</p>
+
+<p>
+<strong> Înregistrare Kprobe </strong>
+</p>
+
+<p>
+Pentru înregistrarea unei <code>Kprobe</code> se va folosi o structură de tipul <a href="http://lxr.free-electrons.com/source/include/linux/kprobes.h#L73" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kprobes.h#L73"  rel="nofollow"> struct kprobe</a>. Aici putem seta <code>addr</code> - adresa la care se va insera proba, <code>pre_handler</code>/<code>post_handler</code>, metode ce vor fi apelate înainte/după executarea instrucțiunii de la <code>addr</code> și <code>fault_handler</code> ce va fi apelat dacă apare un fault în handlerele pre/post sau la execuția instrucțiunii instrumentate. Adresa la care vrem să inserăm proba se poate specifica fie direct, fie folosind funcția <a href="http://lxr.free-electrons.com/source/kernel/kallsyms.c?v=2.6.33#L170" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kallsyms.c?v=2.6.33#L170"  rel="nofollow"> kallsyms_lookup_name</a> ce returnează adresa unui simbol primit ca parameru.
+</p>
+<pre class="code c"><span class="kw4">struct</span> kprobe <span class="br0">&#123;</span>
+     <span class="coMULTI">/* location of the probe point */</span>
+     kprobe_opcode_t <span class="sy0">*</span>addr<span class="sy0">;</span>
+     <span class="coMULTI">/* Called before addr is executed. */</span>
+     kprobe_pre_handler_t pre_handler<span class="sy0">;</span>
+     <span class="coMULTI">/* Called after addr is executed, unless... */</span>
+     kprobe_post_handler_t post_handler<span class="sy0">;</span>
+     <span class="coMULTI">/* Called if executing addr or handlers causes a fault (eg. page fault). */</span>
+     kprobe_fault_handler_t fault_handler<span class="sy0">;</span>
+     ...
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pentru înregistrarea/deînregistrarea unei probe se vor apela funcțiile <a href="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1472" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1472"  rel="nofollow"> register_kprobe</a>, respectiv <a href="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1577" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1577"  rel="nofollow"> unregister_kprobe</a>. Mai jos puteți urmări un exemplu în care este inițializată o probă de tipul <code>Kprobe</code>.
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">struct</span> kprobe kp<span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* kprobe pre_handler: called just before the probed instruction is executed */</span>
+<span class="kw4">int</span> handler_pre<span class="br0">&#40;</span><span class="kw4">struct</span> kprobe <span class="sy0">*</span>p<span class="sy0">,</span> <span class="kw4">struct</span> pt_regs <span class="sy0">*</span>regs<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* kprobe post_handler: called after the probed instruction is executed */</span>
+<span class="kw4">void</span> handler_post<span class="br0">&#40;</span><span class="kw4">struct</span> kprobe <span class="sy0">*</span>p<span class="sy0">,</span> <span class="kw4">struct</span> pt_regs <span class="sy0">*</span>regs<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> flags<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* fault_handler: this is called if an exception is generated for any
+ * instruction within the pre- or post-handler, or when Kprobes
+ * single-steps the probed instruction.
+ */</span>
+<span class="kw4">int</span> handler_fault<span class="br0">&#40;</span><span class="kw4">struct</span> kprobe <span class="sy0">*</span>p<span class="sy0">,</span> <span class="kw4">struct</span> pt_regs <span class="sy0">*</span>regs<span class="sy0">,</span> <span class="kw4">int</span> trapnr<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> init_module<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+         kp.<span class="me1">pre_handler</span> <span class="sy0">=</span> handler_pre<span class="sy0">;</span>
+         kp.<span class="me1">post_handler</span> <span class="sy0">=</span> handler_post<span class="sy0">;</span>
+         kp.<span class="me1">fault_handler</span> <span class="sy0">=</span> handler_fault<span class="sy0">;</span>
+         kp.<span class="me1">addr</span> <span class="sy0">=</span> <span class="br0">&#40;</span>kprobe_opcode_t<span class="sy0">*</span><span class="br0">&#41;</span> probe_addr<span class="sy0">;</span>
+&nbsp;
+         <span class="kw1">if</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>ret <span class="sy0">=</span> register_kprobe<span class="br0">&#40;</span><span class="sy0">&amp;</span>kp<span class="br0">&#41;</span> <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                 printk<span class="br0">&#40;</span><span class="st0">&quot;register_kprobe failed, returned %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> ret<span class="br0">&#41;</span><span class="sy0">;</span>
+                 <span class="kw1">return</span> <span class="sy0">-</span><span class="nu0">1</span><span class="sy0">;</span>
+         <span class="br0">&#125;</span>
+         printk<span class="br0">&#40;</span><span class="st0">&quot;kprobe registered<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+<strong> Înregistrare Jprobe </strong>
+</p>
+
+<p>
+Pentru <code>Jprobe</code>, vom folosi o structură de tipul <a href="http://lxr.free-electrons.com/source/include/linux/kprobes.h?v=2.6.39#L158" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kprobes.h?v=2.6.39#L158"  rel="nofollow"> struct jprobe</a>, al cărei câmp <code>entry</code> determină adresa handlerului ce va fi apelat la intrarea în funcția instrumentată. Pentru înregistrare/deînregistrare se vor folosi <a href="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1703" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1703"  rel="nofollow"> register_jprobe</a>/<a href="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1740" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1740"  rel="nofollow">unregister_jprobe</a>. În exemplul de mai jos se folosește un modul pentru a monitoriza apelurile funcției <code>do_execve_common</code>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+</p>
+<ul>
+<li class="level1"><div class="li"> Semnătura handlerului trebuie să fie aceeași cu semnătura funcției instrumentate.</div>
+</li>
+<li class="level1"><div class="li"> Nu uitați să apelați jprobe_return() la ieșirea din handler.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/so2/laboratoare/lab02%3Fcodeblock=34" title="Download Snippet" class="mediafile mf_c">kprobes.c</a></dt>
+<dd><pre class="code file C"><span class="co2">#include &lt;linux/module.h&gt;</span>
+<span class="co2">#include &lt;linux/init.h&gt;</span>
+<span class="co2">#include &lt;linux/kernel.h&gt;</span>
+<span class="co2">#include &lt;linux/kprobes.h&gt;</span>
+<span class="co2">#include &lt;linux/kallsyms.h&gt;</span>
+&nbsp;
+MODULE_DESCRIPTION<span class="br0">&#40;</span><span class="st0">&quot;Probes module&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+MODULE_AUTHOR<span class="br0">&#40;</span><span class="st0">&quot;So2rul Esforever&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+MODULE_LICENSE<span class="br0">&#40;</span><span class="st0">&quot;GPL&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co2">#define LOG_LEVEL	KERN_WARNING</span>
+&nbsp;
+<span class="coMULTI">/*
+ * Pre-entry point for do_execve.
+ */</span>
+<span class="kw4">static</span> <span class="kw4">int</span> my_do_execve<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span> filename<span class="sy0">,</span>
+		<span class="kw4">char</span> __user <span class="sy0">*</span>__user <span class="sy0">*</span>argv<span class="sy0">,</span>
+		<span class="kw4">char</span> __user <span class="sy0">*</span>__user <span class="sy0">*</span>envp<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	printk<span class="br0">&#40;</span>LOG_LEVEL <span class="st0">&quot;do_execve for %s %s <span class="es1">\n</span>&quot;</span><span class="sy0">,</span> filename<span class="sy0">,</span> current<span class="sy0">-&gt;</span>comm<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="coMULTI">/* Always end with a call to jprobe_return(). */</span>
+	jprobe_return<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="coMULTI">/*NOTREACHED*/</span>
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> jprobe my_jprobe <span class="sy0">=</span> <span class="br0">&#123;</span>
+	.<span class="me1">entry</span> <span class="sy0">=</span> <span class="br0">&#40;</span>kprobe_opcode_t <span class="sy0">*</span><span class="br0">&#41;</span> my_do_execve
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_probe_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> ret<span class="sy0">;</span>
+&nbsp;
+	my_jprobe.<span class="me1">kp</span>.<span class="me1">addr</span> <span class="sy0">=</span>
+		<span class="br0">&#40;</span>kprobe_opcode_t <span class="sy0">*</span><span class="br0">&#41;</span> kallsyms_lookup_name<span class="br0">&#40;</span><span class="st0">&quot;do_execve&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>my_jprobe.<span class="me1">kp</span>.<span class="me1">addr</span> <span class="sy0">==</span> NULL<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		printk<span class="br0">&#40;</span>LOG_LEVEL <span class="st0">&quot;Couldn't find %s to plant jprobe<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="st0">&quot;do_execve&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">return</span> <span class="sy0">-</span><span class="nu0">1</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	ret <span class="sy0">=</span> register_jprobe<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_jprobe<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>ret <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		printk<span class="br0">&#40;</span>LOG_LEVEL <span class="st0">&quot;register_jprobe failed, returned %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> ret<span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">return</span> <span class="sy0">-</span><span class="nu0">1</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+	printk<span class="br0">&#40;</span>LOG_LEVEL <span class="st0">&quot;Planted jprobe at %p, handler addr %p<span class="es1">\n</span>&quot;</span><span class="sy0">,</span>
+			my_jprobe.<span class="me1">kp</span>.<span class="me1">addr</span><span class="sy0">,</span> my_jprobe.<span class="me1">entry</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> my_probe_exit<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	unregister_jprobe<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_jprobe<span class="br0">&#41;</span><span class="sy0">;</span>
+	printk<span class="br0">&#40;</span>LOG_LEVEL <span class="st0">&quot;jprobe unregistered<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+module_init<span class="br0">&#40;</span>my_probe_init<span class="br0">&#41;</span><span class="sy0">;</span>
+module_exit<span class="br0">&#40;</span>my_probe_exit<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</dd></dl>
+
+<p>
+<strong> Înregistrare Kretprobe </strong>
+</p>
+
+<p>
+<code>Kretprobes</code> se vor insera într-un mod similar, folosind o structură de tipul <a href="http://lxr.free-electrons.com/source/include/linux/kprobes.h#L184" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kprobes.h#L184"  rel="nofollow"> struct kretprobe</a> și funcțiile <a href="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1811" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1811"  rel="nofollow"> register_kretprobe</a>, <a href="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1882" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/kprobes.c#L1882"  rel="nofollow"> unregister_kretprobe</a>.
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">int</span> ret_handler<span class="br0">&#40;</span><span class="kw4">struct</span> kretprobe_instance <span class="sy0">*</span>ri<span class="sy0">,</span> <span class="kw4">struct</span> pt_regs <span class="sy0">*</span>regs<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> kretprobe my_kretprobe <span class="sy0">=</span> <span class="br0">&#123;</span>
+         .<span class="me1">handler</span> <span class="sy0">=</span> ret_handler<span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h2 class="sectionedit15" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit16" id="linux">Linux</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Linux Device Drivers, 3rd edition </div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch02.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch02.pdf"  rel="nofollow">Chapter 2. Building and Running Modules</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch04.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch04.pdf"  rel="nofollow">Chapter 4. Debugging Techniques</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="http://tldp.org/LDP/lkmpg/2.6/html/index.html" class="urlextern" title="http://tldp.org/LDP/lkmpg/2.6/html/index.html"  rel="nofollow">The Linux Kernel Module Programming Guide</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://packetstormsecurity.org/docs/hack/LKM_HACKING.html" class="urlextern" title="http://packetstormsecurity.org/docs/hack/LKM_HACKING.html"  rel="nofollow">(nearly) Complete Linux Loadable Kernel Modules</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.urbanmyth.org/linux/oops/" class="urlextern" title="http://www.urbanmyth.org/linux/oops/"  rel="nofollow">www.urbanmyth.org: OOPS!</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.mulix.org/lectures/kernel_oopsing/kernel_oopsing.pdf" class="urlextern" title="http://www.mulix.org/lectures/kernel_oopsing/kernel_oopsing.pdf"  rel="nofollow">Linux Kernel Debugging</a></div>
+</li>
+</ul>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="lab02.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+Pentru mai multe informații despre printk consultați <a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">laboratorul 3</a></div>
+<div class="fn"><sup><a href="lab02.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+ Nivelul implicit setat pe consolă se poate configura din <a href="http://koala.cs.pub.ro/lxr/#linux26/Documentation/sysctl/kernel.txt#L261" class="urlextern" title="http://koala.cs.pub.ro/lxr/#linux26/Documentation/sysctl/kernel.txt#L261"  rel="nofollow"> /proc/sys/kernel/printk</a>; spre exemplu, comanda <code>echo 8 &gt; /proc/sys/kernel/printk</code> va face ca toate mesajele din kernel să fie afișate la consolă </div>
+<div class="fn"><sup><a href="lab02.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+ <a href="http://elinux.org/Debugging_by_printing" class="urlextern" title="http://elinux.org/Debugging_by_printing"  rel="nofollow">http://elinux.org/Debugging_by_printing</a> </div>
+<div class="fn"><sup><a href="lab02.html#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+ Pentru a verifica / modifica ce fișiere sunt folosite pentru logarea erorilor fiecărui nivel (loglevel), inspectați fișierul de configurare pentru syslogd, <code>/etc/syslog.conf</code> </div>
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_174721924458355b516260f" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_169469798258355b51654f6" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></span></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_128930961858355b51683d1" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab02.html#laborator_2_-_module_de_kernel_si_debugging">Laborator 2 - Module de kernel și debugging</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab02.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab02.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab02.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab02.html#notiuni_generale">Noțiuni generale</a></div></li>
+<li class="level2"><div class="li"><a href="lab02.html#module_kernel_in_linux">Module kernel în Linux</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab02.html#un_exemplu_de_modul_kernel">Un exemplu de modul kernel</a></div></li>
+<li class="level3"><div class="li"><a href="lab02.html#compilarea_modulelor_kernel">Compilarea modulelor kernel</a></div></li>
+<li class="level3"><div class="li"><a href="lab02.html#incarcareadescarcarea_unui_modul_de_kernel">Încărcarea/descărcarea unui modul de kernel</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab02.html#kernel_debugging">Kernel debugging</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab02.html#exemplu_de_kernel_oops">Exemplu de kernel oops</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab02.html#objdump">objdump</a></div></li>
+<li class="level4"><div class="li"><a href="lab02.html#addr2line">addr2line</a></div></li>
+<li class="level4"><div class="li"><a href="lab02.html#netconsole">netconsole</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="lab02.html#logging">Logging</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab02.html#printk_debugging">Printk Debugging</a></div></li>
+<li class="level4"><div class="li"><a href="lab02.html#dynamic_debugging">Dynamic debugging</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="lab02.html#kdbkernel_debugger">KDB: Kernel debugger</a></div></li>
+<li class="level3"><div class="li"><a href="lab02.html#tracing">Tracing</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab02.html#kprobes">Kprobes</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab02.html#resurse_utile">Resurse utile</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab02.html#linux">Linux</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/laboratoare/lab02.txt · Last modified: 2016/03/02 18:41 by madalina.hristache          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab02%3Fdo=media&amp;ns=so2%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab02.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Alaboratoare%253Alab02&amp;1479891793" width="2" height="1" alt="" /></div>
+</body>
+</html>

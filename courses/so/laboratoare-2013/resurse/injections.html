@@ -1,0 +1,1293 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Function Hooking and Windows Dll Injection    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-05T22:19:57+0200"/>
+<meta name="keywords" content="so,laboratoare-2013,resurse,injections"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=so:laboratoare-2013:resurse"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../_export/xhtml/so/laboratoare-2013/resurse/injections.html"/>
+<link rel="canonical" href="injections.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so:laboratoare-2013:resurse';var JSINFO = {"id":"so:laboratoare-2013:resurse:injections","namespace":"so:laboratoare-2013:resurse","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so/"><img height="70" src="../../../res/sigla_so.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../systems/index.html"/><img height="70" src="../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="injections%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="injections%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="function_hooking_and_windows_dll_injection">Function Hooking and Windows Dll Injection</h1>
+<div class="level1">
+
+<p>
+In this tutorial I&#039;ll show you how to modify at runtime the behavior of Windows programs.
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="function_hot_patching">Function Hot Patching</h2>
+<div class="level2">
+
+<p>
+<strong>Problem</strong>: we have a function, <code>foo()</code> and we want <code>bar()</code> to be called instead.
+</p>
+
+<p>
+<strong>Solutions</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> modify the code, replace <code>foo()</code> with <code>bar()</code>, doh!. Works when the source is available.</div>
+</li>
+<li class="level1"><div class="li"> write a library that exports a function with the same signature as <code>foo()</code>, which internally calls <code>bar()</code>. On Unix based systems use the <code>LD_PRELOAD</code> trick<sup><a href="injections.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup> to load the library before any other. On Windows, either place your library in the <code>System32</code> folder (it must have the same name as the one exporting <code>foo()</code>) or do the registry hack<sup><a href="injections.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup> to have it load instead. If <code>foo()</code> isn&#039;t available through a shared library, you&#039;re out of luck.</div>
+</li>
+</ul>
+
+<p>
+Here&#039;s a better solution: modify <code>foo()</code> at runtime by writing your code inside it!
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Strictly speaking, you call a function by <code>push</code>-ing some stuff like the arguments into the stack and then by executing <code>call <em>function address</em></code>. Since we&#039;re discussing C, when the function returns, you <code>pop</code> those arguments from the stack to keep it from thrashing. For example (this is debug code, notice the sanity check at <code>00F9145E</code>):
+</p>
+<table class="columns-plugin" style="width:40%">
+<tr><td class="columns-plugin first" style="width:70%;">
+<pre class="code cpp"><span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;bar<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+</td><td class="columns-plugin last">
+<pre class="code asm"><span class="co2">00F9144E</span><span class="sy1">:</span> <span class="kw1">mov</span>         <span class="kw4">esi</span><span class="sy1">,</span><span class="kw4">esp</span>  
+<span class="co2">00F91450</span><span class="sy1">:</span> <span class="kw1">push</span>        offset string <span class="st0">&quot;bar\n&quot;</span> <span class="br0">&#40;</span>00F95744<span class="br0">&#41;</span>  
+<span class="co2">00F91455</span><span class="sy1">:</span> <span class="kw1">call</span>        <span class="kw6">dword</span> ptr <span class="br0">&#91;</span>__imp__printf <span class="br0">&#40;</span>00F982E0<span class="br0">&#41;</span><span class="br0">&#93;</span>  
+<span class="co2">00F9145B</span><span class="sy1">:</span> <span class="kw1">add</span>         <span class="kw4">esp</span><span class="sy1">,</span><span class="nu0">4</span>  
+<span class="co2">00F9145E</span><span class="sy1">:</span> <span class="kw1">cmp</span>         <span class="kw4">esi</span><span class="sy1">,</span><span class="kw4">esp</span>  </pre>
+</td></tr></table>
+
+<p>
+The code at addresses <code>00F9144E</code> and <code>00F9145E</code> is inserted because of the Debug flag enabled when compiling. At <code>00F91450</code> the argument (string <code>“bar\n”</code> - actually an x86 4 byte pointer to the string) is passed to <code>printf()</code> through the stack and at <code>00F9145B</code> that argument is removed from the stack (it just tells the stack that its “peak” lays lower with 4 bytes). Remember that the stack starts at its maximum capacity address and “grows” towards 0. At address <code>00F982E0</code> (relative to the current process&#039; address space. If <code>printf()</code> comes from a shared library - as it&#039;s most likely - then it&#039;s going to have a different address, aligned to that library&#039;s address space!) within this process, expect to find all the might (and magic) of <code>printf()</code>!
+</p>
+</div></div>
+<p>
+So simply take the code from <code>bar()</code> and write it on top of <code>foo()</code> with <code>memmove()</code>-like logic. If <code>bar()</code> is significantly larger than <code>foo()</code> then we might run into trouble by overwriting code residing in memory “after” <code>foo()</code>. To avoid this unwanted effect, we&#039;d have to “move” everything “after” <code>foo()</code> to larger addresses, so that <code>bar()</code> fits without overwriting anything. This is bad because multiple calls from outside to the code that is shifted in the memory will break. We&#039;d also have to patch those calls and jumps, update them with the newer, bigger addresses, ending up with a tremendous amount of work.
+Thankfully there&#039;s an easier hack through means of the unconditional jump - <code>jmp <em>distance to destination</em></code>. It works in the following way:
+</p>
+<pre class="code asm">x    <span class="sy1">:</span> <span class="kw1">jmp</span>      <span class="kw6">dword</span> ptr <span class="br0">&#91;</span>y <span class="sy1">-</span> <span class="br0">&#40;</span>x <span class="sy1">+</span> <span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#93;</span>
+x <span class="sy1">+</span> <span class="nu0">5</span><span class="sy1">:</span>
+<span class="sy1">.......................................</span>
+y    <span class="sy1">:</span> etc</pre>
+
+<p>
+At first the Instruction Pointer is at offset <code>x</code> and execution goes through the jump, next it&#039;s going to be at offset <code>y</code>, running whatever lies there. The operand to this form of <code>jmp</code> is a 32 bit offset, a distance between the “landing point” and the “jump point”. It can be negative.
+So we might run into less trouble by writing <code>jmp <em>distance between bar and (foo + 5)</em></code> immediately after the entry point of <code>foo()</code>.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="basic_hot_patch_example">Basic Hot Patch Example</h3>
+<div class="level3">
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/injections%3Fcodeblock=3" title="Download Snippet" class="mediafile mf_cpp">hotpatch.cpp</a></dt>
+<dd><pre class="code file cpp"><span class="co2">#include &lt;windows.h&gt;</span>
+<span class="co2">#include &lt;cstdio&gt;</span>
+<span class="kw2">using</span> <span class="kw2">namespace</span> std<span class="sy4">;</span>
+&nbsp;
+<span class="kw4">const</span> <span class="kw4">unsigned</span> <span class="kw4">char</span> OP_JMP <span class="sy1">=</span> <span class="nu12">0xE9</span><span class="sy4">;</span>  <span class="co1">// 32 bit relative jmp</span>
+<span class="kw4">const</span> SIZE_T SIZE_PATCH <span class="sy1">=</span> <span class="nu0">5</span><span class="sy4">;</span>        <span class="co1">// jmp dword ptr distance; 1 byte + 4 bytes</span>
+<span class="kw4">typedef</span> <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy2">*</span>MyProc<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+<span class="kw4">void</span> SimpleFunction1<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;foo<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> SimpleFunction2<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;bar<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    PBYTE foo <span class="sy1">=</span> <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>SimpleFunction1<span class="br0">&#41;</span><span class="sy4">;</span>
+    PBYTE bar <span class="sy1">=</span> <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>SimpleFunction2<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+    DWORD oldProtection<span class="sy4">;</span>
+    <span class="co1">// make sure the bytes of the function are writable</span>
+    <span class="co1">// by default they are only readable and executable</span>
+    BOOL res <span class="sy1">=</span> VirtualProtect<span class="br0">&#40;</span>foo, SIZE_PATCH, PAGE_EXECUTE_READWRITE, <span class="sy3">&amp;</span>oldProtection<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy3">!</span>res<span class="br0">&#41;</span> <span class="kw1">return</span> <span class="nu0">1</span><span class="sy4">;</span>
+&nbsp;
+    <span class="co1">// be mindful of pointer arithmetic</span>
+    <span class="co1">// works with PBYTE, won't with PDWORD</span>
+    DWORD distanceToNewFoo <span class="sy1">=</span> bar <span class="sy2">-</span> foo <span class="sy2">-</span> SIZE_PATCH<span class="sy4">;</span>
+&nbsp;
+    <span class="sy2">*</span>foo <span class="sy1">=</span> OP_JMP<span class="sy4">;</span>
+    <span class="sy2">*</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PDWORD<span class="sy1">&gt;</span><span class="br0">&#40;</span>foo <span class="sy2">+</span> <span class="nu0">1</span><span class="br0">&#41;</span> <span class="sy1">=</span> distanceToNewFoo<span class="sy4">;</span>
+&nbsp;
+    <span class="co1">// called though the pointer instead of foo()</span>
+    <span class="co1">// to make sure the compiler won't inline or do some other stupid stuff</span>
+    <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>MyProc<span class="sy1">&gt;</span><span class="br0">&#40;</span>foo<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// will print &quot;bar\n&quot;</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+An important thing to have in mind here, is that the conversion between function pointer and <code>void *</code> (<code>PVOID</code>, <code>PBYTE</code>, etc) is illegal in both C and C++<sup><a href="injections.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup>, even though it works in Visual C and in GCC. For Linux check <a href="http://www.kernel.org/doc/man-pages/online/pages/man2/mprotect.2.html" class="urlextern" title="http://www.kernel.org/doc/man-pages/online/pages/man2/mprotect.2.html"  rel="nofollow">mprotect()</a> instead of <a href="http://msdn.microsoft.com/en-us/library/aa366898%28v=vs.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/aa366898%28v=vs.85%29.aspx"  rel="nofollow">VirtualProtect()</a>.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden"><div class="table sectionedit1"><table class="inline">
+	<tr class="row0">
+		
+	</tr>
+</table></div>
+</div><div class="hiddenOnVisible"><div class="table sectionedit1"><table class="inline">
+	<tr class="row0">
+		
+	</tr>
+</table></div>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Since we&#039;re already on a rule-bending treadmill, know that the popular C++ compilers out there (GCC 4.5, Visual C 2010 SP1) directly complain when trying to look at <strong>member</strong> function pointers as they were data pointers (<code>void *</code>). Here&#039;s how I scrape that, just so that you have a hint (this code bends so many rules that it makes even lolcats weep):
+</p>
+<pre class="code cpp"><span class="kw4">void</span> <span class="sy2">*</span>DisMember<span class="br0">&#40;</span><span class="kw4">size_t</span> size, ...<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="co1">// the pointer can be more complicated than a plain data pointer</span>
+    <span class="co1">// think of virtual member functions, multiple inheritance, etc</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>size <span class="sy3">!</span><span class="sy1">=</span> <span class="kw3">sizeof</span><span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy2">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="kw1">return</span> <span class="kw2">NULL</span><span class="sy4">;</span>
+    <span class="kw4">va_list</span> args<span class="sy4">;</span>
+    <span class="kw3">va_start</span><span class="br0">&#40;</span>args, size<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw4">void</span> <span class="sy2">*</span>res <span class="sy1">=</span> <span class="kw3">va_arg</span><span class="br0">&#40;</span>args, <span class="kw4">void</span> <span class="sy2">*</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw3">va_end</span><span class="br0">&#40;</span>args<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw1">return</span> res<span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Assuming I&#039;m working my way towards <code>int MyClass::MemberFunction(float, const char *)</code>, I use:
+</p>
+<pre class="code cpp">    <span class="kw4">int</span> <span class="br0">&#40;</span>MyClass<span class="sy4">::</span><span class="sy2">*</span>pFunc<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">float</span>, <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy2">*</span><span class="br0">&#41;</span> <span class="sy1">=</span> <span class="sy3">&amp;</span>MyClass<span class="sy4">::</span><span class="me2">MemberFunction</span><span class="sy4">;</span>
+    <span class="kw4">void</span> <span class="sy2">*</span>pData <span class="sy1">=</span> DisMember<span class="br0">&#40;</span>pFunc<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw4">char</span> <span class="sy2">*</span>string <span class="sy1">=</span> <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span><span class="kw4">char</span> <span class="sy2">*</span><span class="sy1">&gt;</span><span class="br0">&#40;</span>pData<span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// watch and cringe!</span></pre>
+
+<p>
+This works when you know for sure that <code>MemberFunction</code> is defined in <code>MyClass</code>. You don&#039;t if you&#039;re fiddling around with virtual functions.
+Suspect that the compilers put a pointer to the virtual table as the first bytes of any object, at least in simple cases of inheritance (both deriving from multiple classes and having a deeper inheritance chain qualify as non-simple cases):
+</p>
+<pre class="code cpp"><span class="kw2">class</span> Base
+<span class="br0">&#123;</span>
+    <span class="coMULTI">/* ... */</span>
+    <span class="kw2">public</span><span class="sy4">:</span> <span class="kw2">virtual</span> <span class="kw4">int</span> Foo<span class="br0">&#40;</span><span class="kw4">float</span>, <span class="kw4">float</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="coMULTI">/* first virtual member */</span>
+    <span class="coMULTI">/* ... */</span>
+    <span class="kw2">public</span><span class="sy4">:</span> <span class="kw2">virtual</span> <span class="kw4">float</span> Bar<span class="br0">&#40;</span><span class="kw4">int</span>, <span class="kw4">int</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="coMULTI">/* second virtual member */</span>
+    <span class="coMULTI">/* ... */</span>
+<span class="br0">&#125;</span><span class="sy4">;</span>
+<span class="coMULTI">/* ... */</span>
+<span class="kw2">class</span> Derived <span class="sy4">:</span> <span class="kw2">public</span> Base <span class="br0">&#123;</span> <span class="coMULTI">/* ... */</span> <span class="br0">&#125;</span><span class="sy4">;</span>
+<span class="coMULTI">/* ... */</span>
+&nbsp;
+    Derived <span class="sy2">*</span>theObject<span class="sy4">;</span>
+    <span class="coMULTI">/* ... */</span>
+&nbsp;
+    <span class="co1">// the first value inside theObject is a pointer to a vector</span>
+    <span class="co1">// the vector contains the address of Foo() and the address of Bar()</span>
+    <span class="co1">// now we assume that those values fit (void *)</span>
+    <span class="kw4">void</span> <span class="sy2">*</span><span class="br0">&#40;</span><span class="sy2">*</span>pVtable<span class="br0">&#41;</span><span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy1">=</span> <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span><span class="kw4">void</span> <span class="sy2">*</span><span class="br0">&#40;</span><span class="sy2">*</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy1">&gt;</span><span class="br0">&#40;</span><span class="sy2">*</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span><span class="kw4">void</span> <span class="sy2">**</span><span class="sy1">&gt;</span><span class="br0">&#40;</span>theObject<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+    <span class="kw4">void</span> <span class="sy2">*</span>pFooAsAnything <span class="sy1">=</span> <span class="br0">&#40;</span><span class="sy2">*</span>pVtable<span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy4">;</span> <span class="co1">// Foo() is the first entry</span>
+    <span class="kw4">char</span> <span class="sy2">*</span>pBarAsString <span class="sy1">=</span> <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span><span class="kw4">char</span> <span class="sy2">*</span><span class="sy1">&gt;</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="sy2">*</span>pVtable<span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+</div></div>
+<p>
+The following image is an attempt at showing a map of the code from <code>hotpatch.cpp</code>. Keep in mind that the memory addresses from the left side are fictional.
+<a href="../../../_detail/so/laboratoare-2013/resurse/home/hotpatch.png%3Fid=so%253Alaboratoare-2013%253Aresurse%253Ainjections.html" class="media" title="so:laboratoare-2013:resurse:home:hotpatch.png"><img src="../../../_media/so/laboratoare-2013/resurse/home/hotpatch.png" class="mediacenter" title="Hot patch memory schematic" alt="Hot patch memory schematic" /></a>
+</p>
+<ol>
+<li class="level1"><div class="li"> <code>foo()</code> is <code>02114B05 - 011A3518 = 00F715ED</code> bytes long, fits an <code>unsigned char[16193005]</code>. <code>bar()</code> is <code>0852AB24 - 0852AA02 = 00000122</code> bytes long, fits an <code>unsigned char[290]</code>.</div>
+</li>
+<li class="level1"><div class="li"> the idea is to inject an unconditional jump at the beginning of <code>foo()</code>, jump that will land at the first instruction of <code>bar()</code>.</div>
+</li>
+<li class="level1"><div class="li"> notice the distance between the expected “current” instruction within <code>foo()</code> at address <code>011A351D</code> and the “landing zone” in <code>bar()</code>, address <code>0852AA02</code>. We&#039;re talking about <code>0852AA02 - 011A351D = 073874E5</code> bytes across.</div>
+</li>
+<li class="level1"><div class="li"> the <code>E9</code> jump receives an immediate operand; that means the operand is within the code and the whole thing eats up 5 bytes, 1 for the opcode and 4 for the operand. That&#039;s why the execution jumps from <code>011A351D</code> and not directly from the beginning of <code>foo()</code>, at <code>011A3518</code>.</div>
+</li>
+</ol>
+
+<p>
+As an observation, both <code>statement n</code> and <code>statement m</code> are far <code>ret</code>s, opcode = <code>CB</code>. For the example in the picture, the program would write <code>E9</code>, <code>E5</code>, <code>74</code>, <code>38</code>, <code>07</code> just at the beginning of <code>foo()</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>E9</code> is the opcode for far <code>jmp</code>. A far <code>jmp</code> receives an immediate 32 bit argument.</div>
+</li>
+<li class="level1"><div class="li"> <code>E5</code>, <code>74</code>, <code>38</code>, <code>07</code> represent - due to endianness - the number <code>073874E5</code>, the argument.</div>
+</li>
+</ul>
+
+<p>
+As a rule, it&#039;s better to make sure the new function matches the old one in both calling convention and return value + arguments.
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="dll_injection">Dll Injection</h2>
+<div class="level2">
+
+<p>
+Now why would I go through the lengths of such useless (but fun) trickery? I won&#039;t answer in this section, but it&#039;s required to fully grasp what will follow.
+Under the Windows operating system, dll injection refers to executing foreign code in a different process. Ever wondered how applications such as Fraps<sup><a href="injections.html#fn__4" id="fnt__4" class="fn_top">4)</a></sup> or RivaTuner<sup><a href="injections.html#fn__5" id="fnt__5" class="fn_top">5)</a></sup> / MSI Aterburner<sup><a href="injections.html#fn__6" id="fnt__6" class="fn_top">6)</a></sup> manage to display a framerate counter on top of the currently running, full screen and exclusive mode D3D / OpenGL application? Or how, something like Sockscap<sup><a href="injections.html#fn__7" id="fnt__7" class="fn_top">7)</a></sup> manages to redirect an application&#039;s traffic through the given proxy? Read on.
+</p>
+
+<p>
+While the above applications take advantage of dll injection, keep in mind that the “global hotkeys” functionality from programs such as foobar2000<sup><a href="injections.html#fn__8" id="fnt__8" class="fn_top">8)</a></sup> or AutoHotkey<sup><a href="injections.html#fn__9" id="fnt__9" class="fn_top">9)</a></sup> are implemented by means of a “cousin” method - via low level keyboard hooks.
+</p>
+
+<p>
+This is how one would run their code in a “parasited” process<sup><a href="injections.html#fn__10" id="fnt__10" class="fn_top">10)</a></sup>:
+</p>
+<ol>
+<li class="level1"><div class="li"> with <a href="http://msdn.microsoft.com/en-us/library/ms644990%28VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms644990%28VS.85%29.aspx"  rel="nofollow">SetWindowsHookEx()</a>. Installing <strong>global hooks</strong>, from dlls defining them, <strong>is</strong> dll injection at work. It&#039;s an OK method, explained here.</div>
+</li>
+<li class="level1"><div class="li"> with <a href="http://msdn.microsoft.com/en-us/library/ms682437%28VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms682437%28VS.85%29.aspx"  rel="nofollow">CreateRemoteThread(</a><a href="http://msdn.microsoft.com/en-us/library/ms684175%28VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms684175%28VS.85%29.aspx"  rel="nofollow">LoadLibrary())</a>. This is the <em>true</em> dll injection.</div>
+</li>
+<li class="level1"><div class="li"> with <a href="http://msdn.microsoft.com/en-us/library/ms681674%28VS.85%29.aspx]" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms681674%28VS.85%29.aspx]"  rel="nofollow">WriteProcessMemory(OurThreadProc)</a>; <a href="http://msdn.microsoft.com/en-us/library/ms682437%28VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms682437%28VS.85%29.aspx"  rel="nofollow">CreateRemoteThread(OurThreadProc)</a>. This is so much in the true spirit of dll injection, that it&#039;s not even dll injection anymore, it&#039;s directly code injection!</div>
+</li>
+</ol>
+
+<p>
+Here&#039;s the recipe for setting up a global Windows hook and getting your code into <code>victim process</code>:
+</p>
+<ol>
+<li class="level1"><div class="li"> think of a suitable criteria; for example when a window gets created. That type of event is called a <code>shell event</code> and it&#039;s hookable via <a href="http://msdn.microsoft.com/en-us/library/ms644990%28VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms644990%28VS.85%29.aspx"  rel="nofollow">SetWindowsHookEx(WH_SHELL, ShellProc)</a></div>
+</li>
+<li class="level1"><div class="li"> write <code>myhook.dll</code> that defines and exports the above <code>ShellProc()</code>, see some steps below. For convenience, also export something like <code>InstallHook()</code> from that dll, and within the code add the call to <code>SetWindowsHookEx()</code>.</div>
+</li>
+<li class="level1"><div class="li"> write a “launcher” program, that will call once the <code>InstallHook()</code> function defined in our dll and then just wait (if it unloads, probably Windows will also unload the dll, unless special measures are taken, resulting in crashes)</div>
+</li>
+<li class="level1"><div class="li"> <code>ShellProc()</code> will get called by the system everytime the specific event - a shell event in our case - is to be received by the application. Its code will run in that application&#039;s address space!</div>
+</li>
+</ol>
+
+<p>
+Watch the following picture if you don&#039;t believe:
+<a href="../../../_detail/so/laboratoare-2013/resurse/home/hook.png%3Fid=so%253Alaboratoare-2013%253Aresurse%253Ainjections.html" class="media" title="so:laboratoare-2013:resurse:home:hook.png"><img src="../../../_media/so/laboratoare-2013/resurse/home/hook.png" class="mediacenter" title="WH_SHELL diagram" alt="WH_SHELL diagram" /></a>
+</p>
+<ol>
+<li class="level1"><div class="li"> normally, an event is dispatched to the message loop of the receiving thread, and the message loop further sends that message within the thread to a “proper” handler</div>
+</li>
+<li class="level1"><div class="li"> <code>myhook.dll</code> registers, system-wide, <code>ShellProc()</code> as an interceptor of shell events (out of which <code>WM_CREATE</code>). Now the message goes through the code from <code>ShellProc()</code> and only after processing it&#039;s (not even necessary, only because I&#039;m too kind) forwarded to the shell handler in the original event loop.</div>
+</li>
+</ol>
+
+</div>
+
+<h1 class="sectionedit5" id="a_practical_example">A Practical Example</h1>
+<div class="level1">
+
+<p>
+I like playing my games in windowed mode. Inspired by Media Player Classic Homecinema&#039;s<sup><a href="injections.html#fn__11" id="fnt__11" class="fn_top">11)</a></sup> borderless always on top window mode, I thought to myself how cool would it be to have any game&#039;s window borderless and always on top of the other windows. A game&#039;s window usually contains either <code>WS_CAPTION</code> or <code>WS_THICKFRAME</code> window styles. Making it borderless is a simple matter of retrieving its style (<a href="http://msdn.microsoft.com/en-us/library/ms633584%28v=VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms633584%28v=VS.85%29.aspx"  rel="nofollow">GetWindowLong(GWL_STYLE)</a>), removing (toggling), by means of <code>XOR</code>, the relevant style and then applying the result on the window handle <a href="http://msdn.microsoft.com/en-us/library/ms633591%28v=VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms633591%28v=VS.85%29.aspx"  rel="nofollow">SetWindowLong(GWL_STYLE)</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="removing_the_window_decorations">Removing The Window Decorations</h2>
+<div class="level2">
+
+<p>
+As a first attempt I created a simple one-shot console application that targeted the Heroes of Newerth window, removing the <code>WS_CAPTION</code> style, as reported by Spy++.
+</p>
+
+<p>
+<a href="../../../_detail/so/laboratoare-2013/resurse/home/hon01.png%3Fid=so%253Alaboratoare-2013%253Aresurse%253Ainjections.html" class="media" title="so:laboratoare-2013:resurse:home:hon01.png"><img src="../../../_media/so/laboratoare-2013/resurse/home/hon01.png%3Fw=640&amp;tok=8f2fde" class="mediacenter" title="Heroes of Newerth window styles" alt="Heroes of Newerth window styles" width="640" /></a>
+</p>
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/injections%3Fcodeblock=7" title="Download Snippet" class="mediafile mf_cpp">Borderless1.cpp</a></dt>
+<dd><pre class="code file cpp"><span class="co2">#include &lt;cstdio&gt;</span>
+<span class="kw2">using</span> <span class="kw2">namespace</span> std<span class="sy4">;</span>
+<span class="co2">#include &lt;windows.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">bool</span> done  <span class="sy1">=</span>  <span class="kw2">false</span><span class="sy4">;</span>
+    <span class="co1">// finish when 'q' is entered</span>
+    <span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy3">!</span>done<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        HWND hwnd <span class="sy1">=</span> FindWindow<span class="br0">&#40;</span><span class="kw2">NULL</span>, TEXT<span class="br0">&#40;</span><span class="st0">&quot;Heroes of Newerth&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw2">NULL</span> <span class="sy3">!</span><span class="sy1">=</span> hwnd<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            LONG styles <span class="sy1">=</span> GetWindowLong<span class="br0">&#40;</span>hwnd,  GWL_STYLE<span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span><span class="nu0">0</span> <span class="sy3">!</span><span class="sy1">=</span> styles<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                styles <span class="sy3">^</span><span class="sy1">=</span> WS_CAPTION<span class="sy4">;</span>
+                LONG result <span class="sy1">=</span> SetWindowLong<span class="br0">&#40;</span>hwnd, GWL_STYLE, styles<span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span>
+        <span class="kw4">char</span> c<span class="sy4">;</span>
+        <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span>, <span class="sy3">&amp;</span>c<span class="br0">&#41;</span><span class="sy4">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="st0">'q'</span> <span class="sy1">==</span> c<span class="br0">&#41;</span>
+            done <span class="sy1">=</span> <span class="kw2">true</span><span class="sy4">;</span>
+    <span class="br0">&#125;</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+<a href="../../../_detail/so/laboratoare-2013/resurse/home/hon02.png%3Fid=so%253Alaboratoare-2013%253Aresurse%253Ainjections.html" class="media" title="so:laboratoare-2013:resurse:home:hon02.png"><img src="../../../_media/so/laboratoare-2013/resurse/home/hon02.png%3Fw=640&amp;tok=e089bc" class="mediacenter" title="Heroes of Newerth borderless" alt="Heroes of Newerth borderless" width="640" /></a>
+</p>
+
+<p>
+You can observe 2 problems in the current approach:
+</p>
+<ol>
+<li class="level1"><div class="li"> the window is now blurry</div>
+</li>
+<li class="level1"><div class="li"> the mouse hover effect is registered a few pixels off</div>
+</li>
+</ol>
+
+<p>
+The blurriness problem happens because after removing the decorations (titlebar, dialog borders), Windows tries to maintain the program window within the same bounding rectangle. In doing so, it “inflates” the client area by a few pixels in each direction, pixels obtained from removing said decorations. Indeed, counting the pixels from the first picture, we get a total window area (including borders) of 1616&times;858 and a client area (only the Direct3D part from within the borders where the application draws its updates) of 1600&times;820 pixels. For the second picture, we have a window area equal to the client area (no more borders) of 1606&times;848 pixels. Since Heroes of Newerth has a dialog frame (non-sizeable), it doesn&#039;t treat <code>WM_SIZE</code> messages; the Direct3D context keeps rendering at the initial config file resolution and the resulting frame buffer gets drawn, with stretching, on top of a sligthly different window area so we don&#039;t have a perfect ”(logical )pixel-on-(screen )pixel” mapping anymore.
+Note my config file for the game:
+</p>
+<pre class="code ini">//snip
+SetSave <span class="st0">&quot;vid_resolution&quot;</span> <span class="st0">&quot;1600,820&quot;</span>
+//snip</pre>
+
+<p>
+Here&#039;s a fix for keeping the client area of the window in place during the style change:
+</p>
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/injections%3Fcodeblock=9" title="Download Snippet" class="mediafile mf_cpp">Borderless2.cpp</a></dt>
+<dd><pre class="code file cpp"><span class="co2">#include &lt;cstdio&gt;</span>
+<span class="kw2">using</span> <span class="kw2">namespace</span> std<span class="sy4">;</span>
+<span class="co2">#include &lt;windows.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">bool</span> done  <span class="sy1">=</span>  <span class="kw2">false</span><span class="sy4">;</span>
+    <span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy3">!</span>done<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        HWND hwnd <span class="sy1">=</span> FindWindow<span class="br0">&#40;</span><span class="kw2">NULL</span>, TEXT<span class="br0">&#40;</span><span class="st0">&quot;Heroes of Newerth&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw2">NULL</span> <span class="sy3">!</span><span class="sy1">=</span> hwnd<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            LONG styles <span class="sy1">=</span> GetWindowLong<span class="br0">&#40;</span>hwnd,  GWL_STYLE<span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span><span class="nu0">0</span> <span class="sy3">!</span><span class="sy1">=</span> styles<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                styles <span class="sy3">^</span><span class="sy1">=</span> WS_CAPTION<span class="sy4">;</span>
+&nbsp;
+                <span class="kw4">bool</span> deflate <span class="sy1">=</span> <span class="nu0">0</span> <span class="sy1">==</span> <span class="br0">&#40;</span>styles <span class="sy3">&amp;</span> WS_CAPTION<span class="br0">&#41;</span><span class="sy4">;</span>
+                RECT rc<span class="sy4">;</span>
+                GetWindowRect<span class="br0">&#40;</span>hwnd, <span class="sy3">&amp;</span>rc<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+                <span class="kw4">int</span> captionHeight <span class="sy1">=</span> GetSystemMetrics<span class="br0">&#40;</span>SM_CYCAPTION<span class="br0">&#41;</span><span class="sy4">;</span>
+                <span class="kw4">int</span> borderWidth <span class="sy1">=</span> GetSystemMetrics<span class="br0">&#40;</span>SM_CXDLGFRAME<span class="br0">&#41;</span><span class="sy4">;</span>
+                <span class="kw4">int</span> borderHeight <span class="sy1">=</span> GetSystemMetrics<span class="br0">&#40;</span>SM_CYDLGFRAME<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+                <span class="kw1">if</span> <span class="br0">&#40;</span>deflate<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                    rc.<span class="me1">left</span> <span class="sy2">+</span><span class="sy1">=</span> borderWidth<span class="sy4">;</span>
+                    rc.<span class="me1">right</span> <span class="sy2">-</span><span class="sy1">=</span> borderWidth<span class="sy4">;</span>
+                    rc.<span class="me1">top</span> <span class="sy2">+</span><span class="sy1">=</span> captionHeight <span class="sy2">+</span> borderHeight<span class="sy4">;</span>
+                    rc.<span class="me1">bottom</span> <span class="sy2">-</span><span class="sy1">=</span> borderHeight<span class="sy4">;</span>
+                <span class="br0">&#125;</span>
+                <span class="kw1">else</span> <span class="br0">&#123;</span>
+                    rc.<span class="me1">left</span> <span class="sy2">-</span><span class="sy1">=</span> borderWidth<span class="sy4">;</span>
+                    rc.<span class="me1">right</span> <span class="sy2">+</span><span class="sy1">=</span> borderWidth<span class="sy4">;</span>
+                    rc.<span class="me1">top</span> <span class="sy2">-</span><span class="sy1">=</span> captionHeight <span class="sy2">+</span> borderHeight<span class="sy4">;</span>
+                    rc.<span class="me1">bottom</span> <span class="sy2">+</span><span class="sy1">=</span> borderHeight<span class="sy4">;</span>
+                <span class="br0">&#125;</span>
+                LONG result <span class="sy1">=</span> SetWindowLong<span class="br0">&#40;</span>hwnd, GWL_STYLE, styles<span class="br0">&#41;</span><span class="sy4">;</span>
+                <span class="kw1">if</span> <span class="br0">&#40;</span><span class="nu0">0</span> <span class="sy3">!</span><span class="sy1">=</span> result<span class="br0">&#41;</span>
+                    SetWindowPos<span class="br0">&#40;</span>hwnd, <span class="kw2">NULL</span>,
+                        rc.<span class="me1">left</span>, rc.<span class="me1">top</span>,
+                        rc.<span class="me1">right</span> <span class="sy2">-</span> rc.<span class="me1">left</span>, rc.<span class="me1">bottom</span> <span class="sy2">-</span> rc.<span class="me1">top</span>,
+                        SWP_FRAMECHANGED<span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span>
+        <span class="kw4">char</span> c<span class="sy4">;</span>
+        <span class="kw3">scanf</span><span class="br0">&#40;</span><span class="st0">&quot;%c&quot;</span>, <span class="sy3">&amp;</span>c<span class="br0">&#41;</span><span class="sy4">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="st0">'q'</span> <span class="sy1">==</span> c<span class="br0">&#41;</span>
+            done <span class="sy1">=</span> <span class="kw2">true</span><span class="sy4">;</span>
+    <span class="br0">&#125;</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+A process such as Starcraft 2 owns a window with the <code>WS_THICKFRAME</code> style denoting a sizing border. If I change the code to remove that style from the Starcraft 2 main window (also <code>SM_C?THICKFRAME</code> instead of <code>SM_C?DLGFRAME</code>, I can only notice the mouse hover effect being off - the game catches <code>WM_SIZE</code> messages and adjusts the framebuffer accordingly.
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="fixing_the_mouse_behavior">Fixing The Mouse Behavior</h2>
+<div class="level2">
+
+<p>
+For the broken mouse hover effect it&#039;s time to put The Injection to use! Among the usual suspects for this problem are the window rectangle functions <a href="http://msdn.microsoft.com/en-us/library/ms633519%28VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms633519%28VS.85%29.aspx"  rel="nofollow">GetWindowRect()</a> and <a href="http://msdn.microsoft.com/en-us/library/ms633503%28VS.85%29.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms633503%28VS.85%29.aspx"  rel="nofollow">GetClientRect()</a>. It would make sense, due to the fact that games usually obtain mouse events through DirectInput, that initially mouse coordinates are expressed in desktop-absolute form, and not relative to the application window. Therefore they&#039;d have to employ, in one form or another a conversion between screen (absolute) coordinates and window coordinates in a similar manner to the operation of <a href="http://msdn.microsoft.com/en-us/library/aa931003.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/aa931003.aspx"  rel="nofollow">ClientToScreen()</a>.
+Let&#039;s take a look at an application window and the <code>Get?Rect()</code> logic relating to it:
+<a href="../../../_detail/so/laboratoare-2013/resurse/home/sc201.png%3Fid=so%253Alaboratoare-2013%253Aresurse%253Ainjections.html" class="media" title="so:laboratoare-2013:resurse:home:sc201.png"><img src="../../../_media/so/laboratoare-2013/resurse/home/sc201.png%3Fw=640&amp;tok=fe0e20" class="mediacenter" title="Window rectangles" alt="Window rectangles" width="640" /></a>
+</p>
+
+<p>
+What the game does when handling mouse input is obtain some absolute screen coordinates from DirectInput, convert them to window coordinates, then <strong>compensate</strong> for the window title and borders and then figure out what to do next with the event. Note that after removing the window decorations, both <code>GetWindowRect()</code> and <code>GetClientRect()</code> return the same coordinates. Then the game compensates by subtracting the expected widths and heights of borders, resulting in slightly off readings for the events. The idea here is to modify at run-time <code>GetWindowRect()</code> so that it returns the old rectangle, with titlebar and borders, as if the window style still contained those elements.
+</p>
+
+<p>
+The basic workflow for detouring <code>GetWindowRect()</code> is:
+</p>
+<ol>
+<li class="level1"><div class="li"> insert exactly at the beginning of the function a <code>jmp</code> to our <code>GetWindowRect()</code>; hot patch it</div>
+</li>
+<li class="level1"><div class="li"> in our <code>GetWindowRect()</code> restore the code of the original function</div>
+</li>
+<li class="level1"><div class="li"> call the original function and save the result</div>
+</li>
+<li class="level1"><div class="li"> modify that result so that it fits our agenda</div>
+</li>
+<li class="level1"><div class="li"> hot patch <code>GetWindowRect()</code> again</div>
+</li>
+<li class="level1"><div class="li"> return the now modified result</div>
+</li>
+</ol>
+
+</div>
+
+<h1 class="sectionedit8" id="bit_versus_64_bit">32 Bit Versus 64 Bit</h1>
+<div class="level1">
+
+<p>
+Special care should be taken when moving to x86-64.
+</p>
+
+</div>
+
+<h2 class="sectionedit9" id="hot_patching">Hot Patching</h2>
+<div class="level2">
+
+<p>
+While the previous approach for hot patching a function (via relative <code>jmp</code>) is generally OK even in 64 bit mode, there could be rare occasions when the distance between the <em>patched</em> function and the original one can&#039;t be expressed on only 32 bits. Since the specific form of <code>jmp</code> used expects a 32 bit displacement, it would be useless in this case.
+</p>
+
+<p>
+The suggested solution here is a 64 bit absolute jump, which comes by default with x86-64<sup><a href="injections.html#fn__12" id="fnt__12" class="fn_top">12)</a></sup>. The idea here is just slightly different than in the case of plain x86. While <code>jmp</code> accepted there as argument an immediate displacement, the x86-64 long jump functions through an indirect register. So we&#039;d simply load the destination address (not a “distance” any more for this instruction) into a register and pass that register as the operand to the <code>jmp</code>. Fortunately, x86-64 states that the special 64-bit registries <code>r10</code> and <code>r11</code> aren&#039;t preserved between <code>call</code> opcodes, so picking <code>r11</code> is a safe bet and guaranteed not to ruin the program flow.
+</p>
+
+</div>
+
+<h2 class="sectionedit10" id="dll_injection1">Dll Injection</h2>
+<div class="level2">
+
+<p>
+One can&#039;t insert an image compiled for 32 bits inside a 64 bit process and can&#039;t inject a 64 bit dll inside a 32 bit process. The idea is to have 2 separate programs making the dll injection, 2 versions of the dll, each of them for 64 bits and, respectively, for 32 bits. The 32 bit injector should set up the hooks as usual and launch a light weight version of itself that only sets up the hook and waits for an end event.
+</p>
+
+<p>
+Loader:
+</p>
+<pre class="code cpp">    TCHAR path<span class="br0">&#91;</span>MAX_PATH<span class="br0">&#93;</span><span class="sy4">;</span>
+    DWORD len <span class="sy1">=</span> GetModuleFileName<span class="br0">&#40;</span><span class="kw2">NULL</span>, path, MAX_PATH<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw1">while</span> <span class="br0">&#40;</span>path<span class="br0">&#91;</span>len <span class="sy2">-</span> <span class="nu0">1</span><span class="br0">&#93;</span> <span class="sy3">!</span><span class="sy1">=</span> <span class="st0">'<span class="es1">\\</span>'</span><span class="br0">&#41;</span> <span class="sy2">--</span>len<span class="sy4">;</span>
+    MoveMemory<span class="br0">&#40;</span>path <span class="sy2">+</span> len, TEXT<span class="br0">&#40;</span><span class="st0">&quot;Deframe64.dat&quot;</span><span class="br0">&#41;</span>, <span class="kw3">sizeof</span><span class="br0">&#40;</span>TCHAR<span class="br0">&#41;</span> <span class="sy2">*</span> <span class="br0">&#40;</span>lstrlen<span class="br0">&#40;</span>TEXT<span class="br0">&#40;</span><span class="st0">&quot;Deframe64.dat&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy2">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    STARTUPINFO siDeframe64 <span class="sy1">=</span> <span class="br0">&#123;</span><span class="kw3">sizeof</span><span class="br0">&#40;</span>STARTUPINFO<span class="br0">&#41;</span><span class="br0">&#125;</span><span class="sy4">;</span>
+    PROCESS_INFORMATION piDeframe64<span class="sy4">;</span>
+    BOOL bRes <span class="sy1">=</span> CreateProcess<span class="br0">&#40;</span><span class="nu0">0</span>, path, <span class="kw2">NULL</span>, <span class="kw2">NULL</span>, TRUE, <span class="nu0">0</span>, <span class="kw2">NULL</span>, <span class="kw2">NULL</span>, <span class="sy3">&amp;</span>siDeframe64, <span class="sy3">&amp;</span>piDeframe64<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>bRes<span class="br0">&#41;</span> WaitForInputIdle<span class="br0">&#40;</span>piDeframe64.<span class="me1">hProcess</span>, INFINITE<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+    InstallHook<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/injections%3Fcodeblock=11" title="Download Snippet" class="mediafile mf_cpp">Deframe64.cpp</a></dt>
+<dd><pre class="code file cpp"><span class="co2">#include &lt;windows.h&gt;</span>
+<span class="co2">#include &quot;DeframeHelper.h&quot;</span>
+&nbsp;
+<span class="kw4">int</span> WINAPI WinMain<span class="br0">&#40;</span>HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, <span class="kw4">int</span> nCmdShow<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    InstallHook<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="co1">// main message loop:</span>
+    MSG msg<span class="sy4">;</span>
+    <span class="kw1">while</span> <span class="br0">&#40;</span>GetMessage<span class="br0">&#40;</span><span class="sy3">&amp;</span>msg, <span class="kw2">NULL</span>, <span class="nu0">0</span>, <span class="nu0">0</span><span class="br0">&#41;</span> <span class="sy3">&amp;&amp;</span> WM_QUIT <span class="sy3">!</span><span class="sy1">=</span> msg.<span class="me1">message</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        TranslateMessage<span class="br0">&#40;</span><span class="sy3">&amp;</span>msg<span class="br0">&#41;</span><span class="sy4">;</span>
+        DispatchMessage<span class="br0">&#40;</span><span class="sy3">&amp;</span>msg<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="br0">&#125;</span>
+    RemoveHook<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw1">return</span> <span class="kw2">static_cast</span><span class="sy1">&lt;</span><span class="kw4">int</span><span class="sy1">&gt;</span><span class="br0">&#40;</span>msg.<span class="me1">wParam</span><span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+The first fragment of code, residing in the normal 32 bit “injector” process first spawns a 64 bit child, our “Deframe64.dat”. They both perform the same main function at this stage - calling <code>InstallHook()</code> which is exported by the “guest” dll. I&#039;ve messed with the output of Deframe64 so that it has the extension <code>.dat</code>; this is only an aesthetic step so that the user doesn&#039;t accidentally launch the useless and with no means of terminating 64 bit process. On 32 bit systems <code>CreateProcess()</code> will fail and I simply ignore everything involving it.
+Here&#039;s how the 32 bit injector terminates the 64 bit one:
+</p>
+<pre class="code cpp">    <span class="kw1">if</span> <span class="br0">&#40;</span>bRes<span class="br0">&#41;</span> <span class="sy4">::</span><span class="me2">PostThreadMessage</span><span class="br0">&#40;</span>piDeframe64.<span class="me1">dwThreadId</span>, WM_QUIT, <span class="nu0">0</span>, <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+<p>
+<a href="../../../_detail/so/laboratoare-2013/resurse/home/guest3264.png%3Fid=so%253Alaboratoare-2013%253Aresurse%253Ainjections.html" class="media" title="so:laboratoare-2013:resurse:home:guest3264.png"><img src="../../../_media/so/laboratoare-2013/resurse/home/guest3264.png%3Fw=512&amp;tok=94a09c" class="mediacenter" title="32 bit guest and 64 bit stub" alt="32 bit guest and 64 bit stub" width="512" /></a>
+</p>
+
+</div>
+
+<h1 class="sectionedit11" id="download">Download</h1>
+<div class="level1">
+
+<p>
+All the required code can be found <a href="../../../_media/so/laboratoare-2013/resurse/injections.7z" class="media mediafile mf_7z" title="so:laboratoare-2013:resurse:injections.7z (120.3 KB)">here</a>. Note that the project files won&#039;t work with the Express version of Visual Studio, due to the main program - <code>Deframe</code> being written with <code>MFC</code>.
+For a binary build, see <a href="../../../_media/so/laboratoare-2013/resurse/deframe-5-no-mfc.7z" class="media mediafile mf_7z" title="so:laboratoare-2013:resurse:deframe-5-no-mfc.7z (45.5 KB)">this archive</a>.
+The solution uses a C-like approach for the Injection. The workflow is:
+</p>
+<ol>
+<li class="level1"><div class="li"> start Deframe.exe</div>
+</li>
+<li class="level1"><div class="li"> start the program of interest (Diablo III in the example)</div>
+</li>
+<li class="level1"><div class="li"> open that program&#039;s system menu (either left click on the small icon on the top left of the window or shift + right click on the program in the taskbar)</div>
+</li>
+<li class="level1"><div class="li"> select either of the 2 available options <code>On top</code> or <code>No borders</code></div>
+</li>
+</ol>
+
+<p>
+<a href="../../../_detail/so/laboratoare-2013/resurse/home/system_menu.png%3Fid=so%253Alaboratoare-2013%253Aresurse%253Ainjections.html" class="media" title="so:laboratoare-2013:resurse:home:system_menu.png"><img src="../../../_media/so/laboratoare-2013/resurse/home/system_menu.png%3Fw=640&amp;tok=e50e5d" class="mediacenter" title="The system menu in Diablo III" alt="The system menu in Diablo III" width="640" /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="a_c_template_library_for_the_impatient">A C++ Template Library (for the impatient)</h2>
+<div class="level2">
+
+<p>
+This code is not for the faint of heart, C++ 2003 (talking about Microsoft Visual C 2010 here, variadic template support) template code to simplify the hotpatching. Include it and use it as exemplified further below (it&#039;s not included in the source download).
+</p>
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/injections%3Fcodeblock=13" title="Download Snippet" class="mediafile mf_hpp">HotPatch.hpp</a></dt>
+<dd><pre class="code file cpp"><span class="co2">#pragma once</span>
+&nbsp;
+<span class="co2">#include &lt;windows.h&gt;</span>
+&nbsp;
+<span class="co1">// HotPatch is a thin wrapper on top of the function hot patching layer.</span>
+<span class="co1">// It encapsulates a way to replace known functions with own functions by means of patching in jmps in both x86 and x86-64.</span>
+<span class="co1">// The basic workflow is:</span>
+<span class="co1">//    1. Declare HotPatch::function&lt;ftype&gt; thePatch; assign target to this object with thePatch = target</span>
+<span class="co1">//    2. set a replacement callback with thePatch.SetPatch(myTarget)</span>
+<span class="co1">//    3. call thePatch.Apply() to replace the target with the other callback</span>
+<span class="co1">//    In the replacement procedure:</span>
+<span class="co1">//        3.1. do your stuff</span>
+<span class="co1">//        3.2. call  thePatch(arguments)</span>
+<span class="co1">//        3.3. do other stuff</span>
+<span class="co1">//    When done:</span>
+<span class="co1">//    4. restore the opcodes with thePatch.RemovePatch()</span>
+<span class="co1">//    5. the destructor or assigning a new function to thePatch will restore the protection status of the memory referred by target</span>
+<span class="co1">// Limitations:</span>
+<span class="co1">//    won't work with variadic functions (blame C)</span>
+<span class="kw2">namespace</span> HotPatch <span class="br0">&#123;</span>
+    <span class="kw2">class</span> Exception
+    <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+    <span class="kw2">class</span> MemoryException <span class="sy4">:</span> <span class="kw2">public</span> Exception
+    <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+    <span class="kw2">class</span> PatchException <span class="sy4">:</span> <span class="kw2">public</span> Exception
+    <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+    <span class="kw2">template</span> <span class="sy1">&lt;</span><span class="kw2">typename</span> FType<span class="sy1">&gt;</span>
+    <span class="kw2">class</span> function_impl
+    <span class="br0">&#123;</span>
+    <span class="kw2">public</span><span class="sy4">:</span>
+        function_impl<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy4">:</span>
+            _pFun<span class="br0">&#40;</span><span class="kw2">NULL</span><span class="br0">&#41;</span>,
+            _pPatch<span class="br0">&#40;</span><span class="kw2">NULL</span><span class="br0">&#41;</span>,
+            _detoured<span class="br0">&#40;</span><span class="kw2">false</span><span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        ~function_impl<span class="br0">&#40;</span><span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+            _RestoreProtection<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="co1">// res = function_impl&lt;FType&gt;::IsPatched() tells whether a call to the target will run the target or the hook.</span>
+        <span class="co1">// Return value:</span>
+        <span class="co1">//    bool res    - true if ApplyPatch() has been called without an accompanying RemovePatch().</span>
+        <span class="kw4">bool</span> IsPatched<span class="br0">&#40;</span><span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+            <span class="kw1">return</span> _detoured<span class="sy4">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="co1">// function_impl&lt;FType&gt;::operator=(pFun) directs the patch to a target and prepares the target memory for writes.</span>
+        <span class="co1">// Parameters:</span>
+        <span class="co1">//    FType *pFun    - the function to patch (see Apply()).</span>
+        <span class="co1">// Throws:</span>
+        <span class="co1">//    MemoryException - when changing the protection of the page where pFun points is impossible.</span>
+        <span class="kw4">void</span> operator<span class="sy1">=</span><span class="br0">&#40;</span>FType <span class="sy2">*</span>pFun<span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+            _RestoreProtection<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+            _pFun <span class="sy1">=</span> pFun<span class="sy4">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw2">NULL</span> <span class="sy1">==</span> _pFun<span class="br0">&#41;</span> <span class="kw1">return</span><span class="sy4">;</span>
+            BOOL res <span class="sy1">=</span> VirtualProtect<span class="br0">&#40;</span>_pFun, _64bit <span class="sy4">?</span> _PATCH_LENGTH64 <span class="sy4">:</span> _PATCH_LENGTH32, PAGE_EXECUTE_READWRITE, <span class="sy3">&amp;</span>_oldProtection<span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy3">!</span>res<span class="br0">&#41;</span> <span class="kw1">throw</span> MemoryException<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="co1">// function_impl&lt;FType&gt;::SetPatch(patch[, alwaysUse32Bit]) prepares internal state for the patch.</span>
+        <span class="co1">// Parameters:</span>
+        <span class="co1">//    FType *patch        - the patch to use instead of pFun (see operator=(FType *)).</span>
+        <span class="co1">//    bool alwaysUse32Bit    - If true, a 32 bit jmp is always inserted.</span>
+        <span class="co1">//        Else, the best jmp is determined based on necessities (can still be 32 bit if it fits).</span>
+        <span class="co1">// Throws:</span>
+        <span class="co1">//    PatchException        - if patch is NULL.</span>
+        <span class="kw4">void</span> SetPatch<span class="br0">&#40;</span>FType <span class="sy2">*</span>patch, <span class="kw4">bool</span> alwaysUse32Bit <span class="sy1">=</span> <span class="kw2">false</span><span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw2">NULL</span> <span class="sy1">==</span> patch<span class="br0">&#41;</span>
+                <span class="kw1">throw</span> PatchException<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw2">NULL</span> <span class="sy3">!</span><span class="sy1">=</span> _pPatch<span class="br0">&#41;</span>
+                RemovePatch<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+            _pPatch <span class="sy1">=</span> patch<span class="sy4">;</span>
+&nbsp;
+            _64bit <span class="sy1">=</span> <span class="sy3">!</span>alwaysUse32Bit<span class="sy4">;</span>
+            <span class="co1">// they haven't expressed mandatory 32 bit only path; try to guess the best path</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span>_64bit<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                LONGLONG jumpDistance <span class="sy1">=</span>
+                    <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>LONGLONG<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pPatch<span class="br0">&#41;</span> <span class="sy2">-</span>
+                    <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>LONGLONG<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">-</span>
+                    _PATCH_LENGTH32<span class="sy4">;</span>
+                <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw3">abs</span><span class="br0">&#40;</span>jumpDistance<span class="br0">&#41;</span> <span class="sy1">&gt;</span> <span class="nu12">0x7FFFFFFF</span><span class="br0">&#41;</span> <span class="co1">// the jump is too long to fit a regular 32 bit relative jmp</span>
+                    _64bit <span class="sy1">=</span> <span class="kw2">true</span><span class="sy4">;</span>
+                <span class="kw1">else</span>
+                    _64bit <span class="sy1">=</span> <span class="kw2">false</span><span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+&nbsp;
+            <span class="co1">// save the old patch opcodes</span>
+            <span class="co1">// plain old for is faster; DO NOT call any library functions!</span>
+            <span class="kw1">for</span> <span class="br0">&#40;</span>SIZE_T i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> <span class="br0">&#40;</span>_64bit <span class="sy4">?</span> _PATCH_LENGTH64 <span class="sy4">:</span> _PATCH_LENGTH32<span class="br0">&#41;</span><span class="sy4">;</span> <span class="sy2">++</span>i<span class="br0">&#41;</span>
+                <span class="sy2">*</span><span class="br0">&#40;</span>_backup <span class="sy2">+</span> i<span class="br0">&#41;</span> <span class="sy1">=</span> <span class="sy2">*</span><span class="br0">&#40;</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">+</span> i<span class="br0">&#41;</span><span class="sy4">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="co1">// function_impl&lt;FType&gt;::ApplyPatch() makes pFun (see operator=(FType *)) jmp to patch (see SetPatch(FType *, bool)).</span>
+        <span class="co1">// This is the actual hot patch mechanism at work.</span>
+        <span class="kw4">void</span> ApplyPatch<span class="br0">&#40;</span><span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span>_64bit<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                <span class="co1">// movabs</span>
+                <span class="sy2">*</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy1">=</span> _OP_MOVABS<span class="sy4">;</span>
+                <span class="co1">// r11</span>
+                <span class="sy2">*</span><span class="br0">&#40;</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">+</span> <span class="nu0">1</span><span class="br0">&#41;</span> <span class="sy1">=</span> _R11_WRITE<span class="sy4">;</span>
+                <span class="co1">// _detourProc</span>
+                <span class="sy2">*</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PLONGLONG<span class="sy1">&gt;</span><span class="br0">&#40;</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">+</span> <span class="nu0">2</span><span class="br0">&#41;</span> <span class="sy1">=</span> <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>LONGLONG<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pPatch<span class="br0">&#41;</span><span class="sy4">;</span>
+                <span class="co1">// jmp</span>
+                <span class="sy2">*</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PWORD<span class="sy1">&gt;</span><span class="br0">&#40;</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">+</span> <span class="nu0">10</span><span class="br0">&#41;</span> <span class="sy1">=</span> _OP_JMP64<span class="sy4">;</span>
+                <span class="co1">// abs r11</span>
+                <span class="sy2">*</span><span class="br0">&#40;</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">+</span> <span class="nu0">12</span><span class="br0">&#41;</span> <span class="sy1">=</span> _R11_JMP<span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+            <span class="kw1">else</span> <span class="br0">&#123;</span>
+                <span class="co1">// jmp</span>
+                <span class="sy2">*</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy1">=</span> _OP_JMP32<span class="sy4">;</span>
+                <span class="co1">// distance left to _detourProc</span>
+                <span class="sy2">*</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PDWORD<span class="sy1">&gt;</span><span class="br0">&#40;</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">+</span> <span class="nu0">1</span><span class="br0">&#41;</span> <span class="sy1">=</span> <span class="kw2">static_cast</span><span class="sy1">&lt;</span>DWORD<span class="sy1">&gt;</span><span class="br0">&#40;</span>
+                    <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pPatch<span class="br0">&#41;</span> <span class="sy2">-</span>
+                    <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">-</span>
+                    <span class="kw2">static_cast</span><span class="sy1">&lt;</span>DWORD<span class="sy1">&gt;</span><span class="br0">&#40;</span>_PATCH_LENGTH32<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+            _detoured <span class="sy1">=</span> <span class="kw2">true</span><span class="sy4">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="co1">// function_impl&lt;FType&gt;::RemovePatch() undoes what ApplyPatch() did. pFun (see operator=(FType *)) will be its old self again.</span>
+        <span class="kw4">void</span> RemovePatch<span class="br0">&#40;</span><span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+            <span class="co1">// plain old for is faster; DO NOT call any library functions!</span>
+            <span class="kw1">for</span> <span class="br0">&#40;</span>SIZE_T i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> <span class="br0">&#40;</span>_64bit <span class="sy4">?</span> _PATCH_LENGTH64 <span class="sy4">:</span> _PATCH_LENGTH32<span class="br0">&#41;</span><span class="sy4">;</span> <span class="sy2">++</span>i<span class="br0">&#41;</span>
+                <span class="sy2">*</span><span class="br0">&#40;</span><span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span>PBYTE<span class="sy1">&gt;</span><span class="br0">&#40;</span>_pFun<span class="br0">&#41;</span> <span class="sy2">+</span> i<span class="br0">&#41;</span> <span class="sy1">=</span> <span class="sy2">*</span><span class="br0">&#40;</span>_backup <span class="sy2">+</span> i<span class="br0">&#41;</span><span class="sy4">;</span>
+            _detoured <span class="sy1">=</span> <span class="kw2">false</span><span class="sy4">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw2">protected</span><span class="sy4">:</span>
+        FType <span class="sy2">*</span>_pFun<span class="sy4">;</span>
+        FType <span class="sy2">*</span>_pPatch<span class="sy4">;</span>
+&nbsp;
+        <span class="kw4">bool</span> _64bit<span class="sy4">;</span>
+        <span class="kw4">bool</span> _detoured<span class="sy4">;</span>
+        BYTE _backup<span class="br0">&#91;</span><span class="nu0">13</span><span class="br0">&#93;</span><span class="sy4">;</span>
+        DWORD _oldProtection<span class="sy4">;</span>
+&nbsp;
+        <span class="kw4">static</span> <span class="kw4">const</span> BYTE _OP_JMP32    <span class="sy1">=</span> <span class="nu12">0xE9</span><span class="sy4">;</span>
+        <span class="kw4">static</span> <span class="kw4">const</span> WORD _OP_JMP64    <span class="sy1">=</span> <span class="nu12">0xFF41</span><span class="sy4">;</span>
+        <span class="kw4">static</span> <span class="kw4">const</span> BYTE _OP_MOVABS <span class="sy1">=</span> <span class="nu12">0x49</span><span class="sy4">;</span>
+        <span class="kw4">static</span> <span class="kw4">const</span> BYTE _R11_WRITE <span class="sy1">=</span> <span class="nu12">0xBB</span><span class="sy4">;</span>
+        <span class="kw4">static</span> <span class="kw4">const</span> BYTE _R11_JMP <span class="sy1">=</span> <span class="nu12">0xE3</span><span class="sy4">;</span>
+&nbsp;
+        <span class="kw4">static</span> <span class="kw4">const</span> SIZE_T _PATCH_LENGTH32 <span class="sy1">=</span> <span class="nu0">5</span><span class="sy4">;</span>    <span class="co1">// jmp, detourProc - originalProc = 1 + 4</span>
+        <span class="kw4">static</span> <span class="kw4">const</span> SIZE_T _PATCH_LENGTH64 <span class="sy1">=</span> <span class="nu0">13</span><span class="sy4">;</span>    <span class="co1">// movabs, R11, detourProc (64 bit), jmp (abs, 64), R11 = 1 + 1 + 8 + 2 + 1</span>
+&nbsp;
+        <span class="kw2">template</span> <span class="sy1">&lt;</span><span class="kw2">typename</span> T<span class="sy1">&gt;</span>
+        <span class="kw4">static</span> T <span class="kw3">abs</span><span class="br0">&#40;</span>T val<span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+            <span class="kw1">return</span> val <span class="sy1">&gt;</span> <span class="nu0">0</span> <span class="sy4">?</span> val <span class="sy4">:</span> <span class="sy2">-</span>val<span class="sy4">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="kw4">void</span> _RestoreProtection<span class="br0">&#40;</span><span class="br0">&#41;</span>
+        <span class="br0">&#123;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span><span class="kw2">NULL</span> <span class="sy1">==</span> _pFun<span class="br0">&#41;</span> <span class="kw1">return</span><span class="sy4">;</span>
+            DWORD unusedOldProtection<span class="sy4">;</span>
+            BOOL res <span class="sy1">=</span> VirtualProtect<span class="br0">&#40;</span>_pFun, _64bit <span class="sy4">?</span> _PATCH_LENGTH64 <span class="sy4">:</span> _PATCH_LENGTH32, _oldProtection, <span class="sy3">&amp;</span>unusedOldProtection<span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span> res<span class="sy4">;</span> <span class="co1">// nothing to do</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        <span class="kw2">template</span> <span class="sy1">&lt;</span><span class="kw2">typename</span> FType<span class="sy1">&gt;</span>
+        <span class="kw2">class</span> _NativeCallGuard <span class="br0">&#123;</span>
+        <span class="kw2">public</span><span class="sy4">:</span>
+            _NativeCallGuard<span class="br0">&#40;</span>function_impl<span class="sy1">&lt;</span>FType<span class="sy1">&gt;</span> <span class="sy3">&amp;</span>fun<span class="br0">&#41;</span> <span class="sy4">:</span> _fun<span class="br0">&#40;</span>fun<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                _fun.<span class="me1">RemovePatch</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+&nbsp;
+            ~_NativeCallGuard<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                _fun.<span class="me1">ApplyPatch</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+&nbsp;
+        <span class="kw2">private</span><span class="sy4">:</span>
+            function_impl<span class="sy1">&lt;</span>FType<span class="sy1">&gt;</span> <span class="sy3">&amp;</span>_fun<span class="sy4">;</span>
+        <span class="br0">&#125;</span><span class="sy4">;</span>
+    <span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+    <span class="kw2">template</span> <span class="sy1">&lt;</span><span class="kw2">typename</span><span class="sy1">&gt;</span>
+    <span class="kw2">class</span> function<span class="sy4">;</span>
+&nbsp;
+<span class="co2">#define HP_TARG0</span>
+<span class="co2">#define HP_TARG1 , typename Arg1</span>
+<span class="co2">#define HP_TARG2 HP_TARG1, typename Arg2</span>
+<span class="co2">#define HP_TARG3 HP_TARG2, typename Arg3</span>
+<span class="co2">#define HP_TARG4 HP_TARG3, typename Arg4</span>
+<span class="co2">#define HP_TARG5 HP_TARG4, typename Arg5</span>
+<span class="co2">#define HP_TARG6 HP_TARG5, typename Arg6</span>
+<span class="co2">#define HP_TARG7 HP_TARG6, typename Arg7</span>
+<span class="co2">#define HP_TARG8 HP_TARG7, typename Arg8</span>
+<span class="co2">#define HP_TARG9 HP_TARG8, typename Arg9</span>
+<span class="co2">#define HP_TARG10 HP_TARG9, typename Arg10</span>
+<span class="co2">#define HP_FARG0</span>
+<span class="co2">#define HP_FARG1 Arg1</span>
+<span class="co2">#define HP_FARG2 HP_FARG1, Arg2</span>
+<span class="co2">#define HP_FARG3 HP_FARG2, Arg3</span>
+<span class="co2">#define HP_FARG4 HP_FARG3, Arg4</span>
+<span class="co2">#define HP_FARG5 HP_FARG4, Arg5</span>
+<span class="co2">#define HP_FARG6 HP_FARG5, Arg6</span>
+<span class="co2">#define HP_FARG7 HP_FARG6, Arg7</span>
+<span class="co2">#define HP_FARG8 HP_FARG7, Arg8</span>
+<span class="co2">#define HP_FARG9 HP_FARG8, Arg9</span>
+<span class="co2">#define HP_FARG10 HP_FARG9, Arg10</span>
+<span class="co2">#define HP_ARG0</span>
+<span class="co2">#define HP_ARG1 arg1</span>
+<span class="co2">#define HP_ARG2 HP_ARG1, arg2</span>
+<span class="co2">#define HP_ARG3 HP_ARG2, arg3</span>
+<span class="co2">#define HP_ARG4 HP_ARG3, arg4</span>
+<span class="co2">#define HP_ARG5 HP_ARG4, arg5</span>
+<span class="co2">#define HP_ARG6 HP_ARG5, arg6</span>
+<span class="co2">#define HP_ARG7 HP_ARG6, arg7</span>
+<span class="co2">#define HP_ARG8 HP_ARG7, arg8</span>
+<span class="co2">#define HP_ARG9 HP_ARG8, arg9</span>
+<span class="co2">#define HP_ARG10 HP_ARG9, arg10</span>
+<span class="co2">#define HP_ARG_DECL0</span>
+<span class="co2">#define HP_ARG_DECL1 Arg1 arg1</span>
+<span class="co2">#define HP_ARG_DECL2 HP_ARG_DECL1, Arg2 arg2</span>
+<span class="co2">#define HP_ARG_DECL3 HP_ARG_DECL2, Arg3 arg3</span>
+<span class="co2">#define HP_ARG_DECL4 HP_ARG_DECL3, Arg4 arg4</span>
+<span class="co2">#define HP_ARG_DECL5 HP_ARG_DECL4, Arg5 arg5</span>
+<span class="co2">#define HP_ARG_DECL6 HP_ARG_DECL5, Arg6 arg6</span>
+<span class="co2">#define HP_ARG_DECL7 HP_ARG_DECL6, Arg7 arg7</span>
+<span class="co2">#define HP_ARG_DECL8 HP_ARG_DECL7, Arg8 arg8</span>
+<span class="co2">#define HP_ARG_DECL9 HP_ARG_DECL8, Arg9 arg9</span>
+<span class="co2">#define HP_ARG_DECL10 HP_ARG_DECL9, Arg10 arg10</span>
+&nbsp;
+<span class="co1">// template partial specialization for function&lt;return_type([arg_types])&gt;</span>
+<span class="co2">#define HP_RET_FUNCTION(n, callconv)\
+    template &lt;typename _Ret HP_TARG##n&gt;\
+    class function&lt;_Ret callconv(HP_FARG##n)&gt; : public function_impl&lt;_Ret callconv(HP_FARG##n)&gt;\
+    {\
+    private:\
+        typedef _Ret callconv type(HP_FARG##n);\
+        \
+    public:\
+        ~function&lt;type&gt;()\
+        {\
+            _RestoreProtection();\
+        }\
+        \
+        using function_impl&lt;type&gt;::operator=;\
+        \
+        _Ret operator()(HP_ARG_DECL##n)\
+        {\
+            _NativeCallGuard&lt;type&gt; CallGuard(*this);\
+            return (*_pFun)(HP_ARG##n);\
+        }\
+        \
+    protected:\
+        using function_impl&lt;type&gt;::_pFun;\
+    }</span>
+&nbsp;
+    <span class="co1">// declare the 11 templates handling functions in the form:</span>
+    <span class="co1">// _Ret function()</span>
+    <span class="co1">// _Ret function(Arg1)</span>
+    <span class="co1">// _Ret function(Arg1, Arg2)</span>
+    <span class="co1">// ...</span>
+    <span class="co1">// _Ret function(Arg1, Arg2, ... Arg10)</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">0</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">1</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">2</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">3</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">4</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">5</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">6</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">7</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">8</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">9</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">10</span>, __cdecl<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co2">#ifndef _M_X64</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">0</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">1</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">2</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">3</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">4</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">5</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">6</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">7</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">8</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">9</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+    HP_RET_FUNCTION<span class="br0">&#40;</span><span class="nu0">10</span>, __stdcall<span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="co2">#endif</span>
+<span class="br0">&#125;</span> <span class="co1">// namespace HotPatch</span></pre>
+</dd></dl>
+
+<p>
+What I&#039;m doing above, is generating 11 partial tempate specializations for class <code>HotPatch::function</code>. The class is inspired by C++2011&#039;s <code>std::function</code>. It&#039;s a class that models functions with up to 10 (included) arguments - you can see the declarations through the <code>HP_RET_FUNCTION</code> macro calls in there. Then, another set of 11 declarations for x86-64 where only calling convention <code>__cdecl</code> exists. <strong>Do not</strong> worry abut understanding the above code; it&#039;s ugly and it sucks. Focus on the usage instead, it gets things done (for up to 10 arguments that is).
+</p>
+
+<p>
+To use this <code>HotPatch</code> mini-lib, write something like:
+</p>
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/injections%3Fcodeblock=14" title="Download Snippet" class="mediafile mf_cpp">HotPatchTest.cpp</a></dt>
+<dd><pre class="code file cpp"><span class="co2">#include &lt;cstdio&gt;</span>
+<span class="co2">#include &quot;HotPatch.hpp&quot;</span>
+<span class="kw2">using</span> <span class="kw2">namespace</span> std<span class="sy4">;</span>
+<span class="kw2">using</span> <span class="kw2">namespace</span> HotPatch<span class="sy4">;</span>
+&nbsp;
+function<span class="sy1">&lt;</span><span class="kw4">void</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy1">&gt;</span> fooPatch<span class="sy4">;</span>
+&nbsp;
+<span class="kw4">void</span> foo<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;In foo()<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> bar<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;I'm hackin ur function<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>fooPatch.<span class="me1">IsPatched</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+        fooPatch<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy2">*</span>pfoo<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy1">=</span> foo<span class="sy4">;</span>
+    <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy2">*</span>pbar<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy1">=</span> bar<span class="sy4">;</span>
+&nbsp;
+    pfoo<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// calls foo()</span>
+    pbar<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// calls bar()</span>
+&nbsp;
+    fooPatch <span class="sy1">=</span> foo<span class="sy4">;</span>
+    fooPatch.<span class="me1">SetPatch</span><span class="br0">&#40;</span>bar<span class="br0">&#41;</span><span class="sy4">;</span>
+    fooPatch.<span class="me1">ApplyPatch</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+    pfoo<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// calls bar()</span>
+    pbar<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// calls bar()</span>
+&nbsp;
+    fooPatch.<span class="me1">RemovePatch</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+    pfoo<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// calls foo()</span>
+    pbar<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// calls bar()</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+
+<h2 class="sectionedit13" id="casting_pointers_to_class_functions_to_void">Casting pointers to class functions to &#039;&#039;void *&#039;&#039;</h2>
+<div class="level2">
+
+<p>
+In C++ it&#039;s illegal even thinking of casting member functions to <code>void *</code>. Here&#039;s a rather shady workaround, taking advantage of some unsafe C mechanics. It will work with GCC circa 4.5 on Linux or <abbr title="Operating System">OS</abbr> X and with CL 10 Service Pack 1 on x86 and x86-64:
+</p>
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/injections%3Fcodeblock=15" title="Download Snippet" class="mediafile mf_cpp">Method.cpp</a></dt>
+<dd><pre class="code file cpp"><span class="co2">#include &lt;cstdio&gt;</span>
+<span class="co2">#include &lt;cstdarg&gt;</span>
+<span class="kw2">using</span> <span class="kw2">namespace</span> std<span class="sy4">;</span>
+&nbsp;
+<span class="kw2">class</span> Base
+<span class="br0">&#123;</span>
+<span class="kw2">public</span><span class="sy4">:</span>
+    Base<span class="br0">&#40;</span><span class="kw4">int</span> a<span class="br0">&#41;</span> <span class="sy4">:</span> _a<span class="br0">&#40;</span>a<span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw4">int</span> Foo<span class="br0">&#40;</span><span class="kw4">int</span> offset<span class="br0">&#41;</span>
+    <span class="br0">&#123;</span>
+        <span class="kw1">return</span> offset <span class="sy2">+</span> _a <span class="sy2">*</span> _a<span class="sy4">;</span>
+    <span class="br0">&#125;</span>
+<span class="kw2">private</span><span class="sy4">:</span>
+    <span class="kw4">int</span> _a<span class="sy4">;</span>
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+<span class="kw4">void</span> <span class="sy2">*</span>DisMember<span class="br0">&#40;</span><span class="kw4">size_t</span> size, ...<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="co1">// the pointer can be more complicated than a plain data pointer</span>
+    <span class="co1">// think of virtual member functions, multiple inheritance, etc</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>size <span class="sy1">&lt;</span> <span class="kw3">sizeof</span><span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy2">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="kw1">return</span> <span class="kw2">NULL</span><span class="sy4">;</span>
+    <span class="kw4">va_list</span> args<span class="sy4">;</span>
+    <span class="kw3">va_start</span><span class="br0">&#40;</span>args, size<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw4">void</span> <span class="sy2">*</span>res <span class="sy1">=</span> <span class="kw3">va_arg</span><span class="br0">&#40;</span>args, <span class="kw4">void</span> <span class="sy2">*</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw3">va_end</span><span class="br0">&#40;</span>args<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw1">return</span> res<span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    Base b<span class="br0">&#40;</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    Base c<span class="br0">&#40;</span><span class="nu0">8</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+    <span class="co1">// regular pointer to member function</span>
+    <span class="kw4">int</span> <span class="br0">&#40;</span>Base<span class="sy4">::</span><span class="sy2">*</span>ptrFoo<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    ptrFoo <span class="sy1">=</span> <span class="sy3">&amp;</span>Base<span class="sy4">::</span><span class="me2">Foo</span><span class="sy4">;</span>
+&nbsp;
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;Calling Base::Foo(3) through the regular pointer gives %d.<span class="es1">\n</span>&quot;</span>, <span class="br0">&#40;</span>b.<span class="sy2">*</span>ptrFoo<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="nu0">3</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+    <span class="co1">// void *pVoid1 = reinterpret_cast&lt;void *&gt;(ptrFoo);    // won't work</span>
+    <span class="co1">// void *pVoid2 = reinterpret_cast&lt;void *&gt;(&amp;(b.*ptrFoo));    // won't work</span>
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;sizeof(&amp;Base::Foo) = %ld.<span class="es1">\n</span>&quot;</span>, <span class="kw3">sizeof</span><span class="br0">&#40;</span><span class="sy3">&amp;</span>Base<span class="sy4">::</span><span class="me2">Foo</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw4">void</span> <span class="sy2">*</span>pVoid3 <span class="sy1">=</span> DisMember<span class="br0">&#40;</span><span class="kw3">sizeof</span><span class="br0">&#40;</span><span class="sy3">&amp;</span>Base<span class="sy4">::</span><span class="me2">Foo</span><span class="br0">&#41;</span>, <span class="sy3">&amp;</span>Base<span class="sy4">::</span><span class="me2">Foo</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;%p.<span class="es1">\n</span>&quot;</span>, pVoid3<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;Calling Foo from the void* through b: %d.<span class="es1">\n</span>&quot;</span>, <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span><span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy2">*</span><span class="br0">&#41;</span><span class="br0">&#40;</span>Base <span class="sy2">*</span>, <span class="kw4">int</span><span class="br0">&#41;</span><span class="sy1">&gt;</span><span class="br0">&#40;</span>pVoid3<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="sy3">&amp;</span>b, <span class="nu0">3</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="co1">// printf(&quot;Calling Foo from the void* through c: %d.\n&quot;, reinterpret_cast&lt;int (Base::*)(int)&gt;(pVoid3)(3)); // won't work; gotta stick with the illegal form from above</span>
+    <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;Calling Foo from the void* through c: %d.<span class="es1">\n</span>&quot;</span>, <span class="kw2">reinterpret_cast</span><span class="sy1">&lt;</span><span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy2">*</span><span class="br0">&#41;</span><span class="br0">&#40;</span>Base <span class="sy2">*</span>, <span class="kw4">int</span><span class="br0">&#41;</span><span class="sy1">&gt;</span><span class="br0">&#40;</span>pVoid3<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="sy3">&amp;</span>c, <span class="nu0">3</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+
+<h1 class="sectionedit14" id="further_info_and_support">Further Info and Support</h1>
+<div class="level1">
+
+<p>
+I&#039;m usually idling on <a href="irc://irc.freenode.net/rosedu" class="urlextern" title="irc://irc.freenode.net/rosedu"  rel="nofollow">irc.freenode.net on #rosedu</a>. Just ask and me or the other people around will direct you.
+</p>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="injections.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+<a href="http://www.kernel.org/doc/man-pages/online/pages/man8/ld-linux.so.8.html" class="urlextern" title="http://www.kernel.org/doc/man-pages/online/pages/man8/ld-linux.so.8.html"  rel="nofollow">http://www.kernel.org/doc/man-pages/online/pages/man8/ld-linux.so.8.html</a> LD_PRELOAD</div>
+<div class="fn"><sup><a href="injections.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+<a href="http://support.microsoft.com/kb/197571" class="urlextern" title="http://support.microsoft.com/kb/197571"  rel="nofollow">http://support.microsoft.com/kb/197571</a> AppInit_DLLs registry hack</div>
+<div class="fn"><sup><a href="injections.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+<a href="http://yosefk.com/c++fqa/function.html" class="urlextern" title="http://yosefk.com/c++fqa/function.html"  rel="nofollow">http://yosefk.com/c++fqa/function.html</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+<a href="http://www.fraps.com/" class="urlextern" title="http://www.fraps.com/"  rel="nofollow">Fraps</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__5" id="fn__5" class="fn_bot">5)</a></sup> 
+<a href="http://www.guru3d.com/rivatuner/" class="urlextern" title="http://www.guru3d.com/rivatuner/"  rel="nofollow">RivaTuner</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__6" id="fn__6" class="fn_bot">6)</a></sup> 
+<a href="http://event.msi.com/vga/afterburner/download.htm" class="urlextern" title="http://event.msi.com/vga/afterburner/download.htm"  rel="nofollow">MSI Afterburner</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__7" id="fn__7" class="fn_bot">7)</a></sup> 
+<a href="http://www.socksproxychecker.com/sockscap.html" class="urlextern" title="http://www.socksproxychecker.com/sockscap.html"  rel="nofollow">Sockscap</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__8" id="fn__8" class="fn_bot">8)</a></sup> 
+<a href="http://www.foobar2000.org/" class="urlextern" title="http://www.foobar2000.org/"  rel="nofollow">foobar2000</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__9" id="fn__9" class="fn_bot">9)</a></sup> 
+<a href="http://www.autohotkey.com/" class="urlextern" title="http://www.autohotkey.com/"  rel="nofollow">AutoHotkey</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__10" id="fn__10" class="fn_bot">10)</a></sup> 
+<a href="http://www.codeproject.com/KB/threads/winspy.aspx" class="urlextern" title="http://www.codeproject.com/KB/threads/winspy.aspx"  rel="nofollow">Code Project Article on Code Injection</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__11" id="fn__11" class="fn_bot">11)</a></sup> 
+<a href="http://mpc-hc.sourceforge.net/" class="urlextern" title="http://mpc-hc.sourceforge.net/"  rel="nofollow">Media Player Classic Homecinema</a></div>
+<div class="fn"><sup><a href="injections.html#fnt__12" id="fn__12" class="fn_bot">12)</a></sup> 
+<a href="http://continuations.wordpress.com/2011/05/10/hot-patching-unconditional-jumps-x86-x86-64/" class="urlextern" title="http://continuations.wordpress.com/2011/05/10/hot-patching-unconditional-jumps-x86-x86-64/"  rel="nofollow">http://continuations.wordpress.com/2011/05/10/hot-patching-unconditional-jumps-x86-x86-64/</a> Article on 64 bit hot patching</div>
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_so">Informații generale SO</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_214396676558357c07b8c84" data-jsajax="%26skipfile%3D%253D/so%253Ainfo%253Astart/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../info/documentatie.html" class="wikilink1" title="so:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/feed.html" class="wikilink1" title="so:info:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/hall.html" class="wikilink1" title="so:info:hall">Hall of SO</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/lista-discutii.html" class="wikilink1" title="so:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/mv.html" class="wikilink1" title="so:info:mv">Mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/trimitere-teme.html" class="wikilink1" title="so:info:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale SO" [12-194] -->
+<h1 class="sectionedit2" id="informatii_so_2015-2016">Informații SO 2015-2016</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_143597365458357c07bcafb" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../../meta/examen.html" class="indexmenu_idx_head">Examen CA/CC</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../meta/examen/2012-2013.html" class="wikilink1" title="so:meta:examen:2012-2013">Examen CA/CC 2012-2013</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/examen/2013-2014.html" class="wikilink1" title="so:meta:examen:2013-2014">Examen CA/CC 2013-2014</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/examen/2014-2015.html" class="wikilink1" title="so:meta:examen:2014-2015">Examen CA/CC 2014-2015</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../meta/notare/reguli-notare-ca-cc.html" class="wikilink1" title="so:meta:notare:reguli-notare-ca-cc">Notare CA/CC</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/notare/reguli-notare-cb.html" class="wikilink1" title="so:meta:notare:reguli-notare-cb">Notare CB</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../../meta/anunturi.html" class="wikilink1" title="so:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/calendar.html" class="wikilink1" title="so:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/catalog.html" class="wikilink1" title="so:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/echivalari.html" class="wikilink1" title="so:meta:echivalari">Echivalări teme</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/karma.html" class="wikilink1" title="so:meta:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/need-to-know.html" class="wikilink1" title="so:meta:need-to-know">SO Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/orar.html" class="wikilink1" title="so:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații SO 2015-2016" [195-261] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_59225252158357c07bea3c" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../../laboratoare/resurse.html" class="indexmenu_idx_head">Resurse</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/c_tips.html" class="wikilink1" title="so:laboratoare:resurse:c_tips">C/SO Tips</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/die.html" class="wikilink1" title="so:laboratoare:resurse:die">Macro-ul DIE</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/gdb.html" class="wikilink1" title="so:laboratoare:resurse:gdb">GDB</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/home.html" class="wikilink1" title="so:laboratoare:resurse:home">Resurse</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/injections.html" class="wikilink1" title="so:laboratoare:resurse:injections">Function Hooking and Windows Dll Injection</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/oprofile.html" class="wikilink1" title="so:laboratoare:resurse:oprofile">Oprofile</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/recapitulare.html" class="wikilink1" title="so:laboratoare:resurse:recapitulare">Recapitulare</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/threaduri_extra.html" class="wikilink1" title="so:laboratoare:resurse:threaduri_extra">Thread-uri - Extra</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/vs_tips.html" class="wikilink1" title="so:laboratoare:resurse:vs_tips">Visual Studio Tips and Tricks</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/windows-video.html" class="wikilink1" title="so:laboratoare:resurse:windows-video">windows-video</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-01.html" class="wikilink1" title="so:laboratoare:laborator-01">Laborator 01 - Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-02.html" class="wikilink1" title="so:laboratoare:laborator-02">Laborator 02 - Operații I/O simple</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-03.html" class="wikilink1" title="so:laboratoare:laborator-03">Laborator 03 - Procese</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-04.html" class="wikilink1" title="so:laboratoare:laborator-04">Laborator 04 - Semnale</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-05.html" class="wikilink1" title="so:laboratoare:laborator-05">Laborator 05 - Gestiunea memoriei</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-06.html" class="wikilink1" title="so:laboratoare:laborator-06">Laborator 06 - Memoria virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-07.html" class="wikilink1" title="so:laboratoare:laborator-07">Laborator 07 - Profiling &amp; Debugging</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-08.html" class="wikilink1" title="so:laboratoare:laborator-08">Laborator 08 - Thread-uri Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-09.html" class="wikilink1" title="so:laboratoare:laborator-09">Laborator 09 - Thread-uri Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-10.html" class="wikilink1" title="so:laboratoare:laborator-10">Laborator 10 - Operații IO avansate - Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-11.html" class="wikilink1" title="so:laboratoare:laborator-11">Laborator 11 - Operații IO avansate - Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-12.html" class="wikilink1" title="so:laboratoare:laborator-12">Laborator 12 - Implementarea sistemelor de fișiere</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [262-322] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_129144531058357c07c097c" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../../cursuri/curs-01.html" class="indexmenu_idx_head">Curs 01 - Introducere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-02.html" class="indexmenu_idx_head">Curs 02 - Sistemul de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-03.html" class="indexmenu_idx_head">Curs 03 - Procese</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-04.html" class="indexmenu_idx_head">Curs 04 - Planificarea execuției. IPC</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-05.html" class="indexmenu_idx_head">Curs 05 - Gestiunea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-06.html" class="indexmenu_idx_head">Curs 06 - Memoria virtuală</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-07.html" class="indexmenu_idx_head">Curs 07 - Securitatea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-08.html" class="indexmenu_idx_head">Curs 08 - Fire de execuție</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-09.html" class="indexmenu_idx_head">Curs 09 - Sincronizare</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-10.html" class="indexmenu_idx_head">Curs 10 - Dispozitive de intrare/ieșire</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-11.html" class="indexmenu_idx_head">Curs 11 - Networking în sistemul de operare</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-12.html" class="indexmenu_idx_head">Curs 12 - Implementarea sistemelor de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-13.html" class="indexmenu_idx_head">Curs 13 - Securitatea sistemului</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/quiz/start.html" class="indexmenu_idx_head">Quizz-uri curs</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra-2.html" class="wikilink1" title="so:cursuri:curs-extra-2">Curs extra - Android</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra-3.html" class="wikilink1" title="so:cursuri:curs-extra-3">Curs extra - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra.html" class="wikilink1" title="so:cursuri:curs-extra">Curs extra - Sincronizarea proceselor</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/note.html" class="wikilink1" title="so:cursuri:note">Note de curs</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [323-374] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_136853222558357c07c28c2" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../../teme/tema-asist.html" class="indexmenu_idx_head">Tema Asistenți - Guardian process</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/contestatii.html" class="wikilink1" title="so:teme:contestatii">Contestații</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/folosire-gitlab.html" class="wikilink1" title="so:teme:folosire-gitlab">Git. Indicații folosire GitLab</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/general.html" class="wikilink1" title="so:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-1.html" class="wikilink1" title="so:teme:tema-1">Tema 1 Multi-platform Development</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-2.html" class="wikilink1" title="so:teme:tema-2">Tema 2 Mini-shell</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-3.html" class="wikilink1" title="so:teme:tema-3">Tema 3 Memorie virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-4.html" class="wikilink1" title="so:teme:tema-4">Tema 4 Planificator de threaduri</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-5.html" class="wikilink1" title="so:teme:tema-5">Tema 5 Server web asincron</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [375-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="injections.html#function_hooking_and_windows_dll_injection">Function Hooking and Windows Dll Injection</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="injections.html#function_hot_patching">Function Hot Patching</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="injections.html#basic_hot_patch_example">Basic Hot Patch Example</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="injections.html#dll_injection">Dll Injection</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="injections.html#a_practical_example">A Practical Example</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="injections.html#removing_the_window_decorations">Removing The Window Decorations</a></div></li>
+<li class="level2"><div class="li"><a href="injections.html#fixing_the_mouse_behavior">Fixing The Mouse Behavior</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="injections.html#bit_versus_64_bit">32 Bit Versus 64 Bit</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="injections.html#hot_patching">Hot Patching</a></div></li>
+<li class="level2"><div class="li"><a href="injections.html#dll_injection1">Dll Injection</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="injections.html#download">Download</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="injections.html#a_c_template_library_for_the_impatient">A C++ Template Library (for the impatient)</a></div></li>
+<li class="level2"><div class="li"><a href="injections.html#casting_pointers_to_class_functions_to_void">Casting pointers to class functions to &#039;&#039;void *&#039;&#039;</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="injections.html#further_info_and_support">Further Info and Support</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so/laboratoare-2013/resurse/injections.txt · Last modified: 2014/03/05 22:19 (external edit)          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="injections%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="injections%3Fdo=media&amp;ns=so%253Alaboratoare-2013%253Aresurse.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="injections.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../feed.php" title="Recent changes RSS feed"><img src="../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../lib/exe/indexer.php%3Fid=so%253Alaboratoare-2013%253Aresurse%253Ainjections&amp;1479900167" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,603 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Tutorial 2.1 - Point2D    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-03T01:02:18+0200"/>
+<meta name="keywords" content="sd-ca,articole,tutorial-02-1"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=sd-ca:articole"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/sd-ca/articole/tutorial-02-1.html"/>
+<link rel="canonical" href="tutorial-02-1.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sd-ca:articole';var JSINFO = {"id":"sd-ca:articole:tutorial-02-1","namespace":"sd-ca:articole","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_sd.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="tutorial-02-1%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="tutorial-02-1%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="tutorial_21_-_point2d">Tutorial 2.1 - Point2D</h1>
+<div class="level1">
+
+<p>
+În acest tutorial, ne propunem să construim o structură de tip Point2D capabil să rețină coordonatele unui punct în plan și să permită anumite prelucrări pe un set de puncte.
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="obiective">Obiective</h2>
+<div class="level2">
+
+<p>
+Ne dorim:
+</p>
+<ul>
+<li class="level1"><div class="li"> să construim class Point2D, cu doi membri de tip double astfel încât să poată memora cele două coordonate</div>
+</li>
+<li class="level1"><div class="li"> să adaugam lui class Point2D o metode de tip SETTER/GETTER pentru a putea accesa/modifica coordonatele unui punct</div>
+</li>
+<li class="level1"><div class="li"> să adaugam si alte functionalitati lui class Point2D, precum posibilitatea calculării distanței dintre două puncte</div>
+</li>
+<li class="level1"><div class="li"> să testam class Point2D printr-un cod simplu care arată cum creează elemente de tip Point2D și cum se calculează distanța dintre două puncte</div>
+</li>
+<li class="level1"><div class="li"> să exemplificăm conceptul de rule of three</div>
+</li>
+<li class="level1"><div class="li"> să găsim cele mai apropiate două puncte dintr-un set de puncte date</div>
+</li>
+<li class="level1"><div class="li"> să verificam cu Valgrind că nu sunt memory leaks.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="dezvoltare">Dezvoltare</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit4" id="varianta_de_baza_a_lui_class_point2d">Varianta de bază a lui class Point2D</h3>
+<div class="level3">
+
+<p>
+Vom considera ca variantă de bază un struct care conține două elemente de tip double.
+</p>
+<pre class="code cpp"><span class="co2">#ifndef __POINT2D__</span>
+<span class="co2">#define __POINT2D__</span>
+&nbsp;
+<span class="kw4">struct</span> Point2D <span class="br0">&#123;</span>
+ 	<span class="kw4">double</span> x, y<span class="sy4">;</span> <span class="co1">// coordonatele punctului</span>
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co2">#endif __POINT2D__</span></pre>
+
+<p>
+Această abordare are dezavantajul că variabilele x și y sunt publice, lucru care nu este dorit în general. O abordare elegantă este următoarea:
+</p>
+<pre class="code cpp"><span class="co2">#ifndef __POINT2D__</span>
+<span class="co2">#define __POINT2D__</span>
+&nbsp;
+<span class="kw2">class</span> Point2D <span class="br0">&#123;</span>
+ <span class="kw2">private</span><span class="sy4">:</span>
+ 	<span class="kw4">double</span> x, y<span class="sy4">;</span> <span class="co1">// coordonatele punctului</span>
+&nbsp;
+ <span class="kw2">public</span><span class="sy4">:</span>
+ 	<span class="co1">// Metoda setter pentru x</span>
+ 	<span class="kw4">void</span> setX<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">double</span><span class="sy3">&amp;</span> x<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		this<span class="sy2">-</span><span class="sy1">&gt;</span>x <span class="sy1">=</span> x<span class="sy4">;</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+ 	<span class="co1">// Metoda setter pentru y</span>
+ 	<span class="kw4">void</span> setY<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">double</span><span class="sy3">&amp;</span> y<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		this<span class="sy2">-</span><span class="sy1">&gt;</span>y <span class="sy1">=</span> y<span class="sy4">;</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+ 	<span class="co1">// Metoda getter pentru x</span>
+ 	<span class="kw4">double</span> getX<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		<span class="kw1">return</span> x<span class="sy4">;</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co1">// Metoda getter pentru y</span>
+ 	<span class="kw4">double</span> getY<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		<span class="kw1">return</span> y<span class="sy4">;</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co2">#endif // __POINT2D__</span></pre>
+
+<p>
+Observați folosirea referințelor și a cuvântului cheie const!
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="adaugarea_de_constructori">Adaugarea de constructori</h3>
+<div class="level3">
+
+<p>
+Pentru a putea inițializa un punct, mai exact coordonatele punctului, cu anumite valori, putem folosi un constructor. În această situație putem inițializa cu valori prestabilite la compile time (Default Constructor), valori cunoscute la runtime (un constructor cu parametri).
+</p>
+<pre class="code cpp">        <span class="co1">// Constructor default</span>
+ 	Point2D<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		x <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span>
+ 		y <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+ 	<span class="co1">// Constructor cu parametri</span>
+ 	Point2D<span class="br0">&#40;</span><span class="kw4">const</span> <span class="kw4">double</span> <span class="sy3">&amp;</span>x, <span class="kw4">const</span> <span class="kw4">double</span> <span class="sy3">&amp;</span>y<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		this<span class="sy2">-</span><span class="sy1">&gt;</span>x <span class="sy1">=</span> x<span class="sy4">;</span>
+ 		this<span class="sy2">-</span><span class="sy1">&gt;</span>y <span class="sy1">=</span> y<span class="sy4">;</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+ 	<span class="co1">// Copy-constructor</span>
+ 	Point2D<span class="br0">&#40;</span>Point2D<span class="sy3">&amp;</span> p<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		this<span class="sy2">-</span><span class="sy1">&gt;</span>x <span class="sy1">=</span> p.<span class="me1">x</span><span class="sy4">;</span>
+&nbsp;</pre>
+
+<p>
+Metoda care implemenetează calculul distanței dintre două puncte este următoarea:
+</p>
+<pre class="code cpp"> 	<span class="co1">// Metoda care calculeaza distanta intre doua puncte in plan</span>
+ 	<span class="kw4">double</span> distance<span class="br0">&#40;</span><span class="kw4">const</span> Point2D <span class="sy3">&amp;</span>p<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		<span class="kw1">return</span> <span class="kw3">sqrt</span><span class="br0">&#40;</span> <span class="br0">&#40;</span>x <span class="sy2">-</span> p.<span class="me1">x</span><span class="br0">&#41;</span> <span class="sy2">*</span> <span class="br0">&#40;</span>x <span class="sy2">-</span> p.<span class="me1">x</span><span class="br0">&#41;</span> <span class="sy2">+</span> <span class="br0">&#40;</span>y <span class="sy2">-</span> p.<span class="me1">y</span><span class="br0">&#41;</span> <span class="sy2">*</span> <span class="br0">&#40;</span>y <span class="sy2">-</span> p.<span class="me1">y</span><span class="br0">&#41;</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+ 	<span class="br0">&#125;</span></pre>
+
+<p>
+Atenție! Trebuie inclusă biblioteca cmath pentru a putea utiliza funcția sqrt!
+</p>
+<pre class="code cpp"><span class="co2">#ifndef __POINT2D__</span>
+<span class="co2">#define __POINT2D__</span>
+&nbsp;
+<span class="co2">#include &lt;cmath&gt;</span>
+....</pre>
+
+<p>
+Putem testa funcționalitățile implementate cu o sursă foarte scurtă.
+</p>
+<pre class="code cpp"><span class="co2">#include &lt;iostream&gt;</span>
+<span class="co2">#include &quot;point2D.h&quot;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	Point2D A, B<span class="sy4">;</span>
+&nbsp;
+	std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> A <span class="sy1">&gt;&gt;</span> B<span class="sy4">;</span>
+&nbsp;
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> A.<span class="me1">distance</span><span class="br0">&#40;</span>B<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pentru compilare și rulare in bash folosiți comanda
+</p>
+<pre class="code cpp">g<span class="sy2">++</span> main.<span class="me1">cpp</span> <span class="sy2">-</span>o main <span class="sy3">&amp;&amp;</span> .<span class="sy2">/</span>main</pre>
+
+</div>
+
+<h3 class="sectionedit6" id="adaugarea_de_alte_elemente_eg_functii_de_citirescriere">Adaugarea de alte elemente (e.g. functii de citire/scriere)</h3>
+<div class="level3">
+
+<p>
+Pentru a putea lucra cu ușurință cu elemente de tip Point2D, putem supraîncărca operatorii de citire/afișare, atribuire, egalitate. 
+De asemenea, întrucât am definit Copy-Constructir și operator de atribuire, se impune definirea unui destructor. 
+</p>
+<pre class="code cpp"><span class="co2">#ifndef __POINT2D__</span>
+<span class="co2">#define __POINT2D__</span>
+&nbsp;
+<span class="co2">#include &lt;cmath&gt;</span>
+&nbsp;
+<span class="kw2">class</span> Point2D <span class="br0">&#123;</span>
+&nbsp;
+  ............
+&nbsp;
+ <span class="kw2">public</span><span class="sy4">:</span>
+ 	<span class="co1">// Destructor</span>
+ 	~Point2D<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		<span class="co1">// Nu avem memorie de eliberat.</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+ 	<span class="co1">// Operator de atribuire</span>
+ 	Point2D<span class="sy3">&amp;</span> operator<span class="sy1">=</span><span class="br0">&#40;</span><span class="kw4">const</span> Point2D<span class="sy3">&amp;</span> p<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		this<span class="sy2">-</span><span class="sy1">&gt;</span>x <span class="sy1">=</span> p.<span class="me1">x</span><span class="sy4">;</span>
+ 		this<span class="sy2">-</span><span class="sy1">&gt;</span>y <span class="sy1">=</span> p.<span class="me1">y</span><span class="sy4">;</span>
+ 		<span class="kw1">return</span> <span class="sy2">*</span><span class="kw3">this</span><span class="sy4">;</span> <span class="co1">// intoarce referinta pentru atribuiri inlantuite</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co1">// Operator de egalitate</span>
+ 	<span class="kw4">bool</span> operator<span class="sy1">==</span><span class="br0">&#40;</span><span class="kw4">const</span> Point2D<span class="sy3">&amp;</span> p<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 		<span class="co1">// Testez daca cele doua puncte au coordonate egale.</span>
+ 		<span class="kw1">if</span> <span class="br0">&#40;</span>x <span class="sy1">==</span> p.<span class="me1">x</span> <span class="sy3">&amp;&amp;</span> y <span class="sy1">==</span> p.<span class="me1">y</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ 			<span class="kw1">return</span> <span class="kw2">true</span><span class="sy4">;</span>
+ 		<span class="br0">&#125;</span>
+&nbsp;
+ 		<span class="kw1">return</span> <span class="kw2">false</span><span class="sy4">;</span>
+ 	<span class="br0">&#125;</span>
+&nbsp;
+ 	<span class="co1">//funcţii operator pentru supraîncărcarea operatorilor de intrare/ieşire  </span>
+    <span class="co1">//declarate ca funcţii de tip &quot;friend&quot;   </span>
+    <span class="kw2">friend</span> std<span class="sy4">::</span><span class="me2">ostream</span><span class="sy3">&amp;</span> operator<span class="sy1">&lt;&lt;</span> <span class="br0">&#40;</span>std<span class="sy4">::</span><span class="me2">ostream</span><span class="sy3">&amp;</span> out, <span class="kw4">const</span> Point2D<span class="sy3">&amp;</span> p<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="kw2">friend</span> std<span class="sy4">::</span><span class="me2">istream</span><span class="sy3">&amp;</span> operator<span class="sy1">&gt;&gt;</span> <span class="br0">&#40;</span>std<span class="sy4">::</span><span class="me2">istream</span><span class="sy3">&amp;</span> is, Point2D<span class="sy3">&amp;</span> p<span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+&nbsp;
+std<span class="sy4">::</span><span class="me2">ostream</span><span class="sy3">&amp;</span> operator<span class="sy1">&lt;&lt;</span><span class="br0">&#40;</span>std<span class="sy4">::</span><span class="me2">ostream</span><span class="sy3">&amp;</span> out, <span class="kw4">const</span> Point2D<span class="sy3">&amp;</span> p<span class="br0">&#41;</span><span class="br0">&#123;</span>
+   out <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;(&quot;</span> <span class="sy1">&lt;&lt;</span> p.<span class="me1">x</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;,&quot;</span> <span class="sy1">&lt;&lt;</span> p.<span class="me1">y</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;)&quot;</span><span class="sy1">&lt;&lt;</span> std<span class="sy4">::</span><span class="me2">endl</span><span class="sy4">;</span>
+   <span class="kw1">return</span> out<span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+std<span class="sy4">::</span><span class="me2">istream</span><span class="sy3">&amp;</span> operator<span class="sy1">&gt;&gt;</span><span class="br0">&#40;</span>std<span class="sy4">::</span><span class="me2">istream</span><span class="sy3">&amp;</span> in, Point2D<span class="sy3">&amp;</span> p<span class="br0">&#41;</span><span class="br0">&#123;</span>
+  in <span class="sy1">&gt;&gt;</span> p.<span class="me1">x</span><span class="sy1">&gt;&gt;</span> p.<span class="me1">y</span><span class="sy4">;</span>
+  <span class="kw1">return</span> in<span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co2">#endif // __POINT2D__</span></pre>
+
+</div>
+
+<h2 class="sectionedit7" id="testare_si_evaluare">Testare si Evaluare</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit8" id="program_de_test">Program de test</h3>
+<div class="level3">
+
+<p>
+În continuare vom face un program care prima dată citește un număr n si un element de tip Point2D, numit p, apoi încă n element de tip Point2D. Se cere să se găsească cel mai apropiat punct (din cele n) față de punctul de referință p.
+</p>
+<pre class="code cpp"><span class="co2">#include &lt;iostream&gt;</span>
+<span class="co2">#include &lt;cmath&gt; // pentru abs</span>
+<span class="co2">#include &quot;point2D.h&quot;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="kw4">int</span> n<span class="sy4">;</span> <span class="co1">// numarul de puncte</span>
+	Point2D p<span class="sy4">;</span> <span class="co1">// punctul de referinta</span>
+	Point2D <span class="sy2">*</span>v<span class="sy4">;</span> <span class="co1">// vectorul de puncte dat de la tastatura</span>
+&nbsp;
+	<span class="co1">//citire</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;n = &quot;</span><span class="sy4">;</span>
+	std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> n<span class="sy4">;;</span>
+&nbsp;
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;p = &quot;</span><span class="sy4">;</span>
+	std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> p<span class="sy4">;</span>
+&nbsp;
+	v <span class="sy1">=</span> <span class="kw3">new</span> Point2D<span class="br0">&#91;</span>n<span class="br0">&#93;</span><span class="sy4">;</span>
+	<span class="kw1">for</span> <span class="br0">&#40;</span> <span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> n<span class="sy4">;</span> <span class="sy2">++</span>i <span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;v[&quot;</span> <span class="sy1">&lt;&lt;</span> i <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;]=&quot;</span><span class="sy4">;</span>
+		std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> v<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw4">double</span> minDistance <span class="sy1">=</span> <span class="br0">&#40;</span><span class="nu0">1</span><span class="sy1">&lt;&lt;</span><span class="nu0">30</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// initializez distanta minima cu ceva foarte mare</span>
+	<span class="kw4">int</span> index <span class="sy1">=</span> <span class="sy2">-</span><span class="nu0">1</span><span class="sy4">;</span> <span class="co1">// indicele celui mai apropiat punct</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span> <span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> n<span class="sy4">;</span> <span class="sy2">++</span>i<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw4">double</span> currentDistance <span class="sy1">=</span> p.<span class="me1">distance</span><span class="br0">&#40;</span>v<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">//distanta fata de punctul curent</span>
+&nbsp;
+		<span class="kw1">if</span> <span class="br0">&#40;</span> currentDistance <span class="sy1">&lt;</span> minDistance <span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			minDistance <span class="sy1">=</span> currentDistance<span class="sy4">;</span>
+			index <span class="sy1">=</span> i<span class="sy4">;</span>
+		<span class="br0">&#125;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+        <span class="co1">// afisare rezultat</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;Cel mai apropiat punct este : &quot;</span> <span class="sy1">&lt;&lt;</span> index <span class="sy1">&lt;&lt;</span> <span class="st0">&quot; = &quot;</span> <span class="sy1">&lt;&lt;</span> v<span class="br0">&#91;</span>index<span class="br0">&#93;</span> <span class="sy1">&lt;&lt;</span> <span class="st0">'<span class="es1">\n</span>'</span><span class="sy4">;</span>
+&nbsp;
+	<span class="co1">//eliberare memorie</span>
+	<span class="kw3">delete</span><span class="br0">&#91;</span><span class="br0">&#93;</span> v<span class="sy4">;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Exemplu:
+</p>
+<pre class="code bash">n = <span class="nu0">5</span>
+p = <span class="nu0">0</span> <span class="nu0">0</span>
+v<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>= <span class="nu0">5</span> <span class="nu0">5</span>
+v<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>=<span class="nu0">40</span> <span class="nu0">5</span>
+v<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span>= <span class="nu0">5</span> <span class="re5">-5</span> 
+v<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span>= <span class="nu0">4</span> <span class="nu0">3</span>           
+v<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span>= <span class="nu0">8</span> <span class="nu0">8</span>
+Cel mai apropiat punct este : <span class="nu0">3</span> = <span class="br0">&#40;</span><span class="nu0">4</span>,<span class="nu0">3</span><span class="br0">&#41;</span></pre>
+
+</div>
+
+<h3 class="sectionedit9" id="verificare_cu_valgrind">Verificare cu Valgrind</h3>
+<div class="level3">
+
+<p>
+Pentru acelasi test rulat cu 
+</p>
+<pre class="code bash"> <span class="kw2">valgrind</span> .<span class="sy0">/</span>main </pre>
+
+<p>
+ toata memoria va fi eliberata.
+</p>
+<pre class="code bash">==<span class="nu0">9360</span>== Memcheck, a memory error detector
+==<span class="nu0">9360</span>== Copyright <span class="br0">&#40;</span>C<span class="br0">&#41;</span> <span class="nu0">2002</span>-<span class="nu0">2013</span>, and GNU GPL<span class="st_h">'d, by Julian Seward et al.
+==9360== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==9360== Command: ./main
+.....................
+==9360== 
+==9360== HEAP SUMMARY:
+==9360==     in use at exit: 0 bytes in 0 blocks
+==9360==   total heap usage: 13 allocs, 13 frees, 772 bytes allocated
+==9360== 
+==9360== All heap blocks were freed -- no leaks are possible
+==9360== 
+==9360== For counts of detected and suppressed errors, rerun with: -v
+==9360== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</span></pre>
+
+</div>
+
+<h3 class="sectionedit10" id="aprofundare">Aprofundare</h3>
+<div class="level3">
+
+<p>
+Încercați să extindeți class Point2D la class Point3D (punct în spațiu). Care sunt diferențele?
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+<ul>
+<li class="level1"><div class="li"> <a href="../catalog.html" class="wikilink1" title="sd-ca:catalog">Catalog</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../catalog-activitate.html" class="wikilink1" title="sd-ca:catalog-activitate">Catalog Activitate</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../calendar.html" class="wikilink1" title="sd-ca:calendar">Calendar</a></div>
+</li>
+</ul>
+
+<h1 class="sectionedit1" id="articole">Articole</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="articol-01.html" class="wikilink1" title="sd-ca:articole:articol-01">Articol 1 - Introducere in C++</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-01-1.html" class="wikilink1" title="sd-ca:articole:tutorial-01-1">Tutorial 1.1 - ResizableArray</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-02.html" class="wikilink1" title="sd-ca:articole:articol-02">Articol 2 - Struct vs. Class</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="tutorial-02-1.html" class="wikilink1" title="sd-ca:articole:tutorial-02-1">Tutorial 2.1 - Point2D</a></span></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-03.html" class="wikilink1" title="sd-ca:articole:articol-03">Articol 3 - Templates in C++</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-03-1.html" class="wikilink1" title="sd-ca:articole:tutorial-03-1">Tutorial 3.1 - Set</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-04.html" class="wikilink1" title="sd-ca:articole:articol-04"> Articol 4 - Stive</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-04-1.html" class="wikilink1" title="sd-ca:articole:tutorial-04-1">Tutorial 4.1 - std::stack</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-04-2.html" class="wikilink1" title="sd-ca:articole:tutorial-04-2">Tutorial 4.2 - Parenthesis pair matching</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-04-3.html" class="wikilink1" title="sd-ca:articole:tutorial-04-3">Tutorial 4.3 - Polish notation</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-05.html" class="wikilink1" title="sd-ca:articole:articol-05"> Articol 5 - Cozi</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-05-1.html" class="wikilink1" title="sd-ca:articole:tutorial-05-1">Tutorial 5.1 - std::queue</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-05-2.html" class="wikilink1" title="sd-ca:articole:tutorial-05-2">Tutorial 5.2 - Radix Sort</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-06.html" class="wikilink1" title="sd-ca:articole:articol-06"> Articol 6 - Liste generice</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-06-1.html" class="wikilink1" title="sd-ca:articole:tutorial-06-1">Tutorial 6.1 - InsertionSort</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-06-2.html" class="wikilink1" title="sd-ca:articole:tutorial-06-2">Tutorial 6.2 - Set</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-07.html" class="wikilink1" title="sd-ca:articole:articol-07"> Articol 7 - HashTable</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tutorial-07-1.html" class="wikilink1" title="sd-ca:articole:tutorial-07-1">Tutorial 7.1 - Frequency vector</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-08.html" class="wikilink1" title="sd-ca:articole:articol-08"> Articol 8 - Grafuri</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../taskuri/task-08.html" class="wikilink1" title="sd-ca:taskuri:task-08"> Taskuri 8 - Grafuri</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-09.html" class="wikilink1" title="sd-ca:articole:articol-09"> Articol 9 - Arbori Binari</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-10.html" class="wikilink1" title="sd-ca:articole:articol-10"> Articol 10 - Arbori Binari de Căutare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../taskuri/task-10.html" class="wikilink1" title="sd-ca:taskuri:task-10"> Taskuri 10 - Arbori Binari de Căutare</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-11.html" class="wikilink1" title="sd-ca:articole:articol-11"> Articol 11 - Heap-uri</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="articol-12.html" class="wikilink1" title="sd-ca:articole:articol-12"> Articol 12 - Treap-uri</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Articole" [252-2234] -->
+<h1 class="sectionedit2" id="laboratoare_din_anii_trecuti">Laboratoare din anii trecuti</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/sd/" class="urlextern" title="http://elf.cs.pub.ro/sd/"  rel="nofollow"> Laboratoare 2012</a> </div>
+</li>
+<li class="level1"><div class="li"> <a href="../2013/index.html" class="wikilink1" title="sd-ca:2013:index"> Laboratoare 2013</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../2014.html" class="wikilink1" title="sd-ca:2014"> Laboratoare 2014</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../2015.html" class="wikilink1" title="sd-ca:2015"> Laboratoare 2015</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare din anii trecuti" [2235-2722] -->
+<h1 class="sectionedit3" id="resurse">Resurse</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../colaborative.html" class="wikilink1" title="sd-ca:colaborative">Instrumente Colaborative</a></div>
+</li>
+</ul>
+
+<div><div id="nojs_indexmenu_79437673358355a573adcf" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/debugging.html" class="wikilink1" title="sd-ca:resurse:debugging">Debugging</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/visualization.html" class="wikilink1" title="sd-ca:resurse:visualization">Data Structure Visualization</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Resurse" [2723-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="tutorial-02-1.html#tutorial_21_-_point2d">Tutorial 2.1 - Point2D</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="tutorial-02-1.html#obiective">Obiective</a></div></li>
+<li class="level2"><div class="li"><a href="tutorial-02-1.html#dezvoltare">Dezvoltare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tutorial-02-1.html#varianta_de_baza_a_lui_class_point2d">Varianta de bază a lui class Point2D</a></div></li>
+<li class="level3"><div class="li"><a href="tutorial-02-1.html#adaugarea_de_constructori">Adaugarea de constructori</a></div></li>
+<li class="level3"><div class="li"><a href="tutorial-02-1.html#adaugarea_de_alte_elemente_eg_functii_de_citirescriere">Adaugarea de alte elemente (e.g. functii de citire/scriere)</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="tutorial-02-1.html#testare_si_evaluare">Testare si Evaluare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tutorial-02-1.html#program_de_test">Program de test</a></div></li>
+<li class="level3"><div class="li"><a href="tutorial-02-1.html#verificare_cu_valgrind">Verificare cu Valgrind</a></div></li>
+<li class="level3"><div class="li"><a href="tutorial-02-1.html#aprofundare">Aprofundare</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          sd-ca/articole/tutorial-02-1.txt · Last modified: 2016/03/03 01:02 by andrei.vasiliu2211          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="tutorial-02-1%3Fdo=media&amp;ns=sd-ca%253Aarticole.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="tutorial-02-1.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=sd-ca%253Aarticole%253Atutorial-02-1&amp;1479891543" width="2" height="1" alt="" /></div>
+</body>
+</html>

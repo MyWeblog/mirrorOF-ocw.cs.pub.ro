@@ -1,0 +1,272 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    01. [10p] Configurare translatare de adrese (MASQUERADE)    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-12-11T11:03:16+0200"/>
+<meta name="keywords" content="rl,labs,09,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=rl:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/rl/labs/09/contents/01.html"/>
+<link rel="canonical" href="01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:09:contents';var JSINFO = {"id":"rl:labs:09:contents:01","namespace":"rl:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/rl/"><img height="70" src="../../../../res/sigla_rl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="01%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="01%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_configurare_translatare_de_adrese_masquerade">01. [10p] Configurare translatare de adrese (MASQUERADE)</h3>
+<div class="level3">
+
+<p>
+Epuizarea adreselor IPv4 în cadrul rețelelor curente a condus la folosirea de adrese IP din clase private (de ex. <code>192.168.0.0/24</code>). Pe lângă comunicația dintre stațiile unei rețele, dorim și accesul la Internet al acestora. De aceea s-a introdus conceptul de translatare de adrese (NAT: <em>Network Address Translation</em>) prin care mai multe stații dispun de acces la Internet folosind aceeași adresă IP rutabilă: adresa gateway-ului. Activarea translatării de adrese (NAT) pe gateway conduce la înlocuirea perechii &lt;adresă IP sursă, port sursă&gt; (aparținând stației) cu perechea &lt;adresa IP gateway, port disponibil&gt;.
+</p>
+
+<p>
+Configurarea NAT pe Linux se realizează tot prin intermediul comenzii <code>iptables</code>, la fel ca în cazul configurării firewall-ului. Dacă pentru configurarea firewall-ului foloseam tabela <code>filter</code> (tabela implicită a <code>iptables</code>), pentru configurarea translatării de adrese vom folosi tabela <code>nat</code>.
+</p>
+
+<p>
+Astfel, pentru a activa NAT pe un server Linux executăm comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+În comanda de mai sus:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-t</code> specifică tabela pe care se aplică regula, în cazul nostru tabela <code>nat</code>.</div>
+</li>
+<li class="level1"><div class="li"> <code>-A</code> înseamnă adăugarea unei reguli la sfârșitul listei de reguli.</div>
+</li>
+<li class="level1"><div class="li"> <code>POSTROUTING</code> se referă la momentul când va fi realizat procesul de translatare de adrese: după rutare.</div>
+<ul>
+<li class="level2"><div class="li"> În nomenclatura <code>iptables</code> acesta se numește și de <strong>lanț (chain)</strong>.</div>
+</li>
+<li class="level2"><div class="li"> Exemple de alte lanțuri: <code>INPUT</code>, <code>OUTPUT</code>, <code>FORWARD</code>, <code>PREROUTING</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <code>-j</code> este acțiunea ce va fi luată, iar în acest caz este <code>MASQUERADE</code> (acțiune simplă de translatare de adrese).</div>
+</li>
+</ul>
+
+<p>
+Pentru a verifica și valida regula, afișăm intrările din lanțul <code>POSTROUTING</code> din tabela <code>nat</code> folosind comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination
+    <span class="nu0">0</span>     <span class="nu0">0</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span></pre>
+
+<p>
+Vrem să verificăm configurarea corectă a NAT. Pentru acesta vom trimite de pe stația <code>red</code> un pachet către <code>8.8.8.8</code>. Pachetul va trece prin gateway (adică stația <code>host</code>) și va fi translatat. Pe stația <code>red</code> rulăm comanda
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> 8.8.8.8
+PING 8.8.8.8 <span class="br0">&#40;</span>8.8.8.8<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+From 192.168.1.2 <span class="re2">icmp_seq</span>=<span class="nu0">1</span> Destination Host Unreachable
+From 192.168.1.2 <span class="re2">icmp_seq</span>=<span class="nu0">2</span> Destination Host Unreachable
+&nbsp;
+<span class="re5">---</span> 8.8.8.8 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">0</span> received, +<span class="nu0">2</span> errors, <span class="nu0">100</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 999ms</pre>
+
+<p>
+Observăm că nu există conectivitate de la stația <code>red</code> către adresa IP <code>8.8.8.8</code>. Consultăm întreaga tabelă <code>nat</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> <span class="re5">-n</span> <span class="re5">-v</span>
+Chain PREROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">2</span> packets, <span class="nu0">168</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+&nbsp;
+Chain INPUT <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+&nbsp;
+Chain OUTPUT <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+&nbsp;
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">0</span>     <span class="nu0">0</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span> </pre>
+
+<p>
+Observăm că pachetele ajung în lanțul <code>PREROUTING</code> (înainte de rutare), dar nu ajung în lanțul <code>POSTROUTING</code> (după rutare). Ne gândim că este posibil să fie o problemă cu rutarea pe gateway. Verificăm dacă rutarea este activată:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = <span class="nu0">0</span></pre>
+
+<p>
+Într-adevăr, rutarea nu este activată. Pentru a activa rutarea pe stația <code>host</code> rulăm comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>sysctl <span class="re5">-w</span> net.ipv4.ip_forward=<span class="nu0">1</span>
+net.ipv4.ip_forward = <span class="nu0">1</span></pre>
+
+<p>
+Intrăm din nou pe stația <code>red</code> și folosim <code>ping</code> pentru a testa conectivitatea la adresa IP <code>8.8.8.8</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> 8.8.8.8
+PING 8.8.8.8 <span class="br0">&#40;</span>8.8.8.8<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 8.8.8.8: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">61</span> <span class="re2">time</span>=<span class="nu0">92.9</span> ms
+<span class="nu0">64</span> bytes from 8.8.8.8: <span class="re2">icmp_req</span>=<span class="nu0">2</span> <span class="re2">ttl</span>=<span class="nu0">61</span> <span class="re2">time</span>=<span class="nu0">81.2</span> ms
+&nbsp;
+<span class="re5">---</span> 8.8.8.8 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">2</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 1001ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">81.272</span><span class="sy0">/</span><span class="nu0">87.094</span><span class="sy0">/</span><span class="nu0">92.917</span><span class="sy0">/</span><span class="nu0">5.829</span> ms</pre>
+
+<p>
+Acum există conectivitate, lucru certificat și de prezența unor pachete în lista prelucrată pe lanțul <code>POSTROUTING</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">2</span>   <span class="nu0">168</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span></pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../09.html" class="wikilink1" title="rl:labs:09">Laboratorul 9</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "rl:labs:09:meta:nav" [0-] --><div class="plugin_include_content plugin_include__rl:labs:09:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_1392849559583560a866cf8" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><span class="curid"><a href="01.html" class="wikilink1" title="rl:labs:09:contents:01">01. [10p] Configurare translatare de adrese (MASQUERADE)</a></span></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="rl:labs:09:contents:02">02. [10p] Format de pachete la translatare</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="rl:labs:09:contents:03">03. [10p] Format de pachete TCP la translatare</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="rl:labs:09:contents:04">04. [10p] Configurare incorectă a translatării</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="rl:labs:09:contents:05">05. [10p] Port forwarding</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="rl:labs:09:contents:06">06. [10p] Extindere port forwarding</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="rl:labs:09:contents:07">07. [10p] Format de pachete la port forwarding</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="rl:labs:09:contents:08">08. [10p] Port forwarding pentru telnet</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="rl:labs:09:contents:09">09. [10p] Configurare persistentă rutare și NAT</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="rl:labs:09:contents:10">10. [10p] Tunel SSH invers</a></div></li>
+<li class="level1"><div class="li"><a href="11.html" class="wikilink1" title="rl:labs:09:contents:11">11. [BONUS - 10p] Translatare selectivă de adrese</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "rl:labs:09:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          rl/labs/09/contents/01.txt · Last modified: 2015/12/11 11:03 by octavian.grigorescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="01%3Fdo=media&amp;ns=rl%253Alabs%253A09%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="01.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=rl%253Alabs%253A09%253Acontents%253A01&amp;1479893160" width="2" height="1" alt="" /></div>
+</body>
+</html>

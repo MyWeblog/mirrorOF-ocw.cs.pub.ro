@@ -1,0 +1,290 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>bd:laboratoare:03</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-12T18:13:20+0200"/>
+<meta name="keywords" content="bd,laboratoare,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=bd:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="03.html"/>
+<link rel="canonical" href="../../../../bd/laboratoare/03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='bd:laboratoare';var JSINFO = {"id":"bd:laboratoare:03","namespace":"bd:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="03.html#laboratorul_03">Laboratorul 03</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="03.html#metode_de_join">Metode de JOIN</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="03.html#descriere_generala">Descriere generală</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#tipuri_de_join">Tipuri de join</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="03.html#exercitii">Exerciții</a></div></li>
+<li class="level3"><div class="li"><a href="03.html#evaluarea_performantei_cererilor">Evaluarea performanței cererilor</a></div></li>
+<li class="level3"><div class="li"><a href="03.html#bibliografie">Bibliografie</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="laboratorul_03">Laboratorul 03</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT1 SECTION "Laboratorul 03" [1-28] -->
+<h3 class="sectionedit2" id="metode_de_join">Metode de JOIN</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="descriere_generala">Descriere generală</h4>
+<div class="level4">
+
+<p>
+Pentru extragerea datelor din mai multe tabele din baza de date, comanda SELECT folosește una sau mai multe metode de JOIN. Sintaxa pentru un join simplu este următoarea:
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> <span class="br0">&#91;</span><span class="kw1">DISTINCT</span><span class="sy0">,</span><span class="kw1">ALL</span><span class="br0">&#93;</span> <span class="br0">&#91;</span>table_alias<span class="br0">&#93;</span><span class="sy0">.</span>col expr_alias<span class="sy0">,</span> <span class="sy0">...</span>
+<span class="kw1">FROM</span> <span class="br0">&#91;</span>schema<span class="sy0">.</span>table1<span class="br0">&#93;</span> table1_alias<span class="sy0">,</span><span class="br0">&#91;</span>schema<span class="sy0">.</span>table2<span class="br0">&#93;</span> table2_alias<span class="sy0">,</span> <span class="sy0">...</span>
+<span class="kw1">WHERE</span> table1_alias<span class="sy0">.</span>col<span class="sy0">=</span>table2_alias<span class="sy0">.</span>col
+<span class="kw1">ORDER</span> <span class="kw1">BY</span> expression<span class="br0">&#40;</span><span class="kw1">POSITION</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="kw1">ASC</span><span class="sy0">,</span><span class="kw1">DESC</span><span class="br0">&#93;</span></pre>
+
+<p>
+Parametrii comenzii au următoarea semnificație (cei din paranteze sunt opționali):
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>DISTINCT</strong> - returnează numai o înregistrarea în cazul în care comanda găsește rânduri duplicate</div>
+</li>
+<li class="level1"><div class="li"> <strong>ALL</strong> - returnează toate înregistrările simple și duplicate (selectează de asemenea toate coloanele tabelelor din clauza FROM)</div>
+</li>
+<li class="level1"><div class="li"> <strong>schema.table</strong> - reprezintă schema de identificare a tabelei (view-lui) specificată prin <em>user.table_name</em></div>
+</li>
+<li class="level1"><div class="li"> <strong>expr_alias</strong> - este un nume alocat unei tabele (view) care va fi folosit în cereri corelate</div>
+</li>
+<li class="level1"><div class="li"> <strong>WHERE condition</strong> - reprezintă o clauză (înlănțuire de condiții) care trebuie să fie îndeplinită în criteriul e selecție a înregistrărilor</div>
+</li>
+<li class="level1"><div class="li"> <strong>ORDER BY expression(position)</strong> - ordonează înregistrările selectate după coloanele din expresie sau în ordinea coloanelor specificate prin poziție</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="tipuri_de_join">Tipuri de join</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="equi_join">Equi Join</h5>
+<div class="level5">
+<pre class="code sql"><span class="kw1">SELECT</span> a<span class="sy0">.</span>id_dep<span class="sy0">,</span>b<span class="sy0">.</span>den_dep departament<span class="sy0">,</span> a<span class="sy0">.</span>nume<span class="sy0">,</span> a<span class="sy0">.</span>functie
+<span class="kw1">FROM</span> angajati a<span class="sy0">,</span> departamente b
+<span class="kw1">WHERE</span> a<span class="sy0">.</span>id_dep<span class="sy0">=</span>b<span class="sy0">.</span>id_dep <span class="kw1">AND</span> a<span class="sy0">.</span>id_dep<span class="sy0">=</span><span class="nu0">10</span>;</pre>
+
+</div>
+
+<h5 id="non_equi_join">Non Equi Join</h5>
+<div class="level5">
+<pre class="code sql"><span class="kw1">SELECT</span> a<span class="sy0">.</span>nume<span class="sy0">,</span> a<span class="sy0">.</span>salariu<span class="sy0">,</span> b<span class="sy0">.</span>grad
+<span class="kw1">FROM</span> angajati a<span class="sy0">,</span> grila_salar b
+<span class="kw1">WHERE</span> a<span class="sy0">.</span>salariu <span class="kw1">BETWEEN</span> b<span class="sy0">.</span>nivel_inf <span class="kw1">AND</span> b<span class="sy0">.</span>nivel_sup <span class="kw1">AND</span> a<span class="sy0">.</span>id_dep<span class="sy0">=</span><span class="nu0">20</span>;</pre>
+
+</div>
+
+<h5 id="self_join">Self Join</h5>
+<div class="level5">
+<pre class="code sql"><span class="kw1">SELECT</span> a<span class="sy0">.</span>nume nume_ang<span class="sy0">,</span> a<span class="sy0">.</span>functie functie_ang<span class="sy0">,</span> b<span class="sy0">.</span>nume nume_sef<span class="sy0">,</span> b<span class="sy0">.</span>functie functie_sef
+<span class="kw1">FROM</span> angajati a<span class="sy0">,</span>angajati b
+<span class="kw1">WHERE</span> a<span class="sy0">.</span>id_sef <span class="sy0">=</span>b<span class="sy0">.</span>id_ang <span class="kw1">AND</span> a<span class="sy0">.</span>id_dep<span class="sy0">=</span><span class="nu0">10</span>;</pre>
+
+</div>
+
+<h5 id="join_extern">Join Extern</h5>
+<div class="level5">
+<pre class="code sql"><span class="kw1">SELECT</span> a<span class="sy0">.</span>id_dep<span class="sy0">,</span>a<span class="sy0">.</span>den_dep<span class="sy0">,</span>b<span class="sy0">.</span>nume<span class="sy0">,</span>b<span class="sy0">.</span>functie
+<span class="kw1">FROM</span> departamente a<span class="sy0">,</span> angajati b
+<span class="kw1">WHERE</span> a<span class="sy0">.</span>id_dep<span class="sy0">=</span>b<span class="sy0">.</span>id_dep<span class="br0">&#40;</span><span class="sy0">+</span><span class="br0">&#41;</span>;</pre>
+
+<p>
+Semnul (+) se pune în dreptul tabelei deficitare ca informații, pentru a afișa întotdeauna informațiile din cealaltă tabelă, chiar dacă nu au corespondent pentru join.
+</p>
+
+</div>
+
+<h5 id="join_vertical">Join Vertical</h5>
+<div class="level5">
+<pre class="code sql"><span class="kw1">SELECT</span> id_dep<span class="sy0">,</span>nume<span class="sy0">,</span>functie<span class="sy0">,</span>salariu
+<span class="kw1">FROM</span> anngajati
+<span class="kw1">WHERE</span> id_dep<span class="sy0">=</span><span class="nu0">10</span>
+<span class="kw1">UNION</span>
+<span class="kw1">SELECT</span> id_dep<span class="sy0">,</span>nume<span class="sy0">,</span>functie<span class="sy0">,</span>salariu
+<span class="kw1">FROM</span> angajati
+<span class="kw1">WHERE</span> id_dep<span class="sy0">=</span><span class="nu0">30</span>;</pre>
+
+<p>
+Operatori pentru join vertical:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>UNION</strong> pentru reuniune; <strong>UNION ALL</strong> pentru a păstra duplicatele;</div>
+</li>
+<li class="level1"><div class="li"> <strong>INTERSECT</strong> pentru intersecție;</div>
+</li>
+<li class="level1"><div class="li"> <strong>MINUS</strong> pentru diferență;</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Metode de JOIN" [29-2562] -->
+<h3 class="sectionedit3" id="exercitii">Exerciții</h3>
+<div class="level3">
+
+<p>
+<p><div class="noteclassic">
+Exercițiile nu sunt identice între 2 ședințe de laborator. Diferențele sunt date de <code>parametrii adiționali</code> prezenți în fiecare dintre ele, ce vor fi descriși de laborant în cadrul fiecărui laborator.
+
+</div></p>
+</p>
+
+</div>
+
+<h5 id="salarii_si_comisioane">1. Salarii și comisioane</h5>
+<div class="level5">
+
+<p>
+Scrieți o cerere care selectează toți angajații (nume, funcție, salariu, comision, venit total, <code>parametri adiționali</code>) și informații despre departamentul în care lucrează (denumire departament, manager departament), unde fie numele angajatului, fie funcția lui, fie numele departamentului conțin un text dat de utilizator. Salvați cererea într-un fișier și apelați fișierul cu textul folosit în cerere ca argument.
+</p>
+
+</div>
+
+<h5 id="indemnizatia_de_vechime">2. Indemnizația de vechime</h5>
+<div class="level5">
+
+<p>
+Modificați tabelul <em>angajați</em> să conțină o coloană denumită <em>vechime</em>, în ani (întregi) de la data angajării.
+Scrieți o cerere care selectează toți angajații (nume, funcție, salariu) împreună cu un câmp numit <em>spor de vechime</em>, calculat după următoarea formulă:
+</p>
+<ul>
+<li class="level1"><div class="li"> Întâi se calculează vechimea managerului de departament (vechimea departamentului <strong>V<sub>d</sub></strong>)</div>
+</li>
+<li class="level1"><div class="li"> Apoi se calculează diferența între vechimea fiecărui angajat <strong>V<sub>a</sub></strong> și vechimea departamentului <strong>D=V<sub>a</sub>-V<sub>d</sub></strong></div>
+</li>
+<li class="level1"><div class="li"> <code>parametri adiționali</code></div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="pe_cine_dam_afara">3. Pe cine dăm afară</h5>
+<div class="level5">
+
+<p>
+Scrieți o cerere care selectează angajații, în ordinea descrescătoare a următoarelor criterii:
+</p>
+<ul>
+<li class="level1"><div class="li"> “ne costă prea mult”: salariu + comision</div>
+</li>
+<li class="level1"><div class="li"> “deja se plictisesc”: vechime</div>
+</li>
+<li class="level1"><div class="li"> “sunt din departamente condamnate, oricum”: vechimea managerului de departament</div>
+</li>
+<li class="level1"><div class="li"> <code>parametri adiționali</code></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Exerciții" [2563-4211] -->
+<h3 class="sectionedit4" id="evaluarea_performantei_cererilor">Evaluarea performanței cererilor</h3>
+<div class="level3">
+
+<p>
+Putem evalua performanța cererilor noastre SQL cu ajutorul unei unelte prezente în majoritatea motoarelor de baze de date, anume <strong>EXPLAIN</strong>. Aceasta se folosește în modul următor:
+</p>
+<pre class="code sql"><span class="kw1">EXPLAIN</span> PLAN <span class="kw1">SET</span> statement_id<span class="sy0">=</span><span class="st0">'my_statement_id'</span> <span class="kw1">FOR</span>
+Cererea_mea_SQL</pre>
+
+<p>
+Apoi, puteți afișa descrierea ultimului plan salvat cu următoarea cerere:
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> plan_table_output <span class="kw1">FROM</span> <span class="kw1">TABLE</span><span class="br0">&#40;</span>dbms_xplan<span class="sy0">.</span>display<span class="br0">&#40;</span><span class="st0">'plan_table'</span><span class="sy0">,</span><span class="kw1">NULL</span><span class="sy0">,</span><span class="st0">'serial'</span><span class="br0">&#41;</span><span class="br0">&#41;</span>;</pre>
+
+<p>
+sau
+</p>
+<pre class="code sql"><span class="kw1">SELECT</span> operation<span class="sy0">,</span><span class="st0">&quot;timestamp&quot;</span><span class="sy0">,</span>search_columns<span class="sy0">,</span>cost<span class="sy0">,</span>cardinality<span class="sy0">,</span>bytes <span class="kw1">FROM</span> plan_table <span class="kw1">WHERE</span> statement_id<span class="sy0">=</span><span class="st0">'my_statement_id'</span>;</pre>
+
+<p>
+În caz că tabelul PLAN_TABLE nu este deja creat, îl puteți crea cu următoarea cerere:
+</p>
+<pre class="code sql"><span class="kw1">CREATE</span> <span class="kw1">TABLE</span> PLAN_TABLE <span class="br0">&#40;</span>
+        STATEMENT_ID VARCHAR2<span class="br0">&#40;</span><span class="nu0">30</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="st0">&quot;TIMESTAMP&quot;</span> <span class="kw1">DATE</span><span class="sy0">,</span>
+REMARKS VARCHAR2<span class="br0">&#40;</span><span class="nu0">80</span><span class="br0">&#41;</span><span class="sy0">,</span>
+OPERATION VARCHAR2<span class="br0">&#40;</span><span class="nu0">30</span><span class="br0">&#41;</span><span class="sy0">,</span>
+OPTIONS VARCHAR2<span class="br0">&#40;</span><span class="nu0">30</span><span class="br0">&#41;</span><span class="sy0">,</span>
+OBJECT_NODE VARCHAR2<span class="br0">&#40;</span><span class="nu0">128</span><span class="br0">&#41;</span><span class="sy0">,</span>
+OBJECT_OWNER VARCHAR2<span class="br0">&#40;</span><span class="nu0">30</span><span class="br0">&#41;</span><span class="sy0">,</span>
+OBJECT_NAME VARCHAR2<span class="br0">&#40;</span><span class="nu0">30</span><span class="br0">&#41;</span><span class="sy0">,</span>
+OBJECT_INSTANCE <span class="kw1">NUMBER</span><span class="sy0">,</span>
+OBJECT_TYPE VARCHAR2<span class="br0">&#40;</span><span class="nu0">30</span><span class="br0">&#41;</span><span class="sy0">,</span>
+OPTIMIZER VARCHAR2<span class="br0">&#40;</span><span class="nu0">255</span><span class="br0">&#41;</span><span class="sy0">,</span>
+SEARCH_COLUMNS <span class="kw1">NUMBER</span><span class="sy0">,</span>
+ID <span class="kw1">NUMBER</span><span class="sy0">,</span>
+PARENT_ID <span class="kw1">NUMBER</span><span class="sy0">,</span>
+<span class="st0">&quot;POSITION&quot;</span> <span class="kw1">NUMBER</span><span class="sy0">,</span>
+COST <span class="kw1">NUMBER</span><span class="sy0">,</span>
+CARDINALITY <span class="kw1">NUMBER</span><span class="sy0">,</span>
+BYTES <span class="kw1">NUMBER</span><span class="sy0">,</span>
+OTHER_TAG VARCHAR2<span class="br0">&#40;</span><span class="nu0">255</span><span class="br0">&#41;</span><span class="sy0">,</span>
+OTHER LONG
+<span class="br0">&#41;</span>;</pre>
+
+</div>
+<!-- EDIT4 SECTION "Evaluarea performanței cererilor" [4212-5430] -->
+<h3 class="sectionedit5" id="bibliografie">Bibliografie</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> <strong>Alexandru Boicea</strong> -<em> Oracle SQL SQL Plus</em>, Editura Printech</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT5 SECTION "Bibliografie" [5431-] --></div>
+</body>
+</html>

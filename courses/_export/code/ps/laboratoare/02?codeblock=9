@@ -1,0 +1,23 @@
+    
+    
+
+N = 200;
+T = 100;
+y1 = ramp(N);
+y2 = [zeros(1,T), -y1(1:N-T)];
+y3 = ustep(N);
+y3 = [zeros(1,T), -T*y3(1:N-T)];
+ys = y1+y2+y3;
+x = 1:N;
+s1 = y1(x);
+s2 = y2(x);
+s3 = y3(x);
+ss = s1+s2+s3;
+h = figure;
+plot(x, ss, 'k-', 'LineWidth', 3);
+hold on;
+plot(x, s1, 'g-', 'LineWidth', 2);
+plot(x, s2, 'b-', 'LineWidth', 2);
+plot(x, s3, 'r-', 'LineWidth', 2);
+legend('sum', 'r(t)', '-r(t-T)', '-u(t-T)');
+print(h1, '-dpng', 'combined_signals.png');

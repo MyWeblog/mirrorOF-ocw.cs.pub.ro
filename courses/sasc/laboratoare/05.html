@@ -1,0 +1,486 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 05 - DES    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-25T13:09:56+0300"/>
+<meta name="keywords" content="sasc,laboratoare,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=sasc:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/sasc/laboratoare/05.html"/>
+<link rel="canonical" href="05.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sasc:laboratoare';var JSINFO = {"id":"sasc:laboratoare:05","namespace":"sasc:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="05%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="05%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="lab_05_-_des">Lab 05 - DES</h2>
+<div class="level2">
+
+<p>
+In this lab we&#039;ll do some exercises with DES and some of its variants, as we discussed in the last lecture:
+<a href="http://cs.curs.pub.ro/2014/pluginfile.php/13095/mod_resource/content/2/sasc_curs4_5.pdf" class="urlextern" title="http://cs.curs.pub.ro/2014/pluginfile.php/13095/mod_resource/content/2/sasc_curs4_5.pdf"  rel="nofollow">http://cs.curs.pub.ro/2014/pluginfile.php/13095/mod_resource/content/2/sasc_curs4_5.pdf</a>
+</p>
+
+</div>
+
+<h3 class="sectionedit2" id="exercise_1">Exercise 1</h3>
+<div class="level3">
+
+<p>
+Remember DESX defined as the operation DESX( (k1,k2,k3), m) = k1 ⊕ DES(k2, m ⊕ k3).
+Show an attack on DESX that runs in time 2<sup>120</sup>.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="exercise_2">Exercise 2</h3>
+<div class="level3">
+
+<p>
+Show why the following schemes do not bring any real advantage compared to DES:
+</p>
+<ul>
+<li class="level1"><div class="li"> a) c = k1 ⊕ DES(k2, m)</div>
+</li>
+<li class="level1"><div class="li"> b) c = DES(k2, m ⊕ k1)</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit4" id="exercise_3">Exercise 3</h3>
+<div class="level3">
+
+<p>
+The goal of this exercise is to implement the meet-in-the-middle attack on double DES.
+For this, you are given a starter code (see below), implemented using the Pycrypto library:
+<a href="https://pypi.python.org/pypi/pycrypto" class="urlextern" title="https://pypi.python.org/pypi/pycrypto"  rel="nofollow">https://pypi.python.org/pypi/pycrypto</a>
+</p>
+
+<p>
+Perform the following tasks:
+</p>
+<ul>
+<li class="level1"><div class="li"> a) Install the pycrypto library</div>
+</li>
+<li class="level1"><div class="li"> b) Starting from the starter code (see below), write methods to encrypt and decrypt using double-DES (2DES), defined as follows:</div>
+</li>
+</ul>
+
+<p>
+&lt;quote&gt; 2DES( (k1,k2), m) = DES(k1, DES(k2, m))&lt;/quote&gt;
+</p>
+<ul>
+<li class="level1"><div class="li"> c) You are given the ciphertexts</div>
+</li>
+</ul>
+
+<p>
+c1 = &#039;cda98e4b247612e5b088a803b4277710f106beccf3d020ffcc577ddd889e2f32&#039;
+</p>
+
+<p>
+c2 = &#039;54826ea0937a2c34d47f4595f3844445520c0995331e5d492f55abcf9d8dfadf&#039;
+</p>
+
+<p>
+as hex strings (i.e. you need to decode them to get the actual byte strings to use with DES, e.g. c1.decode(&#039;hex&#039;))
+</p>
+
+<p>
+Decrypt them using the following keys:
+</p>
+
+<p>
+k1 = &#039;Smerenie&#039;
+</p>
+
+<p>
+k2 = &#039;Dragoste&#039;
+</p>
+
+<p>
+The plaintext corresponding to c1 is m1=&#039;Fericiti cei saraci cu duhul, ca&#039;. Find the plaintext m2 corresponding to c2.
+</p>
+
+<p>
+<p><div class="notetip">
+With the Pycrypto library, DES is given a key in 8 bytes (64 bits) rather than 7 (56 bits). However, the last bit in each byte is considered as a parity bit, but in fact ignored in this library, leaving the actual key in 56 bits. For this and the following exercises, we assume the entire key as 64 bits, given for example as 8 characters, as above.
+</p>
+
+<p>
+Note also that for this exercises, we shall be using the default values when initialising the DES cipher (i.e. ECB mode and no IV).
+
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> d) Decrypt the entire ciphertext (c1 || c2) with k1 and k2 using 2DES and check it matches the messages m1||m2 above.</div>
+</li>
+<li class="level1"><div class="li"> e) You are given the following ciphertext/plaintext pairs:</div>
+</li>
+</ul>
+
+<p>
+m1 = &#039;Pocainta&#039; (in byte string, i.e. can be used directly with Pycrypto DES)
+</p>
+
+<p>
+c1 = &#039;9f98dbd6fe5f785d&#039; (in hex string, you need to hex-decode)
+</p>
+
+<p>
+m2 = &#039;Iertarea&#039;
+</p>
+
+<p>
+c2 = &#039;6e266642ef3069c2&#039;
+</p>
+
+<p>
+Due to a problem with the PRG, you also know the last 6-bytes of each key (note we now have a different key than for the previous exercises):
+k1 (last 6 bytes) = &#039;oIkvH5&#039;
+k2 (last 6 bytes) = &#039;GK4EoU&#039;
+</p>
+
+<p>
+To build a table, I recommend using a list of tuples, where you add new (key,enc) pairs as follows:
+</p>
+<pre class="code">tb = []
+tb.append((&#039;keyval&#039;, &#039;encva&#039;))</pre>
+
+<p>
+To sort the table, you can do this:
+</p>
+<pre class="code">tbs = sorted(tb, key=itemgetter(1))</pre>
+
+<p>
+To search with binary search, first select just the second column (to search the encryptions):
+</p>
+<pre class="code">tenc = [value for _,value in tbs]</pre>
+
+<p>
+then use the bisect library (e.g. bisect.bisect_left)
+<a href="https://docs.python.org/2/library/bisect.html" class="urlextern" title="https://docs.python.org/2/library/bisect.html"  rel="nofollow">https://docs.python.org/2/library/bisect.html</a>
+</p>
+
+<p>
+The starter code is this:
+</p>
+<pre class="code">import sys
+import random
+import string
+from operator import itemgetter
+import time
+import bisect
+from Crypto.Cipher import DES
+
+def strxor(a, b): # xor two strings (trims the longer input)
+  return &quot;&quot;.join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a, b)])
+
+def hexxor(a, b): # xor two hex strings (trims the longer input)
+  ha = a.decode(&#039;hex&#039;)
+  hb = b.decode(&#039;hex&#039;)
+  return &quot;&quot;.join([chr(ord(x) ^ ord(y)).encode(&#039;hex&#039;) for (x, y) in zip(ha, hb)])
+
+def bitxor(a, b): # xor two bit strings (trims the longer input)
+  return &quot;&quot;.join([str(int(x)^int(y)) for (x, y) in zip(a, b)])
+
+def str2bin(ss):
+  &quot;&quot;&quot;
+    Transform a string (e.g. &#039;Hello&#039;) into a string of bits
+  &quot;&quot;&quot;
+  bs = &#039;&#039;
+  for c in ss:
+    bs = bs + bin(ord(c))[2:].zfill(8)
+  return bs
+
+def str2int(ss):
+  &quot;&quot;&quot;
+    Transform a string (e.g. &#039;Hello&#039;) into a (long) integer by converting
+    first to a bistream
+  &quot;&quot;&quot;
+  bs = str2bin(ss)
+  li = int(bs, 2)
+  return li
+
+def hex2bin(hs):
+  &quot;&quot;&quot;
+    Transform a hex string (e.g. &#039;a2&#039;) into a string of bits (e.g.10100010)
+  &quot;&quot;&quot;
+  bs = &#039;&#039;
+  for c in hs:
+    bs = bs + bin(int(c,16))[2:].zfill(4)
+  return bs
+
+def bin2hex(bs):
+  &quot;&quot;&quot;
+    Transform a bit string into a hex string
+  &quot;&quot;&quot;
+  bv = int(bs,2)
+  return int2hexstring(bv)
+
+def byte2bin(bval):
+  &quot;&quot;&quot;
+    Transform a byte (8-bit) value into a bitstring
+  &quot;&quot;&quot;
+  return bin(bval)[2:].zfill(8)
+
+def int2hexstring(bval):
+  &quot;&quot;&quot;
+    Transform an int value into a hexstring (even number of characters)
+  &quot;&quot;&quot;
+  hs = hex(bval)[2:]
+  lh = len(hs)
+  return hs.zfill(lh + lh%2)
+
+def get_index(a, x):
+  &#039;Locate the leftmost value exactly equal to x in list a&#039;
+  i = bisect.bisect_left(a, x)
+  if i != len(a) and a[i] == x:
+    return i
+  else:
+    return -1
+
+def des_enc(k, m):
+  &quot;&quot;&quot;
+  Encrypt a message m with a key k using DES as follows:
+  c = DES(k, m)
+
+  Args:
+    m should be a bytestring (i.e. a sequence of characters such as &#039;Hello&#039; or &#039;\x02\x04&#039;)
+    k should be a bytestring of length exactly 8 bytes.
+
+  Note that for DES the key is given as 8 bytes, where the last bit of
+  each byte is just a parity bit, giving the actual key of 56 bits, as expected for DES.
+  The parity bits are ignored.
+
+  Return:
+    The bytestring ciphertext c
+  &quot;&quot;&quot;
+  d = DES.new(k)
+  c = d.encrypt(m)
+
+  return c
+
+def des_dec(k, c):
+  &quot;&quot;&quot;
+  Decrypt a message c with a key k using DES as follows:
+  m = DES(k, c)
+
+  Args:
+    c should be a bytestring (i.e. a sequence of characters such as &#039;Hello&#039; or &#039;\x02\x04&#039;)
+    k should be a bytestring of length exactly 8 bytes.
+
+  Note that for DES the key is given as 8 bytes, where the last bit of
+  each byte is just a parity bit, giving the actual key of 56 bits, as expected for DES.
+  The parity bits are ignored.
+
+  Return:
+    The bytestring plaintext m
+  &quot;&quot;&quot;
+  d = DES.new(k)
+  m = d.decrypt(c)
+
+  return m
+  
+def main():
+
+  # Exercitiu pentru test des2_enc
+  key1 = &#039;Smerenie&#039;
+  key2 = &#039;Dragoste&#039;
+  m1_given = &#039;Fericiti cei saraci cu duhul, ca&#039;
+  c1 = &#039;cda98e4b247612e5b088a803b4277710f106beccf3d020ffcc577ddd889e2f32&#039;
+  # TODO: implement des2_enc and des2_dec
+  m1 = des2_dec(key1, key2, c1.decode(&#039;hex&#039;))
+
+  print &#039;ciphertext: &#039; + c1
+  print &#039;plaintext: &#039; + m1
+  print &#039;plaintext in hexa: &#039; + m1.encode(&#039;hex&#039;)
+
+  # TODO: run meet-in-the-middle attack for the following plaintext/ciphertext
+  m1 = &#039;Pocainta&#039;
+  c1 = &#039;9f98dbd6fe5f785d&#039; # in hex string
+  m2 = &#039;Iertarea&#039;
+  c2 = &#039;6e266642ef3069c2&#039;
+  
+  # Note: you only need to search for the first 2 bytes of the each key:
+  k1 = &#039;??oIkvH5&#039;
+  k2 = &#039;??GK4EoU&#039;
+
+
+
+if __name__ == &quot;__main__&quot;:
+  main()</pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_84919564558355bb0b1a89" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="sasc:laboratoare:01">Lab 01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="sasc:laboratoare:02">Lab 02 - OTP and Stream Ciphers</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="sasc:laboratoare:03">Lab 03 - PRGs</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="sasc:laboratoare:04">Lab 04 - PRFs and PRPs</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="05.html" class="wikilink1" title="sasc:laboratoare:05">Lab 05 - DES</a></span></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="sasc:laboratoare:06">Lab 06 - CBC Padding Attack</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="sasc:laboratoare:07">Lab 07 - Correlation Power Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="sasc:laboratoare:08">Lab 08 - MACs</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="sasc:laboratoare:09">Lab 09 - OpenSSL MACs and Hashes</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="sasc:laboratoare:10">Lab 10 - OpenSSL AEAD</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Laboratoare" [1-61] -->
+<h1 class="sectionedit2" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_112776808958355bb0b39c1" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/stuff.html" class="wikilink1" title="sasc:res:stuff">Diverse exercitii</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tema1.html" class="wikilink1" title="sasc:res:tema1">Homework 1</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tema2.html" class="wikilink1" title="sasc:res:tema2">Homework 2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Resurse" [62-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="05.html#lab_05_-_des">Lab 05 - DES</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="05.html#exercise_1">Exercise 1</a></div></li>
+<li class="level3"><div class="li"><a href="05.html#exercise_2">Exercise 2</a></div></li>
+<li class="level3"><div class="li"><a href="05.html#exercise_3">Exercise 3</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          sasc/laboratoare/05.txt · Last modified: 2016/04/25 13:09 by sergiu.costea          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="05%3Fdo=media&amp;ns=sasc%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="05.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=sasc%253Alaboratoare%253A05&amp;1479891888" width="2" height="1" alt="" /></div>
+</body>
+</html>

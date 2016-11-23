@@ -1,0 +1,287 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 10 - OpenSSL AEAD    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-24T11:26:52+0300"/>
+<meta name="keywords" content="sasc,laboratoare,10"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=sasc:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/sasc/laboratoare/10.html"/>
+<link rel="canonical" href="10.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sasc:laboratoare';var JSINFO = {"id":"sasc:laboratoare:10","namespace":"sasc:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="10%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="10%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="lab_10_-_openssl_aead">Lab 10 - OpenSSL AEAD</h2>
+<div class="level2">
+
+<p>
+Before you start solving the exercises below, download the <a href="../../_media/sasc/laboratoare/sasc_lab10.tar.gz" class="media mediafile mf_gz" title="sasc:laboratoare:sasc_lab10.tar.gz (2.5 KB)">lab archive from here</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit2" id="exercise_0_-_feedback">Exercise 0 - Feedback</h3>
+<div class="level3">
+
+<p>
+We invite you to assess the activity of the SASC team. Please share with us what you liked and disliked about this course, and if you have any extra suggestions, please let us know. SASC is a new course, and your feedback is very important for us as we continue to improve the course in the years ahead.
+</p>
+
+<p>
+You may find the feedback form <a href="http://cs.curs.pub.ro/2015/course/view.php?id=204" class="urlextern" title="http://cs.curs.pub.ro/2015/course/view.php?id=204"  rel="nofollow"> here</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="exercise_1">Exercise 1</h3>
+<div class="level3">
+
+<p>
+The archive contains the source code for Exercise 2, but sadly it is encrypted. Luckily, we forgot to remove the password file from the archive.
+</p>
+
+<p>
+Use <code>openssl</code> commands to decrypt the source file.
+</p>
+
+<p>
+<p><div class="noteclassic">
+The file is encrypted using AES-256 in CBC mode.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="exercise_2">Exercise 2</h3>
+<div class="level3">
+
+<p>
+In this exercise we&#039;ll use OpenSSL to encrypt and decrypt with AES-128-GCM. Unfortunately, AES-GCM is not supported by the command line utilities of OpenSSL so we&#039;ll have to implement it ourselves.
+</p>
+
+<p>
+Open the file you decrypted in the previous exercise and inspect the code. There are two functions that need to be implemented: <code>aes_gcm_encrypt</code> and <code>aes_gcm_decrypt</code>. We have included hints to guide you through the code.
+</p>
+
+<p>
+The main program initializes a dummy key and a dummy IV; a long message is then encrypted and decrypted. The encryption should automatically include the authentication tag at the end, and the decryption should return an error if the verification of the tag fails.
+</p>
+
+<p>
+If you do not change keys and the implementation is ok, the ciphertext you obtain should be equal to our own. Otherwise, some of the tests will fail.
+</p>
+
+<p>
+Below we have included an example of encryption with RC2 (taken from the OpenSSL man pages). The AES-GCM encryption implementation is quite similar - the authentication tag is automatically appended when finalizing the encryption context.
+</p>
+<pre class="code C"><span class="kw4">int</span> do_crypt<span class="br0">&#40;</span>FILE <span class="sy0">*</span>in<span class="sy0">,</span> FILE <span class="sy0">*</span>out<span class="sy0">,</span> <span class="kw4">int</span> do_encrypt<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* Allow enough space in output buffer for additional block */</span>
+    inbuf<span class="br0">&#91;</span><span class="nu0">1024</span><span class="br0">&#93;</span><span class="sy0">,</span> outbuf<span class="br0">&#91;</span><span class="nu0">1024</span> <span class="sy0">+</span> EVP_MAX_BLOCK_LENGTH<span class="br0">&#93;</span><span class="sy0">;</span>
+    <span class="kw4">int</span> inlen<span class="sy0">,</span> outlen<span class="sy0">;</span>
+    <span class="coMULTI">/* Bogus key and IV: we'd normally set these from
+     * another source.
+     */</span>
+    <span class="kw4">unsigned</span> <span class="kw4">char</span> key<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;0123456789&quot;</span><span class="sy0">;</span>
+    <span class="kw4">unsigned</span> <span class="kw4">char</span> iv<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;12345678&quot;</span><span class="sy0">;</span>
+    <span class="coMULTI">/* Don't set key or IV because we will modify the parameters */</span>
+    EVP_CIPHER_CTX_init<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="br0">&#41;</span><span class="sy0">;</span>
+    EVP_CipherInit_ex<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="sy0">,</span> EVP_rc2<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span> NULL<span class="sy0">,</span> NULL<span class="sy0">,</span> NULL<span class="sy0">,</span> do_encrypt<span class="br0">&#41;</span><span class="sy0">;</span>
+    EVP_CIPHER_CTX_set_key_length<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="sy0">,</span> <span class="nu0">10</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="coMULTI">/* We finished modifying parameters so now we can set key and IV */</span>
+    EVP_CipherInit_ex<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="sy0">,</span> NULL<span class="sy0">,</span> NULL<span class="sy0">,</span> key<span class="sy0">,</span> iv<span class="sy0">,</span> do_encrypt<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">for</span><span class="br0">&#40;</span><span class="sy0">;;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        inlen <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/fread.html"><span class="kw3">fread</span></a><span class="br0">&#40;</span>inbuf<span class="sy0">,</span> <span class="nu0">1</span><span class="sy0">,</span> <span class="nu0">1024</span><span class="sy0">,</span> in<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span><span class="br0">&#40;</span>inlen <span class="sy0">&lt;=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="kw2">break</span><span class="sy0">;</span>
+        <span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span>EVP_CipherUpdate<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="sy0">,</span> outbuf<span class="sy0">,</span> <span class="sy0">&amp;</span>outlen<span class="sy0">,</span> inbuf<span class="sy0">,</span> inlen<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            <span class="coMULTI">/* Error */</span>
+            EVP_CIPHER_CTX_cleanup<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        <a href="http://www.opengroup.org/onlinepubs/009695399/functions/fwrite.html"><span class="kw3">fwrite</span></a><span class="br0">&#40;</span>outbuf<span class="sy0">,</span> <span class="nu0">1</span><span class="sy0">,</span> outlen<span class="sy0">,</span> out<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span>EVP_CipherFinal_ex<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="sy0">,</span> outbuf<span class="sy0">,</span> <span class="sy0">&amp;</span>outlen<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* Error */</span>
+        EVP_CIPHER_CTX_cleanup<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/fwrite.html"><span class="kw3">fwrite</span></a><span class="br0">&#40;</span>outbuf<span class="sy0">,</span> <span class="nu0">1</span><span class="sy0">,</span> outlen<span class="sy0">,</span> out<span class="br0">&#41;</span><span class="sy0">;</span>
+    EVP_CIPHER_CTX_cleanup<span class="br0">&#40;</span><span class="sy0">&amp;</span>ctx<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_42833225658355bb218567" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="sasc:laboratoare:01">Lab 01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="sasc:laboratoare:02">Lab 02 - OTP and Stream Ciphers</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="sasc:laboratoare:03">Lab 03 - PRGs</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="sasc:laboratoare:04">Lab 04 - PRFs and PRPs</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="sasc:laboratoare:05">Lab 05 - DES</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="sasc:laboratoare:06">Lab 06 - CBC Padding Attack</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="sasc:laboratoare:07">Lab 07 - Correlation Power Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="sasc:laboratoare:08">Lab 08 - MACs</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="sasc:laboratoare:09">Lab 09 - OpenSSL MACs and Hashes</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="10.html" class="wikilink1" title="sasc:laboratoare:10">Lab 10 - OpenSSL AEAD</a></span></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Laboratoare" [1-61] -->
+<h1 class="sectionedit2" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_100326123858355bb21a4a5" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/stuff.html" class="wikilink1" title="sasc:res:stuff">Diverse exercitii</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tema1.html" class="wikilink1" title="sasc:res:tema1">Homework 1</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tema2.html" class="wikilink1" title="sasc:res:tema2">Homework 2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Resurse" [62-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="10.html#lab_10_-_openssl_aead">Lab 10 - OpenSSL AEAD</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="10.html#exercise_0_-_feedback">Exercise 0 - Feedback</a></div></li>
+<li class="level3"><div class="li"><a href="10.html#exercise_1">Exercise 1</a></div></li>
+<li class="level3"><div class="li"><a href="10.html#exercise_2">Exercise 2</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          sasc/laboratoare/10.txt · Last modified: 2016/05/24 11:26 by sergiu.costea          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="10%3Fdo=media&amp;ns=sasc%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="10.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=sasc%253Alaboratoare%253A10&amp;1479891890" width="2" height="1" alt="" /></div>
+</body>
+</html>

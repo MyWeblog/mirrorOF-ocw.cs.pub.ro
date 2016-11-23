@@ -1,0 +1,108 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:05:contents:00</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-23T21:51:07+0200"/>
+<meta name="keywords" content="saisp,labs,05,contents,00"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:05:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="00.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/05/contents/00.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:05:contents';var JSINFO = {"id":"saisp:labs:05:contents:00","namespace":"saisp:labs:05:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="00.html#linux_virtual_server">00. Linux Virtual Server</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="00.html#topologie">Topologie</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="linux_virtual_server">00. Linux Virtual Server</h3>
+<div class="level3">
+
+<p>
+<a href="http://www.linuxvirtualserver.org/" class="urlextern" title="http://www.linuxvirtualserver.org/"  rel="nofollow">Linux Virtual Server</a> (LVS) este o soluție avansată de load balancing. Este open source, integrat în kernel-ul Linux.
+</p>
+
+<p>
+Mașina care face load balancing se numește, în <a href="http://www.austintek.com/LVS/LVS-HOWTO/HOWTO/LVS-HOWTO.introduction.html#nomenclature" class="urlextern" title="http://www.austintek.com/LVS/LVS-HOWTO/HOWTO/LVS-HOWTO.introduction.html#nomenclature"  rel="nofollow">terminologia</a> LVS, <em>virtual server</em> (VS), iar serverele reale, care oferă servicii, se numesc <em>real servers</em> (RS). Un client accesează serviciul exclusiv pe baza adresei virtual server-ului.
+</p>
+
+<p>
+LVS are 3 <a href="http://www.linuxvirtualserver.org/how.html" class="urlextern" title="http://www.linuxvirtualserver.org/how.html"  rel="nofollow">moduri de funcționare</a>:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>LVS-NAT</strong> – VS face NAT pentru RS-uri. Util când RS-urile nu au adresă publică și când sunt în aceeași rețea. Scalează slab, pentru că tot traficul trece prin VS.</div>
+</li>
+<li class="level1"><div class="li"> <strong>LVS-TUN</strong> – VS face tunelare pentru pachetele care vin de la client, iar RS-urile răspund direct clientului. Scalează mai bine, pentru că doar traficul dintr-un singur sens (cererile) trece prin VS, dar necesită suport pentru tunelare pe RS-uri.</div>
+</li>
+<li class="level1"><div class="li"> <strong>LVS-DR</strong> (Direct Routing) – VS rutează pachetele către RS-uri fără tunelare. RS-urile răspund direct clientului. Elimină necesitatea suportului pentru tunelare, dar trebuie ca VS-ul și fiecare RS să aibă cate o interfața în același segment de rețea. În plus, trebuie ca RS-urile să poată răspunde la cereri adresate VS-ului, pentru că nu se suprascriu adresele destinație ale request-urilor.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="topologie">Topologie</h4>
+<div class="level4">
+
+<p>
+<a href="../../../../../../_detail/saisp/labs/05/contents/lab05-lvs.jpg%3Fid=saisp%253Alabs%253A05%253Acontents%253A00.html" class="media" title="saisp:labs:05:contents:lab05-lvs.jpg"><img src="../../../../../../_media/saisp/labs/05/contents/lab05-lvs.jpg" class="media" alt="" /></a>
+</p>
+
+<p>
+Masinile din topologie (3 masini virtuale KVM si masina fizica) au urmatoarele roluri:
+</p>
+<ul>
+<li class="level1"><div class="li"> masina <strong>saisp-vm-1</strong> are rol de <strong>director (Virtual Server)</strong>, facand load-balancing pentru saisp-vm-2 si saisp-vm-3;</div>
+</li>
+<li class="level1"><div class="li"> masinile <strong>saisp-vm-2</strong> si <strong>saisp-vm-3</strong> au rol de realservere;</div>
+</li>
+<li class="level1"><div class="li"> masina <strong>fizica</strong> are rol de client;</div>
+</li>
+</ul>
+
+</div>
+</div>
+</body>
+</html>

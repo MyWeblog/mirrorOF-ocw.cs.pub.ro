@@ -1,0 +1,27 @@
+    
+    
+
+extern printf
+
+section .data
+	str: DB `number: %d\n`
+	nr: DD 1, 2, 3, 4, 5
+	len: DD 4000
+
+section .text
+
+global main
+
+main:
+	xor ecx, ecx
+keep_printing:
+	push ecx ; save ecx, because it will be destroyed by printf call
+	push dword [nr + 4*ecx]
+	push str
+	call printf
+	add esp, 8
+	pop ecx ; restore ecx
+	inc ecx
+	cmp ecx, [len]
+	jl keep_printing
+	ret

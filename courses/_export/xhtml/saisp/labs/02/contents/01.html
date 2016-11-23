@@ -1,0 +1,202 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:02:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-03T13:22:22+0200"/>
+<meta name="keywords" content="saisp,labs,02,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:02:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/02/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:02:contents';var JSINFO = {"id":"saisp:labs:02:contents:01","namespace":"saisp:labs:02:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_autentificare_unix_prin_ldap">01. [15p] Configurare autentificare Unix prin LDAP</h3>
+<div class="level3">
+
+<p>
+Serviciul de LDAP poate fi folosit ca mod centralizat de a permite autentificarea altor servicii. În laboratorul 1, am configurat <a href="../../../../../../saisp/labs/01/contents/07.html" class="wikilink1" title="saisp:labs:01:contents:07">DokuWiki</a> și <a href="../../../../../../saisp/labs/01/contents/07.html" class="wikilink1" title="saisp:labs:01:contents:07">MediaWiki</a> pentru a folosi serviciul de LDAP pentru autentificare. O formă frecventă, mai ales în mediile care folosesc Active Directory, este autentificare utilizatorilor locali prin LDAP.
+</p>
+
+<p>
+În cele ce urmează vom configura sistemul client pentru a folosi back-end-ul LDAP server pentru autentificarea utilizatorilor. Adică să fie folosite numele de utilizator și parola din baza de date LDAP pentru autentificarea unui utilizator local în Unix. Pentru aceasta vom configura PAM (<em>Pluggable Authentication Module</em>) și NSS (<em>Name Service Switch</em>) pentru a permite autentificarea prin LDAP. În baza de date LDAP sunt deja configurați utilizatori, fiecare cu parola <code>student</code>. Pentru a vedea utilizatorii rulăm, pe stația client, comanda:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> dn
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Configurarea autentificării Unix prin LDAP o vom face pe stația client. Utilizatorii de pe stația client vor fi autentificați folosind datele din cadrul serverului de LDAP. Vom configura întâi NSS și apoi vom configura PAM.
+</p>
+
+<p>
+Pentru configurarea NSS cu suport LDAP instalăm pe stația client pachetul <code>libnss-ldap</code> și răspundem la întrebări cu datele de conectare la serverul de LDAP, ca mai jos:
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>LDAP server Uniform Resource Identifier</em>: <code>ldaps://192.168.0.2</code></div>
+</li>
+<li class="level1"><div class="li"> <em>Distinguished name of the search base</em>: <code>dc=labs,dc=cs,dc=pub,dc=ro</code></div>
+</li>
+<li class="level1"><div class="li"> <em>LDAP version to use</em>: <code>3</code></div>
+</li>
+<li class="level1"><div class="li"> <em>LDAP account for root</em>: <code>cn=admin,dc=labs,dc=cs,dc=pub,dc=ro</code></div>
+</li>
+<li class="level1"><div class="li"> <em>LDAP root account password</em>: <code>student</code></div>
+</li>
+<li class="level1"><div class="li"> <em>Configuring nslcd, LDAP server <abbr title="Uniform Resource Identifier">URI</abbr></em>: <code>ldaps://192.168.0.2</code> (valoarea implicită)</div>
+</li>
+<li class="level1"><div class="li"> <em>Configuring nslcd, LDAP server search base</em>: <code>dc=labs,dc=cs,dc=pub,dc=ro</code> (valoarea implicită)</div>
+</li>
+<li class="level1"><div class="li"> <em>Check server&#039;s SSL certificate</em>: <code>never</code></div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">
+Configuarea <code>never</code> pentru verificarea certificatului serverului nu este recomandată în mediile de producție. O folosim aici pentru simplitate.
+
+</div></p>
+</p>
+
+<p>
+După acest proces de instalare și configurare a fost instalat și pornit <em>Name Service Caching Daemon</em>. Acesta cache-uiește informații transmise de NSS (<em>Name Service Switch</em>) pentru a evita overhead-ul cauzat de interogări continue.
+</p>
+
+<p>
+Pentru a valida configurarea inspectăm pe stația client fișierele <code>/etc/libnss-ldap.conf</code> și <code>/etc/libnss-ldap.secret</code>:
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># cat /etc/libnss-ldap.conf | grep -v '^#' | grep -v '^[ \t]*$'</span>
+base <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uri ldaps:<span class="sy0">//</span>192.168.0.2
+ldap_version <span class="nu0">3</span>
+rootbinddn <span class="re2">cn</span>=admin,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+<span class="co4">root@ldap-client:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>libnss-ldap.secret 
+student</pre>
+
+<p>
+Pentru a activa suportul LDAP în NSS, configurăm fișierul <code>/etc/nsswitch.conf</code>. Folosim un editor și edităm liniile aferente categoriilor <code>passwd</code>, <code>group</code> și <code>shadow</code>, ca mai jos:
+</p>
+<dl class="file">
+<dt><a href="../../../../../code/saisp/labs/02/contents/01%3Fcodeblock=2" title="Download Snippet" class="mediafile mf_conf">nsswitch.conf</a></dt>
+<dd><pre class="code file none"># /etc/nsswitch.conf
+#
+# Example configuration of GNU Name Service Switch functionality.
+# If you have the `glibc-doc-reference' and `info' packages installed, try:
+# `info libc &quot;Name Service Switch&quot;' for information about this file.
+&nbsp;
+passwd:         files ldap
+group:          files ldap
+shadow:         files ldap
+&nbsp;
+hosts:          files mdns4_minimal [NOTFOUND=return] dns
+networks:       files
+&nbsp;
+protocols:      db files
+services:       db files
+ethers:         db files
+rpc:            db files
+&nbsp;
+netgroup:       nis</pre>
+</dd></dl>
+
+<p>
+După configurarea NSS în fișierul <code>/etc/nsswitch.conf</code>, repornim <code>nscd</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>service nscd restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Restarting Name Service Cache Daemon: nscd.</pre>
+
+<p>
+și apoi verificăm servirea datelor prin LDAP folosind comenzi precum <code>getent</code>, <code>id</code> și <code>finger</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span><span class="kw2">getent</span> <span class="kw2">passwd</span> amengsk
+amengsk:x:<span class="nu0">1001</span>:<span class="nu0">1000</span>:Arcturus Mengsk,,,:<span class="sy0">/</span>home<span class="sy0">/</span>amengsk:<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw2">bash</span>
+&nbsp;
+<span class="co4">root@ldap-client:~# </span><span class="kw2">id</span> amengsk
+<span class="re2">uid</span>=<span class="nu0">1001</span><span class="br0">&#40;</span>amengsk<span class="br0">&#41;</span> <span class="re2">gid</span>=<span class="nu0">1000</span><span class="br0">&#40;</span>student<span class="br0">&#41;</span> <span class="re2">groups</span>=<span class="nu0">1000</span><span class="br0">&#40;</span>student<span class="br0">&#41;</span>
+&nbsp;
+<span class="co4">root@ldap-client:~# </span>finger amengsk
+Login: amengsk        			Name: Arcturus Mengsk
+Directory: <span class="sy0">/</span>home<span class="sy0">/</span>amengsk            	Shell: <span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw2">bash</span>
+Never logged in.
+No mail.
+No Plan.</pre>
+
+<p>
+<p><div class="noteimportant">
+Parola utilizatorului <code>amengsk</code> trebuie setata folosind <code>ldappasswd</code>.
+</p>
+
+<p>
+Revedeti Laboratorul 1: <a href="../../../../../../saisp/labs/01/contents/06.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06"  rel="nofollow">http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06</a>
+
+</div></p>
+</p>
+
+<p>
+Observăm că acum sistemul furnizează informații despre utilizatori din baza de date LDAP. Întrucât a fost instalat și configurat simultan pachetul <code>libpam-ldap</code>, vom putea sa ne și autentificăm la utilizatorul <code>amengsk</code>. Putem face acest lucru folosind comanda <code>ssh</code> de pe sistemul fizic:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>vm<span class="sy0">/</span>kvm$ <span class="kw2">ssh</span> <span class="re5">-l</span> amengsk 192.168.0.3
+amengsk<span class="sy0">@</span>192.168.0.3<span class="st_h">'s password: 
+[...]
+Could not chdir to home directory /home/amengsk: No such file or directory
+amengsk@ldap-client:/$</span></pre>
+
+<p>
+Observăm că nu a fost creat directorul home pentru utilizator pe stația client. Pentru aceasta cel mai simplu este să activăm modulul <code>pam_mkhomedir</code> prin editarea fișierului <code>/etc/pam.d/common-session</code> și adăugarea liniei:
+</p>
+<pre class="code">session required        pam_mkhomedir.so skel=/etc/skel/ umask=0022</pre>
+
+<p>
+După configurarea liniei de mai sus va funcționa conectarea la stația client și crearea directorului home al utilizatorului cu care a fost realizată autentificarea:
+</p>
+<pre class="code bash">razvan<span class="sy0">@</span>einherjar:~<span class="sy0">/</span>vm<span class="sy0">/</span>kvm$ <span class="kw2">ssh</span> <span class="re5">-l</span> amengsk 192.168.0.3
+amengsk<span class="sy0">@</span>192.168.0.3<span class="st_h">'s password: 
+Creating directory '</span><span class="sy0">/</span>home<span class="sy0">/</span>amengsk<span class="st_h">'.
+[...]
+amengsk@ldap-client:~$ </span></pre>
+
+<p>
+Mai sus apare mesajul creării directorului home al utilizatorului <code>amengsk</code>. Sistemul funcționează corespunzător cu autentificarea utilizatorilor prin intermediul LDAP.
+</p>
+
+</div>
+</div>
+</body>
+</html>

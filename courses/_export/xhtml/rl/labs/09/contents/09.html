@@ -1,0 +1,123 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:09:contents:09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-11-29T10:05:59+0200"/>
+<meta name="keywords" content="rl,labs,09,contents,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="09.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/09/contents/09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:09:contents';var JSINFO = {"id":"rl:labs:09:contents:09","namespace":"rl:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_persistenta_rutare_si_nat">09. [10p] Configurare persistentă rutare și NAT</h3>
+<div class="level3">
+
+<p>
+Configurările realizate până în acest moment sunt temporare. La repornirea stației <code>host</code> regulile de NAT se pierd. Dorim să configurăm în mod persistent rutarea și regulile NAT.
+</p>
+
+<p>
+Pentru a configura în mod persistent rutarea pe stația <code>host</code>, edităm fișierul <code>/etc/sysctl.conf</code> și decomentăm linia
+</p>
+<pre class="code">net.ipv4.ip_forward=1</pre>
+
+<p>
+ Astfel la fiecarea pornire a sistemului, rutarea va fi activată.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Rutarea nu se va activa în mod automat după ce decomentați linia din fișier. Trebuie să resetați sistemul sau să rulați comanda
+</p>
+<pre class="code bash">sysctl <span class="re5">-p</span></pre>
+
+<p>
+ pentru a aplica modificările din fișierul de configurare <code>/etc/sysctl.conf</code>.
+
+</div></p>
+</p>
+
+<p>
+Pentru a salva toate regulile <code>iptables</code> introduse în sistem se poate folosi comanda <code>iptables-save</code>. În mod implicit aceste reguli sunt afișate pe consolă. Noi le vom salva în <code>/etc/iptables-rules</code> folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables-save <span class="sy0">&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>iptables-rules</pre>
+
+<p>
+Regulile pot fi restaurate folosind comanda <code>iptables-restore &lt; /etc/iptables-rules</code>. Așadar trebuie să configurăm sistemul să execute această comanda la pornire. Modul cel mai uzual pentru a face acest lucru este adăugarea acestei comenzi în fișierul de configurare al interfeței:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>network<span class="sy0">/</span>interfaces
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co0"># The primary network interface</span>
+auto eth0
+iface eth0 inet dhcp
+        up iptables-restore <span class="sy0">&lt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>iptables-rules</pre>
+
+<p>
+După ce ați făcut toate configurările, reporniți stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>reboot</pre>
+
+<p>
+În urma repornirii stației <code>host</code> vom vedea aplicată rutarea și regulile de NAT:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = <span class="nu0">1</span>
+<span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> <span class="re5">-n</span> <span class="re5">-v</span>
+Chain PREROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">30</span> packets, <span class="nu0">5694</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">0</span>     <span class="nu0">0</span> DNAT       tcp  <span class="re5">--</span>  eth0   <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            tcp dpt:<span class="nu0">10022</span> to:192.168.1.2:<span class="nu0">22</span>
+    <span class="nu0">0</span>     <span class="nu0">0</span> DNAT       tcp  <span class="re5">--</span>  eth0   <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            tcp dpt:<span class="nu0">20022</span> to:192.168.2.2:<span class="nu0">22</span>
+    <span class="nu0">0</span>     <span class="nu0">0</span> DNAT       tcp  <span class="re5">--</span>  eth0   <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            tcp dpt:<span class="nu0">30022</span> to:192.168.3.2:<span class="nu0">22</span>
+    <span class="nu0">0</span>     <span class="nu0">0</span> DNAT       tcp  <span class="re5">--</span>  eth0   <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            tcp dpt:<span class="nu0">10023</span> to:192.168.1.2:<span class="nu0">23</span>
+    <span class="nu0">0</span>     <span class="nu0">0</span> DNAT       tcp  <span class="re5">--</span>  eth0   <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            tcp dpt:<span class="nu0">20023</span> to:192.168.2.2:<span class="nu0">23</span>
+    <span class="nu0">0</span>     <span class="nu0">0</span> DNAT       tcp  <span class="re5">--</span>  eth0   <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            tcp dpt:<span class="nu0">30023</span> to:192.168.3.2:<span class="nu0">23</span>
+&nbsp;
+Chain INPUT <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">2</span> packets, <span class="nu0">534</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+&nbsp;
+Chain OUTPUT <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">16</span> packets, <span class="nu0">958</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+&nbsp;
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">15</span> packets, <span class="nu0">918</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">1</span>    <span class="nu0">40</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      eth0    0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span></pre>
+
+</div>
+</div>
+</body>
+</html>

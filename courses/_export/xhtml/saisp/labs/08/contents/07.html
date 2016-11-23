@@ -1,0 +1,82 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:08:contents:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-05-04T16:46:57+0300"/>
+<meta name="keywords" content="saisp,labs,08,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/08/contents/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:08:contents';var JSINFO = {"id":"saisp:labs:08:contents:07","namespace":"saisp:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_conectarea_masinilor_virtuale_la_reteaua_publica">07. [10p] Conectarea mașinilor virtuale la rețeaua publică</h3>
+<div class="level3">
+
+<p>
+Un scenariu uzual este reprezentat de cazul în care pe mașinile virtuale se activează diverse servicii publice (exemplu: WEB). În acest caz nu este suficient să activăm translatarea de adrese pe mașina fizică, ci trebuie să conectăm mașina virtuală direct la rețeaua publică.
+</p>
+
+<p>
+Porniți o nouă mașină virtuală KVM având o interfață de rețea cu adresa MAC 00:11:22:33:44:XX, unde XX reprezintă numărul vostru din catalogul de SAISP.
+</p>
+
+<p>
+Pe mașina fizică, creați un nou bridge <code>br1</code> în care adăugați interfața <code>tap-vm</code> și interfața <code>eth0</code>. Pe mașina virtuală executați comanda <code>dhclient eth0</code>. Observați adresa IP obținută direct din rețeaua facultății.
+</p>
+
+<p>
+Pentru a avea în continuare acces la Internet pe mașina fizică executați comenzile <code>ip addr flush dev eth0</code> (șterge adresa IP de pe interfață) și  <code>dhclient br1</code> întrucât interfața principală este acum conectată în bridge la nivel 2 și nu mai poate oferi și servicii de nivel 3 (IP).
+</p>
+
+<p>
+Intrebați pe unul din colegi adresa IP obținută pe mașina virtuală și conectați-vă la aceasta prin SSH. Observați că practic vă puteți conecta la orice mașină virtuală a oricărui coleg.
+</p>
+
+<p>
+Eliminați din bridge interfațele <code>tap-vm</code> și <code>eth0</code>, ștergeți bridge-ul <code>br1</code>, executați comanda <code>dhclient eth0</code> și închideți mașina virtuală:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>brctl delif br1 tap-vm
+<span class="co4">root@saisp:~# </span>brctl delif br1 eth0
+<span class="co4">root@saisp:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev br1 down
+<span class="co4">root@saisp:~# </span>brctl delbr br1
+<span class="co4">root@saisp:~# </span>dhclient eth0</pre>
+
+</div>
+</div>
+</body>
+</html>

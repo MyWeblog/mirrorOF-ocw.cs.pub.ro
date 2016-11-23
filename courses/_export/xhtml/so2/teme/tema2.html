@@ -1,0 +1,263 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:teme:tema2</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-03T11:48:00+0300"/>
+<meta name="keywords" content="so2,teme,tema2"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so2:teme"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="tema2.html"/>
+<link rel="canonical" href="../../../../so2/teme/tema2.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:teme';var JSINFO = {"id":"so2:teme:tema2","namespace":"so2:teme","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="tema2.html#tema_2_-_driver_uart">Tema 2 - Driver UART</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="tema2.html#obiectivele_temei">Obiectivele temei</a></div></li>
+<li class="level2"><div class="li"><a href="tema2.html#enunt">Enunț</a></div></li>
+<li class="level2"><div class="li"><a href="tema2.html#precizari_generale">Precizări generale</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tema2.html#schema_buffer-e">Schemă buffer-e</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="tema2.html#precizari_linux">Precizări Linux</a></div></li>
+<li class="level2"><div class="li"><a href="tema2.html#testare">Testare</a></div></li>
+<li class="level2"><div class="li"><a href="tema2.html#intrebari">Întrebări</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="tema_2_-_driver_uart">Tema 2 - Driver UART</h1>
+<div class="level1">
+
+<p>
+Termen de predare: Marți, 12 Aprilie 2016, ora 23:00
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Tema 2 - Driver UART" [1-109] -->
+<h2 class="sectionedit2" id="obiectivele_temei">Obiectivele temei</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">Consolidarea noțiunii de device driver;</div>
+</li>
+<li class="level1"><div class="li">Citire documentație hardware. Urmărirea funcționalității dorite în documentație;</div>
+</li>
+<li class="level1"><div class="li">Lucrul cu întreruperi. Folosire funcții neblocante în context întrerupere(L)/funcții la nivele IRQL corespunzătoare(W);</div>
+</li>
+<li class="level1"><div class="li">Folosirea buffer-elor, sincronizare;</div>
+</li>
+<li class="level1"><div class="li">Module cu parametri;</div>
+</li>
+<li class="level1"><div class="li">DPC-uri.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Obiectivele temei" [110-482] -->
+<h2 class="sectionedit3" id="enunt">Enunț</h2>
+<div class="level2">
+
+<p>
+Să se scrie un modul de kernel care să implementeze un driver pentru portul serial (<code>UART16550</code>). Device driver-ul trebuie să suporte cele două porturi seriale standard dintr-un PC, <code>COM1</code> şi <code>COM2</code> (<code>0x3f8</code>, <code>0x2f8</code>, de fapt întreg range-ul de <code>8</code> adrese <code>0x3f8-0x3ff</code> și <code>0x2f8-0x2ff</code> specific celor două porturi). În afară de rutinele standard care trebuie implementate (<code>open</code>, <code>read</code>, <code>write</code>, <code>close</code>), driver-ul trebuie să aibă suport și pentru schimbarea parametrilor de comunicație cu ajutorul unei operaţii <code>ioctl</code> (<code>UART16550_IOCTL_SET_LINE</code>). 
+</p>
+
+<p>
+Driverul trebuie să folosească înteruperi atât pentru recepție cât și pentru transmisie, pentru a reduce latența și timpul de utilizare a procesorului. De asemenea, apelurile <code>read</code> și <code>write</code> trebuie să fie blocante. Temele care nu respectă aceste cerințe nu se iau în considerare. Este indicat să folosiţi în cadrul driver-ului un buffer de citire și un buffer de scriere pentru fiecare port serial.
+</p>
+
+<p>
+Un apel read blocant înseamnă că rutina de read apelată din user-space se va bloca până la citirea a <strong>cel puţin</strong> un octet (buffer-ul de read din kernel este gol și nu se pot citi date). Un apel write blocant înseamnă că rutina de write apelată din user-space se va bloca până la scrierea a <strong>cel puţin</strong> un octet (buffer-ul de write din kernel este plin și nu se pot scrie date).
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Enunț" [483-1926] -->
+<h2 class="sectionedit4" id="precizari_generale">Precizări generale</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">documentație despre portul serial găsiți <a href="http://retired.beyondlogic.org/serial/serial.htm" class="urlextern" title="http://retired.beyondlogic.org/serial/serial.htm"  rel="nofollow"> aici</a></div>
+</li>
+<li class="level1"><div class="li">sau pe <a href="http://tldp.org/HOWTO/Serial-HOWTO-19.html" class="urlextern" title="http://tldp.org/HOWTO/Serial-HOWTO-19.html"  rel="nofollow"> tldp</a></div>
+</li>
+<li class="level1"><div class="li">aici mai aveți o <a href="http://www.byterunner.com/16550.html" class="urlextern" title="http://www.byterunner.com/16550.html"  rel="nofollow"> tabela cu registre</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://www.ti.com/lit/ds/symlink/pc16550d.pdf" class="urlextern" title="http://www.ti.com/lit/ds/symlink/pc16550d.pdf"  rel="nofollow"> datasheet 16550</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://en.wikibooks.org/wiki/Serial_Programming/8250_UART_Programming" class="urlextern" title="http://en.wikibooks.org/wiki/Serial_Programming/8250_UART_Programming"  rel="nofollow"> documentaţie alternativă</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Precizări generale" [1927-2396] -->
+<h3 class="sectionedit5" id="schema_buffer-e">Schemă buffer-e</h3>
+<div class="level3">
+
+<p>
+<a href="../../../../_detail/so2/teme/tema2/buffers3.png%3Fid=so2%253Ateme%253Atema2.html" class="media" title="so2:teme:tema2:buffers3.png"><img src="../../../../_media/so2/teme/tema2/buffers3.png%3Fw=500&amp;tok=800c00" class="media" alt="" width="500" /></a>
+</p>
+
+<p>
+Transferul de date între diversele buffere reprezintă o problemă de tipul <a href="http://en.wikipedia.org/wiki/Producer-consumer_problem" class="urlextern" title="http://en.wikipedia.org/wiki/Producer-consumer_problem"  rel="nofollow"> Producător-Consumator</a>. Exemple:
+</p>
+<ul>
+<li class="level1"><div class="li">dacă se scrie dintr-un proces în dispozitiv, procesul este producător și dispozitivul consumator; procesul se va bloca până există loc în buffer-ul consumatorului;</div>
+</li>
+<li class="level1"><div class="li">dacă se citește dintr-un proces de la dispozitiv, procesul este consumator și dispozitivul producător; procesul se va bloca până există cel puțin un element în buffer-ul producătorului.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Schemă buffer-e" [2397-3010] -->
+<h2 class="sectionedit6" id="precizari_linux">Precizări Linux</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">driverul va fi accesat ca un device driver de tip caracter, cu funcționări diferite în funcție de parametrii transmiși modulului la încărcare:</div>
+<ul>
+<li class="level2"><div class="li">parametrul <code>major</code> va specifica majorul cu care trebuie înregistrat dispozitivul;</div>
+</li>
+<li class="level2"><div class="li">parametrul <code>option</code> va specifica modul de funcționare:</div>
+<ul>
+<li class="level3"><div class="li">OPTION_BOTH: va înregistra și COM1 și COM2, cu majorul dat de parametrul <code>major</code> și minorii 0 (pentru COM1) și 1 (pentru COM2);</div>
+</li>
+<li class="level3"><div class="li">OPTION_COM1: va înregistra doar COM1, cu majorul <code>major</code> și minorul 0;</div>
+</li>
+<li class="level3"><div class="li">OPTION_COM2: va înregistra doar COM2, cu majorul <code>major</code> și minorul 1;</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li">pentru a afla cum se pot pasa parametri în Linux, consultați Laboratorul 2 sau linkul de <a href="http://tldp.org/LDP/lkmpg/2.6/html/x323.html" class="urlextern" title="http://tldp.org/LDP/lkmpg/2.6/html/x323.html"  rel="nofollow"> aici</a></div>
+</li>
+<li class="level2"><div class="li"><strong>valorile implicite</strong> sunt <code>major=42</code> și <code>option=OPTION_BOTH</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li">numărul întreruperii asociate cu COM1 este 4 (<code>IRQ_COM1</code>), numărul întreruperii asociate cu COM2 este 3 (<code>IRQ_COM2</code>)</div>
+</li>
+<li class="level1"><div class="li">header-ul cu definițiile necesare pentru operațiile speciale îl găsiți <a href="http://elf.cs.pub.ro/so2/2011-2012/_media/teme/tema2/uart16550.h" class="urlextern" title="http://elf.cs.pub.ro/so2/2011-2012/_media/teme/tema2/uart16550.h"  rel="nofollow"> aici</a>;</div>
+</li>
+<li class="level1"><div class="li">un bun punct de pornire în implementarea rutinelor de read/write este <a href="http://elf.cs.pub.ro/so2/wiki/_media/laboratoare/lab04/exmodullincase.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/wiki/_media/laboratoare/lab04/exmodullincase.zip"  rel="nofollow"> exemplul</a> de character device driver de conversie upper-case; singura diferență este că trebuie să folosiți două buffere, unul pentru read și altul pentru write;</div>
+</li>
+<li class="level1"><div class="li">pentru citirea/scrierea datelor în/din porturi nu trebuie să folosiți funcții amânabile (puteți să faceți totul din întrerupere);</div>
+</li>
+<li class="level1"><div class="li">va trebui să sincronizați rutinele de read/write cu rutina de tratare a întreruperii pentru ca rutinele sa fie blocante; este recomandat să folosiți <a href="../../../../so2/laboratoare/lab04%3F&amp;.html#sincronizare_-_cozi_de_asteptare" class="urlextern" title="http://ocw.cs.pub.ro/courses/so2/laboratoare/lab04?&amp;#sincronizare_-_cozi_de_asteptare"  rel="nofollow">sincronizare cozi de așteptare</a>; </div>
+</li>
+<li class="level1"><div class="li">pentru ca tema să poată funcționa este nevoie ca driver-ul implicit <code>serial</code> să fie dezactivat:</div>
+<ul>
+<li class="level2"><div class="li"><code>cat /proc/ioports | grep serial</code> va detecta prezența driver-ului implicit pe regiunile unde sunt definite COM1 și COM2;</div>
+</li>
+<li class="level2"><div class="li">pentru a-l dezactiva trebuie recompilat kernel-ul, fie punând driver-ul <code>serial</code> ca modul, fie dezactivându-l cu totul (pe mașina virtuală este deja făcuta această modificare);</div>
+<ul>
+<li class="level3"><div class="li"><code>Device Drivers –&gt; Character devices –&gt; Serial driver –&gt; 8250/16550 and compatible serial support</code>.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li">puteți folosi <a href="http://lwn.net/Articles/347619/" class="urlextern" title="http://lwn.net/Articles/347619/"  rel="nofollow">kfifo</a> pentru buffere.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Precizări Linux" [3011-5518] -->
+<h2 class="sectionedit7" id="testare">Testare</h2>
+<div class="level2">
+
+<p>
+Pentru simplificarea procesului de corectare a temelor, dar și pentru a reduce greșelile temelor trimise, corectarea temelor se va face automat cu ajutorul unor teste publice (<a href="http://elf.cs.pub.ro/so2/res/teme/2-uart.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/2-uart.zip"  rel="nofollow">Linux</a>). Testele presupun că numele modului de kernel este <code>uart16550</code>.
+</p>
+
+<p>
+Depunctări pentru probleme constatate in implementarea temei:
+</p>
+<ul>
+<li class="level1"><div class="li">-0.5 funcționalitate incompletă</div>
+</li>
+<li class="level1"><div class="li">-0.3 utilizare incorectă a device-ului</div>
+</li>
+<li class="level1"><div class="li">-0.1 lock și posibilitate de pierdere unlock</div>
+</li>
+<li class="level1"><div class="li">-0.1 down și posibilitate de pierdere up</div>
+</li>
+<li class="level1"><div class="li">-0.1 disable și posibilitate de pierdere enable</div>
+</li>
+<li class="level1"><div class="li">-0.1 utilizare funcții la niveluri IRQL necorespunzătoare</div>
+</li>
+<li class="level1"><div class="li">-0.0 observații</div>
+</li>
+<li class="level1"><div class="li">-1 pentru fiecare test eșuat pe linux</div>
+</li>
+</ul>
+
+<p>
+De asemenea, consultați <a href="../../../../so2/teme/general.html" class="wikilink1" title="so2:teme:general">sfaturile și depunctările generale</a>.
+</p>
+
+<p>
+În cazuri excepționale (tema trece testele prin nerespectarea cerințelor) se poate scădea mai mult decât este menționat mai sus.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Testare" [5519-6478] -->
+<h2 class="sectionedit8" id="intrebari">Întrebări</h2>
+<div class="level2">
+
+<p>
+Pentru întrebări legate de temă puteți consulta <a href="http://news.gmane.org/gmane.education.region.romania.operating-systems-design" class="urlextern" title="http://news.gmane.org/gmane.education.region.romania.operating-systems-design"  rel="nofollow"> arhivele</a> listei de discuții sau puteți trimite un <a href="mailto:&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;">e-mail</a> (trebuie să fiți <a href="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2" class="urlextern" title="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2"  rel="nofollow"> înregistrați</a>).
+</p>
+
+<p>
+Înainte să puneți o întrebare verificați că:
+</p>
+<ul>
+<li class="level1"><div class="li"> ați citit bine enunțul temei</div>
+</li>
+<li class="level1"><div class="li"> nu este deja prezentată întrebarea pe pagina de <a href="../../../../so2/teme/tema2/faq.html" class="wikilink1" title="so2:teme:tema2:faq"> FAQ</a></div>
+</li>
+<li class="level1"><div class="li"> nu se poate găsi răspunsul în <a href="http://cursuri.cs.pub.ro/lurker/list/pso.en.html" class="urlextern" title="http://cursuri.cs.pub.ro/lurker/list/pso.en.html"  rel="nofollow"> arhivele</a>  listei de discuții</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Întrebări" [6479-] --></div>
+</body>
+</html>

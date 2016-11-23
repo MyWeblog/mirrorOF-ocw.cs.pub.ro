@@ -1,0 +1,1274 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-22T19:46:35+0300"/>
+<meta name="keywords" content="so2,laboratoare,lab07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/laboratoare/lab07.html"/>
+<link rel="canonical" href="lab07.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab07","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab07%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab07%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_7_-_device_drivere_de_tip_bloc_subsistemul_de_io">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">dobândirea de cunoștințe legate de funcționarea subsistemului de I/O pe Linux</div>
+</li>
+<li class="level1"><div class="li">acomodarea cu structurile și funcțiile de lucru cu dispozitive de tip bloc</div>
+</li>
+<li class="level1"><div class="li">obținerea unor deprinderi de bază de utilizare a <abbr title="Application Programming Interface">API</abbr>-ului pentru dispozitive de tip bloc prin rezolvarea exercițiilor</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">dispozitive de tip block</div>
+</li>
+<li class="level1"><div class="li">subsistemul de I/O</div>
+</li>
+<li class="level1"><div class="li">înregistrare/deînregistrare</div>
+</li>
+<li class="level1"><div class="li"><code>struct gendisk</code></div>
+</li>
+<li class="level1"><div class="li">sector</div>
+</li>
+<li class="level1"><div class="li"><code>struct block_device_operations</code></div>
+</li>
+<li class="level1"><div class="li">cereri – <code>struct request</code></div>
+</li>
+<li class="level1"><div class="li">cozi de cereri – <code>struct request_queue</code></div>
+</li>
+<li class="level1"><div class="li">prelucrarea unei cereri</div>
+</li>
+<li class="level1"><div class="li"><code>struct bio</code>, <code>submit_bio</code></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab07-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab07-slides.pdf"  rel="nofollow"> Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow"> SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="notiuni_generale">Noțiuni generale</h2>
+<div class="level2">
+
+<p>
+Dispozitivele de tip bloc se caracterizează prin accesul aleator la date organizate în blocuri de dimensiune fixă. Exemple de astfel de dispozitive sunt hard disk drive-urile, CD-ROM drive-urile, RAM disk-urile etc. Viteza dispozitivelor de tip bloc este, în general, mult mai ridicată decât a celor de tip caracter, iar performanța acestora este, de asemenea, importantă. Acesta este motivul pentru care <strong>nucleul Linux tratează diferit</strong> cele două  tipuri de dispozitive (dispune de un <abbr title="Application Programming Interface">API</abbr> specializat).
+</p>
+
+<p>
+Lucrul cu dispozitive de tip bloc este, astfel, mai complicat decât lucrul cu cele de tip caracter. Dispozitivele de tip caracter au o singură poziție curentă, în timp ce dispozitivele de tip bloc trebuie să se poată mișca la orice poziție din dispozitiv pentru a asigura accesul aleator la date. Pentru a simplifica lucrul cu dispozitivele de tip bloc, nucleul Linux pune la dispoziția programatorului un întreg subsistem denumit <a href="http://lxr.free-electrons.com/source/Documentation/block/?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/block/?v=3.13"  rel="nofollow"> subsistemul block I/O</a> (sau <em>block layer</em>).
+</p>
+
+<p>
+Din perspectiva nucleului, cea mai mică unitate logică de adresare este <strong>blocul</strong>. Cu toate că dispozitivul fizic poate fi adresat la nivel de <strong>sector</strong>, nucleul efectuează toate operațiile cu discuri folosind blocuri. Întrucât cea mai mică unitate de adresare fizică este sectorul, dimensiunea blocului trebuie să fie un multiplu al dimensiunii sectorului. În plus, dimensiunea blocului trebuie să fie o putere a lui 2 și nu poate depăși dimensiunea unei pagini. Dimensiunea blocului poate varia în funcție de sistemul de fișiere folosit, cele mai frecvente valori fiind 512 bytes, 1 kilobyte și 4 kilobytes.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="device_drivere_de_tip_bloc_in_linux">Device drivere de tip bloc în Linux</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit7" id="inregistrarea_unui_dispozitiv_de_tip_bloc">Înregistrarea unui dispozitiv de tip bloc</h3>
+<div class="level3">
+
+<p>
+Pentru înregistrare se folosește funcția <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L285" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L285"  rel="nofollow"> register_blkdev</a> <sup><a href="lab07.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>.
+</p>
+
+<p>
+Pentru deînregistrarea unui dispozitiv de tip bloc se folosește funcția <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L341" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L341"  rel="nofollow"> unregister_blkdev</a>.
+</p>
+
+<p>
+În versiunea 3.13 a kernel-ului Linux, apelul funcției <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L285" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L285"  rel="nofollow"> register_blkdev</a> este opțional. Singurele operații efectuate de această funcție sunt alocarea dinamică a unui major (dacă este apelată cu valoarea <code>0</code> pentru argumentul <code>major</code>) și crearea unei intrări în <code>/proc/devices</code>. În versiunile viitoare de kernel este posibil să fie eliminată; cu toate acestea majoritatea driverelor încă o apelează.
+</p>
+
+<p>
+Ca de obicei, apelul funcției de înregistrare se realizează în funcția de inițializare a modulului, iar apelul funcției de deînregistrare în funcția de ieșire a modulului. Un scenariu obișnuit este prezentat în continuare:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+&nbsp;
+<span class="co2">#define MY_BLOCK_MAJOR           240</span>
+<span class="co2">#define MY_BLKDEV_NAME          &quot;mybdev&quot;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_block_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">int</span> status<span class="sy0">;</span>
+&nbsp;
+        status <span class="sy0">=</span> register_blkdev<span class="br0">&#40;</span>MY_BLOCK_MAJOR<span class="sy0">,</span> MY_BLKDEV_NAME<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>status <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                printk<span class="br0">&#40;</span>KERN_ERR <span class="st0">&quot;unable to register mybdev block device<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+                <span class="kw1">return</span> <span class="sy0">-</span>EBUSY<span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> my_block_exit<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        unregister_blkdev<span class="br0">&#40;</span>MY_BLOCK_MAJOR<span class="sy0">,</span> MY_BLKDEV_NAME<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit8" id="inregistrarea_unui_disc">Înregistrarea unui disc</h3>
+<div class="level3">
+
+<p>
+Cu toate că funcția <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L285" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L285"  rel="nofollow"> register_blkdev</a> obține un major, nu pune la dispoziția sistemului un dispozitiv (disc). Pentru crearea și utilizarea de dispozitive de tip bloc (discuri), se folosește o interfață specializată definită în <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13"  rel="nofollow"> linux/genhd.h</a>.
+</p>
+
+<p>
+Funcțiile utile definite în <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13"  rel="nofollow"> linux/genhd.h</a> sunt cele de înregistrare/alocare a unui disc, de adăugare a acestuia în sistem și de deînregistrare/dezalocare a discului.
+</p>
+
+<p>
+Funcția <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L1245" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L1245"  rel="nofollow"> alloc_disk</a> este folosită pentru alocarea unui disc, iar funcția <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L633" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L633"  rel="nofollow"> del_gendisk</a> este utilizată pentru dezalocarea acestuia. Adăugarea discului în sistem se realizează cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L580" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L580"  rel="nofollow"> add_disk</a>.
+</p>
+
+<p>
+Funcțiile <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L1245" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L1245"  rel="nofollow"> alloc_disk</a> și <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L580" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L580"  rel="nofollow"> add_disk</a> se folosesc, de obicei, în funcția de inițializare a modulului, iar funcția <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L633" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L633"  rel="nofollow"> del_gendisk</a> în funcția de ieșire a modulului.
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+<span class="co2">#include &lt;linux/genhd.h&gt;</span>
+&nbsp;
+<span class="co2">#define MY_BLOCK_MINORS	 1</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> my_block_dev <span class="br0">&#123;</span>
+        <span class="kw4">struct</span> gendisk <span class="sy0">*</span>gd<span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span> dev<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> create_block_device<span class="br0">&#40;</span><span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        dev<span class="sy0">-&gt;</span>gd <span class="sy0">=</span> alloc_disk<span class="br0">&#40;</span>MY_BLOCK_MINORS<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+        add_disk<span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>gd<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_block_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        create_block_device<span class="br0">&#40;</span><span class="sy0">&amp;</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> delete_block_device<span class="br0">&#40;</span><span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>gd<span class="br0">&#41;</span>
+                del_gendisk<span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>gd<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> my_block_exit<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        delete_block_device<span class="br0">&#40;</span><span class="sy0">&amp;</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Ca și la dispozitivele de tip caracter, se recomandă folosirea unei structuri de tipul <code>my_block_dev</code> în care să se regăsească elemente importante ce descriu dispozitivul de tip bloc.
+</p>
+
+<p>
+Trebuie reținut faptul că imediat după apelul funcției <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L580" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L580"  rel="nofollow"> add_disk</a> (de fapt chiar încă din timpul apelului) discul este activ și metodele sale pot fi apelate la orice moment de timp. Ca urmare, această funcție nu trebuie apelată înainte ca driverul să fie complet inițializat și gata să răspundă cererilor adresate discului înregistrat.
+</p>
+
+<p>
+Se observă că structura de bază în lucrul cu dispozitive de tip bloc (discuri) este structura <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165"  rel="nofollow"> struct gendisk</a>.
+</p>
+
+<p>
+După un apel <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L633" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L633"  rel="nofollow"> del_gendisk</a> este posibil ca structura <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165"  rel="nofollow"> struct gendisk</a> să continue să existe (și operațiile asupra dispozitivului să fie apelate în continuare), în cazul în care există utilizatori ai acesteia (s-a apelat o operație <code>open</code> asupra dispozitivului, dar încă nu a fost apelată operația <code>release</code> asociată). O soluție este păstrarea numărului de utilizatori ai dispozitivului și apelarea funcției <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L633" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L633"  rel="nofollow"> del_gendisk</a> numai atunci când nu există utilizatori ai acestuia.
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="structura_gendisk">Structura gendisk</h3>
+<div class="level3">
+
+<p>
+Structura <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165"  rel="nofollow"> struct gendisk</a> reține informațiile referitoare la un disc. După cum s-a afirmat și mai sus, o astfel de structură se obține în urma apelului <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L1245" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L1245"  rel="nofollow"> alloc_disk</a> și trebuie completată înainte de a fi transmisă funcției <a href="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L580" class="urlextern" title="http://lxr.free-electrons.com/source/block/genhd.c?v=3.13#L580"  rel="nofollow"> add_disk</a>.
+</p>
+
+<p>
+Structura <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165"  rel="nofollow"> struct gendisk</a> are următoarele câmpuri importante:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>major</code>, <code>first_minor</code>, <code>minors</code>, care descriu identificatorii folosiți de disc; un disc trebuie să aibă cel puțin un minor; dacă discul permite operația de partiționare, trebuie alocat un minor pentru fiecare partiție posibilă</div>
+</li>
+<li class="level1"><div class="li"><code>disk_name</code>, care reprezintă numele discului, așa cum apare în <code>/proc/partitions</code> și în <code>sysfs</code> (<code>/sys/block</code>)</div>
+</li>
+<li class="level1"><div class="li"><code>fops</code>, care reprezintă operațiile asociate discului</div>
+</li>
+<li class="level1"><div class="li"><code>queue</code>, care reprezintă coada de cereri <sup><a href="lab07.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup></div>
+</li>
+<li class="level1"><div class="li"><code>capacity</code>, care reprezintă capacitatea discului în sectoare de 512 octeți; se inițializează folosind funcția <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L449" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L449"  rel="nofollow"> set_capacity</a></div>
+</li>
+<li class="level1"><div class="li"><code>private_data</code>, care reprezintă un pointer către datele private</div>
+</li>
+</ul>
+
+<p>
+Un exemplu de completare a unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165"  rel="nofollow"> struct gendisk</a> este prezentat în continuare:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/genhd.h&gt;</span>
+<span class="co2">#include &lt;linux/fs.h&gt;</span>
+<span class="co2">#include &lt;linux/blkdev.h&gt;</span>
+&nbsp;
+<span class="co2">#define NR_SECTORS			1024</span>
+&nbsp;
+<span class="co2">#define KERNEL_SECTOR_SIZE		512</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> my_block_dev <span class="br0">&#123;</span>
+       <span class="co1">//...</span>
+       spinlock_t lock<span class="sy0">;</span>                <span class="coMULTI">/* For mutual exclusion */</span>
+       <span class="kw4">struct</span> request_queue <span class="sy0">*</span>queue<span class="sy0">;</span>    <span class="coMULTI">/* The device request queue */</span>
+       <span class="kw4">struct</span> gendisk <span class="sy0">*</span>gd<span class="sy0">;</span>             <span class="coMULTI">/* The gendisk structure */</span>
+       <span class="co1">//...</span>
+<span class="br0">&#125;</span> dev<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> create_block_device<span class="br0">&#40;</span><span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        ...
+        <span class="coMULTI">/* Initialize the gendisk structure */</span>
+        dev<span class="sy0">-&gt;</span>gd <span class="sy0">=</span> alloc_disk<span class="br0">&#40;</span>MY_BLOCK_MINORS<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span>dev<span class="sy0">-&gt;</span>gd<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                printk <span class="br0">&#40;</span>KERN_NOTICE <span class="st0">&quot;alloc_disk failure<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+                <span class="kw1">return</span> <span class="sy0">-</span>ENOMEM<span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+&nbsp;
+        dev<span class="sy0">-&gt;</span>gd<span class="sy0">-&gt;</span>major <span class="sy0">=</span> MY_BLOCK_MAJOR<span class="sy0">;</span>
+        dev<span class="sy0">-&gt;</span>gd<span class="sy0">-&gt;</span>first_minor <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+        dev<span class="sy0">-&gt;</span>gd<span class="sy0">-&gt;</span>fops <span class="sy0">=</span> <span class="sy0">&amp;</span>my_block_ops<span class="sy0">;</span>
+        dev<span class="sy0">-&gt;</span>gd<span class="sy0">-&gt;</span>queue <span class="sy0">=</span> dev<span class="sy0">-&gt;</span>queue<span class="sy0">;</span>
+        dev<span class="sy0">-&gt;</span>gd<span class="sy0">-&gt;</span>private_data <span class="sy0">=</span> dev<span class="sy0">;</span>
+        <a href="http://www.opengroup.org/onlinepubs/009695399/functions/snprintf.html"><span class="kw3">snprintf</span></a> <span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>gd<span class="sy0">-&gt;</span>disk_name<span class="sy0">,</span> <span class="nu0">32</span><span class="sy0">,</span> <span class="st0">&quot;myblock&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        set_capacity<span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>gd<span class="sy0">,</span> NR_SECTORS<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        add_disk<span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>gd<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_block_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">int</span> status<span class="sy0">;</span>
+        <span class="co1">//...</span>
+        status <span class="sy0">=</span> create_block_device<span class="br0">&#40;</span><span class="sy0">&amp;</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>status <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+                <span class="kw1">return</span> status<span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> delete_block_device<span class="br0">&#40;</span><span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>gd<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                del_gendisk<span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>gd<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> my_block_exit<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        delete_block_device<span class="br0">&#40;</span><span class="sy0">&amp;</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+După cum s-a precizat, kernel-ul consideră un disc ca fiind un vector de sectoare cu dimensiunea 512 octeți. În realitate, dispozitivele pot avea altă dimensiune a sectorului. Pentru a lucra cu aceste dispozitive, trebuie informat kernel-ul asupra dimensiunii reale a unui sector, și pentru toate operațiile trebuie făcute conversiile necesare.
+</p>
+
+<p>
+Pentru a informa kernel-ul asupra dimensiunii sectorului dispozitivului, trebuie setat un parametru al cozii de cereri, imediat după ce coada este alocată folosind funcția <a href="http://lxr.free-electrons.com/source/block/blk-settings.c?v=3.13#L355" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-settings.c?v=3.13#L355"  rel="nofollow"> blk_queue_logical_block_size</a>. Toate cererile generate de kernel vor fi multiplu de această dimensiune a sectorului și vor fi aliniate corespunzător. Totuși, comunicația între dispozitiv și driver se va realiza în continuare în sectoare de 512 octeți, astfel încât trebuie făcută conversia de fiecare dată (un exemplu de astfel de conversie este la apelul funcției <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L449" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L449"  rel="nofollow"> set_capacity</a> în codul de mai sus).
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="structura_block_device_operations">Structura block_device_operations</h3>
+<div class="level3">
+
+<p>
+La fel cum pentru un dispozitiv de tip caracter trebuiau completate operațiile din <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521"  rel="nofollow"> file_operations</a>, și pentru un dispozitiv de tip bloc trebuie completate operațiile din <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L1564" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L1564"  rel="nofollow"> block_device_operations</a>. Asocierea operațiilor se realizează prin intermediul câmpului <code>fops</code> din structura <a href="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/genhd.h?v=3.13#L165"  rel="nofollow"> struct gendisk</a>.
+</p>
+
+<p>
+Câteva din câmpurile structurii <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L1564" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L1564"  rel="nofollow"> block_device_operations</a> sunt prezentate în continuare:
+</p>
+<pre class="code c"><span class="kw4">struct</span> block_device_operations <span class="br0">&#123;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>open<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*,</span> fmode_t<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>release<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> gendisk <span class="sy0">*,</span> fmode_t<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>locked_ioctl<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*,</span> fmode_t<span class="sy0">,</span> <span class="kw4">unsigned</span><span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>ioctl<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*,</span> fmode_t<span class="sy0">,</span> <span class="kw4">unsigned</span><span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>compat_ioctl<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*,</span> fmode_t<span class="sy0">,</span> <span class="kw4">unsigned</span><span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>direct_access<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*,</span> sector_t<span class="sy0">,</span>
+                                                <span class="kw4">void</span> <span class="sy0">**,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>media_changed<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> gendisk <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>revalidate_disk<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> gendisk <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>getgeo<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*,</span> <span class="kw4">struct</span> hd_geometry <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">struct</span> module <span class="sy0">*</span>owner<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Operațiile <code>open</code> și <code>release</code> sunt apelate direct din user space de către utilitare de partiționare, creare de sisteme de fișiere sau verificare de sisteme de fișiere. La o operație <em>mount</em>, se apelează <code>open</code> direct din kernel space, identificatorul de fișier fiind reținut de către kernel. Un driver de tip bloc nu poate face diferența între apelurile <code>open</code> din user space și cele din kernel space.
+</p>
+
+<p>
+Un exemplu de utilizare a celor două funcții este prezentat în continuare:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+<span class="co2">#include &lt;linux/genhd.h&gt;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> my_block_dev <span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        <span class="kw4">struct</span> gendisk <span class="sy0">*</span> gd<span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span> dev<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_block_open<span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*</span>bdev<span class="sy0">,</span> fmode_t mode<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+&nbsp;
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_block_release<span class="br0">&#40;</span><span class="kw4">struct</span> gendisk <span class="sy0">*</span>gd<span class="sy0">,</span> fmode_t mode<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+&nbsp;
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">struct</span> block_device_operations my_block_ops <span class="sy0">=</span> <span class="br0">&#123;</span>
+        .<span class="me1">owner</span> <span class="sy0">=</span> THIS_MODULE<span class="sy0">,</span>
+        .<span class="me1">open</span> <span class="sy0">=</span> my_block_open<span class="sy0">,</span>
+        .<span class="me1">release</span> <span class="sy0">=</span> my_block_release
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> create_block_device<span class="br0">&#40;</span><span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="co1">//....</span>
+        dev<span class="sy0">-&gt;</span>gd<span class="sy0">-&gt;</span>fops <span class="sy0">=</span> <span class="sy0">&amp;</span>my_block_ops<span class="sy0">;</span>
+        dev<span class="sy0">-&gt;</span>gd<span class="sy0">-&gt;</span>private_data <span class="sy0">=</span> dev<span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Este de remarcat că nu există operațiile <code>read</code> și <code>write</code>. Aceste operații sunt efectuate de funcția <code>request</code> asociată cu coada de cereri a discului.
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="cozi_de_cereri">Cozi de cereri</h3>
+<div class="level3">
+
+<p>
+Driverele de tip bloc folosesc cozi de cereri pentru a păstra cererile block I/O care urmează să fie procesate. O coadă de cereri este reprezentată de structura <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L296" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L296"  rel="nofollow">struct request_queue</a>. Coada de cereri este formată dintr-o listă dublu înlănțuită de cereri și informația de control asociată. Cererile sunt adăugate la coadă de cod kernel de nivel mai înalt (de exemplu, sistemele de fișiere). Cât timp coada de cereri nu este vidă, driver-ul asociat cozii va trebui să extragă prima cerere din coadă și să o transmită dispozitivului de tip bloc asociat. Fiecare element din lista de cereri este o cerere reprezentată de tipul <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97"  rel="nofollow">struct request</a>.
+</p>
+
+<p>
+Cozile de cereri implementează o interfață care permite utilizarea mai multor planificatoare I/O (I/O schedulers). Un planificator trebuie să sorteze cererile și să le prezinte driver-ului într-o ordine care să maximizeze performanța. De asemenea, planificatorul se ocupă de combinarea cererilor adiacente (care se referă la sectoare adiacente de pe disc).
+</p>
+
+</div>
+
+<h3 class="sectionedit12" id="crearea_si_stergerea_cozii_de_cereri">Crearea și ștergerea cozii de cereri</h3>
+<div class="level3">
+
+<p>
+O coadă de cereri este creată cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L666" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L666"  rel="nofollow"> blk_init_queue</a> și este ștearsă cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L469" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L469"  rel="nofollow"> blk_cleanup_queue</a>.
+</p>
+
+<p>
+Un exemplu de folosire a acestor funcții este următorul:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+<span class="co2">#include &lt;linux/genhd.h&gt;</span>
+<span class="co2">#include &lt;linux/blkdev.h&gt;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> my_block_dev <span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        <span class="kw4">struct</span> request_queue <span class="sy0">*</span>queue<span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span> dev<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> my_block_request<span class="br0">&#40;</span><span class="kw4">struct</span> request_queue <span class="sy0">*</span>q<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">//...</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> create_block_device<span class="br0">&#40;</span><span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="coMULTI">/* Initialize the I/O queue */</span>
+	spin_lock_init<span class="br0">&#40;</span><span class="sy0">&amp;</span>dev<span class="sy0">-&gt;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span> 
+	dev<span class="sy0">-&gt;</span>queue <span class="sy0">=</span> blk_init_queue<span class="br0">&#40;</span>my_block_request<span class="sy0">,</span> <span class="sy0">&amp;</span>dev<span class="sy0">-&gt;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>queue <span class="sy0">==</span> NULL<span class="br0">&#41;</span>
+		<span class="kw1">goto</span> out_err<span class="sy0">;</span>
+	blk_queue_logical_block_size<span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>queue<span class="sy0">,</span> KERNEL_SECTOR_SIZE<span class="br0">&#41;</span><span class="sy0">;</span>
+	dev<span class="sy0">-&gt;</span>queue<span class="sy0">-&gt;</span>queuedata <span class="sy0">=</span> dev<span class="sy0">;</span>
+        <span class="co1">//...</span>
+&nbsp;
+out_err<span class="sy0">:</span>
+        <span class="kw1">return</span> <span class="sy0">-</span>ENOMEM<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_block_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">int</span> status<span class="sy0">;</span>
+        <span class="co1">//...</span>
+        status <span class="sy0">=</span> create_block_device<span class="br0">&#40;</span><span class="sy0">&amp;</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>status <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+                <span class="kw1">return</span> status<span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> delete_block_device<span class="br0">&#40;</span><span class="kw4">struct</span> block_dev <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>queue<span class="br0">&#41;</span>
+                blk_cleanup_queue<span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>queue<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> my_block_exit<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        delete_block_device<span class="br0">&#40;</span><span class="sy0">&amp;</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Funcția <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L666" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L666"  rel="nofollow"> blk_init_queue</a> primește ca prim argument un pointer la funcția de prelucrare a cererilor pentru dispozitiv (de tipul <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226"  rel="nofollow"> request_fn_proc</a>). În exemplul de mai sus, funcția este <code>my_block_request</code>. Parametrul <code>lock</code> este un spinlock (inițializat de către driver) pe care kernel-ul îl deține în timpul apelului funcției <code>request</code> pentru a asigura accesul exclusiv la coada de cereri. Acest spinlock se poate folosi și în alte funcții ale driver-ului, pentru a proteja accesul la date partajate cu funcția <code>request</code>.
+</p>
+
+<p>
+Ca parte a inițializării cozii de cereri se poate configura câmpul <code>queuedata</code>, care este echivalent cu câmpul <code>private_data</code> din alte structuri.
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="functii_utile_pentru_prelucrarea_cozilor_de_cereri">Funcții utile pentru prelucrarea cozilor de cereri</h3>
+<div class="level3">
+
+<p>
+Funcția de tipul <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226"  rel="nofollow"> request_fn_proc</a> este utilizată pentru tratarea cererilor de lucru cu dispozitivul de tip bloc. Această funcție este echivalentul funcțiilor de citire și scriere întâlnite la dispozitivele de tip caracter. Funcția primește ca argument coada de cereri asociată dispozitivului și poate folosi diverse funcții pentru prelucrarea cererilor din coadă.
+</p>
+
+<p>
+Funcțiile utilizate pentru prelucrarea cererilor din coadă, descrise mai jos, sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2133" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2133"  rel="nofollow"> blk_peek_request</a> - obține o referință la prima cerere din coadă; cererea trebuie pornită folosind <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2256" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2256"  rel="nofollow"> blk_start_request</a>;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2256" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2256"  rel="nofollow"> blk_start_request</a> - extrage cererea din coadă și o pornește pentru procesare; în general funcția primește ca referință un pointer la o cerere întors de <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2133" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2133"  rel="nofollow">blk_peek_request</a>;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2288" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2288"  rel="nofollow"> blk_fetch_request</a> - obține prima cerere din coadă (folosind <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2133" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2133"  rel="nofollow"> blk_peek_request</a>) și o pornește (folosind <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2256" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2256"  rel="nofollow">blk_start_request</a>);</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L1186" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L1186"  rel="nofollow"> blk_requeue_request</a> - pentru reinserarea cererii în coadă.</div>
+</li>
+</ul>
+
+<p>
+Înainte de a apela aceste funcții, trebuie obținut spinlock-ul asociat cozii. Dacă aceste funcții sunt apelate în funcția de tip <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226"  rel="nofollow">request_fn_proc</a>, spinlock-ul este deja deținut.
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="cereri_pentru_dispozitive_de_tip_bloc">Cereri pentru dispozitive de tip bloc</h3>
+<div class="level3">
+
+<p>
+O cerere pentru un dispozitiv de tip bloc este descrisă de structura <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97"  rel="nofollow"> struct request</a>.
+</p>
+
+<p>
+Câmpurile structurii <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97"  rel="nofollow"> struct request</a> includ:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>cmd_flags</code>, o serie de flag-uri printre care și direcția (citire sau scriere); pentru a afla direcția se folosește macrodefiniția <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L609" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L609"  rel="nofollow"> rq_data_dir</a>, care returnează 0 pentru o cerere de citire și 1 pentru o cerere de scriere pe dispozitiv;</div>
+</li>
+<li class="level1"><div class="li"><code>__sector</code>, primul sector al cererii de transfer; dacă sectorul dispozitivului are altă dimensiune, trebuie facută conversia corespunzătoare; pentru accesarea acestui câmp se folosește macro-ul <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L852" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L852"  rel="nofollow"> blk_rq_pos</a>;</div>
+</li>
+<li class="level1"><div class="li"><code>__data_len</code>, numărul total de octeți de transferat; pentru accesarea acestui câmp se folosește macro-ul <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L857" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L857"  rel="nofollow"> blk_rq_bytes</a>;</div>
+<ul>
+<li class="level2"><div class="li">în general, se vor transfera date din <a href="lab07.html#structura_bio" title="so2:laboratoare:lab07 ↵" class="wikilink1"> bio-ul curent</a>; dimensiunea datelor se obține cu ajutorul macro-ului <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L862" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L862"  rel="nofollow"> blk_rq_cur_bytes </a>;</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><code>buffer</code>, un pointer către datele de transferat; acest pointer reprezintă o adresă virtuală din kernel și poate fi accesată direct de către driver;</div>
+</li>
+<li class="level1"><div class="li"><code>bio</code>, o listă dinamică de structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> care reprezintă cererea; acest câmp se accesează cu ajutorul macrodefiniției <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L749" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L749"  rel="nofollow"> rq_for_each_segment</a>; transferul datelor unei cereri se realizează fie folosind câmpul <code>buffer</code>, fie câmpul <code>bio</code> <sup><a href="lab07.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup>.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit15" id="crearea_unei_cereri">Crearea unei cereri</h3>
+<div class="level3">
+
+<p>
+Cererile de citire/scriere sunt create de nivelurile de cod superioare subsistemului de I/O din nucleu. De obicei, subsistemul care creează cereri pentru dispozitive de tip bloc este subsistemul de gestiune a fișierelor. Subsistemul de I/O acționează ca intermediar între subsistemul de gestiune a fișierelor și driverul de dispozitiv de tip bloc. Principalele operații care intră în responsabilitatea subsistemului de I/O sunt adăugarea cererilor în coada de cereri a dispozitivului de tip bloc specific și sortarea și comasarea cererilor (<em>sorting and merging</em>) din considerente de performanță.
+</p>
+
+</div>
+
+<h3 class="sectionedit16" id="terminarea_unei_cereri">Terminarea unei cereri</h3>
+<div class="level3">
+
+<p>
+Când driverul a terminat de transferat toate sectoarele dintr-o cerere către/dinspre dispozitiv, trebuie să informeze subsistemul de I/O prin apelarea funcției <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2578" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2578"  rel="nofollow"> blk_end_request</a>. Dacă lock-ul aferent cozii de cereri este deja obținut, se poate folosi funcția <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2655" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2655"  rel="nofollow"> __blk_end_request</a>.
+</p>
+
+<p>
+În situația în care driverul dorește să încheie cererea chiar dacă nu a transferat toate sectoarele aferente acesteia, poate apela respectiv funcțiile <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2592" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2592"  rel="nofollow"> blk_end_request_all</a> sau <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2669" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2669"  rel="nofollow"> __blk_end_request_all</a>. Funcția <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2669" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2669"  rel="nofollow"> __blk_end_request_all</a> se apelează dacă lock-ul aferent cozii de cereri este deja obținut.
+</p>
+
+</div>
+
+<h3 class="sectionedit17" id="prelucrarea_cererilor">Prelucrarea cererilor</h3>
+<div class="level3">
+
+<p>
+Partea centrală a unui driver de tip bloc este metoda de tip <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226"  rel="nofollow"> request_fn_proc</a>. În exemplele anterioare, funcția care satisfăcea acest rol era <code>my_block_request</code>. După cum s-a precizat și în secțiunea <a href="lab07.html#crearea_si_stergerea_cozii_de_cereri" title="so2:laboratoare:lab07 ↵" class="wikilink1"> Crearea și ștergerea cozii de cereri</a>, această funcție este atașată driverului prin apelarea <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L666" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L666"  rel="nofollow"> blk_init_queue</a>.
+</p>
+
+<p>
+Această metodă este apelată atunci când kernel-ul consideră că driverul trebuie să proceseze cereri de I/O. Metoda trebuie să pornească procesarea cererilor din coada, dar nu este obligată să le și termine, cererile putând fi terminate din alte părți ale driverului.
+</p>
+
+<p>
+Parametrul <code>lock</code>, transmis la crearea unei cozi de cereri, reprezintă un spinlock pe care kernel-ul îl deține atunci când execută metoda <code>request</code>. Din acest motiv, metoda <code>request</code> rulează în context atomic și trebuie să respecte regulile pentru cod atomic (nu trebuie să apeleze funcții care pot duce la sleep etc.). Acest lock asigură și faptul că nu vor fi adăugate în coada alte cereri pentru device în timp ce se execută metoda request.
+</p>
+
+<p>
+Apelarea funcției de prelucrare a cozii de cereri este asincronă relativ la acțiunile oricărui proces din userspace și nu trebuie făcute presupuneri privind procesul în contextul căruia rulează. De asemenea nu trebuie presupus că buffer-ul oferit de o cerere este din kernelspace sau userspace, orice operație care accesează userspace-ul fiind eronata.
+</p>
+
+<p>
+În continuare este prezentată una dintre cele mai simple metode de tip <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L226"  rel="nofollow"> request_fn_proc</a>:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">void</span> my_block_request<span class="br0">&#40;</span><span class="kw4">struct</span> request_queue <span class="sy0">*</span>q<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">struct</span> request <span class="sy0">*</span>rq<span class="sy0">;</span>
+        <span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev <span class="sy0">=</span> q<span class="sy0">-&gt;</span>queuedata<span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">while</span> <span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		rq <span class="sy0">=</span> blk_fetch_request<span class="br0">&#40;</span>q<span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">if</span> <span class="br0">&#40;</span>rq <span class="sy0">==</span> NULL<span class="br0">&#41;</span>
+			<span class="kw2">break</span><span class="sy0">;</span>
+&nbsp;
+		<span class="kw1">if</span> <span class="br0">&#40;</span>rq<span class="sy0">-&gt;</span>cmd_type <span class="sy0">!=</span> REQ_TYPE_FS<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			printk <span class="br0">&#40;</span>KERN_NOTICE <span class="st0">&quot;Skip non-fs request<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+			__blk_end_request_all<span class="br0">&#40;</span>rq<span class="sy0">,</span> <span class="sy0">-</span>EIO<span class="br0">&#41;</span><span class="sy0">;</span>
+			<span class="kw1">continue</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span>
+&nbsp;
+                <span class="coMULTI">/* do work */</span>
+                ...
+&nbsp;
+		__blk_end_request_all<span class="br0">&#40;</span>rq<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Funcția <code>my_block_request</code> conține un ciclu while de parcurgere a cererilor din coada de cereri transmisă ca argument. Operațiile realizate în cadrul acestui ciclu sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> Se citește prima cerere din coadă folosind <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2288" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2288"  rel="nofollow"> blk_fetch_request</a>. Așa cum a fost descrisă <a href="lab07.html#functii_utile_pentru_prelucrarea_cozilor_de_cereri" title="so2:laboratoare:lab07 ↵" class="wikilink1">aici</a>, funcția <code>blk_fetch_request</code> obține primul element din coada de cereri și pornește cererea.</div>
+<ul>
+<li class="level2"><div class="li"> Dacă funcția întoarce <code>NULL</code>, s-a ajuns la sfârșitul cozii de cereri (nu mai este nici o cerere de prelucrat) și se iese din funcție.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Un dispozitiv de tip bloc poate primi cereri care nu transferă blocuri de date (operații low-level asupra discului, instrucțiuni referitoare la moduri speciale de accesare a dispozitivului). Majoritatea driverelor nu știu cum să trateze aceste cereri și întorc eroare.</div>
+<ul>
+<li class="level2"><div class="li"> Terminarea cu eroare se realizează prin apelul funcției <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2669" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2669"  rel="nofollow"> __blk_end_request_all</a> cu al doilea argument <code>-EIO</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Se prelucrează cererea conform nevoilor dispozitivului aferent.</div>
+</li>
+<li class="level1"><div class="li"> Se încheie cererea. În cazul de față, se apelează funcția <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2669" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2669"  rel="nofollow"> __blk_end_request_all</a> pentru a încheiea complet cererea. Dacă toate sectoarele cererii au fost prelucrate, se folosește funcția <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2655" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L2655"  rel="nofollow"> __blk_end_request</a>.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit18" id="structura_bio">Structura bio</h3>
+<div class="level3">
+
+<p>
+Fiecare structură <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97"  rel="nofollow"> struct request</a> reprezintă o cerere block I/O, dar poate proveni din combinarea mai multor cereri independente de la un nivel mai înalt. Sectoarele ce trebuie transferate pentru o cerere pot fi dispersate în memoria principală, dar întotdeauna corespund unui set de sectoare consecutive de pe dispozitiv. Cererea este reprezentată ca o mulțime de segmente, fiecare corespunzând unui buffer din memorie. Kernel-ul poate combina cereri care se referă la sectoare adiacente, dar nu va combina cereri de scriere cu cereri de citire într-o singură structură <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97"  rel="nofollow"> struct request</a>.
+</p>
+
+<p>
+O structură <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97"  rel="nofollow"> struct request</a> este implementată ca o listă înlănțuită de structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> împreună cu informații care permit driver-ului să-și rețină poziția curentă în timp ce procesează cererea.
+</p>
+
+<p>
+Structura <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> este o descriere low-level a unei porțiuni dintr-o cerere block I/O.
+</p>
+<pre class="code c"><span class="kw4">struct</span> bio <span class="br0">&#123;</span>
+        sector_t                bi_sector<span class="sy0">;</span>      <span class="coMULTI">/* device address in 512 byte
+                                                   sectors */</span>
+        <span class="kw4">struct</span> block_device     <span class="sy0">*</span>bi_bdev<span class="sy0">;</span>
+        <span class="kw4">unsigned</span> <span class="kw4">long</span>           bi_rw<span class="sy0">;</span>          <span class="coMULTI">/* bottom bits READ/WRITE,
+                                                 * top bits priority
+                                                 */</span>
+	<span class="co1">//... </span>
+        <span class="kw4">unsigned</span> <span class="kw4">int</span>            bi_size<span class="sy0">;</span>        <span class="coMULTI">/* residual I/O count */</span>
+&nbsp;
+	<span class="co1">//...</span>
+        <span class="kw4">struct</span> bio_vec          <span class="sy0">*</span>bi_io_vec<span class="sy0">;</span>     <span class="coMULTI">/* the actual vec list */</span>
+        bio_end_io_t            <span class="sy0">*</span>bi_end_io<span class="sy0">;</span>
+        atomic_t                bi_cnt<span class="sy0">;</span>         <span class="coMULTI">/* pin count */</span>
+&nbsp;
+        <span class="kw4">void</span>                    <span class="sy0">*</span>bi_private<span class="sy0">;</span>
+	<span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+La rândul ei, structura <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> conține un vector <code>bi_io_vec</code> de tipul <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L25" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L25"  rel="nofollow"> struct bio_vec</a>. Acesta este format din paginile individuale din memoria fizică ce trebuie transferate. Pentru a parcurge o structura <code>bio</code>, trebuie parcurs acest vector de structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L25" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L25"  rel="nofollow"> struct bio_vec</a> și transferate datele din fiecare pagină fizică. 
+</p>
+
+</div>
+
+<h3 class="sectionedit19" id="crearea_unei_structuri_bio">Crearea unei structuri bio</h3>
+<div class="level3">
+
+<p>
+Pentru crearea unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> se pot folosi două funcții:
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L235" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L235"  rel="nofollow"> bio_alloc</a> - alocă spațiu pentru o nouă structură; structura trebuie inițializată;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L240" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L240"  rel="nofollow"> bio_clone</a> - realizează o copie a unei structuri bio existente; structura nou obținută este inițializată cu valorile câmpurilor structurii clonate.</div>
+</li>
+</ul>
+
+<p>
+Ambele funcții întorc o nouă structură <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit20" id="transmiterea_unei_structuri_bio">Transmiterea unei structuri bio</h3>
+<div class="level3">
+
+<p>
+De obicei o structură <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> este creată de nivelurile superioare ale kernel-ului (de obicei sistemul de fișiere). O structură astfel creată este apoi transmisă subsistemului de I/O care adună mai multe structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> într-o cerere.
+</p>
+
+<p>
+Pentru transmiterea unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> către driverul dispozitivului I/O asociat se folosește funcția <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L1849" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L1849"  rel="nofollow"> submit_bio</a>. Funcția primește ca argument o structură <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> inițializată care va fi adăugată unei cereri din coada de cereri a unui dispozitiv I/O. Din acea coadă de cereri va putea fi prelucrată de driverul dispozitivului I/O cu o funcție specializată. Primul argument al funcției <code>submit_bio</code> este un flag ce specifică dacă este vorba de o operație de scriere (<code>1</code>) sau de citire (<code>0</code>) (acest flag se va combina cu valoarea curentă a <code>bio→bi_rw</code>).
+</p>
+
+</div>
+
+<h3 class="sectionedit21" id="asteptarea_incheierii_unei_structuri_bio">Așteptarea încheierii unei structuri bio</h3>
+<div class="level3">
+
+<p>
+Transmiterea unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> unui driver are ca efect adăugarea acesteia într-o cerere din coada de cereri de unde va fi ulterior prelucrată. Astfel, în momentul în care funcția <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L1849" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L1849"  rel="nofollow"> submit_bio</a> se întoarce, nu se garantează încheierea prelucrării structurii.
+</p>
+
+<p>
+Dacă se dorește să se aștepte încheierea prelucrării unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a>, va trebui folosit câmpul <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L62" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L62"  rel="nofollow"> bi_end_io</a> al structurii. În acest câmp se precizează funcția care va fi apelată la încheierea prelucrării structurii bio. De obicei, funcția se folosește împreună cu o structură <a href="http://lxr.free-electrons.com/source/include/linux/completion.h?v=3.13#L25" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/completion.h?v=3.13#L25"  rel="nofollow"> completion</a>. Structura <a href="http://lxr.free-electrons.com/source/include/linux/completion.h?v=3.13#L25" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/completion.h?v=3.13#L25"  rel="nofollow"> completion</a> încapsulează o <a href="http://lxr.free-electrons.com/source/include/linux/wait.h#L39" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h#L39"  rel="nofollow"> coadă de așteptare</a> și o condiție de așteptare.
+</p>
+
+<p>
+Un exemplu uzual este prezent în <a href="http://lxr.free-electrons.com/source/drivers/md/md.c?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/md/md.c?v=3.13"  rel="nofollow"> drivers/md/md.c</a>. Partea relevantă este prezentată în extrasul de cod de mai jos:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">void</span> bi_complete<span class="br0">&#40;</span><span class="kw4">struct</span> bio <span class="sy0">*</span>bio<span class="sy0">,</span> <span class="kw4">int</span> error<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        complete<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">struct</span> completion<span class="sy0">*</span><span class="br0">&#41;</span>bio<span class="sy0">-&gt;</span>bi_private<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="coMULTI">/* functie de prelucrare a bio */</span>
+<span class="kw4">int</span> sync_page_io<span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*</span>bdev<span class="sy0">,</span> sector_t sector<span class="sy0">,</span> <span class="kw4">int</span> size<span class="sy0">,</span>
+                   <span class="kw4">struct</span> page <span class="sy0">*</span>page<span class="sy0">,</span> <span class="kw4">int</span> rw<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">struct</span> bio <span class="sy0">*</span>bio <span class="sy0">=</span> bio_alloc<span class="br0">&#40;</span>GFP_NOIO<span class="sy0">,</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">struct</span> completion event<span class="sy0">;</span>
+        <span class="co1">//...</span>
+        init_completion<span class="br0">&#40;</span><span class="sy0">&amp;</span>event<span class="br0">&#41;</span><span class="sy0">;</span>
+        bio<span class="sy0">-&gt;</span>bi_private <span class="sy0">=</span> <span class="sy0">&amp;</span>event<span class="sy0">;</span>
+        bio<span class="sy0">-&gt;</span>bi_end_io <span class="sy0">=</span> bi_complete<span class="sy0">;</span>
+        submit_bio<span class="br0">&#40;</span>rw<span class="sy0">,</span> bio<span class="br0">&#41;</span><span class="sy0">;</span>
+        wait_for_completion<span class="br0">&#40;</span><span class="sy0">&amp;</span>event<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+După cum se poate observa, câmpul <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L64" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L64"  rel="nofollow"> bi_private</a> al structurii este folosit pentru a reține pointer-ul la structura <a href="http://lxr.free-electrons.com/source/include/linux/completion.h?v=3.13#L25" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/completion.h?v=3.13#L25"  rel="nofollow"> completion</a>. Acest pointer va putea fi folosit în funcția apelată la încheierea bio-ului la apelul <a href="http://lxr.free-electrons.com/source/kernel/sched/completion.c?v=3.13#L29" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/sched/completion.c?v=3.13#L29"  rel="nofollow"> complete</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit22" id="initializarea_unei_structuri_bio">Inițializarea unei structuri bio</h3>
+<div class="level3">
+
+<p>
+După ce o structură <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> a fost alocată și înainte de a fi transmisă, trebuie inițializată.
+</p>
+
+<p>
+Inițializarea structurii presupune completarea câmpurilor importante. După cum s-a precizat anterior, câmpul <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L71" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L71"  rel="nofollow"> bi_end_io</a> este folosit pentru a preciza funcția apelată la încheierea prelucrării structurii. Câmpul <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L64" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L64"  rel="nofollow"> bi_private</a> este folosit pentru a stoca date utile ce pot fi accesate în funcția <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L71" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L71"  rel="nofollow"> bi_end_io</a>.
+</p>
+
+<p>
+Câmpul <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L51" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L51"  rel="nofollow"> bi_rw</a> specifică dacă este vorba de o operație de scriere (<code>1</code>) sau de citire (<code>0</code>).
+</p>
+
+<p>
+Tot din exemplul din <a href="http://lxr.free-electrons.com/source/drivers/md/md.c?v=3.13#L779" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/md/md.c?v=3.13#L779"  rel="nofollow"> drivers/md/md.c</a> se poate observa inițializarea a celorlalte câmpuri utile:
+</p>
+<pre class="code c"><span class="kw4">int</span> sync_page_io<span class="br0">&#40;</span><span class="kw4">struct</span> block_device <span class="sy0">*</span>bdev<span class="sy0">,</span> sector_t sector<span class="sy0">,</span> <span class="kw4">int</span> size<span class="sy0">,</span>
+                   <span class="kw4">struct</span> page <span class="sy0">*</span>page<span class="sy0">,</span> <span class="kw4">int</span> rw<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+       <span class="kw4">struct</span> bio <span class="sy0">*</span>bio <span class="sy0">=</span> bio_alloc<span class="br0">&#40;</span>GFP_NOIO<span class="sy0">,</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+       <span class="co1">//...</span>
+       bio<span class="sy0">-&gt;</span>bi_bdev <span class="sy0">=</span> bdev<span class="sy0">;</span>
+       bio<span class="sy0">-&gt;</span>bi_sector <span class="sy0">=</span> sector<span class="sy0">;</span>
+       bio_add_page<span class="br0">&#40;</span>bio<span class="sy0">,</span> page<span class="sy0">,</span> size<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="co1">//...</span></pre>
+
+<p>
+În extrasul de mai sus se specifică dispozitivul de tip bloc către care va fi trimis bio-ul, sectorul de început și conținutul. Conținutul unui bio este dat de o <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L44" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L44"  rel="nofollow"> pagină</a>.
+</p>
+
+<p>
+<strong>Atenție</strong> : Câmpul <code>size</code> al apelului <a href="http://lxr.free-electrons.com/source/fs/bio.c?v=3.13#L750" class="urlextern" title="http://lxr.free-electrons.com/source/fs/bio.c?v=3.13#L750"  rel="nofollow"> bio_add_page</a> trebuie să fie multiplu de dimensiunea sectorului dispozitivului.
+</p>
+
+<p>
+O pagină poate fi alocată folosind apelul <a href="http://lxr.free-electrons.com/source/include/linux/gfp.h?v=3.13#L345" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/gfp.h?v=3.13#L345"  rel="nofollow"> alloc_page</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit23" id="folosirea_continutului_unei_structuri_bio">Folosirea conținutului unei structuri bio</h3>
+<div class="level3">
+
+<p>
+Pentru folosirea conținutului unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a>, paginile de suport ale structurii trebuie mapate în spațiul de adresă nucleu de unde vor putea fi accesate. Pentru mapare/demapare se folosesc  macrourile <a href="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L100" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L100"  rel="nofollow"> __bio_kmap_atomic</a> și <a href="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L104" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L104"  rel="nofollow"> __bio_kunmap_atomic</a> <sup><a href="lab07.html#fn__4" id="fnt__4" class="fn_top">4)</a></sup>.
+</p>
+
+<p>
+Un exemplu tipic de folosire este:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">void</span> my_block_transfer<span class="br0">&#40;</span><span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev<span class="sy0">,</span> <span class="kw4">size_t</span> start<span class="sy0">,</span> <span class="kw4">size_t</span> len<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">*</span>buffer<span class="sy0">,</span> <span class="kw4">int</span> dir<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_xfer_bio<span class="br0">&#40;</span><span class="kw4">struct</span> my_block_dev <span class="sy0">*</span>dev<span class="sy0">,</span> <span class="kw4">struct</span> bio <span class="sy0">*</span>bio<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+   <span class="kw4">int</span> i<span class="sy0">;</span>
+   <span class="kw4">struct</span> bio_vec <span class="sy0">*</span>bvec<span class="sy0">;</span>
+   <span class="kw4">size_t</span> start <span class="sy0">=</span> bio<span class="sy0">-&gt;</span>bi_sector <span class="sy0">*</span> KERNEL_SECTOR_SIZE<span class="sy0">;</span>
+&nbsp;
+   <span class="coMULTI">/* Do each segment independently. */</span>
+   bio_for_each_segment<span class="br0">&#40;</span>bvec<span class="sy0">,</span> bio<span class="sy0">,</span> i<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+       <span class="kw4">char</span> <span class="sy0">*</span>buffer <span class="sy0">=</span> __bio_kmap_atomic<span class="br0">&#40;</span>bio<span class="sy0">,</span> i<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+       <span class="coMULTI">/* process mapped buffer */</span>
+       my_block_transfer<span class="br0">&#40;</span>dev<span class="sy0">,</span> start<span class="sy0">,</span> bio_cur_bytes<span class="br0">&#40;</span>bio<span class="br0">&#41;</span><span class="sy0">,</span> buffer<span class="sy0">,</span> bio_data_dir<span class="br0">&#40;</span>bio<span class="br0">&#41;</span> <span class="sy0">==</span> WRITE<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+       start <span class="sy0">+=</span> bio_cur_bytes<span class="br0">&#40;</span>bio<span class="br0">&#41;</span><span class="sy0">;</span>
+       __bio_kunmap_atomic<span class="br0">&#40;</span>buffer<span class="br0">&#41;</span><span class="sy0">;</span>
+   <span class="br0">&#125;</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Se pot stoca informații în buffer-ul mapat sau se pot extrage informații.
+</p>
+
+<p>
+Următoarele câmpuri ale structurii <code>bio</code> sunt accesate fie direct, fie cu ajutorul unor macrodefiniții:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>bi_sector</code>, primul sector de transferat, exprimat în sectoare de 512 octeți</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L69" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L69"  rel="nofollow"> bio_sectors</a>, pentru obținerea numărului total de sectoare de transferat din cererea <code>bio</code> curentă</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L72" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L72"  rel="nofollow"> bio_cur_bytes</a>, pentru obținerea numărului de octeți de transferat din pagina curentă</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L2237" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L2237"  rel="nofollow"> bio_data_dir</a>, pentru a determina dacă este o cerere de citire (<code>0</code>) sau de scriere (<code>1</code>)</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L138" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L138"  rel="nofollow"> bio_for_each_segment</a>, pentru a parcurge vectorul de structuri <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L25" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h?v=3.13#L25"  rel="nofollow"> struct bio_vec</a> ce  conține paginile de memorie fizică dintr-o structură <code>bio</code>.</div>
+</li>
+</ul>
+
+<p>
+În cazul în care se folosesc cozile de cereri și se dorește prelucrarea cererilor la nivel de structură <code>bio</code>, se va folosi macrodefiniția <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L749" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L749"  rel="nofollow"> rq_for_each_segment</a> în locul <a href="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L138" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/bio.h?v=3.13#L138"  rel="nofollow"> bio_for_each_segment</a>. Această macrodefiniție parcurge fiecare segment din fiecare structură <code>bio</code> a unei cereri <code>struct request</code> și actualizează o structură <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L737" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L737"  rel="nofollow"> struct req_iterator</a>. Structura <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L737" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L737"  rel="nofollow"> struct req_iterator</a> conține structura curentă <code>bio</code> și indicele segmentului curent.
+</p>
+
+</div>
+
+<h3 class="sectionedit24" id="eliberarea_unei_structuri_bio">Eliberarea unei structuri bio</h3>
+<div class="level3">
+
+<p>
+După ce un subsistem al nucleului folosește o structură <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a> va trebui să elibereze referința către aceasta. Acest lucru se realizează cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/fs/bio.c?v=3.13#L496" class="urlextern" title="http://lxr.free-electrons.com/source/fs/bio.c?v=3.13#L496"  rel="nofollow"> bio_put</a>. Funcția <a href="http://lxr.free-electrons.com/source/fs/bio.c?v=3.13#L496" class="urlextern" title="http://lxr.free-electrons.com/source/fs/bio.c?v=3.13#L496"  rel="nofollow"> bio_put</a> este apelată și în exemplul anterior din <a href="http://lxr.free-electrons.com/source/drivers/md/md.c?v=3.13#L779" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/md/md.c?v=3.13#L779"  rel="nofollow"> drivers/md/md.c</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit25" id="configurarea_unei_cozi_de_cerere_la_nivel_de_bio">Configurarea unei cozi de cerere la nivel de bio</h3>
+<div class="level3">
+
+<p>
+Cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L666" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L666"  rel="nofollow"> blk_init_queue</a> se putea specifica o funcție care să fie folosită pentru prelucrarea cererilor transmise driverului. Funcția primea ca argument coada de cereri și realiza prelucrări la nivel de structuri <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L97"  rel="nofollow">request</a>.
+</p>
+
+<p>
+Dacă, din motive de flexibilitate, se dorește specificarea unei funcții care să realizeze prelucrări la nivel de <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a>, trebuie folosită funcția <a href="http://lxr.free-electrons.com/source/block/blk-settings.c?v=3.13#L175" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-settings.c?v=3.13#L175"  rel="nofollow"> blk_queue_make_request</a> în conjuncție cu funcția <a href="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L546" class="urlextern" title="http://lxr.free-electrons.com/source/block/blk-core.c?v=3.13#L546"  rel="nofollow">blk_alloc_queue</a>. Mai jos este prezentat un exemplu tipic de inițializare a unei funcții de prelucrare la nivel de <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L46"  rel="nofollow"> bio</a>:
+</p>
+<pre class="code c"><span class="co1">// semnatura functiei de tratare</span>
+<span class="kw4">static</span> <span class="kw4">void</span> my_make_request<span class="br0">&#40;</span><span class="kw4">struct</span> request_queue <span class="sy0">*</span>q<span class="sy0">,</span> <span class="kw4">struct</span> bio <span class="sy0">*</span>bio<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+&nbsp;
+<span class="co1">// ...</span>
+<span class="co1">// crearea cozii</span>
+dev<span class="sy0">-&gt;</span>queue <span class="sy0">=</span> blk_alloc_queue <span class="br0">&#40;</span>GFP_KERNEL<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>queue <span class="sy0">==</span> NULL<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        printk <span class="br0">&#40;</span>KERN_ERR <span class="st0">&quot;cannot allocate block device queue<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">return</span> <span class="sy0">-</span>ENOMEM<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="co1">// inregistrarea functiei de tratare</span>
+blk_queue_make_request <span class="br0">&#40;</span>dev<span class="sy0">-&gt;</span>queue<span class="sy0">,</span> my_make_request<span class="br0">&#41;</span><span class="sy0">;</span>
+dev<span class="sy0">-&gt;</span>queue<span class="sy0">-&gt;</span>queuedata <span class="sy0">=</span> dev<span class="sy0">;</span></pre>
+
+<p>
+Funcția <code>my_make_request</code> este de tipul <a href="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L227" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blkdev.h?v=3.13#L227"  rel="nofollow"> make_request_fn</a>. Un exemplu de folosire a unei astfel de funcții se găsește în <a href="http://lxr.free-electrons.com/source/drivers/md/raid1.c#L1047" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/md/raid1.c#L1047"  rel="nofollow"> drivers/md/raid1.c</a>.
+</p>
+
+<p>
+În cazul în care se folosește această metodă, nu se mai folosesc cozile de cereri, fiecare cerere fiind reprezentă de o structură <code>bio</code>. Astfel, transferul de date se reduce la parcurgerea fiecărei structuri <code>bio</code> după cum a fost prezentat <a href="lab07.html#folosirea_conc89binutului_unei_structurii_bio" title="so2:laboratoare:lab07 ↵" class="wikilink1">mai sus</a> și semnalarea terminării prelucrării acesteia cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L71" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/blk_types.h#L71"  rel="nofollow"> bio_endio</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit26" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit27" id="linux">Linux</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch16.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch16.pdf"  rel="nofollow">Linux Device Drivers 3rd Edition, Chapter 16. Block Drivers</a></div>
+</li>
+<li class="level1"><div class="li"> Linux Kernel Development, Second Edition – Chapter 13. The Block I/O Layer</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/58719/" class="urlextern" title="http://lwn.net/Articles/58719/"  rel="nofollow">A simple block driver</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/25711/" class="urlextern" title="http://lwn.net/Articles/25711/"  rel="nofollow">The gendisk interface</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/26404/" class="urlextern" title="http://lwn.net/Articles/26404/"  rel="nofollow">The bio structure</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/27055/" class="urlextern" title="http://lwn.net/Articles/27055/"  rel="nofollow">Request Queues</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/Documentation/block/request.txt?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/block/request.txt?v=3.13"  rel="nofollow">Documentation/ block/request.txt - Struct request documentation</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/Documentation/block/biodoc.txt?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/block/biodoc.txt?v=3.13"  rel="nofollow">Documentation/block/biodoc.txt - Notes on the Generic Block Layer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/drivers/block/brd.c?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/block/brd.c?v=3.13"  rel="nofollow">drivers/block/brd.c - RAM backed block disk driver</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linuxjournal.com/article/6931" class="urlextern" title="http://www.linuxjournal.com/article/6931"  rel="nofollow">I/O Schedulers</a></div>
+</li>
+</ol>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="lab07.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+Pentru mai multe detalii despre alegerea identificatorilor <em>major</em> și <em>minor</em>, consultați <a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04"> laboratorul 4</a></div>
+<div class="fn"><sup><a href="lab07.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+Despre structura struct request_queue și operațiile pentru prelucrarea cozilor de cereri se va discuta în secțiunea <a href="lab07.html#cozi_de_cereri" title="so2:laboratoare:lab07 ↵" class="wikilink1"> Cozi de cereri</a></div>
+<div class="fn"><sup><a href="lab07.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+Despre structura bio și operațiile asociate se va discuta în secțiunea <a href="lab07.html#structura_bio" title="so2:laboratoare:lab07 ↵" class="wikilink1"> Structura bio</a></div>
+<div class="fn"><sup><a href="lab07.html#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+Mai multe informații despre maparea atomică a memoriei găsiți în <a href="http://lwn.net/images/pdf/LDD3/ch15.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch15.pdf"  rel="nofollow"> Linux Device Drivers 3rd Edition, Chapter 15. Memory Mapping and DMA - The Memory Map and Struct Page</a></div>
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_177065429358355b58a8b4f" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_29735035958355b58aba2b" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></span></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_136015964758355b58ae90a" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab07.html#laborator_7_-_device_drivere_de_tip_bloc_subsistemul_de_io">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab07.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab07.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab07.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab07.html#notiuni_generale">Noțiuni generale</a></div></li>
+<li class="level2"><div class="li"><a href="lab07.html#device_drivere_de_tip_bloc_in_linux">Device drivere de tip bloc în Linux</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab07.html#inregistrarea_unui_dispozitiv_de_tip_bloc">Înregistrarea unui dispozitiv de tip bloc</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#inregistrarea_unui_disc">Înregistrarea unui disc</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#structura_gendisk">Structura gendisk</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#structura_block_device_operations">Structura block_device_operations</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#cozi_de_cereri">Cozi de cereri</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#crearea_si_stergerea_cozii_de_cereri">Crearea și ștergerea cozii de cereri</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#functii_utile_pentru_prelucrarea_cozilor_de_cereri">Funcții utile pentru prelucrarea cozilor de cereri</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#cereri_pentru_dispozitive_de_tip_bloc">Cereri pentru dispozitive de tip bloc</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#crearea_unei_cereri">Crearea unei cereri</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#terminarea_unei_cereri">Terminarea unei cereri</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#prelucrarea_cererilor">Prelucrarea cererilor</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#structura_bio">Structura bio</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#crearea_unei_structuri_bio">Crearea unei structuri bio</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#transmiterea_unei_structuri_bio">Transmiterea unei structuri bio</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#asteptarea_incheierii_unei_structuri_bio">Așteptarea încheierii unei structuri bio</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#initializarea_unei_structuri_bio">Inițializarea unei structuri bio</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#folosirea_continutului_unei_structuri_bio">Folosirea conținutului unei structuri bio</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#eliberarea_unei_structuri_bio">Eliberarea unei structuri bio</a></div></li>
+<li class="level3"><div class="li"><a href="lab07.html#configurarea_unei_cozi_de_cerere_la_nivel_de_bio">Configurarea unei cozi de cerere la nivel de bio</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab07.html#resurse_utile">Resurse utile</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab07.html#linux">Linux</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/laboratoare/lab07.txt · Last modified: 2016/04/22 19:46 by alexandra.tudor          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab07%3Fdo=media&amp;ns=so2%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab07.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Alaboratoare%253Alab07&amp;1479891800" width="2" height="1" alt="" /></div>
+</body>
+</html>

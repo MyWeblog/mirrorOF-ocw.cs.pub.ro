@@ -1,0 +1,392 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    03. [15p] Căutare în baza de date LDAP    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-18T11:43:08+0200"/>
+<meta name="keywords" content="saisp,labs,01,contents,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:01:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/saisp/labs/01/contents/03.html"/>
+<link rel="canonical" href="03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:01:contents';var JSINFO = {"id":"saisp:labs:01:contents:03","namespace":"saisp:labs:01:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="03%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="03%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_cautare_in_baza_de_date_ldap">03. [15p] Căutare în baza de date LDAP</h3>
+<div class="level3">
+
+<p>
+Output-ul comenzii de interogare LDAP a serverului <code>swarm.cs.pub.ro</code> este consistent. De multe ori dorim să căutăm în baza de date LDAP și să extragem doar anumite intrări similar comenzii <code>select</code> din SQL.
+</p>
+
+</div>
+
+<h4 id="informatii_din_subarbori">Informații din subarbori</h4>
+<div class="level4">
+
+<p>
+Un prim mod de căutare este selectarea doar a intrării căutate (fără subarbore) sau doar a primului nivel din arbore, ca mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-s</span> base <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span>
+dn: <span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: University Politehnica of Bucharest
+dc: swarm
+&nbsp;
+&nbsp;
+<span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-s</span> one <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span>
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+description: LDAP administrator
+&nbsp;
+dn: <span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+ou: People
+objectClass: organizationalUnit
+&nbsp;
+dn: <span class="re2">ou</span>=Group,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+ou: Group
+objectClass: organizationalUnit</pre>
+
+<p>
+Prima comandă extrage doar intrarea de bază, identificată de <em>domain name</em>-ul (DN) <code>dc=swarm,dc=cs,dc=pub,dc=ro</code>. A doua extrage primul nivel din arborele/directorul LDAP, adică intrarile indentificate de DN-urile <code>cn=admin,dc=swarm,dc=cs,dc=pub,dc=ro</code>, <code>ou=People,dc=swarm,dc=cs,dc=pub,dc=ro</code>, <code>ou=Group,dc=swarm,dc=cs,dc=pub,dc=ro</code>.
+</p>
+
+<p>
+Un mod uzual de căutare este doar într-un subarbore al directorului LDAP. Astfel, dacă dorim să extragem doar intrările din grupuri, vom folosi comanda:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;ou=Group,dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span>
+dn: <span class="re2">ou</span>=Group,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+ou: Group
+objectClass: organizationalUnit
+&nbsp;
+dn: <span class="re2">cn</span>=rosedu,<span class="re2">ou</span>=Group,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+cn: rosedu
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+</div>
+
+<h4 id="extragere_de_atribute">Extragere de atribute</h4>
+<div class="level4">
+
+<p>
+Așa cum comanda <code>select</code> din SQL extrage doar anumite coloane dintr-un tabel, putem selecta, folosind comanda <code>ldapsearch</code> anumite atribute ale intrărilor în baza de date LDAP.
+</p>
+
+<p>
+Spre exemplu, dacă vrem să afișăm doar uid-ul utilizatorilor din baza de date LDAP, vom folosi comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span> uid
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+dn: <span class="re2">uid</span>=ddvlad,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: ddvlad
+&nbsp;
+dn: <span class="re2">uid</span>=roxanam,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: roxanam
+&nbsp;
+dn: <span class="re2">uid</span>=razvan,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: razvan</pre>
+
+<p>
+Folosirea atributului <code>uid</code> la sfârșitul comenzii de mai sus înseamnă selectarea doar a acelui câmp.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Câmpul <code>dn</code> va fi întotdeauna selectat pentru că indică în mod unic intrarea în LDAP.
+
+</div></p>
+</p>
+
+<p>
+Dacă dorim să selectăm uid-ul, adresa de e-mail și numele vom folosi comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span> uid mail cn
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+dn: <span class="re2">uid</span>=ddvlad,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: ddvlad
+cn: Vlad Dogaru
+mail: XXXXXXX
+&nbsp;
+dn: <span class="re2">uid</span>=roxanam,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: roxanam
+cn: Roxana Murarus
+mail: XXXXXXX
+&nbsp;
+dn: <span class="re2">uid</span>=razvan,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: razvan
+cn: Razvan Deaconescu
+mail: XXXXXXX</pre>
+
+<p>
+Altfel spus, pentru a selecta mai multe atribute le transmitem ca argument comenzii <code>ldapsearch</code>.
+</p>
+
+</div>
+
+<h4 id="filtrare_dupa_atribute">Filtrare după atribute</h4>
+<div class="level4">
+
+<p>
+În SQL, clauza <code>where</code> permite selectarea doar anumitor intrări. La fel permite și comanda <code>ldapsearch</code> folosirea de filtre de căutare.
+</p>
+
+<p>
+Astfel, pentru a selecta intrările de utilizator al căror prenume este <code>Silviu</code> vom folosi comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span> <span class="re2">givenName</span>=Silviu
+dn: <span class="re2">uid</span>=silviu,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: silviu
+cn: Silviu Grijincu
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Dacă vrem să aflăm informații despre contul aferent lui Mihai Carabaș, și nu știm uid-ul său, vom folosi comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span> <span class="re2">cn</span>=<span class="st0">&quot;Mihai Carabas&quot;</span>
+dn: <span class="re2">uid</span>=mihaic,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: mihaic
+sn: Carabas
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Dacă știam uid-ul căutam direct după uid:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span> <span class="re2">uid</span>=mihaic
+dn: <span class="re2">uid</span>=mihaic,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: mihaic
+sn: Carabas
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Filtrele de căutare (<em>search filters</em>) sunt expresii care fac match pe anumite atribute din intrările LDAP și le afișează doar pe acelea. Filtrele pot conține și <em>glob</em>-uri pentru a permite match pe mai multe valori ale atributelor. Astfel, pentru a selecta toate persoanele al căror nume de familie începe cu șirul <code>An</code> folosim expresia:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span> <span class="re2">sn</span>=<span class="st0">&quot;An*&quot;</span>
+dn: <span class="re2">uid</span>=aandrei,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: aandrei
+cn: Alexandru Andrei
+sn: Andrei
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Atributul <code>sn</code> înseamnă numele de familie (<em>surname</em>) iar <em>glob</em>-ul <code>An*</code> însemnă șirurile care încep cu <code>An</code>.
+</p>
+
+<p>
+La fel cum comanda <code>select</code> este combinată cu <code>where</code>, vom putea selecta doar anumite atribute ale unor intrări. Dacă dorim să afișăm dar cn-ul și e-mail-ul rezultatelor comenzii de mai sus, vom folosi comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>swarm.cs.pub.ro <span class="re5">-b</span> <span class="st0">&quot;dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span> <span class="re2">sn</span>=<span class="st0">&quot;An*&quot;</span> cn mail
+dn: <span class="re2">uid</span>=aandrei,<span class="re2">ou</span>=People,<span class="re2">dc</span>=swarm,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+cn: Alexandru Andrei
+mail: XXXXXXX
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+În cazul acesta, după comanda de căutare am precizat filtrul de căutare (<code>sn=“An*”</code>) și apoi atributele care vor fi selectate (<code>cn mail</code>).
+</p>
+
+</div>
+
+<h4 id="exercitii_de_cautare">Exerciții de căutare</h4>
+<div class="level4">
+
+<p>
+Realizați următoarele căutări în baza de date LDAP de pe <code>swarm.cs.pub.ro</code>:
+</p>
+<ol>
+<li class="level1"><div class="li"> Extrageți utilizatorii al căror nume de familie este <code>Popescu</code>.</div>
+</li>
+<li class="level1"><div class="li"> Extrageți uid-ul și cn-ul utilizatorilor a căror adresă de e-mail conține șirul <code>@cti.pub.ro</code>.</div>
+</li>
+<li class="level1"><div class="li"> Extrageți utilizatorii al căror nume de familie nu se termină în <code>escu</code>.</div>
+</li>
+<li class="level1"><div class="li"> Extrageți utilizatorii al căror prenume este <code>Vlad</code> <strong>sau</strong> <code>Andrei</code>.</div>
+</li>
+<li class="level1"><div class="li"> Extrageți uid-ul, e-mail-ul și numele de familie al utilizatorilor al căror prenume este <code>Vlad</code> sau <code>Andrei</code>.</div>
+</li>
+</ol>
+
+<p>
+<p><div class="noteimportant">
+Detalii legate de folosirea filtrelor de căutare găsiți la pagina <a href="http://www.centos.org/docs/5/html/CDS/ag/8.0/Finding_Directory_Entries-LDAP_Search_Filters.html" class="urlextern" title="http://www.centos.org/docs/5/html/CDS/ag/8.0/Finding_Directory_Entries-LDAP_Search_Filters.html"  rel="nofollow">http://www.centos.org/docs/5/html/CDS/ag/8.0/Finding_Directory_Entries-LDAP_Search_Filters.html</a>.
+</p>
+
+<p>
+Este recomandat să puneți expresiile de filtrare între apostroafe sau ghilimele ca să preveniți interpretarea caracterelor speciale de shell.
+
+</div></p>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../01.html" class="wikilink1" title="saisp:labs:01">Laboratorul 1</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:01:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:01:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_111635406858356778065b4" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="saisp:labs:01:contents:01">01. [10p] Folosire client LDAP pentru interogare</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="saisp:labs:01:contents:02">02. [10p] Conectare securizată la serviciu de LDAP</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="03.html" class="wikilink1" title="saisp:labs:01:contents:03">03. [15p] Căutare în baza de date LDAP</a></span></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="saisp:labs:01:contents:04">04. [15p] Folosire programatică client de LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="saisp:labs:01:contents:05">05. [15p] Adăugare intrări în baza de date LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="saisp:labs:01:contents:06">06. [20p] Adăugare conturi de utilizatori în baza de date LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="saisp:labs:01:contents:07">07. [15p] Configurare suport de LDAP în DokuWiki</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="saisp:labs:01:contents:08">08. [BONUS - 10p] Configurare suport de LDAP în MediaWiki</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:01:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="03.html#p_cautare_in_baza_de_date_ldap">03. [15p] Căutare în baza de date LDAP</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="03.html#informatii_din_subarbori">Informații din subarbori</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#extragere_de_atribute">Extragere de atribute</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#filtrare_dupa_atribute">Filtrare după atribute</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#exercitii_de_cautare">Exerciții de căutare</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/01/contents/03.txt · Last modified: 2014/02/18 11:43 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="03%3Fdo=media&amp;ns=saisp%253Alabs%253A01%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="03.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A01%253Acontents%253A03&amp;1479894904" width="2" height="1" alt="" /></div>
+</body>
+</html>

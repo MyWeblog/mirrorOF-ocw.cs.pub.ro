@@ -1,0 +1,148 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:01:contents:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-18T13:56:21+0200"/>
+<meta name="keywords" content="saisp,labs,01,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:01:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/01/contents/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:01:contents';var JSINFO = {"id":"saisp:labs:01:contents:05","namespace":"saisp:labs:01:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_adaugare_intrari_in_baza_de_date_ldap">05. [15p] Adăugare intrări în baza de date LDAP</h3>
+<div class="level3">
+
+<p>
+Vrem să populăm baza de date LDAP cu intrări. Pentru aceasta trebuie redactate fișiere de configurare în format LDIF care să fie apoi adăuagate în baza de date LDAP.
+</p>
+
+<p>
+Fișierele de configurare se găsesc în format LDIF pe stația client în directorul <code>/etc/ldap/ldif/</code>:
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># ls</span>
+o-protoss.ldif    ou-khalai.ldif   uid-amengsk.ldif  uid-zeratul.ldif
+o-terran.ldif     ou-nerazim.ldif  uid-artanis.ldif
+ou-dominion.ldif  ou-raiders.ldif  uid-raynor.ldif</pre>
+
+<p>
+Pentru a adăuga intrări în baza de date LDAP folosim comanda <code>ldapadd</code>. Trebuie să precizăm care este <code>dn</code>-ul contului de administrator (parola este <code>student</code>):
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># ldapadd -x -D cn=admin,dc=labs,dc=cs,dc=pub,dc=ro -W -f o-terran.ldif </span>
+Enter LDAP Password: 
+adding new entry <span class="st0">&quot;o=Terran,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span>
+&nbsp;
+root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># ldapadd -x -D cn=admin,dc=labs,dc=cs,dc=pub,dc=ro -W -f ou-dominion.ldif </span>
+Enter LDAP Password: 
+adding new entry <span class="st0">&quot;ou=Dominion,o=Terran,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span>
+&nbsp;
+root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># ldapadd -x -D cn=admin,dc=labs,dc=cs,dc=pub,dc=ro -W -f ou-raiders.ldif </span>
+Enter LDAP Password: 
+adding new entry <span class="st0">&quot;ou=Raiders,o=Terran,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span>
+&nbsp;
+root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># ldapadd -x -D cn=admin,dc=labs,dc=cs,dc=pub,dc=ro -W -f uid-raynor.ldif </span>
+Enter LDAP Password: 
+adding new entry <span class="st0">&quot;uid=raynor,ou=Raiders,o=Terran,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span>
+&nbsp;
+root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># ldapadd -x -D cn=admin,dc=labs,dc=cs,dc=pub,dc=ro -W -f uid-amengsk.ldif </span>
+Enter LDAP Password: 
+adding new entry <span class="st0">&quot;uid=amengsk,ou=Dominion,o=Terran,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span></pre>
+
+<p>
+Opțiunea <code>-D</code> precizează <code>dn</code>-ul utilizatorului privilegiat. Opțiunea <code>-f</code> precizează fișierul format LDIF care va fi adăugat. Iar opțiunea <code>-W</code> precizează că se va introduce parola de la intrarea standard.
+</p>
+
+<p>
+Intrările adăugate se găsesc acum în baza de date LDAP:
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># ldapsearch -x -LLL dn</span>
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">o</span>=Protoss,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">ou</span>=Dominion,<span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">ou</span>=Raiders,<span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">uid</span>=raynor,<span class="re2">ou</span>=Raiders,<span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">uid</span>=amengsk,<span class="re2">ou</span>=Dominion,<span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro</pre>
+
+<p>
+Adăugați și celelate intrări din fișierele LDIF din directorul <code>/etc/ldap/ldif/</code>. Există lipsuri în anumite fișiere pe care trebuie să le rezolvați.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Acolo unde vă solicită un câmp completați cu o valoare potrivită.
+
+</div></p>
+</p>
+
+<p>
+Creați două noi fișiere:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>uid-vmengsk.ldif</code> conține informații despre <code>Valerian Mengsk</code> (Dominion).</div>
+</li>
+<li class="level1"><div class="li"> <code>uid-horner.ldif</code> conține informații despre <code>Matt Horner</code> (Raiders).</div>
+</li>
+</ul>
+
+<p>
+Adăugați aceste fișiere la baza de date LDAP.
+</p>
+
+<p>
+<p><div class="notetip">
+Se recomandă să porniți de la fișiere existente și să le modificați pe acelea. Puteți porni de la fișierele <code>uid-amengsk.ldif</code> și <code>uid-raynor.ldif</code>.
+
+</div></p>
+</p>
+
+<p>
+În final listați conținutul bazei de date.
+</p>
+
+</div>
+</div>
+</body>
+</html>

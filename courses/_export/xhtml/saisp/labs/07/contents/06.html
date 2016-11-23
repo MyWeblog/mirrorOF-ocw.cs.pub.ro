@@ -1,0 +1,115 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:07:contents:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-18T16:54:40+0300"/>
+<meta name="keywords" content="saisp,labs,07,contents,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:07:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/07/contents/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:07:contents';var JSINFO = {"id":"saisp:labs:07:contents:06","namespace":"saisp:labs:07:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_networking">06. [25p] Networking</h3>
+<div class="level3">
+
+<p>
+In mod implicit, un container are doar o interfata de loopback. Daca dorim sa il conectam cu “exteriorul”, trebuie sa ii adaugam o interfata Ethernet.
+</p>
+
+<p>
+Vom adauga urmatoarele linii in fisierul de configurare al containerului <code>ct1</code>:
+</p>
+<pre class="code bash">lxc.network.type = veth           <span class="co0"># Virtual ethernet - virtualizare la nivel 2</span>
+lxc.network.flags = up            <span class="co0"># Interfata va fi &quot;up&quot;</span>
+lxc.network.link = br0            <span class="co0"># Containerul va fi legat intr-un &quot;bridge&quot; din masina gazda.</span>
+lxc.network.name = eth0           <span class="co0"># Numele interfetei &quot;vazut&quot; in container.</span>
+lxc.network.veth.pair = veth0-ct1 <span class="co0"># Numele interfetei &quot;vazut&quot; pe masina fizica.</span></pre>
+
+<p>
+<p><div class="notewarning">Nu adaugati si comentariile de la sfarsitul liniilor, deoarece nu sunt permise de sintaxa lxc.
+</div></p>
+</p>
+
+<p>
+Analog, editati fisierul de configurare al containerului <code>ct2</code>. Pentru atributul <code>lxc.network.veth.pair</code> specificati valoarea <code><strong>veth0-ct2</strong></code>.
+</p>
+
+<p>
+In prealabil, bridge-ul <strong>br0</strong> trebuie creat pe masina gazda, folosind comanda <strong>brctl</strong>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>brctl addbr br0
+<span class="co4">root@saisp-vm-1:~# </span><span class="kw2">ifconfig</span> br0 up</pre>
+
+<p>
+Porniti cele doua containere in <strong>background</strong>, apoi verificati ca intefetele virtuale au fost adaugate in bridge:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>brctl show
+bridge name     bridge <span class="kw2">id</span>               STP enabled     interfaces
+br0             <span class="nu0">8000</span>.fe6d63702103       no              veth0-ct1
+                                                        veth0-ct2</pre>
+
+<p>
+Alocati adrese IP din spatiul <code>192.168.1.0/24</code> pentru:
+</p>
+<ul>
+<li class="level1"><div class="li"> interfata <code><strong>br0</strong></code> de pe masina gazda</div>
+</li>
+<li class="level1"><div class="li"> interfata <code><strong>eth0</strong></code> de pe containerul <code><strong>ct1</strong></code></div>
+</li>
+<li class="level1"><div class="li"> interfata <code><strong>eth0</strong></code> de pe containerul <code><strong>ct2</strong></code></div>
+</li>
+</ul>
+
+<p>
+Apoi, testati conectivitatea prin <code>ping</code> de pe masina gazda catre cele 2 containere.
+</p>
+
+<p>
+Pentru a avea conectivitate din containere catre Internet, trebuie sa configuram NAT si sa activam rutarea pe masina gazda:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-o</span> eth0 <span class="re5">-j</span> MASQUERADE
+<span class="co4">root@saisp-vm-1:~# </span><span class="kw3">echo</span> <span class="nu0">1</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>proc<span class="sy0">/</span>sys<span class="sy0">/</span>net<span class="sy0">/</span>ipv4<span class="sy0">/</span>ip_forward </pre>
+
+<p>
+Apoi, pe cele doua containere adaugati ruta default si testati conectivitatea.
+</p>
+
+</div>
+</div>
+</body>
+</html>

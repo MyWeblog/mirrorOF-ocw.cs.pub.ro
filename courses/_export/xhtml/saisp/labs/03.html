@@ -1,0 +1,1013 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:03</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-28T16:23:22+0300"/>
+<meta name="keywords" content="saisp,labs,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="03.html"/>
+<link rel="canonical" href="../../../../saisp/labs/03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs';var JSINFO = {"id":"saisp:labs:03","namespace":"saisp:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="laborator_3_monitorizarea_retelei">Laborator 3. Monitorizarea rețelei</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 3. Monitorizarea rețelei" [12-62] -->
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Colectare mesaje de logging centralizat</div>
+</li>
+<li class="level1"><div class="li"> Configurarea server SNMP (v2c și v3) pe platformele CISCO și Linux</div>
+</li>
+<li class="level1"><div class="li"> Interogări SNMP</div>
+</li>
+<li class="level1"><div class="li"> Crearea și popularea bazelor de date RRD</div>
+</li>
+<li class="level1"><div class="li"> Instalarea și monitorizarea unor aplicații de monitorizare integrate (NAGIOS și CACTI)</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cunoștințe și abilități ce vor fi dobândite" [63-406] -->
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+În cadrul acestui laborator vom folosi următoarea topologie formată din două rutere CISCO (<code>R1</code> și <code>R2</code>) și două mașini virtuale (<code>gateway</code> și <code>monitor</code>). Acestea sunt conectate conform schemei de mai jos:<a href="../../../../_detail/saisp/labs/03/saisp_lab3.png%3Fid=saisp%253Alabs%253A03.html" class="media" title="saisp:labs:03:saisp_lab3.png"><img src="../../../../_media/saisp/labs/03/saisp_lab3.png%3Fw=700&amp;tok=74475a" class="media" alt="" width="700" /></a>
+</p>
+
+<p>
+Vom rula o masină virtuală în <a href="http://cloud.curs.pub.ro" class="urlextern" title="http://cloud.curs.pub.ro"  rel="nofollow"> cloud-ul facultății</a>. Pentru a porni o astfel de masină urmăriți tutorialul de la <a href="https://cloud.curs.pub.ro/about/tutorial-for-students/" class="urlextern" title="https://cloud.curs.pub.ro/about/tutorial-for-students/"  rel="nofollow"> această adresă</a>. Când creați instanța de mașină virtuală (în fereastra “Launch instance”):
+</p>
+<ul>
+<li class="level1"><div class="li"> La opțiunea <code>Availability zone</code> să alegeți <code>CI</code> sau <code>hp</code>.</div>
+</li>
+<li class="level3"><div class="li"> La opțiunea <code>Instance Boot Source</code> să alegeți <code>Boot from Image</code>.</div>
+</li>
+<li class="level3"><div class="li"> La opțiunea <code>Image Name</code> (apărută după ce efectuați pasul de mai sus) să alegeți imaginea <code>SAISP Template v1</code>.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning">Pentru <code>Size</code> alegeti <code>m1.medium</code> sau <code>c1.medium</code>
+</div></p>
+</p>
+
+<p>
+Pentru a pregăti configurația de laborator, pe mașina virtuală folosiți comenzile următoare din contul utilizatorului <code>student</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"> <pre class="code -bash">student@mjolnir:~/saisp$ cd saisp/
+student@mjolnir:~/saisp$ wget --user=user-curs --ask-password http://repository.grid.pub.ro/cs/saisp/laboratoare/lab-03.zip
+student@mjolnir:~/saisp$ unzip lab-03.zip</pre>
+</div>
+</li>
+</ul>
+
+<p>
+În urma dezarhivării rezultă două fișiere imagine KVM (format <code>qcow2</code>, <code>monitor.qcow2</code> și <code>gateway.qcow2</code>), directorul <code>cisco/</code> și un script de pornire a topologiei (<code>lab03-start</code>). Imaginea de bază <code>base.qcow2</code> este deja în directorul <code>saisp/</code> și este baza pentru celelalte două fișiere: <code>gateway.qcow2</code> și <code>monitor.qcow2</code>.
+</p>
+
+<p>
+Pentru pornirea topologiei de mai sus, rulați scriptul <code>lab03-start</code>:
+</p>
+<pre class="code">student@mjolnir:~/saisp$ ./lab03-start</pre>
+
+<p>
+Pentru accesarea celor două mașini (<code>gateway</code> și <code>monitor</code>) folosiți SSH către adresele IP aferente fiecăreia. Pentru conectarea la mașina virtuală pentru <code>gateway</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.1.3</pre>
+
+<p>
+iar pentru conectarea la <code>monitor</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.1.4</pre>
+
+<p>
+Pentru accesarea celor două rutere CISCO (<code>R1</code> și <code>R2</code>) folosiți <code>telnet</code> către adresele IP aferente fiecăruia. Pentru conectarea la ruterul <code>R1</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span>telnet 192.168.1.1</pre>
+
+<p>
+iar pentru conectarea la <code>R2</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span>telnet 192.168.1.2</pre>
+
+<p>
+Parola pe cele două mașini virtuale este <code>student</code> atât pentru utilizatorul <code>root</code> cât și pentru utilizatorul <code>student</code>. Pentru cele două rutere parola de <code>enable</code> este <code>student</code>.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Detalii rulare masina virtuala KVM local
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Detalii rulare masina virtuala KVM local
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Pentru a pregăti configurația de laborator va trebui să descărcați pe mașina fizică (mjolnir), în directorul saisp/, arhiva laboratorului (<code>base.qcow2</code> există deja):
+</p>
+<pre class="code -bash">student@mjolnir:~/saisp$ wget --user=user-curs --ask-password http://repository.grid.pub.ro/cs/saisp/laboratoare/base.qcow2
+student@mjolnir:~/saisp$ wget --user=user-curs --ask-password http://repository.grid.pub.ro/cs/saisp/laboratoare/lab-03.zip
+student@mjolnir:~/saisp$ unzip lab-03.zip</pre>
+
+<p>
+Puteți urma pașii de mai sus pentru a descărca infrastructura KVM pentru laborator pentru lucru acasă.
+</p>
+</div></div>
+</div>
+<!-- EDIT3 SECTION "Pregătire infrastructură de laborator" [407-3843] -->
+<h2 class="sectionedit4" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/03.html" class="wikilink1" title="saisp:labs:03">Laboratorul 3</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "saisp:labs:03:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_188348425658356788e623a" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/01.html" class="wikilink1" title="saisp:labs:03:contents:01">01. [10p] Sincronizare ceasuri echipamente monitorizate</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/02.html" class="wikilink1" title="saisp:labs:03:contents:02">02. [10p] Remote logging</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/03.html" class="wikilink1" title="saisp:labs:03:contents:03">03. [15p] Configurare server SNMP pe echipamente CISCO</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/04.html" class="wikilink1" title="saisp:labs:03:contents:04">04. [15p] SNMP server pe Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/05.html" class="wikilink1" title="saisp:labs:03:contents:05">05. [20p] Baze de date Round Robin (RRD)</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/06.html" class="wikilink1" title="saisp:labs:03:contents:06">06. [15p] Nagios</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/07.html" class="wikilink1" title="saisp:labs:03:contents:07">07. [15p] NRPE (Nagios Remote Plugin Executor)</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/08.html" class="wikilink1" title="saisp:labs:03:contents:08">08. [BONUS - 20p] CACTI</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 PLUGIN_INCLUDE_END "saisp:labs:03:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Navigare" [3844-3958] -->
+<h2 class="sectionedit7" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 PLUGIN_INCLUDE_START "saisp:labs:03:contents:01" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:01">
+
+<h3 class="sectionedit10" id="p_sincronizare_ceasuri_echipamente_monitorizate">01. [10p] Sincronizare ceasuri echipamente monitorizate</h3>
+<div class="level3">
+
+<p>
+Înainte de a implementa o soluție de monitorizare centralizată, trebuie să ne asigurăm că <strong>ceasurile</strong> tuturor sistemelor din rețea sunt sincronizate. În caz contrar, evenimentele monitorizate nu vor putea fi corelate.
+</p>
+
+<p>
+Protocolul care realizeaza acest lucru este <code>NTP</code> (Network Time Protocol). De obicei, o stație are rolul de server NTP, iar echipamentele sunt clienți NTP. În topologia prezentată anterior stația <code>monitor</code> va avea rol de server de NTP, iar ruterele <code>R1</code> și <code>R2</code> și stația <code>gateway</code> vor avea rolul de clienți.
+</p>
+
+<p>
+În sistemele Debian-base, pachetul <code>ntp</code> conține atât serverul, cât și clientul de NTP. Funcționalitatea implicită este următoarea:
+</p>
+<ul>
+<li class="level1"><div class="li"> clientul obtine ceasul de la niște servere predefinite;</div>
+</li>
+<li class="level1"><div class="li"> serverul acceptă interogari de la alți clienți pe portul <code>UDP 123</code>.</div>
+</li>
+</ul>
+
+<p>
+Pe ambele stații Linux vom instala pachetul <code>ntp</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">apt-get install</span> ntp
+&nbsp;
+<span class="co4">root@gateway:~# </span><span class="kw2">apt-get install</span> ntp</pre>
+
+<p>
+Pe <code>gateway</code> configurăm serviciul NTP să foloseasca stația <code>monitor</code> ca server de NTP. În fișierul <code>/etc/ntp.conf</code> comentăm toate liniile de încep cu <code>server</code> și adăugăm linia <code>server 192.168.1.4</code>. Resetați serviciul <code>ntp</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ntp.conf <span class="sy0">|</span><span class="kw2">grep</span> <span class="nu0">192.168</span>
+server 192.168.1.4 iburst
+<span class="co4">root@gateway:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>ntp restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Stopping NTP server: ntpd.
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Starting NTP server: ntpd.</pre>
+
+<p>
+Pentru a lista toate serverele NTP folosite, vom utiliza comanda <code>ntpq</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>ntpq <span class="re5">-p</span>
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+<span class="sy0">*</span>192.168.1.4     89.36.18.21      <span class="nu0">3</span> u   <span class="nu0">50</span>   <span class="nu0">64</span>    <span class="nu0">1</span>    <span class="nu0">0.373</span>    <span class="nu0">5.896</span>   <span class="nu0">0.081</span></pre>
+
+<p>
+Pentru a configura ruterul <code>R1</code> să aibă rol de client NTP, vom specifica adresa serverului în modul global de configurare:
+</p>
+<pre class="code">R1&gt;enable
+Password:
+R1#conf t
+R1(config)# ntp server 192.168.1.4</pre>
+
+<p>
+Verificarea funcționării protocolului se realizează prin comenzi de tip <code>show</code>:
+</p>
+<pre class="code">R1#show clock
+.12:57:55.421 UTC Sun Mar 9 2014</pre>
+<pre class="code">R1#show ntp status
+Clock is synchronized, stratum 3, reference is 192.168.1.4
+nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**18
+reference time is D6C6EF40.C43D8165 (13:46:40.766 UTC Sun Mar 9 2014)
+clock offset is 14.9852 msec, root delay is 20.75 msec
+root dispersion is 642.38 msec, peer dispersion is 414.18 msec</pre>
+<pre class="code">R1#show ntp associations
+      address         ref clock     st  when  poll reach  delay  offset    disp
+*~192.168.1.4      80.96.120.253     2    11   128  137    12.1   14.99   414.2
+ * master (synced), # master (unsynced), + selected, - candidate, ~ configured</pre>
+
+<p>
+Configurați pe ruterul <code>R2</code> ca server de NTP stația <code>monitor</code>.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "01. [10p] Sincronizare ceasuri echipamente monitorizate" [1-] --><!-- EDIT9 PLUGIN_INCLUDE_END "saisp:labs:03:contents:01" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT11 PLUGIN_INCLUDE_START "saisp:labs:03:contents:02" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:02">
+
+<h3 class="sectionedit13" id="p_remote_logging">02. [10p] Remote logging</h3>
+<div class="level3">
+
+<p>
+O soluție simplă pentru monitorizarea centralizată o reprezintă jurnalizarea la distanță (remote). Toate echipamentele din rețea vor trimite mesajele de jurnalizare (logging) către un server central.
+</p>
+
+<p>
+În Linux, daemon-ul ce asigură jurnalizarea este <code>rsyslogd</code>. Acesta este deja instalat pe majoritatea sistemelor Linux.
+În mod implicit, <code>rsyslogd</code> nu acceptă conexiuni din exterior. Pentru a activa această opțiune, trebuie editat fișierul de configurare <code>/etc/rsyslog.conf</code> și decomentate liniile ce activează recepționarea de mesaje UDP sau TCP.
+</p>
+
+<p>
+Vom realiza acest lucru pe statia <code>monitor</code>:
+</p>
+<pre class="code bash"><span class="co0"># provides UDP syslog reception</span>
+<span class="re1">$ModLoad</span> imudp
+<span class="re1">$UDPServerRun</span> <span class="nu0">514</span>
+&nbsp;
+<span class="co0"># provides TCP syslog reception</span>
+<span class="re1">$ModLoad</span> imtcp
+<span class="re1">$InputTCPServerRun</span> <span class="nu0">514</span></pre>
+
+<p>
+După ce am decomentat liniile trebuie să resetăm serviciul <code>rsyslog</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>rsyslog restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Stopping enhanced syslogd: rsyslogd.
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Starting enhanced syslogd: rsyslogd.</pre>
+
+<p>
+Pentru ca un router Cisco sa trimită mesaje de jurnalizare (logging) către un server extern, adresa acestui server trebuie configurată în modul global. În cazul nostru, vom configura adresa IP a stației <code>monitor</code> pe ruterul <code>R1</code>:
+</p>
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># logging 192.168.1.4</span></pre>
+
+<p>
+De asemenea, se poate specifica și nivelul de logging. Vor fi trimise doar mesajele cu un nivel cel puțin la fel de <em>grav</em> ca nivelul specificat:
+</p>
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># logging trap debugging</span></pre>
+
+<p>
+Pentru a verifica funcționalitatea, activați debugging-ul protocolului ICMP pe ruterul <code>R1</code> și executați comanda <code>ping</code>:
+</p>
+<pre class="code">R1#debug ip  icmp
+ICMP packet debugging is on
+R1#ping google.ro
+
+Translating &quot;google.ro&quot;...domain server (8.8.8.8) [OK]
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 173.194.70.94, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 40/40/40 ms</pre>
+
+<p>
+După cum se observă nu a apărut în consola ruterului nici un mesaj de debug. Vom verifica fișierul <code>/var/log/syslog</code> de pe stația <code>monitor</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>syslog
+Mar  <span class="nu0">9</span> <span class="nu0">15</span>:<span class="nu0">56</span>:<span class="nu0">57</span> 192.168.1.1 <span class="nu0">19</span>: Mar  <span class="nu0">9</span> <span class="nu0">13</span>:<span class="nu0">56</span>:<span class="nu0">56.524</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 173.194.70.94, dst 192.168.1.1
+Mar  <span class="nu0">9</span> <span class="nu0">15</span>:<span class="nu0">56</span>:<span class="nu0">57</span> 192.168.1.1 <span class="nu0">20</span>: Mar  <span class="nu0">9</span> <span class="nu0">13</span>:<span class="nu0">56</span>:<span class="nu0">56.564</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 173.194.70.94, dst 192.168.1.1
+Mar  <span class="nu0">9</span> <span class="nu0">15</span>:<span class="nu0">56</span>:<span class="nu0">57</span> 192.168.1.1 <span class="nu0">21</span>: Mar  <span class="nu0">9</span> <span class="nu0">13</span>:<span class="nu0">56</span>:<span class="nu0">56.608</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 173.194.70.94, dst 192.168.1.1</pre>
+
+<p>
+Opriți debugging-ul protocolului ICMP:
+</p>
+<pre class="code bash"><span class="co4">R1#</span>no debug <span class="kw2">ip</span> icmp
+ICMP packet debugging is off</pre>
+
+<p>
+Configurați pe ruterul R2 jurnalizarea remote și testați funcționalitatea:
+</p>
+
+<p>
+Soluția prezentată până acum are dezavantajul că toate mesajele sunt stocate în același fișier. Dacă dorim ca mesajele de la un anumit ruter să fie stocate într-un fișier separat, vom folosi opțiunea <code>facility</code> ce ne permite clasificarea mesajelor de logging. Pe ruter R1 se configurează <code>logging facility</code> diferit:
+</p>
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># logging facility local1</span></pre>
+
+<p>
+Pe statia <code>monitor</code>, în <code>/etc/rsyslog.conf</code> vom specifica un fișier destinație pentru tipul de logging <code>local1</code>, după care vom reseta serviciul:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>rsyslog.conf <span class="sy0">|</span><span class="kw2">grep</span> <span class="re5">-B</span> <span class="nu0">2</span> R1
+<span class="co0">#### RULES ####</span>
+<span class="co0">###############</span>
+local1.<span class="sy0">*</span>                        <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>R1.log
+<span class="co4">root@monitor:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>rsyslog restart</pre>
+
+<p>
+<p><div class="noteclassic">
+Tipurile de logging (<code>local1</code>) sunt predefinite și NU pot fi înlocuite cu orice șir de caracter. Caracterul <code>.</code> plasat după tipul de logging (<code>local1</code>) este urmat nivelul de logging pentru care se va face scrierea în fișier. În acest caz caracterul <code>*</code> semnifică orice nivel de logging al mesajelor.
+
+</div></p>
+</p>
+
+<p>
+Pentru testare:
+</p>
+<pre class="code bash"><span class="co4">R1#</span>debug <span class="kw2">ip</span> icmp
+ICMP packet debugging is on
+<span class="co4">R1#</span><span class="kw2">ping</span> acs.pub.ro
+&nbsp;
+Translating <span class="st0">&quot;acs.pub.ro&quot;</span>...domain server <span class="br0">&#40;</span>8.8.8.8<span class="br0">&#41;</span> <span class="br0">&#91;</span>OK<span class="br0">&#93;</span>
+&nbsp;
+Type escape sequence to abort.
+Sending <span class="nu0">5</span>, <span class="nu0">100</span>-byte ICMP Echos to 141.85.227.151, timeout is <span class="nu0">2</span> seconds:
+<span class="sy0">!!!!!</span>
+Success rate is <span class="nu0">100</span> percent <span class="br0">&#40;</span><span class="nu0">5</span><span class="sy0">/</span><span class="nu0">5</span><span class="br0">&#41;</span>, round-trip min<span class="sy0">/</span>avg<span class="sy0">/</span>max = <span class="nu0">4</span><span class="sy0">/</span><span class="nu0">20</span><span class="sy0">/</span><span class="nu0">32</span> ms
+&nbsp;
+<span class="co4">root@monitor:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>R1.log
+Mar  <span class="nu0">9</span> <span class="nu0">16</span>:<span class="nu0">11</span>:<span class="nu0">16</span> 192.168.1.1 <span class="nu0">45</span>: Mar  <span class="nu0">9</span> <span class="nu0">14</span>:<span class="nu0">11</span>:<span class="nu0">15.651</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 141.85.227.151, dst 192.168.1.1
+Mar  <span class="nu0">9</span> <span class="nu0">16</span>:<span class="nu0">11</span>:<span class="nu0">16</span> 192.168.1.1 <span class="nu0">46</span>: Mar  <span class="nu0">9</span> <span class="nu0">14</span>:<span class="nu0">11</span>:<span class="nu0">15.655</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 141.85.227.151, dst 192.168.1.1
+Mar  <span class="nu0">9</span> <span class="nu0">16</span>:<span class="nu0">11</span>:<span class="nu0">16</span> 192.168.1.1 <span class="nu0">47</span>: Mar  <span class="nu0">9</span> <span class="nu0">14</span>:<span class="nu0">11</span>:<span class="nu0">15.687</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 141.85.227.151, dst 192.168.1.1</pre>
+
+<p>
+Configurați un fișier separat de logging și pentru ruterul <code>R2</code>.
+</p>
+
+</div>
+<!-- EDIT13 SECTION "02. [10p] Remote logging" [1-] --><!-- EDIT12 PLUGIN_INCLUDE_END "saisp:labs:03:contents:02" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT14 PLUGIN_INCLUDE_START "saisp:labs:03:contents:03" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:03">
+
+<h3 class="sectionedit16" id="p_configurare_server_snmp_pe_echipamente_cisco">03. [15p] Configurare server SNMP pe echipamente CISCO</h3>
+<div class="level3">
+
+<p>
+Folosind soluția de jurnalizare remote, în cazul în care dorim să monitorizăm lucruri diferite, trebuie sa realizăm configurații diferite pe fiecare stație monitorizata, fiind o soluție <em>one-way</em> (client către server).
+</p>
+
+<p>
+O alternativa este activarea serviciului de SNMP (<em>Simple Network Management Protocol</em>) pe fiecare dispozitiv monitorizat. SNMP este implementat în majoritatea echipamentelor de rețea și expune informații despre toate subsistemele unui dispozitiv (utilizare procesor, memorie, număr de interfețe, număr de pachete pe fiecare interfață, etc.). Interogarea fiecarui dispozitiv se va face centralizat de către stația de management, în cazul nostru stația <code>monitor</code>.
+</p>
+
+<p>
+Protocolul SNMP a evoluat trecând prin mai multe versiuni. Cele mai folosite în ziua de astăzi sunt versiunile <code>2c</code> și <code>3</code>.
+</p>
+
+<p>
+Versiunea <code>2c</code> nu dispune de criptarea datelor (trimite parola în clar) și este folosită în general în rețelele interne cu circuit închis. ce poartă adesea numele de rețea de management. Implementarea se realizeaza printr-un VLAN de management, unde numai echipamentele și stația de monitorizare au acces (nu există trafic de date public).
+</p>
+
+<p>
+Versiunea <code>3</code> dispune de autentificare pe bază de utilizator și parolă și asigură criptarea datelor. Este folosită în general peste rețelele publice.
+</p>
+
+<p>
+În continuare vom configura versiunea <code>2c</code> a protocolului. Pentru a funcționa, versiunea <code>2c</code> are nevoie de un <code>community string</code> - un șir de caractere ce este partajat între server și client (acea parolă care se trimite în clar).
+</p>
+
+<p>
+Pe un router Cisco, <code>community string</code>-ul se definește din modul global de configurare (în cazul nostru, parola va fi <code>public</code>):
+</p>
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#snmp-server community public ro</span></pre>
+
+<p>
+Cuvântul cheie <code>ro</code> ce apare după community-ul <code>public</code> specifică faptul că folosind acest community se pot realiza doar operații <em>read-only</em>. Pentru securitate crescută, în general vom păstra atributul <code>ro</code> dacă vom face doar monitorizare.
+</p>
+
+<p>
+Pentru a testa funcționalitatea vom folosi utilitarul <code>snmpwalk</code> de pe stația monitor. Acesta întoarce toate proprietățile pe care protocolul SNMP le expune pe un echipament:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.1
+iso.3.6.1.2.1.1.1.0 = STRING: <span class="st0">&quot;Cisco IOS Software, 3600 Software (C3640-JS-M), Version 12.4(12), RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2006 by Cisco Systems, Inc.
+Compiled Fri 17-Nov-06 13:59 by prod_rel_team&quot;</span>
+iso.3.6.1.2.1.1.2.0 = OID: iso.3.6.1.4.1.9.1.110
+iso.3.6.1.2.1.1.3.0 = Timeticks: <span class="br0">&#40;</span><span class="nu0">1242819</span><span class="br0">&#41;</span> <span class="nu0">3</span>:<span class="nu0">27</span>:<span class="nu0">08.19</span>
+iso.3.6.1.2.1.1.4.0 = <span class="st0">&quot;&quot;</span>
+iso.3.6.1.2.1.1.5.0 = STRING: <span class="st0">&quot;R1&quot;</span>
+iso.3.6.1.2.1.2.2.1.1.1 = INTEGER: <span class="nu0">1</span>
+iso.3.6.1.2.1.2.2.1.1.3 = INTEGER: <span class="nu0">3</span>
+iso.3.6.1.2.1.2.2.1.2.1 = STRING: <span class="st0">&quot;FastEthernet0/0&quot;</span>
+iso.3.6.1.2.1.2.2.1.2.3 = STRING: <span class="st0">&quot;Null0&quot;</span>
+iso.3.6.1.2.1.2.2.1.3.1 = INTEGER: <span class="nu0">6</span>
+iso.3.6.1.2.1.2.2.1.3.3 = INTEGER: <span class="nu0">1</span>
+iso.3.6.1.2.1.2.2.1.4.1 = INTEGER: <span class="nu0">1500</span>
+iso.3.6.1.2.1.2.2.1.4.3 = INTEGER: <span class="nu0">1500</span>
+iso.3.6.1.2.1.2.2.1.5.1 = Gauge32: <span class="nu0">100000000</span>
+iso.3.6.1.2.1.2.2.1.5.3 = Gauge32: <span class="nu0">4294967295</span>
+^Ctrl+C
+&nbsp;
+<span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.1<span class="sy0">|</span><span class="kw2">wc</span> <span class="re5">-l</span>
+<span class="nu0">541</span></pre>
+
+<p>
+După cum se poate observa prin SNMP obținem toate informațiile necesare, de la tipul echipamentului (<code>CISCO</code>), versiunea sistemului de operare (<code>12.4(12)</code>) la numărul de pachete ce au trecut print-o interfață Ethernet. De asemenea se observă un număr relativ mare de proprietăți expuse de SNMP (<code>~540</code>).
+</p>
+
+<p>
+Încercați folosirea versiunilor <code>1</code> și <code>3</code>. Observați că folosirea versiunii 3 eșuează. În mod implicit, la configurarea unei comunități echipamentele CISCO vor folosi versiunea <code>1</code> sau <code>2c</code> a protocolului SNMP.
+</p>
+
+<p>
+Se observă că fiecare intrare are ca și cheie un șir de numere care poartă numele de OID (Object Identifier). În general este greu să lucrăm cu astfel de chei întrucât ele nu au nici o semnificație. Fiecare producător construiește baze de date ce poartă numele de <strong>MIB</strong> (Management Information Base) în care se asociază cuvinte cheie cu semnificație clară (<code>sysUptime</code>) cu câte o înșiruire de numere (OID-uri). Poate fi făcută o paralelă cu serviciul <abbr title="Domain Name System">DNS</abbr> care face legătura între nume de domenii și adrese IP.
+</p>
+
+<p>
+MIB-urile sunt stocate în fișiere pe sistemul ce realizează interogarea SNMP (în cazul de față stația <code>monitor</code>). Pentru a descărca aceste MIB-uri există deverse tool-uri. Noi vom folosi <code>snmp-mibs-downloader</code>:
+</p>
+<pre class="code">root@monitor:~# apt-get install snmp-mibs-downloader</pre>
+
+<p>
+O dată instalat, acest va descărca automat toate MIB-urile și le va plasa în <code>/var/lib/mibs</code>. Noi vom folosi MIB-ul cu numele <code>IF-MIB</code> (<code>/var/lib/mibs/ietf/IF-MIB</code>) pentru a realiza interogări legate de interfețe către ruterul <code>R1</code>. Vom lista toate numele interfețelor de pe <code>R1</code>:
+</p>
+<pre class="code">root@monitor:~# snmpwalk -c public -v 2c 192.168.1.1 IF-MIB::ifName
+IF-MIB::ifName.1 = STRING: Fa0/0
+IF-MIB::ifName.3 = STRING: Nu0</pre>
+
+<p>
+Se observă că <code>Fa0/0</code> are numărul instanței <code>1</code>. Acest număr al instanței este cheia prin care putem afișa și alte caracteristici ale interfeței cum ar fi tipul interfeței:
+</p>
+<pre class="code">root@monitor:~# snmpwalk -c public -v 2c 192.168.1.1 IF-MIB::ifType
+IF-MIB::ifType.1 = INTEGER: ethernetCsmacd(6)
+IF-MIB::ifType.3 = INTEGER: other(1)</pre>
+
+<p>
+Se observă că instanța <code>1</code> e de tip <code>ethernetCsmacd</code>. Asocierea cu <code>Fa0/0</code> se face prin numărul instanței.
+</p>
+
+<p>
+Afișați viteza interfeței <code>Fa0/0</code>, șirul de caractere descriptiv, numărul de octeți trimiși și primiți și dacă au existat erori pe interfață (Hint: inspectați fișierul <code>/var/lib/mibs/ietf/IF-MIB</code> pentru a afla numele proprietăților de afișat).
+</p>
+
+<p>
+Utilitarul <code>snmpwalk</code> întoarce toate înstanțele găsite pentru o anumită proprietate. Dacă se știe în mod particular numele proprietății și numărul unei instanțe se poate folosi <code>snmpget</code> pentru a găsi valoarea asociată (într-un script vom folosi <code>snmpget</code> în general):
+</p>
+<pre class="code">root@monitor:~# snmpget -c public -v 2c 192.168.1.1 IF-MIB::ifName.1
+IF-MIB::ifName.1 = STRING: Fa0/0</pre>
+
+</div>
+
+<h4 id="snmpv3">SNMPv3</h4>
+<div class="level4">
+
+<p>
+Pentru ruterul R2 dorim configurarea SNMP versiunea 3. Pentru acest lucru vom crea un grup <code>SAISP</code> pe care să permitem doar interogările pentru versiunea 3:
+</p>
+<pre class="code">R2(config)#snmp-server group SAISP v3 ?
+  auth    group using the authNoPriv Security Level
+  noauth  group using the noAuthNoPriv Security Level
+R2(config)#snmp-server group SAISP v3 auth</pre>
+
+<p>
+Avem opțiunea <code>auth</code> care ne permite autentificarea. <code>NoPriv</code> se referă la faptul că datele efective nu vor fi criptate (această imagine de IOS nu suportă modul de criptare al datelor transmise de SNMP).
+</p>
+
+<p>
+După acest pas trebuie să configurăm un utilizator și o parolă pentru accesul la informațiile SNMP:
+</p>
+<pre class="code bash">R2<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#snmp-server user student SAISP v3 auth md5 student1</span></pre>
+
+<p>
+<code>student</code> se referă la numele utilizatorului creat, <code>SAISP</code> este grupul configurat mai sus, iar <code>student1</code> este parola pentru acest utilizator (trebuie să fie de minim 8 caractere).
+</p>
+
+<p>
+De pe stația <code>monitor</code> vom realiza o interogarea folosind versiunea 3:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span>snmpget <span class="re5">-v</span> <span class="nu0">3</span> <span class="re5">-l</span> AuthNoPriv <span class="re5">-u</span> student <span class="re5">-a</span> md5 <span class="re5">-A</span> student1 192.168.1.2 IF-MIB::ifName.1
+IF-MIB::ifName.1 = STRING: Fa0<span class="sy0">/</span><span class="nu0">0</span></pre>
+
+<p>
+Se observă că am specificat versiunea 3 (<code>-v 3</code>), comunitatea <code>public</code> a dispărut întrucât autentificarea se face pe bază de utilizator (<code>-u student</code>) și parolă (<code>-A student1</code>). Observați că a trebuit să specificăm obligatoriu tipul de comunicație (<code>-l AuthNoPriv</code> - autentificare fără criptate) și modalitatea de criptare a parolei folosită (<code>-a md5</code>). Chiar dacă nu se criptează datele, credențialele NU sunt trimise în clar.
+</p>
+
+<p>
+Dezactivați folosirea versiunii 1 și 2c a protocolului SNMP de pe ruterul R2.
+</p>
+
+</div>
+<!-- EDIT16 SECTION "03. [15p] Configurare server SNMP pe echipamente CISCO" [1-] --><!-- EDIT15 PLUGIN_INCLUDE_END "saisp:labs:03:contents:03" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT17 PLUGIN_INCLUDE_START "saisp:labs:03:contents:04" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:04">
+
+<h3 class="sectionedit19" id="p_snmp_server_pe_linux">04. [15p] SNMP server pe Linux</h3>
+<div class="level3">
+
+<p>
+În exercițiul <a href="../../../../saisp/labs/03/contents/03.html" class="wikilink1" title="saisp:labs:03:contents:03">03. [15p] Configurare server SNMP pe echipamente CISCO</a> am configurat serverul de SNMP pe rutere CISCO. După cum am precizat anterior SNMP este implementat în general pe toate echipamentele, inclusiv pe sistemele Linux. 
+</p>
+
+<p>
+Pe statia <code>gateway</code>, vom instala pachetul <code>snmpd</code> care conține serverul de SNMP:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">apt-get install</span> snmpd</pre>
+
+<p>
+În mod implicit acesta ascultă doar pe <code>localhost</code>. Trebuie să modificăm linia <code>agentAddress  udp:127.0.0.1:161</code> în <code>agentAddress  udp:161</code> (pe orice intefață) din fișierul de configurare al <code>snmpd</code> (<code>/etc/snmp/snmpd.conf</code>) și să resetăm daemonul (<code>/etc/init.d/snmpd restart</code>).
+</p>
+
+<p>
+Dorim să realizăm o interogare de pe stația <code>monitor</code> către stația <code>gateway</code> prin care să listăm toate interfețele:
+</p>
+<pre class="code">root@monitor:~# snmpwalk -v2c -c public 192.168.1.3 IF-MIB::ifName
+IF-MIB::ifName = No more variables left in this MIB View (It is past the end of the MIB tree)</pre>
+
+<p>
+Acest comportament e cauzat tot de o configurație a daemonului <code>snmpd</code>. În fișierul de configurare pe linia în care se specifică comunitatea (parola) <code>rocommunity public  default    -V systemonly</code> se observă opțiunea <code>-V systemonly</code> care limitează proprietățile expuse doar la cele legate de starea sistemului (exemplu: uptime-ul), <code>systemonly</code> fiind un subset de OID-uri definit mai sus în fișier.
+</p>
+
+<p>
+Eliminăm acea opțiune, resetăm serviciul <code>snmpd</code> și refacem interogarea:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>snmp<span class="sy0">/</span>snmpd.conf <span class="sy0">|</span><span class="kw2">grep</span> rocomm
+<span class="co0"># rocommunity public  default    -V systemonly</span>
+rocommunity public  default
+<span class="co4">root@gateway:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>snmpd restart
+<span class="br0">&#91;</span>....<span class="br0">&#93;</span> Restarting network management services::  snmpd
+&nbsp;
+<span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.3 IF-MIB::ifName
+IF-MIB::ifName.1 = STRING: lo
+IF-MIB::ifName.2 = STRING: eth0
+IF-MIB::ifName.3 = STRING: eth1</pre>
+
+<p>
+Cuvântul cheie <code>default</code> din linia ce configurează comunitatea <code>public</code> permite oricărei adresă IP să facă interogarea. Dacă dorim securizarea interogării la o clasă de adrese IP (192.168.1.0/24 în cazul nostru) putem înlocui <code>default</code> cu clasa respectivă (<code>192.168.1.0/24</code>):
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>snmp<span class="sy0">/</span>snmpd.conf<span class="sy0">|</span><span class="kw2">grep</span> <span class="nu0">192</span>.
+ rocommunity public  192.168.1.0<span class="sy0">/</span><span class="nu0">24</span>
+<span class="co4">root@gateway:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>snmpd restart
+<span class="br0">&#91;</span>....<span class="br0">&#93;</span> Restarting network management services::  snmpd
+&nbsp;
+<span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.3 IF-MIB::ifName
+IF-MIB::ifName.1 = STRING: lo
+IF-MIB::ifName.2 = STRING: eth0
+IF-MIB::ifName.3 = STRING: eth1
+&nbsp;
+<span class="co4">root@gateway:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.0.3
+Timeout: No Response from 192.168.0.3
+<span class="co4">root@gateway:~# </span><span class="kw2">tail</span> <span class="re5">-1</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>syslog
+Mar  <span class="nu0">9</span> <span class="nu0">19</span>:<span class="nu0">11</span>:<span class="nu0">51</span> gateway snmpd<span class="br0">&#91;</span><span class="nu0">4984</span><span class="br0">&#93;</span>: Connection from UDP: <span class="br0">&#91;</span>192.168.0.3<span class="br0">&#93;</span>:<span class="nu0">55453</span>-<span class="sy0">&gt;</span><span class="br0">&#91;</span>192.168.0.3<span class="br0">&#93;</span>:<span class="nu0">161</span></pre>
+
+<p>
+Se observă că la interogarea folosind adresa IP sursă <code>192.168.0.3</code>, serverul nu mai răspunde (automat se folosește adresa IP sursă <code>192.168.0.3</code> când facem interogarea de pe aceeași mașină către aceeași adresă IP).
+</p>
+
+<p>
+SNMP este un protocol extensibil putând adăuga noi proprietăți care să fie exportate serverelor de management/monitorizare. Putem crea script-uri custom care să preia valori din sistem și să le expună prin SNMP.
+</p>
+
+<p>
+Creați un script pe stația <code>gateway</code> care întoarce numărul de intrări din <code>passwd</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>tmp<span class="sy0">/</span>getUserNo
+<span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="kw3">echo</span> Numarul de utilizatori din sistem este: $<span class="br0">&#40;</span><span class="kw2">getent</span> <span class="kw2">passwd</span> <span class="sy0">|</span> <span class="kw2">wc</span> -l<span class="br0">&#41;</span>
+&nbsp;
+<span class="co4">root@gateway:~# </span><span class="kw2">chmod</span> +x <span class="sy0">/</span>tmp<span class="sy0">/</span>getUserNo
+<span class="co4">root@gateway:~# </span><span class="sy0">/</span>tmp<span class="sy0">/</span>getUserNo
+Numarul de utilizatori din sistem este: <span class="nu0">26</span></pre>
+
+<p>
+Dorim să exportăm rezultatul acestui script prin SNMP pentru ca stația <code>monitor</code> să poată să îl preia. În fișierul <code>/etc/snmp/snmpd.conf</code> avem la dispoziție comanda <code>extend</code> (<code>/extend</code>). Vom adăuga o nouă intrare de tipul <code>extend-sh</code>:
+</p>
+<pre class="code">root@gateway:~# cat /etc/snmp/snmpd.conf |grep getUser
+ extend-sh    userNo   /tmp/getUserNo
+root@gateway:~# /etc/init.d/snmpd restart
+[....] Restarting network management services::  snmpd</pre>
+
+<p>
+Conform comentariilor din <code>snmpd.conf</code> ieșirea scriptului este exportată prin proprietatea <code> NET-SNMP-EXTEND-MIB::nsExtendOutput1Table</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.3 NET-SNMP-EXTEND-MIB::nsExtendOutput1Table<span class="sy0">|</span><span class="kw2">grep</span> userNo
+NET-SNMP-EXTEND-MIB::nsExtendOutput1Line.<span class="st0">&quot;userNo&quot;</span> = STRING: Numarul de utilizatori din sistem este: <span class="nu0">26</span>
+NET-SNMP-EXTEND-MIB::nsExtendOutputFull.<span class="st0">&quot;userNo&quot;</span> = STRING: Numarul de utilizatori din sistem este: <span class="nu0">26</span>
+NET-SNMP-EXTEND-MIB::nsExtendOutNumLines.<span class="st0">&quot;userNo&quot;</span> = INTEGER: <span class="nu0">1</span>
+NET-SNMP-EXTEND-MIB::nsExtendResult.<span class="st0">&quot;userNo&quot;</span> = INTEGER: <span class="nu0">0</span></pre>
+
+<p>
+După cum se vede scriptul este executat, iar output-ul acestuia este trimis prin SNMP. Adăugați un nou user pe stația <code>gateway</code> și executați interogarea de mai sus. Observați modificarea valorii la <code>27</code>.
+</p>
+
+</div>
+<!-- EDIT19 SECTION "04. [15p] SNMP server pe Linux" [1-] --><!-- EDIT18 PLUGIN_INCLUDE_END "saisp:labs:03:contents:04" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT20 PLUGIN_INCLUDE_START "saisp:labs:03:contents:05" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:05">
+
+<h3 class="sectionedit22" id="p_baze_de_date_round_robin_rrd">05. [20p] Baze de date Round Robin (RRD)</h3>
+<div class="level3">
+
+<p>
+Procesul de monitorizare presupune colectarea continuă de date la intervale regulate de timp. În timp, volumul de date crește foarte mult, iar spațiul ocupat de acestea devine o problemă. Luând în calcul și faptul că granularitatea datelor colectate la un moment dat în timp poate să scadă o dată cu trecerea timpului (ex.: nu ne interesează traficul pe o interfață de acum un an la o granularitate de un minut, ci la o oră este rezonabil) a fost proiectat un nou tip de bază de date: <strong>Round Robin Database (RRD)</strong>.
+</p>
+
+<p>
+Dimensiunea acesteia este cunoscuta de la momentul creării, în funcție de numărul de tipuri de date colectate și de granularitatea acestora. După cum îi spune și numele, aceasta stochează datele într-un spațiu finit, iar când acel spațiu alocat este epuizat, datele inițiale se vor suprascrie. Înainte de suprascriere se face o <code>arhivare</code> a datelor suprascrise (de cele mai multe ori se folosește media aritmetică pe intervalul de timp respectiv).
+</p>
+
+<p>
+Utilitarul cu ajutorul căruia vom crea și popula bazele de date se numește <code>rrdtool</code>. Acesta permite 3 operații:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>create</code> (creare bază de date)</div>
+</li>
+<li class="level1"><div class="li"> <code>update</code> (inserare valori bază de date)</div>
+</li>
+<li class="level1"><div class="li"> <code>graph</code> (generează un grafic funcție de timp pe baza valorilor introduse)</div>
+</li>
+</ul>
+
+<p>
+Pe stația monitor instalăm utilitarul <code>rrdtool</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">apt-get install</span> rrdtool</pre>
+
+<p>
+Pentru a crea o bază de date, comanda <code>rrdtool create</code> primește următorii parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> timpul de început/referință</div>
+</li>
+<li class="level1"><div class="li"> pasul cu care datele vor fi introduse în baza de date (la nivel de secundă)</div>
+</li>
+<li class="level1"><div class="li"> variabilele ce vor reține datele efective</div>
+</li>
+<li class="level1"><div class="li"> tipul de arhivare folosit și momentul la care să se facă arhivarea</div>
+</li>
+</ul>
+
+<p>
+Vom crea o bază de date ce are ca timp de început/referință ora curentă a stației <code>monitor</code>. <code>rrdtool</code> are nevoie de această valoare în numărul de secunde trecut de la 1 Ianuarie 1970. Acesta poate fi obținut cu comanda <code>date</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">date</span> +<span class="sy0">%</span>s
+<span class="nu0">1394405025</span></pre>
+
+<p>
+Pasul folosit va fi de 5 secunde (în practică se folosește pasul de 300 de secunde, dar acum dorim să colectăm mai multe date într-un interval scurt de timp pentru a putea genera un grafic relevant):
+</p>
+<pre class="code">root@monitor:~#   rrdtool create target.rrd \
+         --start 1394405025 \
+         --step 5 \
+         DS:speedIn:COUNTER:10:U:U \
+         DS:speedOut:COUNTER:10:U:U \
+         RRA:AVERAGE:0.5:2:60 \
+         RRA:AVERAGE:0.5:60:12</pre>
+
+<p>
+După cum se observă am creat 2 variabile de tipul <code>COUNTER</code> care se numesc <code>speedIn</code> și <code>speedOut</code> (pentru alte tipuri de variabile vezi <a href="../../../../saisp/courses/03.html" class="wikilink1" title="saisp:courses:03">Curs 03 - Monitorizarea rețelei</a>). Valoarea lor maximă este nespecficată (<code>U</code> - undefined). Valoarea <code>10</code> reprezintă numărul de secunde cât așteaptă după date noi, iar dacă este depășit se inserează o valoarea specială <code>UNKNOWN</code> pentru a nu afecta mediile calculate.
+Tipul de arhivare configurat este <code>AVERAGE</code> și o dată la 2 valori, realizează media acestora după care vechile valori vor fi suprascrise. Sunt păstrate 60 astfel de medii, în final aceste 60 medii fiind suprascrise și ele. Timpul acoperit de această arhivare este de 10 minute (5 secunde x 2 x 60).
+</p>
+
+<p>
+O altă arhivare configurată este dată media a 60 de valori (deci 300 de secunde), fiind ținute 12 de astfel de medii. Această arhivare acoperă <code>300 secunde x 12 = 60 minute</code>. Deci baza noastră de date ne poate oferi statistici ale traficului pe o interfață de rețea la diferite nivele de granularitate (în ultimele 10 minute este calculată media la nivel de 10 secunde, iar în ultima oră este calculată media la 1 minut).
+</p>
+
+<p>
+Copiați și completați scriptul de mai jos pentru a obține valorile pentru variabilele <code>octetsIn</code> și <code>octetsOut</code>. Acestea reprezintă  numărul de octeți (trimiși și primiți) de pe interfața <code>eth0</code> a stației <code>gateway</code> (<strong>Hint</strong>: <code>snmpwalk</code>, <code>IF-MIB::ifInOctets</code> urmat de numărul instanței). Scriptul colectează numărul de octeți din 5 în 5 secunde și îl introduce în baza de date <code>target.rrd</code> (<code>rrdtool update target.rrd $(date +%s):inOctets:outOctets</code>):
+</p>
+<dl class="file">
+<dt><a href="../../../code/saisp/labs/03%3Fcodeblock=49" title="Download Snippet" class="mediafile mf_">in-out-octets</a></dt>
+<dd><pre class="code file bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="kw2">rm</span> <span class="re5">-rf</span> target.rrd
+&nbsp;
+<span class="co0"># Init timestamp.</span>
+<span class="re2">timestamp</span>=$<span class="br0">&#40;</span><span class="kw2">date</span> +<span class="sy0">%</span>s<span class="br0">&#41;</span>
+&nbsp;
+<span class="co0"># Align timestamp to multiple of 5 seconds.</span>
+<span class="re2">timestamp</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="re1">$timestamp</span><span class="sy0">/</span><span class="nu0">5</span><span class="sy0">*</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="re2">init_timestamp</span>=<span class="re1">$timestamp</span>
+&nbsp;
+rrdtool create target.rrd \
+         <span class="re5">--start</span> <span class="re1">$timestamp</span> \
+         <span class="re5">--step</span> <span class="nu0">5</span> \
+         DS:speedIn:COUNTER:<span class="nu0">10</span>:U:U \
+         DS:speedOut:COUNTER:<span class="nu0">10</span>:U:U \
+         RRA:AVERAGE:<span class="nu0">0.5</span>:<span class="nu0">2</span>:<span class="nu0">60</span> \
+         RRA:AVERAGE:<span class="nu0">0.5</span>:<span class="nu0">60</span>:<span class="nu0">12</span>
+&nbsp;
+<span class="kw1">for</span> i <span class="kw1">in</span> $<span class="br0">&#40;</span><span class="kw2">seq</span> <span class="nu0">1</span> <span class="nu0">24</span><span class="br0">&#41;</span>; <span class="kw1">do</span>
+   <span class="kw2">sleep</span> <span class="nu0">5</span>
+   <span class="re2">timestamp</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="re1">$timestamp</span> + <span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+   <span class="re2">outOctets</span>=$<span class="br0">&#40;</span>...<span class="br0">&#41;</span>
+   <span class="re2">inOctets</span>=$<span class="br0">&#40;</span>...<span class="br0">&#41;</span>
+&nbsp;
+   rrdtool update target.rrd  <span class="re1">$timestamp</span>:<span class="re1">$inOctets</span>:<span class="re1">$outOctets</span>
+<span class="kw1">done</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="re5">--start</span> <span class="re1">$init_timestamp</span> <span class="re5">--end</span> <span class="re1">$timestamp</span></pre>
+</dd></dl>
+
+<p>
+Comanda <code>rrdtool update</code> primește timestamp-ul ($data) la care se inserează datele urmat de valorile de introdus pentru fiecare variabilă declarată la creare, în ordinea specificată la acel moment (<code>speedIn</code> și pe urmă <code>speedOut</code>).
+</p>
+
+<p>
+Înainte de a executa scriptul porniți descărcarea unei imagini CD pe stația <code>gateway</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">wget</span> http:<span class="sy0">//</span>cdimage.debian.org<span class="sy0">/</span>debian-cd<span class="sy0">/</span>7.4.0<span class="sy0">/</span>amd64<span class="sy0">/</span>iso-cd<span class="sy0">/</span>debian-7.4.0-amd64-CD-<span class="nu0">1</span>.iso</pre>
+
+<p>
+Pe stația monitor porniți scriptul de colectare de statistici și actualizare a bazei de date RRD. Acesta va rula timp de 2 minute și va avea următorul output indicând timestamp-ul de început și final al bazei de date:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span>.<span class="sy0">/</span>updateRRD
+<span class="re5">--start</span> <span class="nu0">1394411440</span> <span class="re5">--end</span> <span class="nu0">1394411560</span></pre>
+
+<p>
+Pentru a afișa conținutul bazei de date putem folosi comanda <code>rrdtool fetch</code> (<code>start</code> și <code>end</code> le preluați din scriptul de mai sus):
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span> rrdtool fetch target.rrd AVERAGE  <span class="re5">--start</span> <span class="nu0">1394411440</span> <span class="re5">--end</span> <span class="nu0">1394411560</span>
+                        speedIn            speedOut
+&nbsp;
+<span class="nu0">1394411445</span>: <span class="re5">-nan</span> <span class="re5">-nan</span>
+<span class="nu0">1394411450</span>: 2.4706470000e+06 4.8070000000e+04
+<span class="nu0">1394411455</span>: 1.4958000000e+06 2.7601200000e+04
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+În final vom genera un grafic folosind comanda <code>rrdtool graph</code> (<code>start</code> și <code>end</code> le preluați din scriptul de mai sus):
+</p>
+<pre class="code">root@monitor:~# rrdtool graph speed.png \
+      --start 1394411440 --end 1394411560 \
+      DEF:myspeedIn=target.rrd:speedIn:AVERAGE \
+      DEF:myspeedOut=target.rrd:speedOut:AVERAGE \
+      LINE2:myspeedIn#FF0000 \
+      LINE3:myspeedOut#00FF00</pre>
+
+<p>
+Va rezulta fișierul <code>speed.png</code> în care vom avea trasat cu roșu (<code>#FF0000</code>) traficul de download și cu verde traficul de upload (<code>#00FF00</code>). Se observă că traficul de download (<code>speedIn</code>) este mult mai mare întrucât descărcăm acea imagine de CD. Pentru a vizualiza fișierul copiați-l pe mașina locală folosind comanda <code>scp</code>:
+</p>
+<pre class="code">student@mjolnir~$ scp root@192.168.1.4:speed.png .</pre>
+
+</div>
+<!-- EDIT22 SECTION "05. [20p] Baze de date Round Robin (RRD)" [1-] --><!-- EDIT21 PLUGIN_INCLUDE_END "saisp:labs:03:contents:05" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT23 PLUGIN_INCLUDE_START "saisp:labs:03:contents:06" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:06">
+
+<h3 class="sectionedit25" id="p_nagios">06. [15p] Nagios</h3>
+<div class="level3">
+
+<p>
+Nagios este unul din cele mai utilizate utilitare de monitorizare a infrastructurii de rețea. Pe stația <code>monitor</code> se află instalată o instanță de Nagios ce monitorizeaza stația <code>gateway</code> folosind comanda <code>ping</code> și serviciul SSH de pe aceasta.
+</p>
+
+<p>
+Deschideți un browser web și intrați pe adresa <code><a href="http://192.168.1.4/nagios3" class="urlextern" title="http://192.168.1.4/nagios3"  rel="nofollow">http://192.168.1.4/nagios3</a></code>. Folosiți utilizatorul <code>nagiosadmin</code> și parola <code>student</code>. În meniul din stânga selectați <code>Hosts</code> și <code>Services</code> și observați cele 2 stații prezente (<code>localhost</code> fiind stația <code>monitor</code> în sine adăugată implicit și <code>gateway</code> fiind stația configurată de noi cu serviciul SSH).
+</p>
+
+<p>
+Observați configurațiile făcute în fișierul <code>/etc/nagios3/conf.d/gateway.cfg</code>.
+</p>
+
+</div>
+
+<h4 id="definire_de_servicii_si_host-uri">Definire de servicii si host-uri</h4>
+<div class="level4">
+
+<p>
+Creați câte un nou host în fișierul <code>/etc/nagios3/conf.d/cisco.cfg</code> pentru fiecare din ruterele CISCO (<code>R1</code> și <code>R2</code>). Creați câte un serviciu asociat fiecărui ruter care verifică dacă serviciul <code>telnet</code> răspunde cererilor (Hint: <code>grep -r telnet /etc/nagios-plugins</code>).
+</p>
+
+<p>
+Restartati serviciul <code>nagios</code> si observati ca cele doua routere apar in <code>Hosts</code> si <code>Services</code>.
+</p>
+
+</div>
+
+<h4 id="notificari">Notificari</h4>
+<div class="level4">
+
+<p>
+În fisierul <code>gateway.cfg</code> creați un nou serviciu asociat stației <code>gateway</code> care să verifice serverul WEB aflat pe aceasta.
+</p>
+
+<p>
+În cazul în care acesta nu răspunde să trimită o notificare pe adresa de e-mail a colegului de lângă voi.
+</p>
+
+<p>
+<strong>Note:</strong> Va trebui sa creati un fisier <code>mycontacts.cfg</code> în care sa definiti un obiect <code>contact</code> și un obiect <code>contactgroup</code> (urmăriți fișierul <code>/etc/nagios3/conf.d/contacts_nagios2.cfg</code> în care este creat grupul <code>admins</code>). După ce ați terminat de configurat, nu uitați să resetați serviciul <code>nagios3</code>.
+</p>
+
+<p>
+Pentru a putea trimite alerte, Nagios are nevoie de un server de e-mail local. Pe stația <code>monitor</code> instalați un server de e-mail:
+</p>
+<pre class="code">root@monitor:~# apt-get install postfix</pre>
+
+<p>
+Închideți serverul web pe stația <code>gateway</code> și verificați dacă primiți alerte pe e-mail.
+</p>
+
+</div>
+<!-- EDIT25 SECTION "06. [15p] Nagios" [1-] --><!-- EDIT24 PLUGIN_INCLUDE_END "saisp:labs:03:contents:06" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT26 PLUGIN_INCLUDE_START "saisp:labs:03:contents:07" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:07">
+
+<h3 class="sectionedit28" id="p_nrpe_nagios_remote_plugin_executor">07. [15p] NRPE (Nagios Remote Plugin Executor)</h3>
+<div class="level3">
+
+<p>
+Pentru a putea colecta date despre diferite stații la distanță, uneori trebuie să executăm anumite comenzi pe acele stații. Până acum toate verificările făcute cu Nagios au fost prin interogări de servicii. Dacă dorim să aflăm spre exemplu spațiul liber de pe disc trebuie să executăm o comandă pe acea stație. Nagios vine cu un plugin numit NRPE care poate fi instalat pe orice server din rețea cu scopul de a colecta datele dorite (folosirea procesorului, memoriei, discului, exact ca intrarea implicită <code>localhost</code> din Nagios).
+</p>
+
+<p>
+Vom instala pe <code>gateway</code> pachetul <code>nagios-nrpe-server</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">apt-get install</span> nagios-nrpe-server</pre>
+
+<p>
+Trebuie să permitem stației monitor să se conecteze la serverul NRPE modificând intrarea <code>allowed_hosts</code> din fișierul <code>/etc/nagios/nrpe.cfg</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>nagios<span class="sy0">/</span>nrpe.cfg <span class="sy0">|</span><span class="kw2">grep</span> <span class="nu0">192.168</span>
+<span class="re2">allowed_hosts</span>=192.168.1.4</pre>
+
+<p>
+Apoi, reporniti serviciul <code>nagios-nrpe-server</code> pe statia <code>gateway</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>nagios-nrpe-server restart</pre>
+
+<p>
+Pe stația <code>monitor</code> va trebui instalat plugin-ul pentru NRPE al Nagios:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">apt-get install</span> nagios-nrpe-plugin</pre>
+
+<p>
+Pe <code>monitor</code>, vom configura serviciul NRPE pentru a ne trimite alerte în cazul în care încărcarea procesului de pe  stația <code>gateway</code> este în limite maxime:
+</p>
+<pre class="code">root@monitor:/etc/nagios3/conf.d# cat gateway.cfg
+[...]
+define service{
+        use                             generic-service         ; Name of service template to use
+        host_name                       gateway
+        service_description             NRPE Service
+        check_command                   check_nrpe_1arg!check_load
+        contact_groups                  coleg
+        }</pre>
+
+<p>
+Observați în interfața grafică noul serviciu adăugat (încărcarea procesorului - <code>load average</code>). Modificați pe stația <code>gateway</code> valorile parametrilor la care sunt generate notificările de <code>warning</code> și <code>critical</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>nagios<span class="sy0">/</span>nrpe.cfg <span class="sy0">|</span><span class="kw2">grep</span> check_load
+<span class="kw3">command</span><span class="br0">&#91;</span>check_load<span class="br0">&#93;</span>=<span class="sy0">/</span>usr<span class="sy0">/</span>lib<span class="sy0">/</span>nagios<span class="sy0">/</span>plugins<span class="sy0">/</span>check_load <span class="re5">-w</span> <span class="nu0">5</span>,<span class="nu0">1</span>,<span class="nu0">0.5</span> <span class="re5">-c</span> <span class="nu0">15</span>,<span class="nu0">10</span>,<span class="nu0">5</span></pre>
+
+<p>
+Pentru a varia încărcarea procesorului, rulați programul CPU intensive de mai jos timp de 5 minute și observați cum se modifică valorile raportate de Nagios (îl opriți cu <code>Ctrl+c</code>):
+</p>
+<pre class="code bash">root<span class="sy0">@</span>gateway~<span class="co0"># cat loop.sh</span>
+<span class="co0">#!/bin/bash</span>
+<span class="re2">i</span>=<span class="nu0">0</span>
+<span class="kw1">while</span> <span class="kw2">true</span>
+<span class="kw1">do</span>
+    <span class="re2">i</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span>i++<span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="kw1">done</span></pre>
+
+<p>
+În mod analog, folosind NRPE, verificați starea încărcării memoriei și a discului de pe stația <code>gateway</code>.
+</p>
+
+</div>
+<!-- EDIT28 SECTION "07. [15p] NRPE (Nagios Remote Plugin Executor)" [1-] --><!-- EDIT27 PLUGIN_INCLUDE_END "saisp:labs:03:contents:07" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT29 PLUGIN_INCLUDE_START "saisp:labs:03:contents:08" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:08">
+
+<h3 class="sectionedit31" id="bonus_-_20p_cacti">08. [BONUS - 20p] CACTI</h3>
+<div class="level3">
+
+<p>
+În cazul unei rețele de mari dimensiuni este destul de greu să creăm script-uri la cerere și să generăm grafice folosind <code>rrdtool</code> în linie de comandă. Peste aceste utilitare (<code>snmp</code>, <code>rrdtool</code>) au fost dezvoltate aplicații integrate ce ușurează munca unui administrator. CACTI este un astfel de framework ce folosește SNMP pentru a colecta statistici și <code>rrdtool</code> pentru a genera grafice.
+</p>
+
+<p>
+Instalați pachetul <code>cacti</code> pe stația <code>monitor</code> alegând opțiunile implicite (configurați peste tot parola <code>student</code>):
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">apt-get install</span> cacti</pre>
+
+<p>
+După instalare intrați pe adresa <code><a href="http://192.168.1.4/cacti" class="urlextern" title="http://192.168.1.4/cacti"  rel="nofollow">http://192.168.1.4/cacti</a></code> cu user-ul <code>admin</code> și parola <code>admin</code> (selectați opțiunile implicite până ajungeți la ecranul de login). Adăugați ruterele <code>R1</code>, <code>R2</code> și stația <code>gateway</code> și creați grafice cu:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>[10p]</strong> încărcarea procesorului pentru fiecare în parte</div>
+</li>
+<li class="level1"><div class="li"> <strong>[10p]</strong> traficul pentru fiecare interfață de rețea de pe fiecare echipament</div>
+</li>
+</ul>
+
+<p>
+Hint: <a href="http://www.cacti.net/downloads/docs/html/graph_howto.html" class="urlextern" title="http://www.cacti.net/downloads/docs/html/graph_howto.html"  rel="nofollow"> CACTI-graph-howoto</a>.
+</p>
+
+</div>
+<!-- EDIT31 SECTION "08. [BONUS - 20p] CACTI" [1-] --><!-- EDIT30 PLUGIN_INCLUDE_END "saisp:labs:03:contents:08" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT32 PLUGIN_INCLUDE_START "saisp:labs:03:contents:sidebar" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:contents:sidebar">
+
+<h3 class="sectionedit34" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/03.html" class="wikilink1" title="saisp:labs:03">Laboratorul 3</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT35 PLUGIN_INCLUDE_START "saisp:labs:03:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_188348425658356788e623a" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/01.html" class="wikilink1" title="saisp:labs:03:contents:01">01. [10p] Sincronizare ceasuri echipamente monitorizate</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/02.html" class="wikilink1" title="saisp:labs:03:contents:02">02. [10p] Remote logging</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/03.html" class="wikilink1" title="saisp:labs:03:contents:03">03. [15p] Configurare server SNMP pe echipamente CISCO</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/04.html" class="wikilink1" title="saisp:labs:03:contents:04">04. [15p] SNMP server pe Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/05.html" class="wikilink1" title="saisp:labs:03:contents:05">05. [20p] Baze de date Round Robin (RRD)</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/06.html" class="wikilink1" title="saisp:labs:03:contents:06">06. [15p] Nagios</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/07.html" class="wikilink1" title="saisp:labs:03:contents:07">07. [15p] NRPE (Nagios Remote Plugin Executor)</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/03/contents/08.html" class="wikilink1" title="saisp:labs:03:contents:08">08. [BONUS - 20p] CACTI</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT36 PLUGIN_INCLUDE_END "saisp:labs:03:meta:nav" [0-] --></div>
+<div class="level4">
+
+</div>
+<!-- EDIT34 SECTION "Navigare" [1-] --><!-- EDIT33 PLUGIN_INCLUDE_END "saisp:labs:03:contents:sidebar" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Exerciții" [3959-] --></div>
+</body>
+</html>

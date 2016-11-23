@@ -1,0 +1,373 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>bd:laboratoare:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-04-30T17:59:46+0300"/>
+<meta name="keywords" content="bd,laboratoare,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=bd:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../bd/laboratoare/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='bd:laboratoare';var JSINFO = {"id":"bd:laboratoare:07","namespace":"bd:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#laboratorul_07">Laboratorul 07.</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#operatori_folositi_in_subcereri">Operatori folositi in subcereri</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="07.html#operatorul_exists">Operatorul EXISTS</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#operatorii_someany_all">Operatorii SOME/ANY, ALL</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#clauza_having_cu_subcereri_ascunse">Clauza HAVING cu subcereri ascunse</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#ordonarea_datelor_cu_subcereri">Ordonarea datelor cu subcereri</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#limitele_de_imbricare">Limitele de imbricare</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="07.html#exercitii">Exerciții</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#bibliografie">Bibliografie</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="laboratorul_07">Laboratorul 07.</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT1 SECTION "Laboratorul 07." [1-29] -->
+<h3 class="sectionedit2" id="operatori_folositi_in_subcereri">Operatori folositi in subcereri</h3>
+<div class="level3">
+
+<p>
+In cadrul subcererilor SQL se pot folosi operatorii <code>EXISTS</code>, <code>NOT EXISTS</code>, <code>SOME/ANY</code> si <code>ALL</code>.
+</p>
+
+</div>
+
+<h4 id="operatorul_exists">Operatorul EXISTS</h4>
+<div class="level4">
+
+<p>
+Operatorul EXISTS testeaza daca o valoare se regaseste in multimea de valori intoarsa de o subcerere. Daca valoarea exista, comanda intoarce TRUE; daca valoarea nu exista, intoarce FALSE.
+</p>
+
+<p>
+Exemplu: Gasiti toti angajatii care au cel putin un subordonat.
+</p>
+<pre class="code">   SELECT EMPNO, ENAME, JOB, DEPTNO
+   FROM EMP E
+   WHERE EXISTS (SELECT EMPNO
+                 FROM EMP
+                 WHERE EMP.MGR = E.EMPNO)
+   ORDER BY EMPNO;</pre>
+<pre class="code">   EMPNO     ENAME      JOB       DEPTNO
+  -------   -------    -----     --------
+   7566      JONES    MANAGER       20
+   7698      BLAKE    MANAGER       30
+   7782      CLARK    MANAGER       10
+   7788      SCOTT    ANALYST       20
+   7839      KING     PRESIDENT     10
+   7902      FORD     ANALYST       20</pre>
+
+<p>
+Exemplu: Toti angajatii al caror departament nu se regaseste in tabela DEPT.
+</p>
+<pre class="code">   SELECT EMPNO, ENAME, DEPTNO
+   FROM EMP
+   WHERE NOT EXISTS (SELECT DEPTNO
+                     FROM DEPT
+                     WHERE DEPT.DEPTNO = EMP.DEPTNO);</pre>
+
+<p>
+(Nu va fi selectata nici o inregistrare.)
+</p>
+
+<p>
+Un alt mod prin care se poate gasi departamentul care nu are nici un angajat este:
+</p>
+<pre class="code">   SELECT DEPTNO, DNAME
+   FROM DEPT D
+   WHERE NOT EXISTS (SELECT 1
+                     FROM EMP E
+                     WHERE E.DEPTNO = D.DEPTNO);</pre>
+<pre class="code">   DEPTNO        DNAME
+  --------      -------
+    40         OPERATIONS</pre>
+
+</div>
+
+<h4 id="operatorii_someany_all">Operatorii SOME/ANY, ALL</h4>
+<div class="level4">
+
+<p>
+Operatorii ANY sau ALL pot fi folositi pentru subcererile care intorc mai mult de o linie.
+</p>
+
+<p>
+Acesti operatori sint folositi in clauzele WHERE sau HAVING in legatura cu operatorii logici (=, !=, , &gt;=, ANY (sau sinonimul sau, SOME) compara o valoare cu fiecare valoare intoarsa de o subcerere. 
+</p>
+
+<p>
+Exemplu: Afisati angajatii care cistiga mai mult decit cel mai mic salariu din departamentul 30.
+</p>
+<pre class="code">   SELECT ENAME, SAL, JOB, DEPTNO
+   FROM EMP
+   WHERE SAL &gt; SOME (SELECT DISTINCT SAL
+                     FROM EMP
+                     WHERE DEPTNO = 30)
+   ORDER BY SAL DESC;</pre>
+<pre class="code">   ENAME       SAL        JOB        DEPTNO
+  -------     -----      -----      --------
+   KING       5000     PRESIDENT       10
+   SCOTT      3000     ANALYST         20
+   FORD       3000     ANALYST         20
+   JONES      2975     MANAGER         20
+   BLAKE      2850     MANAGER         30
+   CLARK      2450     MANAGER         10
+   ALLEN      1600     SALESMAN        30
+   MILLER     1300     CLERK           10
+   WARD       1250     SALESMAN        30
+   ADAMS      1100     CLERK           20</pre>
+
+<p>
+Cel mai mic salariu din departamentul 30 este 950$ (a lui James). Cererea principala intoarce angajatii care cistiga un salariu mai mare ca salariul minim din departamentul 30.Asa ca &#039;&gt; ANY&#039; inseamna mai mare ca minim. 
+</p>
+
+<p>
+Cind se foloseste SOME/ANY, veti intalni adesea folosita si mentiunea DISTINCT.
+</p>
+
+<p>
+Operatorul ALL compara o valoare cu fiecare valoare intoarsa de o subcerere.
+</p>
+
+<p>
+Exemplu: Afisati toti ngajatii care cistiga mai mult ca fiecare angajat din departamentul 30.
+</p>
+<pre class="code">   SELECT ENAME, SAL, JOB, DEPTNO
+   FROM EMP
+   WHERE SAL &gt; ALL (SELECT DISTINCT SAL
+                    FROM EMP
+                    WHERE  DEPTNO = 30)
+   ORDER BY SAL DESC;</pre>
+<pre class="code">   ENAME       SAL          JOB        DEPTNO
+  -------     -----        -----      ---------
+   KING        5000      PRESIDENT       10
+   SCOTT       3000      ANALYST         20
+   FORD        3000      ANALYST         20
+   JONES       2975      MANAGER         20</pre>
+
+<p>
+Cel mai mare salariu din departamentul 30 este 250$ (a lui Blake) si prin urmare cererea intoarce acei angajati ai caror salariu este mai mare ca salariul maxim din departamentul 30, adica mai mare ca fiecare salariu din departament.
+</p>
+
+<p>
+Operatorul NOT poate fi folosit impreuna cu operatorii IN, ANY sau ALL. 
+</p>
+
+</div>
+
+<h4 id="clauza_having_cu_subcereri_ascunse">Clauza HAVING cu subcereri ascunse</h4>
+<div class="level4">
+
+<p>
+<p><div class="notetip">
+Clauza WHERE se refera la o singura linie. 
+</p>
+
+<p>
+Clauza HAVING se refera la grupuri de linii specificate in clauza GROUP BY.
+
+</div></p>
+</p>
+
+<p>
+Exemplu: Afisati departamentele pentru care salariu mediu este mai mare ca salariul mediu din departamentul 30.
+</p>
+<pre class="code">   SELECT DEPTNO, AVG(SAL)
+   FROM EMP
+   HAVING AVG(SAL) &gt; (SELECT AVG(SAL)
+                      FROM EMP
+                      WHERE DEPTNO = 30)
+   GROUP BY DEPTNO;</pre>
+<pre class="code">   DEPTNO      AVG(SAL)
+  --------    ----------
+    10         2916.66667
+    20         2175</pre>
+
+<p>
+Exemplu: Construiti o cerere care gaseste functia cu cel mai mare salariu mediu.
+</p>
+<pre class="code">   SELECT JOB, AVG(SAL)
+   FROM EMP
+   GROUP BY JOB
+   HAVING AVG(SAL) = (SELECT MAX(AVG(SAL))
+                      FROM EMP
+                      GROUP BY JOB);</pre>
+<pre class="code">   JOB          AVG(SAL)
+  -----        ----------
+   PRESIDENT     5000</pre>
+
+<p>
+Cererea interioara gaseste salariul mediu pentru fiecare grup de functii diferit si functia MAX alege cel mai mare salariu    mediu. Valoarea gasita (5000) este folosita in clauza HAVING. Clauza GROUP BY din cererea principala este necesara pentru ca lista ce urmeaza dupa SELECT-ul din cererea principala contine atit o coloana agregat cit si o coloana non-agragat.
+</p>
+
+</div>
+
+<h4 id="ordonarea_datelor_cu_subcereri">Ordonarea datelor cu subcereri</h4>
+<div class="level4">
+
+<p>
+Nu poate exista o clauza ORDER BY intr-o subcerere.
+</p>
+
+<p>
+Poate exista doar o singura clauza ORDER BY pentru o declaratie SELECT si, daca este specificata, trebuie sa fie ultima clauza din comanda SELECT.
+</p>
+
+</div>
+
+<h4 id="limitele_de_imbricare">Limitele de imbricare</h4>
+<div class="level4">
+
+<p>
+Limita nivelelor de imbricare pentru subcereri este 255. 
+</p>
+
+<p>
+<p><div class="notetip">
+Reguli de scriere a cererilor
+</p>
+<ul>
+<li class="level1"><div class="li"> cererea interioara trebuie sa fie inclusa intre paranteze si trebuie sa fie in partea dreapta a conditiei.</div>
+</li>
+<li class="level2"><div class="li"> subcererile nu pot avea clauza ORDER BY.</div>
+</li>
+<li class="level2"><div class="li"> clauza ORDER BY apare la sfirsitul declaratiei SELECT principale.</div>
+</li>
+<li class="level2"><div class="li"> coloanele multiple din lista din SELECT a cererii interioare trebuie sa fie in aceeasi ordine ca si coloanele ce apar in conditia din clauza cererii principale. Trebuie sa corespunda tipul si numarul coloanelor listate.</div>
+</li>
+<li class="level2"><div class="li"> subcererile sunt intotdeauna executate de la cea mai adinca imbricare pina la nivelul principal de imbricare, daca nu sunt subcereri corelate.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Operatori folositi in subcereri" [30-6311] -->
+<h3 class="sectionedit3" id="exercitii">Exerciții</h3>
+<div class="level3">
+
+<p>
+<p><div class="noteclassic">
+Exercițiile nu sunt identice între 2 ședințe de laborator. Diferențele sunt date de <code>parametrii adiționali</code> prezenți în fiecare dintre ele, ce vor fi descriși de laborant în cadrul fiecărui laborator.
+
+</div></p>
+</p>
+<ol>
+<li class="level1"><div class="li"> Selectati angajatii care nu au nici macar un coleg in acelasi <code>parametri aditionali</code> cu ei. Gasiti o metoda pentru a verifica corectitudinea rezolvarii.</div>
+</li>
+<li class="level1"><div class="li"> Afisati numarul si <code>parametrii aditionali</code> pentru departamentul cu cei mai multi angajati folosind subcereri.</div>
+</li>
+<li class="level1"><div class="li"> Afisati numele si <code>parametrii aditionali</code> pentru angajatul cu cel mai mare salariu folosind operatorul ALL. Pentru acest exercitiu nu se va primi punctaj daca se folosesc functii de agregare.</div>
+</li>
+<li class="level1"><div class="li"> Afisati numele si <code>parametrii aditionali</code> pentru angajatul cu cel mai mare salariu folosind operatorul ANY. Pentru acest exercitiu nu se va primi punctaj daca se folosesc functii de agregare.</div>
+</li>
+<li class="level1"><div class="li"> Afisati numele si <code>parametrii aditionali</code> pentru angajatul cu cel mai mare salariu folosind operatorul EXISTS. Pentru acest exercitiu nu se va primi punctaj daca se folosesc functii de agregare.</div>
+</li>
+</ol>
+
+<p>
+1. Selectați departamentele cu mai mult de 3 angajați.
+</p>
+
+<p>
+2. Selectați angajații din același departament cu angajatul 7566, dar numai cei care au salariul mai mare decat acesta.
+</p>
+
+<p>
+3. Selectați angajații cu salariul minim din fiecare departament. Afisați numele angajaților, salariul și departamentul.
+</p>
+
+<p>
+4. Selectați funcția care are media salariilor egală cu valoarea minimă a mediilor salariilor după funcție.
+</p>
+
+<p>
+5. Selectați angajații care au salariul mai mic decat cel puțin un angajat cu funcția &#039;CLERK&#039; și au altă funcție diferită de aceasta.
+</p>
+
+<p>
+6. Afișați angajații care câștigă mai mult decât media și au un coleg al cărui nume contine litera &#039;T&#039;. 
+</p>
+
+<p>
+7. Selectați angajații care nu au superiori.
+</p>
+
+<p>
+8. Selectați departamentul cu cei mai multi șefi.
+</p>
+
+<p>
+9. Selectați numele departamentului cu cel mai bine plătit angajat.
+</p>
+
+<p>
+10. Scrieți o cerere care selectează lunile în care pleacă cei mai mulți angajați în concediu. Plecarea în concediu se face la 11 luni de la angajare. Afișati denumirea departamentului, luna și numărul de angajați.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Exerciții" [6312-8516] -->
+<h3 class="sectionedit4" id="bibliografie">Bibliografie</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> <strong>Alexandru Boicea</strong> -<em> Oracle SQL SQL Plus</em>, Editura Printech </div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT4 SECTION "Bibliografie" [8517-] --></div>
+</body>
+</html>

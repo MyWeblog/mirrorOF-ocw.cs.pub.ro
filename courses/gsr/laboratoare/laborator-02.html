@@ -1,0 +1,766 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 02: Servicii sistem și server basics    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-20T21:05:01+0300"/>
+<meta name="keywords" content="gsr,laboratoare,laborator-02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=gsr:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/gsr/laboratoare/laborator-02.html"/>
+<link rel="canonical" href="laborator-02.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='gsr:laboratoare';var JSINFO = {"id":"gsr:laboratoare:laborator-02","namespace":"gsr:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/gsr/"><img height="70" src="../../res/sigla_gsr.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="laborator-02%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="laborator-02%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_02servicii_sistem_si_server_basics">Laborator 02: Servicii sistem și server basics</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="investigarea_dinamica_a_unui_proces">01. Investigarea dinamică a unui proces</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit3" id="a_strace">a) strace</h3>
+<div class="level3">
+
+<p>
+Comanda <code>strace</code> (<em>system call trace</em>) ne este utilă pentru a investiga ce apeluri de sistem efectuează o comandă dată și ce parametri folosește.
+</p>
+
+<p>
+De exemplu, dacă dorim să urmărim apelurile de sistem efectuate de comanda <code>ls</code> folosim comanda
+</p>
+<pre class="code">strace ls</pre>
+
+<p>
+Output-ul fiind destul de vast, ne preocupă să obținem doar informații despre fișierele deschide. Pentru aceasta folosim opțiunea <code>-e</code> a comenzii <code>strace</code> cu ajutorul căreia filtrăm tipuri de operații. În cazul de față folosim comanda
+</p>
+<pre class="code">strace -e file ls</pre>
+
+<p>
+Observăm fișierele deschise.
+</p>
+
+<p>
+Pentru a vedea diferența între comenzile <code>ls</code> și <code>ls -l</code> folosim comanda
+</p>
+<pre class="code">strace -e file ls -l</pre>
+
+<p>
+Observăm că acum deschise și fișiere precum <code>/etc/passwd</code> și <code>/etc/group</code> pentru a determina username-ul și grupul aferent UID-ului și GID-ului din fișier.
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="b_informatii_despre_retea">b) Informații despre rețea</h3>
+<div class="level3">
+
+<p>
+Comanda
+</p>
+<pre class="code bash"><span class="kw2">netstat</span> <span class="re5">-s</span></pre>
+
+<p>
+afișează informații statistice despre pachetele sistemului. Ne interesează să știm de unde obține comanda respectivă informațiile.
+</p>
+
+<p>
+Rulați comanda
+</p>
+<pre class="code bash"><span class="kw2">strace</span> <span class="re5">-e</span> open <span class="kw2">netstat</span> <span class="re5">-s</span></pre>
+
+<p>
+pentru a afla ce fișiere deschide comanda la rulare.
+</p>
+
+<p>
+Care fișier este citit pentru a afla informații despre pachetele primite (<em>packets received</em>)? Vizualizați acel fișier (luați-o pe încercate).
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="c_atasarea_la_un_proces">c) Atașarea la un proces</h3>
+<div class="level3">
+
+<p>
+<code>strace</code> permite investigarea unui proces aflat deja în rulare. Numim acest lucru atașarea la un proces. Putem astfel investiga apelurile de sistem efectuate de un proces aflat în rulare și diagnostica anumite probleme ale acestuia. Pentru a ne putea atașa la un proces avem nevoie de PID-ul acestuia.
+</p>
+
+<p>
+Deschideți două tab-uri de terminal (adică să aveți două deschise; dacă aveți deja unul mai deschideți încă unul).
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru a deschide un tab nou de terminal în GNOME Terminal puteți folosi combinația de taste <code>Ctrl+Shift+t</code>.
+
+</div></p>
+</p>
+
+<p>
+Într-unul dintre tab-uri aflați PID-ul procesului curent (a shell-ului) folosind comanda
+</p>
+<pre class="code">echo $$</pre>
+
+<p>
+Pentru a investiga shell-ul, din celălalt tab folosim comanda
+</p>
+<pre class="code">strace -p &lt;PID&gt;</pre>
+
+<p>
+unde <code>&lt;PID&gt;</code> este PID-ul shell-ului determinat mai sus.
+</p>
+
+<p>
+Acum dacă în celălalt shell rulăm comenzi vom vedea ce se întâmplă în cadrul shell-ului.
+</p>
+
+<p>
+Observăm că se folosește apelul de sistem <code>clone</code> pentru a crea un nou proces, dar nu apare apelul de sistem <code>execve</code> care înlocuiește imaginea de proces. Pentru a vedea aceste apeluri de sistem trebuie să precizăm comenzii <code>strace</code> să investigheze și procesele copil folosind opțiunea <code>-f</code> (de la <code>follow children</code>). Astfel, vom putea investiga folosind comanda
+</p>
+<pre class="code">strace -f -p &lt;PID&gt;</pre>
+
+<p>
+Dacă dorim să vedem doar operațiile cu procese și fișiere, de exemplu, vom folosi pentru investigație comanda
+</p>
+<pre class="code">strace -f -e process,file -p &lt;PID&gt;</pre>
+
+</div>
+
+<h2 class="sectionedit6" id="demonizarea_proceselor">02. Demonizarea proceselor</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit7" id="a_procese_detasate_de_terminal">a) Procese detașate de terminal</h3>
+<div class="level3">
+
+<p>
+Sunt cazuri în care dorim să pornim procese detașate de terminal. Adică după pornirea procesului să închidem terminalul și procesul să nu fie “omorât” ci să își încheie execuția. Aceste procese sunt echivalente unor procese daemon.
+</p>
+
+<p>
+Pentru a detașa un proces de un terminal se folosesc comenzi precum <code>nohup</code>, <code>dtach</code> și <code>disown</code>.
+</p>
+
+<p>
+Folosiți comanda <code>wget</code> pentru a descărca fișierul <code>.torrent</code> de <a href="http://cdimage.debian.org/debian-cd/8.6.0/amd64/bt-cd/debian-8.6.0-amd64-netinst.iso.torrent" class="urlextern" title="http://cdimage.debian.org/debian-cd/8.6.0/amd64/bt-cd/debian-8.6.0-amd64-netinst.iso.torrent"  rel="nofollow">aici</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="b_disown">b) disown</h3>
+<div class="level3">
+
+<p>
+Porniți un proces <code>BitTorrent</code> folosind comanda:
+</p>
+<pre class="code">btdownloadheadless lin-prog.torrent</pre>
+
+<p>
+<p><div class="notetip">
+Dacă nu aveți <code>btdownloadheadless</code> instalat pe sistem instalați pachetul <code>bittorrent</code>
+</p>
+<pre class="code">sudo apt-get install bittorrent</pre>
+
+<p>
+sau pachetul <code>bittornado</code>
+</p>
+<pre class="code">sudo apt-get install bittornado</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Transferați procesul pornit în starea de rulare în background. Detașați procesul de terminal folosind comanda <code>disown</code>. Închideți terminalul. Investigați prezența procesului în alt terminal. Folosiți comanda <code>lsof</code> pentru a vedea ce folosește procesul pe post de standard input, standard output și standard error.
+</p>
+
+<p>
+Apoi încheiați execuția acelui proces.
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="c_nohup">c) nohup</h3>
+<div class="level3">
+
+<p>
+Folosiți comanda <code>nohup</code> pentru a crea un proces BitTorrent precum cel de mai sus, detașat de terminal. Închideți terminalul. Investigați prezența procesului în alt terminal. Folosiți comanda <code>lsof</code> pentru a vedea ce folosește procesul pe post de standard input, standard output și standard error.
+</p>
+
+<p>
+Trimiteți un semnal procesului pentru a-i încheia execuția și apoi reporniți-l sub <code>nohup</code> astfel încât ieșirea standard (<em>standard output</em>, <em>stdout</em>) să fie redirectată la <code>/dev/null</code> iar ieșirea de eroare standard (<em>standard error</em>, <em>stderr</em>) să fie redirectată în fișierul <code>err.log</code>. Investigați cu <code>lsof</code> unde pointează descriptorii standard ai procesului.
+</p>
+
+</div>
+
+<h2 class="sectionedit10" id="serviciul_cron">03. Serviciul cron</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit11" id="a_demoinspectarea_configuratiei_cron">a) Demo: Inspectarea configurației cron</h3>
+<div class="level3">
+
+
+
+<p>
+Pentru a vedea configurația <code>cron</code> a sistemului inspectăm configurațiile din fișierele/directoarele <code>/etc/cron*</code>. Fișierele <code>/etc/cron.d/*</code> și fișierul <code>/etc/crontab</code> conțin configurații standard <code>cron</code> la nivelul sistemului. Liniile de configurare urmează sintaxa crontab așa cum este exemplificată <a href="http://techie-experience.blogspot.ro/2012/10/crontab.html" class="urlextern" title="http://techie-experience.blogspot.ro/2012/10/crontab.html"  rel="nofollow">aici</a>.
+</p>
+
+<p>
+Pentru a vedea configurația pentru utilizatorul curent folosim comanda
+</p>
+<pre class="code">crontab -l</pre>
+
+<p>
+Dacă suntem autentificați ca utilizator privilegiat, putem vizualiza configurația <code>cron</code> pentru un utilizator dat putem folosi comanda
+</p>
+<pre class="code">crontab -u &lt;username&gt; -l</pre>
+
+<p>
+unde <code>&lt;username&gt;</code> este numele utilizatorului a cărui configurație dorim să o afișăm.
+</p>
+
+<p>
+Pentru a afla job-urile cron active per utilizator putem inspecta, ca utilizator privilegiat, directorul de spooling <code>/var/spool/cron/</code>
+</p>
+<pre class="code">sudo tree /var/spool/cron/</pre>
+
+<p>
+În subdirectorul <code>/var/spool/cron/crontabs/</code> se găsesc job-urile cron active (marcate per utilizator).
+</p>
+
+</div>
+
+<h3 class="sectionedit12" id="b_configurare_cron_cu_standard_output">b) Configurare cron cu standard output</h3>
+<div class="level3">
+
+<p>
+Dacă dorim să avem un job care să ruleze periodic vom crea o intrare în crontab-ul utilizatorului <code>root</code>.
+</p>
+
+<p>
+Următorul exercițiu este didactic, ca să putem urmări comportamentul <code>cron</code>.
+</p>
+
+<p>
+Comanda de mai jos este folosită pentru a afișa numărul de procese și thread-uri curente la nivelul sistemului:
+</p>
+<pre class="code">/bin/echo &quot;Num processes: $(ps -e --no-header | wc -l), num threads: $(ps -eL --no-header | wc -l)&quot;</pre>
+
+<p>
+Folosim calea completă către comanda <code>echo</code> pentru că nu știm cum arată variabila <code>PATH</code> în mediul în care rulează <code>cron</code>.
+</p>
+
+<p>
+Adăugați comanda de mai sus să ruleze la fiecare două minute prin alterarea crontab-ului utilizatorului <code>root</code>. După adăugare urmăriți spool-ul cron în <code>/var/spool/cron/crontabs/root</code>.
+</p>
+
+<p>
+În urma funcționării corecte, veți vedea o intrare in <code>/var/log/syslog</code> care arata ca a fost executata comanda.
+</p>
+
+<p>
+<p><div class="notetip">
+Dupa ce configurati regulile de cron, restartati serviciul <code>cron</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru crearea intrării în crontab-ul utilizatorului <code>root</code> urmăriți indicațiile de <a href="http://techie-experience.blogspot.ro/2012/10/crontab.html" class="urlextern" title="http://techie-experience.blogspot.ro/2012/10/crontab.html"  rel="nofollow">aici</a>.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="c_alte_configurari_cron">c) Alte configurări cron</h3>
+<div class="level3">
+
+<p>
+Actualizați comanda din <code>cron</code> de mai sus astfel încât output-ul comenzii să fie adăugat într-un fișier dat. Output-ul să conțină și data la care a fost rulată comanda.
+</p>
+
+<p>
+Instalați pachetul <code>debsums</code>. Urmăriți ce configurări de cron sunt adăugate la instalarea pachetului.
+</p>
+
+<p>
+<p><div class="notetip">
+Urmăriți conținutului unui pachet instalat folosind comanda
+</p>
+<pre class="code">dpkg -L &lt;nume-pachet&gt;</pre>
+
+<p>
+unde <code>&lt;nume-pachet&gt;</code> este numele pachetului.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="d_configurare_serviciu_cron_de_pornire_client_bittorrent">d) Configurare serviciu cron de pornire client Bittorrent</h3>
+<div class="level3">
+
+<p>
+Instalați un client de Bittorrent care funcționează în linia de comandă, precum <code>transmission-cli</code> sau <code>bittorrent</code> sau <code>bittornado</code> și porniți-l în background (folosind <code>nohup</code>) ca să descarce un anumit conținut Bittorrent. Găsiți un fișier <code>.torrrent</code> pe Internet și descărcați-l.
+</p>
+
+<p>
+Apoi creați un script care să verifice dacă este pornit clientul Bittorrent pentru acel fișier <code>.torrent</code> și dacă nu este pornit să-l repornească.
+</p>
+
+<p>
+Plasați script-ul în crontab cu verificare la 10 minute.
+</p>
+
+</div>
+
+<h3 class="sectionedit15" id="e_gestionare_client_de_bittorrent_folosind_supervisord">e) Gestionare client de BitTorrent folosind supervisord</h3>
+<div class="level3">
+
+<p>
+Folosiți <a href="http://supervisord.org/" class="urlextern" title="http://supervisord.org/"  rel="nofollow">supervisord</a> pentru a porni și gestiona clientul BitTorrent de mai sus.
+</p>
+
+<p>
+<p><div class="notetip">
+Urmăriți exemplele de configurare din link-urile de mai jos:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-supervisor-on-ubuntu-and-debian-vps" class="urlextern" title="https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-supervisor-on-ubuntu-and-debian-vps"  rel="nofollow">https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-supervisor-on-ubuntu-and-debian-vps</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://serversforhackers.com/monitoring-processes-with-supervisord" class="urlextern" title="https://serversforhackers.com/monitoring-processes-with-supervisord"  rel="nofollow">https://serversforhackers.com/monitoring-processes-with-supervisord</a></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit16" id="serviciul_ntp">04. Serviciul NTP</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit17" id="a_functionarea_ntp">a) Funcționarea NTP</h3>
+<div class="level3">
+
+<p>
+Pentru a verifica funcționarea NTP (<em>Network Time Protocol</em>) o soluție este instalarea utilitarului <code>ntpdate</code>. Dacă nu-l aveți instalat, instalați-l folosind comanda
+</p>
+<pre class="code">sudo apt-get install ntpdate</pre>
+
+<p>
+Aveți două utilitare pe care le puteți folosi interschimbabil pentru actualizarea timpului sistemului: <code>ntpdate</code> care primește ca argument un server NTP, și <code>nptdate-debian</code> care folosește serverele configurate în <code>/etc/default/ntpdate</code> (directiva <code>NTPSERVERS</code>).
+</p>
+
+</div>
+
+<h3 class="sectionedit18" id="b_configurare_server_ntp_sincronizare_sisteme">b) Configurare server NTP. Sincronizare sisteme</h3>
+<div class="level3">
+
+<p>
+Instalați, dacă nu este instalat serverul <code>NTP</code> prin intermediul pachetului <code>ntp</code>. Serverul va porni automat și veți putea verifica faptul că ascultă conexiuni pe portul <code>123</code> UDP folosind comanda
+</p>
+<pre class="code">sudo netstat -ulpn</pre>
+
+<p>
+Discutați cu 2-3 colegi și aflați adrese IP stațiilor pe care aceștia lucrează și adăugați configurare pentru serverul NTP în fișierul <code>/etc/ntp.conf</code>. După un timp se va crea un mesh de comunicare între serverele NTP din sala de laborator.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru a investiga la orice moment informații despre funcționarea serverului NTP și peer-ii cu care acesta comunică puteți folosi una dintre comenzile de mai jos
+</p>
+<pre class="code">ntpq -p
+ntpq -pn</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Informații despre configurarea NTP găsiți în link-urile de mai jos:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.debianadmin.com/ntp-server-and-client-configuration-in-debian.html" class="urlextern" title="http://www.debianadmin.com/ntp-server-and-client-configuration-in-debian.html"  rel="nofollow">http://www.debianadmin.com/ntp-server-and-client-configuration-in-debian.html</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.tecmint.com/install-and-configure-ntp-server-client-in-debian/" class="urlextern" title="http://www.tecmint.com/install-and-configure-ntp-server-client-in-debian/"  rel="nofollow">http://www.tecmint.com/install-and-configure-ntp-server-client-in-debian/</a></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit19" id="jurnalizare">05. Jurnalizare</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit20" id="a_investigare_configuratie_syslog">a) Investigare configuratie syslog</h3>
+<div class="level3">
+
+<p>
+Pe mașina virtulă verificați dacă daemonul de syslog este instalat (Hint: rsyslog).
+</p>
+<pre class="code">root@heimdall:~# apt-get install rsyslog
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+rsyslog is already the newest version.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</pre>
+
+</div>
+
+<h3 class="sectionedit21" id="b_reguli_de_jurnalizare">b) Reguli de jurnalizare</h3>
+<div class="level3">
+
+<p>
+Adaugati în <code>/etc/rsyslog.conf</code> o intrare prin care TOATE mesajele din sistem sa fie înregistrate în <code>/var/log/all_logs</code>
+</p>
+<pre class="code">root@heimdall:~# tail -n 1 /etc/rsyslog.conf
+*.*		-/var/log/all_logs
+
+Se adauga un minus (-) pentru a se evita sincronizarea fisierului dupa fiecare mesaj syslog (fiind vorba despre toate mesajele din sistem).</pre>
+
+<p>
+Creati fisierul <code>/var/log/all_logs</code>, apoi configurati owner-ul ca fiind user-ul sub care ruleaza <code>rsyslog</code>:
+</p>
+<pre class="code"># touch /var/log/all_logs
+# chown syslog:adm /var/log/all_logs</pre>
+
+<p>
+Reporniți daemonul <code>rsyslog</code> și verificați conținutul fișierului <code>/var/log/all_logs</code>.
+</p>
+<pre class="code">root@heimdall:~# /etc/init.d/rsyslog restart
+Stopping enhanced syslogd: rsyslogd.
+Starting enhanced syslogd: rsyslogd.
+
+root@heimdall:~# tail /var/log/all_logs 
+Nov  9 15:34:04 heimdall kernel: imklog 5.8.5, log source = /proc/kmsg started.
+Nov  9 15:34:04 heimdall rsyslogd: [origin software=&quot;rsyslogd&quot; swVersion=&quot;5.8.5&quot; x-pid=&quot;2604&quot; x-info=&quot;http://www.rsyslog.com&quot;] start</pre>
+
+</div>
+
+<h3 class="sectionedit22" id="c_generate_mesaje_cu_logger">c) Generate mesaje cu logger</h3>
+<div class="level3">
+
+<p>
+Folosind comanda <code>logger</code>, generați 5 mesaje de log cu facilitatea mail și cu proritatea info, care să conțină textele “mail log 1” … “mail log 5”. Verificați prezența mesajelor în <code>/var/log/all_logs</code>.
+</p>
+<pre class="code">root@heimdall:~# logger -p mail.info &quot;mail log 1&quot;
+
+root@heimdall:~# logger -p mail.info &quot;mail log 2&quot;
+
+root@heimdall:~# logger -p mail.info &quot;mail log 3&quot;
+
+root@heimdall:~# logger -p mail.info &quot;mail log 4&quot;
+
+root@heimdall:~# logger -p mail.info &quot;mail log 5&quot;
+
+root@heimdall:~# tail /var/log/all_logs 
+Nov  9 15:34:04 heimdall kernel: imklog 5.8.5, log source = /proc/kmsg started.
+Nov  9 15:34:04 heimdall rsyslogd: [origin software=&quot;rsyslogd&quot; swVersion=&quot;5.8.5&quot; x-pid=&quot;2604&quot; x-info=&quot;http://www.rsyslog.com&quot;] start
+Nov  9 15:36:55 heimdall root: mail log 1
+Nov  9 15:36:57 heimdall root: mail log 2
+Nov  9 15:36:58 heimdall root: mail log 3
+Nov  9 15:36:59 heimdall root: mail log 4
+Nov  9 15:37:00 heimdall root: mail log 5</pre>
+
+</div>
+
+<h3 class="sectionedit23" id="d_rotirea_fisierelor_de_log">d) Rotirea fisierelor de log</h3>
+<div class="level3">
+
+<p>
+Modificați <code>/etc/logrotate.conf</code> astfel încat fisierul <code>/var/log/all_logs</code> să fie rotit zilnic, folosind până la maxim 10 fișiere, fișire care să fie comprimate. Logurile trebuie să fie trimiste pe email la sysadmin@gsr.cs.pub.ro. (Hint: <code>man logrotate</code>)
+</p>
+<pre class="code">root@heimdall:~# tail -n 8 /etc/logrotate.conf
+/var/log/all_logs {
+	missingok
+	daily
+	create 0660 root utmp
+	compress
+	rotate 10
+	mail sysadmin@gsr.cs.pub.ro
+}</pre>
+
+
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<div><div id="nojs_indexmenu_103969746583579774d278" data-jsajax="%26skipfile%3D%252B/gsr%253A%2528sidebar%257Cindex%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="gsr:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="gsr:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-semigrupe.html" class="wikilink1" title="gsr:impartire-semigrupe">Împărțire semigrupe</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli.html" class="wikilink1" title="gsr:reguli">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_18605432885835797750150" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/acces-direct.html" class="wikilink1" title="gsr:resurse:acces-direct">Acces direct</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/cs-curs-pub.ro.html" class="wikilink1" title="gsr:resurse:cs-curs-pub.ro">cs.curs.pub.ro</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="gsr:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="gsr:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/proiect.html" class="wikilink1" title="gsr:resurse:proiect">Proiect GSR</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-laborator.html" class="wikilink1" title="gsr:resurse:sala-laborator">Sală de laborator</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [117-169] -->
+<h1 class="sectionedit2" id="cursuri">Cursuri</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-01.html" class="wikilink1" title="gsr:cursuri:curs-01">Curs 01: Introducere și procese</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-02.html" class="wikilink1" title="gsr:cursuri:curs-02">Curs 02: Server basics</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-03.html" class="wikilink1" title="gsr:cursuri:curs-03">Curs 03: Serviciile de DHCP și SSH</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-04.html" class="wikilink1" title="gsr:cursuri:curs-04">Curs 04: Serviciul de DNS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-05.html" class="wikilink1" title="gsr:cursuri:curs-05">Curs 05: Serviciul de e-mail</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-06.html" class="wikilink1" title="gsr:cursuri:curs-06">Curs 06: Servicii de file sharing</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-07.html" class="wikilink1" title="gsr:cursuri:curs-07">Curs 07: Servicii web</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-08.html" class="wikilink1" title="gsr:cursuri:curs-08">Curs 08: Securitate: PKI și X.509</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-09.html" class="wikilink1" title="gsr:cursuri:curs-09">Curs 09: Securitate: SSL și TLS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-10.html" class="wikilink1" title="gsr:cursuri:curs-10">Curs 10: Securitate: hardening a server</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-11.html" class="wikilink1" title="gsr:cursuri:curs-11">Curs 11: Acces la distanță</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/curs-12.html" class="wikilink1" title="gsr:cursuri:curs-12">Curs 12: After GSR</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cursuri" [170-541] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="laborator-01.html" class="wikilink1" title="gsr:laboratoare:laborator-01">Laborator 01: Introducere și procese</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="laborator-02.html" class="wikilink1" title="gsr:laboratoare:laborator-02">Laborator 02: Servicii sistem și server basics</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-03.html" class="wikilink1" title="gsr:laboratoare:laborator-03">Laborator 03: Serviciile de DHCP si SSH</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-04.html" class="wikilink1" title="gsr:laboratoare:laborator-04">Laborator 04: Serviciul de DNS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-05.html" class="wikilink1" title="gsr:laboratoare:laborator-05">Laborator 05: Serviciul de e-mail</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-06.html" class="wikilink1" title="gsr:laboratoare:laborator-06">Laborator 06: Servicii de file sharing</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-07.html" class="wikilink1" title="gsr:laboratoare:laborator-07">Laborator 07: Servicii web</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-08.html" class="wikilink1" title="gsr:laboratoare:laborator-08">Laborator 08: Securitate: PKI și X.509</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-09.html" class="wikilink1" title="gsr:laboratoare:laborator-09">Laborator 09: Securitate: SSL și TLS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-10.html" class="wikilink1" title="gsr:laboratoare:laborator-10">Laborator 10: Securitate: hardening a server</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-11.html" class="wikilink1" title="gsr:laboratoare:laborator-11">Laborator 11: Acces la distanță</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [542-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-02.html#laborator_02servicii_sistem_si_server_basics">Laborator 02: Servicii sistem și server basics</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-02.html#investigarea_dinamica_a_unui_proces">01. Investigarea dinamică a unui proces</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-02.html#a_strace">a) strace</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#b_informatii_despre_retea">b) Informații despre rețea</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#c_atasarea_la_un_proces">c) Atașarea la un proces</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-02.html#demonizarea_proceselor">02. Demonizarea proceselor</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-02.html#a_procese_detasate_de_terminal">a) Procese detașate de terminal</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#b_disown">b) disown</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#c_nohup">c) nohup</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-02.html#serviciul_cron">03. Serviciul cron</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-02.html#a_demoinspectarea_configuratiei_cron">a) Demo: Inspectarea configurației cron</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#b_configurare_cron_cu_standard_output">b) Configurare cron cu standard output</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#c_alte_configurari_cron">c) Alte configurări cron</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#d_configurare_serviciu_cron_de_pornire_client_bittorrent">d) Configurare serviciu cron de pornire client Bittorrent</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#e_gestionare_client_de_bittorrent_folosind_supervisord">e) Gestionare client de BitTorrent folosind supervisord</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-02.html#serviciul_ntp">04. Serviciul NTP</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-02.html#a_functionarea_ntp">a) Funcționarea NTP</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#b_configurare_server_ntp_sincronizare_sisteme">b) Configurare server NTP. Sincronizare sisteme</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-02.html#jurnalizare">05. Jurnalizare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-02.html#a_investigare_configuratie_syslog">a) Investigare configuratie syslog</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#b_reguli_de_jurnalizare">b) Reguli de jurnalizare</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#c_generate_mesaje_cu_logger">c) Generate mesaje cu logger</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#d_rotirea_fisierelor_de_log">d) Rotirea fisierelor de log</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          gsr/laboratoare/laborator-02.txt · Last modified: 2016/10/20 21:05 by alexandru.carp          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="laborator-02%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="laborator-02%3Fdo=media&amp;ns=gsr%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="laborator-02.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=gsr%253Alaboratoare%253Alaborator-02&amp;1479899511" width="2" height="1" alt="" /></div>
+</body>
+</html>

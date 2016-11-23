@@ -1,0 +1,134 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:07:contents:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-11-20T13:32:43+0200"/>
+<meta name="keywords" content="rl,labs,07,contents,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:07:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/07/contents/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:07:contents';var JSINFO = {"id":"rl:labs:07:contents:06","namespace":"rl:labs:07:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_depanare_problema_de_configurare_adresa_ip">06. [10p] Depanare problemă de configurare adresă IP</h3>
+<div class="level3">
+
+<p>
+Rulați scriptul de pregătire cu argumentul 6:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>.<span class="sy0">/</span>rl-lab-07-prepare <span class="nu0">6</span></pre>
+
+<p>
+În urma rulării scriptului au fost repornită stațiile <code>red</code> și au fost refăcute configurațiile. Va trebui să vă reconectați pe stația <code>red</code> folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>go <span class="kw2">red</span></pre>
+
+<p>
+și folosind username-ul <code>root</code> și parola <code>student</code>.
+</p>
+
+<p>
+Scriptul configurează adresa IP <code>7.7.7.1</code> pe interfața <code>veth-red</code> a stației <code>host</code> și adresa IP <code>7.7.7.2</code> pe interfața <code>eth0</code> a stației <code>red</code>. Folosiți comenzile:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> address show eth0
+<span class="nu0">46</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 7.7.7.2<span class="sy0">/</span><span class="nu0">32</span> scope global eth0
+    inet6 fe80::<span class="nu0">216</span>:3eff:fe8e:<span class="nu0">8421</span><span class="sy0">/</span><span class="nu0">64</span> scope <span class="kw2">link</span> 
+       valid_lft forever preferred_lft forever
+&nbsp;
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> address show veth-red
+<span class="nu0">47</span>: veth-red: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 4e:1b:b8:d9:<span class="nu0">14</span>:bb brd ff:ff:ff:ff:ff:ff
+    inet 7.7.7.1<span class="sy0">/</span><span class="nu0">32</span> scope global veth-red</pre>
+
+<p>
+pentru a urmări configurația IP pe interfața <code>INTERFACE</code>.
+</p>
+
+<p>
+Folosiți comanda <code>ping</code> pentru a testa conectivitatea între cele două adrese IP (<code>7.7.7.1</code> și <code>7.7.7.2</code>) pe cele două stații. Observați ca nu există conectivitate.
+</p>
+
+<p>
+Pentru a depana această problemă, urmărim tabela de rutare a fiecărei stații:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> r s
+<span class="co4">root@red:~# </span>
+&nbsp;
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> r s
+10.10.20.0<span class="sy0">/</span><span class="nu0">24</span> dev veth-green  proto kernel  scope <span class="kw2">link</span>  src 10.10.20.1
+10.10.30.0<span class="sy0">/</span><span class="nu0">24</span> dev veth-blue  proto kernel  scope <span class="kw2">link</span>  src 10.10.30.1
+192.168.56.0<span class="sy0">/</span><span class="nu0">24</span> dev eth0  proto kernel  scope <span class="kw2">link</span>  src 192.168.56.101</pre>
+
+<p>
+Observați că nu apar rutele relevante în tabela de rutare. Fie interfețele sunt dezactivate, fie configurația este greșită. Dacă rulăm comenzile de afișare a informațiilor de nivel 3, observăm:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> address show eth0
+<span class="nu0">46</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 7.7.7.2<span class="sy0">/</span><span class="nu0">32</span> scope global eth0
+    inet6 fe80::<span class="nu0">216</span>:3eff:fe8e:<span class="nu0">8421</span><span class="sy0">/</span><span class="nu0">64</span> scope <span class="kw2">link</span> 
+       valid_lft forever preferred_lft forever
+&nbsp;
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> address show veth-red
+<span class="nu0">47</span>: veth-red: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 4e:1b:b8:d9:<span class="nu0">14</span>:bb brd ff:ff:ff:ff:ff:ff
+    inet 7.7.7.1<span class="sy0">/</span><span class="nu0">32</span> scope global veth-red</pre>
+
+<p>
+Interfețele sunt active (<code>UP</code>). Observăm însă că aceste adrese au masca <code>/32</code>. Acest lucru înseamnă că nu pot comunica în rețea unele cu altele și explică și absența rutei relevante din tabela de rutare. Repararea acestei greșeli se face prin folosirea unor adrese cu mască potrivită (de exemplu, pentru o mască <code>/24</code> este vorba de <code>7.7.7.1/24</code> și <code>7.7.7.2/24</code>).
+</p>
+
+<p>
+<p><div class="notewarning">
+O greșeală relativ frecventă în configurarea adresei IP în Linux este omiterea măștii de rețea. Aveți în vedere să nu omiteți masca în momentul în care configurați adrese IP pe interfețe în Linux.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+Listarea tabelei de rutare a unei stații este printre primii pași care trebuie urmați pentru depanarea unei probleme de conectivitate.
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

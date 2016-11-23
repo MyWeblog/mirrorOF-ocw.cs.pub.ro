@@ -1,0 +1,618 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>gsr:laboratoare:laborator-06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-17T21:00:49+0200"/>
+<meta name="keywords" content="gsr,laboratoare,laborator-06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=gsr:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="laborator-06.html"/>
+<link rel="canonical" href="../../../../gsr/laboratoare/laborator-06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='gsr:laboratoare';var JSINFO = {"id":"gsr:laboratoare:laborator-06","namespace":"gsr:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-06.html#laborator_06servicii_de_file_sharing">Laborator 06: Servicii de file sharing</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-06.html#rsync">1. rsync</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-06.html#nfs">2. NFS</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-06.html#samba">3. Samba</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-06.html#bonus">4. Bonus</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_06servicii_de_file_sharing">Laborator 06: Servicii de file sharing</h1>
+<div class="level1">
+
+<p>
+<p><div class="noteimportant">
+Pentru următoarele exerciții folosim mașina virtuală <code>GSR Debian</code>. Mașina virtuală o gasiti la adresa de mai jos (trebuie sa va logati cu credentialele de pe cs.curs.pub.ro):
+</p>
+
+<p>
+<a href="https://repository.grid.pub.ro/cs/gsr/GSR%20Debian.ova" class="urlextern" title="https://repository.grid.pub.ro/cs/gsr/GSR%20Debian.ova"  rel="nofollow">https://repository.grid.pub.ro/cs/gsr/GSR%20Debian.ova</a>
+</p>
+
+<p>
+Dupa ce o descarcati, trebuie importata în VirtualBox (File → Import Appliance).
+</p>
+
+<p>
+Pentru autentificarea în mașina virtuală folosim numele de utilizator <code>student</code> cu parola <code>student</code>. Ne putem conecta și prin SSH <strong>de pe sistemul fizic</strong> folosind comanda
+</p>
+<pre class="code">student@eg106-pc:~$ ssh -l student 192.168.56.115
+[...]
+Last login: Thu Dec  3 13:57:01 2015
+student@gsr-server:~$</pre>
+
+<p>
+Contul <code>student</code> are permisiuni privilegiate. Putem accesa drepturile de <code>root</code> folosind comanda
+</p>
+<pre class="code">sudo su</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laborator 06: Servicii de file sharing" [1-836] -->
+<h2 class="sectionedit2" id="rsync">1. rsync</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">[00]. Pe masina virtuală instalati pachetul <code>rsync</code>.</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# apt-get update; apt-get install rsync</pre>
+<ul>
+<li class="level1"><div class="li">[01]. Pe mașina virtuală adăugați utilizatorul <code>bkpuser</code> cu parola student.</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# groupadd bkpusr
+
+root@vm:~# useradd -d /home/bkpusr -m -g bkpusr -s /bin/bash bkpusr
+
+root@vm:~# echo &quot;bkpusr:student&quot; | chpasswd</pre>
+<ul>
+<li class="level1"><div class="li">[02].a. Pe mașina virtuală creați directorul <code>/home/bkpuser/stud-home</code> cu drepturi depline pentru utilizatorul <code>bkpuser</code>.</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# su - bkpusr
+
+bkpusr@vm:~$ pwd
+/home/bkpusr
+
+bkpusr@vm:~$ mkdir stud-home</pre>
+<ul>
+<li class="level1"><div class="li">[02].b. Pe mașina fizică creați trei fișiere in directorul <code>/home/student/Documents</code>.</div>
+</li>
+</ul>
+<pre class="code">student@physical:~/Documents$ echo &quot;1&quot; &gt; file1.txt
+
+student@physical:~/Documents$ echo &quot;2&quot; &gt; file2.txt
+
+student@physical:~/Documents$ echo &quot;3&quot; &gt; file3.txt</pre>
+<ul>
+<li class="level1"><div class="li">[03]. Sincronizați, din contul <code>bkpuser</code>, folosind rsync peste ssh, directorul <code>/home/student/Documents</code> de pe mașina fizică în directorul <code>/home/bkpusr/stud-home</code> de pe mașina virtuală. </div>
+</li>
+</ul>
+<pre class="code">student@physical:~$ rsync -avz Documents/ bkpusr@vm.local:stud-home/
+bkpusr@vm.local&#039;s password: 
+sending incremental file list
+./
+file1.txt
+file2.txt
+file3.txt
+
+sent 226 bytes  received 72 bytes  54.18 bytes/sec
+total size is 6  speedup is 0.02</pre>
+<ul>
+<li class="level1"><div class="li">[04]. Creați în contul utilizatorului <code>bkpuser</code> de pe mașina virtuală o pereche de chei RSA. Copiați cheia publica in contul <code>student</code> de pe mașina fizică. Realizați un script care să ruleze în cron, pe mașina virtuală, în contul utilizatorului bkpuser, la fiecare 1 minut, și să realizeze automat back-up-ul directorului <code>~/Documents</code> al utilizatorului student în <code>/home/bkpusr/stud-home</code></div>
+</li>
+</ul>
+<pre class="code">student@physical:~$ ssh-copy-id bkpusr@vm.local
+bkpusr@vm.local&#039;s password: 
+Now try logging into the machine, with &quot;ssh &#039;bkpusr@vm.local&#039;&quot;, and check in:
+
+  ~/.ssh/authorized_keys
+
+to make sure we haven&#039;t added extra keys that you weren&#039;t expecting.
+
+student@physical:~$ rsync -avz Documents/ bkpusr@vm.local:stud-home/
+sending incremental file list
+
+sent 97 bytes  received 12 bytes  218.00 bytes/sec
+total size is 6  speedup is 0.06
+
+student@physical:~$ cat sync.sh 
+#!/bin/bash
+
+RUSR=bkpusr
+RHOST=vm.local
+LPATH=/home/student/Documents/
+RPATH=stud-home/
+
+rsync -avz $LPATH $RUSR@$RHOST:$RPATH
+
+
+root@physical:~# chown :crontab /var/spool/cron/crontabs
+
+root@physical:~# chmod g+w /var/spool/cron/crontabs
+
+root@physical:~# ls -ld /var/spool/cron/crontabs/
+drwxrwxr-x 4 root crontab 4096 Jan 26 17:52 /var/spool/cron/crontabs/
+
+
+student@physical:~$ crontab -e
+crontab: installing new crontab
+
+student@physical:~$ crontab -l | tail -n 1
+* * * * * /home/student/sync.sh
+
+root@physical:~# /etc/init.d/cron restart
+Restarting periodic command scheduler: cronStopping periodic command scheduler: cron.
+Starting periodic command scheduler: cron.</pre>
+
+</div>
+<!-- EDIT2 SECTION "1. rsync" [837-3761] -->
+<h2 class="sectionedit3" id="nfs">2. NFS</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">[01]. Pe mașina virtuală instalați <code>nfs-kernel-server</code>, <code>nfs-common</code> și <code>portmap</code>.</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# apt-get install nfs-kernel-server nfs-common portmap
+[...]</pre>
+<ul>
+<li class="level1"><div class="li">[02]. Creați utilizatorul <code>nfsuser</code> pe mașina virtuala și pe mașina fizică. Pe mașina fizică, setați home-ul utilizatorlui ca fiind în <code>/home/nfsuser</code> și pe cea virtuală în <code>/opt/exports/home/nfsuser</code>.</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# groupadd nfsuser
+
+root@vm:~# mkdir -p /opt/exports/home
+
+root@vm:~# useradd -d /opt/exports/home/nfsuser -m -g nfsuser -s /bin/bash nfsuser
+
+root@vm:~# echo &quot;nfsuser:student&quot; | chpasswd
+
+
+
+root@physical:~# groupadd nfsuser
+
+root@physical:~# useradd -d /home/nfsuser -m -g nfsuser -s /bin/bash nfsuser
+
+root@physical:~# echo &quot;nfsuser:student&quot; | chpasswd
+
+
+
+root@vm:~# apt-get install finger
+
+root@vm:~# finger nfsuser
+Login: nfsuser        			Name: 
+Directory: /opt/exports/home/nfsuser	Shell: /bin/bash
+Never logged in.
+No mail.
+No Plan.
+
+
+
+root@physical:~# apt-get install finger
+
+root@physical:~# finger nfsuser
+Login: nfsuser        			Name: 
+Directory: /home/nfsuser            	Shell: /bin/bash
+Never logged in.
+No mail.
+No Plan.</pre>
+<ul>
+<li class="level1"><div class="li">[03]. Sincronizati UID-ul și GID-ul utilizatorului <code>nfsuser</code> de pe mașina virtuală cu cel de pe mașina fizică. Ajustați în mod corespunzător ID-ul utilizatorului care deține <code>/opt/exports</code>. (Hint: <code>chown</code>, <code>usermod</code>, <code>groupmod</code>).</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# id nfsuser
+uid=1002(nfsuser) gid=1003(nfsuser) groups=1003(nfsuser)
+
+
+
+root@physical:~# id nfsuser
+uid=1001(nfsuser) gid=1001(nfsuser) groups=1001(nfsuser)
+
+root@physical:~# usermod -u 1002 nfsuser
+
+root@physical:~# groupmod -g 1003 nfsuser
+
+root@physical:~# id nfsuser
+uid=1002(nfsuser) gid=1003(nfsuser) groups=1003(nfsuser)
+
+
+
+root@vm:~# chown -R nfsuser:nfsuser /opt/exports</pre>
+<ul>
+<li class="level1"><div class="li">[04]. Pe mașina virtuală editați fișierul de configurare NFS astfel încât să exportați <code>/opt/exports/home/nfsuser</code> de pe mașina virtuală, setând ca trusted-host IP-ul interfeței virtuale de pe masina fizică, având permisiuni de read-write și permițând conexiuni.</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# tail -n 1 /etc/exports
+/opt/exports/home/nfsuser 192.168.56.1(rw,insecure)</pre>
+<ul>
+<li class="level1"><div class="li">[05]. Actualizați lista export-urilor serviciului de NFS (Hint: <code>exportfs</code>)</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# exportfs -ra
+exportfs: /etc/exports [1]: Neither &#039;subtree_check&#039; or &#039;no_subtree_check&#039; specified for export &quot;192.168.56.1:/opt/exports/home/nfsuser&quot;.
+  Assuming default behaviour (&#039;no_subtree_check&#039;).
+  NOTE: this default has changed since nfs-utils version 1.0.x
+
+root@vm:~# exportfs
+/opt/exports/home/nfsuser
+		192.168.56.1</pre>
+<ul>
+<li class="level1"><div class="li">[06]. În mașina virtuală reporniți daemonul rpcbind. (Hint: /etc/init.d).</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# /etc/init.d/rpcbind restart
+Stopping rpcbind daemon....
+Starting rpcbind daemon...Already running..</pre>
+<ul>
+<li class="level1"><div class="li">[07]. Montati temporar export-ul nou creat pe masina fizică în <code>/home/nfsuser</code>.</div>
+</li>
+</ul>
+<pre class="code">root@vm:~# ip a s eth0
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UNKNOWN qlen 1000
+    link/ether 00:0c:29:5a:9c:6c brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.115/24 brd 192.168.48.255 scope global eth0
+    inet6 fe80::20c:29ff:fe5a:9c6c/64 scope link 
+       valid_lft forever preferred_lft forever
+
+
+
+root@physical:~# apt-get install portmap
+
+root@physical:~# apt-get install nfs-common
+
+root@physical:~# mount 192.168.56.115:/opt/exports/home/nfsuser/ /home/nfsuser/</pre>
+<ul>
+<li class="level1"><div class="li">[08]. Logat ca <code>nfsuser</code> în mașina virtuală, creați fișierul <code>nfswrite.txt</code> cu permisiuni 744 în directorul său home. Verificați daca pe client (mașina fizică), in <code>/home/nfsuser</code> exista acest fisier.</div>
+</li>
+</ul>
+<pre class="code">nfsuser@vm:~$ touch nfswrite.txt
+
+nfsuser@vm:~$ chmod 744 nfswrite.txt 
+
+nfsuser@vm:~$ ls -l
+total 0
+-rwxr--r-- 1 nfsuser nfsuser 0 Jan 26 18:34 nfswrite.txt
+
+
+
+root@physical:~# ls -l /home/nfsuser/
+total 0
+-rwxr--r-- 1 nobody nogroup 0 Jan 26 18:34 nfswrite.txt</pre>
+<ul>
+<li class="level1"><div class="li">[09]. Demontați sistemul de fișiere de pe client; verificați din nou existența fișierului pe server.</div>
+</li>
+</ul>
+<pre class="code">root@physical:~# umount /home/nfsuser
+
+root@physical:~# ls -l /home/nfsuser/
+total 0
+
+
+
+nfsuser@vm:~$ ls -l
+total 0
+-rwxr--r-- 1 nfsuser nfsuser 0 Jan 26 18:34 nfswrite.txt</pre>
+<ul>
+<li class="level1"><div class="li">[10]. Montați din nou sistemul de fișiere. Verificați proprietățile fișierului pe client.</div>
+</li>
+</ul>
+<pre class="code">root@physical:~# mount 192.168.56.115:/opt/exports/home/nfsuser/ /home/nfsuser/
+
+root@physical:~# ls -l /home/nfsuser/
+total 0
+-rwxr--r-- 1 nobody nogroup 0 Jan 26 18:34 nfswrite.txt
+
+root@physical:~# file /home/nfsuser/nfswrite.txt 
+/home/nfsuser/nfswrite.txt: empty</pre>
+
+</div>
+<!-- EDIT3 SECTION "2. NFS" [3762-8427] -->
+<h2 class="sectionedit4" id="samba">3. Samba</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">[01]. Instalați serverul de SAMBA pe mașina fizică.</div>
+</li>
+</ul>
+<pre class="code">root@physical:~# apt-get install samba
+[...]</pre>
+<ul>
+<li class="level1"><div class="li">[02]. Instalați clientul de SAMBA atât pe mașina fizică cât și pe cea virtuală.</div>
+</li>
+</ul>
+<pre class="code">root@physical:~# apt-get install smbclient smbfs
+[...]
+
+root@vm:~# apt-get install smbclient smbfs
+[...]</pre>
+
+<p>
+&gt;
+</p>
+<ul>
+<li class="level1"><div class="li">[03]. Folosind man, aflați care sunt daemonii asociați serviciului SAMBA. Verificați dacă acești daemoni sunt porniți pe mașina fizică și, în caz afirmativ, pe ce porturi ascultă.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic">
+S-ar putea sa fie nevoie sa porniti daemonii manual:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>sudo service smbd start</code></div>
+</li>
+<li class="level1"><div class="li"> <code>sudo service nmbd start</code></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+<pre class="code">       smbd(8)
+           The smbd daemon provides the file and print services to SMB clients, such as Windows 95/98,
+           Windows NT, Windows for Workgroups or LanManager. The configuration file for this daemon is
+           described in smb.conf(5)
+
+       nmbd(8)
+           The nmbd daemon provides NetBIOS nameservice and browsing support. The configuration file for
+           this daemon is described in smb.conf(5)
+
+root@physical:~# netstat -tlnp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      7288/rpcbind    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1593/sshd       
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      1603/cupsd      
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      1475/exim4      
+tcp        0      0 0.0.0.0:445             0.0.0.0:*               LISTEN      9933/smbd       
+tcp        0      0 0.0.0.0:46174           0.0.0.0:*               LISTEN      -               
+tcp        0      0 0.0.0.0:36000           0.0.0.0:*               LISTEN      7794/rpc.statd  
+tcp        0      0 0.0.0.0:139             0.0.0.0:*               LISTEN      9933/smbd       
+tcp6       0      0 :::111                  :::*                    LISTEN      7288/rpcbind    
+tcp6       0      0 :::22                   :::*                    LISTEN      1593/sshd       
+tcp6       0      0 ::1:631                 :::*                    LISTEN      1603/cupsd      
+tcp6       0      0 ::1:25                  :::*                    LISTEN      1475/exim4      
+tcp6       0      0 :::60219                :::*                    LISTEN      7794/rpc.statd  
+tcp6       0      0 :::445                  :::*                    LISTEN      9933/smbd       
+tcp6       0      0 :::47114                :::*                    LISTEN      -               
+tcp6       0      0 :::139                  :::*                    LISTEN      9933/smbd   </pre>
+<ul>
+<li class="level1"><div class="li">[04]. Configurați serverul Samba în workgroupul <code>PR706</code>. Folosiți ca nume NetBios prenumele vostru. Reporniți serviciul. Hint: folosiți directiva <code>netbios name</code>.</div>
+</li>
+</ul>
+<pre class="code">root@physical:~# grep -A 2 &quot;workgroup =&quot; /etc/samba/smb.conf
+   workgroup = PR706
+   netbios name = gsr
+   
+root@physical:~# /etc/init.d/samba restart
+Stopping Samba daemons: nmbd smbd.
+Starting Samba daemons: nmbd smbd.</pre>
+<ul>
+<li class="level1"><div class="li">[05]. În file manager (Nautilus) folosiți meniul Go, opțiunea Network și selectați Windows Network (sau CTRL+L și apoi <code>smb://</code>). Vizualizați stațiile prezente în workgroup-ul PR706.</div>
+</li>
+</ul>
+<pre class="code">Go &gt; Network &gt; Windows Shares &gt; PR706 (sau numele configurat) &gt; lista stațiilor</pre>
+<ul>
+<li class="level1"><div class="li">[06]. Observați că în fișierul de configurare este definită secțiunea de share <code>[homes]</code>. Creați utilizatorul <code>bart</code> pe mașina fizică, restartați serverul și conectați-vă cu <code>smbclient</code> de pe mașina virtuală la home-ul utilizatorului bart de pe mașina fizică. Ce se întâmplă?</div>
+</li>
+<li class="level1"><div class="li">[06].a. Hint: <abbr title="Uniform Resource Locator">URL</abbr>-urile de conectare la un server SAMBA, în linia de comandă, sunt <code>//netbios-name</code> sau <code>\\\\netbios-name</code>. În interfața grafică (Nautilus), puteți folosi <code>smb://netbios-name</code></div>
+</li>
+<li class="level1"><div class="li">[06].b. Hint: <abbr title="Uniform Resource Locator">URL</abbr>-urile pentru share-uri SAMBA, în linia de comandă, sunt <code>//netbios-name/share-name</code> sau <code>\\\netbios-name\\share-name</code>. În interfața grafică (Nautilus), puteți folosi <code>smb://netbios-name/share-name</code>.</div>
+</li>
+</ul>
+<pre class="code">root@physical:~# groupadd bart
+
+root@physical:~# useradd -d /home/bart -m -g bart -s /bin/bash bart
+
+root@physical:~# echo &quot;bart:student&quot; | chpasswd
+
+root@physical:~# /etc/init.d/samba restart
+Stopping Samba daemons: nmbd smbd.
+Starting Samba daemons: nmbd smbd.
+
+student@vm:~$ smbclient -L //gsr
+Enter student&#039;s password: 
+session setup failed: NT_STATUS_LOGON_FAILURE
+
+student@vm:~$ smbclient -L //gsr -U bart
+Enter bart&#039;s password: 
+session setup failed: NT_STATUS_LOGON_FAILURE</pre>
+<ul>
+<li class="level1"><div class="li">[07]. Adaugați utilizatorul bart la baza de parole a serverului SAMBA folosind <code>smbpasswd</code>. Restartați serverul și încercați să vă conectați din nou. Listați fișierele din share-ul curent.</div>
+</li>
+<li class="level1"><div class="li">[07].a. Hint: Pentru a accesa o resursă cu smbclient sintaxa este: <em>remote_machine/resource</em></div>
+</li>
+<li class="level1"><div class="li">[07].b. Hint: Implicit, smbclient folosește ca username utilizatorul curent.</div>
+</li>
+</ul>
+<pre class="code">root@physical:~# smbpasswd -a bart
+New SMB password:
+Retype new SMB password:
+Added user bart.
+
+
+student@vm:~$ smbclient -L //gsr -U bart
+Enter bart&#039;s password: 
+Domain=[PR706] OS=[Unix] Server=[Samba 3.6.1]
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	print$          Disk      Printer Drivers
+	IPC$            IPC       IPC Service (physical server)
+	bart            Disk      Home Directories
+
+
+Domain=[PR706] OS=[Unix] Server=[Samba 3.6.1]
+
+	Server               Comment
+	---------            -------
+	GSR                  physical server
+
+	Workgroup            Master
+	---------            -------
+	PR706                GSR</pre>
+<ul>
+<li class="level1"><div class="li">[08]. Pe mașina fizică creați directorul <code>/home/bart/private</code> cu permisiuni 744. Creați un share de tip read-write pentru acest director care să permită accesul doar utilizatorului bart. Conectați-vă la acest share de pe mașina virtuală și transferați un fisier (ex:<code>file.txt</code>) de pe mașina virtuală pe mașina fizică. (Hint: <code>valid users</code>)</div>
+</li>
+</ul>
+<pre class="code">root@physical:~# su - bart
+
+bart@physical:~$ pwd
+/home/bart
+
+bart@physical:~$ mkdir private
+
+bart@physical:~$ chmod 744 private/
+
+root@physical:~# tail -n 6 /etc/samba/smb.conf
+[bart_is_sharing]
+        comment = bart&#039;s shared folder
+        read only = no
+        path = /home/bart/private
+        guest ok = no
+        valid users = bart
+
+root@physical:~# /etc/init.d/samba restart
+Stopping Samba daemons: nmbd smbd.
+Starting Samba daemons: nmbd smbd.
+
+student@vm:~$ smbclient -L //gsr/ -U bart
+Enter bart&#039;s password: 
+Domain=[PR706] OS=[Unix] Server=[Samba 3.6.1]
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	print$          Disk      Printer Drivers
+	bart_is_sharing Disk      bart&#039;s shared folder
+	IPC$            IPC       IPC Service (physical server)
+	bart            Disk      Home Directories
+Domain=[PR706] OS=[Unix] Server=[Samba 3.6.1]
+
+	Server               Comment
+	---------            -------
+	GSR                  physical server
+
+	Workgroup            Master
+	---------            -------
+	PR706                GSR
+
+
+student@vm:~$ echo &quot;text&quot; &gt; file.txt
+
+student@vm:~$ smbclient //gsr/bart_is_sharing -U bart
+Enter bart&#039;s password: 
+Domain=[PR706] OS=[Unix] Server=[Samba 3.6.1]
+smb: \&gt; ?
+?              allinfo        altname        archive        blocksize      
+cancel         case_sensitive cd             chmod          chown          
+close          del            dir            du             echo           
+exit           get            getfacl        geteas         hardlink       
+help           history        iosize         lcd            link           
+lock           lowercase      ls             l              mask           
+md             mget           mkdir          more           mput           
+newer          open           posix          posix_encrypt  posix_open     
+posix_mkdir    posix_rmdir    posix_unlink   print          prompt         
+put            pwd            q              queue          quit           
+readlink       rd             recurse        reget          rename         
+reput          rm             rmdir          showacls       setea          
+setmode        stat           symlink        tar            tarmode        
+translate      unlock         volume         vuid           wdel           
+logon          listconnect    showconnect    ..             !              
+smb: \&gt; ls
+  .                                   D        0  Thu Jan 26 21:16:37 2012
+  ..                                  D        0  Thu Jan 26 21:17:44 2012
+		40317 blocks of size 2097152. 37508 blocks available
+
+smb: \&gt; put file.txt
+putting file file.txt as \file.txt (0.3 kb/s) (average 0.3 kb/s)
+
+smb: \&gt; ls 
+  .                                   D        0  Thu Jan 26 21:30:24 2012
+  ..                                  D        0  Thu Jan 26 21:17:44 2012
+  file.txt                            A        5  Thu Jan 26 21:30:24 2012
+
+smb: \&gt; exit
+
+student@vm:~$ </pre>
+
+</div>
+<!-- EDIT4 SECTION "3. Samba" [8428-17628] -->
+<h2 class="sectionedit5" id="bonus">4. Bonus</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">[01]. rsync:</div>
+</li>
+<li class="level1"><div class="li">[01].a. Pe mașina virtuală activati daemonul de rsync (Hint: <code>/etc/default/rsync</code>). Rulați <code>netstat -lntp</code> și identificati linia corespunzătoare daemonului de rsync.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">[01].b. Creați directoarele <code>/home/student/public-files</code> și <code>/home/student/private-files</code> pe mașina virtuală</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">[01].c. publicați conținutul celor două directoare de mai sus prin daemonul de rsync, astfel încât <code>public-files</code> să poată fi accesat fără parolă și <code>private-files</code> să poata fi accesat numai cu introducerea parolei utilizatorului student.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li">[02]. <abbr title="File Transfer Protocol">FTP</abbr></div>
+</li>
+<li class="level1"><div class="li">[02].a. Instalați <code>vsftpd</code> în mașina virtuală și configurați autentificarea folosind PAM. Testați folosind un client din mașina fizică. (tutorial: <a href="http://www.cyberciti.biz/tips/centos-redhat-vsftpd-ftp-with-virtual-users.html" class="urlextern" title="http://www.cyberciti.biz/tips/centos-redhat-vsftpd-ftp-with-virtual-users.html"  rel="nofollow">http://www.cyberciti.biz/tips/centos-redhat-vsftpd-ftp-with-virtual-users.html</a>)</div>
+</li>
+<li class="level1"><div class="li">[02].b. Configurați suport pentru conexiuni SSL în serverul <abbr title="File Transfer Protocol">FTP</abbr> instalat anrerior. Testați folosind un client din mașina fizică. (tutorial: <a href="http://www.cyberciti.biz/tips/configure-vsfptd-secure-connections-via-ssl-tls.html" class="urlextern" title="http://www.cyberciti.biz/tips/configure-vsfptd-secure-connections-via-ssl-tls.html"  rel="nofollow">http://www.cyberciti.biz/tips/configure-vsfptd-secure-connections-via-ssl-tls.html</a>)</div>
+</li>
+</ul>
+
+
+
+</div>
+<!-- EDIT5 SECTION "4. Bonus" [17629-] --></div>
+</body>
+</html>

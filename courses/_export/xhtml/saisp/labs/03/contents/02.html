@@ -1,0 +1,166 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:03:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-10T04:16:54+0200"/>
+<meta name="keywords" content="saisp,labs,03,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:03:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/03/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:03:contents';var JSINFO = {"id":"saisp:labs:03:contents:02","namespace":"saisp:labs:03:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_remote_logging">02. [10p] Remote logging</h3>
+<div class="level3">
+
+<p>
+O soluție simplă pentru monitorizarea centralizată o reprezintă jurnalizarea la distanță (remote). Toate echipamentele din rețea vor trimite mesajele de jurnalizare (logging) către un server central.
+</p>
+
+<p>
+În Linux, daemon-ul ce asigură jurnalizarea este <code>rsyslogd</code>. Acesta este deja instalat pe majoritatea sistemelor Linux.
+În mod implicit, <code>rsyslogd</code> nu acceptă conexiuni din exterior. Pentru a activa această opțiune, trebuie editat fișierul de configurare <code>/etc/rsyslog.conf</code> și decomentate liniile ce activează recepționarea de mesaje UDP sau TCP.
+</p>
+
+<p>
+Vom realiza acest lucru pe statia <code>monitor</code>:
+</p>
+<pre class="code bash"><span class="co0"># provides UDP syslog reception</span>
+<span class="re1">$ModLoad</span> imudp
+<span class="re1">$UDPServerRun</span> <span class="nu0">514</span>
+&nbsp;
+<span class="co0"># provides TCP syslog reception</span>
+<span class="re1">$ModLoad</span> imtcp
+<span class="re1">$InputTCPServerRun</span> <span class="nu0">514</span></pre>
+
+<p>
+După ce am decomentat liniile trebuie să resetăm serviciul <code>rsyslog</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>rsyslog restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Stopping enhanced syslogd: rsyslogd.
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Starting enhanced syslogd: rsyslogd.</pre>
+
+<p>
+Pentru ca un router Cisco sa trimită mesaje de jurnalizare (logging) către un server extern, adresa acestui server trebuie configurată în modul global. În cazul nostru, vom configura adresa IP a stației <code>monitor</code> pe ruterul <code>R1</code>:
+</p>
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># logging 192.168.1.4</span></pre>
+
+<p>
+De asemenea, se poate specifica și nivelul de logging. Vor fi trimise doar mesajele cu un nivel cel puțin la fel de <em>grav</em> ca nivelul specificat:
+</p>
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># logging trap debugging</span></pre>
+
+<p>
+Pentru a verifica funcționalitatea, activați debugging-ul protocolului ICMP pe ruterul <code>R1</code> și executați comanda <code>ping</code>:
+</p>
+<pre class="code">R1#debug ip  icmp
+ICMP packet debugging is on
+R1#ping google.ro
+
+Translating &quot;google.ro&quot;...domain server (8.8.8.8) [OK]
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 173.194.70.94, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 40/40/40 ms</pre>
+
+<p>
+După cum se observă nu a apărut în consola ruterului nici un mesaj de debug. Vom verifica fișierul <code>/var/log/syslog</code> de pe stația <code>monitor</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>syslog
+Mar  <span class="nu0">9</span> <span class="nu0">15</span>:<span class="nu0">56</span>:<span class="nu0">57</span> 192.168.1.1 <span class="nu0">19</span>: Mar  <span class="nu0">9</span> <span class="nu0">13</span>:<span class="nu0">56</span>:<span class="nu0">56.524</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 173.194.70.94, dst 192.168.1.1
+Mar  <span class="nu0">9</span> <span class="nu0">15</span>:<span class="nu0">56</span>:<span class="nu0">57</span> 192.168.1.1 <span class="nu0">20</span>: Mar  <span class="nu0">9</span> <span class="nu0">13</span>:<span class="nu0">56</span>:<span class="nu0">56.564</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 173.194.70.94, dst 192.168.1.1
+Mar  <span class="nu0">9</span> <span class="nu0">15</span>:<span class="nu0">56</span>:<span class="nu0">57</span> 192.168.1.1 <span class="nu0">21</span>: Mar  <span class="nu0">9</span> <span class="nu0">13</span>:<span class="nu0">56</span>:<span class="nu0">56.608</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 173.194.70.94, dst 192.168.1.1</pre>
+
+<p>
+Opriți debugging-ul protocolului ICMP:
+</p>
+<pre class="code bash"><span class="co4">R1#</span>no debug <span class="kw2">ip</span> icmp
+ICMP packet debugging is off</pre>
+
+<p>
+Configurați pe ruterul R2 jurnalizarea remote și testați funcționalitatea:
+</p>
+
+<p>
+Soluția prezentată până acum are dezavantajul că toate mesajele sunt stocate în același fișier. Dacă dorim ca mesajele de la un anumit ruter să fie stocate într-un fișier separat, vom folosi opțiunea <code>facility</code> ce ne permite clasificarea mesajelor de logging. Pe ruter R1 se configurează <code>logging facility</code> diferit:
+</p>
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># logging facility local1</span></pre>
+
+<p>
+Pe statia <code>monitor</code>, în <code>/etc/rsyslog.conf</code> vom specifica un fișier destinație pentru tipul de logging <code>local1</code>, după care vom reseta serviciul:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>rsyslog.conf <span class="sy0">|</span><span class="kw2">grep</span> <span class="re5">-B</span> <span class="nu0">2</span> R1
+<span class="co0">#### RULES ####</span>
+<span class="co0">###############</span>
+local1.<span class="sy0">*</span>                        <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>R1.log
+<span class="co4">root@monitor:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>rsyslog restart</pre>
+
+<p>
+<p><div class="noteclassic">
+Tipurile de logging (<code>local1</code>) sunt predefinite și NU pot fi înlocuite cu orice șir de caracter. Caracterul <code>.</code> plasat după tipul de logging (<code>local1</code>) este urmat nivelul de logging pentru care se va face scrierea în fișier. În acest caz caracterul <code>*</code> semnifică orice nivel de logging al mesajelor.
+
+</div></p>
+</p>
+
+<p>
+Pentru testare:
+</p>
+<pre class="code bash"><span class="co4">R1#</span>debug <span class="kw2">ip</span> icmp
+ICMP packet debugging is on
+<span class="co4">R1#</span><span class="kw2">ping</span> acs.pub.ro
+&nbsp;
+Translating <span class="st0">&quot;acs.pub.ro&quot;</span>...domain server <span class="br0">&#40;</span>8.8.8.8<span class="br0">&#41;</span> <span class="br0">&#91;</span>OK<span class="br0">&#93;</span>
+&nbsp;
+Type escape sequence to abort.
+Sending <span class="nu0">5</span>, <span class="nu0">100</span>-byte ICMP Echos to 141.85.227.151, timeout is <span class="nu0">2</span> seconds:
+<span class="sy0">!!!!!</span>
+Success rate is <span class="nu0">100</span> percent <span class="br0">&#40;</span><span class="nu0">5</span><span class="sy0">/</span><span class="nu0">5</span><span class="br0">&#41;</span>, round-trip min<span class="sy0">/</span>avg<span class="sy0">/</span>max = <span class="nu0">4</span><span class="sy0">/</span><span class="nu0">20</span><span class="sy0">/</span><span class="nu0">32</span> ms
+&nbsp;
+<span class="co4">root@monitor:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>R1.log
+Mar  <span class="nu0">9</span> <span class="nu0">16</span>:<span class="nu0">11</span>:<span class="nu0">16</span> 192.168.1.1 <span class="nu0">45</span>: Mar  <span class="nu0">9</span> <span class="nu0">14</span>:<span class="nu0">11</span>:<span class="nu0">15.651</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 141.85.227.151, dst 192.168.1.1
+Mar  <span class="nu0">9</span> <span class="nu0">16</span>:<span class="nu0">11</span>:<span class="nu0">16</span> 192.168.1.1 <span class="nu0">46</span>: Mar  <span class="nu0">9</span> <span class="nu0">14</span>:<span class="nu0">11</span>:<span class="nu0">15.655</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 141.85.227.151, dst 192.168.1.1
+Mar  <span class="nu0">9</span> <span class="nu0">16</span>:<span class="nu0">11</span>:<span class="nu0">16</span> 192.168.1.1 <span class="nu0">47</span>: Mar  <span class="nu0">9</span> <span class="nu0">14</span>:<span class="nu0">11</span>:<span class="nu0">15.687</span>: ICMP: <span class="kw3">echo</span> reply rcvd, src 141.85.227.151, dst 192.168.1.1</pre>
+
+<p>
+Configurați un fișier separat de logging și pentru ruterul <code>R2</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

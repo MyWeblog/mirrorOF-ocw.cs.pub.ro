@@ -1,0 +1,338 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>sd-ca:articole:tutorial-05-2</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-10T14:42:44+0200"/>
+<meta name="keywords" content="sd-ca,articole,tutorial-05-2"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=sd-ca:articole"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="tutorial-05-2.html"/>
+<link rel="canonical" href="../../../../sd-ca/articole/tutorial-05-2.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sd-ca:articole';var JSINFO = {"id":"sd-ca:articole:tutorial-05-2","namespace":"sd-ca:articole","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="tutorial-05-2.html#tutorial_52_-_radix_sort">Tutorial 5.2 - Radix Sort</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="tutorial-05-2.html#obiective">Obiective</a></div></li>
+<li class="level2"><div class="li"><a href="tutorial-05-2.html#radix_sort">Radix Sort</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tutorial-05-2.html#implementare_lsd">Implementare LSD</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="tutorial-05-2.html#program_de_test">Program de test</a></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="tutorial_52_-_radix_sort">Tutorial 5.2 - Radix Sort</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Tutorial 5.2 - Radix Sort" [1-41] -->
+<h2 class="sectionedit2" id="obiective">Obiective</h2>
+<div class="level2">
+
+<p>
+Ne dorim:
+</p>
+<ul>
+<li class="level1"><div class="li"> să arătăm funcționalitățile unei cozi</div>
+</li>
+<li class="level1"><div class="li"> să implementăm algoritmul Radix Sort</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Obiective" [42-166] -->
+<h2 class="sectionedit3" id="radix_sort">Radix Sort</h2>
+<div class="level2">
+
+<p>
+Radix Sort este un algoritm de sortare care ţine cont de cifre individuale ale elementelor sortate. Aceste elemente pot fi nu doar numere, ci orice altceva ce se poate reprezenta prin întregi. Majoritatea calculatoarelor digitale reprezintă datele în memorie sub formă de numere binare, astfel că procesarea cifrelor din această reprezentare se dovedeşte a fi cea mai convenabilă. Există două tipuri de astfel de sortare: LSD (least significant digit) şi MSD (most significant digit). LSD procesează reprezentările dinspre cea mai puţin semnificativă cifră spre cea mai semnificativă, iar MSD invers.
+</p>
+
+<p>
+O versiune simplă a radix sort este cea care foloseşte 10 cozi (câte una pentru fiecare cifră de la 0 la 9). Aceste cozi vor reţine la fiecare pas numerele care au cifra corespunzătoare rangului curent. După această împărţire, elementele se scot din cozi în ordinea crescătoare a indicelui cozii (de la 0 la 9), şi se reţin într-un vector (care devine noua secvenţă de sortat).
+Exemplu:
+</p>
+
+<p>
+Secvenţa iniţială:
+</p>
+<pre class="code">170, 45, 75, 90, 2, 24, 802, 66</pre>
+
+<p>
+Numere sunt introduse în 10 cozi (într-un vector de 10 cozi), în funcţie de cifrele de la dreapta la stânga fiecărui număr.
+</p>
+
+<p>
+Cozile pentru prima iteraţie vor fi:
+</p>
+<pre class="code">  * 0: 170, 090 
+  * 1: nimic 
+  * 2: 002, 802 
+  * 3: nimic 
+  * 4: 024 
+  * 5: 045, 075 
+  * 6: 066 
+  * 7 - 9: nimic </pre>
+
+<p>
+a. Se face dequeue pe toate cozile, în ordinea crescătoare a indexului cozii, şi se pun numerele într-un vector, în ordinea astfel obţinută: 
+</p>
+
+<p>
+Noua secvenţă de sortat:
+</p>
+<pre class="code">170, 090, 002, 802, 024, 045, 075, 066</pre>
+
+<p>
+b. A doua iteraţie: 
+</p>
+
+<p>
+Cozi:
+</p>
+<pre class="code">  * 0: 002, 802 
+  * 1: nimic 
+  * 2: 024 
+  * 3: nimic
+  * 4: 045 
+  * 5: nimic
+  * 6: 066 
+  * 7: 170, 075 
+  * 8: nimic 
+  * 9: 090 </pre>
+
+<p>
+Noua secvenţă:
+</p>
+<pre class="code">002, 802, 024, 045, 066, 170, 075, 090</pre>
+
+<p>
+c. A treia iteraţie: 
+</p>
+
+<p>
+Cozi:
+</p>
+<pre class="code">  * 0: 002, 024, 045, 066, 075, 090 
+  * 1: 170 
+  * 2 - 7: nimic
+  * 8: 802 
+  * 9: nimic</pre>
+
+<p>
+Noua secvenţă:
+</p>
+<pre class="code">002, 024, 045, 066, 075, 090, 170, 802 (sortată) </pre>
+
+</div>
+<!-- EDIT3 SECTION "Radix Sort" [167-2300] -->
+<h3 class="sectionedit4" id="implementare_lsd">Implementare LSD</h3>
+<div class="level3">
+
+<p>
+O posibila implementare pentru algoritmul Radix Sort, varianta LSD folosind 10 cozi poate fi urmatoare.
+</p>
+<pre class="code cpp"><span class="kw4">void</span> radixSort<span class="br0">&#40;</span>std<span class="sy4">::</span><span class="me2">vector</span><span class="sy1">&lt;</span><span class="kw4">int</span><span class="sy1">&gt;</span> <span class="sy3">&amp;</span>v<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="co1">// la pasul k Q[i] ca contine toate numerele care au cifra </span>
+	<span class="co1">// de pe pozita k egala cu i</span>
+	std<span class="sy4">::</span><span class="me2">queue</span><span class="sy1">&lt;</span><span class="kw4">int</span><span class="sy1">&gt;</span> Q<span class="br0">&#91;</span><span class="nu0">10</span><span class="br0">&#93;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="co1">// obtine numarul de pasi (este dat de numarul cu cele mai multe cifre)</span>
+	<span class="kw4">int</span> steps <span class="sy1">=</span> countDigits <span class="br0">&#40;</span> getMaxValue<span class="br0">&#40;</span>v<span class="br0">&#41;</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="co1">// la fiecare pas ne va interesa un anumit rang (cifra) care</span>
+	<span class="co1">// corespunde unei puteri a lui 10 </span>
+	<span class="kw4">int</span> power <span class="sy1">=</span> <span class="nu0">1</span><span class="sy4">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> k <span class="sy1">=</span> <span class="nu0">1</span><span class="sy4">;</span> k <span class="sy1">&lt;=</span> steps<span class="sy4">;</span> <span class="sy2">++</span>k<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="co1">// fiecare element din v va fi distribuit intr-o coada cu un anumit indice i</span>
+		<span class="co1">// corespunzator cifrei de pe pozitia k</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span>std<span class="sy4">::</span><span class="me2">vector</span><span class="sy1">&lt;</span><span class="kw4">int</span><span class="sy1">&gt;</span><span class="sy4">::</span><span class="me2">iterator</span> it <span class="sy1">=</span> v.<span class="me1">begin</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> it <span class="sy3">!</span><span class="sy1">=</span> v.<span class="me1">end</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="sy2">++</span>it<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			<span class="kw4">int</span> i <span class="sy1">=</span> <span class="br0">&#40;</span><span class="sy2">*</span>it <span class="sy2">/</span> power<span class="br0">&#41;</span> <span class="sy2">%</span> <span class="nu0">10</span><span class="sy4">;</span> <span class="co1">// preproceseaza indexul i</span>
+			Q<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">push</span><span class="br0">&#40;</span><span class="sy2">*</span>it<span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// adauga elementul in coada cu numarul i</span>
+		<span class="br0">&#125;</span> 
+&nbsp;
+		<span class="co1">// pregateste pasul urmator</span>
+		power <span class="sy2">*</span><span class="sy1">=</span> <span class="nu0">10</span><span class="sy4">;</span> <span class="co1">// trec la urmatorul rang</span>
+&nbsp;
+		<span class="co1">// renunt la vechea ordine din v</span>
+		<span class="co1">// reconstruiesc v cu ordinea curenta din cozi</span>
+		<span class="kw4">int</span> n<span class="sy4">;</span> <span class="co1">// numarul curent de elemente din v </span>
+		n <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> <span class="co1">// simulez golirea vectorului</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;=</span> <span class="nu0">9</span><span class="sy4">;</span> <span class="sy2">++</span>i<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			<span class="co1">// cat timp coada curent are elemente, muta-le in v</span>
+			<span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy3">!</span>Q<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">empty</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+				v<span class="br0">&#91;</span>n<span class="sy2">++</span><span class="br0">&#93;</span> <span class="sy1">=</span> Q<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">front</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// salveaza elemenul in v</span>
+				Q<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">pop</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="co1">// sterge elementul din Q[i]</span>
+			<span class="br0">&#125;</span>
+		<span class="br0">&#125;</span>
+	<span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+ATENȚIE! Este nevoie de includerea mai multor biblioteci.
+</p>
+<pre class="code cpp"><span class="co2">#include &lt;iostream&gt; // std::cin</span>
+<span class="co2">#include &lt;queue&gt; // std::queue</span>
+<span class="co2">#include &lt;cmath&gt; // log10</span></pre>
+
+<p>
+în funcția de mai sus s-au folosit două funcții auxiliare:
+</p>
+
+<p>
+ * getMaxValue care returnează cel mai mare element dintr-un vector dat; rezultatul returnat de această funcție reprezintă numărul care are cele mai multe cifre, deci numărul de pași pe care îi va executa algoritmul nostru.
+</p>
+<pre class="code cpp"><span class="kw4">int</span> getMaxValue<span class="br0">&#40;</span><span class="kw4">const</span> std<span class="sy4">::</span><span class="me2">vector</span><span class="sy1">&lt;</span><span class="kw4">int</span><span class="sy1">&gt;</span> <span class="sy3">&amp;</span>v<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="kw4">int</span> result <span class="sy1">=</span> v<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">1</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> v.<span class="me1">size</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span> <span class="sy2">++</span>i<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		result <span class="sy1">=</span> std<span class="sy4">::</span><span class="me2">max</span><span class="br0">&#40;</span> result, v<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw1">return</span> result<span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+ * countDigits care returnează numărul de cifre al unui număr întreg.
+</p>
+<pre class="code cpp"><span class="kw4">int</span> countDigits<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">int</span> n<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="kw1">return</span> <span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="nu0">1</span> <span class="sy2">+</span> <span class="kw3">log10</span> <span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">double</span><span class="br0">&#41;</span> n<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h4 id="program_de_test">Program de test</h4>
+<div class="level4">
+
+<p>
+Vom folosi următorul cod sursă pentru a testa algoritmul implementat.
+</p>
+<pre class="code cpp"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="kw4">int</span> n<span class="sy4">;</span> <span class="co1">// numarul de elemente din vector</span>
+	<span class="kw4">int</span> x<span class="sy4">;</span> <span class="co1">// variabila temporara</span>
+	std<span class="sy4">::</span><span class="me2">vector</span><span class="sy1">&lt;</span><span class="kw4">int</span><span class="sy1">&gt;</span> v<span class="sy4">;</span> <span class="co1">// vectorul care va fi sortat</span>
+&nbsp;
+	<span class="co1">// citire</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;n = &quot;</span><span class="sy4">;</span>
+	std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> n<span class="sy4">;</span>
+	<span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> n<span class="sy4">;</span> <span class="sy2">++</span>i<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="co1">// citeste inca un element</span>
+		std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;v[&quot;</span> <span class="sy1">&lt;&lt;</span>  i <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;] = &quot;</span><span class="sy4">;</span>
+		std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span>  x<span class="sy4">;</span>
+&nbsp;
+		<span class="co1">// adauga-l in vector</span>
+		v.<span class="me1">push_back</span><span class="br0">&#40;</span>x<span class="br0">&#41;</span><span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co1">// sorteaza </span>
+	radixSort<span class="br0">&#40;</span>v<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="co1">// afiseaza vectorul sortat</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;Dupa sortare:<span class="es1">\n</span>&quot;</span><span class="sy4">;</span>
+	<span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> n<span class="sy4">;</span> <span class="sy2">++</span>i<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> v<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy1">&lt;&lt;</span> <span class="st0">' '</span><span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Compilare
+</p>
+<pre class="code bash"><span class="kw2">g++</span> main.cpp <span class="re5">-o</span> main</pre>
+
+<p>
+Exemple:
+</p>
+<pre class="code bash">.<span class="sy0">/</span>main
+&nbsp;
+n = <span class="nu0">5</span>
+v<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> = <span class="nu0">55</span>
+v<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> = <span class="nu0">25</span>
+v<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> = <span class="nu0">43</span>
+v<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span> = <span class="nu0">32</span>
+v<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span> = <span class="nu0">11</span>
+Dupa pasul <span class="nu0">1</span>
+<span class="nu0">11</span> <span class="nu0">32</span> <span class="nu0">43</span> <span class="nu0">55</span> <span class="nu0">25</span> 
+Dupa pasul <span class="nu0">2</span>
+<span class="nu0">11</span> <span class="nu0">25</span> <span class="nu0">32</span> <span class="nu0">43</span> <span class="nu0">55</span> 
+Dupa sortare:
+<span class="nu0">11</span> <span class="nu0">25</span> <span class="nu0">32</span> <span class="nu0">43</span> <span class="nu0">55</span> </pre>
+<pre class="code bash">.<span class="sy0">/</span>main
+&nbsp;
+n = <span class="nu0">10</span>
+v<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> = <span class="nu0">123456</span>
+v<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> = <span class="nu0">134789</span>
+v<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> = <span class="nu0">198555</span>
+v<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span> = <span class="nu0">223456</span>
+v<span class="br0">&#91;</span><span class="nu0">4</span><span class="br0">&#93;</span> = <span class="nu0">111111</span>
+v<span class="br0">&#91;</span><span class="nu0">5</span><span class="br0">&#93;</span> = <span class="nu0">222222</span>
+v<span class="br0">&#91;</span><span class="nu0">6</span><span class="br0">&#93;</span> = <span class="nu0">923456</span>
+v<span class="br0">&#91;</span><span class="nu0">7</span><span class="br0">&#93;</span> = <span class="nu0">111555</span>
+v<span class="br0">&#91;</span><span class="nu0">8</span><span class="br0">&#93;</span> = <span class="nu0">999111</span>
+v<span class="br0">&#91;</span><span class="nu0">9</span><span class="br0">&#93;</span> = <span class="nu0">123456</span>
+Dupa pasul <span class="nu0">1</span>
+<span class="nu0">111111</span> <span class="nu0">999111</span> <span class="nu0">222222</span> <span class="nu0">198555</span> <span class="nu0">111555</span> <span class="nu0">123456</span> <span class="nu0">223456</span> <span class="nu0">923456</span> <span class="nu0">123456</span> <span class="nu0">134789</span> 
+Dupa pasul <span class="nu0">2</span>
+<span class="nu0">111111</span> <span class="nu0">999111</span> <span class="nu0">222222</span> <span class="nu0">198555</span> <span class="nu0">111555</span> <span class="nu0">123456</span> <span class="nu0">223456</span> <span class="nu0">923456</span> <span class="nu0">123456</span> <span class="nu0">134789</span> 
+Dupa pasul <span class="nu0">3</span>
+<span class="nu0">111111</span> <span class="nu0">999111</span> <span class="nu0">222222</span> <span class="nu0">123456</span> <span class="nu0">223456</span> <span class="nu0">923456</span> <span class="nu0">123456</span> <span class="nu0">198555</span> <span class="nu0">111555</span> <span class="nu0">134789</span> 
+Dupa pasul <span class="nu0">4</span>
+<span class="nu0">111111</span> <span class="nu0">111555</span> <span class="nu0">222222</span> <span class="nu0">123456</span> <span class="nu0">223456</span> <span class="nu0">923456</span> <span class="nu0">123456</span> <span class="nu0">134789</span> <span class="nu0">198555</span> <span class="nu0">999111</span> 
+Dupa pasul <span class="nu0">5</span>
+<span class="nu0">111111</span> <span class="nu0">111555</span> <span class="nu0">222222</span> <span class="nu0">123456</span> <span class="nu0">223456</span> <span class="nu0">923456</span> <span class="nu0">123456</span> <span class="nu0">134789</span> <span class="nu0">198555</span> <span class="nu0">999111</span> 
+Dupa pasul <span class="nu0">6</span>
+<span class="nu0">111111</span> <span class="nu0">111555</span> <span class="nu0">123456</span> <span class="nu0">123456</span> <span class="nu0">134789</span> <span class="nu0">198555</span> <span class="nu0">222222</span> <span class="nu0">223456</span> <span class="nu0">923456</span> <span class="nu0">999111</span> 
+Dupa sortare:
+<span class="nu0">111111</span> <span class="nu0">111555</span> <span class="nu0">123456</span> <span class="nu0">123456</span> <span class="nu0">134789</span> <span class="nu0">198555</span> <span class="nu0">222222</span> <span class="nu0">223456</span> <span class="nu0">923456</span> <span class="nu0">999111</span></pre>
+
+</div>
+<!-- EDIT4 SECTION "Implementare LSD" [2301-] --></div>
+</body>
+</html>

@@ -1,0 +1,505 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    03 - Android Internals    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-06T18:47:59+0200"/>
+<meta name="keywords" content="osp,lectures,lecture-internals"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=osp:lectures"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/osp/lectures/lecture-internals.html"/>
+<link rel="canonical" href="lecture-internals.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='osp:lectures';var JSINFO = {"id":"osp:lectures:lecture-internals","namespace":"osp:lectures","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/osp/"><img height="70" src="../../res/sigla_osp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lecture-internals%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lecture-internals%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="android_internals">03 - Android Internals</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Description: WakeLocks, Low-memory Killer, Ashmem, Alarm, Logger, Binder, System Server, Dalvik, ART, Zygote, Service Manager, Activity Manager, Package Manager, Power Manager.</div>
+</li>
+<li class="level1"><div class="li"> Practical part: </div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit2" id="lecture">Lecture</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="../../_media/osp/lectures/lecture-internals.pdf" class="media mediafile mf_pdf" title="osp:lectures:lecture-internals.pdf (690.8 KB)"> Lecture Slides</a></div>
+</li>
+<li class="level1"><div class="li"><a href="../../_media/osp/lectures/3.internals_notes.pdf" class="media mediafile mf_pdf" title="osp:lectures:3.internals_notes.pdf (69.6 KB)"> Lecture Notes</a></div>
+</li>
+</ul>
+
+<p>
+<iframe title="" src="../../_media/osp/lectures/lecture-internals.pdf" style="width:98%; height:400px"></iframe>
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="practical">Practical</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="resources">Resources</h4>
+<div class="level4">
+
+</div>
+
+<h4 id="files">Files</h4>
+<div class="level4">
+
+<p>
+<a href="../../_media/osp/media/lab2.zip" class="media mediafile mf_zip" title="osp:media:lab2.zip (1.9 KB)">lab2.zip</a>
+</p>
+
+</div>
+
+<h4 id="task_1_-_launching_an_activity_3p">Task 1 - Launching an Activity (3p)</h4>
+<div class="level4">
+
+<p>
+Create a new project and add a button to the main activity layout. Get a reference to this button in the onCreate method in MainActivity. Add a new Activity to the project. You can automatically add a new activity by right clicking on the project and selecting <strong>New &gt; Activity &gt; Blank Activity</strong> from the menu. This will start a wizard similar to the one at application creation.
+</p>
+
+<p>
+Back in MainActivity, add code to the onClick of the OnClickListener so that the new activity gets started. To start a new Activity you have to create an intent first which will explicitly take two parameters: a Context and the Class of the second activity. A context represents an interface to the current state of the application. It allows access to application specific resources and operations such as launching an activity or starting a service. In order to obtain the context you can use a reference to the current instance of the MainActivity class.
+</p>
+<pre class="code">public void onClick(View v) {
+        // Replace NewActivity with the name of your secondary activity
+	Intent i = new Intent(MainActivity.this, NewActivity.class);
+}</pre>
+
+<p>
+In order to launch the activity you must call:
+</p>
+<pre class="code">startActivity(i);</pre>
+
+<p>
+Before launching the new activity, it must be declared in the AndroidManifest.xml file. If you manually created the activity , you will have to add a similar line to the following one to the manifest file. If you created the activity through the wizard, the line should have been added automatically.
+</p>
+<pre class="code">&lt;activity
+   android:name=&quot;com.example.test.NewActivity&quot; /&gt;</pre>
+
+<p>
+If you created the Activity manually, in the onCreate of the second activity make sure you call the onCreate of the super class and use setContentView to the layout of the second activity for which you will have to create an empty layout.
+</p>
+<pre class="code">super.onCreate(savedInstanceState);
+setContentView(R.layout.new_activity);</pre>
+
+<p>
+Intents can also contain a dictionary of data (called Intent extras). Add an EditText box to your main activity layout and a TextView to your second activity ​layout. When clicking the button, get the text from the EditText element and add it to the intent. 
+</p>
+<pre class="code">i.putExtra(&quot;key&quot;, &quot;value&quot;);</pre>
+
+<p>
+Then, in your second activity, first, you have to access the intent through which the activity was launched. This can be done using the <strong>getIntent</strong> method. Afterwards, get the string from the intent and display it in the TextView. (Hint:  <a href="http://developer.android.com/reference/android/content/Intent.html#getStringExtra%28java.lang.String%29" class="urlextern" title="http://developer.android.com/reference/android/content/Intent.html#getStringExtra%28java.lang.String%29"  rel="nofollow">Intent.getStringExtra</a> ​and <a href="http://developer.android.com/reference/android/app/Activity.html#getIntent%28%29" class="urlextern" title="http://developer.android.com/reference/android/app/Activity.html#getIntent%28%29"  rel="nofollow">Activity.getIntent</a>)
+</p>
+
+</div>
+
+<h4 id="task_2_-_lists_and_adapters_4p">Task 2 - Lists and Adapters (4p)</h4>
+<div class="level4">
+
+<p>
+For this task, you will have to unpack the lab archive and copy the three files into the current project. Copy <strong>MyMenuItem.java</strong> and <strong>MenuAdapter.java</strong> in the same directory where the activity files reside. Copy <strong>list_item.xml</strong> in <strong>res/layout</strong>.
+</p>
+
+<p>
+A common widget for an Android application are lists which contain multiple items. Each item in the list has a layout and, usually, all items in a list have the same layout. To account for this, ListViews must have an adapter which creates the View for each item. When you want to display custom items within a list, the easiest way is to extend the BaseAdapter class.
+</p>
+
+<p>
+In this task, we will implement a list for which each list item (MyMenuItem) will have <strong>list_item.xml</strong> as its corresponding layout. If you take a closer look at this layout, you will notice that it contains 3 TextView elements.
+</p>
+
+<p>
+Add a ListView to your secondary activity and get a reference to it (ListView can be found under the Containers tab in the Design tab of the layout file). As previously mentioned, the adapter is responsible for creating and displaying the view for each list item through the getView method of the MenuAdapter class.
+</p>
+
+<p>
+In order to create a view, we will need to “inflate” the xml layout. For this we have to get the standard LayoutInflater object which is already hooked in the context:
+</p>
+<pre class="code">LayoutInflater inflater = (LayoutInflater)context.getSystemService
+      (Context.LAYOUT_INFLATER_SERVICE);</pre>
+
+<p>
+To inflate a view use the inflater you obtained and call the inflate method, giving it the list_item layout and a null ViewGroup.
+Afterwards, we need a reference to the list item corresponding to the position argument from the getView method (Hint: getItem).
+Then, set the correct text on the TextViews inside the new View. Use findViewById on the View to get the TextViews.
+</p>
+
+<p>
+You can use this code to test your getView implementation:
+</p>
+<pre class="code">ListView lv = (ListView) findViewById(R.id.listView1);
+
+List&lt;MyMenuItem&gt; items = new ArrayList&lt;MyMenuItem&gt;();
+items.add(new MyMenuItem(&quot;Coffee&quot;, 6, &quot;Simple black coffee&quot;));
+items.add(new MyMenuItem(&quot;Caffe latte&quot;, 7, &quot;Coffee with milk&quot;));
+items.add(new MyMenuItem(&quot;Espresso&quot;, 7, &quot;Simple espresso&quot;));
+items.add(new MyMenuItem(&quot;Caffe macchiatto&quot;, 8, &quot;Espresso with foamed milk&quot;));
+
+MenuAdapter adapter = new MenuAdapter(this, items);
+lv.setAdapter(adapter);</pre>
+
+</div>
+
+<h4 id="task_3_-_data_storage_3p">Task 3 - Data Storage (3p)</h4>
+<div class="level4">
+
+<p>
+We want to provide a method for persistently storing menu items within the application, while also allowing the user to add new ones. For this, modify the behavior of the first EditText (from the first activity) such that its content will not be sent through the intent to the second activity. We will use it for adding the name of a new item. Add other two EditText elements, one for the description and the other one for the price of new items. Also add a new Button, with the “Add” label. When the user clicks it, we want to take the contents of the three EditText elements and add a new item to a database. The second activity will query this database in order to list available items.
+</p>
+
+<p>
+The first step in creating a database is to have a class that extends the <strong>SQLiteOpenHelper</strong> android class, which will be responsible for creating the database, while also allowing read and write operations. However, these operations will not be handled by it directly, but by our own <strong>ContentProvider</strong> class. As such, the SQLiteOpenHelper class should only contain this:
+</p>
+<pre class="code">public class DatabaseHelper extends SQLiteOpenHelper{
+    private static final String DB_NAME = &quot;menu.db&quot;;
+    private static final int DB_VERSION = 1;
+
+    public DatabaseHelper(Context context) {
+        super(context,DB_NAME, null, DB_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(&quot;CREATE TABLE IF NOT EXISTS menu (&quot; +
+                &quot;id INTEGER PRIMARY KEY,&quot; +
+                &quot;name TEXT,&quot; +
+                &quot;desc TEXT,&quot; +
+                &quot;price INTEGER&quot; +
+                &quot;);&quot;);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(&quot;DROP TABLE IF EXISTS menu&quot;);
+        onCreate(db);
+    }
+}</pre>
+
+<p>
+Now, create a new ContentProvider class using the creation wizard. You will be prompted for an authority, which is typically chosen as the class name and the package name(for e.g. “ndk.lab2.ItemsProvider”). Afterwards, we need to add some constants that will be involved in Uri matching:
+</p>
+<pre class="code">public class ItemsProvider extends ContentProvider {
+    
+    public static final int TABLE = 1;
+    public static final int ROW = 2;
+
+    // Change the uriRoot to the proper package name
+    public static final String uriRoot = &quot;ndk.lab2.ItemsProvider&quot;;
+    public static final String tableUri = &quot;content://&quot; + uriRoot + &quot;/menu&quot;;
+
+    private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    static{
+        uriMatcher.addURI(uriRoot, &quot;menu&quot;, TABLE);
+        uriMatcher.addURI(uriRoot, &quot;menu/#&quot;, TABLE);
+    }
+...
+}</pre>
+
+<p>
+Check the manifest file after you created the ContentProvider class. You will notice that the content provider component was automatically added there.
+</p>
+
+<p>
+We will also need a database helper instance within our provider, which should be initialized within the provider&#039;s onCreate() method:
+</p>
+<pre class="code">public class ItemsProvider extends ContentProvider {
+...
+    private DatabaseHelper dbHelper;
+
+    @Override
+    public boolean onCreate() {
+        dbHelper = new DatabaseHelper(getContext());
+
+        return true;
+    }
+...
+}</pre>
+
+<p>
+Next we will implement the insert and query methods for the content provider. For insert, we will check if the <abbr title="Uniform Resource Identifier">URI</abbr> matches the table, insert the ContentValue in the table and return the added row&#039;s <abbr title="Uniform Resource Identifier">URI</abbr>. For query, we should create and return a cursor object which will allow random read-write access to a database query. We will use the DatabaseHelper to access the database (see getReadableDatabase, getWritableDatabase), SQLiteQueryBuilder to create a query and the UriMatcher to check <abbr title="Uniform Resource Identifier">URI</abbr> type and validity.
+</p>
+
+<p>
+For insert, we will use this code:
+</p>
+<pre class="code"> @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        // handle requests to insert a new row.
+
+        if (uriMatcher.match(uri) != TABLE) {
+            throw new UnsupportedOperationException(&quot;Should insert to menu table&quot;);
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        long rowId = db.insert(&quot;menu&quot;, null, values);
+        if (rowId &gt;= 0) {
+            // Appends the URI to the tableUri path
+            Uri noteUri = ContentUris.withAppendedId(Uri.parse(tableUri), rowId);
+            getContext().getContentResolver().notifyChange(noteUri, null);
+            return noteUri;
+        } else {
+            throw new UnsupportedOperationException(&quot;Failed to insert row into &quot; + uri);
+        }
+    }</pre>
+
+<p>
+For query, the following code will be used:
+</p>
+<pre class="code">    @Override
+    public Cursor query(Uri uri, String[] projection, String selection,
+                        String[] selectionArgs, String sortOrder) {
+        // handle query requests from clients.
+
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setTables(&quot;menu&quot;);
+
+        switch (uriMatcher.match(uri)) {
+            case TABLE:
+                break;
+            case ROW:
+                queryBuilder.appendWhereEscapeString(&quot;id = &quot; + uri.getLastPathSegment());
+                break;
+            default:
+                throw  new IllegalArgumentException(&quot;Wrong URI: &quot; + uri);
+        }
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+
+        return cursor;
+    }</pre>
+
+<p>
+Then, to test, insert items into the database in the MainActivity, and query the database and build the list from the database in the second activity.
+</p>
+
+<p>
+Example inserting an item into the database:
+</p>
+<pre class="code">addButton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        ContentValues cv = new ContentValues();
+        cv.put(&quot;name&quot;, name.getText().toString());
+        cv.put(&quot;desc&quot;, desc.getText().toString());
+        cv.put(&quot;price&quot;, Integer.parseInt(price.getText().toString()));
+
+        Uri uri = getContentResolver().insert(Uri.parse(ItemsProvider.tableUri), cv);
+        Log.d(&quot;[ndk][lab2]&quot;,&quot;Result of adding new item: &quot; + uri.toString());
+    }
+});</pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<div><div id="nojs_indexmenu_149860643058355b90f2d7f" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="osp:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../class-register.html" class="wikilink1" title="osp:class-register">Class Register</a></div></li>
+<li class="level1"><div class="li"><a href="../feed.html" class="wikilink1" title="osp:feed">RSS Feed</a></div></li>
+<li class="level1"><div class="li"><a href="../index.html" class="wikilink1" title="osp:index">Index</a></div></li>
+<li class="level1"><div class="li"><a href="../rules-and-grading.html" class="wikilink1" title="osp:rules-and-grading">Rules and Grading</a></div></li>
+<li class="level1"><div class="li"><a href="../sidebar.html" class="wikilink1" title="osp:sidebar">Lectures &amp; Labs</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="lectures_labs">Lectures &amp; Labs</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lecture-intro.html" class="wikilink1" title="osp:lectures:lecture-intro">01 - Introduction</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lecture-sdk.html" class="wikilink1" title="osp:lectures:lecture-sdk">02 - Android SDK</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="lecture-internals.html" class="wikilink1" title="osp:lectures:lecture-internals">03 - Android Internals</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="lecture-services.html" class="wikilink1" title="osp:lectures:lecture-services">04 - Android Services</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lecture-connectivity.html" class="wikilink1" title="osp:lectures:lecture-connectivity">05 - Android Connectivity &amp; Google APIs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lecture-ndk.html" class="wikilink1" title="osp:lectures:lecture-ndk">06 - Android NDK</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lecture-native-apps.html" class="wikilink1" title="osp:lectures:lecture-native-apps">07 - Android Native Activities</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lecture-security.html" class="wikilink1" title="osp:lectures:lecture-security">08 - Android Security</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lecture-security2.html" class="wikilink1" title="osp:lectures:lecture-security2">09 - Android Security (2)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lecture-native-libs.html" class="wikilink1" title="osp:lectures:lecture-native-libs">10 - Native Libraries</a></div>
+</li>
+</ul>
+
+
+
+</div>
+<!-- EDIT1 SECTION "Lectures & Labs" [87-880] -->
+<h1 class="sectionedit2" id="lab_assignment">Lab &amp; Assignment</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_57964014858355b9101a16" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../laboratory/choice.html" class="wikilink1" title="osp:laboratory:choice">Lab slots</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratory/lab-room.html" class="wikilink1" title="osp:laboratory:lab-room">Laboratory Room</a></div></li>
+</ul>
+</div></div>
+
+<div><div id="nojs_indexmenu_82267548858355b91029bb" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../project/assignment.html" class="wikilink1" title="osp:project:assignment">Assignment</a></div></li>
+<li class="level1"><div class="li"><a href="../project/team-choice.html" class="wikilink1" title="osp:project:team-choice">Team choice</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Lab & Assignment" [881-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lecture-internals.html#android_internals">03 - Android Internals</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lecture-internals.html#lecture">Lecture</a></div></li>
+<li class="level3"><div class="li"><a href="lecture-internals.html#practical">Practical</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lecture-internals.html#resources">Resources</a></div></li>
+<li class="level4"><div class="li"><a href="lecture-internals.html#files">Files</a></div></li>
+<li class="level4"><div class="li"><a href="lecture-internals.html#task_1_-_launching_an_activity_3p">Task 1 - Launching an Activity (3p)</a></div></li>
+<li class="level4"><div class="li"><a href="lecture-internals.html#task_2_-_lists_and_adapters_4p">Task 2 - Lists and Adapters (4p)</a></div></li>
+<li class="level4"><div class="li"><a href="lecture-internals.html#task_3_-_data_storage_3p">Task 3 - Data Storage (3p)</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          osp/lectures/lecture-internals.txt · Last modified: 2016/11/06 18:47 by laura.gheorghe          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lecture-internals%3Fdo=media&amp;ns=osp%253Alectures.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lecture-internals.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=osp%253Alectures%253Alecture-internals&amp;1479891857" width="2" height="1" alt="" /></div>
+</body>
+</html>

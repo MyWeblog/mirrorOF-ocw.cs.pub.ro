@@ -1,0 +1,61 @@
+    
+    
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <windows.h>
+
+#include "utils.h"
+
+#define BUF_SIZE	100
+
+int main (void)
+{
+	HANDLE hFile;
+	DWORD dwBytesRead, dwPos, dwBytesToRead = BUF_SIZE, dwRet;
+	BOOL bRet;
+	CHAR outBuffer[BUF_SIZE+1];
+
+	/* deschidem fisierul */
+	hFile = CreateFile(
+			"file.txt",
+			GENERIC_READ,
+			FILE_SHARE_READ,
+			NULL,	/* no security attributes */
+			OPEN_EXISTING,
+			FILE_ATTRIBUTE_NORMAL,
+			NULL	/* no pattern */
+		);
+	DIE(hFile == INVALID_HANDLE_VALUE, "CreateFile");
+
+	/* set file pointer at 100 bytes
+	_before_ the end of file */
+	dwPos = SetFilePointer(
+			hFile,
+			-100,
+			NULL,	/* used only for offsets on 64bytes */
+			FILE_END
+	);
+	DIE(dwPos == INVALID_SET_FILE_POINTER, "SetFilePointer");
+        
+	/* read last 100 bytes into buffer */
+	dwRet = ReadFile(
+			hFile,
+			outBuffer,
+			dwBytesToRead,
+			&dwBytesRead,
+			NULL);	/* do nothing asynchronous */
+	DIE(dwRet == FALSE, "ReadFile");
+
+	/* print buffer */
+	outBuffer[dwBytesRead] = '\0';
+	printf("last %ld bytes: \n%s\n", dwBytesRead, outBuffer);
+	fflush(stdout);
+
+	/* close file */
+	bRet = CloseHandle (hFile);
+	DIE(bRet == FALSE, "CloseHandle");
+
+	return 0;
+}

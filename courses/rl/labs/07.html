@@ -1,0 +1,1076 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 7. Adresare IP și rutare în Linux    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="date" content="2016-11-21T19:15:32+0200"/>
+<meta name="keywords" content="rl,labs,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=rl:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="http://ocw.cs.pub.ro/courses/_export/xhtml/rl/labs/07"/>
+<link rel="canonical" href="07.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs';var JSINFO = {"id":"rl:labs:07","namespace":"rl:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/rl/"><img height="70" src="../../res/sigla_rl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="http://ocw.cs.pub.ro/courses/rl/labs/07?do=recent"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="http://ocw.cs.pub.ro/courses/rl/labs/07?do=login&amp;sectok=f62420cf5b01253da4b50505d148181b"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+
+
+<h1 class="sectionedit1" id="laborator_7_adresare_ip_si_rutare_in_linux">Laborator 7. Adresare IP și rutare în Linux</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Configurare de adrese IP în Linux</div>
+</li>
+<li class="level1"><div class="li"> Configurarea rutării în Linux</div>
+</li>
+<li class="level1"><div class="li"> Depanarea problemelor de configurare a rețelei în Linux</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Vom rula o masină virtuală în <a href="http://cloud.curs.pub.ro" class="urlextern" title="http://cloud.curs.pub.ro"  rel="nofollow"> cloud-ul facultății</a></div>
+</li>
+<li class="level1"><div class="li"> Pentru a porni o astfel de masină urmăriți tutorialul de la <a href="https://cloud.curs.pub.ro/about/tutorial-for-students/" class="urlextern" title="https://cloud.curs.pub.ro/about/tutorial-for-students/"  rel="nofollow"> această adresă</a>.</div>
+<ul>
+<li class="level2"><div class="li"> Când creați instanța de mașină virtuală (în fereastra “Launch instance”):</div>
+<ul>
+<li class="level3"><div class="li"> La opțiunea <code>Instance Boot Source</code> să alegeți <code>Boot from Image</code>.</div>
+</li>
+<li class="level3"><div class="li"> La opțiunea <code>Image Name</code> (apărută după ce efectuați pasul de mai sus) să alegeți imaginea <code>RL2016</code>.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Pentru a pregăti configurația de laborator, pe mașina virtuală (stația <code>host</code>) folosiți comenzile următoare din contul utilizatorului <code>root</code> de pe stația <code>host</code> (puteți da copy/paste la comenzi în terminal):<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">wget</span> https:<span class="sy0">//</span>raw.github.com<span class="sy0">/</span>RL-UPB<span class="sy0">/</span>rl-lab-prepare<span class="sy0">/</span>master<span class="sy0">/</span>rl-lab-07-prepare
+<span class="co4">root@host:~# </span><span class="kw2">chmod</span> +x rl-lab-07-prepare
+<span class="co4">root@host:~# </span>.<span class="sy0">/</span>rl-lab-07-prepare</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Deschideți trei noi tab-uri în terminal (folosiți combinația de taste <code>Ctrl+Shift+t</code>), și conectați-vă, din nou, la mașina virtuală folosind comanda <code>ssh</code> de mai sus.</div>
+<ul>
+<li class="level2"><div class="li"> De pe cele trei noi tab-uri, conectați-vă la cele trei containere (<code>red</code>, <code>green</code> și <code>blue</code>).</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Detalii rulare masina virtuala VMware local
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Detalii rulare masina virtuala VMware local
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><ul>
+<li class="level1"><div class="li"> Deschideți VMware și porniți mașina virtuală <code>RL_lab</code>.</div>
+</li>
+<li class="level1"><div class="li"> Dorim să folosim terminalul sistemului fizic și să lucrăm peste SSH cu mașina virtuală VMware (denumită și <code>host</code>). În acest fel vom putea folosi copy-paste în terminal sau alte facilități. Pentru aceasta urmați pașii de mai jos:</div>
+<ul>
+<li class="level2"><div class="li"> Autentificați-vă în mașina virtuală folosind contul <code>root</code> cu parola <code>student</code>.</div>
+</li>
+<li class="level2"><div class="li"> Aflați adresa IP a mașinii virtuale de pe interfața <code>eth0</code>:<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ifconfig</span> eth0</pre>
+</div>
+</li>
+<li class="level2"><div class="li"> De pe sistemul fizic, deschideți un terminal și realizați o sesiune SSH folosind:<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span><span class="re1">$ADRESA_IP_MV</span></pre>
+
+<p>
+unde <code>$ADRESA_IP_MV</code> este adresa IP a mașinii virtuale așa cum ați obținut-o mai sus.
+</p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div></div>
+<p>
+<p><div class="noteclassic">
+Pentru a vedea cum accesați stațiile <code>red</code>, <code>green</code> și <code>blue</code> (containere LXC configurate peste mașina virtuală VMware - stația <code>host</code>) urmăriți indicațiile din <a href="../info/resurse/vm-laborator.html#instructiuni_de_utilizare" class="wikilink1" title="rl:info:resurse:vm-laborator">pagina cu instrucțiuni de utilizare a mașinii virtuale</a>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Conturile de acces la mașina virtuală (stația <code>host</code>) sunt (<code>username:parola</code>):
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>root:student</code></div>
+</li>
+<li class="level1"><div class="li"> <code>student:student</code></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+În mod implicit folosiți contul <code>root</code> pentru conectare pe toate stațiile. Aveți nevoie de drepturi privilegiate pentru configurare. Folosiți contul <code>student</code> doar unde vi se cere explicit.
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="topologie">Topologie</h2>
+<div class="level2">
+
+<p>
+<a href="http://ocw.cs.pub.ro/courses/_detail/rl/topologie.png?id=rl%3Alabs%3A07" class="media" title="rl:topologie.png"><img src="../../_media/rl/topologie.png" class="mediacenter" alt="" /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit5" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="07.html" class="wikilink1" title="rl:labs:07">Laboratorul 7</a></span></strong>
+</p>
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_56017520958355ab03b125" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="07/contents/01.html" class="wikilink1" title="rl:labs:07:contents:01">01. [10p] Configurare și ștergere adrese IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/02.html" class="wikilink1" title="rl:labs:07:contents:02">02. [10p] Configurare adrese IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/03.html" class="wikilink1" title="rl:labs:07:contents:03">03. [10p] Adresare IP și rutare</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/04.html" class="wikilink1" title="rl:labs:07:contents:04">04. [10p] Configurare conectivitate completă</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/05.html" class="wikilink1" title="rl:labs:07:contents:05">05. [10p] Tabela ARP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/06.html" class="wikilink1" title="rl:labs:07:contents:06">06. [10p] Depanare problemă de configurare adresă IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/07.html" class="wikilink1" title="rl:labs:07:contents:07">07. [10p] Refacere configurare adresă IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/08.html" class="wikilink1" title="rl:labs:07:contents:08">08. [20p] Subnetare și configurare parametri de rețea</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/09.html" class="wikilink1" title="rl:labs:07:contents:09">09. [10p] Depanare problemă de conectivitate</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/10.html" class="wikilink1" title="rl:labs:07:contents:10">10. [BONUS - 10p] Configurare persistentă</a></div></li>
+</ul>
+</div></div>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+
+<h2 class="sectionedit8" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+<p>
+În cadrul exercițiilor din laboratoarele de Linux vom folosi <span class="curid"><a href="07.html#topologie" class="wikilink1" title="rl:labs:07">topologia de mai sus</a></span>.
+</p>
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:01">
+
+<h3 class="sectionedit11" id="p_configurare_si_stergere_adrese_ip">01. [10p] Configurare și ștergere adrese IP</h3>
+<div class="level3">
+
+<p>
+Dorim, pentru început, să asigurăm conectivitate între stația <code>host</code> și <code>red</code>. În acest tutorial vom folosi suita <code>iproute</code> de pe Linux pentru a realiza configurările frecvente de nivel 3 (adresare IP).
+</p>
+
+<p>
+Vom configura câte o adresă IP din clasa <code>192.168.0.0/24</code> pe interfețele de legătură dintre stația <code>host</code> și stația <code>red</code>. Adică între <code>host(veth-red)</code> (interfața <code>veth-red</code> de pe stația <code>host</code>) și <code>red(eth0)</code> (interfața <code>eth0</code> de pe stația <code>red</code>).
+</p>
+
+<p>
+Pe interfața <code>veth-red</code> de pe stația <code>host</code> vom configura adresa IP <code>192.168.0.1</code> cu masca <code>255.255.255.0</code> (<code>/24</code> în forma prefixată):
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> address add 192.168.0.1<span class="sy0">/</span><span class="nu0">24</span> dev veth-red</pre>
+
+<p>
+Observați că suita <code>iproute2</code> (adică utilitarul <code>ip</code>) folosește masca în format prefixat: <code>/24</code>.
+</p>
+
+<p>
+Imediat după o configurare de rețea rulați o comandă pentru validarea configurării. În cazul nostru este comanda de afișare a configurării de nivel 3 (Rețea), adică a adresei IP:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> address show dev veth-red
+<span class="nu0">47</span>: veth-red: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state DOWN qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 4e:1b:b8:d9:<span class="nu0">14</span>:bb brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.1<span class="sy0">/</span><span class="nu0">24</span> scope global veth-red</pre>
+
+<p>
+Pe interfața <code>eth0</code> de pe stația <code>red</code> vom configura adresa IP <code>192.168.0.2</code> cu masca <code>255.255.255.0</code> (<code>/24</code> în forma prefixată):
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>go <span class="kw2">red</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> address add 192.168.0.2<span class="sy0">/</span><span class="nu0">24</span> dev eth0
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev eth0
+<span class="nu0">46</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state DOWN qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.2<span class="sy0">/</span><span class="nu0">24</span> scope global eth0
+    inet6 fe80::<span class="nu0">216</span>:3eff:fe8e:<span class="nu0">8421</span><span class="sy0">/</span><span class="nu0">64</span> scope <span class="kw2">link</span> 
+       valid_lft forever preferred_lft forever</pre>
+
+<p>
+La fel, după o configurare de rețea, am rulat comanda de validare, în cazul acesta <code>ip address</code>.
+</p>
+
+<p>
+Pentru a vă putea întoarce la consola stației <code>host</code> apăsați simultan tastele <code>Ctrl+a</code>, eliberați-le, după care apăsați tasta <code>q</code>.
+</p>
+
+<p>
+Pentru a testa conectivitatea între stațiile <code>host</code> și <code>red</code> folosim comanda <code>ping</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ping</span> 192.168.0.2
+PING 192.168.0.2 <span class="br0">&#40;</span>192.168.0.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+^C
+<span class="re5">---</span> 192.168.0.2 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">0</span> received, <span class="nu0">100</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 1007ms</pre>
+
+<p>
+După câteva secunde opriți comanda <code>ping</code> folosind combinația de taste <code>Ctrl+c</code>.
+</p>
+
+<p>
+Observați că nu există conectivitatea între cele două stații: pachetele sunt pierdute în întregime (<code>100% packet loss</code>). Motivul este că nu am activat interfețele, ci doar am realizat configurații de nivel 3.
+</p>
+
+<p>
+Urmăriți configurația de nivel 2 al interfețelor folosind comanda <code>ip link</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip link</span> show dev veth-red
+<span class="nu0">10</span>: veth-red: <span class="sy0">&lt;</span>BROADCAST,MULTICAST<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state DOWN qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 3e:03:f0:<span class="nu0">76</span>:<span class="nu0">76</span>:ab brd ff:ff:ff:ff:ff:ff</pre>
+
+<p>
+Observați că interfața nu este activă la nivelul 2 (Legătură de date). Pentru a activa interfața folosiți comanda:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev veth-red up</pre>
+
+<p>
+Urmăriți din nou configurația de nivel 2 (Legătură de date) a interfeței <code>veth-red</code> și observați că acum este parțial <code>UP</code> (apare și <code>UP</code> și <code>DOWN</code> în output-ul comenzii):
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip link</span> show dev veth-red
+<span class="nu0">10</span>: veth-red: <span class="sy0">&lt;</span>NO_CARRIER,BROADCAST,MULTICAST,UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state DOWN qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 3e:03:f0:<span class="nu0">76</span>:<span class="nu0">76</span>:ab brd ff:ff:ff:ff:ff:ff</pre>
+
+<p>
+Testați din nou conectivitatea folosiți comanda <code>ping</code>. În continuare nu există conectivitate. Acest lucru și faptul că apărea și <code>DOWN</code> în output-ul comenzii anterioare se datorează faptului că nu am activat interfața <code>eth0</code> de pe stația <code>red</code>. Interfața <code>eth0</code> de pe stația <code>red</code> este cea conectată la interfața <code>veth-red</code> de pe stația <code>host</code>; ambele trebuie să fie activate pentru a avea o conexiune activă.
+</p>
+
+<p>
+Pe stația <code>red</code> verificați configuratia de nivel 2 a interfaței <code>eth0</code> de pe <code>red</code>. Observați că este <code>DOWN</code> și activați nivelul 2 dacă este cazul, folosind comanda
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev eth0 up</pre>
+
+<p>
+Verificați că acum interfața este activă folosind comanda
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip link</span> show dev eth0</pre>
+
+<p>
+Folosiți comanda <code>ping</code> ca să retestați conectivitatea între stațiile <code>host</code> și <code>red</code>.
+</p>
+
+<p>
+Dorim să resetăm configurația la configurația inițială. Pentru acesta rulați o comandă de forma
+</p>
+<pre class="code"># ip address flush dev INTERFACE</pre>
+
+<p>
+ unde <code>INTERFACE</code> este interfața interfața <code>veth-red</code> pe stația <code>host</code>, respectiv <code>eth0</code> pe stația <code>red</code>. Asigurați-vă că nu mai este configurată nici o adresă IP pe interfețe folosind o comandă de forma
+</p>
+<pre class="code"># ip address show dev INTERFACE</pre>
+
+<p>
+ unde <code>INTERFACE</code> este interfața interfața <code>veth-red</code> pe stația <code>host</code>, respectiv <code>eth0</code> pe stația <code>red</code>. 
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:02">
+
+<h3 class="sectionedit14" id="p_configurare_adrese_ip">02. [10p] Configurare adrese IP</h3>
+<div class="level3">
+
+<p>
+Dorim să avem conectivitate între stația <code>red</code> și stația <code>host</code>, respectiv între stația <code>green</code> și stația <code>host</code>. Pentru aceasta, vom configura adrese IP pe fiecare.
+</p>
+
+<p>
+Configurați câte o adresă IP din clasa 10.10.10.0/24 pe legătura dintre stația <code>red</code> și stația <code>host</code> (adică legătura <code>red(eth0)</code> ↔ <code>host(veth-red)</code>) și testați conectivitatea.
+</p>
+
+<p>
+Configurați câte o adresă IP din clasa 10.10.20.0/24 pe legătura dintre stația <code>green</code> și stația <code>host</code> (adică legătura <code>green(eth0)</code> ↔ <code>host(veth-green)</code>) și testați conectivitatea.
+</p>
+
+<p>
+<p><div class="noteimportant">Aveți în vedere să verificați nivelul <em>Legătură de date</em> folosind comanda <code>ip link</code> și să activați, la nevoie, interfețele.
+</div></p>
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:03">
+
+<h3 class="sectionedit17" id="p_adresare_ip_si_rutare">03. [10p] Adresare IP și rutare</h3>
+<div class="level3">
+
+<p>
+Dorim să realizăm conectivitate și între stațiile <code>red</code> și <code>green</code>. Întrucât cele două stații sunt în rețele locale diferite, va trebui să configurăm stația <code>host</code> ca <em>default gateway</em> pe fiecare stație.
+</p>
+
+<p>
+Pentru a adăuga <em>default gateway</em> pe stația <code>red</code> folosiți comenzile:
+</p>
+<pre class="code">root@host:~# go red
+[...]
+root@red:~# ip route add default via 10.10.10.1</pre>
+
+<p>
+După configurare (adăugarea rutei), validăm configurația cu o comandă specifică. În acest caz urmărim tabela de rutare folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip route</span> show
+default via 10.10.10.1 dev eth0 
+10.10.10.0<span class="sy0">/</span><span class="nu0">24</span> dev eth0  proto kernel  scope <span class="kw2">link</span>  src 10.10.10.2</pre>
+
+<p>
+<p><div class="notetip">
+Adresa IP <code>10.10.10.1</code> reprezintă adresa IP a interfeței <code>veth-red</code> de pe stația <code>host</code>.
+
+</div></p>
+</p>
+
+<p>
+Intrați pe stația <code>green</code> și executați:
+</p>
+<pre class="code">root@host:~# go green
+[...]
+root@green:~# ip route add default via 10.10.20.1
+root@green:~# ip route show
+default via 10.10.20.1 dev eth0 
+10.10.20.0/24 dev eth0  proto kernel  scope link  src 10.10.20.2</pre>
+
+<p>
+La fel ca mai sus, am folosit comanda <code>ip route show</code> pentru afișarea tabelei de rutare și, astfel, a validării comenzii de adăugare de <em>default gateway</em>.
+</p>
+
+<p>
+<p><div class="notetip">
+Adresa IP <code>10.10.20.1</code> reprezintă adresa IP a interfeței <code>veth-green</code> de pe stația <code>host</code>.
+
+</div></p>
+</p>
+
+<p>
+Testați conectivitatea între stația <code>green</code> și stația <code>red</code>. Accesați pe <code>red</code> și executați comanda <code>ping</code> către adresa IP a stației <code>green</code>. Observați că nu funcționează. Motivul pentru care nu există conectivitate este reprezentat de faptul că stația <code>host</code> nu are activată rutarea (nu trimite pachetele ce vin de pe o interfață pe altă interfață). Pentru a activa rutarea pe stația <code>host</code> rulați comanda:
+</p>
+<pre class="code">root@host:~# sysctl -w net.ipv4.ip_forward=1</pre>
+
+<p>
+Pentru a valida configurarea de activare a rutării rulăm comanda:
+</p>
+<pre class="code">root@host:~# sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1</pre>
+
+<p>
+Testați din nou conectivitatea între <code>red</code> și <code>green</code> și observați că funcționează.
+</p>
+
+<p>
+Porniți comanda <code>ping</code> de pe stația <code>red</code> către stația <code>green</code>. Deschideți un nou terminal și executați pe stația <code>host</code> comanda:
+</p>
+<pre class="code">root@host:~# tcpdump  -i veth-red
+listening on veth-red, link-type EN10MB (Ethernet), capture size 65535 bytes
+18:46:48.783576 IP red.local &gt; 10.10.20.2: ICMP echo request, id 434, seq 163, length 64
+18:46:48.783622 IP 10.10.20.2 &gt; red.local: ICMP echo reply, id 434, seq 163, length 64</pre>
+
+<p>
+Observați pachetele de tip <code>ICMP echo request/reply</code> care trec prin stația <code>host</code> (sau altfel zis stația <code>host</code> le rutează).
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:04">
+
+<h3 class="sectionedit20" id="p_configurare_conectivitate_completa">04. [10p] Configurare conectivitate completă</h3>
+<div class="level3">
+
+<p>
+Dorim să asigurăm conectivitate completă între toate stațiile din topologie. Trebuie configurată corespunzător stația <code>blue</code>.
+</p>
+
+<p>
+Configurați adrese IP din clasa 10.10.30.0/24 pe legătura dintre stația <code>host</code> și stația <code>blue</code> (adică între <code>host(veth-blue)</code> și <code>blue(eth0)</code>).
+</p>
+
+<p>
+<p><div class="noteclassic">
+Țineți cont să verificați legătura de nivel 2 folosind comanda <code>ip link</code>.
+
+</div></p>
+</p>
+
+<p>
+Testați conectivitatea între stația <code>host</code> și stația <code>blue</code>.
+</p>
+
+<p>
+Pe stația <code>blue</code> configurați ca <em>default gateway</em> stația <code>host</code>, pentru a permite conectivitata la celelalte stații.
+</p>
+
+<p>
+<p><div class="notetip">
+Pe stația <code>blue</code> folosiți ca <em>default gateway</em> adresa IP de pe interfața <code>veth-blue</code> a stației <code>host</code>.
+
+</div></p>
+</p>
+
+<p>
+Testați conectivitatea între oricare două stații.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:05">
+
+<h3 class="sectionedit23" id="p_tabela_arp">05. [10p] Tabela ARP</h3>
+<div class="level3">
+
+<p>
+ARP (<em>Address Resolution Protocol</em>) este protocol care face intern fiecărui sistem de operare asocierea între adresele IP și adresele MAC ale stațiilor cu care comunică. De multe ori stațiile cunosc adresele IP ale vecinilor dar nu știu adresele MAC; protocolul ARP completează o tabelă ARP locală sistemului cu intrările necesare. Protocolul ARP este rulat implicit de sistemul de operare atunci când se comunică cu o stație a cărei adresă MAC nu este cunoscută.
+</p>
+
+<p>
+Ne propunem să urmărim tabela ARP a unui sistem Linux.
+</p>
+
+<p>
+Pe stația <code>host</code> urmăriți tabela ARP folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> neighbor show
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Este posibil ca tabela să fie vidă (neexistând comunicație recentă) sau să aibă unele intrări (cele mai recente comunicații) sau intrările să fie marcate <code>STALE</code> (intrări nesigure).
+</p>
+
+<p>
+Pentru a popula tabela ARP inițiați comunicație cu celelalte stații folosind comanda <code>ping</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">1</span> 10.10.10.2
+PING 10.10.10.2 <span class="br0">&#40;</span>10.10.10.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 10.10.10.2: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.033</span> ms
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@host:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">1</span> 10.10.20.2
+PING 10.10.20.2 <span class="br0">&#40;</span>10.10.20.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 10.10.20.2: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.036</span> ms
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@host:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">1</span> 10.10.30.2
+PING 10.10.30.2 <span class="br0">&#40;</span>10.10.30.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 10.10.30.2: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.080</span> ms
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Urmăriți din nou tabela ARP:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> neighbor show
+10.10.10.2 dev veth-red lladdr 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> REACHABLE
+10.10.20.2 dev veth-green lladdr 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> REACHABLE
+10.10.30.2 dev veth-blue lladdr 00:<span class="nu0">16</span>:3e:<span class="nu0">32</span>:0f:ae REACHABLE
+10.8.0.1 dev eth0 lladdr 0a:00:<span class="nu0">27</span>:00:00:00 REACHABLE</pre>
+
+<p>
+Observați că fiecare stație (<code>red</code>, <code>green</code> și <code>blue</code>) are câte o intrare aferentă în tabela ARP marcată cu <code>REACHABLE</code> (intrare validă). Intrarea suplimentară este comunicarea mașinii virtuale (stației <code>host</code>) cu sistemul <code>fep.grid.pub.ro</code>.
+</p>
+
+<p>
+Realizați pașii de mai sus pentru fiecare dintre stațiile <code>red</code>, <code>green</code> și <code>blue</code>:
+</p>
+<ol>
+<li class="level1"><div class="li"> Urmăriți tabela ARP.</div>
+</li>
+<li class="level1"><div class="li"> Inițiați comunicație cu celelalte stații pentru a popula tabela ARP.</div>
+</li>
+<li class="level1"><div class="li"> Urmăriți din nou tabela ARP.</div>
+</li>
+</ol>
+
+<p>
+Observați că în tabela ARP a fiecăreia dintre stațiile <code>red</code>, <code>green</code> și <code>blue</code> se găsește câte o intrare ARP, corespunzătoare stației <code>host</code>. Aceasta se întâmplă întrucât comunicațiile trec prin <em>default gateway</em> (adică prin stația <code>host</code>) iar fiecare stație trebuie să cunoască doar adresa MAC a gateway-ului.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:06">
+
+<h3 class="sectionedit26" id="p_depanare_problema_de_configurare_adresa_ip">06. [10p] Depanare problemă de configurare adresă IP</h3>
+<div class="level3">
+
+<p>
+Rulați scriptul de pregătire cu argumentul 6:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>.<span class="sy0">/</span>rl-lab-07-prepare <span class="nu0">6</span></pre>
+
+<p>
+În urma rulării scriptului au fost repornită stațiile <code>red</code> și au fost refăcute configurațiile. Va trebui să vă reconectați pe stația <code>red</code> folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>go <span class="kw2">red</span></pre>
+
+<p>
+și folosind username-ul <code>root</code> și parola <code>student</code>.
+</p>
+
+<p>
+Scriptul configurează adresa IP <code>7.7.7.1</code> pe interfața <code>veth-red</code> a stației <code>host</code> și adresa IP <code>7.7.7.2</code> pe interfața <code>eth0</code> a stației <code>red</code>. Folosiți comenzile:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> address show eth0
+<span class="nu0">46</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 7.7.7.2<span class="sy0">/</span><span class="nu0">32</span> scope global eth0
+    inet6 fe80::<span class="nu0">216</span>:3eff:fe8e:<span class="nu0">8421</span><span class="sy0">/</span><span class="nu0">64</span> scope <span class="kw2">link</span> 
+       valid_lft forever preferred_lft forever
+&nbsp;
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> address show veth-red
+<span class="nu0">47</span>: veth-red: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 4e:1b:b8:d9:<span class="nu0">14</span>:bb brd ff:ff:ff:ff:ff:ff
+    inet 7.7.7.1<span class="sy0">/</span><span class="nu0">32</span> scope global veth-red</pre>
+
+<p>
+pentru a urmări configurația IP pe interfața <code>INTERFACE</code>.
+</p>
+
+<p>
+Folosiți comanda <code>ping</code> pentru a testa conectivitatea între cele două adrese IP (<code>7.7.7.1</code> și <code>7.7.7.2</code>) pe cele două stații. Observați ca nu există conectivitate.
+</p>
+
+<p>
+Pentru a depana această problemă, urmărim tabela de rutare a fiecărei stații:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> r s
+<span class="co4">root@red:~# </span>
+&nbsp;
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> r s
+10.10.20.0<span class="sy0">/</span><span class="nu0">24</span> dev veth-green  proto kernel  scope <span class="kw2">link</span>  src 10.10.20.1
+10.10.30.0<span class="sy0">/</span><span class="nu0">24</span> dev veth-blue  proto kernel  scope <span class="kw2">link</span>  src 10.10.30.1
+192.168.56.0<span class="sy0">/</span><span class="nu0">24</span> dev eth0  proto kernel  scope <span class="kw2">link</span>  src 192.168.56.101</pre>
+
+<p>
+Observați că nu apar rutele relevante în tabela de rutare. Fie interfețele sunt dezactivate, fie configurația este greșită. Dacă rulăm comenzile de afișare a informațiilor de nivel 3, observăm:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> address show eth0
+<span class="nu0">46</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 7.7.7.2<span class="sy0">/</span><span class="nu0">32</span> scope global eth0
+    inet6 fe80::<span class="nu0">216</span>:3eff:fe8e:<span class="nu0">8421</span><span class="sy0">/</span><span class="nu0">64</span> scope <span class="kw2">link</span> 
+       valid_lft forever preferred_lft forever
+&nbsp;
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> address show veth-red
+<span class="nu0">47</span>: veth-red: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 4e:1b:b8:d9:<span class="nu0">14</span>:bb brd ff:ff:ff:ff:ff:ff
+    inet 7.7.7.1<span class="sy0">/</span><span class="nu0">32</span> scope global veth-red</pre>
+
+<p>
+Interfețele sunt active (<code>UP</code>). Observăm însă că aceste adrese au masca <code>/32</code>. Acest lucru înseamnă că nu pot comunica în rețea unele cu altele și explică și absența rutei relevante din tabela de rutare. Repararea acestei greșeli se face prin folosirea unor adrese cu mască potrivită (de exemplu, pentru o mască <code>/24</code> este vorba de <code>7.7.7.1/24</code> și <code>7.7.7.2/24</code>).
+</p>
+
+<p>
+<p><div class="notewarning">
+O greșeală relativ frecventă în configurarea adresei IP în Linux este omiterea măștii de rețea. Aveți în vedere să nu omiteți masca în momentul în care configurați adrese IP pe interfețe în Linux.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+Listarea tabelei de rutare a unei stații este printre primii pași care trebuie urmați pentru depanarea unei probleme de conectivitate.
+
+</div></p>
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:07">
+
+<h3 class="sectionedit29" id="p_refacere_configurare_adresa_ip">07. [10p] Refacere configurare adresă IP</h3>
+<div class="level3">
+
+<p>
+Refaceți configurația anterioară pentru stația <code>host</code> și stația <code>red</code>. Adică adresa <code>10.10.10.1</code> pe interfața <code>veth-red</code> a stației <code>host</code>, adresa <code>10.10.10.2</code> pe interfața <code>eth0</code> a stației <code>red</code> și configurarea adresei <code>10.10.10.1</code> ca <em>default gateway</em> pe stația <code>red</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Ca să refaceți configurația, se recomandă să eliminați vechea configurație folosind comanda
+</p>
+<pre class="code bash"><span class="co4"># </span><span class="kw2">ip</span> address flush INTERFACE</pre>
+
+<p>
+unde <code>INTERFACE</code> este interfața a cărei configurație vreți să o eliminați.
+
+</div></p>
+</p>
+
+<p>
+După configurare testați din conectivitatea între toate stațiile din topologie folosind comanda <code>ping</code>.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:08">
+
+<h3 class="sectionedit32" id="p_subnetare_si_configurare_parametri_de_retea">08. [20p] Subnetare și configurare parametri de rețea</h3>
+<div class="level3">
+
+<p>
+Dorim să facem o configurare nouă de adrese IP pe toate stațiile din topologie. Pentru aceasta folosiți spațiul <code>4.4.4.0/22</code>. Împărțiți-l în trei subrețele cu masca <code>/24</code> și atribuiți adrese din acele subrețele pe interfețele legăturilor dintre stații.
+</p>
+
+<p>
+Înainte de a realiza configurarea eliminați vechile configurații prin folosirea comenzii:
+</p>
+<pre class="code"># ip address flush dev INTERFACE</pre>
+
+<p>
+ unde <code>INTERFACE</code> este interfața pentru care se dorește eliminarea configurației. Este vorba de interfața <code>eth0</code> de pe fiecare dintre stațiile <code>red</code>, <code>green</code> și <code>blue</code>, respectiv interfețele <code>veth-red</code>, <code>veth-blue</code> și <code>veth-blue</code> de pe stația <code>host</code>.
+</p>
+
+<p>
+Aveți în vedere atât configurarea adreselor IP pe toate stațiile din topologie cât și a <em>default gateway</em> pe stațiile <code>red</code>, <code>green</code> și <code>blue</code>.
+</p>
+
+<p>
+Pentru testarea conectivității folosiți comanda <code>ping</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru depanare, primul pas recomandat este afișarea tabelei de rutare. Tabela de rutare vă va ajuta pentru depanare în cazul în care anumite intrări sunt absente sau configurate greșit.
+
+</div></p>
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:09">
+
+<h3 class="sectionedit35" id="p_depanare_problema_de_conectivitate">09. [10p] Depanare problemă de conectivitate</h3>
+<div class="level3">
+
+<p>
+Ne propunem să depanăm o problemă de conectivitate. Pentru a “genera” problema rulați scriptul de pregătire cu argumentul <code>9</code>:
+</p>
+<pre class="code host">root@host:~# ./rl-lab-07-prepare 9</pre>
+
+<p>
+<p><div class="notetip">
+Pentru depanare, primul pas recomandat este afișarea tabelei de rutare. Tabela de rutare vă va ajuta pentru depanare în cazul în care anumite intrări sunt absente sau configurate greșit.
+
+</div></p>
+</p>
+
+<p>
+Verificați conectivitatea între toate stațiile din topologie. Observați că nu există conectivitate între nici o stație și stația <code>blue</code>. Rezolvați problemele de conectivitate la stația <code>blue</code>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Nu schimbați adresele IP deja configurate. Doar identificați și soluționați problemele.
+
+</div></p>
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:10">
+
+<h3 class="sectionedit38" id="bonus_-_10p_configurare_persistenta">10. [BONUS - 10p] Configurare persistentă</h3>
+<div class="level3">
+
+<p>
+Dorim ca la o reponire a unei stații configurațiile de nivel 3 (adresele IP) să se păstreze. Configurările pe care le-am făcut până acum sunt temporare și sunt pierdute la repornirea stației. În Cisco IOS foloseam comanda
+</p>
+<pre class="code">copy running-config startup-config</pre>
+
+<p>
+ pentru a asigura persistența configurațiilor la repornire (<code>reload</code>). În Linux, persistența configurațiilor se realizează prin plasarea acestora în fișiere text specifice, fiecare distribuție (ex.: Debian, RedHat) având propriul mod de configurare.
+</p>
+
+<p>
+Pentru a pregăti exercițiul, rulați scriptul de pregătire cu argumentul <code>10</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>.<span class="sy0">/</span>rl-lab-07-prepare <span class="nu0">10</span></pre>
+
+<p>
+Realizați <strong>persistent</strong> configurațiile de la exercițiul <a href="07/contents/08.html" class="wikilink1" title="rl:labs:07:contents:08">08. [20p] Subnetare și configurare parametri de rețea</a> (adrese IP și <em>default gateway</em>). Distribuția de Linux folosită în laborator este Debian-based.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru detalii despre cum puteți face configurații persistent pe sisteme Debian, consultați <a href="https://wiki.debian.org/NetworkConfiguration#Setting_up_an_Ethernet_Interface" class="urlextern" title="https://wiki.debian.org/NetworkConfiguration#Setting_up_an_Ethernet_Interface"  rel="nofollow">această pagină</a>. Veți realiza o configurație statică.
+
+</div></p>
+</p>
+
+<p>
+După ce ați realizat configurațiile necesare, executați, pe fiecare stație comenzile:
+</p>
+<pre class="code"># ifdown INTERFACE
+# ifup INTERFACE</pre>
+
+<p>
+unde <code>INTERFACE</code> este interfața configurată. Observați că la executarea comenzii <code>ifup</code> interfața a preluat configurările din fișier.
+</p>
+
+<p>
+Configurați sistemul astfel încât rutarea să fie activată la pornirea sistemului.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru informații legate de activarea rutări, consultați <a href="http://linuxpoison.blogspot.ro/2008/01/how-to-enable-ip-forwarding.html" class="urlextern" title="http://linuxpoison.blogspot.ro/2008/01/how-to-enable-ip-forwarding.html"  rel="nofollow">această pagină</a>.
+
+</div></p>
+</p>
+
+<p>
+Reporniți mașina virtuală (stația <code>host</code>), folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>reboot</pre>
+
+<p>
+După repornire ar trebui să aveți configurațiile activate și conectivitate completă la nivelul topologiei.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:contents:sidebar">
+
+<h3 class="sectionedit41" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="07.html" class="wikilink1" title="rl:labs:07">Laboratorul 7</a></span></strong>
+</p>
+
+</div>
+<div class="plugin_include_content plugin_include__rl:labs:07:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_56017520958355ab03b125" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="07/contents/01.html" class="wikilink1" title="rl:labs:07:contents:01">01. [10p] Configurare și ștergere adrese IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/02.html" class="wikilink1" title="rl:labs:07:contents:02">02. [10p] Configurare adrese IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/03.html" class="wikilink1" title="rl:labs:07:contents:03">03. [10p] Adresare IP și rutare</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/04.html" class="wikilink1" title="rl:labs:07:contents:04">04. [10p] Configurare conectivitate completă</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/05.html" class="wikilink1" title="rl:labs:07:contents:05">05. [10p] Tabela ARP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/06.html" class="wikilink1" title="rl:labs:07:contents:06">06. [10p] Depanare problemă de configurare adresă IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/07.html" class="wikilink1" title="rl:labs:07:contents:07">07. [10p] Refacere configurare adresă IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/08.html" class="wikilink1" title="rl:labs:07:contents:08">08. [20p] Subnetare și configurare parametri de rețea</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/09.html" class="wikilink1" title="rl:labs:07:contents:09">09. [10p] Depanare problemă de conectivitate</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/10.html" class="wikilink1" title="rl:labs:07:contents:10">10. [BONUS - 10p] Configurare persistentă</a></div></li>
+</ul>
+</div></div>
+
+</div>
+</div>
+<div class="level4">
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="laborator">Laborator</h1>
+<div class="level1">
+
+<p>
+<strong><span class="curid"><a href="07.html" class="wikilink1" title="rl:labs:07">Laboratorul 7</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "rl:labs:07:meta:nav" [0-] --><div class="plugin_include_content plugin_include__rl:labs:07:meta:nav">
+<div class="level1">
+
+<div><div id="nojs_indexmenu_56017520958355ab03b125" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="07/contents/01.html" class="wikilink1" title="rl:labs:07:contents:01">01. [10p] Configurare și ștergere adrese IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/02.html" class="wikilink1" title="rl:labs:07:contents:02">02. [10p] Configurare adrese IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/03.html" class="wikilink1" title="rl:labs:07:contents:03">03. [10p] Adresare IP și rutare</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/04.html" class="wikilink1" title="rl:labs:07:contents:04">04. [10p] Configurare conectivitate completă</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/05.html" class="wikilink1" title="rl:labs:07:contents:05">05. [10p] Tabela ARP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/06.html" class="wikilink1" title="rl:labs:07:contents:06">06. [10p] Depanare problemă de configurare adresă IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/07.html" class="wikilink1" title="rl:labs:07:contents:07">07. [10p] Refacere configurare adresă IP</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/08.html" class="wikilink1" title="rl:labs:07:contents:08">08. [20p] Subnetare și configurare parametri de rețea</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/09.html" class="wikilink1" title="rl:labs:07:contents:09">09. [10p] Depanare problemă de conectivitate</a></div></li>
+<li class="level1"><div class="li"><a href="07/contents/10.html" class="wikilink1" title="rl:labs:07:contents:10">10. [BONUS - 10p] Configurare persistentă</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "rl:labs:07:meta:nav" [0-] --></div>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator" [1-112] -->
+<h1 class="sectionedit4" id="curs">Curs</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "rl:sidebar" [0-] --><div class="plugin_include_content plugin_include__rl:sidebar">
+<div class="level1">
+
+
+
+</div>
+
+<h2 class="sectionedit7" id="informatii_generale_rl">Informații generale RL</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_10794266258355ab112cea" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../info/regulament.html" class="indexmenu_idx_head">Regulament</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../info/regulament/notare-ca.html" class="wikilink1" title="rl:info:regulament:notare-ca">Notare Seria CA</a></div></li>
+<li class="level2"><div class="li"><a href="../info/regulament/notare-cb-cc.html" class="wikilink1" title="rl:info:regulament:notare-cb-cc">Notare Seriile CB/CC</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../info/resurse.html" class="indexmenu_idx_head">Resurse</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../info/resurse/carte.html" class="wikilink1" title="rl:info:resurse:carte">Cartea RL</a></div></li>
+<li class="level2"><div class="li"><a href="../info/resurse/packet-tracer.html" class="wikilink1" title="rl:info:resurse:packet-tracer">Packet Tracer</a></div></li>
+<li class="level2"><div class="li"><a href="../info/resurse/vm-laborator.html" class="wikilink1" title="rl:info:resurse:vm-laborator">Mașina virtuală</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../info/calendar.html" class="wikilink1" title="rl:info:calendar">Calendarul Semestrului</a></div></li>
+<li class="level1"><div class="li"><a href="../info/catalog.html" class="wikilink1" title="rl:info:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../info/echipa.html" class="wikilink1" title="rl:info:echipa">Echipa RL</a></div></li>
+<li class="level1"><div class="li"><a href="../info/feed.html" class="wikilink1" title="rl:info:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../info/orar.html" class="wikilink1" title="rl:info:orar">Orar</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT7 SECTION "Informații generale RL" [12-194] -->
+<h2 class="sectionedit8" id="cursuri">Cursuri</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_176627883358355ab116b69" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/00.html" class="wikilink1" title="rl:courses:00">Cursul 00 - Regulament. Prezentarea echipei.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="rl:courses:01">Cursul 01 - Introducere. Mediul fizic.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="rl:courses:02">Cursul 02 - Nivelul legătură de date</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="rl:courses:03">Cursul 03 - Protocolul IP</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="rl:courses:04">Cursul 04 - VLAN</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="rl:courses:05">Cursul 05 - Rutare</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="rl:courses:06">Cursul 06 - IPv4 și IPv6</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/07.html" class="wikilink1" title="rl:courses:07">Cursul 07 - Securizarea rețelei</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/08.html" class="wikilink1" title="rl:courses:08">Cursul 08 - NAT și tunelare</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/09.html" class="wikilink1" title="rl:courses:09">Cursul 09 - Servicii de rețea</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/10.html" class="wikilink1" title="rl:courses:10">Cursul 10 - Virtualizarea echipamentelor și a rețelelor</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/11.html" class="wikilink1" title="rl:courses:11">Cursul 11 - Autentificare</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/12.html" class="wikilink1" title="rl:courses:12">Cursul 12 - Atacuri de rețea</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT8 SECTION "Cursuri" [195-243] -->
+<h2 class="sectionedit9" id="laboratoare">Laboratoare</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_128655697058355ab118aaa" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="01.html" class="indexmenu_idx_head">Laborator 1. Introducere în Rețele de Calculatoare</a></div></li>
+<li class="closed"><div class="li"><a href="02.html" class="indexmenu_idx_head">Laborator 2. Comutarea pachetelor</a></div></li>
+<li class="closed"><div class="li"><a href="03.html" class="indexmenu_idx_head">Laborator 3. Adresarea IP</a></div></li>
+<li class="closed"><div class="li"><a href="04.html" class="indexmenu_idx_head">Laborator 4. VLAN (Virtual LAN)</a></div></li>
+<li class="closed"><div class="li"><a href="05.html" class="indexmenu_idx_head">Laborator 5. Rutare</a></div></li>
+<li class="closed"><div class="li"><a href="06.html" class="indexmenu_idx_head">Laborator 6. Recapitulare</a></div></li>
+<li class="closed"><div class="li"><span class="curid"><a href="07.html" class="indexmenu_idx_head">Laborator 7. Adresare IP și rutare în Linux</a></span></div></li>
+<li class="closed"><div class="li"><a href="08.html" class="indexmenu_idx_head">Laborator 8. Securizarea unui server</a></div></li>
+<li class="closed"><div class="li"><a href="09.html" class="indexmenu_idx_head">Laborator 9. Translatarea de adrese</a></div></li>
+<li class="closed"><div class="li"><a href="10.html" class="indexmenu_idx_head">Laborator 10. Clienți de rețea</a></div></li>
+<li class="closed"><div class="li"><a href="11.html" class="indexmenu_idx_head">Laborator 11. Virtualizare în networking</a></div></li>
+<li class="closed"><div class="li"><a href="12.html" class="indexmenu_idx_head">Laborator 12. Autentificarea în rețelele locale</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT9 SECTION "Laboratoare" [244-295] -->
+<h2 class="sectionedit10" id="teme">Teme</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_127990749158355ab11a9ea" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../teme/tema1.html" class="wikilink1" title="rl:teme:tema1">Tema 1</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema2.html" class="wikilink1" title="rl:teme:tema2">Tema 2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT10 SECTION "Teme" [296-] --><!-- EDIT6 PLUGIN_INCLUDE_END "rl:sidebar" [0-] --></div>
+<div class="level1">
+
+</div>
+<!-- EDIT4 SECTION "Curs" [113-] -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          rl/labs/07.txt · Last modified: 2016/11/21 19:15 by mihai.carabas          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="http://ocw.cs.pub.ro/courses/rl/labs/07?do=media&amp;ns=rl%3Alabs"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="07.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="http://ocw.cs.pub.ro/courses/lib/exe/indexer.php?id=rl%3Alabs%3A07&amp;1479891633" width="2" height="1" alt="" /></div>
+</body>
+</html>

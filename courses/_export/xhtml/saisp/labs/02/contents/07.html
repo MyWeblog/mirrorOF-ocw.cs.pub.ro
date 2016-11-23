@@ -1,0 +1,172 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:02:contents:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-03T00:19:59+0200"/>
+<meta name="keywords" content="saisp,labs,02,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:02:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/02/contents/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:02:contents';var JSINFO = {"id":"saisp:labs:02:contents:07","namespace":"saisp:labs:02:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_suport_ssltls">07. [15p] Configurare suport SSL/TLS</h3>
+<div class="level3">
+
+<p>
+Pentru a securiza comunicația cu serverul de LDAP avem două opțiuni
+</p>
+<ol>
+<li class="level1"><div class="li"> configurarea suportului SSL, adică LDAPS</div>
+</li>
+<li class="level1"><div class="li"> configurarea suportului de TLS</div>
+</li>
+</ol>
+
+<p>
+Pentru configurarea suportului de SSL, edităm în fișierul <code>/etc/default/slapd</code> linia care conține directiva <code>SLAPD_SERVICES</code>. Linia trebuie să ajungă la forma:
+</p>
+<pre class="code">SLAPD_SERVICES=&quot;ldap:/// ldapi:/// ldaps:///&quot;</pre>
+
+<p>
+Apoi repornim serverul de LDAP
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>service slapd restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Stopping OpenLDAP: slapd.
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Starting OpenLDAP: slapd.</pre>
+
+<p>
+ și urmărim dacă acum ascultă conexiuni LDAPS (pe portul <code>636</code>):
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span><span class="kw2">netstat</span> <span class="re5">-tlpn</span> <span class="sy0">|</span> <span class="kw2">grep</span> slapd
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">636</span>             0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">3620</span><span class="sy0">/</span>slapd      
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">389</span>             0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">3620</span><span class="sy0">/</span>slapd      
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">636</span>                  :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">3620</span><span class="sy0">/</span>slapd      
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">389</span>                  :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">3620</span><span class="sy0">/</span>slapd </pre>
+
+<p>
+Cu toate acestea, dacă încercăm să ne conectăm la server folosind LDAPS obținem eroare:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>localhost <span class="re5">-b</span> <span class="st0">&quot;dc=tasks,dc=cs,dc=pub,dc=ro&quot;</span> dn
+ldap_sasl_bind<span class="br0">&#40;</span>SIMPLE<span class="br0">&#41;</span>: Can<span class="st_h">'t contact LDAP server (-1)</span></pre>
+
+<p>
+Acest lucru este datorat absenței certificatelor SSL. Ca să rezolvăm acest lucru, generăm un certificat SSL self-signed, urmărind indicațiile de <a href="https://wiki.debian.org/Self-Signed_Certificate#STEP_2" class="urlextern" title="https://wiki.debian.org/Self-Signed_Certificate#STEP_2"  rel="nofollow">aici</a>. Vom rula comanda:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>openssl req <span class="re5">-new</span> <span class="re5">-x509</span> <span class="re5">-days</span> <span class="nu0">365</span> <span class="re5">-nodes</span> <span class="re5">-out</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>slapd-cert.pem <span class="re5">-keyout</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>private<span class="sy0">/</span>slapd-key.pem
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Introduceți în cadrul comenzii de mai sus opțiunile utile. Acum cheia privată este generată în fișierul <code>/etc/ssl/private/slapd-key.pem</code>, iar cheia publică este generată în fișierul <code>/etc/ssl/certs/slapd-cert.pem</code>.
+</p>
+
+<p>
+Acum trebuie să configurăm serverul de LDAP pentru a folosi certificatele. Vom urmări indicațiile de <a href="https://wiki.debian.org/LDAP/OpenLDAPSetup#Configuring_LDAPS" class="urlextern" title="https://wiki.debian.org/LDAP/OpenLDAPSetup#Configuring_LDAPS"  rel="nofollow">aici</a>. Vom crea un fișier LDIF și în cadrul acestuia vom preciza directivele <code>olcTLSCertificateKeyFile</code> respectiv <code>olcTLSCertificateFile</code>:
+</p>
+<dl class="file">
+<dt><a href="../../../../../code/saisp/labs/02/contents/07%3Fcodeblock=5" title="Download Snippet" class="mediafile mf_ldif">slapd-config-tls.ldif</a></dt>
+<dd><pre class="code file note">dn: cn=config
+changetype: modify
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/slapd-key.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/certs/slapd-cert.pem</pre>
+</dd></dl>
+
+<p>
+Încărcăm apoi acest fișier în baza de date de configurare internă a serverului LDAP:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapmodify <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-f</span> slapd-config-tls.ldif 
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+modifying entry <span class="st0">&quot;cn=config&quot;</span></pre>
+
+<p>
+ și verificăm informațiile prezente acum în baza de date
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-s</span> base <span class="re5">-b</span> <span class="st0">&quot;cn=config&quot;</span>
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">cn</span>=config
+objectClass: olcGlobal
+cn: config
+olcArgsFile: <span class="sy0">/</span>var<span class="sy0">/</span>run<span class="sy0">/</span>slapd<span class="sy0">/</span>slapd.args
+olcLogLevel: none
+olcPidFile: <span class="sy0">/</span>var<span class="sy0">/</span>run<span class="sy0">/</span>slapd<span class="sy0">/</span>slapd.pid
+olcToolThreads: <span class="nu0">1</span>
+olcTLSCertificateKeyFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>private<span class="sy0">/</span>slapd-key.pem
+olcTLSCertificateFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>slapd-cert.pem</pre>
+
+<p>
+În baza de date internă de configurare sunt prezente acum cheia privată și certificatul SSL utile pentru funcționarea LDAPS și LDAP+TLS. Va trebui să acordăm serverului LDAP acces la cheia privată folosind comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>adduser openldap ssl-cert</pre>
+
+<p>
+și apoi să repornim serviciul:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>service slapd restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Stopping OpenLDAP: slapd.
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Starting OpenLDAP: slapd.</pre>
+
+<p>
+După aceasta vom putea folosi <abbr title="Uniform Resource Identifier">URI</abbr> de tipul LDAPS pentru a interoga serverul de LDAP local:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>localhost <span class="re5">-b</span> <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro dn
+dn: <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro</pre>
+
+<p>
+Pe această configurație putem verifica și conexiunea folosind TLS. <abbr title="Uniform Resource Identifier">URI</abbr>-ul de conectare la server este același ca în cazul nesecurizat, dar folosim opțiunea <code>-Z</code> pentru a activa suportul TLS:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-Z</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldap:<span class="sy0">//</span>localhost <span class="re5">-b</span> <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro dn
+dn: <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro</pre>
+
+<p>
+Acum serverul funcționează corespunzător cu suport SSL (LDAPS) și TLS.
+</p>
+
+</div>
+</div>
+</body>
+</html>

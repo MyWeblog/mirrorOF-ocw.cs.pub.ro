@@ -1,0 +1,127 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:01:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-24T22:25:26+0200"/>
+<meta name="keywords" content="saisp,labs,01,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:01:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/01/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:01:contents';var JSINFO = {"id":"saisp:labs:01:contents:01","namespace":"saisp:labs:01:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_folosire_client_ldap_pentru_interogare">01. [10p] Folosire client LDAP pentru interogare</h3>
+<div class="level3">
+
+<p>
+Pentru început, ne propunem să interogăm baza de date LDAP. Cererile de interogare sunt adresate unui server, care accesează baza de date din spate și returnează informații dintr-un director. Comanda folosită pentru interogare este <code>ldapsearch</code>.
+</p>
+
+<p>
+O modalitate simplă de interogare LDAP este chiar din cadrul serverului LDAP. Pe serverul LDAP, rulați comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-b</span> <span class="st0">&quot;dc=labs,dc=cs,dc=pub,dc=ro&quot;</span>
+<span class="co0"># extended LDIF</span>
+<span class="co0">#</span>
+<span class="co0"># LDAPv3</span>
+<span class="co0"># base &lt;dc=labs,dc=cs,dc=pub,dc=ro&gt; with scope subtree</span>
+<span class="co0"># filter: (objectclass=*)</span>
+<span class="co0"># requesting: ALL</span>
+<span class="co0">#</span>
+&nbsp;
+<span class="co0"># labs.cs.pub.ro</span>
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Comanda realizează o interogare a serverului LDAP și întoarce intrările aferente arborelui/directorului <code>dc=labs,dc=cs,dc=pub,dc=ro</code>.
+</p>
+
+<p>
+Opțiuna <code>-x</code> folosește autentificare simplă, în loc de SASL. În cazul de față este vorba de o conectare anonimă, fără interogare. Opțiunea <code>-b</code> a comenzii <code>ldapsearch</code> indică punctul din arborele/directorul LDAP de unde se face parcurgerea.
+</p>
+
+<p>
+Dacă vrem să nu afișăm informații despre versiunea LDAP sau comentarii LDIF, atunci putem folosi opțiunea <code>-LLL</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-b</span> <span class="st0">&quot;dc=labs,dc=cs,dc=pub,dc=ro&quot;</span>
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Ca să interogăm serverul de LDAP <strong>de pe stația client</strong> va trebui să precizăm care este <abbr title="Uniform Resource Identifier">URI</abbr>-ul serverului. Pentru a obține un rezultat similar, pe stația client trebuie să rulăm comanda de mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldap:<span class="sy0">//</span>ldap-server.local <span class="re5">-b</span> <span class="st0">&quot;dc=labs,dc=cs,dc=pub,dc=ro&quot;</span>
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Opțiunea <code>-H</code> indică <abbr title="Uniform Resource Identifier">URI</abbr>-ul serverului la care se face conectarea. În cazul de fața este vorba de numele (în forma multicast <abbr title="Domain Name System">DNS</abbr> al) serverului prefixat de șirul <code>ldap://</code>.
+</p>
+
+<p>
+În general, conexiunile LDAP de pe un client se fac către un același server așa că se pot reține <abbr title="Uniform Resource Identifier">URI</abbr>-ul de conectare și punctul de căutare de arbore în fișierul de configurare <code>/etc/ldap/ldap.conf</code>. Vom completa, folosind un editor, în fișierul de configurare <code>/etc/ldap/ldap.conf</code> directivele de configurare <code>BASE</code> (punctul de căutare – <em>search base</em>) și <code><abbr title="Uniform Resource Identifier">URI</abbr></code> (<abbr title="Uniform Resource Identifier">URI</abbr>-ul serverului). În final fișierul de configurare pe client va avea forma de mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldap.conf
+<span class="co0">#</span>
+<span class="co0"># LDAP Defaults</span>
+<span class="co0">#</span>
+&nbsp;
+<span class="co0"># See ldap.conf(5) for details</span>
+<span class="co0"># This file should be world readable but not world writable.</span>
+&nbsp;
+BASE	<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+URI	ldap:<span class="sy0">//</span>ldap-server.local
+&nbsp;
+<span class="co0">#SIZELIMIT	12</span>
+<span class="co0">#TIMELIMIT	15</span>
+<span class="co0">#DEREF		never</span>
+&nbsp;
+<span class="co0"># TLS certificates (needed for GnuTLS)</span>
+TLS_CACERT	<span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>ca-certificates.crt</pre>
+
+<p>
+Directivele <code>BASE</code> și <code><abbr title="Uniform Resource Identifier">URI</abbr></code> sunt configurate și nu mai este nevoie de folosirea opțiunilor <code>-b</code> (pentru <code>BASE</code>), respectiv <code>-H</code> (pentru <code><abbr title="Uniform Resource Identifier">URI</abbr></code>) pentru comanda <code>ldapsearch</code> pe stația client. Acum putem rula comanda simplu:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span>
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+</div>
+</div>
+</body>
+</html>

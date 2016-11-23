@@ -1,0 +1,409 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:laboratoare:lab11</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-09T19:42:34+0300"/>
+<meta name="keywords" content="so2,laboratoare,lab11"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="lab11.html"/>
+<link rel="canonical" href="../../../../so2/laboratoare/lab11.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab11","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab11.html#laborator_11_-_maparea_memoriei">Laborator 11 - Maparea memoriei</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab11.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab11.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab11.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab11.html#maparea_memoriei_in_linux">Maparea memoriei în Linux</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab11.html#structuri_de_lucru_cu_memoria">Structuri de lucru cu memoria</a></div></li>
+<li class="level3"><div class="li"><a href="lab11.html#structura_page">Structura &#039;&#039;page&#039;&#039;</a></div></li>
+<li class="level3"><div class="li"><a href="lab11.html#structura_vm_area_struct">Structura &#039;&#039;vm_area_struct&#039;&#039;</a></div></li>
+<li class="level3"><div class="li"><a href="lab11.html#structura_mm_struct">Structura &#039;&#039;mm_struct&#039;&#039;</a></div></li>
+<li class="level3"><div class="li"><a href="lab11.html#maparea_memoriei">Maparea memoriei</a></div></li>
+<li class="level3"><div class="li"><a href="lab11.html#user-space">User-space</a></div></li>
+<li class="level3"><div class="li"><a href="lab11.html#kernel-space">Kernel-space</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab11.html#remap_pfn_range">&#039;&#039;remap_pfn_range&#039;&#039;</a></div></li>
+<li class="level2"><div class="li"><a href="lab11.html#setpagereservedclearpagereserved">&#039;&#039;SetPageReserved&#039;&#039;/&#039;&#039;ClearPageReserved&#039;&#039;</a></div></li>
+<li class="level2"><div class="li"><a href="lab11.html#resurse_utile">Resurse utile</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab11.html#linux">Linux</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_11_-_maparea_memoriei">Laborator 11 - Maparea memoriei</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 11 - Maparea memoriei" [1-47] -->
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">familiarizarea cu mecanismele de mapare a spațiilor de adresă</div>
+</li>
+<li class="level1"><div class="li">prezentarea structurilor cele mai importante din Linux, legate de memory management</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Obiectivele laboratorului" [48-241] -->
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">spațiu de adresă</div>
+</li>
+<li class="level1"><div class="li">mmap</div>
+</li>
+<li class="level1"><div class="li"><code>struct page</code></div>
+</li>
+<li class="level1"><div class="li"><code>struct vm_area_struct</code></div>
+</li>
+<li class="level1"><div class="li"><code>struct vm_struct</code></div>
+</li>
+<li class="level1"><div class="li"><code>remap_pfn_range</code></div>
+</li>
+<li class="level1"><div class="li">SetPageReserved/ClearPageReserved</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Cuvinte cheie" [242-433] -->
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab11-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab11-slides.pdf"  rel="nofollow">Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow">SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Materiale ajutătoare" [434-650] -->
+<h2 class="sectionedit5" id="maparea_memoriei_in_linux">Maparea memoriei în Linux</h2>
+<div class="level2">
+
+<p>
+În kernel-ul Linux există posibilitatea mapării unui spaţiu de adresă kernel într-un spaţiu de adresă utilizator. În acest fel se elimină overhead-ul datorat copierii informaţiei din user-space în kernel-space (şi invers). Acest lucru poate fi realizat prin intermediul unui device driver şi a interfeţei dispozitiv (<code>/dev</code>) a acestuia în user-space.
+</p>
+
+<p>
+Această facilitate poate fi folosită prin completarea operaţiei <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1532" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1532"  rel="nofollow">mmap</a> din structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521"  rel="nofollow">struct file_operations</a> asociată dispozitivului şi utilizând apelul <code>mmap</code> din user-space.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Maparea memoriei în Linux" [651-1388] -->
+<h3 class="sectionedit6" id="structuri_de_lucru_cu_memoria">Structuri de lucru cu memoria</h3>
+<div class="level3">
+
+<p>
+Înainte de a discuta despre mecanismul de memory-mapping peste un dispozitiv, vom prezenta câteva din structurile de bază legate de subsistemul de management al memoriei în kernel-ul Linux.
+</p>
+
+<p>
+Cateva din structurile importante sunt: <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L31" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L31"  rel="nofollow">struct page</a>, <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L241" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L241"  rel="nofollow">struct vm_area_struct</a> şi <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L344" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L344"  rel="nofollow">struct mm_struct</a>.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Structuri de lucru cu memoria" [1389-1955] -->
+<h3 class="sectionedit7" id="structura_page">Structura &#039;&#039;page&#039;&#039;</h3>
+<div class="level3">
+
+<p>
+Structura <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L31" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L31"  rel="nofollow">struct page</a> este utilizată pentru a încorpora informaţii despre toate paginile fizice din sistem. Kernel-ul deţine o structură <code>struct page</code> pentru toate paginile din sistem.
+</p>
+
+<p>
+Printre câmpurile importante ale acestei structuri amintim:
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L117" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L117"  rel="nofollow">_count</a>, contorul de utilizare al paginii; când acesta devine 0 pagina este adăugată la lista de pagini libere;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L180" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L180"  rel="nofollow">virtual</a>, adresa virtuală în spaţiul kernel asociată acestei pagini fizice; paginile din <code>ZONE_DMA</code> sau <code>ZONE_NORMAL</code> sunt tot timpul mapate; paginile din <code>ZONE_HIHGMEM</code> nu sunt tot timpul mapate; Aceste constante se găsesc în <a href="http://lxr.free-electrons.com/source/include/linux/mmzone.h?v=3.13#L261" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mmzone.h?v=3.13#L261"  rel="nofollow">enum zone_type</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L46" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L46"  rel="nofollow">flags</a>, un set de flag-uri care descriu atributele paginii.</div>
+</li>
+</ul>
+
+<p>
+Există numeroase funcţii care interacţionează cu această structură:
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/arch/x86/include/asm/page.h?v=3.13#L63" class="urlextern" title="http://lxr.free-electrons.com/source/arch/x86/include/asm/page.h?v=3.13#L63"  rel="nofollow">virt_to_page</a> întoarce pagina asociată unei adrese virtuale;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/asm-generic/memory_model.h?v=3.13#L73" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/memory_model.h?v=3.13#L73"  rel="nofollow">pfn_to_page</a> întoarce pagina asociată pentru un număr de pagină (<code>page frame number</code>);</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/mm/highmem.c?v=3.13#L348" class="urlextern" title="http://lxr.free-electrons.com/source/mm/highmem.c?v=3.13#L348"  rel="nofollow">page_address</a> întoarce adresa virtuală a paginii transmise ca parametru.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Structura ''page''" [1956-3606] -->
+<h3 class="sectionedit8" id="structura_vm_area_struct">Structura &#039;&#039;vm_area_struct&#039;&#039;</h3>
+<div class="level3">
+
+<p>
+Structura <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L246" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L246"  rel="nofollow">struct vm_area_struct</a> deţine informaţii despre o zonă de memorie virtuală contiguă. Zonele de memorie ale unui proces pot fi vizualizate inspectând <code>procfs</code>:
+</p>
+<pre class="code bash">$ <span class="kw2">cat</span> <span class="sy0">/</span>proc<span class="sy0">/</span><span class="nu0">1</span><span class="sy0">/</span>maps
+08048000-0804f000 r-xp 00000000 03:01 <span class="nu0">401624</span>     <span class="sy0">/</span>sbin<span class="sy0">/</span>init
+0804f000-08050000 rw-p 00007000 03:01 <span class="nu0">401624</span>     <span class="sy0">/</span>sbin<span class="sy0">/</span>init
+08050000-08071000 rw-p 08050000 00:00 <span class="nu0">0</span>
+<span class="nu0">40000000</span>-<span class="nu0">40016000</span> r-xp 00000000 03:01 <span class="nu0">369654</span>     <span class="sy0">/</span>lib<span class="sy0">/</span>ld-2.3.2.so
+<span class="nu0">40016000</span>-<span class="nu0">40017000</span> rw-p 00015000 03:01 <span class="nu0">369654</span>     <span class="sy0">/</span>lib<span class="sy0">/</span>ld-2.3.2.so
+<span class="nu0">40017000</span>-<span class="nu0">40018000</span> rw-p <span class="nu0">40017000</span> 00:00 <span class="nu0">0</span>
+4001d000-<span class="nu0">40147000</span> r-xp 00000000 03:01 <span class="nu0">371432</span>     <span class="sy0">/</span>lib<span class="sy0">/</span>tls<span class="sy0">/</span>libc-2.3.2.so
+<span class="nu0">40147000</span>-<span class="nu0">40150000</span> rw-p 00129000 03:01 <span class="nu0">371432</span>     <span class="sy0">/</span>lib<span class="sy0">/</span>tls<span class="sy0">/</span>libc-2.3.2.so
+<span class="nu0">40150000</span>-<span class="nu0">40153000</span> rw-p <span class="nu0">40150000</span> 00:00 <span class="nu0">0</span>
+bffff000-c0000000 rw-p bffff000 00:00 <span class="nu0">0</span>
+ffffe000-fffff000 <span class="re5">---p</span> 00000000 00:00 <span class="nu0">0</span></pre>
+
+<p>
+O zonă de memorie este caracterizată printr-o adresă de start, adresă de stop, lungime, permisiuni. 
+</p>
+
+<p>
+O structură <code>vm_area_struct</code> este creată la fiecare apel <code>mmap</code> din user-space. Un driver care are suport pentru operaţia de <code>mmap</code> trebuie să completeze şi să iniţializeze structura <code>vm_area_struct</code> asociată. Cele mai importante câmpuri ale acestei structuri sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L249" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L249"  rel="nofollow">vm_start</a>, <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L250" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L250"  rel="nofollow">vm_end</a>, reprezintă începutul, respectiv, sfârşitul zonei de memorie (aceste câmpuri apar şi in <code>/proc/*/maps</code>);</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L301" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L301"  rel="nofollow">vm_file</a>, pointer-ul la structura de fişier asociată (dacă există);</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L299" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L299"  rel="nofollow">vm_pgoff</a>, offset-ul zonei în cadrul fişierului;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L270" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L270"  rel="nofollow">vm_flags</a>, un set de indicatori;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L296" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L296"  rel="nofollow">vm_ops</a>, un set de funcţii de lucru asupra acestei zone.</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L254" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L254"  rel="nofollow">vm_next</a>, <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L254" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L254"  rel="nofollow">vm_prev</a>, <code>vm_area</code>-urile aferente unui proces sunt înlănțuite printr-o listă</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Structura ''vm_area_struct''" [3607-6001] -->
+<h3 class="sectionedit9" id="structura_mm_struct">Structura &#039;&#039;mm_struct&#039;&#039;</h3>
+<div class="level3">
+
+<p>
+Structura <a href="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L344" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mm_types.h?v=3.13#L344"  rel="nofollow">struct mm_struct</a> înglobează toate zonele de memorie asociate unui proces; folosind câmpul <code>mm</code> al structurii <a href="http://lxr.free-electrons.com/source/include/linux/sched.h?v=3.13#L1042" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/sched.h?v=3.13#L1042"  rel="nofollow">task_struct</a> se poate obţine structura <code>mm_struct</code> asociată procesului curent.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Structura ''mm_struct''" [6002-6397] -->
+<h3 class="sectionedit10" id="maparea_memoriei">Maparea memoriei</h3>
+<div class="level3">
+
+<p>
+Maparea memoriei (<code>memory mapping</code>) este una dintre cele mai interesante caracteristici ale unui sistem Unix. Din punct de vedere al unui driver, facilitatea de <code>memory-mapping</code> permite accesul direct al memoriei unui dispozitiv din user-space.
+</p>
+
+<p>
+Pentru a asocia unui driver o operaţie <code>mmap</code>, trebuie utilizat câmpul <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1532" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1532"  rel="nofollow">mmap</a> din structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521"  rel="nofollow">struct file_operations</a> asociată dispozitivului. Metoda astfel asociată este utilizată în cazul unui apel <code>mmap</code> din user-space.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Maparea memoriei" [6398-7050] -->
+<h3 class="sectionedit11" id="user-space">User-space</h3>
+<div class="level3">
+
+<p>
+Apelul <code>mmap</code> din user-space realizează o mapare între spaţiul de adresă al unui proces şi un fişier şi are signatura:
+</p>
+<pre class="code C"><span class="kw4">void</span> <span class="sy0">*</span>mmap <span class="br0">&#40;</span>caddr_t addr<span class="sy0">,</span> <span class="kw4">size_t</span> len<span class="sy0">,</span> <span class="kw4">int</span> prot<span class="sy0">,</span> <span class="kw4">int</span> flags<span class="sy0">,</span> <span class="kw4">int</span> fd<span class="sy0">,</span> <span class="kw4">off_t</span> offset<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Pentru a mapa memorie între un dispozitiv şi user-space, se va deschide dispozitivul cu un apel <code>open</code> şi se va pasa apelului <code>mmap</code> descriptorul acestuia.
+</p>
+
+</div>
+<!-- EDIT11 SECTION "User-space" [7051-7465] -->
+<h3 class="sectionedit12" id="kernel-space">Kernel-space</h3>
+<div class="level3">
+
+<p>
+Operaţia <code>mmap</code> din kernel-space se declară ca un membru al structurii <code>struct file_operations</code> de forma:
+</p>
+<pre class="code C"><span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>mmap<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*</span>filp<span class="sy0">,</span> <span class="kw4">struct</span> vm_area_struct <span class="sy0">*</span>vma<span class="br0">&#41;</span></pre>
+
+<p>
+Câmpul <code>filp</code> reprezintă pointer-ul la structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h#L866" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h#L866"  rel="nofollow">struct file</a> creată o dată cu deschiderea dispozitivului din user-space. Câmpul <code>vma</code> este utilizat pentru a indica spaţiul de adresă virtual folosit pentru maparea memoriei dispozitivului. Un driver va putea aloca memorie (folosind <code>kmalloc</code> sau <code>vmalloc</code>), urmând ca un set de procese să poată mapa în spaţiul propriu de adresă adresa alocată în driver.
+</p>
+
+</div>
+<!-- EDIT12 SECTION "Kernel-space" [7466-8172] -->
+<h2 class="sectionedit13" id="remap_pfn_range">&#039;&#039;remap_pfn_range&#039;&#039;</h2>
+<div class="level2">
+
+<p>
+Pentru maparea unui spaţiu de memorie fizică în spaţiul virtual utilizator, reprezentat de structura <code>struct vm_area_struct</code>, se folosește apelul <a href="http://lxr.free-electrons.com/source/mm/memory.c?v=3.13#L2319" class="urlextern" title="http://lxr.free-electrons.com/source/mm/memory.c?v=3.13#L2319"  rel="nofollow"> remap_pfn_range</a>. Acesta va mapa un spaţiu de adresă fizic contiguu în spaţiul virtual reprezentat de <code>struct vm_area_struct</code>:
+</p>
+<pre class="code C"><span class="kw4">int</span> remap_pfn_range<span class="br0">&#40;</span><span class="kw4">struct</span> vm_area_struct <span class="sy0">*</span>vma<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> addr<span class="sy0">,</span>
+                        <span class="kw4">unsigned</span> <span class="kw4">long</span> pfn<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> size<span class="sy0">,</span> pgprot_t prot<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Parametrii funcţiei sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>vma</code>, spaţiul de memorie virtuală în cadrul căruia se face maparea;</div>
+</li>
+<li class="level1"><div class="li"><code>addr</code>, spaţiul virtual de adresă de unde se începe remaparea; se vor construi tabele de pagini pentru spaţiul virtual de adresă cuprins intre <code>addr</code> şi <code>addr + size</code>;</div>
+</li>
+<li class="level1"><div class="li"><code>pfn</code>, numărul paginii fizice (<code>page frame number</code>) în care se mapează adresa virtuală; de obicei acesta se obţine prin shifting-ul adresei fizice <a href="http://lxr.free-electrons.com/source/include/asm-generic/page.h?v=3.13#L15" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/page.h?v=3.13#L15"  rel="nofollow"> PAGE_SHIFT</a> biţi la dreapta</div>
+</li>
+<li class="level1"><div class="li"><code>size</code>, dimensiunea (în octeţi) a spaţiului de memorie care va fi remapat;</div>
+</li>
+<li class="level1"><div class="li"><code>prot</code>, caracteristicile de protecţie pentru noul spaţiu de adresă.</div>
+</li>
+</ul>
+
+<p>
+Un exemplu de utilizare a acestei funcţii este:
+</p>
+<pre class="code C"><span class="kw4">struct</span> vm_area_struct <span class="sy0">*</span>vma<span class="sy0">;</span>
+<span class="kw4">unsigned</span> <span class="kw4">long</span> phys_pgoff<span class="sy0">;</span>
+<span class="kw4">int</span> ret<span class="sy0">;</span>
+&nbsp;
+ret <span class="sy0">=</span> remap_pfn_range <span class="br0">&#40;</span>vma<span class="sy0">,</span> vma<span class="sy0">-&gt;</span>vm_start<span class="sy0">,</span> phys_pgoff<span class="sy0">,</span>
+                   vma<span class="sy0">-&gt;</span>vm_end <span class="sy0">-</span> vma<span class="sy0">-&gt;</span>vm_start<span class="sy0">,</span> vma<span class="sy0">-&gt;</span>vm_page_prot<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>ret <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        printk<span class="br0">&#40;</span>KERN_ERR<span class="st0">&quot;could not map address area<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">return</span> <span class="sy0">-</span>EIO<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În exemplul de mai sus se realizează o mapare a zonei fizice începând de la numărul de pagină <code>phys_pgoff</code> în întreg spaţiul virtual de adresă reprezentat de <code>vma</code>.
+</p>
+
+<p>
+Două funcţii care sunt utile sunt cele de translatare a unei adrese virtuale din spaţiul kernel în adrese fizice. Acestea sunt <a href="http://lxr.free-electrons.com/source/arch/x86/include/asm/io.h?v=3.13#L111" class="urlextern" title="http://lxr.free-electrons.com/source/arch/x86/include/asm/io.h?v=3.13#L111"  rel="nofollow"> virt_to_phys</a> pentru adrese alocate folosind <code>kmalloc</code> şi <a href="http://lxr.free-electrons.com/source/mm/vmalloc.c?v=3.13#L259" class="urlextern" title="http://lxr.free-electrons.com/source/mm/vmalloc.c?v=3.13#L259"  rel="nofollow"> vmalloc_to_pfn</a> pentru adrese alocate folosind <code>vmalloc</code>.
+</p>
+
+<p>
+Astfel, numărul de pagină <code>phys_pgoff</code> din exemplul de mai sus se va obţine în cazul unei adrese <code>kmalloc_area</code> alocate folosind <code>kmalloc</code> astfel:
+</p>
+<pre class="code C"><span class="kw4">static</span> <span class="kw4">char</span><span class="sy0">*</span> kmalloc_area<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">unsigned</span> <span class="kw4">long</span> phys_pgoff <span class="sy0">=</span> virt_to_phys<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span><span class="br0">&#41;</span>kmalloc_area<span class="br0">&#41;</span> <span class="sy0">&gt;&gt;</span> PAGE_SHIFT<span class="sy0">;</span></pre>
+
+<p>
+iar în cazul unei adrese alocate folosind <code>vmalloc</code>:
+</p>
+<pre class="code C"><span class="kw4">static</span> <span class="kw4">char</span> <span class="sy0">*</span>vmalloc_area<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">unsigned</span> <span class="kw4">long</span>  phys_pgoff  <span class="sy0">=</span> vmalloc_to_pfn <span class="br0">&#40;</span>vmalloc_area<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+De cele mai multe ori, implementarea funcţiei <code>mmap</code> descrisă mai sus se reduce la un apel al funcţiei <code>remap_pfn_range</code>. Paginile alocate folosind <code>vmalloc</code> nu sunt fizic contigue, astfel încât va trebui mapată fiecare pagină în parte (în cazul în care zona de memorie are mai multe pagini), apelând <code>remap_pfn_range</code> pentru fiecare pagină virtuală.
+</p>
+
+</div>
+<!-- EDIT13 SECTION "''remap_pfn_range''" [8173-11177] -->
+<h2 class="sectionedit14" id="setpagereservedclearpagereserved">&#039;&#039;SetPageReserved&#039;&#039;/&#039;&#039;ClearPageReserved&#039;&#039;</h2>
+<div class="level2">
+
+<p>
+Înainte de a fi utilizată, unei pagini îi va trebui activat bitul <a href="http://lxr.free-electrons.com/source/include/linux/page-flags.h?v=3.13#L85" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/page-flags.h?v=3.13#L85"  rel="nofollow">PG_reserved</a>. Acest bit înseamnă că pagina nu poate fi evacuată pe disk (<code>swap</code>). Activarea se realizează cu ajutorul macroului <a href="http://lxr.free-electrons.com/source/include/linux/page-flags.h?v=3.13#L182" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/page-flags.h?v=3.13#L182"  rel="nofollow">SetPageReserved</a>. Macrodefiniţia primeşte ca parametru un pointer către structura de pagină, <code>struct page</code>, care se obţine din adresa virtuală din kernel cu ajutorul funcţiei <code>virt_to_page</code>, pentru adrese alocate folosind <code>kmalloc</code>:
+</p>
+<pre class="code C"><span class="co2">#define NPAGES		16</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">char</span><span class="sy0">*</span> kmalloc_area<span class="sy0">;</span>
+<span class="kw4">int</span> i<span class="sy0">;</span>
+&nbsp;
+<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> NPAGES <span class="sy0">*</span> PAGE_SIZE<span class="sy0">;</span> i <span class="sy0">+=</span> PAGE_SIZE<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        SetPageReserved<span class="br0">&#40;</span>virt_to_page<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">long</span><span class="br0">&#41;</span>kmalloc_area<span class="br0">&#41;</span> <span class="sy0">+</span> i<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+şi cu ajutorul funcţiei <a href="http://lxr.free-electrons.com/source/mm/vmalloc.c?v=3.13#L225" class="urlextern" title="http://lxr.free-electrons.com/source/mm/vmalloc.c?v=3.13#L225"  rel="nofollow">vmalloc_to_page</a> pentru adrese alocate folosind <code>vmalloc</code>:
+</p>
+<pre class="code C"><span class="co2">#define NPAGES		16</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">char</span><span class="sy0">*</span> vmalloc_area<span class="sy0">;</span>
+<span class="kw4">int</span> i<span class="sy0">;</span>
+&nbsp;
+<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> NPAGES <span class="sy0">*</span> PAGE_SIZE<span class="sy0">;</span> i <span class="sy0">+=</span> PAGE_SIZE<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        SetPageReserved<span class="br0">&#40;</span>vmalloc_to_page<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">long</span><span class="br0">&#41;</span>vmalloc_area<span class="br0">&#41;</span> <span class="sy0">+</span> i<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Înainte de eliberarea paginii (<code>kfree</code>/<code>vfree</code>), bitul de pagină rezervată trebuie dezactivat cu ajutorul macroului <a href="http://lxr.free-electrons.com/source/include/linux/page-flags.h?v=3.13#L185" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/page-flags.h?v=3.13#L185"  rel="nofollow">ClearPageReserved</a>. Acesta primeşte ca parametru acelaşi pointer către o structura de pagină care a fost dat la <code>SetPageReserved</code>.
+</p>
+
+</div>
+<!-- EDIT14 SECTION "''SetPageReserved''/''ClearPageReserved''" [11178-12750] -->
+<h2 class="sectionedit15" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT15 SECTION "Resurse utile" [12751-12777] -->
+<h3 class="sectionedit16" id="linux">Linux</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Linux Device Drivers 3rd Edition – <a href="http://lwn.net/images/pdf/LDD3/ch15.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch15.pdf"  rel="nofollow">Chapter 15. Memory Mapping and DMA</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.scs.ch/~frey/linux/memorymap.html" class="urlextern" title="http://www.scs.ch/~frey/linux/memorymap.html"  rel="nofollow">Linux - mapping driver memory in user-space</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.xml.com/ldd/chapter/book/ch13.html" class="urlextern" title="http://www.xml.com/ldd/chapter/book/ch13.html"  rel="nofollow">Linux Device Driver mmap Skeleton</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linuxhq.com/guides/TLK/mm/memory.html" class="urlextern" title="http://www.linuxhq.com/guides/TLK/mm/memory.html"  rel="nofollow">The Linux Kernel - Memory Management</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/28746/" class="urlextern" title="http://lwn.net/Articles/28746/"  rel="nofollow">Driver porting: supporting mmap()</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linuxjournal.com/article/1287" class="urlextern" title="http://www.linuxjournal.com/article/1287"  rel="nofollow">Device Drivers Concluded</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.ecst.csuchico.edu/~beej/guide/ipc/mmap.html" class="urlextern" title="http://www.ecst.csuchico.edu/~beej/guide/ipc/mmap.html"  rel="nofollow">Memory Mapped Files</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Mmap" class="urlextern" title="http://en.wikipedia.org/wiki/Mmap"  rel="nofollow">mmap</a></div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT16 SECTION "Linux" [12778-] --></div>
+</body>
+</html>

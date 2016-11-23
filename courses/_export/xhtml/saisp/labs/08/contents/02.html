@@ -1,0 +1,80 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:08:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-14T10:07:29+0200"/>
+<meta name="keywords" content="saisp,labs,08,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/08/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:08:contents';var JSINFO = {"id":"saisp:labs:08:contents:02","namespace":"saisp:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_copy-on-write_virtual_storage">02. [10p] Copy-on-write virtual storage</h3>
+<div class="level3">
+
+<p>
+La punctul anterior am pornit o mașină virtuală ce avea o imagine a disk-ului deja construită. Ați observat extensia specifică a imaginii <code>.qcow2</code> (<em>QEMU Copy-on-write</em>). Acest tip de imagine virtuală ne permite să multiplicăm o mașină virtuală folosind o imagine de bază read-only. Pentru fiecare mașină virtuală pornită se va crea un fișier doar cu modificările aduse de aceasta imaginii de bază. Mai multe despre multiplicare vom vedea în următoarele exerciții
+</p>
+
+<p>
+În continuare vom crea o imagine <code>.qcow</code> pe care vom porni instalarea unui sistem de operare. Utilitarul cu ajutorul căruia se crează astfel de imagini  este <code>qemu-img</code> (dacă nu există, instalați-l folosind comanda <code>apt-get install qemu-utils</code>):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>qemu-img create <span class="re5">-f</span> qcow2 virtualdisk.qcow2 1G
+Formatting <span class="st_h">'virtualdisk.qcow2'</span>, <span class="re2">fmt</span>=qcow2 <span class="re2">size</span>=<span class="nu0">1073741824</span> <span class="re2">encryption</span>=off <span class="re2">cluster_size</span>=<span class="nu0">65536</span> </pre>
+
+<p>
+Se observă că utilitarul <code>qemu-img</code> primește ca prim parametru o comandă (<code>create</code>). Pentru comanda <code>create</code> am specificat tipul dorit de imagine (<code>qcow2</code>), numele disk-ului virtual și dimensiunea maximă a acestuia (<code>1G</code>).
+</p>
+
+<p>
+Dorim să instalăm un sistem de operare folosind un CD de instalare (fomat <code>.iso</code>). Comanda <code>kvm</code> ne permite să adăugăm un nou dispozitiv de tip <em>cdrom</em> în care să fie încărcată. Folosiți imaginea CD-ului Debian din arhiva descărcată (fișierul <code>debian-7.3.0-amd64-netinst.iso</code>) și porniți o mașină virtuală cu disk-ul virtual creat anterior și un dispozitiv de tip <em>cdrom</em>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> virtualdisk.qcow2 <span class="re5">-cdrom</span> debian-7.3.0-amd64-netinst.iso <span class="re5">-m</span> <span class="nu0">256</span> <span class="re5">-smp</span> <span class="nu0">2</span></pre>
+
+<p>
+Mașina virtuala va porni de pe CD întrucât nu va găsi nici un bootloader pe disk-ul virtual. Porniți instalarea sistemului de operare folosind pașii impliciți. Din acest punct instalarea decurge ca în cazul unui sistem fizic obișnuit.
+</p>
+
+<p>
+O dată începută instalarea, închideți mașina virtuală folosind una din metodele găsite/prezentate anterior și ștergeți imaginea nou creată.
+</p>
+
+</div>
+</div>
+</body>
+</html>

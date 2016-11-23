@@ -1,0 +1,151 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:01:contents:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-18T12:28:46+0200"/>
+<meta name="keywords" content="saisp,labs,01,contents,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:01:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/01/contents/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:01:contents';var JSINFO = {"id":"saisp:labs:01:contents:06","namespace":"saisp:labs:01:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_adaugare_conturi_de_utilizatori_in_baza_de_date_ldap">06. [20p] Adăugare conturi de utilizatori în baza de date LDAP</h3>
+<div class="level3">
+
+<p>
+Pentru a putea folosi conturi din baza de date LDAP pentru anumite forme de autentificare, este necesar ca intrările să aibă ca <code>objectClass</code> atât <code>posixAccount</code> cât și <code>shadowAccount</code>. Cele două clase conțin informații precum <code>uid</code>, <code>password</code>, <code>loginShell</code>, <code>uidNumber</code>, <code>gidNumber</code>.
+</p>
+
+<p>
+Trebuie, așadar, să modificăm intrările de tip utilizator existente în baza de date LDAP. Modificările se realizează tot prin intermediul unui fișier LDIF. Astfel, pentru a adăuga informații din clasa <code>posixAccount</code> și <code>shadowAccount</code> pentru utilizatorul <code>amengsk</code> vom folosi un fișier cu următorul conținut:
+</p>
+<dl class="file">
+<dt><a href="../../../../../code/saisp/labs/01/contents/06%3Fcodeblock=0" title="Download Snippet" class="mediafile mf_ldif">account-uid-amengsk.ldif</a></dt>
+<dd><pre class="code file none">dn: uid=amengsk,ou=Dominion,o=Terran,dc=labs,dc=cs,dc=pub,dc=ro
+changetype: modify
+add: objectClass
+objectClass: posixAccount
+-
+add: uidNumber
+uidNumber: 1001
+-
+add: gidNumber
+gidNumber: 1000
+-
+add: homeDirectory
+homeDirectory: /home/amengsk
+-
+add: loginShell
+loginShell: /bin/bash
+-
+add: gecos
+gecos: Arcturus Mengsk,,,
+-
+add: objectClass
+objectClass: shadowAccount
+-</pre>
+</dd></dl>
+
+<p>
+Acest fișier se găsește și pe stația client în directorul <code>/etc/ldap/ldif/modify/</code>, cu numele <code>account-uid-amengsk.ldif</code>.
+</p>
+
+<p>
+Adăugăm noile informații folosind comanda <code>ldapmodify</code>, cu o sintaxă similară comenzii <code>ldapadd</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:/etc/ldap/ldif/modify# </span>ldapmodify <span class="re5">-x</span> <span class="re5">-D</span> <span class="re2">cn</span>=admin,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro <span class="re5">-W</span> <span class="re5">-f</span> account-uid-amengsk.ldif</pre>
+
+<p>
+Acum verificăm modificările în baza de date LDAP folosind comanda <code>ldapsearch</code>:
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="sy0">/</span>modify<span class="co0"># ldapsearch -x -LLL uid=amengsk</span>
+dn: <span class="re2">uid</span>=amengsk,<span class="re2">ou</span>=Dominion,<span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uid: amengsk
+cn: Arcturus Mengsk
+givenName: Arcturus
+sn: Mengsk
+mail: mengsk<span class="sy0">@</span>dominion.terran.mil
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uidNumber: <span class="nu0">1001</span>
+gidNumber: <span class="nu0">1000</span>
+homeDirectory: <span class="sy0">/</span>home<span class="sy0">/</span>amengsk
+loginShell: <span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw2">bash</span>
+gecos: Arcturus Mengsk,,,</pre>
+
+<p>
+Pentru a fi informațiile complete trebuie completate câmpurile legate de parole. Pentru aceasta se folosește comanda <code>ldappasswd</code>:
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="sy0">/</span>modify<span class="co0"># ldappasswd -x -D cn=admin,dc=labs,dc=cs,dc=pub,dc=ro -W -S uid=amengsk,ou=Dominion,o=Terran,dc=labs,dc=cs,dc=pub,dc=ro</span>
+New password: 
+Re-enter new password: 
+Enter LDAP Password:</pre>
+
+<p>
+Opțiunea <code>-W</code> folosită și în cazul comenzilor <code>ldapadd</code> și <code>ldappaswd</code> înseamnă că parola utilizatorului de bind (cel care face modificarea, în cazul de față <code>cn=admin,dc=labs,dc=cs,dc=pub,dc=ro</code>) se va citi de la intrarea standard. Opțiunea <code>-S</code> spune că parola care va fi completată utilizatorului transmis ca parametru (<code>uid=amengsk…</code>) va fi citită, de asemenea, de la intrarea standard. În rularea de mai sus se cere întâi parola utilizatorului primit ca parametru (introduceți ce parolă doriți), se confirmă acea parolă și apoi se cere parola de bind.
+</p>
+
+<p>
+În acest moment utilizatorul are configurată parola. Pentru a verifica acest lucru, putem să citim intrarea din baza de date LDAP. Câmpul de parolă este însă accesibil doar utilizatorului propriu sau doar celui privilegiat. Vom face citirea folosind utilizatorul propriu (bind):
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="sy0">/</span>modify<span class="co0"># ldapsearch -x -LLL -D 'uid=amengsk,ou=Dominion,o=Terran,dc=labs,dc=cs,dc=pub,dc=ro' -W uid=amengsk userPassword</span>
+Enter LDAP Password: 
+dn: <span class="re2">uid</span>=amengsk,<span class="re2">ou</span>=Dominion,<span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+userPassword:: <span class="re2">e1NTSEF9NDhXajhSbzZ6THNWZ1YrRjRnNjRITno4blNYaWhSblo</span>=</pre>
+
+<p>
+În comanda de mai sus am realizat bind la serverul LDAP folosind chiar utilizatorul <code>amengsk</code>, am folosit opțiunea <code>-W</code> pentru a citi parola de la intrarea standard și apoi am solicitat afișarea câmpului <code>userPassword</code> în format <code>base64</code>.
+</p>
+
+<p>
+<strong>Exercițiu</strong>: Realizați pașii de mai sus și pentru utilizatorii <code>raynor</code>, <code>vmengsk</code>, <code>horner</code>, <code>zeratul</code> și <code>artanis</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Creați copii ale fișierului <code>/etc/ldap/ldif/account-uid-mengsk.ldif</code>, încărcați-le în baza de date LDAP și apoi configurați parola pentru fiecare utilizator. Incrementați pentru fiecare utilizator adăugat valoarea pentru numărul de UID (<code>uidNumber</code>).
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

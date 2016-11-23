@@ -1,0 +1,944 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    11. Linkers and Loaders    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T07:35:01+0300"/>
+<meta name="keywords" content="cpl,labs-2015,11"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cpl:labs-2015"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cpl/labs-2015/11.html"/>
+<link rel="canonical" href="11.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs-2015';var JSINFO = {"id":"cpl:labs-2015:11","namespace":"cpl:labs-2015","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cpl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="11%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="11%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="linkers_and_loaders">11. Linkers and Loaders</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="nice_to_read">Nice to read</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.iecc.com/linker/" class="urlextern" title="http://www.iecc.com/linker/"  rel="nofollow">Linkers and Loaders</a>,  John R. Levine</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic">
+Acest laborator va abunda de rom-engleză, în special de cuvintele <strong>linkăre</strong> și <strong>loadăre</strong>. :)
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit3" id="prezentare_teoretica">Prezentare teoretică</h2>
+<div class="level2">
+
+<p>
+<strong>Linkerele</strong> unesc mai multe fișiere compilate (obiect) pentru a genera un singur fișier executabil.
+</p>
+
+<p>
+<strong>Loaderele</strong> încarcă un program executabil la o anumită adresă în memorie.
+</p>
+
+<p>
+Acestea permit construirea programelor din module, în locul unui program mare și monolitic. Astfel, una din principalele sarcini ale linkerelor și loaderelor este să lege numele abstracte folosite de programatori (ex: numele funcțiilor din biblioteci) și să le transforme în nume concrete (ex: locația deplasată cu 512 octeți de la începutul secvenței codului executabil din memorie sau o adresă numerică).
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="asambloare">Asambloare</h3>
+<div class="level3">
+
+<p>
+La începuturile erei calculatoarelor, programarea se făcea în totalitate în cod mașină. Programatorii scriau programele simbolice pe hârtie și le transformau <em>de mână</em> în cod mașină. Dacă programatorul folosea nume simbolice (de exemplu un nume de procedură) acestea trebuiau transformate <em>de mână</em> în adrese și, dacă apoi se descoperea că o instrucțiune trebuie adăugată într-un anumit loc în program, acesta trebuia verificat pentru a fi modificate toate adresele afectate de acea instrucțiune.
+</p>
+
+<p>
+Problema în aceasta abordare era că numele erau legate de o adresă fixă prea devreme în procesul de dezvoltare. Această problemă a fost rezolvată cu ajutorul asambloarelor ce permiteau folosirea de nume simbolice. Dacă programul trebuia schimbat, programatorul trebuia să îl reasambleze, dar această muncă de a atribui adresele fizice nu mai era făcută de el.
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="de_ce_linkere">De ce linkere?</h3>
+<div class="level3">
+
+<p>
+Bibliotecile complică această problemă (existau biblioteci de cod încă înaintea apariției asambloarelor). Aceste biblioteci ar trebui să fie încărcate în memorie și să poată fi accesate din programul care le apelează (eventual să fie încărcate în același loc cu celelalte metode ale programului). În general aceste biblioteci vin sub o formă binară (compilată) și ar trebui ca adresele lor sa poată fi atribuite în funcție de adresa efectivă la care sunt încărcate.
+</p>
+
+<p>
+Pentru a rezolva această problemă a fost introdusă noțiunea de <strong>cod relocabil</strong>. Programatorii și asamblorul scriau module care începeau atribuirea adreselor relative de la 0 și amânau atribuirea adreselor absolute (adrese fizice) până în <strong>momentul linkeditării</strong>.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="de_ce_loadere">De ce loadere?</h3>
+<div class="level3">
+
+<p>
+Odată cu apariția sistemelor de operare, a devenit necesară o <strong>separare a linkerelor de loadere</strong>. Înainte programele puteau fi asamblate și link-ate cu adrese fixe pentru că programele aveau toată memoria la dispoziție, dar în contextul sistemelor de operare, în momentul în care modulele erau legate, programele nu știau la ce adresă vor fi încărcate.
+</p>
+
+<p>
+Astfel linkerele făceau partea de agregare a modulelor și foloseau adrese relative, în timp ce loaderele le transformau în adrese absolute odată cu încărcarea programelor în memorie.
+</p>
+
+<p>
+Această evoluție a continuat și a mai parcurs o serie de stagii marcate în principal de apariția blocurilor de date partajate de mai multe programe (linkerul trebuia să asigure suportul pentru accesul la aceste date), împărțirea programelor în secțiuni (linkerul trebuie să combine toate secțiunile de fiecare tip din fiecare modul), apariția bibliotecilor dinamice etc.
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="linkere_vs_loadere">Linkere vs. Loadere</h2>
+<div class="level2">
+
+<p>
+Atât linkerele cât și loaderele lucrează (sau modifică) cod obiect și sunt cam singurele instrumente de largă răspândire care lucrează cu acest tip de cod (în afara debuggerelor).
+</p>
+
+<p>
+Există trei mari acțiuni pe care le îndeplinesc:
+</p>
+<ul>
+<li class="level1"><div class="li"> relocarea</div>
+</li>
+<li class="level1"><div class="li"> rezolvarea simbolurilor</div>
+</li>
+<li class="level1"><div class="li"> încărcarea</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit8" id="relocarea">Relocarea</h3>
+<div class="level3">
+
+<p>
+Este o acțiune făcută și de <strong>linker</strong> și de <strong>loader</strong>.
+</p>
+
+<p>
+Compilatoarele și asambloarele creează, în general, fișiere obiect cu adrese relative (pornind de la 0). Relocarea este procesul prin care se atribuie adrese de încărcare diferitelor părți din program, ajustând codul și datele în program pentru a reflecta adresele atribuite. Un program poate fi relocat de mai multe ori. De regulă, un linker creează un program mare cu adresele pornind de la zero din mai multe subprograme (fiecare fiind creat cu adrese pornind de la zero) care vor fi introduse în zone diferite în programul mare. La încărcare, loaderul va reloca executabilul produs de linker la o adresă efectivă în memorie.
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="rezolvarea_simbolurilor">Rezolvarea simbolurilor</h3>
+<div class="level3">
+
+<p>
+Este o acțiune făcută de <strong>linker</strong>.
+</p>
+
+<p>
+Într-un program compus din mai multe subprograme se pot face referințe între subprograme prin simboluri (de ex. proceduri sau variabile externe: un apel către sqrt() din biblioteca matematică). Rezolvarea unui simbol se face înlocuind toate utilizările simbolului cu adresa la care acesta este definit.
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="incarcarea">Încărcarea</h3>
+<div class="level3">
+
+<p>
+Este o acțiune făcută de <strong>loader</strong>.
+</p>
+
+<p>
+Încărcarea este procesul de aducere a unui program de pe un mediu de stocare secundar (hard-disk, SSD, flash etc.) în memoria principală astfel încât programul să fie gata de execuție. Această acțiune poate varia de la simpla copiere a datelor până la alocarea spațiului, setarea unor biți de protecție ai memoriei (de ex. paginile de cod sunt read-only) sau maparea unor zone de memorie virtuală pe spații de pe disk/flash/SSD/etc.
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="linking_loaders">Linking loaders</h3>
+<div class="level3">
+
+<p>
+Un singur program poate face toate cele trei funcții amintite mai sus. Limita dintre relocare și identificarea simbolurilor poate fi destul de confuză. Din moment ce linkerele pot rezolva referințe la simboluri, un mod de a trata relocarea este de a atribui un simbol adresei de start a fiecărei părți din program și apoi de a trata relocarea adreselor ca referințe la adresa simbolului de bază.
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="formatul_unix_elf">Formatul Unix ELF</h2>
+<div class="level2">
+
+<p>
+Fișierele ELF pot fi de trei tipuri (puțin diferite):
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>relocabile</strong> - create de compilatoare sau asambloare, dar trebuie procesate de linker înainte de execuție</div>
+</li>
+<li class="level1"><div class="li"> <strong>executabile</strong> - gata relocate și cu toate simbolurile rezolvate exceptând, poate, simbolurile din bibliotecile partajate care vor fi rezolvate la runtime</div>
+</li>
+<li class="level1"><div class="li"> <strong>partajate</strong> - biblioteci comune ce conțin informații despre simboluri (folosite de linker) și cod executabil</div>
+</li>
+</ul>
+
+<p>
+Compilatoarele, asambloarele și linkerele tratează fișierele ELF ca un set de secțiuni logice descrise de un <em>section header table</em>. Loaderul tratează fișierele ELF ca un set de segmente descrise de un <em>program header table</em>, un segment fiind de obicei compus din mai multe secțiuni.
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="fisiere_elf_relocabile_si_partajate">Fișiere ELF relocabile și partajate</h3>
+<div class="level3">
+
+<p>
+Un fișier relocabil sau partajat este considerat o colecție de secțiuni definite în header. Fiecare secțiune conține un singur tip de informație (ex: codul programului, date read-only sau read-write, intrări relocabile, simboluri, etc.). Fiecare simbol definit este relativ la o secțiune (ex: punctul de intrare al unei proceduri va fi definit relativ la secțiunea care conține codul programului). 
+</p>
+
+<p>
+Există două pseudo-secțiuni:
+</p>
+<ul>
+<li class="level1"><div class="li"> SHN_ABS - conține simboluri ne-relocabile</div>
+</li>
+<li class="level1"><div class="li"> SHN_COMMON - conține blocuri de date neinițializate, moștenire din formatul a.out</div>
+</li>
+</ul>
+
+<p>
+Un executabil relocabil are în jur de 12 secțiuni. Numele secțiunilor au semnificație pentru linker, care caută anumite secțiuni pentru prelucrări specifice. Tipurile de secțiuni includ:
+</p>
+<ul>
+<li class="level1"><div class="li"> PROGBITS - conținut al programului: cod, date, informații pentru debugger</div>
+</li>
+<li class="level1"><div class="li"> NOBITS - la fel ca și PROGBITS, dar nu alocă spațiu în fișierul propriu zis, ci folosește BSS pentru alocarea datelor la încărcarea programului</div>
+</li>
+<li class="level1"><div class="li"> SYMTAB - tabelă ce conține toate simbolurile</div>
+</li>
+<li class="level1"><div class="li"> DYNSYM - tabelă ce conține simbolurile folosite pentru linkarea dinamică</div>
+</li>
+<li class="level1"><div class="li"> STRTAB - tabelă de stringuri</div>
+</li>
+<li class="level1"><div class="li"> RELA - valorile de bază pentru relocare</div>
+</li>
+<li class="level1"><div class="li"> REL - valorile cu care se fac relocările (valorile sunt adăugate la valoarea de bază)</div>
+</li>
+<li class="level1"><div class="li"> DYNAMIC - informații pentru linkarea dinamică</div>
+</li>
+<li class="level1"><div class="li"> HASH - tabelă de simboluri folosite la runtime</div>
+</li>
+</ul>
+
+<p>
+Se pot defini și secțiuni proprii, însă vom enumera câteva dintre secțiunile tipice (standard):
+</p>
+<ul>
+<li class="level1"><div class="li"> .text - de tip PROGBITS (cu modificatori ce permit execuția instrucțiunilor), este echivalentul segmentului text din a.out</div>
+</li>
+<li class="level1"><div class="li"> .data - de tip PROGBITS (cu modificatori ce permit scrierea datelor), este echivalentul segmentului de date din a.out</div>
+</li>
+<li class="level1"><div class="li"> .rodata - date read-only </div>
+</li>
+<li class="level1"><div class="li"> .bss - de tip NOBITS (cu modificatori ce permit scrierea); nu ocupă spațiu în fișier și este alocată la runtime</div>
+</li>
+<li class="level1"><div class="li"> .init și .fini - cod care este executat la inițializarea/finalizarea programului; spre exemplu, compilatoarele de C++ folosesc aceste secțiuni pentru a inițializa datele globale alocate static</div>
+</li>
+<li class="level1"><div class="li"> .symtab și .dynsym - tabele de simboluri</div>
+</li>
+<li class="level1"><div class="li"> .strtab și .dynstr - tabele de stringuri</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit14" id="fisiere_elf_executabile">Fișiere ELF executabile</h3>
+<div class="level3">
+
+<p>
+Fișierele executabile au același format, dar datele sunt aranjate astfel încât fișierul poate fi mapat direct în memorie și rulat. Conține un header de program care urmează headerului ELF din fișier și definește segmentele care trebuie mapate.
+</p>
+
+<p>
+Un executabil are în general doar câteva segmente: unul read-only pentru cod și datele read-only și unul read-write pentru datele read-write. Toate secțiunile sunt împachetate în segmentele corespunzătoare astfel încât sistemul poate mapa simplu fișierul în memorie.
+</p>
+
+</div>
+
+<h2 class="sectionedit15" id="linker_command_language">Linker Command Language</h2>
+<div class="level2">
+
+<p>
+Utilitarul <code>ld</code> poate fi configurat atât din linia de comandă, cât și printr-un limbaj specific: <em>Linker Command Language</em>. Fișierele de configurare au extensia <code>.lds</code> (ld script) și constituie o înșiruire de comenzi:
+</p>
+<ul>
+<li class="level1"><div class="li"> cuvânt cheie [argumente]</div>
+</li>
+<li class="level1"><div class="li"> atribuiri unui simbol</div>
+</li>
+<li class="level1"><div class="li"> comentarii</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="sections">SECTIONS</h4>
+<div class="level4">
+
+<p>
+Secțiuniile de cod sunt definite folosind comanda <code>SECTIONS</code>, urmată de diverse atribute. Exemplu:
+</p>
+<pre class="code">SECTIONS
+{
+       /* 
+        * „.” (contorul de locație) este setat la 0x10000 
+        * implicit, la începutul comenzii SECTIONS are valoarea 0
+        * este incrementat automat la includerea unei secțiuni cu dimensiunea acesteia
+        */
+       . = 0x10000;
+ 
+       /*
+        * adună toate secțiunile .text din fișierele de intrare 
+        * și pune-le în secțiunea .text în fișierul de ieșiere
+        *
+        * dacă nu există nici o secțiune .text în nici un fișier de intrare
+        * nu se generează în fișierul de ieșire secțiunea .text
+        */
+       .text : { *(.text) }
+ 
+       /* adresa de la care se scriu date este 0x8000000 */
+       . = 0x8000000;
+ 
+        /* similar text */
+       .data : { *(.data) }
+        /* similar text */
+       .bss : { *(.bss) }
+}</pre>
+
+</div>
+
+<h4 id="entry">ENTRY</h4>
+<div class="level4">
+
+<p>
+Comanda <code>ENTRY</code> setează entry-pointul programului (prima instrucțiune de executat). Dacă comanda lipsește, atunci se va utiliza valoarea simbolului <code>.start</code> (dacă este definit), sau valoarea simbolului <code>.text</code> (dacă este definit), sau, dacă nu, valoarea 0.
+</p>
+
+</div>
+
+<h4 id="provide">PROVIDE</h4>
+<div class="level4">
+
+<p>
+Pentru a defini un simbol nou se poate folosi comanda <code>PROVIDE</code> în cadrul comenzii <code>SECTIONS</code>. Exemplu:
+</p>
+<pre class="code">SECTIONS
+{
+   .text : { *(.text) }
+ 
+   PROVIDE(__data_start = .);
+   .data : { *(.data) }
+   PROVIDE(__data_stop =  .);
+ 
+   PROVIDE(__bss_start = .);
+   .bss : { *(.bss) }
+   PROVIDE(__bss_stop =  .);
+}</pre>
+
+<p>
+Pentru a folosi simbolurile definite în exemplul anterior se poate proceda ca în exemplul următor:
+</p>
+<pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw2">extern</span> <span class="kw4">void</span> <span class="sy0">*</span> __data_start<span class="sy0">,</span> <span class="sy0">*</span> __data_stop<span class="sy0">,</span> <span class="sy0">*</span> __bss_start<span class="sy0">,</span> <span class="sy0">*</span> __bss_stop<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;.data starts at %p and ends at %p<span class="es1">\n</span>&quot;</span><span class="sy0">,</span>  <span class="sy0">&amp;</span>__data_start<span class="sy0">,</span> <span class="sy0">&amp;</span>__data_stop<span class="br0">&#41;</span><span class="sy0">;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;.bss starts at %p and ends at %p<span class="es1">\n</span>&quot;</span><span class="sy0">,</span>  <span class="sy0">&amp;</span>__bss_start<span class="sy0">,</span> <span class="sy0">&amp;</span>__bss_stop<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h4 id="atribute_gcc">Atribute GCC</h4>
+<div class="level4">
+
+<p>
+În GCC se pot specifica pentru anumite tipuri de simboluri comportamente speciale. Sintaxa prin care se decorează un element cu un atribut este următoarea:
+</p>
+<pre class="code">type_of_element element_name __attribute__ ( attribute_goes_here );</pre>
+
+<p>
+Unul din atributele pe care GCC le suportă este specificarea secțiunii în care va fi inclus simbolul generat:
+</p>
+<pre class="code c"><span class="co1">// definim variabila x, o inițializăm cu 7 </span>
+<span class="co1">// și specificăm compilatorului să o pună în secținea &quot;.cpl&quot;</span>
+<span class="kw4">int</span> x __attribute__ <span class="br0">&#40;</span><span class="br0">&#40;</span>section <span class="br0">&#40;</span><span class="st0">&quot;.cpl&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">=</span> <span class="nu0">7</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h2 class="sectionedit16" id="variabile_de_mediu_folosite_de_linker">Variabile de mediu folosite de linker</h2>
+<div class="level2">
+
+<p>
+<strong>LD_LIBRARY_PATH</strong> - o listă de directoare separate prin <code>:</code> ce specifică directoarele în care linkerul să caute biblioteci, înainte de a se uita în directoarele standard
+</p>
+
+<p>
+<strong>LD_PRELOAD</strong> - calea către o bibliotecă dinamică ce va fi încărcată în locul unei alte biblioteci; spre exemplu astfel se poate înlocui biblioteca standard C
+</p>
+
+</div>
+
+<h1 class="sectionedit17" id="exercitii_de_laborator_11p">Exerciții de laborator (11p)</h1>
+<div class="level1">
+
+<p>
+În rezolvarea laboratorului folosiți arhiva de sarcini <a href="../../_media/cpl/labs/lab11-tasks.zip" class="media mediafile mf_zip" title="cpl:labs:lab11-tasks.zip (10.5 KB)">lab11-tasks.zip</a>.
+</p>
+
+<p>
+Pe măsura ce rezolvați exercițiile, nu uitați că modificarea optiunilor compilării implică și recompilarea fișierelor sursă.
+</p>
+
+</div>
+
+<h2 class="sectionedit18" id="exercitiul_1_-_name_mangling_4p">Exercițiul 1 - name mangling (4p)</h2>
+<div class="level2">
+
+<p>
+Linkerul este responsabil de rezolvarea numelor. Fiecare fișier obiect conține o tabelă de simboluri. În continuare vom analiza cum arată aceste tabele pentru diverse tipuri de funcții în C și în C++.
+</p>
+
+<p>
+Pentru a vizualiza tabela de simboluri vom utiliza utilitarul <code>nm</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Denumirea simbolurilor nu este standard și este strâns dependentă de compilator și de platformă.
+
+</div></p>
+</p>
+
+</div>
+
+<h4 id="name_mangling_in_c_2p">Name mangling în C (2p)</h4>
+<div class="level4">
+
+<p>
+Intrați în directorul <code>1-name/c</code>. Vom analiza pe rând fiecare din cele 3 fișiere.
+</p>
+
+<p>
+Pentru a genera fișierele obiect, rulați comanda <code>make obj</code>. Vom avea nevoie de acestea pentru a vizualiza tabelele de simboluri. Tabela de simboluri poate fi vizualizată rulând comanda:
+</p>
+<pre class="code">nm -s $FIȘIER_OBIECT</pre>
+
+<p>
+Deschideți fișierul <code>main-only.c</code>. Programul apelează funcția <code>printf</code>, fără a include niciun header specific. Vizualizați tabela de simboluri. Ce observați? Ce înseamnă <code>T</code>? Dar <code>U</code>? Consultați pagina de manual a utilitarului <a href="http://linux.die.net/man/1/nm" class="urlextern" title="http://linux.die.net/man/1/nm"  rel="nofollow">nm</a>.
+</p>
+
+<p>
+Deschideți fișierul <code>simple-functions.c</code>. Programul definește mai multe funcții având diverse tipuri de argumente. Vizualizați tabela de simboluri. Ce observați? În ce ordine sunt listate funcțiile?
+</p>
+
+<p>
+Deschideți fișierul <code>static-function.c</code>. Programul definește o funcție statică și o apelează din funcția main. Vizualizați tabela de simboluri. Ce observați? Ce înseamnă <code>t</code>? Consultați pagina de manual a utilitarului <a href="http://linux.die.net/man/1/nm" class="urlextern" title="http://linux.die.net/man/1/nm"  rel="nofollow">nm</a>.
+</p>
+
+</div>
+
+<h4 id="name_mangling_in_c_2p1">Name mangling în C++ (2p)</h4>
+<div class="level4">
+
+<p>
+Intrați în directorul <code>1-name/cpp</code>. Vom analiza pe rând fiecare din cele 5 fișiere sursă.
+</p>
+
+<p>
+Pentru a genera fișierele obiect, rulați comanda <code>make obj</code>. Vom avea nevoie de acestea pentru a vizualiza tabelele de simboluri. Tabela de simboluri poate fi vizualizată rulând comanda:
+</p>
+<pre class="code">nm -s $FIȘIER_OBIECT</pre>
+
+<p>
+Deschideți fișierul <code>main-only.cpp</code>. Programul include header-ul <code>iostream</code> și importă în cadrul namespace-ului curent streamul <code>cout</code>. Vizualizați tabela de simboluri. Ce observați? Folosiți parametrul <code>C</code> al utilitarului <code>nm</code> pentru a înțelege mai bine simbolistica outputului. Consultați pagina de manual a utilitarului <a href="http://linux.die.net/man/1/nm" class="urlextern" title="http://linux.die.net/man/1/nm"  rel="nofollow">nm</a>.
+</p>
+
+<p>
+Deschideți fișierul <code>simple-functions.cpp</code>. Programul definește mai multe funcții având diverse tipuri de argumente. Vizualizați tabela de simboluri.
+</p>
+
+<p>
+Deschideți fișierul <code>static-function.cpp</code>. Programul definește o funcție statică și o apelează din funcția main. Vizualizați tabela de simboluri.
+</p>
+
+<p>
+Deschideți fișierele <code>myClass.hpp</code> și <code>myClass.cpp</code>. Cele două definesc clasa <code>myClass</code>. Vizualizați tabela de simboluri. De ce sunt două simboluri diferite pentru constructorul fără argumente? Citiți explicația de <a href="http://stackoverflow.com/questions/6921295/dual-emission-of-constructor-symbols/6921467#6921467" class="urlextern" title="http://stackoverflow.com/questions/6921295/dual-emission-of-constructor-symbols/6921467#6921467"  rel="nofollow">aici</a>.
+</p>
+
+<p>
+Deschideți fișierul <code>useClass.cpp</code>. Programul folosește clasa definită anterior. Vizualizați tabela de simboluri.
+</p>
+
+</div>
+
+<h2 class="sectionedit19" id="exercitiul_2_-_rezolvarea_simbolurilor_2p">Exercițiul 2 - rezolvarea simbolurilor (2p)</h2>
+<div class="level2">
+
+<p>
+Rezolvarea simbolurilor de către linker se face în următoarea ordine:
+</p>
+<ul>
+<li class="level1"><div class="li"> simbolul este căutat în fișierul obiect în care este folosit prima oară</div>
+</li>
+<li class="level1"><div class="li"> simbolul este căutat în oricare din fișierele obiect sau bibliotecile statice cu care este compilat (în ordinea în care acestea apar ca argumente ale linkerului)</div>
+</li>
+<li class="level1"><div class="li"> simbolul este căutat în bibliotecile partajate (în ordinea în care acestea apar în linia de comandă)</div>
+</li>
+</ul>
+
+<p>
+Intrați în directorul <code>2-symbols</code>. Vizualizați conținutul fișierelor sursă c. O să găsiți trei implementări diferite ale funcției <code>function</code>.
+</p>
+
+<p>
+Rulați comanda <code>make</code> pentru a genera:
+</p>
+<ul>
+<li class="level1"><div class="li"> fișierele obiect corespunzătoare fiecărui fișier sursă</div>
+</li>
+<li class="level1"><div class="li"> biblioteca dinamică <code>libA.so</code> ce implementează funcția <code>function</code> în fișierul <code>a.c</code></div>
+</li>
+<li class="level1"><div class="li"> biblioteca dinamică <code>libB.so</code> ce implementează funcția <code>function</code> în fișierul <code>b.c</code></div>
+</li>
+<li class="level1"><div class="li"> executabilul <code>exe12</code> compilat astfel <code>gcc main.o -lA -lB -L. -o exe12</code></div>
+</li>
+<li class="level1"><div class="li"> executabilul <code>exe21</code> compilat astfel <code>gcc main.o -lB -lA -L. -o exe21</code></div>
+</li>
+<li class="level1"><div class="li"> executabilul <code>exe-static</code> compilat astfel <code>gcc main.o c.o -lA -lB -L. -o exe-static</code></div>
+</li>
+</ul>
+
+<p>
+Setați variabila de mediu <a href="../labs/12%3F&amp;.html#variabile_de_mediu_folosite_de_linker" class="urlextern" title="http://ocw.cs.pub.ro/courses/cpl/labs/12?&amp;#variabile_de_mediu_folosite_de_linker"  rel="nofollow">LD_LIBRARY_PATH</a> corespunzător, pentru ca linkerul să găsească bibliotecile generate în directorul curent.
+</p>
+
+<p>
+Executabilul <code>exe12</code> a fost generat linkând 2 biblioteci dinamice ce implementează funcția <code>function</code>. Care este ordinea bibliotecilor dinamice în linia de comandă? Rulați binarul pentru a observa outputul produs.
+</p>
+
+<p>
+Executabilul <code>exe21</code> a fost generat linkând 2 biblioteci dinamice ce implementează funcția <code>function</code>. Care este ordinea bibliotecilor dinamice în linia de comandă? Rulați binarul pentru a observa outputul produs.
+</p>
+
+<p>
+Executabilul <code>exe-static</code> a fost generat linkând 2 biblioteci dinamice și un fișier obiect ce implementează funcția <code>function</code>. În ce ordine au fost specificate în linia de comandă? Rulați binarul pentru a observa outputul produs.
+</p>
+
+</div>
+
+<h2 class="sectionedit20" id="exercitiul_3_-_instrumentarea_binarelor_3p">Exercițiul 3 - instrumentarea binarelor (3p)</h2>
+<div class="level2">
+
+<p>
+Presupunem că avem un set de binare ale unei aplicații/biblioteci ale cărei surse nu le mai avem (de ex. am cumpărat licența pentru o bibliotecă proprietară și compania care producea acea bibliotecă s-a închis). Dorim să modificăm aplicația/biblioteca, fără a modifica acele binare. :)
+</p>
+
+<p>
+Neavând acces la surse putem spune linkerului să routeze toate apelurile către un anumit simbol către o funcție specială aflată sub controlul nostru. Dacă se trimite argumentul <code>–wrap=symbol</code> linkerului acesta:
+</p>
+<ul>
+<li class="level1"><div class="li"> va înlocui toate referințele către simbolul <code>symbol</code> cu referințe către <code>__wrap_symbol</code></div>
+</li>
+<li class="level1"><div class="li"> va genera un simbol <code>__real_symbol</code> care va trimite către varianta originală a lui <code>symbol</code></div>
+</li>
+</ul>
+
+<p>
+Intrați în directorul <code>3-wrap</code>. Vizualizați fișierul <code>main.c</code>. Programul încearcă să scrie un mesaj în fișierul <code>/bad/path</code> și eșuează din lipsa permisiunilor și a existenței directoarelor superioare. Pentru a compila fișierul, rulați comanda <code>make default</code> și rulați executabilul <code>exe_default</code>.
+</p>
+
+<p>
+<strong>Fără a modifica fișierul <code>main.c</code></strong>, veți suprascrie funcția <code>open</code> așa cum am descris mai sus, astfel încât să obțineți un file descriptor valid. Implementarea o veți realiza în cadrul fișierului <code>wrap.c</code>. Pentru a compila, rulați comanda <code>make wrapped</code>, apoi rulați executabilul <code>exe_wrapped</code>.
+</p>
+
+<p>
+<p><div class="notetip"> <strong>Hint</strong>: man ld, apoi căutați –wrap 
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit21" id="exercitiul_4_-_linker_command_language_2p">Exercițiul 4 - Linker Command Language (2p)</h2>
+<div class="level2">
+
+<p>
+<p><div class="noteclassic">
+Dacă lucrați pe calculatoarele proprii și acestea sunt pe 64 de biți, instalați gcc-multilib pentru a putea compila cross-platform:
+<strong>sudo apt-get install gcc-multilib</strong>
+
+</div></p>
+</p>
+
+<p>
+Consultați secțiunea <a href="../labs/11%3F&amp;.html#linker_command_language" class="urlextern" title="http://ocw.cs.pub.ro/courses/cpl/labs/11?&amp;#linker_command_language"  rel="nofollow">Linker Command Language</a> din laborator.
+</p>
+
+<p>
+Intrați în directorul <code>4-lcl</code>. Aveți definit în cadrul fișierului <code>def.h</code> un macro care primește numele unei funcții și generează un pointer la funcție și-l pune în secținuea <code>.cpl</code>:
+</p>
+<pre class="code c"><span class="co1">// def.h</span>
+<span class="co2">#define MODULE_INIT(X) \
+  static void * __ptr_init_cpl_##X __attribute__ ((section (&quot;.cpl&quot;))) = &amp;X;</span></pre>
+
+<p>
+De asemenea, în director veți găsi un set de fișiere cu funcții de inițializare pentru care s-a apelat macro-ul de mai sus.
+</p>
+
+<p>
+Practic, în secțiunea <code>.cpl</code> se vor adăuga pointeri către toate funcțiile.
+</p>
+
+<p>
+Modificați scriptul de linker din cadrul directorului pentru a introduce o secțiune de date specială <code>.cpl</code> care să adune secțiunile <code>.cpl</code> din fiecare fișier obiect de intrare, conform <strong>TODO-ului</strong> din script (revedeți secțiunea <a href="../labs/11.html#provide" class="urlextern" title="http://ocw.cs.pub.ro/courses/cpl/labs/11#provide"  rel="nofollow">PROVIDE</a>). Apoi, în cadrul fișierului <code>main.c</code>, exportați două simboluri pentru începutul și sfârșitul acestei secțiuni și iterați prin toți pointerii, apelând pe rând funcția către care aceștia trimit (puteți pasa orice întreg ca parametru).
+</p>
+
+</div>
+
+<h2 class="sectionedit22" id="bonus">BONUS</h2>
+<div class="level2">
+
+</div>
+
+<h4 id="cpl_karma_-_ld_preload">1 cpl karma - LD_PRELOAD</h4>
+<div class="level4">
+
+<p>
+Scopul acestui exercițiu este de a suprascrie o funcție de bibliotecă (similar ca la exercițiul 3).
+</p>
+
+<p>
+Implementați acest lucru folosindu-vă de variabila de mediu <code>LD_PRELOAD</code>.
+</p>
+
+</div>
+
+<h4 id="cpl_karma_-_rpath">1 cpl karma - rpath</h4>
+<div class="level4">
+
+<p>
+Refaceți exercițiul 2 fără a folosi variabila de mediu <code>LD_LIBRARY_PATH</code>. 
+</p>
+
+<p>
+Folosiți-vă de <a href="https://en.wikipedia.org/wiki/Rpath" class="urlextern" title="https://en.wikipedia.org/wiki/Rpath"  rel="nofollow">run-time search path</a>.
+Citiți secțiunea <code>GNU ld.so</code> pentru a înțelege algoritmul aplicat de linker pentru a căuta biblioteci dinamice.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_cpl">Informații generale CPL</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_18799753458357907544ff" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/documentatie.html" class="wikilink1" title="cpl:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../info/lista-discutii.html" class="wikilink1" title="cpl:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../info/trimitere-teme.html" class="wikilink1" title="cpl:info:trimitere-teme">Trimitere teme</a></div></li>
+<li class="level1"><div class="li"><a href="../info/vm.html" class="wikilink1" title="cpl:info:vm">Mașina virtuală</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale CPL" [12-86] -->
+<h1 class="sectionedit2" id="informatii_cpl_2016-2017">Informații CPL 2016-2017</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_1080862657583579075548c" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../meta/notare/reguli-notare.html" class="wikilink1" title="cpl:meta:notare:reguli-notare">Notare</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../meta/anunturi.html" class="wikilink1" title="cpl:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/calendar.html" class="wikilink1" title="cpl:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/catalog.html" class="wikilink1" title="cpl:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/examen.html" class="wikilink1" title="cpl:meta:examen">Examen</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/need-to-know.html" class="wikilink1" title="cpl:meta:need-to-know">CPL Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/orar.html" class="wikilink1" title="cpl:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații CPL 2016-2017" [87-155] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_522187249583579075642c" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../labs/01.html" class="wikilink1" title="cpl:labs:01">01. Introduction to Flex</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/02.html" class="wikilink1" title="cpl:labs:02">02. Introduction to Bison</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/03.html" class="wikilink1" title="cpl:labs:03">03. Bison Advanced</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/04.html" class="wikilink1" title="cpl:labs:04">04. Introduction to LLVM</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/05.html" class="wikilink1" title="cpl:labs:05">05. LLVM IR - C++ API</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/06.html" class="wikilink1" title="cpl:labs:06">06. Code generation. Structure of data and objects in memory</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/07.html" class="wikilink1" title="cpl:labs:07">07. Code generation. Function calls and stack frames</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/08.html" class="wikilink1" title="cpl:labs:08">08. LLVM backend</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/09.html" class="wikilink1" title="cpl:labs:09">09. LLVM Passes - displaying code structure</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/10.html" class="wikilink1" title="cpl:labs:10">10. LLVM Passes - code analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/11.html" class="wikilink1" title="cpl:labs:11">11. LLVM Passes - code optimizations</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/12.html" class="wikilink1" title="cpl:labs:12">12. Linkers and Loaders</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/llvm-pass.html" class="wikilink1" title="cpl:labs:llvm-pass">LLVM Passes</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [156-209] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_91126205458357907573ce" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="cpl:courses:01">Cursul 01. Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="cpl:courses:02">Cursul 02. Analiză sintatică LL</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="cpl:courses:03">Cursul 03. Analiză sintatică LR</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="cpl:courses:04">Cursul 04. Analiză semantică</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="cpl:courses:05">Cursul 05. Generarea codului obiect. Arhitectura setului de instrucțiuni</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="cpl:courses:06">Cursul 06. Generarea apelurilor de funcții și a codului orientat obiect.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/07.html" class="wikilink1" title="cpl:courses:07">Cursul 07. Optimizări. Analiza fluxului de control (CFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/08.html" class="wikilink1" title="cpl:courses:08">Cursul 08. Analiza fluxului de date (DFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/09.html" class="wikilink1" title="cpl:courses:09">Cursul 09. Analiza fluxului de date. Forma SSA. Extragerea codului invariant din bucle. Variabile de inducție.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/10.html" class="wikilink1" title="cpl:courses:10">Cursul 10. Arhitectura Calculatoarelor. Dependență. Planificarea instrucțiunilor</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/11.html" class="wikilink1" title="cpl:courses:11">Cursul 11. Garbage Collection</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/12.html" class="wikilink1" title="cpl:courses:12">Cursul 12. Alocarea de registre. Linkers.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/13.html" class="wikilink1" title="cpl:courses:13">Cursul 13. Just in Time Compilers (JIT)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [210-262] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_777869469583579075836d" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../teme/concurs.html" class="wikilink1" title="cpl:teme:concurs">Concurs</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/general.html" class="wikilink1" title="cpl:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema1.html" class="wikilink1" title="cpl:teme:tema1">Tema de casă 1 - Analiza sintactică</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema2.html" class="wikilink1" title="cpl:teme:tema2">Tema de casă 2 - Generarea de cod</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema3.html" class="wikilink1" title="cpl:teme:tema3">Tema de casa 3 - Backend</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [263-310] -->
+<h1 class="sectionedit6" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_583010692583579075930b" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/materiale.html" class="wikilink1" title="cpl:res:materiale">Nice to read</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 SECTION "Resurse" [311-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="11.html#linkers_and_loaders">11. Linkers and Loaders</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="11.html#nice_to_read">Nice to read</a></div></li>
+<li class="level2"><div class="li"><a href="11.html#prezentare_teoretica">Prezentare teoretică</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="11.html#asambloare">Asambloare</a></div></li>
+<li class="level3"><div class="li"><a href="11.html#de_ce_linkere">De ce linkere?</a></div></li>
+<li class="level3"><div class="li"><a href="11.html#de_ce_loadere">De ce loadere?</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="11.html#linkere_vs_loadere">Linkere vs. Loadere</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="11.html#relocarea">Relocarea</a></div></li>
+<li class="level3"><div class="li"><a href="11.html#rezolvarea_simbolurilor">Rezolvarea simbolurilor</a></div></li>
+<li class="level3"><div class="li"><a href="11.html#incarcarea">Încărcarea</a></div></li>
+<li class="level3"><div class="li"><a href="11.html#linking_loaders">Linking loaders</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="11.html#formatul_unix_elf">Formatul Unix ELF</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="11.html#fisiere_elf_relocabile_si_partajate">Fișiere ELF relocabile și partajate</a></div></li>
+<li class="level3"><div class="li"><a href="11.html#fisiere_elf_executabile">Fișiere ELF executabile</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="11.html#linker_command_language">Linker Command Language</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="11.html#sections">SECTIONS</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#entry">ENTRY</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#provide">PROVIDE</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#atribute_gcc">Atribute GCC</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="11.html#variabile_de_mediu_folosite_de_linker">Variabile de mediu folosite de linker</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="11.html#exercitii_de_laborator_11p">Exerciții de laborator (11p)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="11.html#exercitiul_1_-_name_mangling_4p">Exercițiul 1 - name mangling (4p)</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="11.html#name_mangling_in_c_2p">Name mangling în C (2p)</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#name_mangling_in_c_2p1">Name mangling în C++ (2p)</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="11.html#exercitiul_2_-_rezolvarea_simbolurilor_2p">Exercițiul 2 - rezolvarea simbolurilor (2p)</a></div></li>
+<li class="level2"><div class="li"><a href="11.html#exercitiul_3_-_instrumentarea_binarelor_3p">Exercițiul 3 - instrumentarea binarelor (3p)</a></div></li>
+<li class="level2"><div class="li"><a href="11.html#exercitiul_4_-_linker_command_language_2p">Exercițiul 4 - Linker Command Language (2p)</a></div></li>
+<li class="level2"><div class="li"><a href="11.html#bonus">BONUS</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="11.html#cpl_karma_-_ld_preload">1 cpl karma - LD_PRELOAD</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#cpl_karma_-_rpath">1 cpl karma - rpath</a></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cpl/labs-2015/11.txt · Last modified: 2016/10/04 07:35 by bogdan.nitulescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="11%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="11%3Fdo=media&amp;ns=cpl%253Alabs-2015.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="11.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cpl%253Alabs-2015%253A11&amp;1479899399" width="2" height="1" alt="" /></div>
+</body>
+</html>

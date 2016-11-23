@@ -1,0 +1,1097 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cpl:labs-2015:12</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T07:35:21+0300"/>
+<meta name="keywords" content="cpl,labs-2015,12"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cpl:labs-2015"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="12.html"/>
+<link rel="canonical" href="../../../../cpl/labs-2015/12.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs-2015';var JSINFO = {"id":"cpl:labs-2015:12","namespace":"cpl:labs-2015","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="12.html#garbage_collection">12. Garbage Collection</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="12.html#principii_de_functionare">Principii de funcționare</a></div></li>
+<li class="level2"><div class="li"><a href="12.html#algoritmi_de_garbage_collection">Algoritmi de Garbage Collection</a></div></li>
+<li class="level2"><div class="li"><a href="12.html#mark_sweep">Mark &amp; Sweep</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="12.html#probleme_algoritmi">Probleme algoritmi</a></div></li>
+<li class="level3"><div class="li"><a href="12.html#variatiuni_algoritmi">Variațiuni algoritmi</a></div></li>
+<li class="level3"><div class="li"><a href="12.html#algoritmul_cheney_two_fingers">Algoritmul Cheney (two fingers)</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="12.html#reference_counting">Reference Counting</a></div></li>
+<li class="level2"><div class="li"><a href="12.html#copy_collection">Copy Collection</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="12.html#algoritmul_cheney_pentru_copy_collection">Algoritmul Cheney pentru Copy Collection</a></div></li>
+<li class="level3"><div class="li"><a href="12.html#non-copying_implicit_collection_baker">Non-Copying Implicit Collection (Baker)</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="12.html#algoritmi_incrementali">Algoritmi incrementali</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="12.html#marcajul_tricolor">Marcajul tricolor</a></div></li>
+<li class="level3"><div class="li"><a href="12.html#bariere_la_scriere">Bariere la scriere</a></div></li>
+<li class="level3"><div class="li"><a href="12.html#algoritmii_baker_cu_bariera_la_citire">Algoritmii Baker cu barieră la citire</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="12.html#generational_gc">Generational GC</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="12.html#algoritmul_ungar">Algoritmul Ungar</a></div></li>
+<li class="level3"><div class="li"><a href="12.html#pointeri_intre_generatii">Pointeri între generații</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="12.html#java">JAVA</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="12.html#generatia_young">Generația Young</a></div></li>
+<li class="level4"><div class="li"><a href="12.html#generatia_tenured">Generația Tenured</a></div></li>
+<li class="level4"><div class="li"><a href="12.html#finalizers">Finalizers</a></div></li>
+<li class="level4"><div class="li"><a href="12.html#algoritmi_de_gc_in_java">Algoritmi de GC în Java</a></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="garbage_collection">12. Garbage Collection</h1>
+<div class="level1">
+
+<p>
+Termenul de <strong>Garbage Collection</strong> (gc) se referă la algoritmii de eliberare implicită a memoriei dinamice sau, altfel
+spus, de colectare a zonelor de memorie devenite inaccesibile.
+</p>
+
+<p>
+Zonele care pot să fie eliberate (garbage) sunt zone de memorie la care nu se mai poate ajunge prin intermediul unui pointer sau eventual a unei succesiuni de pointeri accesibili. Despre aceste zone se spune că sunt inaccesibile spre deosebire de zonele care sunt accesibile şi despre care se spune că sunt în viaţă.
+</p>
+
+<p>
+Iniţial aceste tehnici au apărut în legătură cu limbajele de tip Lisp pentru care alocarea memoriei se face implicit. În prezent
+se încearcă utilizarea acestor tehnici și pentru limbajele care utilizează alocarea explicită a memoriei dinamice (C, C++). Limbaje mai noi, precum Java, au fost proiectate pentru a putea să utilizeze această tehnică. 
+</p>
+
+</div>
+<!-- EDIT1 SECTION "12. Garbage Collection" [1-913] -->
+<h2 class="sectionedit2" id="principii_de_functionare">Principii de funcționare</h2>
+<div class="level2">
+
+<p>
+<strong>GC</strong> se execută, de regulă, când nu mai este memorie liberă disponibilă. Trebuie să rezolve două probleme: să identifice zonele nefolosite într-un mod conservativ și să elibereze zonele identificate. 
+</p>
+
+<p>
+Identificarea zonelor de memorie în viață se face pornind de la variabilele accesibile (mulțime rădăcină) atunci când se execută colectarea memoriei. Mulțimea rădăcină este formată din variabilele globale, variabilele locale din stiva curentă și registre. Pornind de la această mulțime și parcurgând obiectele accesibile prin intermediul unor pointeri se pot identifica obiectele accesibile. Tot ce nu este accesibil în acest fel reprezintă zona inaccesibilă (garbage).
+</p>
+
+<p>
+Pentru a identifica aceste zone, trebuie să existe o strategie pentru a răspunde la două întrebări:
+</p>
+<ul>
+<li class="level1"><div class="li"> dându-se un obiect, acesta conține pointeri?</div>
+</li>
+<li class="level1"><div class="li"> dându-se un pointer, unde este începutul și sfârșitul obiectului spre care indică pointerul?</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Principii de funcționare" [914-1921] -->
+<h2 class="sectionedit3" id="algoritmi_de_garbage_collection">Algoritmi de Garbage Collection</h2>
+<div class="level2">
+
+<p>
+Există mai multe tipuri de astfel de algoritmi:
+</p>
+<ul>
+<li class="level1"><div class="li"> secvențiali</div>
+<ul>
+<li class="level2"><div class="li"> un singur thread </div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> paraleli</div>
+<ul>
+<li class="level2"><div class="li"> mai multe thread-uri; posibilitatea de a rula pe mai multe core-uri simultan</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> incrementali</div>
+<ul>
+<li class="level2"><div class="li"> în paralel cu execuția programului</div>
+</li>
+<li class="level2"><div class="li"> trebuie să limiteze timpul petrecut într-un pas de GC</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> cu compactare/copiere</div>
+<ul>
+<li class="level2"><div class="li"> reduc fragmentarea memoriei</div>
+</li>
+<li class="level2"><div class="li"> cresc gradul de localitate a datelor</div>
+</li>
+<li class="level2"><div class="li"> alocare rapidă (incrementare de pointeri)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Mai multe detalii despre diversele tipuri de algoritmi în <a href="../../../../cpl/courses/11.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/cpl/courses/11"  rel="nofollow">cursul de Garbage Collection</a>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Algoritmi de Garbage Collection" [1922-2565] -->
+<h2 class="sectionedit4" id="mark_sweep">Mark &amp; Sweep</h2>
+<div class="level2">
+
+<p>
+Algoritmii din această clasă presupun parcurgerea tuturor lanțurilor posibile de pointeri accesibili și marcarea zonelor de memorie indicate de acestea (<strong>mark</strong>). Este ca și cum s-ar turna vopsea prin pointeri, iar zonele de memorie utilizate (accesibile) devin colorate.
+</p>
+
+<p>
+După ce se realizează această operație, se parcurge întreaga zonă heap și se realizează înlănțuirea zonelor de memorie nemarcate care vor forma spațiul disponibil (<strong>sweep</strong>).
+</p>
+
+</div>
+
+<h5 id="pseudocod">pseudocod</h5>
+<div class="level5">
+<div class="table sectionedit5"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> </th><th class="col1"> </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"><pre class="code c">new<span class="br0">&#40;</span>A<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>freeList este goala<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    mark<span class="sy0">&amp;</span>sweep<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>freeList este goala<span class="br0">&#41;</span>
+      <span class="kw1">return</span> <span class="br0">&#40;</span>“out of memory”<span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  pointer <span class="sy0">=</span> allocate<span class="br0">&#40;</span>A<span class="br0">&#41;</span>
+  <span class="kw1">return</span> pointer
+<span class="br0">&#125;</span>
+&nbsp;
+mark<span class="sy0">&amp;</span>sweep<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">for</span> p in root
+    mark<span class="br0">&#40;</span>p<span class="br0">&#41;</span>
+  sweep<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#125;</span></pre>
+</td><td class="col1"> <pre class="code c">mark<span class="br0">&#40;</span>Obiect<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>marc<span class="br0">&#40;</span>Obiect<span class="br0">&#41;</span> <span class="sy0">==</span> nemarcat<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    marcheaza Obiect
+    <span class="kw1">for</span> d in descendentii <span class="br0">&#40;</span>Obiect<span class="br0">&#41;</span>
+      mark<span class="br0">&#40;</span>d<span class="br0">&#41;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+sweep<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  p <span class="sy0">=</span> bazaHeap
+  <span class="kw1">while</span> <span class="br0">&#40;</span>p <span class="sy0">&lt;</span> topHeap<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>marc<span class="br0">&#40;</span>p<span class="br0">&#41;</span> <span class="sy0">==</span> nemarcat<span class="br0">&#41;</span>
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span>p<span class="br0">&#41;</span>
+    <span class="kw1">else</span> <span class="br0">&#123;</span>
+      sterge marcaj p
+      p <span class="sy0">=</span> p <span class="sy0">+</span> size<span class="br0">&#40;</span>obiect p<span class="br0">&#41;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT5 TABLE [3077-3639] -->
+</div>
+<!-- EDIT4 SECTION "Mark & Sweep" [2566-3640] -->
+<h3 class="sectionedit6" id="probleme_algoritmi">Probleme algoritmi</h3>
+<div class="level3">
+
+<p>
+Dacă obiectele alocate sunt de dimensiuni foarte diferite și alocarea se face într-o secvență nefavorabilă, se poate ajunge în situația ca deși spațiul total disponibil este suficient pentru o cerere de alocare, aceasta să nu poată fi satisfăcută din cauza <strong>fragmentării memoriei dinamice</strong>.
+</p>
+
+<p>
+Deoarece operația <strong>sweep</strong> presupune parcurgerea întregii zone heap, durata execuției algoritmului depinde de dimensiunea zonei de memorie dinamice care poate să fie mult mai mare decât partea utilă. Acest aspect poate limita semnificativ performanțele algoritmilor de acest tip.
+</p>
+
+<p>
+Pentru că obiectele alocate dinamic nu se mută, obiectele create la începutul execuției programului ajung să fie vecine cu obiecte create mult mai târziu. În acest mod, localitatea referințelor este distrusă și apar probleme de performanță.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Probleme algoritmi" [3641-4522] -->
+<h3 class="sectionedit7" id="variatiuni_algoritmi">Variațiuni algoritmi</h3>
+<div class="level3">
+
+<p>
+Fragmentarea se poate rezolva:
+</p>
+<ul>
+<li class="level1"><div class="li"> mai multe liste de spațiu liber, ordonate după dimensiuni; alocarea se va face după principiul <strong>best fit</strong></div>
+</li>
+<li class="level1"><div class="li"> compactarea zonelor disponibile vecine</div>
+</li>
+<li class="level1"><div class="li"> se alocă pagini suficient de mari pentru a ține orice obiect (dezavantaj: se irosește multă memorie)</div>
+</li>
+</ul>
+
+<p>
+Compactarea se poate rezolva:
+</p>
+<ul>
+<li class="level1"><div class="li"> prin “alunecarea” zonelor în viață peste zonele inaccesibile (rezolvă fragmentarea și localitatea, dar mărește timpul de execuție)</div>
+</li>
+<li class="level1"><div class="li"> variante:</div>
+<ul>
+<li class="level2"><div class="li"> arbitrar - nu există nicio garanție a ordinii obiectelor</div>
+</li>
+<li class="level2"><div class="li"> alunecare - se face alunecarea pentru a păstra ordinea inițială de alocare</div>
+</li>
+<li class="level2"><div class="li"> liniarizare - obiectele sunt mutate conform modului în care se referă unul la altul</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT7 SECTION "Variațiuni algoritmi" [4523-5283] -->
+<h3 class="sectionedit8" id="algoritmul_cheney_two_fingers">Algoritmul Cheney (two fingers)</h3>
+<div class="level3">
+
+<p>
+Este o variantă de algoritm din clasa mark&amp;sweep ce se poate utiliza dacă toate obiectele au aceeași dimensiune.
+</p>
+
+<p>
+Algoritmul are doi pași:
+</p>
+<ul>
+<li class="level1"><div class="li"> primul pas face compactarea</div>
+</li>
+<li class="level1"><div class="li"> al doilea pas face actualizarea pointerilor</div>
+</li>
+</ul>
+
+<p>
+Se folosesc doi pointeri:
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>free</em> - parcurge heap-ul de la limita de pornire căutând poziții libere</div>
+</li>
+<li class="level1"><div class="li"> <em>live</em> - parcurge heap-ul de la capăt spre început căutând obiecte în viață</div>
+</li>
+</ul>
+
+<p>
+Când <em>free</em> găsește o poziție liberă și <em>live</em> a găsit și el un obiect în viață, se face deplasarea obiectului. După ce se face mutarea, este memorată în vechea locație o referință la noua poziție.
+</p>
+
+<p>
+În pasul al doilea se parcurc obiectele live, iar dacă ele indică spre zona liberă se face corecția corespunzătoare.
+</p>
+
+<p>
+<strong>Avantaj</strong>: simplu, nu necesită spațiu suplimentar<br/>
+
+<strong>Dezavantaj</strong>: ordine arbitrară, distruge localitatea datelor, o singură dimensiune de obiecte (se pot utiliza mai multe zone de heap pentru dimensiuni diferite)
+<a href="../../../../_detail/cpl/labs/screen_shot_2016-01-06_at_11.10.57.png%3Fid=cpl%253Alabs-2015%253A12.html" class="media" title="cpl:labs:screen_shot_2016-01-06_at_11.10.57.png"><img src="../../../../_media/cpl/labs/screen_shot_2016-01-06_at_11.10.57.png%3Fw=500&amp;tok=df188f" class="mediacenter" alt="" width="500" /></a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Algoritmul Cheney (two fingers)" [5284-6374] -->
+<h2 class="sectionedit9" id="reference_counting">Reference Counting</h2>
+<div class="level2">
+
+<p>
+Algoritmii de tip <strong>reference counting</strong> păstrează contoare de utilizare pentru fiecare obiect.
+</p>
+
+<p>
+De fiecare dată când un obiect este referit de un pointer, contorul este incrementat. De fiecare dată când un pointer este distrus, contorul obiectului spre care acesta indică este decrementat. Dacă un contor a ajuns la zero înseamnă că obiectul respectiv nu mai este accesibil și poate fi trecut imediat în lista spațiului disponibil sau se poate face o fază de măturare în care se caută obiecte cu contor zero.
+</p>
+
+<p>
+Probleme:
+</p>
+<ul>
+<li class="level1"><div class="li"> structurile ciclice nu ajung la zero</div>
+</li>
+<li class="level1"><div class="li"> menținerea contoarelor mărește timpul de execuție</div>
+</li>
+</ul>
+
+<p>
+Se poate combina cu execuția periodică a unui algoritm mark&amp;sweep prin limitarea valorii contoarelor. Dacă se ajunge la limita maximă, atunci contorul nu mai este nici incrementat, nici decrementat, limitând astfel numărul de operații suplimentare pentru obiectele des referite. Prin execuția ulterioara a algoritmului mark&amp;sweep se va parcurge toată memoria și se vor identifica atât structurile ciclice cât și obiectele cu contor blocat.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Reference Counting" [6375-7499] -->
+<h2 class="sectionedit10" id="copy_collection">Copy Collection</h2>
+<div class="level2">
+
+<p>
+În algoritmii de acest tip, memoria dinamică este împărțită în două zone. Se face alocarea de memorie într-o singură zonă (<strong>from-space</strong>) până când aceasta se umple. Execuția algoritmului începe în acest moment și copiază toate zonele de memorie accesibile din prima zonă, în a doua zona (<strong>to-space</strong>), care nu va mai conține și <em>garbage</em>-ul. În continuare cele două zone își schimbă rolurile.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Copy Collection" [7500-7955] -->
+<h3 class="sectionedit11" id="algoritmul_cheney_pentru_copy_collection">Algoritmul Cheney pentru Copy Collection</h3>
+<div class="level3">
+
+<p>
+Folosește doi pointeri (<strong>scan</strong> și <strong>next</strong>) care indică la început spre zona <strong>to-space</strong>.
+</p>
+
+<p>
+Fiecare obiect accesibil poate să fie referit de către mai mulți pointeri din obiecte diferite - trebuie actualizați pointerii; se memoriează noua adresă (din <strong>to-space</strong>) la vechea adresă (în <strong>from-space</strong>). Această adresă se numește <strong>forwarding pointer</strong>. 
+</p>
+
+<p>
+Algoritmul folosește o funcție <strong>forward</strong> care întoarce tot timpul valoarea din <strong>to-space</strong> pentru un pointer. Acesta are două faze:
+</p>
+<ul>
+<li class="level1"><div class="li"> în prima fază, obiectele accesibile direct din root sunt mutate în zona <strong>to-space</strong></div>
+<ul>
+<li class="level2"><div class="li"> în copiile vechi ale obiectelor se memorează adresele din zona <strong>to-space</strong></div>
+</li>
+<li class="level2"><div class="li"> obiectele mutate în zona <strong>to-space</strong> pot să conțină pointeri către alte obiecte din zona <strong>from-space</strong></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> în a doua fază sunt parcurse obiectele care sunt conținute între adresele indicate de către pointerii <strong>scan</strong> și <strong>next</strong> și se tratează pointerii conținuți în aceste obiecte</div>
+<ul>
+<li class="level2"><div class="li"> se vor copia noi obiecte în <strong>to-space</strong></div>
+</li>
+<li class="level2"><div class="li"> se vor actualiza pointerii care indică spre obiecte conținute deja în <strong>to-space</strong></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h5 id="pseudocod1">pseudocod</h5>
+<div class="level5">
+<div class="table sectionedit12"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> </th><th class="col1"> </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> <pre class="code c"><span class="co2">### MAIN:</span>
+scan <span class="sy0">=</span> next <span class="sy0">=</span> începutul zonei to<span class="sy0">-</span>space
+<span class="kw1">for</span> each registru r din root
+  r <span class="sy0">=</span> forward<span class="br0">&#40;</span>r<span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">while</span> scan <span class="sy0">&lt;</span> next <span class="br0">&#123;</span>
+  <span class="kw1">for</span> fiecare camp fi al obiectului <span class="sy0">*</span>scan
+    scan.<span class="me1">fi</span> <span class="sy0">=</span> forward<span class="br0">&#40;</span>scan.<span class="me1">fi</span><span class="br0">&#41;</span>
+  scan <span class="sy0">=</span> scan <span class="sy0">+</span> dim<span class="br0">&#40;</span><span class="sy0">*</span>scan<span class="br0">&#41;</span>
+<span class="br0">&#125;</span></pre>
+</td><td class="col1"> <pre class="code c">forward<span class="br0">&#40;</span>p<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> p indică spre from<span class="sy0">-</span>space
+    <span class="kw1">if</span> p.<span class="me1">f1</span> indica spre to<span class="sy0">-</span>space
+      <span class="kw1">return</span> p.<span class="me1">f1</span>
+    <span class="kw1">else</span> <span class="br0">&#123;</span>
+      <span class="sy0">*</span>next <span class="sy0">=</span> <span class="sy0">*</span>p <span class="co1">// copiere de obiect</span>
+      p.<span class="me1">f1</span> <span class="sy0">=</span> next
+      next <span class="sy0">=</span> next <span class="sy0">+</span> dim<span class="br0">&#40;</span><span class="sy0">*</span>p<span class="br0">&#41;</span>
+      <span class="kw1">return</span> p.<span class="me1">f1</span>
+   <span class="br0">&#125;</span>
+  <span class="kw1">else</span>
+    <span class="kw1">return</span> p
+<span class="br0">&#125;</span></pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT12 TABLE [9160-9659] -->
+<p>
+<strong>Probleme</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> formularea originală face o trecere BFS - distruge localitatea datelor</div>
+<ul>
+<li class="level2"><div class="li"> se poate face o trecere DFS, dar avem nevoie din nou de stivă (spațiu limitat)</div>
+</li>
+<li class="level2"><div class="li"> se poate copia doar obiectul + descendenții imediați</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT11 SECTION "Algoritmul Cheney pentru Copy Collection" [7956-9899] -->
+<h3 class="sectionedit13" id="non-copying_implicit_collection_baker">Non-Copying Implicit Collection (Baker)</h3>
+<div class="level3">
+
+<p>
+În loc să se facă o mutare fizică a obiectelor dintr-o zonă în alta, se mută pointerii la obiecte între două liste.
+</p>
+
+<p>
+Fiecare obiect are trei câmpuri suplimentare invizibile pentru programul care se execută. Două dintre ele sunt utilizate pentru ca obiectul să fie legat într-o listă dublu înlănțuită. Al treilea câmp indică lista la care este conectat obiectul. Sunt folosite, astfel, trei liste: o listă a spațiului disponibil, o listă <strong>from</strong> și o listă <strong>to</strong>.
+</p>
+
+<p>
+Aloacarea de memorie se face mutând elemente din lista spațiului disponibil în lista <strong>from</strong>. Algoritmul se declanșează când se epuizează prima listă, cea a spațiului liber disponibil.
+</p>
+
+<p>
+Colectarea memoriei se face mutând obiectele în viață din lista <strong>from</strong> în lista <strong>to</strong>. Când toate obiectele accesibile au fost mutate, lista <strong>from</strong> conține numai pointeri spre obiecte care nu mai sunt în viață și devine o listă a spațiului liber disponibil. Execuția copierii pointerilor se face într-o manieră similară cu cea a algoritmului Cheney.
+</p>
+
+<p>
+Principalul avantaj este viteza, deoarece nu se fac copieri, iar valorile pointerilor vizibili nu se schimbă, ceea ce simplifică rolul compilatorului.
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Non-Copying Implicit Collection (Baker)" [9900-11165] -->
+<h2 class="sectionedit14" id="algoritmi_incrementali">Algoritmi incrementali</h2>
+<div class="level2">
+
+<p>
+Întreruperile necesare GC sunt inacceptabile într-un sistem de timp real - se face colectarea incremental.
+</p>
+
+<p>
+Se pune problema consistenței datelor deoarece rulează două procese simultan:
+</p>
+<ul>
+<li class="level1"><div class="li"> mutator (programul)</div>
+</li>
+<li class="level1"><div class="li"> colector (GC)</div>
+</li>
+</ul>
+
+<p>
+<strong>M&amp;S</strong> - cititori-scriitor, doar mutatorul modifică pointerii
+<strong>CC</strong> - mai mulți scriitori
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Algoritmi incrementali" [11166-11530] -->
+<h3 class="sectionedit15" id="marcajul_tricolor">Marcajul tricolor</h3>
+<div class="level3">
+
+<p>
+Marcajul tricolor este o notație folosită pentru sincronizare. Obiectele pot să fie colorate cu o culoare din trei posibile:
+</p>
+<ul>
+<li class="level1"><div class="li"> alb - marcajul la începutul ciclului de colectare</div>
+</li>
+<li class="level1"><div class="li"> gri - obiectul a fost identificat ca fiind în viață, dar obiectele la care se poate ajunge utilizând câmpurile obiectului respectiv nu au fost încă parcurse. La CC, gri sunt obiectele dintre scan și next</div>
+</li>
+<li class="level1"><div class="li"> negru - obiectul este în viață la sfârșitul ciclului de colectare</div>
+</li>
+</ul>
+
+<p>
+Indiferent de tipul de tipul de algoritm utilizat colectorul trebuie să respecte condiția - nici un câmp dintr-un obiect negru nu conține un pointer către un obiect alb. 
+</p>
+
+<p>
+<strong>Colectorul</strong> realizează traversarea grafului de obiecte în viață şi le schimbă culoarea.
+</p>
+
+<p>
+<strong> Mutatorul</strong> poate să modifice obiectele care au fost deja tratate.
+</p>
+<ul>
+<li class="level1"><div class="li"> nu poate să facă dintr-un obiect inaccesibil un obiect accesibil și nici să modifice câmpuri din interiorul unui astfel de obiect</div>
+</li>
+<li class="level1"><div class="li"> un obiect care a fost deja marcat în viață poate să devină inaccesibil</div>
+</li>
+<li class="level1"><div class="li"> un câmp (pointer) dintr-un obiect care a fost deja tratat poate să fie modificat</div>
+</li>
+</ul>
+
+<p>
+Prima situație poate să fie ignorată, considerarea unui obiect inaccesibil ca fiind în viață este conservativă și obiectul respectiv va fi identificat ca inaccesibil la următoarea trecere a algoritmului.
+</p>
+
+<p>
+<strong>Probleme:</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> modificarea câmpurilor în obiectele care au fost deja tratate</div>
+</li>
+</ul>
+
+<p>
+Coordonarea între mutator și colector presupune existenţa unui mecanism prin care:
+</p>
+<ul>
+<li class="level1"><div class="li"> mutatorul să fie împiedicat să acceseze un obiect alb sau</div>
+</li>
+<li class="level1"><div class="li"> să fie împiedicat să scrie valoarea unui pointer către un obiect alb într-un obiect negru</div>
+</li>
+</ul>
+
+<p>
+În primul caz se utilizează o barieră la citire, (detectează dacă mutatorul încearcă să utilizeze un pointer la un obiect alb). Acesta poate fi vopsit în gri pentru că acum “se știe” că obiectul este accesibil, dar nu se știe cum sunt descendenții acestuia.
+</p>
+
+<p>
+În al doilea caz se utilizează o barieră la scriere (înregistrează scrierile de pointeri în obiecte).
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Marcajul tricolor" [11531-13617] -->
+<h3 class="sectionedit16" id="bariere_la_scriere">Bariere la scriere</h3>
+<div class="level3">
+
+<p>
+În cazul algoritmilor care nu realizează copierea se utilizează barierele la scriere (nu se pune problema ca mutatorul să citească un pointer incorect).
+</p>
+
+<p>
+Există 2 tipuri de bariere la scriere:
+</p>
+<ul>
+<li class="level1"><div class="li"> snapshot-at-beginning</div>
+<ul>
+<li class="level2"><div class="li"> se salveaza o copie a tuturor pointerilor înlocuiți la atribuiri; valorile salvate se adaugă la root</div>
+</li>
+<li class="level2"><div class="li"> toate obiectele accesibile la inceputul ciclului vor fi negre</div>
+</li>
+<li class="level2"><div class="li"> obiectele nou create în timpul unui ciclu sunt negre</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> incremental update</div>
+<ul>
+<li class="level2"><div class="li"> se detectează când pointerii sunt scriși în obiecte negre; dacă pointerul indică spre un obiect alb, se colorează în gri obiectul negru</div>
+</li>
+<li class="level2"><div class="li"> posibila implementare: se reparcurg obiectele negre din paginile de memorie marcate “dirty”</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT16 SECTION "Bariere la scriere" [13618-14387] -->
+<h3 class="sectionedit17" id="algoritmii_baker_cu_bariera_la_citire">Algoritmii Baker cu barieră la citire</h3>
+<div class="level3">
+
+<p>
+Copiere incrementală (bazat pe algoritmul Cheney):
+</p>
+<ul>
+<li class="level1"><div class="li"> operație atomică: se invalidează obiectele din <strong>from-space</strong>, se copiază root-set-ul în <strong>to-space</strong> (practic, <em>from-space</em>-ul devine alb, iar root-set-ul devine gri); apoi se colectează incremental</div>
+</li>
+<li class="level1"><div class="li"> dacă mutatorul citește un pointer către <strong>from-space</strong>, obiectul respectiv este copiat în <strong>to-space</strong> (marcat gri) și pointerul actualizat</div>
+</li>
+<li class="level1"><div class="li"> obiectele nou alocate sunt alocate în <strong>to-space</strong> (colorate cu negru)</div>
+</li>
+</ul>
+
+<p>
+Bariera poate fi implementată software, compilatorul generând pentru fiecare referință la un pointer un cod corespunzător, sau hardware pentru mașini dedicate.
+</p>
+
+<p>
+Utilizarea unei bariere la citire este în general destul de ineficientă deoarece presupune că pentru fiecare referire de pointer se face un test referitor la zona în care este conținut obiectul respectiv. Dacă obiectul este într-o zonă de top from se va declanșa operația de copiere a obiectului respectiv în zona to.
+</p>
+
+<p>
+Se poate utiliza și un sprijin din partea compilatorului care poate să identifice accese care se referă la câmpuri din același obiect și să optimizeze pe această bază codul general.
+</p>
+
+<p>
+Algoritmul este unul conservativ, obiectele noi fiind negre, deci chiar dacă mor imediat nu vor fi șterse decât la următorul ciclu de colectare.
+</p>
+
+</div>
+<!-- EDIT17 SECTION "Algoritmii Baker cu barieră la citire" [14388-15766] -->
+<h2 class="sectionedit18" id="generational_gc">Generational GC</h2>
+<div class="level2">
+
+<p>
+Clasa generational GC încearcă să beneficieze de o propietate observată empiric a obiectelor alocate, și anume faptul că majoritatea obiectelor trăiesc foarte puțin, iar doar o mică parte trăiesc perioade mai lungi. Obiectele cu viață lungă încetinesc în mod nenecesar GC. Tehnicile algoritmului curent împart heap-ul în mai multe sub-heap-uri și separă obiectele pe sub-heap-uri în funcție de generația fiecărui obiect. Obiectele noi sunt alocate într-un subheap dedicat. Când nu mai există memorie, se scanează doar primul subheap, iar majoritatea obiectelor vor fi, probabil, dealocate. Subheapurile cu generații mai mari sunt scanate mai puțin frecvent. De vreme ce se scanează fragmente mici de heap și se recuperează proporțional mai mult spațiu, eficiența algoritmului este îmbunătățită.
+</p>
+
+<p>
+<strong>Câte cicluri de colectare trebuie să fie supravieţuite de către un obiect pentru a fi mutat într-o generație mai veche ?</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> dacă se păstrează un singur ciclu, se poate folosi CC și se pot copia direct în generația ‘mai bătrână’ obiectele care supraviețuiesc</div>
+</li>
+<li class="level1"><div class="li"> un obiect cu viața scurtă care a fost creat chiar înainte de colectare, va avansa degeaba la o generație mai mare</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT18 SECTION "Generational GC" [15767-17038] -->
+<h3 class="sectionedit19" id="algoritmul_ungar">Algoritmul Ungar</h3>
+<div class="level3">
+
+<p>
+Prima generație poate avea heap-ul împărțit în trei zone: una pentru obiectele nou create, celelalte fiind zonele <strong>from</strong> și <strong>to</strong>. Se face astfel diferența dintre obiectele foarte noi și cele mai vechi din generația curentă.
+</p>
+
+<p>
+O variantă a algoritmului Ungar ține doar două zone: de memorare și de alocare. Obiectele care sunt colectate din zona de memorare se copiază într-o generație mai veche, iar cele din zona de alocare se copiază în zona de memorare.
+<a href="../../../../_detail/cpl/labs/screen_shot_2016-01-06_at_12.21.54.png%3Fid=cpl%253Alabs-2015%253A12.html" class="media" title="cpl:labs:screen_shot_2016-01-06_at_12.21.54.png"><img src="../../../../_media/cpl/labs/screen_shot_2016-01-06_at_12.21.54.png%3Fw=500&amp;tok=02e4a6" class="mediacenter" alt="" width="500" /></a>
+</p>
+
+</div>
+<!-- EDIT19 SECTION "Algoritmul Ungar" [17039-17606] -->
+<h3 class="sectionedit20" id="pointeri_intre_generatii">Pointeri între generații</h3>
+<div class="level3">
+
+<p>
+Pentru a rezolva problema pointerilor dintr-o generație veche către obiect dintr-o generație nouă, se pot folosi bariere la scriere similare celor utilizate în cazul algoritmilor de alocare incrementali.
+</p>
+
+<p>
+Pentru orice operație de modificare a unui câmp de tip pointer trebuie să se faca o verificare pentru a stabili dacă nu cumva este vorba de un pointer de la un obiect dintr-o generație mai veche la un obiect dintr-o generație mai nouă. Pointerul respectiv va trebui să fie utilizat în mulțimea rădăcină pentru generația nouă. Abordarea este conservativă, obiectul dintr-o generație mai veche datorită căruia se păstrează un obiect dintr-o generație mai nouă poate să nu mai fie accesibil.
+</p>
+
+<p>
+O altă metodă este folosirea memoriei virtuale (LISP: Symbolics). În loc să se înregistreze obiectele care conțin pointeri între generații se înregistrează paginile din memoria virtuală care conțin astfel de pointeri, granularitatea utlizată fiind la nivel de pagină. Timpul pentru parcurgerea setului înregistrat va depinde de numărul de pagini și de lungimea paginilor și nu de numărul de obiecte în care s-au scris pointeri.
+</p>
+
+</div>
+<!-- EDIT20 SECTION "Pointeri între generații" [17607-18817] -->
+<h2 class="sectionedit21" id="java">JAVA</h2>
+<div class="level2">
+
+<p>
+Java pornește în implementarea Garbage Collectorului de la observația empirică cunoscută ca <em>Weak generational hypothesis</em>. Obiectele sunt folosite, în majoritatea lor, pentru foarte puțin timp, iar restul au o durată de viață îndelungată.
+</p>
+
+<p>
+<img src="../../../../_media/cpl/labs/lab12object-age-based-on-gc-generation-generational-hypothesis.png" class="media" alt="" />
+</p>
+
+<p>
+Pornind de la această observație, Java împarte heapul în două regiuni (sau generații): Young(sau Nursery) și Old. Pentru obiectele noi, alocarea se face din regiunea Young. Dacă spațiul nu este suficient, un GC este executat pe această regiune. În urma lui memoria care nu mai este referită este revendicată, iar obiectele care sunt încă în viață sunt mutate în generația Old. În momentul în care spațiul din regiunea Old este epuizat, un GC este executat si spațiul ocupat de obiectele care între timp au devenit nefolosite este eliberat. Colectarea memoriei libere din regiunea Young este referită ca “minor collection”, cea din regiunea Old ca “major collection”. O colectare ce are loc în ambele regiuni e referită ca “Full collection”. Modelul prezentat este unul simplificat. Din motive de eficiență, Java împarte mai departe regiunile Young și Old în mai multe subregiuni.
+</p>
+
+<p>
+<img src="../../../../_media/cpl/labs/12java-heap-eden-survivor-old.png" class="media" alt="" />
+</p>
+
+<p>
+Zona <em>Permanent Generation</em>, ce aparține regiunii Old, conține informații cum ar fi:
+</p>
+<ul>
+<li class="level1"><div class="li"> metadata despre reprezentarea internă a claselor</div>
+</li>
+<li class="level1"><div class="li"> metodele claselor, constante și variabile statice</div>
+</li>
+<li class="level1"><div class="li"> informații suplimentare pentru optimizări (JIT)</div>
+</li>
+</ul>
+
+<p>
+Dimensiunea acestei regiuni poate fi setată prin parameterul XX:MaxPermSize.
+</p>
+
+<p>
+In Java 8, informațiile din această regiune au fost mutate în Metaspace, care se află în regiunea nativă a memoriei(XX:MaxMetaspaceSize).
+</p>
+
+<p>
+În continuare, pentru generația Old, vom vorbi doar despre regiunea Tenured.
+</p>
+
+<p>
+<em>Q: Un program poate primi excepția “Permanent Generation’s area in memory is exhausted”? Care credeți că este cauza?</em>
+</p>
+
+<p>
+<em>Q: Ce credeți că se întâmplă dacă nu e suficient spațiu în Young pentru alocarea unui obiect nou?</em>
+</p>
+
+</div>
+
+<h4 id="generatia_young">Generația Young</h4>
+<div class="level4">
+
+<p>
+Cea mai mare parte a obiectelor noi se “nasc” aici, iar majoritatea vor “muri” tot aici. În urma unui GC, majoritatea obiectelor sunt colectate, iar obiectele care vor supraviețui suficient de mult timp vor fi mutate în regiunea Tenured. În acest fel, numărul de obiecte “în viață” din generația Young rămâne constant mic. Asta face ca algoritmii de colectare liniari în numărul de obiecte “în viață” să fie foarte eficienți pentru această regiune.
+</p>
+
+<p>
+Pe de altă parte, obiectele din generația Tenured sunt obiecte care au în general durată de viață mare, motiv pentru care multe dintre ele vor supraviețui procesului de GC. Odată cu numărul mare de obiecte, crește și spațiul ocupat din această regiune și procesul de GC durează considerabil mai mult.
+</p>
+
+<p>
+Din acest motiv, este important momentul în care decidem să mutăm un obiect din generația Young în generația Tenured. Pe de o parte vrem ca numărul de obiecte din generația Young să rămână mic, lucru pe care îl putem obține prin mutarea imediată a obiectelor în generația Tenured. Pe de altă parte, vrem ca memoria ocupată de obiectele ieșite din uz să fie cât mai repede colectată. Pentru că majoritatea colectărilor se petrec în zona Young, asta înseamnă că dorim ca un obiect să rămână suficient de mult în această zonă, altfel, odată ajuns în Tenured va trebui să așteptăm  colectare a acestui spațiu, care se face mai rar. Un alt lucru de care dorim să ținem cont este faptul că vom aplica algoritmi de colectare diferiți pentru cele două zone, așa că am vrea ca obiectele din fiecare zonă să respecte presupunerile zonei de care aparțin:
+</p>
+<ul>
+<li class="level1"><div class="li"> obiecte cu durată de viață mică în Young. </div>
+</li>
+<li class="level1"><div class="li"> obiecte cu durată de viață mare în Tenured</div>
+</li>
+</ul>
+
+<p>
+Mașina virtuală de Java încearcă să rezolve această problemă prin împărțirea zonei Young în:
+</p>
+<ul>
+<li class="level1"><div class="li"> regiunea Eden: alocările obiectelor noi se fac din această regiune.</div>
+</li>
+<li class="level1"><div class="li"> 2 regiuni Survivor: from și to. Aici sunt ținute obiectele vii până ating maturitatea necesară pentru a considera că vor avea o durată de viață îndelungată. În acel moment vor fi mutate în zona Tenured.</div>
+</li>
+</ul>
+
+<p>
+Inițial, spațiile Eden, Survivor 1 și Survivor 2 sunt libere. Unul dintre ele va fi considerat spațiul <em>from</em> iar celălalt spațiul <em>to</em>. Rolurile celor două spații se vor schimba la fiecare GC. De menționat faptul că unul dintre cele două spații (to) trebuie să fie întotdeauna liber.
+Alocările obiectelor se fac din zona Eden. Cu timpul, această zona va fi epuizată, moment în care un GC de tipul Mark and Copy va fi declanșat pentru obiectele din zona Eden și zona Survivor from. Majoritatea obiectelor au “murit” între timp. Obiectele rămase în viață vor fi copiate în zona Survivor <em>to</em>, în cazul în care nu au atins încă maturitatea, sau în zona Tenured, în caz contrar. La sfârșitul colectării, pointerii from și to sunt interschimbați.
+</p>
+
+</div>
+
+<h5 id="evaluarea_maturitatii">Evaluarea maturității</h5>
+<div class="level5">
+
+<p>
+Pentru obiectele aflate în viață se menține un contor al numărului de GC (minor collection) cărora le-au supraviețuit. În momentul în care acest contor depăsește o anumită valoare (denumită <em>tenuring threshold</em> și calculată dinamic), un obiect este considerat matur și poate fi mutat în generația Tenured.
+</p>
+
+<p>
+<em>Q: Valoarea maximă pe care poate să o ia </em>tenuring threshold<em> e dată de MaxTenuringThreshold care poate fi setat la pornirea mașinii virtuale. Ce valori credeți că sunt recomandate pentru acest parametru? De ce? Ce credeți că se întâmplă în cazul în care setăm această valoare la 0?</em>
+</p>
+
+<p>
+<em>Q: Se poate întâmpla o promovare în generația Tenured, fără ca un obiect să fi atins maturitatea?</em>
+</p>
+
+</div>
+
+<h5 id="marcarea_obiectelor_aflate_in_viata">Marcarea obiectelor aflate în viață</h5>
+<div class="level5">
+
+<p>
+Colectarea pentru zona Young ține cont doar de obiectele din zonele Eden și Survivor from, cele din Tenured fiind ignorate. Trebuie totuși detectate referințele către obiectele din zona Young care provin din zona Tenured.
+Pentru detectarea obiectelor se folosește un algoritm de tip Mark. Rădăcinile sunt considerate a fi:
+</p>
+<ul>
+<li class="level1"><div class="li"> variabilele locale (stivă, regiștrii)</div>
+</li>
+<li class="level1"><div class="li"> parametrii funcției curente</div>
+</li>
+<li class="level1"><div class="li"> threadurile java active (inclusiv partea de thread local storage)</div>
+</li>
+<li class="level1"><div class="li"> variabilele statice</div>
+</li>
+<li class="level1"><div class="li"> referințele JNI</div>
+</li>
+<li class="level1"><div class="li"> referințele din zona tenured</div>
+</li>
+</ul>
+
+<p>
+Pentru detectarea referințelor din zona tenured în zona Young, se folosește tehnica numită <em>card-marking</em>. Generația veche este împărțită în bucăți de 512 bytes, denumite <em>cărți</em>. Mașina virtuală va menține un bitmap în care fiecare bit corespunde unei <em>cărți</em>. În momentul în care o actualizare a unei referințe are loc pentru un obiect din zona Old, bitul corespunzător <em>cărții</em> din care face parte obiectul este setat ca fiind dirty. În momentul unei colectări minore, obiectele din zonele marcate ca dirty din zona Old sunt scanate pentru găsirea de referințe către zona Young. Pentru actualizarea referințelor se folosesc bariere la scriere introduse de compilator.
+</p>
+
+<p>
+<em>Q: Credeți că numărul de </em>cărți<em> dirty este mare? De ce? Dați exemplu de situație în care poate să apară.</em>
+</p>
+
+<p>
+Notă: În momentul în care se face Marking, threadurile sunt întrerupte, pentru ca graful de referințe să nu mai fie modificat în continuare (pauză <em>Stop the world</em>). Oprirea threadurilor se poate face doar în anumite puncte, unde structura obiectelor și conținutul referințelor acestora sunt valide. Astfel de puncte poartă denumirea de Safe-Points și sunt introduse automat de compilator. Astfel, un GC minor nu pornește imediat ce este nevoie de el, ci în momentul în care toate threadurile au atins un SafePoint. 
+</p>
+
+<p>
+<em>Q: Pot exista </em>memory leaks<em> în Java?</em>
+</p>
+
+</div>
+
+<h5 id="copierea_obiectelor_ramase_in_viata">Copierea Obiectelor rămase în viață</h5>
+<div class="level5">
+
+<p>
+Pentru copierea obiectelor din Eden și Survivor <em>from</em> în Survivor <em>to</em> sau Tenured, se folosește un algoritm de tipul Cheney.
+</p>
+
+<p>
+<em>Q: Care este avantajul acestor copieri? Cum arată zona Eden după colectare? Care e costul alocării unui obiect?</em>
+</p>
+
+</div>
+
+<h5 id="multithreading">Multithreading</h5>
+<div class="level5">
+
+<p>
+Alocarea de obiecte noi e foarte rapidă. Dar majoritatea aplicațiilor java folosesc threaduri. Pentru a evita costurile de performanță implicate de sincronizarea accesului la un pool comun, spațiul Eden este împărțit în mai multe “memory pools”, care poartă denumirea de Thread Local Allocation Buffer. Fiecare thread va aloca memorie din TLAB-ul asociat, iar când acesta este epuizat, alocarea se va face dintr-o zonă comună tuturor threadurilor, moment în care e nevoie de sincronizare.
+</p>
+
+</div>
+
+<h4 id="generatia_tenured">Generația Tenured</h4>
+<div class="level4">
+
+<p>
+Generația Tenured conține obiectele care au supraviețuit colectării din generația Young. Aceste obiecte au tendința de a avea o viață îndelungată. Numărul de obiecte aflate în viață la momentul unui GC este așadar mare și prin urmare și spațiul de heap necesar.
+Din aceasta cauza nu putem să folosim Mark and Copy și trebuie să apelăm la alte strategii de colectare.
+</p>
+
+<p>
+<em>Q: De ce nu putem folosi Mark and Copy?</em>
+</p>
+
+<p>
+Un algoritm de Mark Sweep Compact este preferat:
+</p>
+<ol>
+<li class="level1"><div class="li"> Mark: asemănător cu ce se întâmplă în genererația Young</div>
+</li>
+<li class="level1"><div class="li"> Sweep: implementare folosind “free lists” pentru obiectele reclamate; acest pas are complexitate liniară în dimensiunea spațiului Heap disponibil.</div>
+</li>
+<li class="level1"><div class="li"> Compact: încearcă să rezolve problema fragmentării; Obiectele rămase în viață sunt mutate la începutul regiunii</div>
+</li>
+</ol>
+
+</div>
+
+<h4 id="finalizers">Finalizers</h4>
+<div class="level4">
+
+<p>
+Java pune la dispoziția programatorilor posibilitatea definirii, per clasă, a unei metode care să fie apelată în momentul în care un obiect din acea clasă este colectat.
+</p>
+
+<p>
+<em> Q: De ce am folosi-o? Care ar fi dezavantajele? Ce se întâmplă dacă aruncăm o excepție? </em>
+</p>
+
+</div>
+
+<h4 id="algoritmi_de_gc_in_java">Algoritmi de GC în Java</h4>
+<div class="level4">
+
+<p>
+Pentru că aplicații diferite au nevoi diferite, Java permite alegerea algoritmilor de GC pentru generația Young și generația Old. În alegerea acestora trebuie să se țină cont de:
+</p>
+<ul>
+<li class="level1"><div class="li"> Performanță (throughput): se dorește minimizarea timpului total petrecut în GC</div>
+</li>
+<li class="level1"><div class="li"> Latență: se dorește minimizarea pauzelor în care aplicația nu răspunde</div>
+</li>
+<li class="level1"><div class="li"> Footprint: se dorește minimizarea memoriei folosite</div>
+</li>
+</ul>
+
+<p>
+<em>Q: Dați exemple de aplicații cu necesități diferite.</em>
+</p>
+
+<p>
+Combinațiile de GC cele mai întâlnite sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> Serial GC atât pentru Young, cât și pentru Old</div>
+</li>
+<li class="level1"><div class="li"> Parallel GC atât pentru Young, cât și pentru Old</div>
+</li>
+<li class="level1"><div class="li"> Parallel New pentru Young și Concurrent Mark and Sweep (<abbr title="Content Management System">CMS</abbr>) pentru Old</div>
+</li>
+<li class="level1"><div class="li"> G1 care înglobează colectarea atât pentru Young cât și pentru Old</div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="serial_gc">Serial GC</h5>
+<div class="level5">
+
+<p>
+În cazul acesta se folosește MarkCopy pentru generația Young și MarkSweepCompact pentru generația Old. Acești algoritmi sunt single-threaded și de tipul stop-the-world.
+</p>
+
+<p>
+<em>Q: Când ar fi utilă această combinație?</em>
+</p>
+
+</div>
+
+<h5 id="parallel_gc">Parallel GC</h5>
+<div class="level5">
+
+<p>
+În acest caz, se folosește MarkCopy pentru generația Young și MarkSweepCompact pentru generația Old. De asemenea tipul de colectare este stop-the world. Operațiile de Mark, Copy, Compact sunt însă executate pe mai multe threaduri.
+</p>
+
+<p>
+<em>Q: Când ar fi utilă această combinație?</em>
+</p>
+
+<p>
+<em>Q: De ce important ca procesul de GC să fie paralel? Ce se întâmplă dacă rămâne serial, iar numărul de procesoare crește? Presupuneți că inițial sistemul are un singur procesor și colectarea durează 1%, respectiv 10% din timpul total. Ce se întâmplă când trecem pe un sistem cu 32 de procesoare? Hint1: Legea lui Amdahl. <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/introduction.html#percentage_time_gc" class="urlextern" title="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/introduction.html#percentage_time_gc"  rel="nofollow">Hint2</a></em>
+</p>
+
+</div>
+
+<h5 id="concurrent_mark_and_sweep">Concurrent Mark and Sweep</h5>
+<div class="level5">
+
+<p>
+Numele oficial este de fapt “Mostly Concurrent Mark and Sweep Garbage Collector”.
+Folosește un algoritm MarkCopy paralel și stop-the world pentru generația Young și un algoritm “aproape concurent” de MarkSweep pentru generația Old. Pentru a evita pauzele lungi generate de colectarea generației Old, acest algoritm nu execută operația de compactare în această regiune și folosește “free-lists”. De asemenea, majoritatea operațiilor din fazele de Mark și Sweep sunt făcute concurent cu aplicația.
+</p>
+
+<p>
+<em>Q: Când ar fi utilă această combinație?</em>
+</p>
+
+</div>
+
+<h5 id="garbage_first_gc">Garbage First GC</h5>
+<div class="level5">
+
+<p>
+G1 este un GC destinat mașinilor multiprocesor și memorie de dimensiune mare. Își propune să ofere, cu probabilitate ridicată, pauze <em>Stop the world</em> care se încadrează în parametrii specificați, fără însă a sacrifica high performanța(<em>throughput</em>). G1 atinge acest scop prin câteva tehnici.
+</p>
+
+<p>
+Heap-ul este partiționat în regiuni cu aceași dimensiune. iar G1 încearcă să colecteze mai întâi regiunile care au cel mai mult spațiu liber. Etapa de Marking este concurentă și în timpul ei G1 colectează statistici despre spațiul liber al fiecărei regiuni. În etapa următoare, G1 încearcă să colecteze mai întâi regiunile aproape goale (de unde și denumirea lui).
+În etapa următoare, G1 încearcă să copieze dintr-una sau mai multe regiuni obiecte într-o singură regiune, pentru a compacta și elibera memorie în același timp. Aceast proces este realizat în paralel, pe mai multe procesoare. Astfel, cu fiecare GC, G1 încearcă să reducă fragmentarea într-o manieră incrementală.
+</p>
+
+<p>
+G1 nu oferă garanții <em>hard</em> pentru durata unui <em>Stop the world</em>, dar încearcă să atingă durata configurată cu probabilitate mare. Face acest lucru, prin actualizarea de statistici în timpul unui GC. Astfel, din procesel de GC precedente, putem estima câte regiuni pot fi colectate în fereastra de timp disponibilă.
+</p>
+
+<p>
+G1 este un GC paralel, incremental și “aproape” concurent, care compactează spațiul liber. Scopul lui este să înlocuiască <abbr title="Content Management System">CMS</abbr> și să ofere pauze <em>Stop the world</em> predictibile, fără însă a sacrifica performanța globală.
+</p>
+
+</div>
+
+<h5 id="exercitiu">Exercițiu</h5>
+<div class="level5">
+
+<p>
+Descărcați <a href="../../../../_media/cpl/labs/lab12examples.tar.gz" class="media mediafile mf_gz" title="cpl:labs:lab12examples.tar.gz (920 B)">arhiva de laborator</a>.
+</p>
+
+<p>
+Instalați pachetul pentru visualvm
+</p>
+
+<p>
+<em>sudo apt-get install visualvm</em>
+</p>
+
+<p>
+Porniți programul din linia de comandă și instalați pluginul de VisualGC (Tools→Plugins→Available plugins).
+</p>
+
+<p>
+<em>visualm</em>
+</p>
+
+<p>
+Rulați aplicația din sursele laboratorului
+</p>
+
+<p>
+<em>java -Xmx512m MemLeak</em>
+</p>
+
+<p>
+Ce concluzii trageți? Analizați codul sursă.
+</p>
+
+<p>
+<em>Dacă doriți să modificați și să compilați aplicația, trebuie să instalați pachetul openjdk-7-jdk și să folosiți comanda javac</em>
+</p>
+
+</div>
+
+<h5 id="linkuri_utile">Linkuri Utile</h5>
+<div class="level5">
+
+<p>
+<a href="https://www.youtube.com/watch?v=lt1cVudGKA8" class="urlextern" title="https://www.youtube.com/watch?v=lt1cVudGKA8"  rel="nofollow">Understanding Java Garbage Collection and what you can do about it</a>
+</p>
+
+<p>
+<a href="http://www.azulsystems.com/sites/default/files/images/Understanding_Java_Garbage_Collection_v3.pdf" class="urlextern" title="http://www.azulsystems.com/sites/default/files/images/Understanding_Java_Garbage_Collection_v3.pdf"  rel="nofollow">Understanding Java Garbage Collection and what you can do about it(presentation)</a>
+</p>
+
+<p>
+<a href="https://www.youtube.com/watch?v=we_enrM7TSY" class="urlextern" title="https://www.youtube.com/watch?v=we_enrM7TSY"  rel="nofollow">Are Your Garbage Collection Logs Speaking to You?</a>
+</p>
+
+<p>
+<a href="http://wiki.apache.org/tomcat/MemoryLeakProtection" class="urlextern" title="http://wiki.apache.org/tomcat/MemoryLeakProtection"  rel="nofollow">Memory Leaks in Java</a>
+</p>
+
+<p>
+<a href="https://plumbr.eu/handbook/gc-tuning-in-practice" class="urlextern" title="https://plumbr.eu/handbook/gc-tuning-in-practice"  rel="nofollow">GC tuning in practice</a>
+</p>
+
+<p>
+<a href="http://psy-lob-saw.blogspot.ro/2014/10/the-jvm-write-barrier-card-marking.html" class="urlextern" title="http://psy-lob-saw.blogspot.ro/2014/10/the-jvm-write-barrier-card-marking.html"  rel="nofollow">The JVM Write Barrier - Card Marking</a>
+</p>
+
+<p>
+<a href="http://mechanical-sympathy.blogspot.ro/2013/07/java-garbage-collection-distilled.html" class="urlextern" title="http://mechanical-sympathy.blogspot.ro/2013/07/java-garbage-collection-distilled.html"  rel="nofollow">Java Garbage Collection Distilled</a>
+</p>
+
+<p>
+<a href="http://dept.cs.williams.edu/~freund/cs434/hotspot-gc.pdf" class="urlextern" title="http://dept.cs.williams.edu/~freund/cs434/hotspot-gc.pdf"  rel="nofollow">Garbage Collection in the Java HotSpot Virtual Machine</a>
+</p>
+
+<p>
+<a href="http://www.infoq.com/articles/G1-One-Garbage-Collector-To-Rule-Them-All" class="urlextern" title="http://www.infoq.com/articles/G1-One-Garbage-Collector-To-Rule-Them-All"  rel="nofollow">G1: One Garbage Collector To Rule Them All</a>
+</p>
+
+<p>
+<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;rep=rep1&amp;type=pdf" class="urlextern" title="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;rep=rep1&amp;type=pdf"  rel="nofollow">Garbage-First Garbage Collection</a>
+</p>
+
+<p>
+<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/" class="urlextern" title="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/"  rel="nofollow">Java Platform, Standard Edition HotSpot Virtual Machine Garbage Collection Tuning Guide</a>
+</p>
+
+</div>
+<!-- EDIT21 SECTION "JAVA" [18818-] --></div>
+</body>
+</html>

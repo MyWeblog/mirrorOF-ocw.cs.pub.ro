@@ -1,0 +1,36 @@
+    
+    
+
+public class ChatActivity extends Activity {
+
+  // ...
+  
+  protected WifiManager wifiManager = null;
+
+  @Override
+  protected void onCreate(Bundle state) {
+    super.onCreate(state);
+  
+    // ...
+
+    WifiManager wifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+    multicastLock = wifiManager.createMulticastLock(Constants.TAG);
+    multicastLock.setReferenceCounted(true);
+    multicastLock.acquire();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+  
+    // ...
+  
+    if (multicastLock != null) {
+      multicastLock.relase();
+      multicastLock = null;
+    }
+  }
+  
+  // ...
+  
+}

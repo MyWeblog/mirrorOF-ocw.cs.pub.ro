@@ -1,0 +1,38 @@
+    
+    
+
+CC = gcc                        # compilatorul folosit
+CFLAGS = -Wall -g               # optiunile pentru compilare
+LDLIBS = -lefence               # optiunile pentru linking
+
+# creeaza executabilele client si server
+all: client server
+
+# leaga modulele client.o user.o sock.o in executabilul client
+client: client.o user.o sock.o log.o
+
+# leaga modulele server.o cli_handler.o sock.o in executabilul server
+server: server.o cli_handler.o sock.o log.o
+
+# compileaza fisierul client.c in modulul obiect client.o
+client.o: client.c sock.h user.h log.h
+
+# compileaza fisierul user.c in modulul obiect user.o
+user.o: user.c user.h
+
+# compileaza fisierul sock.c in modulul obiect sock.o
+sock.o: sock.c sock.h
+
+# compileaza fisierul server.c in modulul obiect server.o
+server.o: server.c cli_handler.h sock.h log.h
+
+# compileaza fisierul cli_handler.c in modulul obiect cli_handler.o
+cli_handler.o: cli_handler.c cli_handler.h
+
+# compileaza fisierul log.c in modulul obiect log.o
+log.o: log.c log.h
+
+.PHONY: clean
+
+clean:
+        rm -fr *~ *.o server client

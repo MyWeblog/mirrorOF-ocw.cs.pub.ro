@@ -1,0 +1,107 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:01:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-18T11:45:20+0200"/>
+<meta name="keywords" content="saisp,labs,01,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:01:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/01/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:01:contents';var JSINFO = {"id":"saisp:labs:01:contents:04","namespace":"saisp:labs:01:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_folosire_programatica_client_de_ldap">04. [15p] Folosire programatică client de LDAP</h3>
+<div class="level3">
+
+<p>
+Pe stația client este instalat pachetul <code>python-ldap</code> util pentru programarea unui client LDAP în Python.
+</p>
+
+<p>
+Fișierul de mai jos implementează căutarea intrărilor LDAP pentru utilizatorii al căror atribut <code>cn</code> începe cu <code>Mihai</code> și afișează pentru aceștia atributele <code>cn</code> și <code>e-mail</code>.
+</p>
+<dl class="file">
+<dt><a href="../../../../../code/saisp/labs/01/contents/04%3Fcodeblock=0" title="Download Snippet" class="mediafile mf_py">simple-ldap.py</a></dt>
+<dd><pre class="code file python"><span class="co1">#!/usr/bin/env python</span>
+&nbsp;
+<span class="kw1">import</span> <span class="kw3">sys</span>
+<span class="kw1">import</span> ldap
+&nbsp;
+<span class="kw1">def</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+    ldap.<span class="me1">set_option</span><span class="br0">&#40;</span>ldap.<span class="me1">OPT_PROTOCOL_VERSION</span><span class="sy0">,</span> <span class="nu0">3</span><span class="br0">&#41;</span>
+    l <span class="sy0">=</span> ldap.<span class="me1">initialize</span><span class="br0">&#40;</span><span class="st0">&quot;ldaps://swarm.cs.pub.ro&quot;</span><span class="br0">&#41;</span>
+    entries <span class="sy0">=</span> l.<span class="me1">search_s</span><span class="br0">&#40;</span><span class="st0">&quot;ou=People,dc=swarm,dc=cs,dc=pub,dc=ro&quot;</span><span class="sy0">,</span> ldap.<span class="me1">SCOPE_SUBTREE</span><span class="sy0">,</span> <span class="st0">'(cn=Mihai*)'</span><span class="sy0">,</span> <span class="br0">&#91;</span><span class="st0">'cn'</span><span class="sy0">,</span> <span class="st0">'mail'</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="kw1">for</span> dn<span class="sy0">,</span> attrs <span class="kw1">in</span> entries:
+        <span class="kw1">print</span> <span class="st0">'Found:'</span><span class="sy0">,</span> <span class="kw3">repr</span><span class="br0">&#40;</span>dn<span class="br0">&#41;</span>
+        <span class="kw1">print</span> attrs
+&nbsp;
+<span class="kw1">if</span> __name__ <span class="sy0">==</span> <span class="st0">&quot;__main__&quot;</span>:
+    <span class="kw3">sys</span>.<span class="me1">exit</span><span class="br0">&#40;</span>main<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+<p>
+Fișierul se găsește și pe stația client, în directorul <code>/root/</code>, și îl putem rula:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>python simple-ldap.py 
+Found: <span class="st_h">'uid=mihai,ou=People,dc=swarm,dc=cs,dc=pub,dc=ro'</span>
+<span class="br0">&#123;</span><span class="st_h">'mail'</span>: <span class="br0">&#91;</span><span class="st_h">'XXXXXX@gmail.com'</span><span class="br0">&#93;</span>, <span class="st_h">'cn'</span>: <span class="br0">&#91;</span><span class="st_h">'Mihai Maruseac'</span><span class="br0">&#93;</span><span class="br0">&#125;</span>
+Found: <span class="st_h">'uid=moro,ou=People,dc=swarm,dc=cs,dc=pub,dc=ro'</span>
+<span class="br0">&#123;</span><span class="st_h">'mail'</span>: <span class="br0">&#91;</span><span class="st_h">'XXXXXX@gmail.com'</span><span class="br0">&#93;</span>, <span class="st_h">'cn'</span>: <span class="br0">&#91;</span><span class="st_h">'Mihai Morogan'</span><span class="br0">&#93;</span><span class="br0">&#125;</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Actualizați scriptul astfel încât sa extragă din intrările de mai sus acele intrări ale căror adresă de e-mail conține șirul <code>@gmail.com</code>. Apoi afișați doar atributele <code>uid</code>, <code>cn</code> și <code>email</code> pe o singură linie, separate prin virgulă, la fel ca mai jos:
+</p>
+<pre class="code">mihai, Mihai Maruseac, XXXXXX@gmail.com
+moro, Mihai Morogan, XXXXXX@gmail.com</pre>
+
+<p>
+<p><div class="noteclassic">
+Variabila <code>attrs</code> este un dicționar. Pentru a obține fiecare element numit <code>item</code> dintr-un dicționar <code>d</code> folosiți construcția <code>d[&#039;item&#039;]</code>.
+</p>
+
+<p>
+Fiecare element din dicționarul <code>attrs</code> este o listă. Pentru a obține primul element (cel căutat) din listă, folosiți o expresie de forma <code>l[0]</code>, unde <code>l</code> este lista.
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

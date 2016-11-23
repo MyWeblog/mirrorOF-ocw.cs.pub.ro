@@ -1,0 +1,245 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:10:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-12T16:55:22+0300"/>
+<meta name="keywords" content="saisp,labs,10,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:10:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/10/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:10:contents';var JSINFO = {"id":"saisp:labs:10:contents:02","namespace":"saisp:labs:10:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="02.html#p_manifeste_puppet">02. [20p] Manifeste Puppet</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="02.html#crearea_unui_manifest">Crearea unui manifest</a></div></li>
+<li class="level4"><div class="li"><a href="02.html#aplicarea_unui_manifest">Aplicarea unui manifest</a></div></li>
+<li class="level4"><div class="li"><a href="02.html#stari_ensure">Stari (ensure)</a></div></li>
+<li class="level4"><div class="li"><a href="02.html#cheie_autorizata_ssh">Cheie autorizata SSH</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="p_manifeste_puppet">02. [20p] Manifeste Puppet</h3>
+<div class="level3">
+
+<p>
+Cu toate ca putem crea, modifica sau sterge resurse folosind comenzi de tip <code>puppet resource</code>, aceasta nu este o solutie potrivita pentru situatii complexe. 
+</p>
+
+<p>
+O solutie mai buna consta in:
+</p>
+<ul>
+<li class="level1"><div class="li"> declararea resurselor in fisiere (text);</div>
+</li>
+<li class="level1"><div class="li"> efectuarea modificarilor descrise in fisiere folosind Puppet.</div>
+</li>
+</ul>
+
+<p>
+Fisierele ce contin declarari de resurse Puppet se numesc <strong>manifeste</strong> si au, de obicei, extensia <strong>.pp</strong>.
+</p>
+
+</div>
+
+<h4 id="crearea_unui_manifest">Crearea unui manifest</h4>
+<div class="level4">
+
+<p>
+Vom scrie un manifest care sa descrie o resursa de tip fisier. Fisierul va avea urmatoarele proprietati:
+</p>
+<ul>
+<li class="level1"><div class="li"> nume si cale: <strong>/tmp/my_file</strong>;</div>
+</li>
+<li class="level1"><div class="li"> drepturi de acces: <strong>0640</strong>;</div>
+</li>
+<li class="level1"><div class="li"> continut: “File created using Puppet”;</div>
+</li>
+</ul>
+
+<p>
+Declararea resursei va arata astfel:
+</p>
+<pre class="code">file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; &quot;File created using Puppet.&quot;,
+}</pre>
+
+<p>
+Salvati codul de mai sus intr-un fisier manifest numit <strong>my_file_manif.pp</strong>.
+</p>
+
+</div>
+
+<h4 id="aplicarea_unui_manifest">Aplicarea unui manifest</h4>
+<div class="level4">
+
+<p>
+Aplicarea unui manifest se executa folosind comanda <code>puppet apply</code>:
+</p>
+<pre class="code">[root@learn ~]# puppet apply my_file_manif.pp
+Notice: Compiled catalog for learn.localdomain in environment production in 0.18 seconds                             
+Notice: /Stage[main]//File[my_file]/ensure: created                                                                  
+Notice: Finished catalog run in 0.38 seconds                                                                         </pre>
+
+<p>
+Verificati ca fisierul a fost creat, iar continutul si drepturile de acces sunt corecte.
+</p>
+
+<p>
+Incercati sa aplicati din nou manifestul:
+</p>
+<pre class="code">[root@learn ~]# puppet apply my_file_manif.pp
+Notice: Compiled catalog for learn.localdomain in environment production in 0.16 seconds
+Notice: Finished catalog run in 0.38 seconds</pre>
+
+<p>
+Observati ca daca resursa este deja in starea descrisa de manifest, Puppet nu mai executa nici o actiune.
+</p>
+
+<p>
+Modificati drepturile de acces ale fisierului la <strong>755</strong>, apoi aplicati din nou manifestul:
+</p>
+<pre class="code">[root@learn ~]# chmod 755 /tmp/my_file 
+[root@learn ~]# puppet apply my_file_manif.pp
+Notice: Compiled catalog for learn.localdomain in environment production in 0.18 seconds
+Notice: /Stage[main]//File[my_file]/mode: mode changed &#039;0755&#039; to &#039;0640&#039;
+Notice: Finished catalog run in 0.38 seconds</pre>
+
+<p>
+Modificati continutul fisierului, apoi aplicati din nou manifestul:
+</p>
+<pre class="code">[root@learn ~]# echo &quot;This is not my file&quot; &gt; /tmp/my_file 
+[root@learn ~]# puppet apply my_file_manif.pp
+Notice: Compiled catalog for learn.localdomain in environment production in 0.18 seconds
+Notice: /Stage[main]//File[my_file]/content: content changed &#039;{md5}7225302b0d15d4a2562c2ab55e45d4cc&#039; to &#039;{md5}b4fdf30d694de5a5d7fe7a50cda27851&#039;
+Notice: Finished catalog run in 0.41 seconds</pre>
+
+<p>
+Observati ca daca atributele resursei difera de cele descrise in manifest, aplicarea manifestului readuce resursa in starea dorita.
+</p>
+
+</div>
+
+<h4 id="stari_ensure">Stari (ensure)</h4>
+<div class="level4">
+
+<p>
+Atributul <strong>ensure</strong> specifica de cele mai multe ori daca resursa:
+</p>
+<ul>
+<li class="level1"><div class="li"> trebuie sa existe (ensure ⇒ present);</div>
+</li>
+<li class="level1"><div class="li"> trebuie sa NU existe (ensure ⇒ absent).</div>
+</li>
+</ul>
+
+<p>
+Unele tipuri de resurse definesc stari aditionale pentru acest atribut. Resursele de tip <strong>file</strong> pot avea, in plus, urmatoarele valori pentru <strong>ensure</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> directory</div>
+</li>
+<li class="level1"><div class="li"> link </div>
+</li>
+<li class="level1"><div class="li"> file</div>
+</li>
+</ul>
+
+<p>
+Definiti un manifest care sa creeze un link simbolic la fisierul <strong>/tmp/my_file</strong>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Resursa trebuie sa aiba si atributul <strong>target</strong>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Folositi documentatia Puppet pentru tipul de resursa <strong>file</strong>: <a href="http://docs.puppetlabs.com/references/stable/type.html#file" class="urlextern" title="http://docs.puppetlabs.com/references/stable/type.html#file"  rel="nofollow">http://docs.puppetlabs.com/references/stable/type.html#file</a>
+
+</div></p>
+</p>
+
+</div>
+
+<h4 id="cheie_autorizata_ssh">Cheie autorizata SSH</h4>
+<div class="level4">
+
+<p>
+Intr-un manifest, definiti o resursa de tip “cheie autorizata SSH”.
+</p>
+
+<p>
+Resursa trebuie sa permita autentificarea utilizatorului <code>student</code> de pe masina fizica, in contul utilizatorului <code>root</code> de pe masina virtuala, fara parola.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Daca nu exista, perechea de chei pentru utilizatorul <strong>student</strong> trebuie generata in prealabil.
+</p>
+
+<p>
+Apoi, rulati comanda <code>ssh-add ~/.ssh.id_rsa</code> pe masina fizica, din contul <code>student</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Folositi documentatia Puppet pentru tipul de resursa <strong>sshauthorizedkey</strong>: <a href="http://docs.puppetlabs.com/references/stable/type.html#sshauthorizedkey" class="urlextern" title="http://docs.puppetlabs.com/references/stable/type.html#sshauthorizedkey"  rel="nofollow">http://docs.puppetlabs.com/references/stable/type.html#sshauthorizedkey</a>
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

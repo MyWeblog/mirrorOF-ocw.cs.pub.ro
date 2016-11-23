@@ -1,0 +1,275 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    07. [10p] Instalare și configurare sistem distribuit de fișiere GlusterFS    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-11T21:00:08+0300"/>
+<meta name="keywords" content="saisp,labs,06,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:06:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/saisp/labs/06/contents/07.html"/>
+<link rel="canonical" href="07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:06:contents';var JSINFO = {"id":"saisp:labs:06:contents:07","namespace":"saisp:labs:06:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="07%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="07%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_instalare_si_configurare_sistem_distribuit_de_fisiere_glusterfs">07. [10p] Instalare și configurare sistem distribuit de fișiere GlusterFS</h3>
+<div class="level3">
+
+<p>
+<p><div class="notewarning">
+Inainte de a trece mai departe, modificati inapoi, in <code>/etc/apt/sources.list</code>, toate aparitiile lui <code>wheezy</code> in <code>jessie</code>, apoi efectuati <code>apt-get update</code>.
+
+</div></p>
+</p>
+
+<p>
+În instalarea și configurația sistemului de fișiere GlusterFS vom considera ca sisteme de stocare stațiile <code>storage1</code> cu discul <code>/dev/sdc</code> și <code>storage3</code> cu discul <code>/dev/sdc</code>. Înainte de a instala server-ele aferente sistemului de fișiere GlusterFS, trebuie să formatăm discurile ce vor intra în componența sistemului de fișiere. Recomandată este folosirea sistemului de fișiere <code>XFS</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> xfsprogs
+<span class="co4">root@storage1:~# </span><span class="kw2">fdisk</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdc
+Command <span class="br0">&#40;</span>m <span class="kw1">for</span> <span class="kw3">help</span><span class="br0">&#41;</span>: n
+&nbsp;
+<span class="co4">root@storage1:~# </span>mkfs.xfs <span class="sy0">/</span>dev<span class="sy0">/</span>sdc1
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">fdisk</span> <span class="sy0">/</span>dev<span class="sy0">/</span>sdc
+Command <span class="br0">&#40;</span>m <span class="kw1">for</span> <span class="kw3">help</span><span class="br0">&#41;</span>: n
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">apt-get install</span> xfsprogs
+<span class="co4">root@storage3:~# </span>mkfs.xfs <span class="sy0">/</span>dev<span class="sy0">/</span>sdc1</pre>
+
+<p>
+Vom monta cele 2 partiții în <code>/export</code> pe fiecare stație în parte:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span><span class="kw3">export</span>
+<span class="co4">root@storage1:~# </span><span class="kw3">echo</span> <span class="st0">&quot;/dev/sdc1 /export xfs defaults 1 2&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab
+<span class="co4">root@storage1:~# </span><span class="kw2">mount</span> <span class="re5">-a</span>
+&nbsp;
+<span class="co4">root@storage3:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span><span class="kw3">export</span>
+<span class="co4">root@storage3:~# </span><span class="kw3">echo</span> <span class="st0">&quot;/dev/sdc1 /export xfs defaults 1 2&quot;</span> <span class="sy0">&gt;&gt;</span> <span class="sy0">/</span>etc<span class="sy0">/</span>fstab
+<span class="co4">root@storage3:~# </span><span class="kw2">mount</span> <span class="re5">-a</span></pre>
+
+<p>
+Vom instala serverul GlusterFS pe ambele stații după care vom configura comunicația dintre acestea:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> glusterfs-server
+<span class="co4">root@storage3:~# </span><span class="kw2">apt-get install</span> glusterfs-server
+&nbsp;
+<span class="co4">root@storage1:~# </span>gluster peer probe storage3
+peer probe: success
+<span class="co4">root@storage1:~# </span>gluster peer status
+Number of Peers: <span class="nu0">1</span>
+&nbsp;
+Hostname: storage3
+Port: <span class="nu0">24007</span>
+Uuid: ba15f574-bcf3-<span class="nu0">4608</span>-<span class="nu0">8173</span>-da43857771ff
+State: Peer <span class="kw1">in</span> Cluster <span class="br0">&#40;</span>Connected<span class="br0">&#41;</span></pre>
+
+<p>
+Este suficient să configurăm legătura doar pe unul din servere. Următorul pas este reprezentat de crearea volumului care va fi exportat de acest sistem de fișiere:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>gluster volume create saispvol1 transport tcp storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1 storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+volume create: saispvol1: success: please start the volume to access data
+&nbsp;
+<span class="co4">root@storage1:~# </span>gluster volume info
+&nbsp;
+Volume Name: saispvol1
+Type: Distribute
+Volume ID: 6b9fdea1-e6ea-44a0-af2a-d10c47e8939d
+Status: Created
+Number of Bricks: <span class="nu0">2</span>
+Transport-type: tcp
+Bricks:
+Brick1: storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Brick2: storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1</pre>
+
+<p>
+Se observă că s-a creat volumul cu numele <code>saispvol1</code>, folosind protocolul <code>tcp</code> ca protocol de transport, iar acest volum este format din 2 <code>brick</code>-uri (aceste <code>brick</code>-uri sunt practic discurile formatate cu <code>XFS</code> anterior).
+Înainte de a porni volumul vom permite accesul tuturor adreselor IP din rețeaua noastră:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>gluster volume <span class="kw1">set</span> saispvol1 auth.allow 192.168.1.<span class="sy0">*</span>
+volume set: success</pre>
+
+<p>
+Vom porni volumul:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span> gluster volume start  saispvol1
+volume start: saispvol1: success
+<span class="co4">root@storage1:~# </span>gluster volume info
+&nbsp;
+Volume Name: saispvol1
+Type: Distribute
+Volume ID: 6b9fdea1-e6ea-44a0-af2a-d10c47e8939d
+Status: Started
+Number of Bricks: <span class="nu0">2</span>
+Transport-type: tcp
+Bricks:
+Brick1: storage1:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Brick2: storage3:<span class="sy0">/</span>export<span class="sy0">/</span>brick1
+Options Reconfigured:
+auth.allow: 192.168.1.<span class="sy0">*</span></pre>
+
+<p>
+Pentru a putea testa sistemul distribuit construit anterior, trebuie să montăm partiția exportată pe client. Vom instala clientul pentru GlusterFS pe stația <code>storage2</code> și vom monta sistemul de fișiere folosind tipul <code>glusterfs</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">apt-get install</span> glusterfs-client
+<span class="co4">root@storage2:~# </span><span class="kw2">mount</span> <span class="re5">-t</span> glusterfs storage1:<span class="sy0">/</span>saispvol1 <span class="sy0">/</span>export<span class="sy0">/</span>
+<span class="co4">root@storage2:~# </span><span class="kw2">df</span> <span class="re5">-h</span> <span class="sy0">|</span><span class="kw2">grep</span> <span class="kw3">export</span>
+storage1:<span class="sy0">/</span>saispvol1  189M   11M  179M   <span class="nu0">6</span><span class="sy0">%</span> <span class="sy0">/</span><span class="kw3">export</span></pre>
+
+<p>
+Observați dimensiunea de <code>189M</code> sistemului de fișiere aceasta fiind practic suma dintre cele două discuri puse la dispozitie de stațiile <code>storage1</code> și <code>storage2</code>. Practic datele se vor distribui pe aceste 2 partiții.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../06.html" class="wikilink1" title="saisp:labs:06">Laboratorul 6</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:06:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:06:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_1376918899583567ab49f39" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="00.html" class="wikilink1" title="saisp:labs:06:contents:00">00. [5p] Configurarea rezolvării numelor pentru servere</a></div></li>
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="saisp:labs:06:contents:01">01. [10p] Partajarea de fișiere folosind protocolul NFS</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="saisp:labs:06:contents:02">02. [10p] Exportarea unei partitii folosind NFS</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="saisp:labs:06:contents:03">03. [10p] Montarea automată a sistemului de fișiere NFS</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="saisp:labs:06:contents:04">04. [15p] Configurarea unei sesiuni iSCSI client-server</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="saisp:labs:06:contents:05">05. [10p] Restricționarea accesului la dispozitivile logice (LUN)</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="saisp:labs:06:contents:06">06. [20p] LIO backstore as a physical block device</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="07.html" class="wikilink1" title="saisp:labs:06:contents:07">07. [10p] Instalare și configurare sistem distribuit de fișiere GlusterFS</a></span></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="saisp:labs:06:contents:08">08. [10p] Replicarea datelor folosind GlusterFS</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="saisp:labs:06:contents:09">09. [BONUS - 10p] Instalarea și configurarea sistemului distribuit de fișiere Ceph</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:06:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/06/contents/07.txt · Last modified: 2016/04/11 21:00 by alexandru.carp          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="07%3Fdo=media&amp;ns=saisp%253Alabs%253A06%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="07.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A06%253Acontents%253A07&amp;1479894955" width="2" height="1" alt="" /></div>
+</body>
+</html>

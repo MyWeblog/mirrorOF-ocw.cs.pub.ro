@@ -1,0 +1,1856 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 04 - Processes. Dynamic Analysis    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-31T17:26:41+0200"/>
+<meta name="keywords" content="cns,labs,lab-04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cns/labs/lab-04.html"/>
+<link rel="canonical" href="lab-04.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-04","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/cns/"><img height="70" src="../../res/sigla_cns.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab-04%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab-04%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="lab_04_-_processes_dynamic_analysis">Lab 04 - Processes. Dynamic Analysis</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="elf_format_continued">ELF Format Continued</h2>
+<div class="level2">
+
+<p>
+The ELF format allows executable files to be <strong>dynamically</strong> linked. Instead of linking all the source files that contain subroutines into the final binaries, separate binaries are organized in libraries that can be loaded per use case, on demand. Essentially, the libraries are loaded only once into memory and when a program instance requires a subroutine from a specific library. In this case, it inquires a special <abbr title="Operating System">OS</abbr> component about it and new resources are allocated only for the volatile parts of the library image (<code>.bss</code> and <code>.data</code>).
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="symbol_table">Symbol Table</h3>
+<div class="level3">
+
+<p>
+One of the initial goals of the ELF format was to enable dynamic linking. Given the machine code of a binary, various elements inside it will use absolute addresses that are based on the memory address where the binary expects to be loaded. The entire idea of shared libraries is that these can be loaded and unloaded on demand inside the memory space of whichever process needs them at whichever address is available. As such, a  map of how to locate and relocate absolute data points inside the machine code is needed and that&#039;s where the symbol table comes in. 
+</p>
+<pre class="code text">readelf -s libtesting.so.1
+&nbsp;
+Symbol table '.dynsym' contains 8 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 00001339     1 OBJECT  GLOBAL DEFAULT   12 cPub
+     2: 000001f8    10 FUNC    GLOBAL DEFAULT    7 fPub
+     3: 0000020c   100 FUNC    GLOBAL DEFAULT    7 foo
+     4: 00001328    16 OBJECT  GLOBAL DEFAULT   11 a
+     5: 00001338     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start
+     6: 0000133c     0 NOTYPE  GLOBAL DEFAULT  ABS _end
+     7: 00001338     0 NOTYPE  GLOBAL DEFAULT  ABS _edata
+&nbsp;
+Symbol table '.symtab' contains 27 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 000000b4     0 SECTION LOCAL  DEFAULT    1 
+     2: 000000e8     0 SECTION LOCAL  DEFAULT    2 
+     3: 00000168     0 SECTION LOCAL  DEFAULT    3 
+     4: 000001a8     0 SECTION LOCAL  DEFAULT    4 
+     5: 000001d0     0 SECTION LOCAL  DEFAULT    5 
+     6: 000001d8     0 SECTION LOCAL  DEFAULT    6 
+     7: 000001f8     0 SECTION LOCAL  DEFAULT    7 
+     8: 00001274     0 SECTION LOCAL  DEFAULT    8 
+     9: 00001314     0 SECTION LOCAL  DEFAULT    9 
+    10: 00001318     0 SECTION LOCAL  DEFAULT   10 
+    11: 00001328     0 SECTION LOCAL  DEFAULT   11 
+    12: 00001338     0 SECTION LOCAL  DEFAULT   12 
+    13: 00000000     0 SECTION LOCAL  DEFAULT   13 
+    14: 00000000     0 FILE    LOCAL  DEFAULT  ABS libtesting.c
+    15: 00000202    10 FUNC    LOCAL  DEFAULT    7 fLocal
+    16: 00001338     1 OBJECT  LOCAL  DEFAULT   12 cLocal
+    17: 00001318     0 OBJECT  LOCAL  HIDDEN  ABS _GLOBAL_OFFSET_TABLE_
+    18: 00000270     0 FUNC    LOCAL  HIDDEN    7 __i686.get_pc_thunk.bx
+    19: 00001274     0 OBJECT  LOCAL  HIDDEN  ABS _DYNAMIC
+    20: 00001339     1 OBJECT  GLOBAL DEFAULT   12 cPub
+    21: 000001f8    10 FUNC    GLOBAL DEFAULT    7 fPub
+    22: 0000020c   100 FUNC    GLOBAL DEFAULT    7 foo
+    23: 00001328    16 OBJECT  GLOBAL DEFAULT   11 a
+    24: 00001338     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start
+    25: 0000133c     0 NOTYPE  GLOBAL DEFAULT  ABS _end
+    26: 00001338     0 NOTYPE  GLOBAL DEFAULT  ABS _edata</pre>
+
+<p>
+Some information on the symbols that may belong to external files or may be referenced by external files during dynamic linking are copied in the <strong>.dynsym</strong> section
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Name</strong> - symbol name</div>
+</li>
+<li class="level1"><div class="li"> <strong>Type</strong></div>
+<ul>
+<li class="level2"><div class="li"> <strong>NoType</strong> - not specified</div>
+</li>
+<li class="level2"><div class="li"> <strong>FUNC</strong> - the symbol influences a function</div>
+</li>
+<li class="level2"><div class="li"> <strong>SECTION</strong> - associated with a section</div>
+</li>
+<li class="level2"><div class="li"> <strong>FILE</strong> -  a symbol that references a files</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Bind</strong></div>
+<ul>
+<li class="level2"><div class="li"> <strong>LOCAL</strong> - the symbol information is not visible outside the object file</div>
+</li>
+<li class="level2"><div class="li"> <strong>GLOBAL </strong> -  the symbol is visible to all the files being combined to form the executable</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Size</strong>  - the size of the symbol in bytes or 0 if it is unknown</div>
+</li>
+<li class="level1"><div class="li"> <strong>Ndx</strong></div>
+<ul>
+<li class="level2"><div class="li"> <strong>UND</strong> - unspecified section reference</div>
+</li>
+<li class="level2"><div class="li"> <strong>COM</strong> - unallocated C external variable</div>
+</li>
+<li class="level2"><div class="li"> <strong>ABS</strong> - an absolute value for the reference</div>
+</li>
+<li class="level2"><div class="li"> <em>value</em> -  an index into the section table</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Value</strong> - if the symbol table is part of an executable, the value will contain a memory address where the symbol resides. Otherwise it will contain an offset from the beginning of the section referenced by     <strong>Ndx</strong> or O.</div>
+</li>
+</ul>
+
+<p>
+As you can see, the symbol table as it appears in object files compiled with <code>gcc</code> is quite verbose, revealing function names and visibility as well as variable scopes, names and even sizes. In its default form it even shows the name of the sourcefile.
+</p>
+
+<p>
+<p><div class="notetip">
+In order to subvert Reverse Engineering attempts you can check out some of the methods of stripping the symbol table of valuable information:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html" class="urlextern" title="http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html"  rel="nofollow">A Whirlwind Tutorial on Creating Really Teensy ELF Executables for Linux</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://sourceware.org/binutils/docs/binutils/strip.html" class="urlextern" title="https://sourceware.org/binutils/docs/binutils/strip.html"  rel="nofollow">strip</a> is your friend</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="relocations">Relocations</h3>
+<div class="level3">
+
+<p>
+Relocations were a concept that was present ever since the invention of static linking. The initial purpose of relocations was to give the static linker a roadmap when combining multiple object files into a binary by stating:
+</p>
+<ul>
+<li class="level1"><div class="li"> the symbol that needs to be fixed</div>
+</li>
+<li class="level1"><div class="li"> where you can find the symbol (file/section offset)</div>
+</li>
+<li class="level1"><div class="li"> an algorithm for making the fixes</div>
+</li>
+</ul>
+
+<p>
+The fixes would usually be made in the <strong>.data</strong> and <strong>.text</strong> sections and everything was well. Dynamic runtime brought  a bit of a complication to modifications that needed to be made in the code segments. The whole idea of shared libraries is that the code can be loaded once into memory from an ELF file then shared among all the processes that use the library. The only way to reliably do this is to make the code section read-only. 
+</p>
+
+<p>
+In order to compensate for this constraint a special data section called the <strong>GOT</strong> (global offset table) was created. When the code needs to work with a symbol that belongs to shared object, in the code entry for that symbol uses addresses from the <strong>GOT</strong> table. First time the symbol is referenced the dynamic linker corrects the entry in GOT and on subsequent calls the correct address will be used.
+</p>
+
+<p>
+When implementing calls to subroutines in shared objects, a different table is used called the <strong>PLT</strong> (procedure linkage table). The initial call is made to a stub sequence in the <strong>PLT</strong> which bounces off a <strong>GOT</strong> entry in order to push the subroutine name on the stack and then calls the resolver (mentioned in the <strong>INTERP</strong> program header).
+</p>
+
+<p>
+<p><div class="noteimportant">
+Relocations and how they get applied are very complex topic and we will only try to cover as far is helps detecting file and symbol types
+If you want to read more you can refer to some of these resources:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://http://www.mindfruit.co.uk/2012/06/relocations-relocations.html" class="urlextern" title="http://http://www.mindfruit.co.uk/2012/06/relocations-relocations.html"  rel="nofollow">Some Assembly Required</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://http://netwinder.osuosl.org/users/p/patb/public_html/elf_relocs.html" class="urlextern" title="http://http://netwinder.osuosl.org/users/p/patb/public_html/elf_relocs.html"  rel="nofollow">Study Of ELF Loading and Relocs</a></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+<pre class="code text">readelf -r libdynamic.o
+&nbsp;
+Relocation section '.rel.text' at offset 0x5f8 contains 8 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+0000001d  00001402 R_386_PC32        00000000   __i686.get_pc_thunk.bx
+00000023  0000150a R_386_GOTPC       00000000   _GLOBAL_OFFSET_TABLE_
+00000029  00000409 R_386_GOTOFF      00000000   .bss
+0000002f  00000409 R_386_GOTOFF      00000000   .bss
+00000035  00000d03 R_386_GOT32       00000004   so_int_global
+00000041  00000d03 R_386_GOT32       00000004   so_int_global
+00000052  00000e04 R_386_PLT32       00000000   so_fpublic_global
+0000005b  00000209 R_386_GOTOFF      00000000   .text
+&nbsp;
+Relocation section '.rel.data.rel.local' at offset 0x638 contains 2 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+00000000  00000401 R_386_32          00000000   .bss
+00000004  00000201 R_386_32          00000000   .text
+&nbsp;
+Relocation section '.rel.data.rel' at offset 0x648 contains 2 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+00000000  00000d01 R_386_32          00000004   so_int_global
+00000004  00000e01 R_386_32          00000000   so_fpublic_global</pre>
+
+<p>
+* <strong>Offset</strong> - In relocatable files and linked shared objects it contains the offset from the beginning of the section , where the relocation needs to be applied
+* <strong>Info</strong> - This field is used to derive the index in the symbol table to the affected symbol as well as the algorithm needed for fixing.
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>info&gt;&gt;8</strong> - symbol table index</div>
+</li>
+<li class="level1"><div class="li"> <strong>info&amp;0xff</strong> - algorithm type as defined in the documentation</div>
+</li>
+</ul>
+
+<p>
+<code>readelf</code> is nice enough to interpret the symbol table for us and gives us the relocation algorithm in the <strong>Type</strong> field and also the symbol name and value as defined in the symbol table
+</p>
+
+<p>
+By looking at the types of relocations we can draw some basic conclusions about the symbol types and also about the files.
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Reloctable Files</strong></div>
+<ul>
+<li class="level2"><div class="li"> <strong>R_386_32 </strong> - usually used to reference changes to a local symbol</div>
+</li>
+<li class="level2"><div class="li"> <strong>R_386_PC32 </strong> - reference a relative distance from here to the symbol</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Relocatable Files for Shared object </strong></div>
+<ul>
+<li class="level2"><div class="li"> <strong>R_386_GOTOFF</strong> - usually found in the code area, describes the offset from the beginning of GOT to a local symbol</div>
+</li>
+<li class="level2"><div class="li"> <strong>R_386_GOT32 </strong> - also speicific to the code area. These entries persist in the linkage phase</div>
+</li>
+<li class="level2"><div class="li"> <strong>R_386_PLT32 </strong> - used when describing calls to global subroutines. when the linker will read this information it will generate an entry in the <strong>GOT</strong> and <strong>PLT</strong> tables</div>
+</li>
+<li class="level2"><div class="li"> <strong>R_386_GOTPC</strong> - used in function to calculate the start address of the  <strong>GOT</strong></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Executables that use dynamic linking </strong></div>
+<ul>
+<li class="level2"><div class="li"> <strong>R_386_JMP</strong> - the dynamic linker will deposit the address of the external subroutine during execution</div>
+</li>
+<li class="level2"><div class="li"> <strong>R_386_COPY</strong> - the address of global variable from  shared object will be deposited here</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>Shared object files </strong></div>
+<ul>
+<li class="level2"><div class="li"> <strong>R_386_JMP</strong> - the dynamic linker will deposit the address of the external subroutine from one of the shared object dependencies during execution</div>
+</li>
+<li class="level2"><div class="li"> <strong>R_386_GLOB_DATA</strong> - used to deposit the address of a global symbol defined in one of the shared object dependencies</div>
+</li>
+<li class="level2"><div class="li"> <strong>R_386_RELATIVE </strong> - at link time all the R_386_GOTOFF entries are fixed and these relocation will contain absolute addresses</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">
+<strong> Executable files that are statically linked do not contain relocations </strong>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit5" id="memory_layout_of_a_process">Memory layout of a process</h2>
+<div class="level2">
+
+<p>
+To understand the full picture of program execution it is vital to understand the memory layout of processes from ELF executables.
+The kernel provides an interface in <code>/proc/&lt;PID&gt;/maps</code> for each process to see how the memory layout looks like.
+</p>
+
+<p>
+Let&#039;s write a simple Hello World application and investigate.
+<p><div class="noteimportant">
+Note that we have removed Address Space Layout Randomization for these examples. We&#039;ll explain this later.
+
+</div></p>
+</p>
+<pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Hello world<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span><span class="nu0">10000</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">while</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+		<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+<pre class="code bash">$ <span class="kw2">gcc</span> <span class="re5">-Wall</span> hw.c <span class="re5">-o</span> hw <span class="re5">-m32</span>
+$ .<span class="sy0">/</span>hw  <span class="sy0">&amp;</span>
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="nu0">4771</span>
+Hello world
+$ <span class="kw2">cat</span> <span class="sy0">/</span>proc<span class="sy0">/</span><span class="nu0">4771</span><span class="sy0">/</span>maps 
+08048000-08049000 r-xp 00000000 08:06 <span class="nu0">1843771</span>                            <span class="sy0">/</span>tmp<span class="sy0">/</span>hw
+08049000-0804a000 r--p 00000000 08:06 <span class="nu0">1843771</span>                            <span class="sy0">/</span>tmp<span class="sy0">/</span>hw
+0804a000-0804b000 rw-p 00001000 08:06 <span class="nu0">1843771</span>                            <span class="sy0">/</span>tmp<span class="sy0">/</span>hw
+0804b000-0806e000 rw-p 00000000 00:00 <span class="nu0">0</span>                                  <span class="br0">&#91;</span>heap<span class="br0">&#93;</span>
+f7ded000-f7dee000 rw-p 00000000 00:00 <span class="nu0">0</span> 
+f7dee000-f7f93000 r-xp 00000000 08:06 <span class="nu0">917808</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+f7f93000-f7f95000 r--p 001a5000 08:06 <span class="nu0">917808</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+f7f95000-f7f96000 rw-p 001a7000 08:06 <span class="nu0">917808</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+f7f96000-f7f99000 rw-p 00000000 00:00 <span class="nu0">0</span> 
+f7fd9000-f7fdb000 rw-p 00000000 00:00 <span class="nu0">0</span> 
+f7fdb000-f7fdc000 r-xp 00000000 00:00 <span class="nu0">0</span>                                  <span class="br0">&#91;</span>vdso<span class="br0">&#93;</span>
+f7fdc000-f7ffc000 r-xp 00000000 08:06 <span class="nu0">917869</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+f7ffc000-f7ffd000 r--p 0001f000 08:06 <span class="nu0">917869</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+f7ffd000-f7ffe000 rw-p 00020000 08:06 <span class="nu0">917869</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+fffdd000-ffffe000 rw-p 00000000 00:00 <span class="nu0">0</span>                                  <span class="br0">&#91;</span>stack<span class="br0">&#93;</span></pre>
+
+<p>
+If we start another process in the background the output for it will be exactly the same as this one. Why is that? The answer, of course, is virtual memory.
+The kernel provides this mechanism through which each process has an address space <strong>completely isolated</strong> from that of other running processes. They can still communicate using inter-process communication mechanisms provided by the kernel but we won&#039;t get into that here.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="executable">Executable</h3>
+<div class="level3">
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+As we have seen, there are three memory regions associated with the executable:
+</p>
+<pre class="code">08048000-08049000 r-xp 00000000 08:06 1843771                            /tmp/hw
+08049000-0804a000 r--p 00000000 08:06 1843771                            /tmp/hw
+0804a000-0804b000 rw-p 00001000 08:06 1843771                            /tmp/hw</pre>
+
+<p>
+From their permissions we can infer what they correspond to:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>08048000-08049000 r-xp</code> is the <code>.text</code> section along with the rest of the executable parts</div>
+</li>
+<li class="level1"><div class="li"> <code>08049000-0804a000 r–p</code> is the <code>.rodata</code> section</div>
+</li>
+<li class="level1"><div class="li"> <code>0804a000-0804b000 rw-p</code> consists of the <code>.data</code>, <code>.bss</code> sections and other R/W sections.</div>
+</li>
+</ul>
+
+<p>
+It is interesting to note that the executable is almost identically mapped into memory. The only region that is <em>compressed</em> in the binary is the <code>.bss</code> section.
+Let&#039;s see this in action by dumping the header of the file (note that <code>r2 -d</code> starts the program in debug mode):
+</p>
+<pre class="code bash">$ r2 .<span class="sy0">/</span>hw
+<span class="br0">&#91;</span>0x08048330<span class="br0">&#93;</span><span class="sy0">&gt;</span> px<span class="sy0">@</span>0
+- offset -   <span class="nu0">0</span> <span class="nu0">1</span>  <span class="nu0">2</span> <span class="nu0">3</span>  <span class="nu0">4</span> <span class="nu0">5</span>  <span class="nu0">6</span> <span class="nu0">7</span>  <span class="nu0">8</span> <span class="nu0">9</span>  A B  C D  E F  0123456789ABCDEF
+0x00000000  7f45 4c46 0101 0100 0000 0000 0000 0000  .ELF............
+0x00000010  0200 0300 0100 0000 <span class="nu0">3083</span> 0408 <span class="nu0">3400</span> 0000  ........<span class="nu0">0</span>...<span class="nu0">4</span>...
+0x00000020  d80e 0000 0000 0000 <span class="nu0">3400</span> <span class="nu0">2000</span> 0800 <span class="nu0">2800</span>  ........<span class="nu0">4</span>. ...<span class="br0">&#40;</span>.
+0x00000030  1e00 1b00 0600 0000 <span class="nu0">3400</span> 0000 <span class="nu0">3480</span> 0408  ........<span class="nu0">4</span>...<span class="nu0">4</span>...
+0x00000040  <span class="nu0">3480</span> 0408 0001 0000 0001 0000 0500 0000  <span class="nu0">4</span>...............
+0x00000050  0400 0000 0300 0000 <span class="nu0">3401</span> 0000 <span class="nu0">3481</span> 0408  ........<span class="nu0">4</span>...<span class="nu0">4</span>...
+0x00000060  <span class="nu0">3481</span> 0408 <span class="nu0">1300</span> 0000 <span class="nu0">1300</span> 0000 0400 0000  <span class="nu0">4</span>...............
+0x00000070  0100 0000 0100 0000 0000 0000 0080 0408  ................
+0x00000080  0080 0408 dc05 0000 dc05 0000 0500 0000  ................
+0x00000090  0010 0000 0100 0000 dc05 0000 dc95 0408  ................
+0x000000a0  dc95 0408 1c01 0000 <span class="nu0">2001</span> 0000 0600 0000  ........ .......
+0x000000b0  0010 0000 0200 0000 e805 0000 e895 0408  ................
+0x000000c0  e895 0408 e800 0000 e800 0000 0600 0000  ................
+0x000000d0  0400 0000 0400 0000 <span class="nu0">4801</span> 0000 <span class="nu0">4881</span> 0408  ........H...H...
+0x000000e0  <span class="nu0">4881</span> 0408 <span class="nu0">4400</span> 0000 <span class="nu0">4400</span> 0000 0400 0000  H...D...D.......
+0x000000f0  0400 0000 50e5 <span class="nu0">7464</span> fc04 0000 fc84 0408  ....P.td........
+&nbsp;
+$ r2 <span class="re5">-d</span> .<span class="sy0">/</span>hw
+<span class="br0">&#91;</span>0xf77c7d00<span class="br0">&#93;</span><span class="sy0">&gt;</span> px<span class="sy0">@</span>0x8048000
+- offset -   <span class="nu0">0</span> <span class="nu0">1</span>  <span class="nu0">2</span> <span class="nu0">3</span>  <span class="nu0">4</span> <span class="nu0">5</span>  <span class="nu0">6</span> <span class="nu0">7</span>  <span class="nu0">8</span> <span class="nu0">9</span>  A B  C D  E F  0123456789ABCDEF
+0x08048000  7f45 4c46 0101 0100 0000 0000 0000 0000  .ELF............
+0x08048010  0200 0300 0100 0000 <span class="nu0">3083</span> 0408 <span class="nu0">3400</span> 0000  ........<span class="nu0">0</span>...<span class="nu0">4</span>...
+0x08048020  d80e 0000 0000 0000 <span class="nu0">3400</span> <span class="nu0">2000</span> 0800 <span class="nu0">2800</span>  ........<span class="nu0">4</span>. ...<span class="br0">&#40;</span>.
+0x08048030  1e00 1b00 0600 0000 <span class="nu0">3400</span> 0000 <span class="nu0">3480</span> 0408  ........<span class="nu0">4</span>...<span class="nu0">4</span>...
+0x08048040  <span class="nu0">3480</span> 0408 0001 0000 0001 0000 0500 0000  <span class="nu0">4</span>...............
+0x08048050  0400 0000 0300 0000 <span class="nu0">3401</span> 0000 <span class="nu0">3481</span> 0408  ........<span class="nu0">4</span>...<span class="nu0">4</span>...
+0x08048060  <span class="nu0">3481</span> 0408 <span class="nu0">1300</span> 0000 <span class="nu0">1300</span> 0000 0400 0000  <span class="nu0">4</span>...............
+0x08048070  0100 0000 0100 0000 0000 0000 0080 0408  ................
+0x08048080  0080 0408 dc05 0000 dc05 0000 0500 0000  ................
+0x08048090  0010 0000 0100 0000 dc05 0000 dc95 0408  ................
+0x080480a0  dc95 0408 1c01 0000 <span class="nu0">2001</span> 0000 0600 0000  ........ .......
+0x080480b0  0010 0000 0200 0000 e805 0000 e895 0408  ................
+0x080480c0  e895 0408 e800 0000 e800 0000 0600 0000  ................
+0x080480d0  0400 0000 0400 0000 <span class="nu0">4801</span> 0000 <span class="nu0">4881</span> 0408  ........H...H...
+0x080480e0  <span class="nu0">4881</span> 0408 <span class="nu0">4400</span> 0000 <span class="nu0">4400</span> 0000 0400 0000  H...D...D.......
+0x080480f0  0400 0000 50e5 <span class="nu0">7464</span> fc04 0000 fc84 0408  ....P.td........</pre>
+</div></div>
+</div>
+
+<h3 class="sectionedit7" id="heap">Heap</h3>
+<div class="level3">
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+The heap comes right after the executable at <code>0x0804b000</code> and ends at <code>0x0806e000</code> which is the current <code>brk</code> point. The <code>brk</code> point is actually a pointer which shows where the heap ends. Increasing the address <code>brk</code> points to means provisioning more memory to the heap of the process while decreasing it means decreasing the available memory given to the process heap (for more information read through the brk man page). The memory allocator will increase the <code>brk</code> when more allocations are made but will not decrease it when memory is freed so as to reuse the memory regions for future allocations.
+The allocator in libc actually keeps a list of past allocations and their sizes. When future allocations will require the same size as a previously freed region, the allocator will reuse one from this lookup table. The process is called <code>binning</code>.
+</p>
+
+<p>
+Let&#039;s see how the <code>brk</code> evolves in our executable using strace:
+</p>
+<pre class="code bash">$ <span class="kw2">strace</span> <span class="re5">-i</span> <span class="re5">-e</span> brk .<span class="sy0">/</span>hw 
+<span class="br0">&#91;</span> Process <span class="re2">PID</span>=<span class="nu0">1995</span> runs <span class="kw1">in</span> <span class="nu0">32</span> bit mode. <span class="br0">&#93;</span>
+<span class="br0">&#91;</span>f7ff2314<span class="br0">&#93;</span> brk<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                       = 0x804b000
+Hello world
+<span class="br0">&#91;</span>f7fdb430<span class="br0">&#93;</span> brk<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                       = 0x804b000
+<span class="br0">&#91;</span>f7fdb430<span class="br0">&#93;</span> brk<span class="br0">&#40;</span>0x806e000<span class="br0">&#41;</span>               = 0x806e000</pre>
+
+<p>
+Let&#039;s test the fact that the <code>brk</code> does not decrease and that future malloc&#039;s can reuse previously freed regions:
+</p>
+<pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">void</span> <span class="sy0">*</span> buf<span class="br0">&#91;</span><span class="nu0">15</span><span class="br0">&#93;</span><span class="sy0">;</span>
+	<span class="kw4">int</span> i<span class="sy0">;</span>
+	<span class="kw1">for</span><span class="br0">&#40;</span> i <span class="sy0">=</span> <span class="nu0">0</span> <span class="sy0">;</span> i <span class="sy0">&lt;</span> <span class="nu0">15</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>
+		buf<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span> i <span class="sy0">*</span> <span class="nu0">100</span><span class="br0">&#41;</span> <span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span><span class="br0">&#40;</span> i <span class="sy0">=</span> <span class="nu0">0</span> <span class="sy0">;</span> i <span class="sy0">&lt;</span> <span class="nu0">15</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span> buf<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span><span class="br0">&#40;</span> i <span class="sy0">=</span> <span class="nu0">0</span> <span class="sy0">;</span> i <span class="sy0">&lt;</span> <span class="nu0">15</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>
+		buf<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span> i <span class="sy0">*</span> <span class="nu0">100</span><span class="br0">&#41;</span> <span class="sy0">;</span>
+&nbsp;
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+<pre class="code bash">$ <span class="kw2">strace</span> <span class="re5">-e</span> brk .<span class="sy0">/</span>hw
+<span class="br0">&#91;</span> Process <span class="re2">PID</span>=<span class="nu0">2424</span> runs <span class="kw1">in</span> <span class="nu0">32</span> bit mode. <span class="br0">&#93;</span>
+brk<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                                  = 0x804b000
+brk<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                                  = 0x804b000
+brk<span class="br0">&#40;</span>0x806c000<span class="br0">&#41;</span>                          = 0x806c000
++++ exited with <span class="nu0">0</span> +++
+$ <span class="kw2">ltrace</span> <span class="re5">-e</span> malloc .<span class="sy0">/</span>hw
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                                                                                                                           = 0x804b008
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">100</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b018
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">200</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b080
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">300</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b150
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">400</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b280
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">500</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b418
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">600</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b610
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">700</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b870
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">800</span><span class="br0">&#41;</span>                                                                                                                         = 0x804bb30
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">900</span><span class="br0">&#41;</span>                                                                                                                         = 0x804be58
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1000</span><span class="br0">&#41;</span>                                                                                                                        = 0x804c1e0
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1100</span><span class="br0">&#41;</span>                                                                                                                        = 0x804c5d0
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1200</span><span class="br0">&#41;</span>                                                                                                                        = 0x804ca20
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1300</span><span class="br0">&#41;</span>                                                                                                                        = 0x804ced8
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1400</span><span class="br0">&#41;</span>                                                                                                                        = 0x804d3f0
+&nbsp;
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                                                                                                                           = 0x804b008
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">100</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b018
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">200</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b080
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">300</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b150
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">400</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b280
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">500</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b418
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">600</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b610
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">700</span><span class="br0">&#41;</span>                                                                                                                         = 0x804b870
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">800</span><span class="br0">&#41;</span>                                                                                                                         = 0x804bb30
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">900</span><span class="br0">&#41;</span>                                                                                                                         = 0x804be58
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1000</span><span class="br0">&#41;</span>                                                                                                                        = 0x804c1e0
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1100</span><span class="br0">&#41;</span>                                                                                                                        = 0x804c5d0
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1200</span><span class="br0">&#41;</span>                                                                                                                        = 0x804ca20
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1300</span><span class="br0">&#41;</span>                                                                                                                        = 0x804ced8
+hw-<span class="sy0">&gt;</span>malloc<span class="br0">&#40;</span><span class="nu0">1400</span><span class="br0">&#41;</span>                                                                                                                        = 0x804d3f0
++++ exited <span class="br0">&#40;</span>status <span class="nu0">0</span><span class="br0">&#41;</span> +++</pre>
+
+<p>
+As you can see, only one <code>brk</code> call is made. Furthermore, after the regions are freed they are reused.
+</p>
+
+<p>
+<p><div class="noteimportant"> This behaviour of the allocator is important in the Use After Free class of vulnerabilities which we will be covering in the next labs  
+</div></p>
+</p>
+</div></div>
+</div>
+
+<h3 class="sectionedit8" id="memory_mappings_and_libraries">Memory mappings and libraries</h3>
+<div class="level3">
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+In our example we had the following memory mappings:
+</p>
+<pre class="code">f7ded000-f7dee000 rw-p 00000000 00:00 0 
+f7dee000-f7f93000 r-xp 00000000 08:06 917808                             /lib32/libc-2.17.so
+f7f93000-f7f95000 r--p 001a5000 08:06 917808                             /lib32/libc-2.17.so
+f7f95000-f7f96000 rw-p 001a7000 08:06 917808                             /lib32/libc-2.17.so
+f7f96000-f7f99000 rw-p 00000000 00:00 0 
+f7fd9000-f7fdb000 rw-p 00000000 00:00 0 
+f7fdb000-f7fdc000 r-xp 00000000 00:00 0                                  [vdso]
+f7fdc000-f7ffc000 r-xp 00000000 08:06 917869                             /lib32/ld-2.17.so
+f7ffc000-f7ffd000 r--p 0001f000 08:06 917869                             /lib32/ld-2.17.so
+f7ffd000-f7ffe000 rw-p 00020000 08:06 917869                             /lib32/ld-2.17.so</pre>
+
+<p>
+All functions that are called from external libraries <em>pull in</em> the whole library into the address space. As these are also ELF files you can see that they have similar patterns: multiple sections with different permissions just like the main executable.
+</p>
+
+<p>
+One more thing to note here is that large calls to <code>malloc</code> result in calls to &#039;mmap2&#039;:
+</p>
+<pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Hello world<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Small allocation %p<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span><span class="nu0">10000</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Big allocation %p<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span><span class="nu0">10000000</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+<pre class="code bash">$ <span class="kw2">strace</span> <span class="re5">-e</span> brk,mmap2  .<span class="sy0">/</span>hw_large 
+<span class="br0">&#91;</span> Process <span class="re2">PID</span>=<span class="nu0">3445</span> runs <span class="kw1">in</span> <span class="nu0">32</span> bit mode. <span class="br0">&#93;</span>
+brk<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                                  = 0x804b000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">4096</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0xfffffffff7fda000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">265183</span>, PROT_READ, MAP_PRIVATE, <span class="nu0">3</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0xfffffffff7f99000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">1747628</span>, PROT_READ<span class="sy0">|</span>PROT_EXEC, MAP_PRIVATE<span class="sy0">|</span>MAP_DENYWRITE, <span class="nu0">3</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0xfffffffff7dee000
+mmap2<span class="br0">&#40;</span>0xf7f93000, <span class="nu0">12288</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_FIXED<span class="sy0">|</span>MAP_DENYWRITE, <span class="nu0">3</span>, 0x1a5000<span class="br0">&#41;</span> = 0xfffffffff7f93000
+mmap2<span class="br0">&#40;</span>0xf7f96000, <span class="nu0">10924</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_FIXED<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0xfffffffff7f96000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">4096</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0xfffffffff7ded000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">4096</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0xfffffffff7fd9000
+Hello world
+brk<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                                  = 0x804b000
+brk<span class="br0">&#40;</span>0x806e000<span class="br0">&#41;</span>                          = 0x806e000
+Small allocation 0x804b008
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">10002432</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0xfffffffff7463000
+Big allocation 0xf7463008</pre>
+
+<p>
+As expected, the <code>brk</code> is increased when the first allocation is made. However, larger regions are backed by memory mappings.
+</p>
+</div></div>
+</div>
+
+<h3 class="sectionedit9" id="stack">Stack</h3>
+<div class="level3">
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+If you observed from previous traces, the <code>mmap2</code> call returns addresses towards NULL (lower addresses). It behaves like this because there is another important memory region called the <code>stack</code> that has a fixed size: usually 8 <abbr title="Megabyte">MB</abbr>. Since the heap and the mmap region do not have this limit imposed the optimization is to start mmap-ings from a known boundary: the stack end boundary.
+Let&#039;s put this into perspective. You can view the current stack limit using <code>ulimit -s</code>
+</p>
+<pre class="code bash">$ <span class="kw3">ulimit</span> <span class="re5">-s</span>
+<span class="nu0">8192</span>
+$ python
+<span class="sy0">&gt;&gt;&gt;</span> hex<span class="br0">&#40;</span>0xffffffff - <span class="nu0">8192</span><span class="sy0">*</span><span class="nu0">1024</span><span class="br0">&#41;</span>
+<span class="st_h">'0xff7fffff'</span></pre>
+
+<p>
+This address is the stack boundary. It seems odd then that the first mmap in the program above ends at <code>0xf7ffe000</code> and not <code>0xff7fffff</code>. This is probably an optimization.
+</p>
+
+<p>
+However, we can set the stack size to unlimited and the <code>mmap</code> allocation direction will reverse:
+</p>
+<pre class="code bash">$ <span class="kw3">ulimit</span> <span class="re5">-s</span> unlimited
+$ <span class="kw2">strace</span> <span class="re5">-e</span> mmap2,brk .<span class="sy0">/</span>hw_large
+<span class="br0">&#91;</span> Process <span class="re2">PID</span>=<span class="nu0">4617</span> runs <span class="kw1">in</span> <span class="nu0">32</span> bit mode. <span class="br0">&#93;</span>
+brk<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                                  = 0x804b000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">4096</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0x55578000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">265183</span>, PROT_READ, MAP_PRIVATE, <span class="nu0">3</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0x55579000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">1747628</span>, PROT_READ<span class="sy0">|</span>PROT_EXEC, MAP_PRIVATE<span class="sy0">|</span>MAP_DENYWRITE, <span class="nu0">3</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0x555ba000
+mmap2<span class="br0">&#40;</span>0x5575f000, <span class="nu0">12288</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_FIXED<span class="sy0">|</span>MAP_DENYWRITE, <span class="nu0">3</span>, 0x1a5000<span class="br0">&#41;</span> = 0x5575f000
+mmap2<span class="br0">&#40;</span>0x55762000, <span class="nu0">10924</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_FIXED<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0x55762000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">4096</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0x55765000
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">4096</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0x55579000
+Hello world
+brk<span class="br0">&#40;</span><span class="nu0">0</span><span class="br0">&#41;</span>                                  = 0x804b000
+brk<span class="br0">&#40;</span>0x806e000<span class="br0">&#41;</span>                          = 0x806e000
+Small allocation 0x804b008
+mmap2<span class="br0">&#40;</span>NULL, <span class="nu0">10002432</span>, PROT_READ<span class="sy0">|</span>PROT_WRITE, MAP_PRIVATE<span class="sy0">|</span>MAP_ANONYMOUS, -<span class="nu0">1</span>, <span class="nu0">0</span><span class="br0">&#41;</span> = 0x55766000
+Big allocation 0x55766008
+^Z
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>+  Stopped                 <span class="kw2">strace</span> <span class="re5">-e</span> mmap2,brk .<span class="sy0">/</span>hw_large
+&nbsp;
+&nbsp;
+$ <span class="kw2">cat</span> <span class="sy0">/</span>proc<span class="sy0">/</span><span class="nu0">4617</span><span class="sy0">/</span>maps 
+08048000-08049000 r-xp 00000000 08:06 <span class="nu0">1843771</span>                            <span class="sy0">/</span>tmp<span class="sy0">/</span>hw_large
+08049000-0804a000 r--p 00000000 08:06 <span class="nu0">1843771</span>                            <span class="sy0">/</span>tmp<span class="sy0">/</span>hw_large
+0804a000-0804b000 rw-p 00001000 08:06 <span class="nu0">1843771</span>                            <span class="sy0">/</span>tmp<span class="sy0">/</span>hw_large
+0804b000-0806e000 rw-p 00000000 00:00 <span class="nu0">0</span>                                  <span class="br0">&#91;</span>heap<span class="br0">&#93;</span>
+<span class="nu0">55555000</span>-<span class="nu0">55575000</span> r-xp 00000000 08:06 <span class="nu0">917869</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+<span class="nu0">55575000</span>-<span class="nu0">55576000</span> r--p 0001f000 08:06 <span class="nu0">917869</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+<span class="nu0">55576000</span>-<span class="nu0">55577000</span> rw-p 00020000 08:06 <span class="nu0">917869</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+<span class="nu0">55577000</span>-<span class="nu0">55578000</span> r-xp 00000000 00:00 <span class="nu0">0</span>                                  <span class="br0">&#91;</span>vdso<span class="br0">&#93;</span>
+<span class="nu0">55578000</span>-5557a000 rw-p 00000000 00:00 <span class="nu0">0</span> 
+555ba000-5575f000 r-xp 00000000 08:06 <span class="nu0">917808</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+5575f000-<span class="nu0">55761000</span> r--p 001a5000 08:06 <span class="nu0">917808</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+<span class="nu0">55761000</span>-<span class="nu0">55762000</span> rw-p 001a7000 08:06 <span class="nu0">917808</span>                             <span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+<span class="nu0">55762000</span>-560f0000 rw-p 00000000 00:00 <span class="nu0">0</span> 
+fffdd000-ffffe000 rw-p 00000000 00:00 <span class="nu0">0</span>                                  <span class="br0">&#91;</span>stack<span class="br0">&#93;</span></pre>
+
+<p>
+As you can see, the big allocation is now towards the stack instead of towards the heap.
+</p>
+
+<p>
+Returning to the main functionality of the stack, remember from the previous lab that local variables are declared on the stack. This translates into assembly code in the following way:
+</p>
+<pre class="code c"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+&nbsp;
+        <span class="kw4">char</span> buf<span class="br0">&#91;</span><span class="nu0">1000</span><span class="br0">&#93;</span><span class="sy0">;</span>
+        <span class="kw4">int</span> i<span class="sy0">;</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span></pre>
+<pre class="code asm"><span class="co2">0804840c</span> &lt;main&gt;<span class="sy1">:</span>
+ 804840c<span class="sy1">:</span>	<span class="nu0">55</span>                   	<span class="kw1">push</span>   <span class="kw4">ebp</span>
+ 804840d<span class="sy1">:</span>	<span class="nu0">89</span> e5                	<span class="kw1">mov</span>    <span class="kw4">ebp</span><span class="sy1">,</span><span class="kw4">esp</span>
+ <span class="nu0">804840f</span><span class="sy1">:</span>	<span class="nu0">81</span> ec f0 <span class="nu0">03</span> <span class="nu0">00</span> <span class="nu0">00</span>    	<span class="kw1">sub</span>    <span class="kw4">esp</span><span class="sy1">,</span><span class="nu0">0x3f0</span>
+<span class="br0">&#91;</span><span class="sy1">...</span><span class="br0">&#93;</span></pre>
+
+<p>
+0x3f0 is equal to 1008 which is precisely 1000 (from buf) + 4 (from i) + 4 (the storage of another int that the compiler used later in the code)
+</p>
+
+<p>
+As the program subtracts more from <code>esp</code> the kernel will provide pages on-demand until the stack boundary or another mmap-ing is hit. The kernel will, in this case, kill the application because of the Segmentation Fault.
+</p>
+</div></div>
+</div>
+
+<h3 class="sectionedit10" id="segmentation_fault">Segmentation Fault</h3>
+<div class="level3">
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Now that we know everything about the memory address space we can say more about the infamous <code>Segmentation Fault</code> that all of us have, at some time, encountered.
+It is basically a permission violation. Apart from the mappings that appear in <code>/proc/&lt;PID&gt;/maps</code> with <code>r--</code>, <code>rw-</code>, etc, you can consider that everything else is <code>---</code>. Thus, a read access at such a location will violate the permission of that region so the whole app will be killed by the signal received (unless it has a signal handler).
+Examples:
+</p>
+<ul>
+<li class="level1"><div class="li"> dereferencing a NULL pointer will try to read from 0x00000000 which is not (usually) mapped ⇒ SIGSEGV (read access on none)</div>
+</li>
+<li class="level1"><div class="li"> writing after the end of a heap buffer (if the heap buffer is exactly at the end of a mapping) will determine writes into unmapped pages ⇒ SIGSEGV (write access on none)</div>
+</li>
+<li class="level1"><div class="li"> trying to write to .rodata ⇒ (write access on read only)</div>
+</li>
+<li class="level1"><div class="li"> overwriting the stack with “AAAAAAAAAAAAAAAAAAA” will also overwrite the return address and make the execution go to 0x41414141 ⇒ SIGSEGV (execute access on none) </div>
+</li>
+<li class="level1"><div class="li"> overwriting the stack and return address with another address to a shellcode on the stack ⇒ SIGSEGV (execute access on read/write only)</div>
+</li>
+<li class="level1"><div class="li"> trying to rewrite the binary ( int *v = main; *v = 0x90909090; )  ⇒ SIGSEGV (write access on read/execute only) </div>
+</li>
+</ul>
+</div></div>
+</div>
+
+<h3 class="sectionedit11" id="summary_of_memory_layout_without_aslr">Summary of memory layout without ASLR</h3>
+<div class="level3">
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+We can now add some more labels on the initial schematic to complete the picture:
+<a href="../../_media/cns/labs/sess-03-elf_space_final.png" class="media" title="cns:labs:sess-03-elf_space_final.png"><img src="../../_media/cns/labs/sess-03-elf_space_final.png%3Fw=500&amp;tok=ab3677" class="mediacenter" alt="" width="500" /></a>
+</p>
+</div></div>
+</div>
+
+<h3 class="sectionedit12" id="address_space_layout_randomization">Address Space Layout Randomization</h3>
+<div class="level3">
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+In practice, you will find that memory mappings are not that static. Actually, most of the offsets might seem to vary at each new run of a binary.
+This is a security feature and we will talk about the motives that introduced it in a future lab.
+</p>
+
+<p>
+For the moment you should only need to know that the heap, the stack and the mmap areas are randomized by the kernel introducing an initial random offset:
+</p>
+
+<p>
+<a href="../../_media/cns/labs/sess-03-aslr.png" class="media" title="cns:labs:sess-03-aslr.png"><img src="../../_media/cns/labs/sess-03-aslr.png%3Fw=500&amp;tok=5d4e0b" class="mediacenter" alt="" width="500" /></a>
+</p>
+
+<p>
+This randomization can be controlled through parameters passed to the kernel. The file <code>/proc/sys/kernel/randomize_va_space</code> provides this interface. You can read from it or write the following values:
+</p>
+<ul>
+<li class="level1"><div class="li"> 0 ⇒ no randomization (that is what we used for the previous listings in this memory layout tutorial)</div>
+</li>
+<li class="level1"><div class="li"> 1 ⇒ stack randomization</div>
+</li>
+<li class="level1"><div class="li"> 2 ⇒ stack, heap and mmap randomization</div>
+</li>
+</ul>
+</div></div>
+</div>
+
+<h2 class="sectionedit13" id="gdb_basic_commands">GDB Basic Commands</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit14" id="getting_help_with_gdb">Getting help with GDB</h3>
+<div class="level3">
+
+<p>
+Whenever you want to find out more information about GDB commands feel free to search for it inside <a href="http://www.gnu.org/software/gdb/documentation/" class="urlextern" title="http://www.gnu.org/software/gdb/documentation/"  rel="nofollow">the documentation</a> or by using the <code>help</code> command followed by your area of interest. For example searching for help for the <code>disassemble</code> command can be obtained by running the following command in GDB:
+</p>
+<pre class="code bash"><span class="co0">#print info about all help areas available</span>
+<span class="co0">#identify the area of your question</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">help</span>
+<span class="co0">#print info about available data commands</span>
+<span class="co0">#identify the command you want to learn more about</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">help</span> data
+<span class="co0">#print info about a specific command</span>
+<span class="co0">#find out more about the command you are searching for</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">help</span> disassemble</pre>
+
+</div>
+
+<h3 class="sectionedit15" id="opening_a_program_with_gdb">Opening a program with GDB</h3>
+<div class="level3">
+
+<p>
+A program can be opened for debugging in a number of ways.
+We can run GDB directly attaching it to a program:
+</p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw2">gdb</span> <span class="br0">&#91;</span>executable-file<span class="br0">&#93;</span></pre>
+
+<p>
+Or we can open up GDB and then specify the program we are trying to attach to using the file or file-exec command:
+</p>
+<pre class="code bash">$ <span class="kw2">gdb</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw2">file</span> <span class="br0">&#91;</span>executable-file<span class="br0">&#93;</span></pre>
+
+<p>
+Furthermore we can attach GDB to a running service if we know it&#039;s process id:
+</p>
+<pre class="code bash"><span class="co4">$ </span><span class="kw2">gdb</span> <span class="re5">--pid</span> <span class="br0">&#91;</span>pid_number<span class="br0">&#93;</span></pre>
+
+</div>
+
+<h3 class="sectionedit16" id="disassembling">Disassembling</h3>
+<div class="level3">
+
+<p>
+GDB allows disassembling of binary code using the <code>disassemble</code> command (it may be shortened to <code>diasas</code>). The command can be issued either on a memory address or using labels.
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> disas <span class="sy0">*</span>main
+Dump of assembler code <span class="kw1">for</span> <span class="kw1">function</span> main:
+=<span class="sy0">&gt;</span> 0x080484c4 <span class="sy0">&lt;</span>+<span class="nu0">0</span><span class="sy0">&gt;</span>:,  push   ebp
+   0x080484c5 <span class="sy0">&lt;</span>+<span class="nu0">1</span><span class="sy0">&gt;</span>:,  mov    ebp,esp
+   0x080484c7 <span class="sy0">&lt;</span>+<span class="nu0">3</span><span class="sy0">&gt;</span>:,  and    esp,0xfffffff0
+   0x080484ca <span class="sy0">&lt;</span>+<span class="nu0">6</span><span class="sy0">&gt;</span>:,  sub    esp,0x30
+   0x080484cd <span class="sy0">&lt;</span>+<span class="nu0">9</span><span class="sy0">&gt;</span>:,  mov    DWORD PTR <span class="br0">&#91;</span>esp+0x12<span class="br0">&#93;</span>,0x24243470
+   0x080484d5 <span class="sy0">&lt;</span>+<span class="nu0">17</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp+0x16<span class="br0">&#93;</span>,0x64723077
+   0x080484dd <span class="sy0">&lt;</span>+<span class="nu0">25</span><span class="sy0">&gt;</span>:,mov    WORD PTR <span class="br0">&#91;</span>esp+0x1a<span class="br0">&#93;</span>,0x21
+....Output ommited.....
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> disas 0x080484c4
+Dump of assembler code <span class="kw1">for</span> <span class="kw1">function</span> main:
+=<span class="sy0">&gt;</span> 0x080484c4 <span class="sy0">&lt;</span>+<span class="nu0">0</span><span class="sy0">&gt;</span>:,  push   ebp
+   0x080484c5 <span class="sy0">&lt;</span>+<span class="nu0">1</span><span class="sy0">&gt;</span>:,  mov    ebp,esp
+   0x080484c7 <span class="sy0">&lt;</span>+<span class="nu0">3</span><span class="sy0">&gt;</span>:,  and    esp,0xfffffff0
+   0x080484ca <span class="sy0">&lt;</span>+<span class="nu0">6</span><span class="sy0">&gt;</span>:,  sub    esp,0x30
+   0x080484cd <span class="sy0">&lt;</span>+<span class="nu0">9</span><span class="sy0">&gt;</span>:,  mov    DWORD PTR <span class="br0">&#91;</span>esp+0x12<span class="br0">&#93;</span>,0x24243470
+   0x080484d5 <span class="sy0">&lt;</span>+<span class="nu0">17</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp+0x16<span class="br0">&#93;</span>,0x64723077
+   0x080484dd <span class="sy0">&lt;</span>+<span class="nu0">25</span><span class="sy0">&gt;</span>:,mov    WORD PTR <span class="br0">&#91;</span>esp+0x1a<span class="br0">&#93;</span>,0x21</pre>
+
+</div>
+
+<h3 class="sectionedit17" id="adding_breakpoints">Adding Breakpoints</h3>
+<div class="level3">
+
+<p>
+Breakpoints are important to suspend the execution of the program being debugged in a certain place. Adding breakpoints is done with the <code>break</code> command. A good idea is to place a breakpoint at the main function of the program you are trying to exploit. Given the fact that you have already run <code>objdump</code> and disassembled the program you know the address for the start of the main function. This means that we can set a breakpoint for the start of our program in two ways:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> <span class="sy0">*</span>main
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> <span class="sy0">*</span>0x<span class="br0">&#91;</span>main_address_obtained_with_objdump<span class="br0">&#93;</span></pre>
+
+<p>
+The general format for setting breakpoints in GDB is as follows:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> <span class="br0">&#91;</span>LOCATION<span class="br0">&#93;</span> <span class="br0">&#91;</span>thread THREADNUM<span class="br0">&#93;</span> <span class="br0">&#91;</span><span class="kw1">if</span> CONDITION<span class="br0">&#93;</span></pre>
+
+<p>
+<p><div class="notetip">
+Issuing the <code>break</code> command with no parameters will place a breakpoint at the current address.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+GDB allows using abbreviated forms for all the commands it supports. Learning these abbreviations comes with time and will greatly improve you work output. Always be on the lookout for using abbreviated commands.
+</p>
+
+<p>
+The abbreviated command for setting breakpoints is simply <code>b</code>.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit18" id="listing_breakpoints">Listing Breakpoints</h3>
+<div class="level3">
+
+<p>
+At any given time all the breakpoints in the program can be displayed using the <code>info breakpoints</code> command:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> info breakpoints</pre>
+
+<p>
+<p><div class="notetip">
+You can also issue the abbreviated form of the command
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> i b</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit19" id="deleting_breakpoints">Deleting Breakpoints</h3>
+<div class="level3">
+
+<p>
+Breakpoints can be removed by issuing the <code>delete breakpoints</code> command followed by the breakpoints number, as it is listed in the output of the <code>info breakpoints</code> command.
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> delete breakpoints <span class="br0">&#91;</span>breakpoint_number<span class="br0">&#93;</span></pre>
+
+<p>
+<p><div class="notetip">
+You can also delete all active breakpoints by issuing the following the <code>delete breakpoints</code> command with no parameters:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> delete breakpoints</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Once a breakpoint is set you would normally want to launch the program into execution. You can do this by issuing the <code>run</code> command. The program will start executing and stop at the first breakpoint you have set.
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run</pre>
+
+</div>
+
+<h3 class="sectionedit20" id="execution_flow">Execution flow</h3>
+<div class="level3">
+
+<p>
+Execution flow can be controlled in GDB using the <code>continue</code>, <code>stepi</code>, <code>nexti</code> as follows:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">help</span> <span class="kw3">continue</span>
+<span class="co0">#Continue program being debugged, after signal or breakpoint.</span>
+<span class="co0">#If proceeding from breakpoint, a number N may be used as an argument,</span>
+<span class="co0">#which means to set the ignore count of that breakpoint to N - 1 (so that</span>
+<span class="co0">#the breakpoint won't break until the Nth time it is reached).</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">help</span> stepi
+<span class="co0">#Step one instruction exactly.</span>
+<span class="co0">#Argument N means do this N times (or till program stops for another reason).</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">help</span> nexti
+<span class="co0">#Step one instruction, but proceed through subroutine calls.</span>
+<span class="co0">#Argument N means do this N times (or till program stops for another reason).</span></pre>
+
+<p>
+<p><div class="notetip">
+You can also use the abbreviated format of the commands: <code>c</code> (<code>continue</code>), <code>si</code> (<code>stepi</code>), <code>ni</code> (<code>nexti</code>).
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+If at any point you want to start the program execution from the beginning you can always reissue the <code>run</code> command.
+
+</div></p>
+</p>
+
+<p>
+Another technique that can be used for setting breakpoints is using offsets.
+<p><div class="notetip">
+As you already know, each assembly instruction takes a certain number of bytes inside the executable file. This means that whenever you are setting breakpoints using offsets you must always set them at instruction boundaries.
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> <span class="sy0">*</span>main
+Breakpoint <span class="nu0">1</span> at 0x80484c4
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+Starting program: bash_login
+&nbsp;
+Breakpoint <span class="nu0">1</span>, 0x080484c4 <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> disas main
+Dump of assembler code <span class="kw1">for</span> <span class="kw1">function</span> main:
+=<span class="sy0">&gt;</span> 0x080484c4 <span class="sy0">&lt;</span>+<span class="nu0">0</span><span class="sy0">&gt;</span>:,  push   ebp
+   0x080484c5 <span class="sy0">&lt;</span>+<span class="nu0">1</span><span class="sy0">&gt;</span>: ,mov    ebp,esp
+   0x080484c7 <span class="sy0">&lt;</span>+<span class="nu0">3</span><span class="sy0">&gt;</span>: ,and    esp,0xfffffff0
+   0x080484ca <span class="sy0">&lt;</span>+<span class="nu0">6</span><span class="sy0">&gt;</span>: ,sub    esp,0x30
+   0x080484cd <span class="sy0">&lt;</span>+<span class="nu0">9</span><span class="sy0">&gt;</span>: ,mov    DWORD PTR <span class="br0">&#91;</span>esp+0x12<span class="br0">&#93;</span>,0x24243470
+   0x080484d5 <span class="sy0">&lt;</span>+<span class="nu0">17</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp+0x16<span class="br0">&#93;</span>,0x64723077
+   0x080484dd <span class="sy0">&lt;</span>+<span class="nu0">25</span><span class="sy0">&gt;</span>:,mov    WORD PTR <span class="br0">&#91;</span>esp+0x1a<span class="br0">&#93;</span>,0x21
+&nbsp;
+.....Output ommited.....
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> <span class="sy0">*</span>main+<span class="nu0">6</span>
+Breakpoint <span class="nu0">2</span> at 0x80484ca</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit21" id="examine_and_print_your_most_powerful_tools">Examine and Print, your most powerful tools</h3>
+<div class="level3">
+
+<p>
+GDB allows examining of memory locations be them specified as addresses or stored in registers. The <code>x</code> command (for <em>examine</em>) is arguably one of the most powerful tool in your arsenal and the most common command you are going to run when exploiting.
+</p>
+
+<p>
+The format for the <code>examine</code> command is as follows:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> x<span class="sy0">/</span>nfu <span class="br0">&#91;</span>address<span class="br0">&#93;</span>
+        n:  How many units to print
+        f:  Format character
+              a Pointer
+              c Read <span class="kw2">as</span> integer, print <span class="kw2">as</span> character
+              d Integer, signed decimal
+              f Floating point number
+              o Integer, print <span class="kw2">as</span> octal
+              s Treat <span class="kw2">as</span> C string <span class="br0">&#40;</span><span class="kw2">read</span> all successive memory addresses <span class="kw1">until</span> null character and print <span class="kw2">as</span> characters<span class="br0">&#41;</span>
+              t Integer, print <span class="kw2">as</span> binary <span class="br0">&#40;</span><span class="re2">t</span>=<span class="st0">&quot;two&quot;</span><span class="br0">&#41;</span>
+              u Integer, unsigned decimal
+              x Integer, print <span class="kw2">as</span> hexadecimal
+        u:  Unit
+              b: Byte
+              h: Half-word <span class="br0">&#40;</span><span class="nu0">2</span> bytes<span class="br0">&#41;</span>
+              w: Word <span class="br0">&#40;</span><span class="nu0">4</span> bytes<span class="br0">&#41;</span>
+              g: Giant word <span class="br0">&#40;</span><span class="nu0">8</span> bytes<span class="br0">&#41;</span>
+              i: Instruction <span class="br0">&#40;</span><span class="kw2">read</span> n assembly instructions from the specified memory address<span class="br0">&#41;</span></pre>
+
+<p>
+In contrast with the examine command, which reads data at a memory location the <code>print</code> command (shorthand <code>p</code>) prints out values stored in registers and variables.
+</p>
+
+<p>
+The format for the <code>print</code> command is as follows:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> p<span class="sy0">/</span>f <span class="br0">&#91;</span>what<span class="br0">&#93;</span>
+        f:  Format character
+              a Pointer
+              c Read <span class="kw2">as</span> integer, print <span class="kw2">as</span> character
+              d Integer, signed decimal
+              f Floating point number
+              o Integer, print <span class="kw2">as</span> octal
+              s Treat <span class="kw2">as</span> C string <span class="br0">&#40;</span><span class="kw2">read</span> all successive memory addresses <span class="kw1">until</span> null character and print <span class="kw2">as</span> characters<span class="br0">&#41;</span>
+              t Integer, print <span class="kw2">as</span> binary <span class="br0">&#40;</span><span class="re2">t</span>=<span class="st0">&quot;two&quot;</span><span class="br0">&#41;</span>
+              u Integer, unsigned decimal
+              x Integer, print <span class="kw2">as</span> hexadecimal
+              i Instruction <span class="br0">&#40;</span><span class="kw2">read</span> n assembly instructions from the specified memory address<span class="br0">&#41;</span></pre>
+
+<p>
+For a better explanation please follow through with the following example:
+</p>
+<pre class="code bash"><span class="co0">#a breakpoint has been set inside the program and the program has been run with the appropriate commands to reach the breakpoint</span>
+<span class="co0">#at this point we want to see which are the following 10 instructions</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> x<span class="sy0">/</span>10i 0x080484c7
+   0x80484c7 <span class="sy0">&lt;</span>main+<span class="nu0">3</span><span class="sy0">&gt;</span>:,and    esp,0xfffffff0
+   0x80484ca <span class="sy0">&lt;</span>main+<span class="nu0">6</span><span class="sy0">&gt;</span>:,sub    esp,0x30
+   0x80484cd <span class="sy0">&lt;</span>main+<span class="nu0">9</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp+0x12<span class="br0">&#93;</span>,0x24243470
+   0x80484d5 <span class="sy0">&lt;</span>main+<span class="nu0">17</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp+0x16<span class="br0">&#93;</span>,0x64723077
+   0x80484dd <span class="sy0">&lt;</span>main+<span class="nu0">25</span><span class="sy0">&gt;</span>:,mov    WORD PTR <span class="br0">&#91;</span>esp+0x1a<span class="br0">&#93;</span>,0x21
+   0x80484e4 <span class="sy0">&lt;</span>main+<span class="nu0">32</span><span class="sy0">&gt;</span>:,mov    eax,0x8048630
+   0x80484e9 <span class="sy0">&lt;</span>main+<span class="nu0">37</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp<span class="br0">&#93;</span>,eax
+   0x80484ec <span class="sy0">&lt;</span>main+<span class="nu0">40</span><span class="sy0">&gt;</span>:,call   0x80483b0 <span class="sy0">&lt;</span><span class="kw3">printf</span><span class="sy0">@</span>plt<span class="sy0">&gt;</span>
+   0x80484f1 <span class="sy0">&lt;</span>main+<span class="nu0">45</span><span class="sy0">&gt;</span>:,mov    eax,0x804864a
+   0x80484f6 <span class="sy0">&lt;</span>main+<span class="nu0">50</span><span class="sy0">&gt;</span>:,lea    edx,<span class="br0">&#91;</span>esp+0x1c<span class="br0">&#93;</span>
+<span class="co0">#let's examine the memory at 0x80486a0 because we have a hint that the eax register holds a parameter</span>
+<span class="co0">#as it is then placed on the stack (we'll explain later how we have reached this conclusion)</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> x<span class="sy0">/</span>s 0x80486a0
+0x80486a0:, <span class="st0">&quot;<span class="es1">\n</span>Please provide password:&quot;</span>
+<span class="co0"># we now set a breakpoint for main+49</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> <span class="sy0">*</span>0x80484e9
+Breakpoint <span class="nu0">3</span> at 0x80484e9
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">continue</span>
+Continuing.
+&nbsp;
+Breakpoint <span class="nu0">3</span>, 0x080484e9 <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co0">#let's examine the eax register (it should hold the address for the beginning of the string so let's interpret it as appropriately)</span>
+<span class="co0">#take note that in GDB registers are preceded by the &quot;$&quot; character very much like variables</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> x<span class="sy0">/</span>s <span class="re1">$eax</span>
+0x8048630:, <span class="st0">&quot;<span class="es1">\n</span>Please provide password:&quot;</span>
+<span class="co0">#now let's print the contents of the eax register as hexadecimal</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> p<span class="sy0">/</span>x <span class="re1">$eax</span>
+<span class="re4">$1</span> = 0x8048630
+<span class="co0"># as you can see the eax register hold the memory for the beginning of the string</span>
+<span class="co0"># this shows you how &quot;x&quot; interprets data from memory while &quot;p&quot; merely prints out the contents in the required format</span>
+<span class="co0"># you can think of it as &quot;x&quot; dereferencing while &quot;p&quot; not dereferencing</span></pre>
+
+</div>
+
+<h3 class="sectionedit22" id="gdb_command_file">GDB command file</h3>
+<div class="level3">
+
+<p>
+When exploiting, there are a couple of commands that you will issue periodically and doing that by hand will get cumbersome. GDB commands files will allow you to run a specific set of commands automatically after each command you issue manually. This comes in especially handy when you&#039;re stepping through a program and want to see what happens with the registers and stack after each instruction is ran, which is the main target when exploiting.
+</p>
+
+<p>
+The examine command online has sense when code is already running on the machine so inside the file we are going to use the display command which translates to the same output.
+</p>
+
+<p>
+In order to use this option you must first create your commands file. This file can include any GDB commands you like but a good start would be printing out the content of all the register values, the next ten instructions that are going to be executed, and some portion from the top of the stack.
+</p>
+
+<p>
+The reason for examining all of the above after each instruction is ran will become more clear once the we go through the second section of the session.
+</p>
+
+<p>
+Command file template:
+</p>
+<pre class="code bash">display<span class="sy0">/</span>10i <span class="re1">$eip</span>
+display<span class="sy0">/</span>x <span class="re1">$eax</span>
+display<span class="sy0">/</span>x <span class="re1">$ebx</span>
+display<span class="sy0">/</span>x <span class="re1">$ecx</span>
+display<span class="sy0">/</span>x <span class="re1">$edx</span>
+display<span class="sy0">/</span>x <span class="re1">$edi</span>
+display<span class="sy0">/</span>x <span class="re1">$esi</span>
+display<span class="sy0">/</span>x <span class="re1">$ebp</span>
+display<span class="sy0">/</span>32xw <span class="re1">$esp</span></pre>
+
+<p>
+<p><div class="notetip">
+In order to view all register values you could use the <code>x</code> command. However the values of all registers can be obtained by running the <code>info all-registers</code> command:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> info all-registers
+eax            0x8048630,<span class="nu0">134514224</span>
+ecx            0xbffff404,-<span class="nu0">1073744892</span>
+edx            0xbffff394,-<span class="nu0">1073745004</span>
+ebx            0xb7fc6ff4,-<span class="nu0">1208193036</span>
+esp            0xbffff330,0xbffff330
+ebp            0xbffff368,0xbffff368
+esi            0x0,<span class="nu0">0</span>
+edi            0x0,<span class="nu0">0</span>
+eip            0x80484e9,0x80484e9 <span class="sy0">&lt;</span>main+<span class="nu0">37</span><span class="sy0">&gt;</span>
+eflags         0x286,<span class="br0">&#91;</span> PF SF IF <span class="br0">&#93;</span>
+cs             0x73,<span class="nu0">115</span>
+ss             0x7b,<span class="nu0">123</span>
+ds             0x7b,<span class="nu0">123</span>
+es             0x7b,<span class="nu0">123</span>
+fs             0x0,<span class="nu0">0</span>
+<span class="kw2">gs</span>             0x33,<span class="nu0">51</span>
+st0            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+st1            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+st2            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+st3            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+st4            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+st5            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+st6            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+st7            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+fctrl          0x37f,<span class="nu0">895</span>
+fstat          0x0,<span class="nu0">0</span>
+ftag           0xffff,<span class="nu0">65535</span>
+fiseg          0x0,<span class="nu0">0</span>
+fioff          0x0,<span class="nu0">0</span>
+foseg          0x0,<span class="nu0">0</span>
+<span class="re5">---Type</span> <span class="sy0">&lt;</span><span class="kw3">return</span><span class="sy0">&gt;</span> to <span class="kw3">continue</span>, or q <span class="sy0">&lt;</span><span class="kw3">return</span><span class="sy0">&gt;</span> to quit---
+fooff          0x0,<span class="nu0">0</span>
+fop            0x0,<span class="nu0">0</span>
+mxcsr          0x1f80,<span class="br0">&#91;</span> IM DM ZM OM UM PM <span class="br0">&#93;</span>
+ymm0           <span class="sy0">*</span>value not available<span class="sy0">*</span>
+ymm1           <span class="sy0">*</span>value not available<span class="sy0">*</span>
+ymm2           <span class="sy0">*</span>value not available<span class="sy0">*</span>
+ymm3           <span class="sy0">*</span>value not available<span class="sy0">*</span>
+ymm4           <span class="sy0">*</span>value not available<span class="sy0">*</span>
+ymm5           <span class="sy0">*</span>value not available<span class="sy0">*</span>
+ymm6           <span class="sy0">*</span>value not available<span class="sy0">*</span>
+ymm7           <span class="sy0">*</span>value not available<span class="sy0">*</span>
+mm0            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+mm1            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+mm2            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+mm3            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+mm4            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+mm5            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+mm6            <span class="sy0">*</span>value not available<span class="sy0">*</span>
+mm7            <span class="sy0">*</span>value not available<span class="sy0">*</span></pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+One thing you might notice while using GDB is that addresses seem to be pretty similar between runs. Although with experience you will gain a better feel for where an address points to, one thing to remember at this point would be that stack addresses usually have the <code>0xbffff….</code> format.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+In order to run GDB with the commands file you have just generated, when launching GDB specify the <code>-x [command_file]</code> parameter.
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit23" id="gdb_peda">GDB PEDA</h2>
+<div class="level2">
+
+<p>
+As you can see using GDB can be cumbersome, this is why we recommend using the PEDA (<em>Python Exploit Development Assistance</em> for GDB) plugin presented in the previous session.
+</p>
+
+<p>
+Give the fact that PEDA is just a wrapper, all the functionality of GDB will be available when running <code>gdb-peda</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Some of the advantages of using PEDA include:
+</p>
+<ol>
+<li class="level1"><div class="li"> Automatic preview of registers, code and stack after each instruction (you no longer need to create your own commands file)</div>
+</li>
+<li class="level1"><div class="li"> Automatic dereferencing and following through of memory locations</div>
+</li>
+<li class="level1"><div class="li"> Color coding</div>
+</li>
+</ol>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit24" id="installation">Installation</h3>
+<div class="level3">
+
+<p>
+You can download peda using:
+</p>
+<pre class="code bash"><span class="kw2">git clone</span> https:<span class="sy0">//</span>github.com<span class="sy0">/</span>longld<span class="sy0">/</span>peda.git ~<span class="sy0">/</span>peda</pre>
+
+<p>
+To set it up add the following to your <strong>~/.gdbinit</strong> file and then run <strong>gdb</strong> as usual:
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/cns/labs/lab-04%3Fcodeblock=36" title="Download Snippet" class="mediafile mf_gdbinit">.gdbinit</a></dt>
+<dd><pre class="code file bash"><span class="co0"># Source all settings from the peda dir</span>
+<span class="kw3">source</span> ~<span class="sy0">/</span>peda<span class="sy0">/</span>peda.py
+&nbsp;
+<span class="co0"># These are other settings I have found useful</span>
+&nbsp;
+<span class="co0"># When inspecting large portions of code the scrollbar works better than 'less'</span>
+<span class="kw1">set</span> pagination off
+&nbsp;
+&nbsp;
+<span class="co0"># Keep a history of all the commands typed. Search is possible using ctrl-r</span>
+<span class="kw1">set</span> <span class="kw3">history</span> save on
+<span class="kw1">set</span> <span class="kw3">history</span> filename ~<span class="sy0">/</span>.gdb_history
+<span class="kw1">set</span> <span class="kw3">history</span> <span class="kw2">size</span> <span class="nu0">32768</span>
+<span class="kw1">set</span> <span class="kw3">history</span> expansion on</pre>
+</dd></dl>
+
+</div>
+
+<h3 class="sectionedit25" id="peda_commands">PEDA Commands</h3>
+<div class="level3">
+
+<p>
+<code>pdis</code> command gives a pretty output that is similar to what the <code>disas</code> command in GDB prints:
+</p>
+<pre class="code bash">Usage:  pdis main</pre>
+
+<p>
+If <code>pdis</code> is used with an address as a parameter, the output will be similar to what <code>x/Ni</code> prints out (where N is the number of instructions you want to disassemble)
+Usage:  -pdis [address]/N - where N is the number of instructions you want to be printed
+</p>
+
+<p>
+The <code>stepi</code> command has the same effect as in GDB however, if you are running PEDA you will notice that after each step PEDA will automatically print register values, several lines of code from eip register and a portion of the stack:
+</p>
+<pre class="code bash"><span class="co4">gdb-peda$ </span>stepi
+<span class="br0">&#91;</span>----------------------------------registers-----------------------------------<span class="br0">&#93;</span>
+EAX: 0x1
+EBX: 0xb7fc6ff4 --<span class="sy0">&gt;</span> 0x1a0d7c
+ECX: 0xbffff404 --<span class="sy0">&gt;</span> 0xbffff569 <span class="br0">&#40;</span><span class="st0">&quot;/home/dgioga/sss/bash_login&quot;</span><span class="br0">&#41;</span>
+EDX: 0xbffff394 --<span class="sy0">&gt;</span> 0xb7fc6ff4 --<span class="sy0">&gt;</span> 0x1a0d7c
+ESI: 0x0
+EDI: 0x0
+EBP: 0xbffff368 --<span class="sy0">&gt;</span> 0x0
+ESP: 0xbffff360 --<span class="sy0">&gt;</span> 0x8048560 <span class="br0">&#40;</span><span class="sy0">&lt;</span>__libc_csu_init<span class="sy0">&gt;</span>:,push   ebp<span class="br0">&#41;</span>
+EIP: 0x80484ca <span class="br0">&#40;</span><span class="sy0">&lt;</span>main+<span class="nu0">6</span><span class="sy0">&gt;</span>:,sub    esp,0x30<span class="br0">&#41;</span>
+EFLAGS: 0x286 <span class="br0">&#40;</span>carry PARITY adjust zero SIGN <span class="kw3">trap</span> INTERRUPT direction overflow<span class="br0">&#41;</span>
+<span class="br0">&#91;</span>-------------------------------------code-------------------------------------<span class="br0">&#93;</span>
+   0x80484c4 <span class="sy0">&lt;</span>main<span class="sy0">&gt;</span>:,push   ebp
+   0x80484c5 <span class="sy0">&lt;</span>main+<span class="nu0">1</span><span class="sy0">&gt;</span>:,mov    ebp,esp
+   0x80484c7 <span class="sy0">&lt;</span>main+<span class="nu0">3</span><span class="sy0">&gt;</span>:,and    esp,0xfffffff0
+=<span class="sy0">&gt;</span> 0x80484ca <span class="sy0">&lt;</span>main+<span class="nu0">6</span><span class="sy0">&gt;</span>:,sub    esp,0x30
+   0x80484cd <span class="sy0">&lt;</span>main+<span class="nu0">9</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp+0x12<span class="br0">&#93;</span>,0x24243470
+   0x80484d5 <span class="sy0">&lt;</span>main+<span class="nu0">17</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp+0x16<span class="br0">&#93;</span>,0x64723077
+   0x80484dd <span class="sy0">&lt;</span>main+<span class="nu0">25</span><span class="sy0">&gt;</span>:,mov    WORD PTR <span class="br0">&#91;</span>esp+0x1a<span class="br0">&#93;</span>,0x21
+   0x80484e4 <span class="sy0">&lt;</span>main+<span class="nu0">32</span><span class="sy0">&gt;</span>:,mov    eax,0x8048630
+<span class="br0">&#91;</span>------------------------------------stack-------------------------------------<span class="br0">&#93;</span>
+0000<span class="sy0">|</span> 0xbffff360 --<span class="sy0">&gt;</span> 0x8048560 <span class="br0">&#40;</span><span class="sy0">&lt;</span>__libc_csu_init<span class="sy0">&gt;</span>:,push   ebp<span class="br0">&#41;</span>
+0004<span class="sy0">|</span> 0xbffff364 --<span class="sy0">&gt;</span> 0x0
+0008<span class="sy0">|</span> 0xbffff368 --<span class="sy0">&gt;</span> 0x0
+0012<span class="sy0">|</span> 0xbffff36c --<span class="sy0">&gt;</span> 0xb7e3f4d3 <span class="br0">&#40;</span><span class="sy0">&lt;</span>__libc_start_main+<span class="nu0">243</span><span class="sy0">&gt;</span>:,mov    DWORD PTR <span class="br0">&#91;</span>esp<span class="br0">&#93;</span>,eax<span class="br0">&#41;</span>
+0016<span class="sy0">|</span> 0xbffff370 --<span class="sy0">&gt;</span> 0x1
+0020<span class="sy0">|</span> 0xbffff374 --<span class="sy0">&gt;</span> 0xbffff404 --<span class="sy0">&gt;</span> 0xbffff569 <span class="br0">&#40;</span><span class="st0">&quot;/home/dgioga/sss/bash_login&quot;</span><span class="br0">&#41;</span>
+0024<span class="sy0">|</span> 0xbffff378 --<span class="sy0">&gt;</span> 0xbffff40c --<span class="sy0">&gt;</span> 0xbffff585 <span class="br0">&#40;</span><span class="st0">&quot;SSH_AGENT_PID=1948&quot;</span><span class="br0">&#41;</span>
+0028<span class="sy0">|</span> 0xbffff37c --<span class="sy0">&gt;</span> 0xb7fdc858 --<span class="sy0">&gt;</span> 0xb7e26000 --<span class="sy0">&gt;</span> 0x464c457f
+<span class="br0">&#91;</span>------------------------------------------------------------------------------<span class="br0">&#93;</span>
+Legend: code, data, rodata, value
+0x080484ca <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+
+<p>
+<p><div class="notetip">
+You can always use the following commands to obtain context at any given moment inside the debug process:
+</p>
+<ol>
+<li class="level1"><div class="li"> <code>context reg</code></div>
+</li>
+<li class="level1"><div class="li"> <code>context code</code></div>
+</li>
+<li class="level1"><div class="li"> <code>context stack</code></div>
+</li>
+<li class="level1"><div class="li"> <code>context all</code></div>
+</li>
+</ol>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+One additional PEDA command which can be used to show values in registers is the <code>telescope</code> command. The command  dereferentiates pointer values until it gets to a value and prints out the entire trace.
+</p>
+
+<p>
+The command can be used with both registers and memory addresses:
+</p>
+<pre class="code bash"><span class="co4">gdb-peda$ </span>telescope <span class="re1">$eax</span>
+0000<span class="sy0">|</span> 0x8048630 <span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>Please provide password:&quot;</span><span class="br0">&#41;</span>
+0004<span class="sy0">|</span> 0x8048634 <span class="br0">&#40;</span><span class="st0">&quot;ase provide password:&quot;</span><span class="br0">&#41;</span>
+0008<span class="sy0">|</span> 0x8048638 <span class="br0">&#40;</span><span class="st0">&quot;provide password:&quot;</span><span class="br0">&#41;</span>
+0012<span class="sy0">|</span> 0x804863c <span class="br0">&#40;</span><span class="st0">&quot;ide password:&quot;</span><span class="br0">&#41;</span>
+0016<span class="sy0">|</span> 0x8048640 <span class="br0">&#40;</span><span class="st0">&quot;password:&quot;</span><span class="br0">&#41;</span>
+0020<span class="sy0">|</span> 0x8048644 <span class="br0">&#40;</span><span class="st0">&quot;word:&quot;</span><span class="br0">&#41;</span>
+0024<span class="sy0">|</span> 0x8048648 --<span class="sy0">&gt;</span> 0x7325003a <span class="br0">&#40;</span><span class="st_h">':'</span><span class="br0">&#41;</span>
+0028<span class="sy0">|</span> 0x804864c --<span class="sy0">&gt;</span> 0x0
+<span class="co4">gdb-peda$ </span>telescope 0x8048630
+0000<span class="sy0">|</span> 0x8048630 <span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>Please provide password:&quot;</span><span class="br0">&#41;</span>
+0004<span class="sy0">|</span> 0x8048634 <span class="br0">&#40;</span><span class="st0">&quot;ase provide password:&quot;</span><span class="br0">&#41;</span>
+0008<span class="sy0">|</span> 0x8048638 <span class="br0">&#40;</span><span class="st0">&quot;provide password:&quot;</span><span class="br0">&#41;</span>
+0012<span class="sy0">|</span> 0x804863c <span class="br0">&#40;</span><span class="st0">&quot;ide password:&quot;</span><span class="br0">&#41;</span>
+0016<span class="sy0">|</span> 0x8048640 <span class="br0">&#40;</span><span class="st0">&quot;password:&quot;</span><span class="br0">&#41;</span>
+0020<span class="sy0">|</span> 0x8048644 <span class="br0">&#40;</span><span class="st0">&quot;word:&quot;</span><span class="br0">&#41;</span>
+0024<span class="sy0">|</span> 0x8048648 --<span class="sy0">&gt;</span> 0x7325003a <span class="br0">&#40;</span><span class="st_h">':'</span><span class="br0">&#41;</span>
+0028<span class="sy0">|</span> 0x804864c --<span class="sy0">&gt;</span> 0x0</pre>
+
+<p>
+In the example above, the memory address 0x8048630 was loaded into EAX. That is why examining the register or the memory location gives the same output.
+</p>
+
+<p>
+<p><div class="notetip">
+For more information on various PEDA commands you can always visit the PEDA help through the <code>help peda</code> command
+It is always a better idea to use PEDA commands when available. However you should also know the basics of using GDB as well.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit26" id="altering_variables_and_memory_with_peda_and_gdb">Altering variables and memory with PEDA and GDB</h3>
+<div class="level3">
+
+<p>
+In addition to basic registers, GDB has a two extra variables which map onto some of the existing registers, as follows:
+* <code>$pc – $eip</code>
+* <code>$sp – $esp</code>
+* <code>$fp – $ebp</code>
+</p>
+
+<p>
+In addition to these there are also two registers which can be used to view the processor state
+<code>$ps – processor status</code>
+</p>
+
+<p>
+Values of memory addresses and registers can be altered at execution time. Because altering memory is a lot easier using PEDA we are going to use it throughout today&#039;s session.
+</p>
+
+<p>
+<p><div class="notetip">
+If you want to do it the hard way (no PEDA) you can always look into the <code>set</code> GDB command.
+
+</div></p>
+</p>
+
+<p>
+The easiest way of altering the execution flow of a program is editing the <code>$eflags</code> register just before jump instructions.
+</p>
+
+<p>
+Using PEDA the <code>$eflags</code> register can be easily modified:
+</p>
+<pre class="code bash"><span class="co4">gdb-peda$ </span>eflags
+EFLAGS: 0x286 <span class="br0">&#40;</span>carry PARITY adjust zero SIGN <span class="kw3">trap</span> INTERRUPT direction overflow<span class="br0">&#41;</span>
+<span class="co4">gdb-peda$ </span><span class="kw3">help</span> eflags
+Display<span class="sy0">/</span>set<span class="sy0">/</span><span class="kw2">clear</span> value of eflags register
+Usage:
+    eflags
+    eflags <span class="br0">&#91;</span><span class="kw1">set</span><span class="sy0">|</span><span class="kw2">clear</span><span class="br0">&#93;</span> flagname</pre>
+
+<p>
+<p><div class="notetip">
+Notice that the flags that are sent are printed in all-caps when the <code>eflags</code> command is issued.
+
+</div></p>
+</p>
+
+<p>
+The <code>patch</code> command can be used to modify values that reside inside memory.
+</p>
+<pre class="code bash"><span class="co4">gdb-peda$ </span>telescope 0x8048630
+0000<span class="sy0">|</span> 0x8048630 <span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>Please provide password:&quot;</span><span class="br0">&#41;</span>
+0004<span class="sy0">|</span> 0x8048634 <span class="br0">&#40;</span><span class="st0">&quot;ase provide password:&quot;</span><span class="br0">&#41;</span>
+0008<span class="sy0">|</span> 0x8048638 <span class="br0">&#40;</span><span class="st0">&quot;provide password:&quot;</span><span class="br0">&#41;</span>
+0012<span class="sy0">|</span> 0x804863c <span class="br0">&#40;</span><span class="st0">&quot;ide password:&quot;</span><span class="br0">&#41;</span>
+0016<span class="sy0">|</span> 0x8048640 <span class="br0">&#40;</span><span class="st0">&quot;password:&quot;</span><span class="br0">&#41;</span>
+0020<span class="sy0">|</span> 0x8048644 <span class="br0">&#40;</span><span class="st0">&quot;word:&quot;</span><span class="br0">&#41;</span>
+0024<span class="sy0">|</span> 0x8048648 --<span class="sy0">&gt;</span> 0x7325003a <span class="br0">&#40;</span><span class="st_h">':'</span><span class="br0">&#41;</span>
+0028<span class="sy0">|</span> 0x804864c --<span class="sy0">&gt;</span> 0x0
+<span class="co4">gdb-peda$ </span><span class="kw3">help</span> <span class="kw2">patch</span>
+Patch memory start at an address with string<span class="sy0">/</span>hexstring<span class="sy0">/</span>int
+Usage:
+    <span class="kw2">patch</span> address <span class="br0">&#40;</span>multiple lines input<span class="br0">&#41;</span>
+    <span class="kw2">patch</span> address <span class="st0">&quot;string&quot;</span>
+    <span class="kw2">patch</span> from_address to_address <span class="st0">&quot;string&quot;</span>
+    <span class="kw2">patch</span> <span class="br0">&#40;</span>will <span class="kw2">patch</span> at current <span class="re1">$pc</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co4">gdb-peda$ </span><span class="kw2">patch</span> 0x8048630 <span class="st0">&quot;Modified valu of the string\x00&quot;</span>
+Written <span class="nu0">28</span> bytes to 0x8048630
+<span class="co4">gdb-peda$ </span>telescope 0x8048630
+0000<span class="sy0">|</span> 0x8048630 <span class="br0">&#40;</span><span class="st0">&quot;Modified valu of the string&quot;</span><span class="br0">&#41;</span>
+0004<span class="sy0">|</span> 0x8048634 <span class="br0">&#40;</span><span class="st0">&quot;fied valu of the string&quot;</span><span class="br0">&#41;</span>
+0008<span class="sy0">|</span> 0x8048638 <span class="br0">&#40;</span><span class="st0">&quot; valu of the string&quot;</span><span class="br0">&#41;</span>
+0012<span class="sy0">|</span> 0x804863c <span class="br0">&#40;</span><span class="st0">&quot;u of the string&quot;</span><span class="br0">&#41;</span>
+0016<span class="sy0">|</span> 0x8048640 <span class="br0">&#40;</span><span class="st0">&quot; the string&quot;</span><span class="br0">&#41;</span>
+0020<span class="sy0">|</span> 0x8048644 <span class="br0">&#40;</span><span class="st0">&quot; string&quot;</span><span class="br0">&#41;</span>
+0024<span class="sy0">|</span> 0x8048648 --<span class="sy0">&gt;</span> 0x676e69 <span class="br0">&#40;</span><span class="st_h">'ing'</span><span class="br0">&#41;</span>
+0028<span class="sy0">|</span> 0x804864c --<span class="sy0">&gt;</span> 0x0</pre>
+
+<p>
+As you can see the string residing in memory at address <code>0x8048630</code> has been modified using the <code>patch</code> command.
+</p>
+
+<p>
+PEDA does not offer enhancements in modifying registry values. For modifying registry values you can use the GDB <code>set</code> command.
+</p>
+<pre class="code bash"><span class="co4">gdb-peda$ </span>p<span class="sy0">/</span>x <span class="re1">$eax</span>
+<span class="re4">$1</span><span class="nu0">0</span> = 0x1
+<span class="co4">gdb-peda$ </span><span class="kw1">set</span> <span class="re1">$eax</span>=0x80
+<span class="co4">gdb-peda$ </span>p<span class="sy0">/</span>x <span class="re1">$eax</span>
+<span class="re4">$1</span><span class="nu0">1</span> = 0x80</pre>
+
+</div>
+
+<h3 class="sectionedit27" id="basic_stuff">Basic stuff</h3>
+<div class="level3">
+
+<p>
+The most common actions done in gdb are: setting breakpoints, stepping through program execution and examining memory. The following are commands you need to know:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>run [args]</code> ⇒ restart the program with [args] as args</div>
+</li>
+<li class="level1"><div class="li"> <code>stepi</code> ⇒ execute the current instruction and go to the next one - if it&#039;s a call instruction go to that subroutine (step into)</div>
+</li>
+<li class="level1"><div class="li"> <code>nexti</code> ⇒ execute the current instruction and go to the next one - if it&#039;s a call instruction execute the whole subroutine in the background (step over)</div>
+</li>
+<li class="level1"><div class="li"> <code>break</code> ⇒ set a permanent breakpoint on an address or function</div>
+</li>
+<li class="level1"><div class="li"> <code>info break</code> ⇒ display all current breakpoints set</div>
+</li>
+<li class="level1"><div class="li"> <code> delete 2</code> ⇒ delete the breakpoint with index 2 (from the list of current breakpoints)</div>
+</li>
+<li class="level1"><div class="li"> <code>continue</code> ⇒ continue execution after hitting a breakpoint (or receiving a signal)</div>
+</li>
+<li class="level1"><div class="li"> <code>hexdump &lt;addr&gt; [/NR]</code> ⇒ dump NR lines of memory starting from &lt;addr&gt;. (by default NR is 1)</div>
+</li>
+<li class="level1"><div class="li"> <code>x /s &lt;addr&gt;</code> ⇒ dump a <strong>string</strong> starting from &lt;addr&gt; (<code>/100s</code> would dump 100 strings)</div>
+</li>
+<li class="level1"><div class="li"> <code>x /wx &lt;addr&gt;</code> ⇒ dump a <strong>dword</strong> starting from &lt;addr&gt; (<code>/100wx</code> would dump 100 dwords)</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit28" id="dynamic_analysis_shortcuts">Dynamic analysis shortcuts</h3>
+<div class="level3">
+
+<p>
+In peda you have quick access to information that you would otherwise have to obtain using other tools as presented before:
+</p>
+<pre class="code bash"><span class="co4">gdb-peda$ </span>vmmap
+Start      End        Perm	Name
+0x08048000 0x08049000 r-xp	<span class="sy0">/</span>tmp<span class="sy0">/</span>black<span class="sy0">/</span>crackmes<span class="sy0">/</span>crackme3
+0x08049000 0x0804a000 r--p	<span class="sy0">/</span>tmp<span class="sy0">/</span>black<span class="sy0">/</span>crackmes<span class="sy0">/</span>crackme3
+0x0804a000 0x0804b000 rw-p	<span class="sy0">/</span>tmp<span class="sy0">/</span>black<span class="sy0">/</span>crackmes<span class="sy0">/</span>crackme3
+0xf7ded000 0xf7dee000 rw-p	mapped
+0xf7dee000 0xf7f93000 r-xp	<span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+0xf7f93000 0xf7f95000 r--p	<span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+0xf7f95000 0xf7f96000 rw-p	<span class="sy0">/</span>lib32<span class="sy0">/</span>libc-<span class="nu0">2.17</span>.so
+0xf7f96000 0xf7f99000 rw-p	mapped
+0xf7fda000 0xf7fdb000 rw-p	mapped
+0xf7fdb000 0xf7fdc000 r-xp	<span class="br0">&#91;</span>vdso<span class="br0">&#93;</span>
+0xf7fdc000 0xf7ffc000 r-xp	<span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+0xf7ffc000 0xf7ffd000 r--p	<span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+0xf7ffd000 0xf7ffe000 rw-p	<span class="sy0">/</span>lib32<span class="sy0">/</span>ld-<span class="nu0">2.17</span>.so
+0xfffdd000 0xffffe000 rw-p	<span class="br0">&#91;</span>stack<span class="br0">&#93;</span>
+<span class="co4">gdb-peda$ </span>elfheader
+.interp = 0x8048174
+.note.ABI-tag = 0x8048188
+.hash = 0x80481a8
+.gnu.hash = 0x80481e0
+.dynsym = 0x8048204
+.dynstr = 0x8048294
+.gnu.version = 0x80482f6
+.gnu.version_r = 0x8048308
+.rel.dyn = 0x8048328
+.rel.plt = 0x8048338
+.init = 0x8048368
+.plt = 0x8048390
+.text = 0x8048400
+.fini = 0x80486c4
+.rodata = 0x80486d8
+.eh_frame_hdr = 0x80486fc
+.eh_frame = 0x8048738
+.init_array = 0x8049f00
+.fini_array = 0x8049f04
+.jcr = 0x8049f08
+.dynamic = 0x8049f0c
+.got = 0x8049ffc
+.got.plt = 0x804a000
+.data = 0x804a024
+.bss = 0x804a044
+<span class="co4">gdb-peda$ </span>elfsymbol
+Found <span class="nu0">6</span> symbols
+fgets<span class="sy0">@</span>plt = 0x80483a0
+puts<span class="sy0">@</span>plt = 0x80483b0
+__gmon_start__<span class="sy0">@</span>plt = 0x80483c0
+<span class="kw3">exit</span><span class="sy0">@</span>plt = 0x80483d0
+strlen<span class="sy0">@</span>plt = 0x80483e0
+__libc_start_main<span class="sy0">@</span>plt = 0x80483f0</pre>
+
+<p>
+You can also search for strings in the mapped regions:
+</p>
+<pre class="code bash"><span class="co4">gdb-peda$ </span><span class="kw2">find</span> <span class="st0">&quot;Correct&quot;</span>
+Searching <span class="kw1">for</span> <span class="st_h">'Correct'</span> in: None ranges
+Found <span class="nu0">2</span> results, display max <span class="nu0">2</span> items:
+crackme3 : 0x80486ea <span class="br0">&#40;</span><span class="st0">&quot;Correct!&quot;</span><span class="br0">&#41;</span>
+crackme3 : 0x80496ea <span class="br0">&#40;</span><span class="st0">&quot;Correct!&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co4">gdb-peda$ </span><span class="kw2">find</span> <span class="st0">&quot;/bin/sh&quot;</span>
+Searching <span class="kw1">for</span> <span class="st_h">'/bin/sh'</span> in: None ranges
+Found <span class="nu0">1</span> results, display max <span class="nu0">1</span> items:
+libc : 0xf7f53be6 <span class="br0">&#40;</span><span class="st0">&quot;/bin/sh&quot;</span><span class="br0">&#41;</span></pre>
+
+</div>
+
+<h1 class="sectionedit29" id="tasks">Tasks</h1>
+<div class="level1">
+
+</div>
+
+<h3 class="sectionedit30" id="task_1">Task 1</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Download level01 from Smash the stack and solve it using peda. Break on <code>*main</code>, step through the execution and figure out what it does and how to crack it.</div>
+</li>
+</ul>
+<pre class="code">$ scp level1@io.netgarage.org:/levels/level01 . # Password is level1</pre>
+
+</div>
+
+<h3 class="sectionedit31" id="task_2">Task 2</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Use GDB and PEDA to run the code provided at <a href="../../_media/cns/resurse/s2_pp_bash.tar.gz" class="media mediafile mf_gz" title="cns:resurse:s2_pp_bash.tar.gz (2.6 KB)">s2_pp_bash.tar.gz</a>. The executable gets input from the user and evaluates it against a static condition. If it succeeds it then calls a <code>password_accepted</code> function that prints out a success message and spawns a shell.</div>
+</li>
+</ul>
+
+<p>
+Your task is to use GDB and PEDA to force the executable to call the <code>password_accepted</code> function.
+</p>
+
+<p>
+<p><div class="notetip">
+Gather as much info about the executable as possible through the techniques you have learned in previous sessions.
+</p>
+
+<p>
+Think of modifying registers for forcing the executable to call the function (there is more than one way of doing this).
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit32" id="extragotplt">Extra: GOT/PLT</h3>
+<div class="level3">
+
+<p>
+<code>http://swarm.cs.pub.ro/~irinap/lab4/got/main-skel.c</code>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_158142804458355b79183bb" data-jsajax="%26skipfile%3D%252B/cns%253A%2528sidebar%257Cindex%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="cns:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../class-register.html" class="wikilink1" title="cns:class-register">Class Register</a></div></li>
+<li class="level1"><div class="li"><a href="../lab-split.html" class="wikilink1" title="cns:lab-split">Lab Split</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="cns:need-to-know">CNS Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../news.html" class="wikilink1" title="cns:news">News</a></div></li>
+<li class="level1"><div class="li"><a href="../rules-and-grading.html" class="wikilink1" title="cns:rules-and-grading">Rules and Grading</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="resources">Resources</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_156356459758355b791b2a2" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resources/direct.html" class="wikilink1" title="cns:resources:direct">Direct Access</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/documentation.html" class="wikilink1" title="cns:resources:documentation">Documentation</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/feed.html" class="wikilink1" title="cns:resources:feed">RSS Feed</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/mailing-list.html" class="wikilink1" title="cns:resources:mailing-list">Mailing List</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/vm.html" class="wikilink1" title="cns:resources:vm">Virtual Machine</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resources" [104-160] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_192630419158355b791d1e7" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="lab-01.html" class="wikilink1" title="cns:labs:lab-01">Lab 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="lab-02.html" class="wikilink1" title="cns:labs:lab-02">Lab 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="lab-03.html" class="wikilink1" title="cns:labs:lab-03">Lab 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="lab-04.html" class="wikilink1" title="cns:labs:lab-04">Lab 04 - Processes. Dynamic Analysis</a></span></div></li>
+<li class="level1"><div class="li"><a href="lab-05.html" class="wikilink1" title="cns:labs:lab-05">Lab 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="lab-06.html" class="wikilink1" title="cns:labs:lab-06">Lab 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="lab-07.html" class="wikilink1" title="cns:labs:lab-07">Lab 07 - Exploiting. Shellcodes (Part 2)</a></div></li>
+<li class="level1"><div class="li"><a href="lab-08.html" class="wikilink1" title="cns:labs:lab-08">Lab 08 - Exploit Protection Mechanisms</a></div></li>
+<li class="level1"><div class="li"><a href="lab-09.html" class="wikilink1" title="cns:labs:lab-09">Lab 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="lab-10.html" class="wikilink1" title="cns:labs:lab-10">Lab 10 - Password Breaking</a></div></li>
+<li class="level1"><div class="li"><a href="lab-11.html" class="wikilink1" title="cns:labs:lab-11">Lab 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="lab-12.html" class="wikilink1" title="cns:labs:lab-12">Lab 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [161-207] -->
+<h1 class="sectionedit3" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_52153884358355b791f11b" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../lectures/lecture-01.html" class="wikilink1" title="cns:lectures:lecture-01">Lecture 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-02.html" class="wikilink1" title="cns:lectures:lecture-02">Lecture 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-03.html" class="wikilink1" title="cns:lectures:lecture-03">Lecture 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-04.html" class="wikilink1" title="cns:lectures:lecture-04">Lecture 04 - Processes. Dynamic Analysis. GDB</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-05.html" class="wikilink1" title="cns:lectures:lecture-05">Lecture 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-06.html" class="wikilink1" title="cns:lectures:lecture-06">Lecture 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-07.html" class="wikilink1" title="cns:lectures:lecture-07">Lecture 07 - Strings</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-08.html" class="wikilink1" title="cns:lectures:lecture-08">Lecture 08 - Integers</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-09.html" class="wikilink1" title="cns:lectures:lecture-09">Lecture 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-10.html" class="wikilink1" title="cns:lectures:lecture-10">Lecture 10 - Password Cracking</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-11.html" class="wikilink1" title="cns:lectures:lecture-11">Lecture 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-12.html" class="wikilink1" title="cns:lectures:lecture-12">Lecture 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Lectures" [208-262] -->
+<h1 class="sectionedit4" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_9283790358355b7921060" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/assignment-1.html" class="wikilink1" title="cns:assignments:assignment-1">Assignment 1</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-2.html" class="wikilink1" title="cns:assignments:assignment-2">Assignment 2</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-3.html" class="wikilink1" title="cns:assignments:assignment-3">Assignment 3</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Assignments" [263-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-04.html#lab_04_-_processes_dynamic_analysis">Lab 04 - Processes. Dynamic Analysis</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-04.html#elf_format_continued">ELF Format Continued</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-04.html#symbol_table">Symbol Table</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#relocations">Relocations</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-04.html#memory_layout_of_a_process">Memory layout of a process</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-04.html#executable">Executable</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#heap">Heap</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#memory_mappings_and_libraries">Memory mappings and libraries</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#stack">Stack</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#segmentation_fault">Segmentation Fault</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#summary_of_memory_layout_without_aslr">Summary of memory layout without ASLR</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#address_space_layout_randomization">Address Space Layout Randomization</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-04.html#gdb_basic_commands">GDB Basic Commands</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-04.html#getting_help_with_gdb">Getting help with GDB</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#opening_a_program_with_gdb">Opening a program with GDB</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#disassembling">Disassembling</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#adding_breakpoints">Adding Breakpoints</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#listing_breakpoints">Listing Breakpoints</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#deleting_breakpoints">Deleting Breakpoints</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#execution_flow">Execution flow</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#examine_and_print_your_most_powerful_tools">Examine and Print, your most powerful tools</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#gdb_command_file">GDB command file</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-04.html#gdb_peda">GDB PEDA</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-04.html#installation">Installation</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#peda_commands">PEDA Commands</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#altering_variables_and_memory_with_peda_and_gdb">Altering variables and memory with PEDA and GDB</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#basic_stuff">Basic stuff</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#dynamic_analysis_shortcuts">Dynamic analysis shortcuts</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="lab-04.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-04.html#task_1">Task 1</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#task_2">Task 2</a></div></li>
+<li class="level3"><div class="li"><a href="lab-04.html#extragotplt">Extra: GOT/PLT</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cns/labs/lab-04.txt · Last modified: 2016/10/31 17:26 by lucian.mogosanu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab-04%3Fdo=media&amp;ns=cns%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab-04.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cns%253Alabs%253Alab-04&amp;1479891833" width="2" height="1" alt="" /></div>
+</body>
+</html>

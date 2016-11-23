@@ -1,0 +1,624 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cpl:labs-2015:08</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T07:33:43+0300"/>
+<meta name="keywords" content="cpl,labs-2015,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cpl:labs-2015"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="08.html"/>
+<link rel="canonical" href="../../../../cpl/labs-2015/08.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs-2015';var JSINFO = {"id":"cpl:labs-2015:08","namespace":"cpl:labs-2015","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="08.html#control_flow_analysis">08. Control Flow Analysis</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="08.html#abordari_ale_analizei_fluxului_de_control">Abordări ale analizei fluxului de control</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="08.html#exemplu">Exemplu</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="08.html#basic_blocks">Basic blocks</a></div></li>
+<li class="level2"><div class="li"><a href="08.html#graful_fluxului_de_control_cfg">Graful fluxului de control (CFG)</a></div></li>
+<li class="level2"><div class="li"><a href="08.html#dominatori_si_postdominatori">Dominatori și postdominatori</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="08.html#relatia_de_dominare">Relația de dominare</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#relatia_de_dominare_imediata">Relația de dominare imediată</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#relatia_de_post-dominare">Relația de post-dominare</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#arbori_de_dominare_si_post-dominare">Arbori de dominare și post-dominare</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="08.html#bucle_naturale_si_componente_tare_conexe">Bucle naturale și componente tare conexe</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="08.html#arc_inapoi">Arc înapoi</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#bucla_naturala">Buclă naturală</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#introducerea_nodului_pre-header">Introducerea nodului PRE-HEADER</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#bucle_imbricate">Bucle imbricate</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#regiuni_improprii">Regiuni improprii</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="08.html#optional_de_citit">Opțional de citit</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="08.html#exercitii_de_laborator_11p">Exerciții de laborator (11p)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="08.html#exercitiul_1_-_hands-on_pe_foaie_2p">Exercițiul 1 - hands-on, pe foaie (2p)</a></div></li>
+<li class="level2"><div class="li"><a href="08.html#exercitiul_2_-_no_loops_1p">Exercițiul 2 - no loops (1p)</a></div></li>
+<li class="level2"><div class="li"><a href="08.html#exercitiul_3_-_no_forwhiledo_while_1p">Exercițiul 3 - no for/while/do while (1p)</a></div></li>
+<li class="level2"><div class="li"><a href="08.html#exercitiul_4_-_goto_1p">Exercițiul 4 - goto (1p)</a></div></li>
+<li class="level2"><div class="li"><a href="08.html#exercitiul_5_-_transform_3p">Exercițiul 5 - transform (3p)</a></div></li>
+<li class="level2"><div class="li"><a href="08.html#exercitiul_6_-_llvm_pass_3p">Exercițiul 6 - LLVM pass (3p)</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="control_flow_analysis">08. Control Flow Analysis</h1>
+<div class="level1">
+
+<p>
+Înainte de a putea optimiza un program, unui compilator îi sunt necesare componente care sa îl ajute sa “înțeleagă” cum folosește programul respectiv resursele disponibile.
+</p>
+
+<p>
+Astfel, compilatorul trebuie sa fie capabil sa descrie:
+</p>
+<ul>
+<li class="level1"><div class="li"> caracteristicile fluxului de control al programelor</div>
+</li>
+<li class="level1"><div class="li"> cum sunt manipulate datele</div>
+</li>
+</ul>
+
+<p>
+Astfel, mecanismele mai generale, dar mai puțin eficiente, pot fi înlocuite cu mecanisme mai specializate și mai eficiente.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "08. Control Flow Analysis" [1-493] -->
+<h2 class="sectionedit2" id="abordari_ale_analizei_fluxului_de_control">Abordări ale analizei fluxului de control</h2>
+<div class="level2">
+
+<p>
+Orice analiza a fluxului de control al unei rutine începe cu determinarea <strong>blocurilor de bază(basic blocks)</strong>. Acest pas constituie rutina și construcția <strong>Control Flow Graph (CFG)</strong>.
+</p>
+
+<p>
+Abordarea descrisă în continuare folosește <strong>dominatorii</strong> pentru a descoperi buclele și a le memora, în vederea optimizării ulterioare. Această abordare este suficientă optimizoarelor care analizează fluxul de date în mod iterativ.
+</p>
+
+<p>
+O abordare mai sofisticată este <strong>analiza intervalelor (Interval Analysis)</strong>. Aceasta include o serie de metode de a analiza structura unei rutine și de a o descompune în regiuni imbricate denumite intervale. Această structură de regiuni imbricate este descrisă printr-un arbore (denumit arbore de control) care este foarte util în structurarea și îmbunătățirea analizei fluxului de date. Această abordare este mai complexă și nu va fi discutată aici.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Abordări ale analizei fluxului de control" [494-1452] -->
+<h3 class="sectionedit3" id="exemplu">Exemplu</h3>
+<div class="level3">
+
+<p>
+Înainte de a descrie tehnici formale folosite în analiza fluxului de control și în analiza fluxului de date, să prezentăm un exemplu simplu.
+Fie rutina C de mai jos, care calculează termenul <code>m</code> din șirul lui Fibonacci (<code>m ≥ 0</code>). Lângă secvența de cod C, am dat și o posibilă descriere într-un limbaj intermediar a acestei funcții.
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Cod sursă </th><th class="col1"> Pseudocod generat </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"><pre class="code c"><span class="kw4">unsigned</span> <span class="kw4">int</span> fib<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">int</span> m<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw4">unsigned</span> <span class="kw4">int</span> f0 <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+    <span class="kw4">unsigned</span> <span class="kw4">int</span> f1 <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+    <span class="kw4">unsigned</span> <span class="kw4">int</span> f2<span class="sy0">,</span> i<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">if</span> <span class="br0">&#40;</span>m <span class="sy0">&lt;=</span> <span class="nu0">1</span><span class="br0">&#41;</span>
+        <span class="kw1">return</span> m<span class="sy0">;</span>
+    <span class="kw1">else</span> <span class="br0">&#123;</span>
+        <span class="kw1">for</span><span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">2</span><span class="sy0">;</span> i <span class="sy0">&lt;=</span> m<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            f2 <span class="sy0">=</span> f0 <span class="sy0">+</span> f1<span class="sy0">;</span>
+            f0 <span class="sy0">=</span> f1<span class="sy0">;</span>
+            f1 <span class="sy0">=</span> f2<span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        <span class="kw1">return</span> f2<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</td><td class="col1"> <pre class="code asm"><span class="nu0">1</span>      receive m
+<span class="nu0">2</span>      f0 &lt;<span class="sy1">-</span> <span class="nu0">0</span>
+<span class="nu0">3</span>      f1 &lt;<span class="sy1">-</span> <span class="nu0">1</span>
+<span class="nu0">4</span>      if m &lt;= <span class="nu0">1</span> goto L3
+<span class="nu0">5</span>      i &lt;<span class="sy1">-</span> <span class="nu0">2</span>
+<span class="nu0">6</span>  L1<span class="sy1">:</span> if i &lt;= m goto L2
+<span class="nu0">7</span>      return f2
+<span class="nu0">8</span>  L2<span class="sy1">:</span> f2 &lt;<span class="sy1">-</span> f0<span class="sy1">+</span>f1
+<span class="nu0">9</span>      f0 &lt;<span class="sy1">-</span> f1
+<span class="nu0">10</span>     f1 &lt;<span class="sy1">-</span> f2
+<span class="nu0">11</span>     i &lt;<span class="sy1">-</span> i<span class="sy1">+</span><span class="nu0">1</span>
+<span class="nu0">12</span>     goto L1
+<span class="nu0">13</span> L3<span class="sy1">:</span> return m
+&nbsp;
+&nbsp;
+&nbsp;</pre>
+</td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [1826-2424] -->
+<p>
+Primul pas este de a descoperi structura de control a programului. Această structură poate fi evidentă în codul sursă (<code>if-then-else</code>, cu o buclă pe partea cu <code>else</code>), însă, aceasta nu mai este la fel de evidentă în limbajul intermediar. Mai mult, chiar și în C, există situații mult mai complexe (ex. un <code>for</code> ar fi putut fi format din instrucțiuni <code>if</code> și <code>goto</code>).
+Pentru a facilita înțelegerea metodei de analiză a fluxul de control, am reprezentat în figura de mai jos codul intermediar într-o formă “vizuală”, un <code>flowchart</code>.
+</p>
+
+<p>
+<a href="../../../../_detail/cpl/labs/laborator-08-fibonacci-flowchart.gif%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-fibonacci-flowchart.gif"><img src="../../../../_media/cpl/labs/laborator-08-fibonacci-flowchart.gif" class="mediacenter" title="Flowchart pentru fib()" alt="Flowchart pentru fib()" /></a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Exemplu" [1453-3068] -->
+<h2 class="sectionedit5" id="basic_blocks">Basic blocks</h2>
+<div class="level2">
+
+<p>
+Un <strong> block de bază (basic block)</strong> reprezintă o secvență de instrucțiuni care se execută întotdeauna una după alta.
+Formal, un <strong>basic block</strong> (bb) este o secvență maximală de instrucțiuni consecutive în care se poate intra doar prin intermediul primei instrucțiuni și din care se poate ieși doar prin intermediul ultimei instrucțiuni.
+</p>
+
+<p>
+<strong> Determinare basic blocks</strong>
+</p>
+<ol>
+<li class="level1"><div class="li"> Prima instrucțiune a unui basic block (denumită <strong>lider</strong>) poate fi:</div>
+<ul>
+<li class="level2"><div class="li"> punctul de intrare în rutină</div>
+</li>
+<li class="level2"><div class="li"> ținta unei instrucțiuni de salt</div>
+</li>
+<li class="level2"><div class="li"> instrucțiunea imediat următoare unei instrucțiuni de salt</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Pentru a determina bb-urile care formează o rutina întâi se identifică toți liderii și apoi, pentru fiecare lider, includem în  <code>bb</code> toate instrucțiunile de la lider pana la următorul lider sau până la sfârșitul rutinei.</div>
+</li>
+</ol>
+
+<p>
+Pe flowchart-ul de mai sus se vede că putem identifica cu ușurință blocurile de bază:
+</p>
+<ul>
+<li class="level1"><div class="li"> nodurile 1-4 formează un basic block </div>
+</li>
+<li class="level1"><div class="li"> nodurile 8-11 formează alt basic block </div>
+</li>
+<li class="level1"><div class="li"> Toate celelalte noduri formează singure câte un basic block</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Basic blocks" [3069-4184] -->
+<h2 class="sectionedit6" id="graful_fluxului_de_control_cfg">Graful fluxului de control (CFG)</h2>
+<div class="level2">
+
+<p>
+<a href="../../../../_detail/cpl/labs/laborator-08-fibonacci-cfg-llvm.png%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-fibonacci-cfg-llvm.png"><img src="../../../../_media/cpl/labs/laborator-08-fibonacci-cfg-llvm.png" class="media" title="Graful fluxului de control pentru fib (CFG) generate cu LLVM" alt="Graful fluxului de control pentru fib (CFG) generate cu LLVM" /></a>
+</p>
+
+<p>
+Figura conţine cod intermediar LLVM și a fost obţinută executând următoarele comenzi:
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> <span class="kw2">apt-get install</span> clang
+clang <span class="re5">-emit-llvm</span> fibo.c <span class="re5">-c</span> <span class="re5">-o</span> fibo.bc
+&nbsp;
+<span class="kw2">sudo</span> <span class="kw2">apt-get install</span> dot2tex
+&nbsp;
+opt <span class="re5">-dot-cfg</span> fibo.bc ; dot <span class="re5">-Tpdf</span> cfg.fib.dot <span class="sy0">&gt;</span> cfg.fib.pdf 
+SAU
+opt-<span class="nu0">3.0</span> <span class="re5">-f</span> <span class="re5">-dot-cfg</span> fibo.bc ; dot <span class="re5">-Tpdf</span> cfg.fib.dot <span class="sy0">&gt;</span> cfg.fib.pdf </pre>
+
+<p>
+În graf, există <strong>arc</strong> (muchie orientată) de la un nod la altul dacă există posibilitatea ca, imediat după execuția ultimei instrucțiuni din <code>bb</code>-ul din primul nod, să urmeze spre execuție prima instrucțiune din <code>bb</code>-ul din cel de-al doilea nod.
+Există arce de la nodul <em>entry</em> la fiecare nod care reprezintă un <strong>basic block de intrare</strong> (liderul său poate fi prima instrucțiune executată la apelul rutinei). Analog, există arce de la fiecare nod ce reprezinta un <strong>basic block de ieșire</strong> (ultima instrucțiunea a <code>bb</code>-ului poate fi ultima instrucțiune executată la ieșirea din funcție) la nodul <em>exit</em>.
+</p>
+
+<p>
+<p><div class="noteclassic">În general, exista un singur basic block de intrare, dar, în unele limbaje (ex. FORTRAN), pot exista mai multe puncte de intrare într-o rutina).
+</div></p>
+</p>
+
+<p>
+În continuare, definim:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Succ(b)</strong> - setul de succesori ai unui basic block</div>
+</li>
+<li class="level1"><div class="li"> <strong>Pred(b)</strong> - setul de predecesori ai unui basic block.</div>
+</li>
+</ul>
+
+<p>
+Tipuri de basic blocks:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Branch</strong> - blocul are mai mult de un succesor</div>
+</li>
+<li class="level1"><div class="li"> <strong>Join</strong> - blocul are mai mult de un predecesor</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Graful fluxului de control (CFG)" [4185-5756] -->
+<h2 class="sectionedit7" id="dominatori_si_postdominatori">Dominatori și postdominatori</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Dominatori și postdominatori" [5757-5799] -->
+<h3 class="sectionedit8" id="relatia_de_dominare">Relația de dominare</h3>
+<div class="level3">
+
+<p>
+Pentru a determina <strong>buclele într-un CFG</strong>, definim întâi o relație binară pe nodurile grafului, numită <strong>dominare</strong>.
+Nodul d <strong>domină</strong> nodul i (<strong>d dom i</strong>) dacă orice drum posibil de la nodul <em>entry</em> la nodul <em>i</em> include nodul <em>d</em>.
+Nodul d <strong>domină strict</strong> nodul i (<strong>d sdom i</strong>) dacă <code>d dom i</code> și <code>d != i</code>.
+<a href="../../../../_detail/cpl/labs/laborator-08-dominare.jpeg%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-dominare.jpeg"><img src="../../../../_media/cpl/labs/laborator-08-dominare.jpeg" class="mediacenter" title="d dom i" alt="d dom i" /></a>
+</p>
+
+<p>
+Proprietăți ale relației de dominare:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Reflexivitate</strong> - un nod este propriul său dominator</div>
+</li>
+<li class="level1"><div class="li"> <strong>Antisimetrie</strong> - dacă A domină B și B domina A atunci A = B</div>
+</li>
+<li class="level1"><div class="li"> <strong>Tranzitivitate</strong> - dacă A domină B și B domină C atunci A domină C</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "Relația de dominare" [5800-6465] -->
+<h3 class="sectionedit9" id="relatia_de_dominare_imediata">Relația de dominare imediată</h3>
+<div class="level3">
+
+<p>
+Nodul a este în relație de <strong>dominare imediată (a idom b)</strong> <code>dacă și numai dacă</code>:
+<em>pentru <code>a != b</code>, <code>a idom b ⇔ a dom b</code> și nu există <code>c</code> astfel încât <code>c != a</code> și <code>c != b</code> și <code>a dom c</code> și <code>c dom b</code></em>.
+Există un singur <strong>dominator imediat</strong> pentru fiecare nod; îl vom nota cu <strong>idom (nod)</strong>. Relația de <em>dominare imediată</em> formează un arbore cu nodurile CFG-ului a cărui rădăcină este nodul <em>entry</em> și ale cărui arcuri reprezintă relații de <em>dominare imediată</em>. Drumurile în acest arbore arată toate relațiile de dominare din CFG (vezi figura de mai sus).
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Relația de dominare imediată" [6466-7117] -->
+<h3 class="sectionedit10" id="relatia_de_post-dominare">Relația de post-dominare</h3>
+<div class="level3">
+
+<p>
+Nodul p <strong>post-domină</strong> nodul i (<strong>p pdom i</strong>) dacă orice drum posibil de la nodul <em>i</em> la nodul <em>exit</em> include nodul <em>p</em>.
+<a href="../../../../_detail/cpl/labs/laborator-08-post-dominare.jpeg%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-post-dominare.jpeg"><img src="../../../../_media/cpl/labs/laborator-08-post-dominare.jpeg" class="mediacenter" title="p pdom i" alt="p pdom i" /></a>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Relația de post-dominare" [7118-7342] -->
+<h3 class="sectionedit11" id="arbori_de_dominare_si_post-dominare">Arbori de dominare și post-dominare</h3>
+<div class="level3">
+
+<p>
+<strong>Arborii de dominare(graf si LLVM IR)</strong> pentru programul Fibonacci.
+</p>
+
+<p>
+<a href="../../../../_detail/cpl/labs/laborator-08-fibodom.png%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-fibodom.png"><img src="../../../../_media/cpl/labs/laborator-08-fibodom.png" class="media" title="Arbore de dominare pentru fib() LLVM IR" alt="Arbore de dominare pentru fib() LLVM IR" /></a>
+</p>
+
+<p>
+<strong>Arborele de postdominare</strong> pentru programul Fibonacci.
+</p>
+
+<p>
+<a href="../../../../_detail/cpl/labs/laborator-08-fibopostdom.png%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-fibopostdom.png"><img src="../../../../_media/cpl/labs/laborator-08-fibopostdom.png" class="media" title="Arbore de postdominare pentru fib()" alt="Arbore de postdominare pentru fib()" /></a>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "Arbori de dominare și post-dominare" [7343-7680] -->
+<h2 class="sectionedit12" id="bucle_naturale_si_componente_tare_conexe">Bucle naturale și componente tare conexe</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT12 SECTION "Bucle naturale și componente tare conexe" [7681-7735] -->
+<h3 class="sectionedit13" id="arc_inapoi">Arc înapoi</h3>
+<div class="level3">
+
+<p>
+Un <strong>arc înapoi</strong> în CFG este <em>un arc a cărui destinatie este întalnită înaintea nodului sursă intr-o parcurgere DFS</em>.
+<a href="../../../../_detail/cpl/labs/laborator-08-arc-inapoi.jpeg%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-arc-inapoi.jpeg"><img src="../../../../_media/cpl/labs/laborator-08-arc-inapoi.jpeg" class="mediacenter" title="Arc înapoi" alt="Arc înapoi" /></a>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Arc înapoi" [7736-7944] -->
+<h3 class="sectionedit14" id="bucla_naturala">Buclă naturală</h3>
+<div class="level3">
+
+<p>
+<strong>Buclă naturală</strong> determinată de <strong>arcul înapoi <code>v→u</code></strong> este definită ca fiind subgraful definit prin:
+</p>
+<ul>
+<li class="level1"><div class="li"> mulțimea de noduri - formată din nodul u și toate nodurile din care poate fi atins nodul v fără a trece prin u</div>
+</li>
+<li class="level1"><div class="li"> mulțimea de arce - toate arcele conectând nodurile din mulțime.</div>
+</li>
+</ul>
+
+<p>
+<strong>Atenție!</strong> Pentru a avea buclă naturală <code>u dom v</code> și, deci, nu există noduri din care v poate fi atins fără a trece prin u și care să nu fie la rândul lor dominate de u. Astfel, nodul u este <strong>header</strong>-ul buclei.
+<a href="../../../../_detail/cpl/labs/laborator-08-bucla-naturala.jpeg%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-bucla-naturala.jpeg"><img src="../../../../_media/cpl/labs/laborator-08-bucla-naturala.jpeg" class="mediacenter" title="Buclă naturală" alt="Buclă naturală" /></a>
+</p>
+
+<p>
+<p><div class="noteclassic">O buclă naturală este o <a href="http://en.wikipedia.org/wiki/Strongly_connected_component" class="urlextern" title="http://en.wikipedia.org/wiki/Strongly_connected_component"  rel="nofollow">componentă tare conexă</a> cu o singură intrare.
+</div></p>
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Buclă naturală" [7945-8720] -->
+<h3 class="sectionedit15" id="introducerea_nodului_pre-header">Introducerea nodului PRE-HEADER</h3>
+<div class="level3">
+
+<p>
+Multe optimizari constau în mutarea codului din interiorul buclei imediat înaintea header-ului buclei. Pentru a garanta că avem un astfel de loc disponibil, introducem conceptul de <strong>pre-header</strong>, care este <strong>un nou basic block, inițal gol, plasat imediat înaintea header-ului buclei</strong>. Astfel, toate arcele care înainte intrau în header, venind din afara buclei, acum vor intra în pre-header. În plus, există un singur arc de la pre-header la header. Figura de mai jos arată rezultatul introducerii unui pre-header pentru o buclă.
+</p>
+<div class="table sectionedit16"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Înainte de adăugarea nodului de preheader </th><th class="col1"> După adăugarea nodului de preheader </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> <a href="../../../../_detail/cpl/labs/laborator-08-bucla-fara-preheader.gif%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-bucla-fara-preheader.gif"><img src="../../../../_media/cpl/labs/laborator-08-bucla-fara-preheader.gif" class="media" title="Înainte de adăugarea nodului de preheader" alt="Înainte de adăugarea nodului de preheader" /></a></td><td class="col1"> <a href="../../../../_detail/cpl/labs/laborator-08-bucla-cu-preheader.gif%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-bucla-cu-preheader.gif"><img src="../../../../_media/cpl/labs/laborator-08-bucla-cu-preheader.gif" class="media" title="După adăugarea nodului de preheader" alt="După adăugarea nodului de preheader" /></a> </td>
+	</tr>
+</table></div>
+<!-- EDIT16 TABLE [9308-9586] -->
+</div>
+<!-- EDIT15 SECTION "Introducerea nodului PRE-HEADER" [8721-9587] -->
+<h3 class="sectionedit17" id="bucle_imbricate">Bucle imbricate</h3>
+<div class="level3">
+
+<p>
+Nu este greu de observat că dacă două bucle au header-e diferite, ele sunt fie <strong>disjuncte</strong>, fie <strong>imbricate</strong>. Pe de altă parte, dacă două bucle au același header (ca în cazul din figura de mai jos), nu este foarte clar dacă una este imbricată în cealaltă (și care este imbricată în care) sau dacă ele formeaza împreună o singură buclă.
+<a href="../../../../_detail/cpl/labs/laborator-08-bucla-dubla.gif%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-bucla-dubla.gif"><img src="../../../../_media/cpl/labs/laborator-08-bucla-dubla.gif" class="mediacenter" title="Bucle cu header comun" alt="Bucle cu header comun" /></a>
+</p>
+
+<p>
+Pornind de la faptul ca, fără mai multe detalii despre codul sursa, nu se poate distinge între aceste două situații, astfel de cazuri vor fi tratate ca fiind o singură buclă (există o modalitate de analiză a fluxului de control denumită <strong>analiză structurală</strong> care poate face acestă distincție).
+</p>
+
+</div>
+<!-- EDIT17 SECTION "Bucle imbricate" [9588-10353] -->
+<h3 class="sectionedit18" id="regiuni_improprii">Regiuni improprii</h3>
+<div class="level3">
+
+<p>
+O buclă naturală este doar un tip particular de componentă tare conexă. În practică, deși rar, pot apărea și alte structuri de tip buclă cu mai multe puncte de intrare (în special în programele nestructurate). Deși asemenea structuri sunt rare, faptul că ele totuși apar, ne obligă să le luăm în considerare. Cea mai generală structură de tip buclă care poate să apară este o componentă tare conexă a CFG-ului.
+</p>
+
+<p>
+CFG-ul este <strong>bine-structurat</strong> dacă acesta conține <strong>doar</strong> bucle naturale.
+Formal, un CFG <code>G=&lt;N,E&gt;</code> este <strong>bine-structurat</strong> dacă mulțimea arcelor poate fi partitionată în două mulțimi:
+</p>
+<ul>
+<li class="level1"><div class="li"> mulțimea arcelor înainte - acele arce care formează un graf aciclic orientat (DAG) în care fiecare nod poate fi atins din nodul <em>entry</em></div>
+</li>
+<li class="level1"><div class="li"> multimea arcelor înapoi - acele arce care sunt conforme cu definiția de mai sus, adică nodul destinație domină nodul sursă</div>
+</li>
+</ul>
+
+<p>
+Anumite șabloane de flux de control pot face un CFG prost-structurat. Astfel de sabloane se numesc regiuni improprii și în general sunt componente tare conexe cu mai multe intări. Un exemplu de regiune improprie este dat și în figura de mai jos (stanga).
+</p>
+<div class="table sectionedit19"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Regiune improprie </th><th class="col1"> După “node-splitting” </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> <a href="../../../../_detail/cpl/labs/laborator-08-regiune-improrie.gif%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-regiune-improrie.gif"><img src="../../../../_media/cpl/labs/laborator-08-regiune-improrie.gif" class="media" title="Regiune improprie" alt="Regiune improprie" /></a> </td><td class="col1"> <a href="../../../../_detail/cpl/labs/laborator-08-regiune-improrie-reparata.gif%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-regiune-improrie-reparata.gif"><img src="../../../../_media/cpl/labs/laborator-08-regiune-improrie-reparata.gif" class="media" title="După &quot;node-splitting&quot;" alt="După &quot;node-splitting&quot;" /></a> </td>
+	</tr>
+</table></div>
+<!-- EDIT19 TABLE [11559-11759] -->
+<p>
+Regiunile improprii sunt un impediment în special în analiza fluxului de date. Există mai multe metode de a trata problema regiunilor improprii dintr-un CFG dintre care menționăm:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>analiza iterativă</strong> a fluxului de date</div>
+</li>
+<li class="level1"><div class="li"> <strong>node-splitting</strong> pentru transformarea unui CFG ireductibil într-unul reductibil </div>
+</li>
+</ul>
+
+<p>
+(vezi exemplul de mai sus (figura din dreapta) în care tehnica a fost aplicată pentru nodul B3).
+</p>
+
+</div>
+<!-- EDIT18 SECTION "Regiuni improprii" [10354-12179] -->
+<h2 class="sectionedit20" id="optional_de_citit">Opțional de citit</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Basic Blocks and Flow Graphs, p528, <a href="http://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools" class="urlextern" title="http://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools"  rel="nofollow">Dragon book</a>, 2nd edition</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Control_flow_analysis" class="urlextern" title="http://en.wikipedia.org/wiki/Control_flow_analysis"  rel="nofollow">Analiza fluxului de control</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT20 SECTION "Opțional de citit" [12180-12442] -->
+<h1 class="sectionedit21" id="exercitii_de_laborator_11p">Exerciții de laborator (11p)</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT21 SECTION "Exerciții de laborator (11p)" [12443-12488] -->
+<h2 class="sectionedit22" id="exercitiul_1_-_hands-on_pe_foaie_2p">Exercițiul 1 - hands-on, pe foaie (2p)</h2>
+<div class="level2">
+
+<p>
+Pentru următorul CFG:
+<a href="../../../../_detail/cpl/labs/laborator-08-bucle.jpeg%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-bucle.jpeg"><img src="../../../../_media/cpl/labs/laborator-08-bucle.jpeg" class="mediacenter" title="CFG" alt="CFG" /></a>
+</p>
+<ul>
+<li class="level1"><div class="li"> găsiți arcele inapoi</div>
+</li>
+<li class="level1"><div class="li"> găsiți nodurile dominate de basic blockurile 2 și 4.</div>
+</li>
+<li class="level1"><div class="li"> desenați arborele de dominare</div>
+</li>
+<li class="level1"><div class="li"> determinați nodurile de tip branch și cele de tip join</div>
+</li>
+<li class="level1"><div class="li"> găsiți buclele naturale și nenaturale</div>
+</li>
+<li class="level1"><div class="li"> găsiți buclele imbricate</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT22 SECTION "Exercițiul 1 - hands-on, pe foaie (2p)" [12489-12868] -->
+<h2 class="sectionedit23" id="exercitiul_2_-_no_loops_1p">Exercițiul 2 - no loops (1p)</h2>
+<div class="level2">
+
+<p>
+Este posibil ca o funcție care conține unul din cuvintele cheie <code>for/while/do while</code> să nu conțină bucle? Dacă da, în ce condiții ?
+</p>
+
+<p>
+Scrieți o funcție în C și desenați CFG-ul corespunzător folosind toolchain-ul LLVM.
+</p>
+
+</div>
+<!-- EDIT23 SECTION "Exercițiul 2 - no loops (1p)" [12869-13143] -->
+<h2 class="sectionedit24" id="exercitiul_3_-_no_forwhiledo_while_1p">Exercițiul 3 - no for/while/do while (1p)</h2>
+<div class="level2">
+
+<p>
+Dați exemplu de o funcție care nu conține cuvintele cheie <code>for/while/do while</code>, dar conține bucle în CFG.
+</p>
+
+<p>
+Scrieți o funcție în C și desenați CFG-ul corespunzător folosind toolchain-ul LLVM.
+</p>
+
+</div>
+<!-- EDIT24 SECTION "Exercițiul 3 - no for/while/do while (1p)" [13144-13402] -->
+<h2 class="sectionedit25" id="exercitiul_4_-_goto_1p">Exercițiul 4 - goto (1p)</h2>
+<div class="level2">
+
+<p>
+Dați exemplu de o funcție care nu conține <code>for/while/do while</code>, conține maxim o instrucțiune <code>goto</code> și are o buclă nenaturală.
+</p>
+
+<p>
+Scrieți o funcție în C și desenați CFG-ul corespunzător folosind toolchain-ul LLVM.
+</p>
+
+</div>
+<!-- EDIT25 SECTION "Exercițiul 4 - goto (1p)" [13403-13670] -->
+<h2 class="sectionedit26" id="exercitiul_5_-_transform_3p">Exercițiul 5 - transform (3p)</h2>
+<div class="level2">
+
+<p>
+Transformați următoarea regiune improprie într-o buclă naturală plecând de la următorul cod :
+<a href="../../../../_detail/cpl/labs/laborator-08-exsplit.png%3Fid=cpl%253Alabs-2015%253A08.html" class="media" title="cpl:labs:laborator-08-exsplit.png"><img src="../../../../_media/cpl/labs/laborator-08-exsplit.png" class="mediacenter" title="Exemplu de split]" alt="Exemplu de split]" /></a>
+</p>
+<pre class="code cpp"><span class="kw4">int</span> f <span class="br0">&#40;</span><span class="kw4">int</span> x, <span class="kw4">int</span> y<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    x <span class="sy1">=</span> x <span class="sy2">+</span> <span class="nu0">1</span><span class="sy4">;</span>
+    <span class="kw1">switch</span><span class="br0">&#40;</span>y<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">case</span> <span class="nu0">2</span><span class="sy4">:</span>
+        <span class="kw1">do</span>
+        <span class="br0">&#123;</span>
+        L2<span class="sy4">:</span>
+            x <span class="sy1">=</span> x <span class="sy2">-</span> <span class="nu0">2</span><span class="sy4">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span>x <span class="sy1">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="kw1">goto</span> L4<span class="sy4">;</span>
+    <span class="kw1">case</span> <span class="nu0">3</span><span class="sy4">:</span>
+            x <span class="sy1">=</span> x <span class="sy2">*</span> <span class="nu0">3</span><span class="sy4">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span>x <span class="sy1">&lt;=</span> <span class="nu0">6</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                x <span class="sy2">-</span><span class="sy1">=</span> <span class="nu0">5</span><span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+            <span class="kw1">else</span> <span class="br0">&#123;</span>
+    <span class="kw1">default</span><span class="sy4">:</span>
+        L4<span class="sy4">:</span>
+                x <span class="sy1">&lt;&lt;=</span> <span class="nu0">4</span><span class="sy4">;</span>
+                <span class="kw1">if</span> <span class="br0">&#40;</span>x <span class="sy3">!</span><span class="sy1">=</span> <span class="nu0">16</span><span class="br0">&#41;</span> <span class="kw1">goto</span> L2<span class="sy4">;</span>
+                x <span class="sy1">=</span> y <span class="sy2">+</span> <span class="nu0">6</span><span class="sy4">;</span>
+            <span class="br0">&#125;</span>
+            y <span class="sy1">=</span> x <span class="sy2">+</span> <span class="nu0">7</span><span class="sy4">;</span>
+        <span class="br0">&#125;</span> <span class="kw1">while</span><span class="br0">&#40;</span>y <span class="sy1">&lt;</span> x<span class="br0">&#41;</span><span class="sy4">;</span>
+    <span class="br0">&#125;</span>
+    <span class="kw1">return</span> x<span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT26 SECTION "Exercițiul 5 - transform (3p)" [13671-14364] -->
+<h2 class="sectionedit27" id="exercitiul_6_-_llvm_pass_3p">Exercițiul 6 - LLVM pass (3p)</h2>
+<div class="level2">
+
+<p>
+Scrieți un LLVM pass pentru a afișa:
+</p>
+<ul>
+<li class="level1"><div class="li"> toate basic block-urile unui program</div>
+</li>
+<li class="level1"><div class="li"> pentru fiecare basic-block:</div>
+<ul>
+<li class="level2"><div class="li"> basic block-urile predecesoare</div>
+</li>
+<li class="level2"><div class="li"> basic block-urile următoare</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Hints:
+</p>
+<ul>
+<li class="level1"><div class="li"> instrucțiuni despre este creat pass-ul Hello din sursele de LLVM (inclusiv cum să faceți setup-ul): <a href="http://llvm.org/docs/WritingAnLLVMPass.html#quick-start-writing-hello-world" class="urlextern" title="http://llvm.org/docs/WritingAnLLVMPass.html#quick-start-writing-hello-world"  rel="nofollow">Start writing hello world</a></div>
+</li>
+<li class="level1"><div class="li"> instrucțiuni despre accesarea succesorilor și predecesorilor unui basic block: <a href="http://llvm.org/docs/ProgrammersManual.html#iterating-over-predecessors-successors-of-blocks" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#iterating-over-predecessors-successors-of-blocks"  rel="nofollow">Iterating over predecessors and successors of blocks</a></div>
+</li>
+</ul>
+
+<p>
+Detalii despre <a href="../../../../cpl/labs/llvm-pass.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/cpl/labs/llvm-pass"  rel="nofollow">LLVM passes</a>.
+</p>
+
+</div>
+<!-- EDIT27 SECTION "Exercițiul 6 - LLVM pass (3p)" [14365-] --></div>
+</body>
+</html>

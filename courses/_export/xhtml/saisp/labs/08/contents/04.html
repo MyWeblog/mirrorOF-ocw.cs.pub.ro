@@ -1,0 +1,82 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:08:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-09T12:33:41+0200"/>
+<meta name="keywords" content="saisp,labs,08,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/08/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:08:contents';var JSINFO = {"id":"saisp:labs:08:contents:04","namespace":"saisp:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_multiplicare_masini_virtuale_folosind_o_singura_image_de_baza">04. [10p] Multiplicare mașini virtuale folosind o singură image de bază</h3>
+<div class="level3">
+
+<p>
+Folosind imaginea <code>base.qcow2</code> dorim să pornim două mașini virtuale fără a crea două copii ale acesteia. Pentru acest lucru putem folosi conceptul <em>copy-on-write</em> specific acestui de tip de imagini (<code>qcow2</code>).
+</p>
+
+<p>
+Pentru a crea o nouă imagine ce reține doar diferențele față de imaginea de bază folosim comanda <code>create</code> a utilitarului <code>qemu-img</code> cu parametrul <code>-b</code> care va specifica baza de la care va porni noua imagine:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>qemu-img create <span class="re5">-f</span> qcow2 <span class="re5">-b</span> base.qcow2 sda-vm1.qcow2
+Formatting <span class="st_h">'sda-vm1.qcow2'</span>, <span class="re2">fmt</span>=qcow2 <span class="re2">size</span>=<span class="nu0">2147483648</span> <span class="re2">backing_file</span>=<span class="st_h">'base.qcow2'</span> <span class="re2">encryption</span>=off <span class="re2">cluster_size</span>=<span class="nu0">65536</span>
+<span class="co4">root@saisp:~# </span><span class="kw2">ls</span> <span class="re5">-lh</span> sda<span class="sy0">*</span>
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root 1.4G Jan <span class="nu0">29</span> <span class="nu0">19</span>:01 base.qcow2
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root 193K Jan <span class="nu0">29</span> <span class="nu0">19</span>:01 sda-vm1.qcow2</pre>
+
+<p>
+Afișați dimensiunea ambelor imagini.
+</p>
+
+<p>
+Porniți o nouă mașină virtuală folosind imaginea <code>sda-vm1.qcow2</code>.
+</p>
+
+<p>
+Creați un fișier pe 100 <abbr title="Megabyte">MB</abbr> în mașina virtuală. Afișați dimensiunea imaginilor (<code>base.qcow2</code> și <code>sda-vm1.qcow2</code>) și observați faptul că <code>base.qcow2</code> a rămas constant , iar <code>sda-vm1.qcow2</code> a crescut).
+</p>
+
+<p>
+Închideți mașina virtuală și ștergeți imaginea creată (<code>sda-vm1.qcow2</code>).
+</p>
+
+</div>
+</div>
+</body>
+</html>

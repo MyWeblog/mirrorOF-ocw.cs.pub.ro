@@ -1,0 +1,156 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:09:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-12-18T13:09:48+0200"/>
+<meta name="keywords" content="rl,labs,09,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/09/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:09:contents';var JSINFO = {"id":"rl:labs:09:contents:02","namespace":"rl:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_format_de_pachete_la_translatare">02. [10p] Format de pachete la translatare</h3>
+<div class="level3">
+
+<p>
+Ne propunem să analizăm antetul IP al pachetelor ce sunt generate de stațiile <code>red</code>, <code>green</code> și <code>blue</code> și au ca destinație o rețea din Internet. Pentru acest lucru vom folosi utilitarul de captură <code>tcpdump</code>.
+</p>
+
+<p>
+Pe stația <code>red</code> pornim comanda <code>ping</code> către <code>8.8.8.8.</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> 8.8.8.8
+PING 8.8.8.8 <span class="br0">&#40;</span>8.8.8.8<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 8.8.8.8: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">127</span> <span class="re2">time</span>=<span class="nu0">42.0</span> ms
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+<p><div class="noteclassic">
+Atunci când rulăm comanda <code>tcpdump</code> secvența de urmat este:
+</p>
+<ol>
+<li class="level1"><div class="li"> Se rulează comanda <code>tcpdump</code> cu opțiunile aferente într-un terminal, activând astfel captura de pachete. Utilitarul <code>tcpdump</code> așteaptă acum transmiterea de pachete pe interfețele pe care ascultă.</div>
+</li>
+<li class="level1"><div class="li"> Într-un alt terminal se rulează o comandă specifică unui client de rețea care generează trafic.</div>
+</li>
+<li class="level1"><div class="li"> Se revine în terminalul în care rulează comanda <code>tcpdump</code> și se urmăresc pachetele capturate.</div>
+</li>
+<li class="level1"><div class="li"> Când nu mai este nevoie de utilitarul <code>tcpdump</code> se întrerupe captura de pachete folosind combinația de taste <code>Ctrl+c</code>.</div>
+</li>
+</ol>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Pentru a urmări traficul, pe stația <code>host</code> rulăm comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>tcpdump <span class="re5">-i</span> eth0 <span class="kw2">ip</span> dst host 8.8.8.8
+tcpdump: verbose output suppressed, use <span class="re5">-v</span> or <span class="re5">-vv</span> <span class="kw1">for</span> full protocol decode
+listening on eth0, link-type EN10MB <span class="br0">&#40;</span>Ethernet<span class="br0">&#41;</span>, capture <span class="kw2">size</span> <span class="nu0">65535</span> bytes
+<span class="nu0">12</span>:<span class="nu0">59</span>:<span class="nu0">20.976707</span> IP host.local <span class="sy0">&gt;</span> google-public-dns-a.google.com: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">625</span>, <span class="kw2">seq</span> <span class="nu0">6</span>, length <span class="nu0">64</span>
+<span class="nu0">12</span>:<span class="nu0">59</span>:<span class="nu0">21.977708</span> IP host.local <span class="sy0">&gt;</span> google-public-dns-a.google.com: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">625</span>, <span class="kw2">seq</span> <span class="nu0">7</span>, length <span class="nu0">64</span></pre>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+(click pentru expandare) Detalii rulare masina virtuala VMware local
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+(click pentru expandare) Detalii rulare masina virtuala VMware local
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+<p><div class="noteimportant">
+După rularea comenzii de mai sus, probabil vi se va bloca terminalul. În mașina virtuală VMware apare o mini-fereastră care vă indică intrarea plăcii de rețea în modul <em>promiscuous</em>. Apăsați pe butonul <code>OK</code> al ferestrei pentru a debloca mașina virtuală și, astfel, terminalul.
+
+</div></p>
+</p>
+</div></div>
+<p>
+Observăm că adresa IP sursă este <code>host.local</code> chiar dacă stația <code>red</code> este cea care execută comanda <code>ping</code> și generează pachetele de tip <code>ICMP echo request</code>.
+</p>
+
+<p>
+Pentru a vedea pachetele așa cum sunt generate inițial, rulăm comandă <code>tcpdump</code> pe interfața <code>veth-red</code> în loc de <code>eth0</code>: 
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>tcpdump <span class="re5">-i</span> veth-red <span class="kw2">ip</span> dst host 8.8.8.8
+tcpdump: verbose output suppressed, use <span class="re5">-v</span> or <span class="re5">-vv</span> <span class="kw1">for</span> full protocol decode
+listening on veth-red, link-type EN10MB <span class="br0">&#40;</span>Ethernet<span class="br0">&#41;</span>, capture <span class="kw2">size</span> <span class="nu0">65535</span> bytes
+<span class="nu0">13</span>:01:<span class="nu0">12.557692</span> IP <span class="kw2">red</span> <span class="sy0">&gt;</span> google-public-dns-a.google.com: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">626</span>, <span class="kw2">seq</span> <span class="nu0">6</span>, length <span class="nu0">64</span>
+<span class="nu0">13</span>:01:<span class="nu0">13.559726</span> IP <span class="kw2">red</span> <span class="sy0">&gt;</span> google-public-dns-a.google.com: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">626</span>, <span class="kw2">seq</span> <span class="nu0">7</span>, length <span class="nu0">64</span></pre>
+
+<p>
+Observăm că pe interfața <code>veth-red</code> adresa IP sursă este adresa stației <code>red</code>, adică așa cum este generat de la început pachetul. Motivul este reprezentat de faptul că pachetele ce intră pe intefața <code>veth-red</code> sunt capturate înainte de rutare, iar procesul NAT este aplicat <strong>după rutare</strong> (vezi <a href="../../../../../../rl/labs/09/contents/01.html" class="wikilink1" title="rl:labs:09:contents:01">01. [10p] Configurare translatare de adrese (MASQUERADE)</a>.
+</p>
+
+<p>
+Pentru a vedea modul în care se translatează traficul capturăm traficul pe toate interfețele (cele de interes sunt <code>veth-red</code> și <code>eth0</code>)
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>tcpdump <span class="re5">-i</span> any <span class="kw2">ip</span> dst host 8.8.8.8
+tcpdump: verbose output suppressed, use <span class="re5">-v</span> or <span class="re5">-vv</span> <span class="kw1">for</span> full protocol decode
+listening on any, link-type LINUX_SLL <span class="br0">&#40;</span>Linux cooked<span class="br0">&#41;</span>, capture <span class="kw2">size</span> <span class="nu0">65535</span> bytes
+<span class="nu0">10</span>:<span class="nu0">23</span>:<span class="nu0">07.632412</span> IP <span class="kw2">red</span> <span class="sy0">&gt;</span> google-public-dns-a.google.com: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">707</span>, <span class="kw2">seq</span> <span class="nu0">237</span>, length <span class="nu0">64</span>
+<span class="nu0">10</span>:<span class="nu0">23</span>:<span class="nu0">07.632430</span> IP host.local <span class="sy0">&gt;</span> google-public-dns-a.google.com: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">707</span>, <span class="kw2">seq</span> <span class="nu0">237</span>, length <span class="nu0">64</span>
+<span class="nu0">10</span>:<span class="nu0">23</span>:<span class="nu0">08.633936</span> IP <span class="kw2">red</span> <span class="sy0">&gt;</span> google-public-dns-a.google.com: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">707</span>, <span class="kw2">seq</span> <span class="nu0">238</span>, length <span class="nu0">64</span>
+<span class="nu0">10</span>:<span class="nu0">23</span>:<span class="nu0">08.633954</span> IP host.local <span class="sy0">&gt;</span> google-public-dns-a.google.com: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">707</span>, <span class="kw2">seq</span> <span class="nu0">238</span>, length <span class="nu0">64</span></pre>
+
+<p>
+În lista de mai sus observăm atât pachetele care sunt captuarate pe interfața <code>veth-red</code> (generate de stația <code>red</code>) cât și cele capturate pe interfața <code>eth0</code> (translatate de stația <code>host</code>).
+</p>
+
+<p>
+Capturați și pachetele de reply, care au ca <strong>sursă</strong> adresa <code>8.8.8.8</code>. Folosiți șirul de argumente <code>ip src host 8.8.8.8</code> pentru <code>tcpdump</code>.
+</p>
+
+<p>
+Repetați testele de mai sus pentru stația <code>green</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Întrucât latența <abbr title="Domain Name System">DNS</abbr> poate fi semnificativă, recomandăm folosirea opțiunii <code>-n</code> a utilitarului <code>tcpdump</code>, opțiune care dezactivează rezolvarea <abbr title="Domain Name System">DNS</abbr>. În exemplele de mai sus, nu am folosit opțiunea <code>-n</code> a utilitarului <code>tcpdump</code> pentru a identifica mai ușor numele stațiilor implicate în conversație.
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

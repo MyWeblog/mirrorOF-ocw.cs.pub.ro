@@ -1,0 +1,430 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cpl:labs:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-31T10:27:23+0200"/>
+<meta name="keywords" content="cpl,labs,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cpl:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../cpl/labs/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs';var JSINFO = {"id":"cpl:labs:05","namespace":"cpl:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="05.html#llvm_ir_-_c_api">05. LLVM IR - C++ API</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="05.html#organizarea_ir-ului">Organizarea IR-ului</a></div></li>
+<li class="level3"><div class="li"><a href="05.html#generarea_de_cod_llvm_ir">Generarea de cod LLVM IR</a></div></li>
+<li class="level3"><div class="li"><a href="05.html#introducere_in_api-ul_de_c">Introducere în API-ul de C++</a></div></li>
+<li class="level3"><div class="li"><a href="05.html#tipuri_importante_pentru_lucrul_cu_api-ul_de_c">Tipuri importante pentru lucrul cu API-ul de C++</a></div></li>
+<li class="level3"><div class="li"><a href="05.html#exercitii_de_laborator_10p">Exerciții de laborator (10p)</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="05.html#exercitiul_1_-_first_dump_1p">Exercițiul 1 - first dump (1p)</a></div></li>
+<li class="level4"><div class="li"><a href="05.html#exercitiul_2_-_main_1p">Exercițiul 2 - main (1p)</a></div></li>
+<li class="level4"><div class="li"><a href="05.html#exercitiul_3_-_function_call_2p">Exercițiul 3 - function call (2p)</a></div></li>
+<li class="level4"><div class="li"><a href="05.html#exercitiul_4_-_printf_2p">Exercițiul 4 - printf (2p)</a></div></li>
+<li class="level4"><div class="li"><a href="05.html#exercitiul_5_-_string_global_2p">Exercițiul 5 - string global (2p)</a></div></li>
+<li class="level4"><div class="li"><a href="05.html#exercitiul_6_-_apel_printf_2p">Exercițiul 6 - apel printf (2p)</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="05.html#bonus">BONUS</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="05.html#contains">contains</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="llvm_ir_-_c_api">05. LLVM IR - C++ API</h2>
+<div class="level2">
+
+<p>
+În <a href="../../../../cpl/labs/04.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/cpl/labs/04"  rel="nofollow">laboratorul trecut</a> ne-am folosit de reprezentarea textuală a codului intermediar LLVM pentru a înțelege mai bine forma și structura acestuia. Laboratorul curent își propune să vă familiarizeze cu <abbr title="Application Programming Interface">API</abbr>-ul C++ cu care lucrează bibliotecile LLVM-ului pentru a reprezenta în memorie instrucțiuni.
+</p>
+
+<p>
+Reprezentarea în memorie a IR-ului este utilă (printre altele) pentru a putea utiliza engine-ul de optimizări independente de platformă și limbaj, <a href="http://llvm.org/docs/Passes.html" class="urlextern" title="http://llvm.org/docs/Passes.html"  rel="nofollow">LLVM Passes</a>. Acest framework va fi folosit în laboratoarele următoare și nu face subiectul laboratorului curent. Cunoașterea <abbr title="Application Programming Interface">API</abbr>-ului de C++ ne va ajuta pentru a putea implementa mai ușor astfel de optimizări, dar și pentru realizarea temei de casă nr. 2, cea de generare de cod intermediar. 
+</p>
+
+</div>
+<!-- EDIT1 SECTION "05. LLVM IR - C++ API" [1-878] -->
+<h3 class="sectionedit2" id="organizarea_ir-ului">Organizarea IR-ului</h3>
+<div class="level3">
+
+<p>
+Pentru mai multe detalii despre tipurile de instrucțiuni și semnificația acestora, revedeți secțiunea <a href="../../../../cpl/labs/04.html#organizarea_ir-ului" class="urlextern" title="http://ocw.cs.pub.ro/courses/cpl/labs/04#organizarea_ir-ului"  rel="nofollow">Organizarea IR-ului</a> din laboratorul trecut sau puteți consulta <a href="http://llvm.org/docs/LangRef.html" class="urlextern" title="http://llvm.org/docs/LangRef.html"  rel="nofollow">documentația oficială</a>.
+</p>
+
+<p>
+<a href="../../../../_detail/cpl/labs/module-hierarchy.png%3Fid=cpl%253Alabs%253A05.html" class="media" title="cpl:labs:module-hierarchy.png"><img src="../../../../_media/cpl/labs/module-hierarchy.png%3Fw=500&amp;tok=958551" class="mediacenter" alt="" width="500" /></a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Organizarea IR-ului" [879-1252] -->
+<h3 class="sectionedit3" id="generarea_de_cod_llvm_ir">Generarea de cod LLVM IR</h3>
+<div class="level3">
+
+<p>
+Pentru a înțelege mai ușor <abbr title="Application Programming Interface">API</abbr>-ul de C++ vom începe prin a explica pașii necesari <strong>generării în memorie</strong> a IR-ului corespunzător unei funcții simple, <code>sum</code>, ce calculează suma a două numere întregi:
+</p>
+<dl class="code">
+<dt><a href="../../../code/cpl/labs/05%3Fcodeblock=0" title="Download Snippet" class="mediafile mf_c">test.c</a></dt>
+<dd><pre class="code C"><span class="kw4">int</span> sum<span class="br0">&#40;</span><span class="kw4">int</span> x<span class="sy0">,</span> <span class="kw4">int</span> y<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw1">return</span> x <span class="sy0">+</span> y<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Mai întâi, să observăm cum arată fișierul <code>test.ll</code> corespunzător fișierului sursă:
+</p>
+<dl class="code">
+<dt><a href="../../../code/cpl/labs/05%3Fcodeblock=1" title="Download Snippet" class="mediafile mf_ll">test.ll</a></dt>
+<dd><pre class="code LLVM"><span class="co1">; ModuleID = 'test.ll'</span>
+<a href="http://llvm.org/docs/LangRef.html#datalayout"><span class="kw15">target datalayout</span></a> <span class="sy0">=</span> <span class="st0">&quot;e-m:e-i64:64-f80:128-n8:16:32:64-S128&quot;</span>
+target triple <span class="sy0">=</span> <span class="st0">&quot;x86_64-pc-linux-gnu&quot;</span>
+&nbsp;
+<span class="co1">; Function Attrs: nounwind uwtable</span>
+<a href="http://llvm.org/docs/LangRef.html#functionstructure"><span class="kw20">define</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <a href="http://llvm.org/docs/LangRef.html#globalvars"><span class="re9">@sum</span></a><span class="br0">&#40;</span><a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re0">%x</span><span class="sy0">,</span> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re0">%y</span><span class="br0">&#41;</span> #<span class="nu0">0</span> <span class="br0">&#123;</span>
+  <span class="re3">%1</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_alloca"><span class="kw6">alloca</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a><span class="sy0">,</span> <span class="kw0">align</span> <span class="nu0">4</span>
+  <span class="re3">%2</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_alloca"><span class="kw6">alloca</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a><span class="sy0">,</span> <span class="kw0">align</span> <span class="nu0">4</span>
+  <a href="http://llvm.org/docs/LangRef.html#i_store"><span class="kw6">store</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re0">%x</span><span class="sy0">,</span> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a><span class="sy0">*</span> <span class="re3">%1</span><span class="sy0">,</span> <span class="kw0">align</span> <span class="nu0">4</span>
+  <a href="http://llvm.org/docs/LangRef.html#i_store"><span class="kw6">store</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re0">%y</span><span class="sy0">,</span> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a><span class="sy0">*</span> <span class="re3">%2</span><span class="sy0">,</span> <span class="kw0">align</span> <span class="nu0">4</span>
+  <span class="re3">%3</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_load"><span class="kw6">load</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a><span class="sy0">,</span> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a><span class="sy0">*</span> <span class="re3">%1</span><span class="sy0">,</span> <span class="kw0">align</span> <span class="nu0">4</span>
+  <span class="re3">%4</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_load"><span class="kw6">load</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a><span class="sy0">,</span> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a><span class="sy0">*</span> <span class="re3">%2</span><span class="sy0">,</span> <span class="kw0">align</span> <span class="nu0">4</span>
+  <span class="re3">%5</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_add"><span class="kw2">add</span></a> <span class="kw0">nsw</span> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re3">%3</span><span class="sy0">,</span> <span class="re3">%4</span>
+  <a href="http://llvm.org/docs/LangRef.html#i_ret"><span class="kw1">ret</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re3">%5</span>
+<span class="br0">&#125;</span>
+&nbsp;
+attributes #<span class="nu0">0</span> <span class="sy0">=</span> <span class="br0">&#123;</span> <a href="http://llvm.org/docs/LangRef.html#fnattrs"><span class="kw13">nounwind</span></a> uwtable <span class="st0">&quot;disable-tail-calls&quot;</span><span class="sy0">=</span><span class="st0">&quot;false&quot;</span> <span class="st0">&quot;less-precise-fpmad&quot;</span><span class="sy0">=</span><span class="st0">&quot;false&quot;</span> <span class="st0">&quot;no-frame-pointer-elim&quot;</span><span class="sy0">=</span><span class="st0">&quot;true&quot;</span> <span class="st0">&quot;no-frame-pointer-elim-non-leaf&quot;</span> <span class="st0">&quot;no-infs-fp-math&quot;</span><span class="sy0">=</span><span class="st0">&quot;false&quot;</span> <span class="st0">&quot;no-nans-fp-math&quot;</span><span class="sy0">=</span><span class="st0">&quot;false&quot;</span> <span class="st0">&quot;stack-protector-buffer-size&quot;</span><span class="sy0">=</span><span class="st0">&quot;8&quot;</span> <span class="st0">&quot;target-cpu&quot;</span><span class="sy0">=</span><span class="st0">&quot;x86-64&quot;</span> <span class="st0">&quot;target-features&quot;</span><span class="sy0">=</span><span class="st0">&quot;+fxsr,+mmx,+sse,+sse2&quot;</span> <span class="st0">&quot;unsafe-fp-math&quot;</span><span class="sy0">=</span><span class="st0">&quot;false&quot;</span> <span class="st0">&quot;use-soft-float&quot;</span><span class="sy0">=</span><span class="st0">&quot;false&quot;</span> <span class="br0">&#125;</span>
+&nbsp;
+<span class="sy0">!</span>llvm<span class="sy0">.</span>ident <span class="sy0">=</span> <span class="sy0">!</span><span class="br0">&#123;</span><span class="sy0">!</span><span class="nu0">0</span><span class="br0">&#125;</span>
+&nbsp;
+<span class="sy0">!</span><span class="nu0">0</span> <span class="sy0">=</span> <span class="sy0">!</span><span class="br0">&#123;</span><span class="sy0">!</span><span class="st0">&quot;clang version 3.8.1-12ubuntu1 (tags/RELEASE_381/final)&quot;</span><span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT3 SECTION "Generarea de cod LLVM IR" [1253-3448] -->
+<h3 class="sectionedit4" id="introducere_in_api-ul_de_c">Introducere în API-ul de C++</h3>
+<div class="level3">
+
+<p>
+Pentru a obține reprezentarea în memorie a IR-ului din exemplu puteți folosi codul din arhiva de sarcini <a href="../../../../_media/cpl/labs/lab5_cpl.zip" class="media mediafile mf_zip" title="cpl:labs:lab5_cpl.zip (1.4 KB)">lab5_cpl.zip</a>. După cum se poate observa, pentru a putea folosi <abbr title="Application Programming Interface">API</abbr>-ul C++ va fi necesară includerea mai multor headere. În plus, ar fi bine să folosiți și namespace-ul llvm:
+</p>
+<pre class="code cpp"><span class="kw2">using</span> <span class="kw2">namespace</span> llvm<span class="sy4">;</span></pre>
+
+<p>
+Pentru construcția modulului primul pas este inițializarea unui obiect de acest tip și setarea:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://llvm.org/docs/LangRef.html#data-layout" class="urlextern" title="http://llvm.org/docs/LangRef.html#data-layout"  rel="nofollow">data layout</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://llvm.org/docs/LangRef.html#target-triple" class="urlextern" title="http://llvm.org/docs/LangRef.html#target-triple"  rel="nofollow">target triple</a></div>
+</li>
+</ul>
+<pre class="code cpp">Module<span class="sy2">*</span> mod <span class="sy1">=</span> <span class="kw3">new</span> Module<span class="br0">&#40;</span><span class="st0">&quot;test.ll&quot;</span>, getGlobalContext<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+mod<span class="sy2">-</span><span class="sy1">&gt;</span>setDataLayout<span class="br0">&#40;</span><span class="st0">&quot;e-m:e-p:32:32-f64:32:64-f80:32-n8:16:32-S128&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+mod<span class="sy2">-</span><span class="sy1">&gt;</span>setTargetTriple<span class="br0">&#40;</span><span class="st0">&quot;i386-pc-linux-gnu&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+<p>
+Înainte de a declara o funcție, trebuie definit tipul acesteia (adică antetul funcției):
+</p>
+<pre class="code cpp"><span class="co1">//Create IntType</span>
+<span class="kw4">auto</span> IntType <span class="sy1">=</span> llvm<span class="sy4">::</span><span class="me2">IntegerType</span><span class="sy4">::</span><span class="me2">getInt32Ty</span><span class="br0">&#40;</span>getGlobalContext<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co1">//Create sum's function prototype    </span>
+std<span class="sy4">::</span><span class="me2">vector</span><span class="sy1">&lt;</span>Type<span class="sy2">*</span><span class="sy1">&gt;</span> sum_args <span class="sy1">=</span> <span class="br0">&#123;</span> IntType, IntType <span class="br0">&#125;</span><span class="sy4">;</span>
+FunctionType<span class="sy2">*</span> sum_func_type <span class="sy1">=</span> FunctionType<span class="sy4">::</span><span class="me2">get</span><span class="br0">&#40;</span>
+<span class="coMULTI">/*Return Type*/</span> IntType,
+<span class="coMULTI">/*Params*/</span> sum_args,
+<span class="coMULTI">/*isVarArg*/</span> <span class="kw2">false</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+<p>
+În exemplul de mai sus:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>sum_func_type</code> este o variabilă ce definește antetul unei funcții cu următoarele proprietăți:</div>
+<ul>
+<li class="level2"><div class="li"> rezultatul funcției este un întreg pe 32 de biți</div>
+</li>
+<li class="level2"><div class="li"> parametrii funcției sunt specificați prin vectorul <code>sum_args</code></div>
+</li>
+<li class="level2"><div class="li"> nu are număr variabil de argumente</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <code>sum_args</code> este un vector ce definește tipurile argumentelor unei funcții:</div>
+<ul>
+<li class="level2"><div class="li"> primul parametru este un întreg pe 32 de biți</div>
+</li>
+<li class="level2"><div class="li"> al doilea parametru este un întreg pe 32 de biți </div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Următorul pas este declararea funcției:
+</p>
+<pre class="code cpp"><span class="co1">//Declare sum</span>
+Function<span class="sy2">*</span> sum_func <span class="sy1">=</span> llvm<span class="sy4">::</span><span class="me2">cast</span><span class="sy1">&lt;</span>llvm<span class="sy4">::</span><span class="me2">Function</span><span class="sy1">&gt;</span><span class="br0">&#40;</span>Mod<span class="sy2">-</span><span class="sy1">&gt;</span>getOrInsertFunction<span class="br0">&#40;</span><span class="st0">&quot;sum&quot;</span>, sum_func_type<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy4">;;</span>
+sum_func<span class="sy2">-</span><span class="sy1">&gt;</span>setCallingConv<span class="br0">&#40;</span>CallingConv<span class="sy4">::</span><span class="me2">C</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+<p>
+În codul de mai sus, se adaugă la modul (dacă nu există deja) funcția <code>sum</code> cu tipul definit anterior. Pe obiectul de tip <code>Function</code> returnat se pot apela diverse metode, de exemplu cea pentru setarea calling convention-ului.
+</p>
+
+<p>
+Urmează definirea efectivă a funcției. Primul pas este adăugarea argumentelor:
+</p>
+<pre class="code cpp">Function<span class="sy4">::</span><span class="me2">arg_iterator</span> args <span class="sy1">=</span> sum_func<span class="sy2">-</span><span class="sy1">&gt;</span>arg_begin<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+Argument<span class="sy2">*</span> int32_x <span class="sy1">=</span> <span class="sy3">&amp;</span><span class="br0">&#40;</span><span class="sy2">*</span>args<span class="sy2">++</span><span class="br0">&#41;</span><span class="sy4">;</span>
+int32_x<span class="sy2">-</span><span class="sy1">&gt;</span>setName<span class="br0">&#40;</span><span class="st0">&quot;x&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+Argument<span class="sy2">*</span> int32_y <span class="sy1">=</span> <span class="sy3">&amp;</span><span class="br0">&#40;</span><span class="sy2">*</span>args<span class="sy2">++</span><span class="br0">&#41;</span><span class="sy4">;</span>
+int32_y<span class="sy2">-</span><span class="sy1">&gt;</span>setName<span class="br0">&#40;</span><span class="st0">&quot;y&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+<p>
+Următorul pas este adăugarea primului BasicBlock din cadrul funcției. În mod uzual acesta va purta numele <code>entry</code>, însă poate avea și un alt nume.
+</p>
+<pre class="code cpp">BasicBlock<span class="sy2">*</span> entry <span class="sy1">=</span> BasicBlock<span class="sy4">::</span><span class="me2">Create</span><span class="br0">&#40;</span>getGlobalContext<span class="br0">&#40;</span><span class="br0">&#41;</span>, <span class="st0">&quot;entry&quot;</span>, sum_func<span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+<p>
+În cadrul BasicBlock-ului creat anterior se vor adăuga instrucțiunile, așa cum le vedem în reprezentarea fișierului <code>test.ll</code>:
+</p>
+
+<p>
+<p><div class="noteimportant">
+Documentația pentru cea mai recentă versiune de LLVM se găsește <a href="http://llvm.org/docs/doxygen/html/classllvm_1_1IRBuilder.html" class="urlextern" title="http://llvm.org/docs/doxygen/html/classllvm_1_1IRBuilder.html"  rel="nofollow">pe net</a> (căutați “llvm instruction”, “llvm IRBuilder” sau orice altă clasă vă interesează). La laborator folosim versiunea 3.8, așa că pot exista schimbări de <abbr title="Application Programming Interface">API</abbr> față de ce găsiți online, dar puteți măcar să vă orientați in linii mari.
+Pe mașina virtuală de la laborator găsiți header-ele LLVM-ului în <code>~/cpl/llvm/src/include/llvm</code>. Pentru acest laborator sunt importante mai ales header-ele din directorul <code>IR</code>.
+
+</div></p>
+</p>
+
+<p>
+}
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Introducere în API-ul de C++" [3449-6868] -->
+<h3 class="sectionedit5" id="tipuri_importante_pentru_lucrul_cu_api-ul_de_c">Tipuri importante pentru lucrul cu API-ul de C++</h3>
+<div class="level3">
+
+<p>
+La baza reprezentării în memorie a IR-ului de LLVM stau două ierarhii de clase: una pentru <strong>tipuri</strong> și una pentru <strong>valori</strong>.
+</p>
+
+<p>
+Ierarhia pentru tipuri are la bază clasa <a href="http://llvm.org/doxygen/classllvm_1_1Type.html" class="urlextern" title="http://llvm.org/doxygen/classllvm_1_1Type.html"  rel="nofollow">&#039;&#039;Type&#039;&#039;</a> (<code>include/llvm/IR/Type.h</code>) din care derivă
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>IntegerType</code>, </div>
+</li>
+<li class="level1"><div class="li"> <code>FunctionType</code>, </div>
+</li>
+<li class="level1"><div class="li"> <code>PointerType</code>, </div>
+</li>
+<li class="level1"><div class="li"> <code>StructType</code> etc (<code>include/llvm/IR/DerivedTypes.h</code>).</div>
+</li>
+</ul>
+
+<p>
+<a href="../../../../_detail/cpl/labs/classllvm_1_1type_inherit_graph.png%3Fid=cpl%253Alabs%253A05.html" class="media" title="cpl:labs:classllvm_1_1type_inherit_graph.png"><img src="../../../../_media/cpl/labs/classllvm_1_1type_inherit_graph.png" class="mediacenter" alt="" /></a>
+</p>
+
+<p>
+După cum probabil ați observat deja din exemplele de mai sus, instanțe ale acestora se pot obține folosind metodele statice <code>get</code> corespunzătoare fiecărei clase.
+</p>
+
+<p>
+Ierarhia pentru valori are la bază clasa <a href="http://llvm.org/doxygen/classllvm_1_1Value.html" class="urlextern" title="http://llvm.org/doxygen/classllvm_1_1Value.html"  rel="nofollow">&#039;&#039;Value&#039;&#039;</a> (<code>include/llvm/IR/Value.h</code>). Aceasta are o multitudine de subtipuri, incluzând în primul rând
+</p>
+<ul>
+<li class="level1"><div class="li"> toate tipurile de instrucțiuni de IR (<code>llvm/include/IR/Instruction.h</code>, <code>llvm/include/IR/InstrTypes.h</code>, <code>llvm/include/IR/Instructions.h</code>) </div>
+</li>
+<li class="level1"><div class="li"> toate tipurile de constante (<code>llvm/include/IR/Constant.h</code>, <code>llvm/include/IR/Constants.h</code>), </div>
+</li>
+<li class="level1"><div class="li"> argumentele funcțiilor,</div>
+</li>
+<li class="level1"><div class="li"> basic block-urile etc.</div>
+</li>
+</ul>
+
+<p>
+<a href="../../../../_detail/cpl/labs/classllvm_1_1instruction_inherit_graph.png%3Fid=cpl%253Alabs%253A05.html" class="media" title="cpl:labs:classllvm_1_1instruction_inherit_graph.png"><img src="../../../../_media/cpl/labs/classllvm_1_1instruction_inherit_graph.png%3Fw=800&amp;tok=c5c09e" class="media" alt="" width="800" /></a>
+<a href="../../../../_detail/cpl/labs/classllvm_1_1value_inherit_graph.png%3Fid=cpl%253Alabs%253A05.html" class="media" title="cpl:labs:classllvm_1_1value_inherit_graph.png"><img src="../../../../_media/cpl/labs/classllvm_1_1value_inherit_graph.png%3Fw=800&amp;tok=fb91d7" class="media" alt="" width="800" /></a>
+</p>
+
+<p>
+În general, expresiile constante sunt folosite pentru valori care vor fi constante în executabilul final, dar nu pot fi calculate încă (de exemplu pentru că se bazează pe adresa unei variabile globale, care este stabilită mult mai târziu în cadrul procesului de compilare).
+</p>
+
+<p>
+De regulă subclasele lui <code>Value</code> pun la dispoziție una sau mai multe metode statice <code>Create</code> care se pot folosi pentru a obține obiecte de acel tip. Există însă și excepții, pentru care trebuie folosit direct constructorul. Pentru un <abbr title="Application Programming Interface">API</abbr> uniform e recomandat să folosiți clasa <a href="http://llvm.org/doxygen/classllvm_1_1IRBuilder.html" class="urlextern" title="http://llvm.org/doxygen/classllvm_1_1IRBuilder.html"  rel="nofollow"> IRBuilder</a>.
+</p>
+
+<p>
+Ierarhia de valori ușurează lucrul cu orice combinații de instrucțiuni sau constante. De exemplu, o instrucțiune de adunare poate folosi ca operanzi fie un argument al funcției și o constantă, fie o constantă și rezultatul unei instrucțiuni anterioare, fie rezultatele a două instrucțiuni anterioare, și așa mai departe. Pentru a folosi rezultatul unei instrucțiuni ca operand, pur și simplu folosiți instanța acelei instrucțiuni:
+</p>
+<pre class="code cpp"><span class="co1">// Add 3 numbers</span>
+Value <span class="sy2">*</span>int32_x_plus_y <span class="sy1">=</span> Builder.<span class="me1">CreateAdd</span><span class="br0">&#40;</span>
+  int32_x, int32_y, <span class="st0">&quot;x_plus_y&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+Value <span class="sy2">*</span>int32_x_plus_y_plus_z <span class="sy1">=</span> Builder.<span class="me1">CreateAdd</span><span class="br0">&#40;</span>
+  int32_x_plus_y, int32_z, <span class="st0">&quot;x_plus_y_plus_z&quot;</span><span class="br0">&#41;</span><span class="sy4">;</span></pre>
+
+</div>
+<!-- EDIT5 SECTION "Tipuri importante pentru lucrul cu API-ul de C++" [6869-9498] -->
+<h3 class="sectionedit6" id="exercitii_de_laborator_10p">Exerciții de laborator (10p)</h3>
+<div class="level3">
+
+<p>
+În rezolvarea laboratorului folosiți arhiva de sarcini <a href="../../../../_media/cpl/labs/lab5_cpl.zip" class="media mediafile mf_zip" title="cpl:labs:lab5_cpl.zip (1.4 KB)">lab5_cpl.zip</a>.
+</p>
+
+</div>
+
+<h4 id="exercitiul_1_-_first_dump_1p">Exercițiul 1 - first dump (1p)</h4>
+<div class="level4">
+
+<p>
+Pornind de la Makefile-ul din laborator, compilați și rulați exemplul respectiv pentru a obține un fișier <code>.ll</code>. 
+</p>
+
+</div>
+
+<h4 id="exercitiul_2_-_main_1p">Exercițiul 2 - main (1p)</h4>
+<div class="level4">
+
+<p>
+La exercițiul anterior am construit un program care generează instrucțiunile corespunzătoare obținerii funcției <code>sum</code>. Pentru următoarele exerciții vom construi un program care să genereze întreg <code>.ll</code>-ul necesar pentru a apela funcția <code>sum</code> și a-i printa rezultatul:
+</p>
+<dl class="code">
+<dt><a href="../../../code/cpl/labs/05%3Fcodeblock=12" title="Download Snippet" class="mediafile mf_c">main.c</a></dt>
+<dd><pre class="code c"><span class="co2">#include &lt;stdlib.h&gt;</span>
+<span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> sum<span class="br0">&#40;</span><span class="kw4">int</span> x<span class="sy0">,</span> <span class="kw4">int</span> y<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+  <span class="kw1">return</span> x <span class="sy0">+</span> y<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+  <span class="kw4">int</span> a <span class="sy0">=</span> <span class="nu0">10</span><span class="sy0">,</span> b <span class="sy0">=</span> <span class="nu0">23</span><span class="sy0">;</span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;sum of %d and %d is %d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> a<span class="sy0">,</span> b<span class="sy0">,</span> sum<span class="br0">&#40;</span>a<span class="sy0">,</span> b<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Puteți să generați fișierul în forma textuală folosind <code>clang</code>, pentru a înțelege exact ce trebuie să generați:
+</p>
+
+<p>
+<code>clang -S -emit-llvm main.c -o main.ll</code>
+</p>
+
+<p>
+Ca prim pas, generați o funcție main care întoarce 0.
+</p>
+
+</div>
+
+<h4 id="exercitiul_3_-_function_call_2p">Exercițiul 3 - function call (2p)</h4>
+<div class="level4">
+
+<p>
+Adăugați în corpul funcției <code>main</code> un apel către funcția <code>sum</code>, cu argumentele din exemplu. Pentru simplitate, puteți folosi direct constante de tip int32, nu e nevoie să alocați spațiu pe stivă.
+</p>
+
+</div>
+
+<h4 id="exercitiul_4_-_printf_2p">Exercițiul 4 - printf (2p)</h4>
+<div class="level4">
+
+<p>
+Adăugați declarația funcției <code>printf</code>. Aceasta primește un parametru de tip pointer la un întreg pe 8 biți, și are număr variabil de parametri (<code>isVarArgs</code>).
+Întrucat este o funcție de bibliotecă, nu trebuie definită de către voi.
+</p>
+
+</div>
+
+<h4 id="exercitiul_5_-_string_global_2p">Exercițiul 5 - string global (2p)</h4>
+<div class="level4">
+
+<p>
+Pentru apelarea functiei <code>printf</code>, avem nevoie de un string global care să conțină argumentul de tip format (“sum of %d and %d is %d\n”). <strong>(Hint: llvm::IRBuilder::CreateGlobalStringPtr)</strong>
+</p>
+
+</div>
+
+<h4 id="exercitiul_6_-_apel_printf_2p">Exercițiul 6 - apel printf (2p)</h4>
+<div class="level4">
+
+<p>
+Apelul funcției printf va primi 4 argumente: formatul + cele 3 valori care trebuie printate (2 constante și rezultatului apelului functiei <code>sum</code>). Pentru a transmite ca parametru formatul, va trebui să îi calculați adresa folosind o constantă de tip GetElementPointer.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Exerciții de laborator (10p)" [9499-11655] -->
+<h2 class="sectionedit7" id="bonus">BONUS</h2>
+<div class="level2">
+
+</div>
+
+<h4 id="contains">contains</h4>
+<div class="level4">
+
+<p>
+Adăugați o funcție <code>contains</code> care primește ca parametri un șir de caractere și un caracter, și întoarce true dacă șirul conține caracterul dat (și false în caz contrar).
+</p>
+
+</div>
+<!-- EDIT7 SECTION "BONUS" [11656-] --></div>
+</body>
+</html>

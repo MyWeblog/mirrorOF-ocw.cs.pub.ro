@@ -1,0 +1,102 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:12:contents:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-01-19T11:24:23+0200"/>
+<meta name="keywords" content="rl,labs,12,contents,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:12:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/12/contents/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:12:contents';var JSINFO = {"id":"rl:labs:12:contents:06","namespace":"rl:labs:12:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_manuala_a_unui_client_pppoe">06. [20p] Configurare manuală a unui client PPPoE</h3>
+<div class="level3">
+
+<p>
+După cum am precizat mai sus, comanda <code>pppoeconf</code> este folosită pentru configurarea conexiunii PPPoE, inclusiv activarea acesteia. Configurația dată de comanda <code>pppoeconf</code> poate fi realizată și manual<sup><a href="06.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>. O asemenea situație poate apărea în cazul în care există mai multe conexiuni de tip PPPoE pentru acces la Internet.
+</p>
+
+<p>
+Argumentul <code>dsl-provider</code> transmis comenzilor <code>pon</code> și <code>poff</code> este aferent fișierului <code>/etc/ppp/peers/dsl-provider</code> care descrie conexiunea de tip PPPoE. Se pot crea mai multe astfel de fișiere pentru conexiuni diferite.
+</p>
+
+<p>
+Adăugați pe serverul PPPoE (adică pe stația <code>host</code>) credențialele <code>extra</code>/<code>extra</code> (adică username <code>extra</code> și parola <code>extra</code>). Configurați <strong>manual</strong> pe stația <code>red</code> o conexiune PPPoE nouă, denumită <code>rl-dsl-provider</code>, care să se autentifice la serverul PPPoE folosind credențialele <code>extra</code>/<code>extra</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Întrucât va trebui să repornim serverul PPPoE, dezactivați conexiunile PPPoE anterioare (cele create folosind <code>pppoeconf</code>) pe stațiile <code>red</code>, <code>green</code> și <code>blue</code> folosind comanda <code>poff</code>.
+</p>
+
+<p>
+După ce ați realizat configurația pe stația <code>host</code>, opriți și reporniți serverul PPPoE. Pentru oprire folosiți comanda <code>pkill</code> iar pentru pornire comanda <code>pppoe-server</code> așa cum e indicat în partea finală din secțiunea <a href="../../../../../../rl/labs/12/contents/02.html" class="wikilink1" title="rl:labs:12:contents:02">02. [15p] Configurare server de PPPoE</a>.
+</p>
+
+<p>
+Pe stația <code>red</code> va trebui:
+</p>
+<ul>
+<li class="level1"><div class="li"> să creați fișierul <code>/etc/ppp/peers/rl-dsl-provider</code> cu informații legate de noul furnizor;</div>
+</li>
+<li class="level1"><div class="li"> să actualizați fișierul <code>/etc/ppp/chap-secrets</code> cu noile credențiale (adăugați-le pe lângă cele existente).</div>
+</li>
+</ul>
+
+<p>
+Cel mai bine este ca, pentru a crea fișierul <code>/etc/ppp/peers/rl-dsl-provider</code>, să faceți o copie a fișierului <code>/etc/ppp/peers/dsl-provider</code> cu numele <code>/etc/ppp/peers/rl-dsl-provider</code>. Modificările de făcut sunt minore.
+</p>
+
+<p>
+Folosiți comanda <code>pon rl-dsl-provider</code> pentru a porni conexiunea PPPoE creată manual.
+</p>
+
+<p>
+Folosiți indicațiile din <a href="https://help.ubuntu.com/community/ADSLPPPoE#Configuration_by_hand" class="urlextern" title="https://help.ubuntu.com/community/ADSLPPPoE#Configuration_by_hand"  rel="nofollow">pagina ADSLPPoE a comunității Ubuntu</a>.
+
+</div></p>
+</p>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="06.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+detalii despre configurarea manuală a clientului PPPoE se găsesc <a href="http://wiki.mikrotik.com/wiki/Manual:Interface/PPPoE" class="urlextern" title="http://wiki.mikrotik.com/wiki/Manual:Interface/PPPoE"  rel="nofollow">aici</a></div>
+</div>
+</div>
+</body>
+</html>

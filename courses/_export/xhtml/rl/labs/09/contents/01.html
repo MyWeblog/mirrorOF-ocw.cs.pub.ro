@@ -1,0 +1,154 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:09:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-12-11T11:03:16+0200"/>
+<meta name="keywords" content="rl,labs,09,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/09/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:09:contents';var JSINFO = {"id":"rl:labs:09:contents:01","namespace":"rl:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_translatare_de_adrese_masquerade">01. [10p] Configurare translatare de adrese (MASQUERADE)</h3>
+<div class="level3">
+
+<p>
+Epuizarea adreselor IPv4 în cadrul rețelelor curente a condus la folosirea de adrese IP din clase private (de ex. <code>192.168.0.0/24</code>). Pe lângă comunicația dintre stațiile unei rețele, dorim și accesul la Internet al acestora. De aceea s-a introdus conceptul de translatare de adrese (NAT: <em>Network Address Translation</em>) prin care mai multe stații dispun de acces la Internet folosind aceeași adresă IP rutabilă: adresa gateway-ului. Activarea translatării de adrese (NAT) pe gateway conduce la înlocuirea perechii &lt;adresă IP sursă, port sursă&gt; (aparținând stației) cu perechea &lt;adresa IP gateway, port disponibil&gt;.
+</p>
+
+<p>
+Configurarea NAT pe Linux se realizează tot prin intermediul comenzii <code>iptables</code>, la fel ca în cazul configurării firewall-ului. Dacă pentru configurarea firewall-ului foloseam tabela <code>filter</code> (tabela implicită a <code>iptables</code>), pentru configurarea translatării de adrese vom folosi tabela <code>nat</code>.
+</p>
+
+<p>
+Astfel, pentru a activa NAT pe un server Linux executăm comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+În comanda de mai sus:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-t</code> specifică tabela pe care se aplică regula, în cazul nostru tabela <code>nat</code>.</div>
+</li>
+<li class="level1"><div class="li"> <code>-A</code> înseamnă adăugarea unei reguli la sfârșitul listei de reguli.</div>
+</li>
+<li class="level1"><div class="li"> <code>POSTROUTING</code> se referă la momentul când va fi realizat procesul de translatare de adrese: după rutare.</div>
+<ul>
+<li class="level2"><div class="li"> În nomenclatura <code>iptables</code> acesta se numește și de <strong>lanț (chain)</strong>.</div>
+</li>
+<li class="level2"><div class="li"> Exemple de alte lanțuri: <code>INPUT</code>, <code>OUTPUT</code>, <code>FORWARD</code>, <code>PREROUTING</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <code>-j</code> este acțiunea ce va fi luată, iar în acest caz este <code>MASQUERADE</code> (acțiune simplă de translatare de adrese).</div>
+</li>
+</ul>
+
+<p>
+Pentru a verifica și valida regula, afișăm intrările din lanțul <code>POSTROUTING</code> din tabela <code>nat</code> folosind comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination
+    <span class="nu0">0</span>     <span class="nu0">0</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span></pre>
+
+<p>
+Vrem să verificăm configurarea corectă a NAT. Pentru acesta vom trimite de pe stația <code>red</code> un pachet către <code>8.8.8.8</code>. Pachetul va trece prin gateway (adică stația <code>host</code>) și va fi translatat. Pe stația <code>red</code> rulăm comanda
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> 8.8.8.8
+PING 8.8.8.8 <span class="br0">&#40;</span>8.8.8.8<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+From 192.168.1.2 <span class="re2">icmp_seq</span>=<span class="nu0">1</span> Destination Host Unreachable
+From 192.168.1.2 <span class="re2">icmp_seq</span>=<span class="nu0">2</span> Destination Host Unreachable
+&nbsp;
+<span class="re5">---</span> 8.8.8.8 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">0</span> received, +<span class="nu0">2</span> errors, <span class="nu0">100</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 999ms</pre>
+
+<p>
+Observăm că nu există conectivitate de la stația <code>red</code> către adresa IP <code>8.8.8.8</code>. Consultăm întreaga tabelă <code>nat</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> <span class="re5">-n</span> <span class="re5">-v</span>
+Chain PREROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">2</span> packets, <span class="nu0">168</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+&nbsp;
+Chain INPUT <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+&nbsp;
+Chain OUTPUT <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+&nbsp;
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">0</span>     <span class="nu0">0</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span> </pre>
+
+<p>
+Observăm că pachetele ajung în lanțul <code>PREROUTING</code> (înainte de rutare), dar nu ajung în lanțul <code>POSTROUTING</code> (după rutare). Ne gândim că este posibil să fie o problemă cu rutarea pe gateway. Verificăm dacă rutarea este activată:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = <span class="nu0">0</span></pre>
+
+<p>
+Într-adevăr, rutarea nu este activată. Pentru a activa rutarea pe stația <code>host</code> rulăm comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>sysctl <span class="re5">-w</span> net.ipv4.ip_forward=<span class="nu0">1</span>
+net.ipv4.ip_forward = <span class="nu0">1</span></pre>
+
+<p>
+Intrăm din nou pe stația <code>red</code> și folosim <code>ping</code> pentru a testa conectivitatea la adresa IP <code>8.8.8.8</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> 8.8.8.8
+PING 8.8.8.8 <span class="br0">&#40;</span>8.8.8.8<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 8.8.8.8: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">61</span> <span class="re2">time</span>=<span class="nu0">92.9</span> ms
+<span class="nu0">64</span> bytes from 8.8.8.8: <span class="re2">icmp_req</span>=<span class="nu0">2</span> <span class="re2">ttl</span>=<span class="nu0">61</span> <span class="re2">time</span>=<span class="nu0">81.2</span> ms
+&nbsp;
+<span class="re5">---</span> 8.8.8.8 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">2</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 1001ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">81.272</span><span class="sy0">/</span><span class="nu0">87.094</span><span class="sy0">/</span><span class="nu0">92.917</span><span class="sy0">/</span><span class="nu0">5.829</span> ms</pre>
+
+<p>
+Acum există conectivitate, lucru certificat și de prezența unor pachete în lista prelucrată pe lanțul <code>POSTROUTING</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">2</span>   <span class="nu0">168</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span></pre>
+
+</div>
+</div>
+</body>
+</html>

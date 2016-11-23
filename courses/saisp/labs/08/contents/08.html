@@ -1,0 +1,321 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    08. [15p] Managementul mașinilor virtuale KVM folosind virsh    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-04-28T16:36:07+0300"/>
+<meta name="keywords" content="saisp,labs,08,contents,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/saisp/labs/08/contents/08.html"/>
+<link rel="canonical" href="08.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:08:contents';var JSINFO = {"id":"saisp:labs:08:contents:08","namespace":"saisp:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="08%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="08%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_managementul_masinilor_virtuale_kvm_folosind_virsh">08. [15p] Managementul mașinilor virtuale KVM folosind virsh</h3>
+<div class="level3">
+
+<p>
+Pentru a ușura managementul mașinilor virtuale a fost dezvoltată o bibliotecă de interacțiune cu acestea ce poartă denumirea de <code>libvirt</code>. Această bibliotecă oferă o interfață de programare comună pentru mai multe tehnologii (e.g.: KVM, LXC) fiind folosită de majoritatea tehnologiilor open-source de Cloud (e.g.: OpenStack, oVirt).
+</p>
+
+<p>
+Pentru administratorii de rețea a fost dezvoltată o consolă numită <code>virsh</code> ce folosește interfața oferită de <code>libvirt</code> pentru interacțiunea cu mașinile virtuale.
+</p>
+
+<p>
+Pentru a putea folosi facilitățile oferite de <code>libvirt</code> trebuie să instalăm pachetele <code>libvirt-bin</code>, <code>virtinst</code>, <code>virt-viewer</code> și <code>virt-top</code>. De asemenea dacă utilizatorul e diferit de cel privilegiat trebuie adăugat în grupul <code>libvirtd</code> (ca si la <code>kvm</code>). În exemplul următor vom folosi utilizatorul privilegiat <code>root</code>.
+</p>
+
+<p>
+În primul pas trebuie să activăm serviciul de networking al <code>libvirt</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>virsh <span class="re5">-c</span> qemu:<span class="sy0">///</span>system net-start default</pre>
+
+<p>
+Pentru a crea o mașină virtuală folosim utilitarul <code>virt-install</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>virt-install <span class="re5">--connect</span> qemu:<span class="sy0">///</span>system <span class="re5">--name</span> VM1 <span class="re5">--hvm</span> <span class="re5">--ram</span> <span class="nu0">256</span> <span class="re5">--disk</span> <span class="re2">path</span>=base.qcow2,<span class="re2">format</span>=qcow2 <span class="re5">--network</span> <span class="re2">network</span>=default <span class="re5">--vnc</span> <span class="re5">--import</span></pre>
+
+<p>
+Semnificația parametrilor este după cum urmează:
+</p>
+<pre class="code bash">   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--connect</span> qemu:<span class="sy0">///</span>system<span class="st_h">''</span>  - conectarea la sistemul <span class="kw3">local</span>
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--name</span> VM1<span class="st_h">''</span> - numele mașinii virtuale
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--hvm</span><span class="st_h">''</span> - să se folosească virtualizarea hardware <span class="br0">&#40;</span>altfel se face emulare folosind QEMU, fără KVM<span class="br0">&#41;</span>
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--ram</span> <span class="nu0">256</span><span class="st_h">''</span> - cantitatea de memorie
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--disk</span> <span class="re2">path</span>=base.qcow2,<span class="re2">format</span>=qcow2<span class="st_h">''</span> - discul folosit și formatul acestuia
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--network</span> <span class="re2">network</span>=default<span class="st_h">''</span> - adăugare interfață de rețea cu proprietățile implicite
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--vnc</span><span class="st_h">''</span> - să <span class="kw3">export</span> consola VNC
+   <span class="sy0">*</span> <span class="st_h">''</span><span class="re5">--import</span><span class="st_h">''</span> - să folosească imaginea deja creată <span class="st_h">''</span>base.qcow2<span class="st_h">''</span>, să NU creeze alta</pre>
+
+<p>
+În acest moment s-a creat un fișier de configurație XML al mașinii virtuale care poate fi vizualizat în <code>/etc/libvirt/qemu/VM1.xml</code>.
+</p>
+
+<p>
+Consola mașinii virtuale s-a deschis, programul <code>virt-inst</code> rămânând să ruleze. Folositi <code>CTRL+C</code> pentru a incheia instalarea masinii virtuale.
+</p>
+
+<p>
+Pentru a controla mașina virtuală vom folosi consola <code>virsh</code>. Ne conectăm la daemon-ul local cu ajutorul lui <code>virsh</code> și vom afișa mașinile virtuale existente folosind comanda <code>list</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>virsh <span class="re5">--connect</span> qemu:<span class="sy0">///</span>system
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+virsh<span class="sy0">&gt;</span> list
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  <span class="nu0">2</span> VM1                  running</pre>
+
+<p>
+Observați starea mașinii virtuale și Id-ul acesteia (<code>2</code>). Pe baza Id-ului veți realiza toate operațiile.
+</p>
+
+<p>
+Dorim să aflăm portul VNC al mașinii virtuale cu ajutorul comenzii <code>vncdisplay</code> urmat de Id-ul mașinii virtuale:
+</p>
+<pre class="code bash">virsh <span class="co0"># vncdisplay 2</span>
+:<span class="nu0">0</span></pre>
+
+<p>
+Deschideți o nouă consolă și conectați-vă la aceasta prin VNC folosind utilitarul <code>vncviewer</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>vncviewer :<span class="nu0">0</span></pre>
+
+<p>
+Inchideți consola. <strong>ATENTIE</strong>: Mașina virtuala va continua să ruleze în background!
+</p>
+
+<p>
+Opriți mașina virtuală cu ajutorul comenzii <code>shutdown</code> urmată de Id-ul acesteia:
+</p>
+<pre class="code bash">virsh <span class="co0"># shutdown 2</span>
+Domain <span class="nu0">2</span> is being shutdown
+&nbsp;
+virsh <span class="co0"># list</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  <span class="nu0">2</span> VM1                  running
+&nbsp;
+virsh <span class="co0"># list</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span></pre>
+
+<p>
+Pentru a afișa toate mașinile virtuale indiferent de starea lor folosiți opțiunea <code>–all</code> a comenzii <code>list</code>:
+</p>
+<pre class="code bash">virsh <span class="co0"># list --all</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  - VM1                  shut off</pre>
+
+<p>
+Vom porni mașina virtuală VM1 folosind comanda <code>start</code> urmată de numele mașinii:
+</p>
+<pre class="code bash">virsh <span class="co0"># start VM1</span>
+Domain VM1 started
+&nbsp;
+virsh <span class="co0"># list</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  <span class="nu0">3</span> VM1                  running</pre>
+
+<p>
+Observați că Id-urile se alocă la pornirea mașinilor virtuale.
+</p>
+
+<p>
+Executați comanda <code>destroy</code> pe Id-ul mașinii virtuale. Observați că mașina virtuală s-a închis, <strong>NU</strong> s-a șters.
+</p>
+<pre class="code bash">virsh <span class="co0"># destroy 3</span>
+Domain <span class="nu0">3</span> destroyed
+virsh <span class="co0"># list --all</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  - VM1                  shut off</pre>
+
+<p>
+În echipe de câte doi, faceți schimb de adrese IP și asigurați accesul SSH fără parolă între calculatoarele voastre, folosind utilizatorul privilegiat <code>root</code>.
+</p>
+
+<p>
+Conectați-vă cu <code>virsh</code> la calculatorului colegului și listați mașinile virtuale disponibile. La adresa de conectare folosiți parametrul: 
+</p>
+<pre class="code bash">qemu+ssh:<span class="sy0">//</span><span class="re1">$ADRESA_IP_COLEG</span><span class="sy0">/</span>system</pre>
+
+<p>
+Porniți mașina creată de el și conectați-vă prin VNC la aceasta. Acesta este unul dintre cele mai utilizate cazuri în care aveți un server cu suport de virtualizare și doriți să rulați de la distanță mai multe mașini virtuale.
+</p>
+
+<p>
+Ștergeți mașina virtuală definită folosind comanda <code>undefine</code> urmată de numele mașinii virtuale:
+</p>
+<pre class="code bash">virsh <span class="co0"># undefine VM1</span>
+Domain VM1 has been undefined
+virsh <span class="co0"># list</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span>
+  <span class="nu0">6</span> VM1                  running</pre>
+
+<p>
+Observați că mașina virtuală încă mai rulează. Ea va dispare complet după ce o închidem:
+</p>
+<pre class="code bash">virsh <span class="co0"># shutdown 6</span>
+Domain <span class="nu0">6</span> is being shutdown
+virsh <span class="co0"># list --all</span>
+ Id Name                 State
+<span class="re5">----------------------------------</span></pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../08.html" class="wikilink1" title="saisp:labs:08">Laboratorul 8</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:08:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:08:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_1298834219583567baad77e" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="saisp:labs:08:contents:01">01. [15p] Kernel-based Virtual Machine (KVM)</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="saisp:labs:08:contents:02">02. [10p] Copy-on-write virtual storage</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="saisp:labs:08:contents:03">03. [10p] Adăugare resurse la o mașină virtuală KVM</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="saisp:labs:08:contents:04">04. [10p] Multiplicare mașini virtuale folosind o singură image de bază</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="saisp:labs:08:contents:05">05. [10p] Conversie disk virtual între diferite formate</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="saisp:labs:08:contents:06">06. [15p] Interconectare mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="saisp:labs:08:contents:07">07. [10p] Conectarea mașinilor virtuale la rețeaua publică</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="08.html" class="wikilink1" title="saisp:labs:08:contents:08">08. [15p] Managementul mașinilor virtuale KVM folosind virsh</a></span></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="saisp:labs:08:contents:09">09. [5p] Rularea mașinilor virtuale de către un utilizator neprivilegiat</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="saisp:labs:08:contents:10">10. [BONUS - 10p] Migrarea mașinilor virtuale între noduri</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:08:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/08/contents/08.txt · Last modified: 2014/04/28 16:36 by alexandru.carp          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="08%3Fdo=media&amp;ns=saisp%253Alabs%253A08%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="08.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A08%253Acontents%253A08&amp;1479894970" width="2" height="1" alt="" /></div>
+</body>
+</html>

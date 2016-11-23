@@ -1,0 +1,957 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 02: Toolchain    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-06T16:31:12+0200"/>
+<meta name="keywords" content="iocla,laboratoare,laborator-02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=iocla:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/iocla/laboratoare/laborator-02.html"/>
+<link rel="canonical" href="laborator-02.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='iocla:laboratoare';var JSINFO = {"id":"iocla:laboratoare:laborator-02","namespace":"iocla:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/iocla/"><img height="70" src="../../res/sigla_iocla.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="laborator-02%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="laborator-02%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_02toolchain">Laborator 02: Toolchain</h1>
+<div class="level1">
+
+<p>
+În acest laborator, vom trece prin fiecare nivel de procesare a unui limbaj de nivel înalt și prin toolchain-ul pe care îl vom folosi de acum încolo.
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="c_basicsgotos">C basics: GOTOs</h2>
+<div class="level2">
+
+<p>
+Un concept mai puțin abordat în tutoriale de C este instrucțiunea <strong>goto</strong>.
+Prin instrucțiunea <strong>goto</strong>, un program poate sări în puncte intermediare în cadrul unei funcții.
+Aceste puncte intermediare se numesc <strong>label</strong>-uri (etichete).
+</p>
+
+<p>
+Un exemplu de cod:
+</p>
+<pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">int</span> i<span class="sy0">,</span> j<span class="sy0">,</span> k<span class="sy0">;</span>
+    <span class="coMULTI">/* some code */</span>
+do_some_work<span class="sy0">:</span>
+    <span class="coMULTI">/* some other code */</span>
+    work<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>any_work<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+        <span class="kw1">goto</span> do_some_work<span class="sy0">;</span>
+    <span class="coMULTI">/* some code */</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Programul execută un job prin <strong>work()</strong>. În caz că mai sunt alte joburi neterminate, programul sare la labelul <strong>do_some_work</strong>.<br/>
+
+<strong>do_some_work</strong> este punctul din program în care începe procesarea unui nou job. Acesta e marcat printr-un nume urmat de <strong>:</strong>.
+Pentru a sări la acest punct din program se folosește instrucțiunea <strong>goto</strong> urmată de numele etichetei declarate.
+Prin diferite combinații de <strong>if</strong>-uri si <strong>goto</strong>-uri se pot echivala alte instrucțiuni din C, cum ar fi <strong>else</strong>, <strong>for</strong> si <strong>while</strong>.<br/>
+
+Codul dat exemplu mai sus ar putea fi un candidat care să înlocuiască o instrucțiune <code>do { /* ... */ } while ();</code>:
+</p>
+<pre class="code C"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">int</span> i<span class="sy0">,</span> j<span class="sy0">,</span> k<span class="sy0">;</span>
+    <span class="coMULTI">/* some code */</span>
+    <span class="kw1">do</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* some other code */</span>
+        work<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> <span class="kw1">while</span> <span class="br0">&#40;</span>any_work<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="coMULTI">/* some code */</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit3" id="the_whys_of_goto">The &quot;WHYs&quot; of goto</h3>
+<div class="level3">
+
+<p>
+Această instrucțiune nu doar că adesea lipsește din tutorialele de C, dar se fac recomandări împotriva abordării ei deoarece de cele mai multe ori duce la cod ofuscat (greu de înțeles, întreținut și depanat).<br/>
+
+Există totuși mici cazuri în care este folosit. În codul <a href="http://programmers.stackexchange.com/a/154980" class="urlextern" title="http://programmers.stackexchange.com/a/154980"  rel="nofollow">kernel-ului de Linux</a>, instrucțiunile de <strong>goto</strong> sunt folosite ca o formă de <strong>try-catch</strong> din limbaje de nivel mai înalt (precum C++, Java, C#, etc.).<br/>
+
+Exemplu:
+</p>
+<pre class="code C"><span class="kw4">int</span> process_data_from_mouse_device<span class="br0">&#40;</span>...<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">int</span> err<span class="sy0">;</span>
+    <span class="kw4">int</span> x<span class="sy0">,</span> y<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* &gt;&gt;try&lt;&lt; instructions */</span>
+    err <span class="sy0">=</span> init_communication_with_mouse<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> get_x_coord_from_mouse<span class="br0">&#40;</span><span class="sy0">&amp;</span>x<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> get_y_coord_from_mouse<span class="br0">&#40;</span><span class="sy0">&amp;</span>y<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> announce_upper_layers_of_mouse_movement<span class="br0">&#40;</span>x<span class="sy0">,</span> y<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> close_communication_with_mouse<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* &gt;&gt;catch&lt;&lt; instructions' exceptions */</span>
+error<span class="sy0">:</span>
+    print_message<span class="br0">&#40;</span><span class="st0">&quot;Failed to get data from mouse device. Error = %d&quot;</span><span class="sy0">,</span> err<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span> err<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Acest cod încearcă să proceseze datele venite de la un mouse și sa le paseze altor părți superioare din kernel care le-ar putea folosi. În caz că apare vreo eroare, se afișează un mesaj de eroare și se termină procesarea datelor.
+Codul pare corect, dar nu este complet. Nu este complet pentru că în caz că apare o eroare în mijlocul funcției, comunicația cu mouse-ul este lăsată deschisă.<br/>
+
+O variantă îmbunătățită ar fi următoarea:
+</p>
+<pre class="code c"><span class="kw4">int</span> process_data_from_mouse_device<span class="br0">&#40;</span>...<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">int</span> err<span class="sy0">;</span>
+    <span class="kw4">int</span> x<span class="sy0">,</span> y<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* &gt;&gt;try&lt;&lt; instructions */</span>
+    err <span class="sy0">=</span> init_communication_with_mouse<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> get_x_coord_from_mouse<span class="br0">&#40;</span><span class="sy0">&amp;</span>x<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error_close_connection<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> get_y_coord_from_mouse<span class="br0">&#40;</span><span class="sy0">&amp;</span>y<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error_close_connection<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> announce_upper_layers_of_mouse_movement<span class="br0">&#40;</span>x<span class="sy0">,</span> y<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error_close_connection<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> close_communication_with_mouse<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+        <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* &gt;&gt;catch&lt;&lt; instructions' exceptions */</span>
+error_close_connection<span class="sy0">:</span>
+    close_communication_with_mouse<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+error<span class="sy0">:</span>
+    print_message<span class="br0">&#40;</span><span class="st0">&quot;Failed to get data from mouse device. Error = %d&quot;</span><span class="sy0">,</span> err<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span> err<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În varianta îmbunătățită, dacă apare o eroare, se face și o parte de curățenie: conexiunea cu mouse-ul va fi închisă, și apoi codul va continua cu tratarea generală a oricărei erori din program (afișarea unui mesaj de eroare).
+<p><div class="noteclassic">
+Totuși acest curs/laborator de ce abordează un astfel de subiect?<br/>
+
+Când vom ajunge în limbajul de asamblare se va putea observa ca o bună parte din instrucțiunile unui limbaj de nivel înalt, chiar și precum C, sunt inexistente, iar o bună parte din workflow seamănă cu un program format din <strong>goto</strong>-uri.
+
+</div></p>
+<p><div class="notewarning">
+În orice alt caz, această formă de programare ar trebui evitată pe cât posibil.
+</p>
+
+<p>
+<a href="https://xkcd.com/292/" class="media" title="https://xkcd.com/292/"  rel="nofollow"><img src="../../lib/exe/fetch.php%3Fhash=f6c270&amp;w=600&amp;h=170&amp;tok=41c716&amp;media=http%253A%252F%252Fimgs.xkcd.com%252Fcomics%252Fgoto.png" class="media" alt="" width="600" height="170" /></a>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="de_la_c_la_program_in_rulare">De la C la program în rulare</h2>
+<div class="level2">
+
+<p>
+Un compilator trece prin următoarele etape:
+</p>
+<ul>
+<li class="level1"><div class="li"> preprocesare</div>
+</li>
+<li class="level1"><div class="li"> compilare</div>
+</li>
+<li class="level1"><div class="li"> asamblare</div>
+</li>
+<li class="level1"><div class="li"> link editare</div>
+</li>
+</ul>
+
+<p>
+În etapa de <strong>compilare</strong> codul este tradus din cod de nivel înalt în limbaj de asamblare. Limbajul de asamblare este o formă human-readable a ce ajunge procesorul să execute efectiv. Dacă programele scrise în limbaje de nivel înalt ajung să fie portate ușor pentru procesoare diferite (arm, powerpc, x86, etc.), cele scrise în limbaj de asamblare sunt implementări specifice unei anumite arhitecturi. Limbaje de nivel înalt reprezintă o formă mai abstractă de rezolvare a unei probleme, din punctul de vedere al unui procesor, motiv pentru care și acestea trebuie traduse în limbaj de asamblare în cele din urmă, pentru a se putea ajunge la un binar care poate fi rulat. Mai multe detalii în laboratorul următor.
+</p>
+
+<p>
+În imaginea de mai jos sunt reprezentate etape prin care trece un program din momentul în care este scris până când este rulat ca un proces. Putem observa între acestea etapele descrise mai sus: preprocesare, compilare, asamblare, link-editare.
+</p>
+
+<p>
+<a href="../../_detail/iocla/laboratoare/phases-full.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:phases-full.png"><img src="../../_media/iocla/laboratoare/phases-full.png%3Fw=500&amp;tok=9bf8f0" class="mediacenter" title=" Etapele procesului de compilare: de la program la proces" alt=" Etapele procesului de compilare: de la program la proces" width="500" /></a>
+</p>
+
+<p>
+Majoritatea compilatoarelor oferă opțiunea de a genera și un fișier cu programul scris în limbaj de asamblare.
+</p>
+
+<p>
+<p><div class="noteclassic">
+În cazul compilatorului <strong>gcc</strong> este de ajuns să adăugați flag-ul <strong>-S</strong> și vă va genera un fișier <strong>*.s</strong> cu codul aferent.
+</p>
+
+<p>
+În arhiva de <a href="../../_media/iocla/laboratoare/compiler-phases.zip" class="media mediafile mf_zip" title="iocla:laboratoare:compiler-phases.zip (865 B)">aici</a> aveți un exemplu de trecere a unui program foarte simplu <code>hello.c</code> prin cele patru faze. Îl puteți testa pe un sistem Unix/Linux și pe un sistem Windows cu suport de MinGW. Pe sistemele din laborator și în mașina virtuală (disponibilă <a href="../utile.html" class="wikilink1" title="iocla:utile">aici</a>) există suport MinGW și îl veți putea testa folosind comanda <code>make</code> la fel ca mai jos și apoi diversele fișiere:
+</p>
+<pre class="code">$ make
+cc  -E -o hello.i hello.c
+cc -Wall -S -o hello.s hello.i
+cc  -c -o hello.o hello.s
+cc  -o hello hello.o
+
+$ ls
+Makefile  hello  hello.c  hello.i  hello.o  hello.s
+
+$ ./hello
+Hello, World!
+
+$ tail -10 hello.i
+
+
+
+# 5 &quot;hello.c&quot;
+int main(void)
+{
+ puts(&quot;Hello, World!&quot;);
+
+ return 0;
+}
+
+$ cat hello.s
+	.file	&quot;hello.c&quot;
+	.section	.rodata
+.LC0:
+	.string	&quot;Hello, World!&quot;
+	.text
+	.globl	main
+	.type	main, @function
+main:
+.LFB0:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	$.LC0, %edi
+	call	puts
+	movl	$0, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	main, .-main
+	.ident	&quot;GCC: (Debian 5.2.1-17) 5.2.1 20150911&quot;
+	.section	.note.GNU-stack,&quot;&quot;,@progbits
+
+$ file hello.o
+hello.o: ELF 64-bit LSB relocatable, x86-64, [...]
+
+$ file hello
+hello: ELF 64-bit LSB executable, x86-64, [...]
+
+$ objdump -d hello.o
+
+hello.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 &lt;main&gt;:
+   0:	55                   	push   %rbp
+   1:	48 89 e5             	mov    %rsp,%rbp
+   4:	bf 00 00 00 00       	mov    $0x0,%edi
+   9:	e8 00 00 00 00       	callq  e &lt;main+0xe&gt;
+   e:	b8 00 00 00 00       	mov    $0x0,%eax
+  13:	5d                   	pop    %rbp
+  14:	c3                   	retq </pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit5" id="toolchain">Toolchain</h2>
+<div class="level2">
+
+<p>
+În cadrul laboratorului vom folosi asamblorul <a href="http://www.nasm.us/" class="urlextern" title="http://www.nasm.us/"  rel="nofollow">NASM</a>. Acesta este foarte folosit în tutoriale și cărți legate de scrierea programelor în limbaje de asamblare.<br/>
+
+Ca IDE vom folosi <a href="http://dman95.github.io/SASM/english.html" class="urlextern" title="http://dman95.github.io/SASM/english.html"  rel="nofollow">SASM</a>. Pe Windows dispune de un installer de tipul next-next-next. Vine cu tool-urile aferente(inclusiv NASM) și este preconfigurat corespunzător.<br/>
+
+Ambele programe menționate sunt open-source și valabile pe toate platformele cunoscute (Windows, Linux și MacOS).
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="exercitii">Exerciții:</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit7" id="p_1_online_c_compiling">[2p] 1. Online C Compiling</h3>
+<div class="level3">
+
+<p>
+Un tool interesant pentru a observa cum se traduce codul C în limbaj de asamblare este <strong>Compiler Explorer</strong>.
+</p>
+<ol>
+<li class="level1"><div class="li"> Intrați pe <a href="http://gcc.godbolt.org/" class="urlextern" title="http://gcc.godbolt.org/"  rel="nofollow">Compiler Explorer</a>.</div>
+</li>
+<li class="level1"><div class="li"> Încărcați programul “sum over array” din exemple (accesibile folosind butonul de load, în formă de dischetă).</div>
+</li>
+<li class="level1"><div class="li"> Asigurați-vă că <strong>x86 gcc 4.8.2</strong> este selectat la <strong>Compiler:</strong>.</div>
+</li>
+<li class="level1"><div class="li"> Selectați <strong>Intel syntax</strong>. Acesta este un format mai ușor de digerat și mai asemănător formatului acceptat de NASM.</div>
+</li>
+<li class="level1"><div class="li"> Folosiți opțiunea <code>-m32</code> (la <code>Compiler options</code>) pentru a afișa cod în limbaj de asamblare pe 32 de biți (față de 64 de biți în mod implicit).</div>
+</li>
+<li class="level1"><div class="li"> Pentru a putea să vă dați seama ce cod C s-a tradus într-un anumit set de instrucțiuni de asamblare selectați <strong>Colourise</strong>.</div>
+</li>
+<li class="level1"><div class="li"> În continuare codul este destul de greoi. Pentru a putea fi mai human-readable adăugați opțiunea <strong>-O2</strong> la opțiunile de compilare (<code>Compiler options</code>).</div>
+</li>
+<li class="level1"><div class="li"> Se poate observa existența simbolurilor <strong>.L3:</strong> și <strong>.L4:</strong>. Acestea reprezintă puncte fixe în program, label-uri, destul de asemănătoare cu ceea ce se găsește și în C.</div>
+</li>
+<li class="level1"><div class="li"> Treceți, pe rând, prin compilatoarele corespunzătoare următoarelor arhitecturi: ARM, ARM64, AVR, PowerPC. <strong>Atenție:</strong> pentru ARM, ARM64 și AVR va trebuie să renunțați la flag-ul <code>-m32</code> setat anterior. Se poate observa cum codul generat diferă de la o arhitectură la alta.</div>
+</li>
+<li class="level1"><div class="li"> Mai încercați și următoarele compilatoare: <strong>clang</strong> și <strong>icc</strong>. După cum se poate observa, deși este același cod C și aceeași arhitectură, codul generat diferă. Acest lucru se întâmplă pentru că fiecare compilator poate avea o strategie de optimizare și generare de cod diferită.</div>
+</li>
+</ol>
+
+<p>
+<p><div class="noteclassic">
+<a href="http://clang.llvm.org/" class="urlextern" title="http://clang.llvm.org/"  rel="nofollow">clang</a> este un compilator open-source de C\C++. Adesea este folosit în IDE-uri datorită mesajelor de eroare de compilare foarte sugestive pe care le produce.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+<strong>icc</strong> este compilatorul de C\C++ al celor de la compania Intel.
+
+</div></p>
+</p>
+<hr />
+
+<p>
+Scrieți în zona <code>Code editor</code> următoarea secvență de cod:
+</p>
+<pre class="code">int simple_fn(void)
+{
+    int a = 1;
+    a++;
+    return a;
+}</pre>
+
+<p>
+Observați codul în limbaj de asamblare atunci când opțiunile de compilare (<code>Compiler options</code>) sunt <code>-m32</code>, respectiv atunci când opțiunile de compilare sunt <code>-m32 -O2</code>. Observați ce efect au opțiunile de optimizare asupra codului în limbaj de asamblare generat.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="p_2_microsoft_visual_studiofrom_c_to_assembly">[2p] 2. Microsoft Visual Studio: from C to assembly</h3>
+<div class="level3">
+
+<p>
+La exercițiul anterior am abordat compilatoarele gcc, clang și icc pentru a observa cam ce cod de asamblare produc. În acest exercițiu vom trece în revistă și compilatorul celor de la Microsoft (valabil pe Microsoft Windows, evident).<br/>
+
+</p>
+
+<p>
+În primă fază deschideți Microsoft Visual Studio și creați un nou proiect gol.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru a crea un proiect gol, folosiți <code>File → New project</code>, apoi selectați <code>Win32 Console Application</code>, apoi <code>Next</code> și apoi selectați <code>Empty Project</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notewarning">
+În sala <strong>ED202</strong> exista o problema de linking in VC++ Express 2010. Pentru a o rezolva urmați indicațiile de <a href="http://stackoverflow.com/a/10890428" class="urlextern" title="http://stackoverflow.com/a/10890428"  rel="nofollow">aici</a>. Adică, pentru fiecare proiect creat, dezactivați <em>Incremental Linking</em> accesând meniurile:
+</p>
+<pre class="code">Project Properties 
+   -&gt; Configuration Properties 
+       -&gt; Linker (General) 
+          -&gt; Enable Incremental Linking -&gt; &quot;No (/INCREMENTAL:NO)&quot;</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Ca sa puteți observa afișarea unor mesaje la rularea unui program scris in VC++ Express 2010, puteti suspenda execuția programului până la apăsarea unei taste folosind
+</p>
+<pre class="code">#include &lt;stdlib.h&gt;
+
+...
+    system(&quot;pause&quot;);
+...</pre>
+
+<p>
+Plasați apelul <code>system(&quot;pause&quot;);</code> la sfârșitul funcției <code>main()</code>.
+
+</div></p>
+</p>
+
+<p>
+Pentru a adăuga un fișier nou în cadrul proiectului mergeți cu mouse-ul în  zona <code>Solution Explorer</code> (din partea dreapta sus a ecranului) și apoi folosiți click dreapta pe intrarea <code>Source files</code>, apoi folosiți <code>Add</code> și apoi, după caz, <code>New Item</code> sau <code>Existing Item</code>. Adăugați un fișier nou în <strong>cadrul proiectului</strong>, numit <code>main.cpp</code> și adăugați următorul cod în fișier:
+</p>
+<pre class="code c"><span class="co2">#define DATA_LEN 100 </span>
+&nbsp;
+<span class="kw4">int</span> testFunction<span class="br0">&#40;</span><span class="kw4">int</span><span class="sy0">*</span> input<span class="sy0">,</span> <span class="kw4">int</span> length<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> sum <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> length<span class="sy0">;</span> <span class="sy0">++</span>i<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		sum <span class="sy0">+=</span> input<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw1">return</span> sum<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> random_data<span class="br0">&#91;</span>DATA_LEN<span class="br0">&#93;</span><span class="sy0">;</span>
+&nbsp;
+	testFunction<span class="br0">&#40;</span>random_data<span class="sy0">,</span> DATA_LEN<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Mergeți în proprietățile proiectului (<code>Project → &lt;project_name&gt; Properties..</code>), la secțiunea indicată în următoarea imagine:
+<a href="../../_detail/iocla/laboratoare/project-properties.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:project-properties.png"><img src="../../_media/iocla/laboratoare/project-properties.png" class="mediacenter" title="Microsoft Visual Studio: Project Properties" alt="Microsoft Visual Studio: Project Properties" /></a>
+</p>
+
+<p>
+Asigurați-vă că la câmpul <strong>Assembler Output</strong> este selectat <strong>Assembly With Source Code (/FAs)</strong> și dați <strong>OK</strong> pentru ca proprietățile să ia efect.
+</p>
+
+<p>
+Folosiți <code>Debug → Build Solution</code> pentru a compila proiectul. În acest moment vi s-a generat un fișier <strong>*.asm</strong>, dar care nu va apărea în Visual Studio.
+</p>
+
+<p>
+Pentru a vizualiza fișierul în cauză, accesati directorul aferent proiectului (în mod implicit este în <code>C:\Users\student\Documents\Visual Studio 2010\Projects\...</code>). Într-unu subdirector numit <code>Debug</code> veți găsi un fișier cu extensia <code>.asm</code>; deschideți acest fișier. După cum puteți observa, acesta conține codul de asamblare intercalat cu comentarii în care este prezentat codul original.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Există două directoare cu numele <code>Debug</code>: unul aferent soluției și altul aferent proiectului. Alegeți directorul <code>Debug</code> aferent proiectului.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="p_3_sasmwalkthrough">[1p] 3. SASM: walkthrough</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="proiect_nou">3.1 Proiect nou</h4>
+<div class="level4">
+
+<p>
+Pentru a crea un proiect nou intrați la <strong>File → New</strong>.
+</p>
+
+</div>
+
+<h4 id="ferestre">3.2 Ferestre</h4>
+<div class="level4">
+
+<p>
+<a href="../../_detail/iocla/laboratoare/sasm-window.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:sasm-window.png"><img src="../../_media/iocla/laboratoare/sasm-window.png%3Fw=900&amp;tok=7c9c14" class="mediacenter" alt="" width="900" /></a>
+</p>
+
+<p>
+Legendă:
+</p>
+<ol>
+<li class="level1"><div class="li"> editorul</div>
+</li>
+<li class="level1"><div class="li"> fereastră în care se pot transmite date programului</div>
+</li>
+<li class="level1"><div class="li"> fereastră în care se afișează outputul programului</div>
+</li>
+<li class="level1"><div class="li"> logging pentru build, clean, run</div>
+</li>
+</ol>
+
+</div>
+
+<h4 id="butoane">3.3 Butoane</h4>
+<div class="level4">
+<ol>
+<li class="level1"><div class="li"> <a href="../../_detail/iocla/laboratoare/build.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:build.png"><img src="../../_media/iocla/laboratoare/build.png" class="media" title="Build" alt="Build" /></a> Build - construiește executabilul</div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_detail/iocla/laboratoare/run.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:run.png"><img src="../../_media/iocla/laboratoare/run.png" class="media" title="Run" alt="Run" /></a> Run - rulare normală a programului</div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_detail/iocla/laboratoare/stop.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:stop.png"><img src="../../_media/iocla/laboratoare/stop.png" class="media" title="Stop" alt="Stop" /></a> Stop - oprește execuția programului</div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_detail/iocla/laboratoare/debug.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:debug.png"><img src="../../_media/iocla/laboratoare/debug.png" class="media" title="Debug" alt="Debug" /></a> Debug - rularea programului cu suport de debugging</div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_detail/iocla/laboratoare/stepinto.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:stepinto.png"><img src="../../_media/iocla/laboratoare/stepinto.png" class="media" title="Step into" alt="Step into" /></a> Step into - dacă instrucțiunea curentă apelează o funcție, se va arăta și execuția din interiorul ei</div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_detail/iocla/laboratoare/stepover.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:stepover.png"><img src="../../_media/iocla/laboratoare/stepover.png" class="media" title="Step over" alt="Step over" /></a> Step over - dacă instrucțiunea curentă apelează o funcție, debugger-ul va executa funcția ca și cum ar fi o singură instrucțiune</div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_detail/iocla/laboratoare/continue.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:continue.png"><img src="../../_media/iocla/laboratoare/continue.png" class="media" title="Continue" alt="Continue" /></a> Continue - continuă execuția până la următorul breakpoint sau până se termină programul</div>
+</li>
+</ol>
+
+</div>
+
+<h4 id="modul_debugging">3.4 Modul debugging</h4>
+<div class="level4">
+
+<p>
+În modul debugging (programul rulat cu <a href="../../_detail/iocla/laboratoare/debug.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:debug.png"><img src="../../_media/iocla/laboratoare/debug.png" class="media" title="Debug" alt="Debug" /></a>), vă mai apare o ferestră cu resursele procesorului (starea registrelor sale):<br/>
+
+<p><div class="noteclassic">
+Pentru a activa fereastra cu registrele <strong>Debug → Show Registers</strong> sau <strong>CTRL + R</strong>. În mod asemănător
+pentru a activa fereastra cu valorile variabilelor <strong>Debug → Show Memory</strong> sau <strong>CTRL + M</strong>.
+
+</div></p>
+<a href="../../_detail/iocla/laboratoare/registers-window.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:registers-window.png"><img src="../../_media/iocla/laboratoare/registers-window.png%3Fw=900&amp;tok=63e4dd" class="media" alt="" width="900" /></a><br/>
+
+Opțional, puteți activa și o fereastră prin care puteți monitoriza valorile unor variabile în timpul sesiunii de depanare:<br/>
+
+<a href="../../_detail/iocla/laboratoare/memory-menu.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:memory-menu.png"><img src="../../_media/iocla/laboratoare/memory-menu.png%3Fw=900&amp;tok=b2f4da" class="media" alt="" width="900" /></a><br/>
+
+Activarea acestei ferestre se face din meniu astfel:<br/>
+
+<a href="../../_detail/iocla/laboratoare/show-memory.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:show-memory.png"><img src="../../_media/iocla/laboratoare/show-memory.png" class="media" alt="" /></a><br/>
+
+Pentru a introduce un breakpoint dați click în dreapta linenumber-ului corespunzător liniei pe care vreți să o depanați. Când va fi setat un breakpoint pentru o linie, în stanga ei va apărea și un cerculeț roșu care să desemneze acest lucru:
+<a href="../../_detail/iocla/laboratoare/insert-breakpoint.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:insert-breakpoint.png"><img src="../../_media/iocla/laboratoare/insert-breakpoint.png" class="media" title="Insert breakpoint" alt="Insert breakpoint" /></a><br/>
+
+O alternativă ar fi, având cursorul pe linia în cauză, să apăsați tasta <strong>F8</strong> sau să dați comanda din meniu:<br/>
+
+<a href="../../_detail/iocla/laboratoare/breakpoint-menu.png%3Fid=iocla%253Alaboratoare%253Alaborator-02.html" class="media" title="iocla:laboratoare:breakpoint-menu.png"><img src="../../_media/iocla/laboratoare/breakpoint-menu.png" class="media" title="Breakpoint menu entry" alt="Breakpoint menu entry" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="p_4_cwarm-up_gotos">[1p] 4. C: Warm-up GOTOs</h3>
+<div class="level3">
+
+<p>
+Pentru exercițiul acesta va trebui să descarcați <a href="http://elf.cs.pub.ro/asm/res/laboratoare/lab-02-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/asm/res/laboratoare/lab-02-tasks.zip"  rel="nofollow">arhiva de laborator</a> și să navigați în directorul aferent task-ului curent.
+<p><div class="notetip">
+Pentru scrierea de programe puteți folosi orice editor indicat pe Desktop sau IDE-urile Code::Blocks sau Visual Studio.
+</p>
+
+<p>
+Pentru compilarea/rularea codului puteți folosi IDE-urile Code::Blocks sau Visual Studio sau puteți folosi linia de comandă ca mai jos.
+</p>
+
+<p>
+Pentru a compila un fișier cod sursă C/C++ în linia de comandă folosind Visual Studio, urmați pașii:
+</p>
+<ol>
+<li class="level1"><div class="li"> Deschideți butonul de start, selectați <code>All apps</code> , apoi mergeți la litera <code>V</code>, selectați directorul <code>Visual Studio 2015</code> și alegeți opțiunea <code>Visual Studio x86 Native Command Prompt</code>.</div>
+</li>
+<li class="level1"><div class="li"> Accesați directorul în care aveți codul sursă. Echivalentul din windows pentru <code>ls</code> este <code>dir</code>. Dacă ați folosit calea default proiectul ar trebui să se găsească în (modificați <code>nume_proiect</code> cu numele proiectului pe care l-ați creat) <pre class="code">C:\Users\student\Documents\Visual Studio 2010\Projects\nume_proiect\nume_proiect</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Folosiți comanda<pre class="code">cl &lt;nume-fisier&gt;.cpp</pre>
+
+<p>
+ unde <code>&lt;nume-fisier&gt;</code> este numele fișierului.
+</p>
+</div>
+</li>
+<li class="level1"><div class="li"> Rulați executabilul obținut folosind comanda<pre class="code">.\nume-fisier</pre>
+
+<p>
+ unde <code>&lt;nume-fisier&gt;</code> este numele fișierului.
+</p>
+</div>
+</li>
+</ol>
+
+
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<strong>[0.5p]</strong> Modificați codul sursă din fișierul <code>bogosort.c</code> (<a href="https://en.wikipedia.org/wiki/Bogosort" class="urlextern" title="https://en.wikipedia.org/wiki/Bogosort"  rel="nofollow">Bogosort</a>) prin înlocuirea
+instrucțiunii <code>break</code> cu o instrucțiune <code>goto</code> astfel încât funcționalitatea să se păstreze.
+</p>
+
+<p>
+<p><div class="notewarning">
+Când scrieți cod cu etichete (label-uri) țineți cont de următoarele recomandări de indentare:
+</p>
+<ul>
+<li class="level1"><div class="li"> Nu indentați etichetele (label-urile). “Lipiți-le” de marginea din stânga a ecranului de editare.</div>
+</li>
+<li class="level1"><div class="li"> O etichetă este singură pe liniei. Nu există cod după etichetă.</div>
+</li>
+<li class="level1"><div class="li"> Nu țineți cont de etichete în indetarea codului. Codul trebuie indendat în același mod și cu etichete și fără etichete.</div>
+</li>
+<li class="level1"><div class="li"> Puneți o linie liberă înaintea linie care conține o etichetă.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<strong>[0.5p]</strong> În mod asemănător modificați instrucțiunea <code>continue</code> din <code>ignore_the_comments.c</code> astfel încât funcționalitatea codului să se păstreze.
+</p>
+
+<p>
+<p><div class="noteclassic">
+<a href="http://stackoverflow.com/a/3517765" class="urlextern" title="http://stackoverflow.com/a/3517765"  rel="nofollow">Caz</a> în care <code>goto</code> poate fi util
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="p_5_cgotos">[4p] 5. C: GOTOs</h3>
+<div class="level3">
+
+<p>
+Pentru algoritmii de mai jos scrieți cod în C <strong>fără</strong> a folosi:
+</p>
+<ul>
+<li class="level1"><div class="li"> apeluri de funcţii (exceptând <em>scanf()</em> şi <em>printf()</em>)</div>
+</li>
+<li class="level1"><div class="li"> else</div>
+</li>
+<li class="level1"><div class="li"> for</div>
+</li>
+<li class="level1"><div class="li"> while</div>
+</li>
+<li class="level1"><div class="li"> do {} while;</div>
+</li>
+<li class="level1"><div class="li"> construcțiile <code>if</code> care conțin return</div>
+</li>
+<li class="level1"><div class="li"> if-uri imbricate</div>
+</li>
+</ul>
+
+<p>
+If-urile trebuie sa contina cel mult un <strong>goto</strong>.<br/>
+
+Adică va trebui să folosiți <code>if</code> și multe instrucțiuni <code>goto</code>.
+</p>
+
+<p>
+<strong>[2p]</strong> Implementați maximul dintr-un vector folosind cod C și constrângerile de mai sus.
+</p>
+
+<p>
+<strong>[2p]</strong> Implementați căutare binară folosind cod C și constrângerile de mai sus.
+</p>
+
+<p>
+<p><div class="notewarning">
+Reiterăm ideea că scenariile de utilizare ale instrucțiunii <code>goto</code> sunt limitate. Exercițiile acestea au valoare didactică pentru a vă acomoda cu instrucțiuni de salt (<em>jump</em>) pe care le vom folosi în dezvoltarea în limbaj de asamblare.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit12" id="p_6_bonus">[2p] 6. Bonus</h3>
+<div class="level3">
+
+<p>
+Implementați cu aceleași constrângeri ca la exercițiul anterior și algoritmii:
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>[1p]</strong> Bubble sort. Porniți de la implementarea fără <code>goto</code>-uri.</div>
+</li>
+<li class="level1"><div class="li"> <strong>[1p]</strong> Căutarea unui substring într-un string. În mod asemănător, puteți porni de la implementarea fără <code>goto</code>-uri.</div>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<div><div id="nojs_indexmenu_28806665958355a6b2348b" data-jsajax="%26skipfile%3D%252B/iocla%253A%2528sidebar%257Cindex%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="iocla:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../bune-practici.html" class="wikilink1" title="iocla:bune-practici">Bune practici</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="iocla:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="iocla:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../feed.html" class="wikilink1" title="iocla:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="iocla:need-to-know">IOCLA Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="iocla:reguli-notare">Reguli și notare</a></div></li>
+<li class="level1"><div class="li"><a href="../utile.html" class="wikilink1" title="iocla:utile">Resurse utile</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="cursuri">Cursuri</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-01.html" class="wikilink1" title="iocla:cursuri:capitol-01">Capitol 01: Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-02.html" class="wikilink1" title="iocla:cursuri:capitol-02">Capitol 02: Reprezentarea datelor în sistemele de calcul</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-03.html" class="wikilink1" title="iocla:cursuri:capitol-03">Capitol 03: Arhitectura unui sistem de calcul</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-04.html" class="wikilink1" title="iocla:cursuri:capitol-04">Capitol 04: Arhitectura x86</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-05.html" class="wikilink1" title="iocla:cursuri:capitol-05">Capitol 05: Moduri de adresare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-06.html" class="wikilink1" title="iocla:cursuri:capitol-06">Capitol 06: Setul de instrucțiuni</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-07.html" class="wikilink1" title="iocla:cursuri:capitol-07">Capitol 07: Dezvoltarea în limbaj de asamblare pe x86</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-08.html" class="wikilink1" title="iocla:cursuri:capitol-08">Capitol 08: Inginerie inversă și exploatarea aplicațiilor</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-09.html" class="wikilink1" title="iocla:cursuri:capitol-09">Capitol 09: Operații și extensii dedicate</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-10.html" class="wikilink1" title="iocla:cursuri:capitol-10">Capitol 10: Programarea pentru medii specifice</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Cursuri" [166-529] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="laborator-01.html" class="wikilink1" title="iocla:laboratoare:laborator-01">Laborator 01: Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="laborator-02.html" class="wikilink1" title="iocla:laboratoare:laborator-02">Laborator 02: Toolchain</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-03.html" class="wikilink1" title="iocla:laboratoare:laborator-03">Laborator 03: First baby steps</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-04.html" class="wikilink1" title="iocla:laboratoare:laborator-04">Laborator 04: Rolul registrelor, adresare directă și bazată</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-05.html" class="wikilink1" title="iocla:laboratoare:laborator-05">Laborator 05: Structuri, vectori, explorarea memoriei</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-06.html" class="wikilink1" title="iocla:laboratoare:laborator-06">Laborator 06: Apeluri de funcții</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-07.html" class="wikilink1" title="iocla:laboratoare:laborator-07">Laborator 07: Operații pe numere mari</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-08.html" class="wikilink1" title="iocla:laboratoare:laborator-08">Laborator 08: Interfața în linia de comandă, analiza statică și dinamică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-09.html" class="wikilink1" title="iocla:laboratoare:laborator-09">Laborator 09: Gestiunea bufferelor. Buffer overflow</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-10.html" class="wikilink1" title="iocla:laboratoare:laborator-10">Laborator 10: Exploatarea memoriei. Shellcodes</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-11.html" class="wikilink1" title="iocla:laboratoare:laborator-11">Laborator 11: Interactiunea C-assembly</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-12.html" class="wikilink1" title="iocla:laboratoare:laborator-12">Laborator 12: Calcul în virgulă mobilă</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [530-1037] -->
+<h1 class="sectionedit3" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/tema-1.html" class="wikilink1" title="iocla:teme:tema-1">Tema 1</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-2.html" class="wikilink1" title="iocla:teme:tema-2">Tema 2</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-3.html" class="wikilink1" title="iocla:teme:tema-3">Tema 3</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Teme" [1038-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-02.html#laborator_02toolchain">Laborator 02: Toolchain</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-02.html#c_basicsgotos">C basics: GOTOs</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-02.html#the_whys_of_goto">The &quot;WHYs&quot; of goto</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-02.html#de_la_c_la_program_in_rulare">De la C la program în rulare</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-02.html#toolchain">Toolchain</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-02.html#exercitii">Exerciții:</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-02.html#p_1_online_c_compiling">[2p] 1. Online C Compiling</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#p_2_microsoft_visual_studiofrom_c_to_assembly">[2p] 2. Microsoft Visual Studio: from C to assembly</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#p_3_sasmwalkthrough">[1p] 3. SASM: walkthrough</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="laborator-02.html#proiect_nou">3.1 Proiect nou</a></div></li>
+<li class="level4"><div class="li"><a href="laborator-02.html#ferestre">3.2 Ferestre</a></div></li>
+<li class="level4"><div class="li"><a href="laborator-02.html#butoane">3.3 Butoane</a></div></li>
+<li class="level4"><div class="li"><a href="laborator-02.html#modul_debugging">3.4 Modul debugging</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="laborator-02.html#p_4_cwarm-up_gotos">[1p] 4. C: Warm-up GOTOs</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#p_5_cgotos">[4p] 5. C: GOTOs</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-02.html#p_6_bonus">[2p] 6. Bonus</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          iocla/laboratoare/laborator-02.txt · Last modified: 2016/11/06 16:31 by mihai.tiganus          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="laborator-02%3Fdo=media&amp;ns=iocla%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="laborator-02.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=iocla%253Alaboratoare%253Alaborator-02&amp;1479891563" width="2" height="1" alt="" /></div>
+</body>
+</html>

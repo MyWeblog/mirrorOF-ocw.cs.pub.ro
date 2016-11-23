@@ -1,0 +1,698 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cpl:labs-2015:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T07:33:25+0300"/>
+<meta name="keywords" content="cpl,labs-2015,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cpl:labs-2015"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../cpl/labs-2015/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs-2015';var JSINFO = {"id":"cpl:labs-2015:07","namespace":"cpl:labs-2015","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#llvm_backend_new_architectures">07. LLVM backend (new architectures)</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#nice_to_read">Nice to read</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#introducere">Introducere</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#selectiondag">SelectionDAG</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#machinedag">MachineDAG</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#machineinstr">MachineInstr</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#mcinst">MCInst</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="07.html#structura_de_fisiere">Structura de fișiere</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#tablegen">TableGen</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#setul_de_instructiuni">Setul de instrucțiuni</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#compilare_si_rulare">Compilare și rulare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#device_pentru_android">Device pentru android</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#compilare">Compilare</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#emulare">Emulare</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="07.html#emulatorul_de_android">Emulatorul de Android</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#qemu">Qemu</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="07.html#exercitii">Exerciții</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#exercitiul_1">Exercițiul 1</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#exercitiul_2">Exercițiul 2</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#exercitiul_3">Exercițiul 3</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#exercitiul_4">Exercițiul 4</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="07.html#f">f</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#ident">ident</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#or">or</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#second">second</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="llvm_backend_new_architectures">07. LLVM backend (new architectures)</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT1 SECTION "07. LLVM backend (new architectures)" [1-50] -->
+<h2 class="sectionedit2" id="nice_to_read">Nice to read</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://llvm.org/docs/CodeGenerator.html" class="urlextern" title="http://llvm.org/docs/CodeGenerator.html"  rel="nofollow">The LLVM Target-Independent Code Generator</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CB0QFjAAahUKEwjzt_fS3tbIAhWn_XIKHbiXBkM&amp;url=http%3A%2F%2Fllvm.org%2Fdevmtg%2F2014-04%2FPDFs%2FTalks%2FBuilding%2520an%2520LLVM%2520backend.pdf&amp;usg=AFQjCNFzRa244bFKgvM2bPNFE0SHbubtyA&amp;sig2=CB3kPXTrEvUbHhJ2-jMaBw" class="urlextern" title="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CB0QFjAAahUKEwjzt_fS3tbIAhWn_XIKHbiXBkM&amp;url=http%3A%2F%2Fllvm.org%2Fdevmtg%2F2014-04%2FPDFs%2FTalks%2FBuilding%2520an%2520LLVM%2520backend.pdf&amp;usg=AFQjCNFzRa244bFKgvM2bPNFE0SHbubtyA&amp;sig2=CB3kPXTrEvUbHhJ2-jMaBw"  rel="nofollow">Building an LLVM backend</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://llvm.org/devmtg/2009-10/Korobeynikov_BackendTutorial.pdf" class="urlextern" title="http://llvm.org/devmtg/2009-10/Korobeynikov_BackendTutorial.pdf"  rel="nofollow">Building a 
+backend in 24 hours</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://jonathan2251.github.io/lbd/" class="urlextern" title="http://jonathan2251.github.io/lbd/"  rel="nofollow">Creating an LLVM Backend for the Cpu0 Architecture</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://llvm.org/docs/TableGen/" class="urlextern" title="http://llvm.org/docs/TableGen/"  rel="nofollow">TableGen</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Nice to read" [51-742] -->
+<h2 class="sectionedit3" id="introducere">Introducere</h2>
+<div class="level2">
+
+<p>
+Backend-ul de LLVM primește cod scris în limbajul intermediar și generează asamblare.
+Binarul este llc.
+</p>
+
+<p>
+Pentru a face trecerea de la codul IR la asamblare, este nevoie de 4 transformări:
+</p>
+
+<p>
+LLVM IR → SelectionDAG → MachineDAG → MachineInstr → MCInst
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Introducere" [743-1025] -->
+<h3 class="sectionedit4" id="selectiondag">SelectionDAG</h3>
+<div class="level3">
+
+<p>
+Reprezintă un graf în care operațiile sunt reprezentate ca noduri.
+Majoritatea nodurilor sunt independente de arhitectură, dar pot exista și noduri custom.
+Fiecare nod are un opcode, care este definit (pentru nodurile independente de arhitectură) în enum-ul <a href="http://llvm.org/docs/doxygen/html/namespacellvm_1_1ISD.html" class="urlextern" title="http://llvm.org/docs/doxygen/html/namespacellvm_1_1ISD.html"  rel="nofollow">ISD::NodeType</a>
+Dacă este nevoie de noduri specifice pentru o arhitectură, ele se definesc începând cu ISD::BUILTIN_OP_END.
+Se poate observa ca există mai multe opcode-uri decât instrucțiuni llvm.
+</p>
+
+<p>
+Arcele din graf reprezintă dependințe.
+Ele pot fi:
+</p>
+<ol>
+<li class="level1"><div class="li"> de date, o operație folosește un rezultat produs de o altă operație;</div>
+</li>
+<li class="level1"><div class="li"> chain, ordonează operații;</div>
+</li>
+<li class="level1"><div class="li"> glue, operațiile sunt împreună.</div>
+</li>
+</ol>
+
+<p>
+Valorile din acest graf au tipuri (e.g. i32).
+</p>
+
+</div>
+<!-- EDIT4 SECTION "SelectionDAG" [1026-1830] -->
+<h3 class="sectionedit5" id="machinedag">MachineDAG</h3>
+<div class="level3">
+
+<p>
+Este un graf foarte asemănător cu SelectionDAG, în care nodurile sunt înlocuite cu instrucțiuni. 
+</p>
+
+</div>
+<!-- EDIT5 SECTION "MachineDAG" [1831-1955] -->
+<h3 class="sectionedit6" id="machineinstr">MachineInstr</h3>
+<div class="level3">
+
+<p>
+MachineDAG-ul este transformat într-o listă de instrucțiuni dependente de arhitectură, cu câteva excepții (e.g. instrucțiunea COPY).
+</p>
+
+</div>
+<!-- EDIT6 SECTION "MachineInstr" [1956-2119] -->
+<h3 class="sectionedit7" id="mcinst">MCInst</h3>
+<div class="level3">
+
+<p>
+Este o reprezentare simplificată, care conține un opcode și niște operanzi. 
+</p>
+
+</div>
+<!-- EDIT7 SECTION "MCInst" [2120-2218] -->
+<h2 class="sectionedit8" id="structura_de_fisiere">Structura de fișiere</h2>
+<div class="level2">
+
+<p>
+Pentru a înregistra un backend, trebuie modificate urmatoarele fișiere:
+</p>
+<pre class="code">CMakeLists.txt
+autoconf/config.sub
+autoconf/configure.ac
+configure
+include/llvm/ADT/Triple.h
+include/llvm/Object/ELFObjectFile.h
+include/llvm/Support/ELF.h
+lib/Support/Triple.cpp
+lib/Target/LLVMBuild.txt</pre>
+
+<p>
+Hint: Căutați în aceste fișiere apariții corespunzătoare unui target existent (ex Hexagon).
+</p>
+
+<p>
+Implementarea se face în directorul lib/Target/X, care trebuie să conțină, printre altele și următoarele fișiere:
+</p>
+<div class="table sectionedit9"><table class="inline">
+	<tr class="row0">
+		<th class="col0 leftalign"> Nume           </th><th class="col1 leftalign"> Semnificație   </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> XTargetMachine </td><td class="col1"> Implementarea unei clase care extinde LLVMTargetMachine. Conține <strong>XPassConfig</strong> care adaugă pașii de transformare. Cel mai important pas este <strong>createXISelDag</strong> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> XSubtarget     </td><td class="col1"> Extinde o clasă generată de tablegen, care definiește un subtarget. </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 leftalign"> XISelLowering  </td><td class="col1"> Definește modul in care se face lowering la un SelectionDAG legal. </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> XISelDAGToDAG  </td><td class="col1"> Este responsabil cu trecerea de la SelectionDAG la MachineDAG </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 leftalign"> XRegisterInfo  </td><td class="col1"> Conține informații despre regiștrii (regștrii rezervați, speciali, salvați de calling convention). Metoda care trebuie implementată este <strong>eliminateFrameIndex</strong>, care inlocuiește accese abstracte la stivă (e.g. FI -3) cu o adresă concretă (e.g. -20 (SP)) </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 leftalign"> XInstrInfo     </td><td class="col1"> Informații și transformări pe instrucțiuni. Cele mai importante metode care trebuiesc implementate sunt <strong>copyPhysReg</strong>, <strong>storeRegToStackSlot</strong>, <strong>loadRegFromStackSlot</strong>, <strong>expandPostRAPseudo</strong> </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> XFrameLowering </td><td class="col1"> Responsabil cu calcularea stivei folosite și modificarea ei la intrarea (<strong>emitPrologue</strong>) și ieșirile (<strong>emitEpilogue</strong>) din funcție. </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> XAsmPrinter    </td><td class="col1"> Emiterea codului și datelor. Deși conține Asm în nume, dumparea se face la un stream abstract care poate fi text (pentru asamblare) sau obiect (dacă se generează direct elf). </td>
+	</tr>
+</table></div>
+<!-- EDIT9 TABLE [2770-4125] -->
+</div>
+<!-- EDIT8 SECTION "Structura de fișiere" [2219-4126] -->
+<h2 class="sectionedit10" id="tablegen">TableGen</h2>
+<div class="level2">
+
+<p>
+Informațiile dependente de arhitectură sunt definite în fișiere speciale cu extensia ``.td`` într-o manieră declarativă.
+</p>
+
+<p>
+Aceste fișiere sunt procesate de utilitarul <strong>table-gen</strong>, care generează cod C++ pe baza acestor fișiere.
+</p>
+
+<p>
+Cele 2 concepte importante din limbaj sunt clasele și definițiile.
+</p>
+
+<p>
+<strong>Clasele</strong> sunt folosite pentru a grupa caracteristici comune ale resurselor. O clasă poate să extindă una sau mai multe clase. Cu excepția unor clase de baza (Instruction, Register, CallingConv, CalleeSavedRegs, ș.a.), care definesc semantica unor resurse, clasele nu apar in fișierele C++ generate.
+</p>
+
+<p>
+Pentru a defini un registru R0, extindem clasa <strong>Register</strong>:
+</p>
+<pre class="code">// Clasa CplReg extinde clasa Register.
+// Parametrii sunt transmiși printr-o manieră care seamana cu template-urile din C++.
+class CplReg&lt;bits&lt;5&gt; num, string n, list&lt;string&gt; alt = [],
+                   list&lt;Register&gt; alias = []&gt; : Register&lt;n&gt; {
+  let Namespace = &quot;Cpl&quot;;     // Namespace este un câmp din Register în care
+                             // vor fi grupate registrele în codul generat.
+  field bits&lt;5&gt; Num;         // Field al clasei curente în care salvăm numărul registrului
+  let Aliases = alias;       // Listă de alias-uri pentru registru
+  let HWEncoding{4-0} = num; // Codificarea registrului
+}
+
+// Ri - 32-bit integer registers.
+// Această clasă nu se reflectă în fișierul generat.
+class Ri&lt;bits&lt;5&gt; num, string n, list&lt;string&gt; alt = []&gt; : CplReg&lt;num, n, alt&gt; {
+  let Num = num;
+}
+
+// Definim R0, R1 și R2 prin intermediul claselor Ri și DwarfRegNum
+def R0 : Ri&lt;0, &quot;r0&quot;&gt;,  DwarfRegNum&lt;[0]&gt;;
+def R1 : Ri&lt;1, &quot;r1&quot;&gt;,  DwarfRegNum&lt;[1]&gt;;
+def R2 : Ri&lt;2, &quot;r2&quot;&gt;,  DwarfRegNum&lt;[2]&gt;;
+//...</pre>
+
+<p>
+Pentru a defini o instrucțiune, extindem clasa <strong>Instruction</strong>:
+</p>
+<pre class="code">class InstCpl&lt;dag outs, dag ins, string asmstr&gt;
+  : Instruction {
+  let Namespace = &quot;Cpl&quot;;
+
+  dag OutOperandList = outs;  // lista operanzilor destinație
+  dag InOperandList = ins;    // lista operanzilor sursă
+  let AsmString = asmstr;     // string-ul corespunzător sintaxei
+  let Size = 4;               // dimensiunea în octeți (pentru generare obiect)
+
+  bits&lt;32&gt; Inst = 0;          // codificarea binară a instrucțiunii
+  bits&lt;32&gt; SoftFail;
+}
+
+// Instrucțiunea va fi identificată prin enum-ul Cpl::ADD în codul generat.
+def ADD : InstCpl&lt;
+     (outs IntRegs:$rc),
+     (ins IntRegs:$ra, IntRegs:$rb),
+     &quot;add $rc, $ra, $rb&quot;
+&gt;;</pre>
+
+<p>
+Generarea de cod se face prin intermediul clasei <strong>Pat</strong> care mapează noduri din <strong>SelectionDAG</strong> în <strong>MachineDAG</strong>:
+</p>
+<pre class="code">// Nu avem nevoie de nume pentru pattern, așa că îl definim anonim
+
+// add -&gt; ADD
+def : Pat&lt;(add IntRegs:$ra, IntRegs:$rb), (ADD IntRegs:$ra, IntRegs:$rb)&gt;;
+// ineg -&gt;
+//   t = EOR ra, ra    @ t is zero
+//   res = SUB t, ra   @ res is zero - ra
+def : Pat&lt;(inot IntRegs:$ra), (SUB (EOR IntRegs:$ra, IntRegs:$ra), IntRegs:$ra)&gt;;</pre>
+
+<p>
+Clasa <strong>Pat</strong> extinde clasa <strong>Pattern</strong> și ne permite să definim pattern-uri într-un mod mai simplu. In versiunea de LLVM 3.6, aceasta clasa este definita ca: 
+</p>
+<pre class="code"> class Pat&lt;dag pattern, dag result&gt; : Pattern&lt;pattern, [result]&gt;;</pre>
+
+<p>
+<strong>Calling convention</strong>-ul se definește tot prin intermediul fișierelor <strong>.td</strong>. Calling convention-ul este un contract prin intermediul căruia se specifică modalitatea de transmitere a parametrilor către funcții și întoarcerea rezultatelor de către acestea (folosind registre, stiva sau ambele). 
+</p>
+
+<p>
+Se pot defini mai multe calling convention-uri, folosing clasa <strong>CallingConvention</strong>. Această clasă primește ca parametru o listă de acținui (<strong>CCAction</strong>) care este folosită pentru a determina modul de transmitere a parametrilor. 
+</p>
+
+<p>
+Pentru lista tuturor acțiunilor, inspectați fișierul <strong>include/llvm/Target/TargetCallingConv.td</strong>. Mai jos sunt prezentate câteva din cele mai comune acțiuni, din acest fișier.
+</p>
+<pre class="code">/// CCIfType - If the current argument is one of the specified types, apply
+/// Action A.
+class CCIfType&lt;list&lt;ValueType&gt; vts, CCAction A&gt; : CCPredicateAction&lt;A&gt; {
+  list&lt;ValueType&gt; VTs = vts;
+}
+
+/// CCPromoteToType - If applied, this promotes the specified current value to
+/// the specified type.
+class CCPromoteToType&lt;ValueType destTy&gt; : CCAction {
+  ValueType DestTy = destTy;
+}
+
+/// CCAssignToReg - This action matches if there is a register in the specified
+/// list that is still available.  If so, it assigns the value to the first
+/// available register and succeeds.
+class CCAssignToReg&lt;list&lt;Register&gt; regList&gt; : CCAction {
+  list&lt;Register&gt; RegList = regList;
+}
+
+/// CCAssignToStack - This action always matches: it assigns the value to a
+/// stack slot of the specified size and alignment on the stack.  If size is
+/// zero then the ABI size is used; if align is zero then the ABI alignment
+/// is used - these may depend on the target or subtarget.
+class CCAssignToStack&lt;int size, int align&gt; : CCAction {
+  int Size = size;
+  int Align = align;
+}</pre>
+
+<p>
+Este important de menționat că determinarea modului de transmitere a unui parametru se face parcurgând lista până la prima acțiune de assign care se execută.
+</p>
+
+<p>
+Pentru a defini un calling convention care primește toți parametrii pe stivăputem folosi:
+</p>
+<pre class="code">def CC_Stack : CallingConv&lt;[
+  // Promote values to i32
+  CCIfType&lt;[i1, i8, i16], CCPromoteToType&lt;i32&gt;&gt;,
+
+  // Use the stack (always works)
+  CCAsignToStack&lt;0, 0&gt;
+]&gt;;</pre>
+
+</div>
+<!-- EDIT10 SECTION "TableGen" [4127-9539] -->
+<h2 class="sectionedit11" id="setul_de_instructiuni">Setul de instrucțiuni</h2>
+<div class="level2">
+
+<p>
+În cadrul acestui laborator se va folosi o arhitectură care definește un subset al instrucțiunilor de <strong>ARMv3</strong>.
+</p>
+
+<p>
+Arhitectura dispune de un set de 16 registre de 32 biți (R0-R15) și un registru de stare (CPSR). Registrele R13-R15 sunt rezervate pentru stack pointer SP (R13), link register LR (R14) și program counter PC (R15). 
+</p>
+
+<p>
+Registrul de stare este scris de către instrucțiunile de comparație și citit de către instrucțiunile de salt condiționat.
+</p>
+
+<p>
+Setul de instrucțiuni cuprinde: 
+</p>
+<div class="table sectionedit12"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Tip </th><th class="col1"> Sintaxă </th><th class="col2"> Efect </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0" rowspan="12"> ALU </td><td class="col1"> add rd, rs1, rs2 </td><td class="col2"> rd = rs1 + rs2 </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> add rd, rs1, i8 </td><td class="col1"> rd = rs1 + i8 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> sub rd, rs1, rs2 </td><td class="col1"> rd = rs1 - rs2 </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> sub rd, rs1, i8 </td><td class="col1"> rd = rs1 - i8 </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> mul rd, rs1, rs2 </td><td class="col1"> rd = rs1 * rs2 </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> and rd, rs1, rs2 </td><td class="col1"> rd = rs1 AND rs2 </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> and rd, rs1, i8 </td><td class="col1"> rd = rs1 AND i8 </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"> orr rd, rs1, rs2 </td><td class="col1"> rd = rs1 OR rs2 </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"> orr rd, rs1, i8 </td><td class="col1"> rd = rs1 OR i8 </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0"> eor rd, rs1, rs2 </td><td class="col1"> rd = rs1 XOR rs2 </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0"> eor rd, rs1, i8 </td><td class="col1"> rd = rs1 XOR i8 </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0"> mul rd, rs1, rs2 </td><td class="col1"> rd = rs1 * rs2 </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0" rowspan="2"> Transfer </td><td class="col1"> mov rd, rs </td><td class="col2"> rd = rs </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0"> mvn rd, rs </td><td class="col1"> rd = NOT rs </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0"> Salt </td><td class="col1"> b i24 </td><td class="col2"> pc = address </td>
+	</tr>
+	<tr class="row16">
+		<td class="col0" rowspan="6"> Salt condiționat </td><td class="col1"> beq i24 </td><td class="col2"> if eq then pc = address </td>
+	</tr>
+	<tr class="row17">
+		<td class="col0"> bne i24 </td><td class="col1"> if ne then pc = address </td>
+	</tr>
+	<tr class="row18">
+		<td class="col0"> bge i24 </td><td class="col1"> if ge then pc = address </td>
+	</tr>
+	<tr class="row19">
+		<td class="col0"> bgt i24 </td><td class="col1"> if gt then pc = address </td>
+	</tr>
+	<tr class="row20">
+		<td class="col0"> ble i24 </td><td class="col1"> if le then pc = address </td>
+	</tr>
+	<tr class="row21">
+		<td class="col0"> blt i24 </td><td class="col1"> if lt then pc = address </td>
+	</tr>
+	<tr class="row22">
+		<td class="col0"> Apel funcție </td><td class="col1"> bl i24 </td><td class="col2"> lr = next_address; pc = address </td>
+	</tr>
+	<tr class="row23">
+		<td class="col0" rowspan="4"> Memorie </td><td class="col1"> ldr rd, [ra, i12] </td><td class="col2"> rd = [ra + i12] </td>
+	</tr>
+	<tr class="row24">
+		<td class="col0"> ldrb rd, [ra, i12] </td><td class="col1"> rd = zero_extend [ra + i12] </td>
+	</tr>
+	<tr class="row25">
+		<td class="col0"> str rs, [ra, i12] </td><td class="col1"> [ra + i12] = rs </td>
+	</tr>
+	<tr class="row26">
+		<td class="col0"> strb rs, [ra, i12] </td><td class="col1"> [ra + i12] = rs AND 0xFF </td>
+	</tr>
+</table></div>
+<!-- EDIT12 TABLE [10077-11284] -->
+</div>
+<!-- EDIT11 SECTION "Setul de instrucțiuni" [9540-11284] -->
+<h2 class="sectionedit13" id="compilare_si_rulare">Compilare și rulare</h2>
+<div class="level2">
+
+<p>
+Următoarele pachete sunt necesare:
+</p>
+<pre class="code">gcc-arm-linux-gnueabi # cross compiler de arm
+libc-dev-armel-cross # embedded GNU C library pentru cross-compiling
+qemu-user # pt qemu-arm
+android-tools-adb # adb
+openjdk-7-jre # sau alta varianta de java
+lib32z1 lib32ncurses5 lib32stdc++6 # lib-uri pe 32 de biti (daca e cazul)</pre>
+
+<p>
+De asemenea, este necesar <a href="http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz" class="urlextern" title="http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz"  rel="nofollow">SDK-ul de Android</a>.
+Acesta trebuie dezarhivat, iar calea către directorul obținut în urma dezarhivării trebuie setată în cadrul variabilei de mediu ANDROID_SDK_ROOT.
+De asemenea trebuie adăugată în PATH calea către directorul $ANDROID_SDK_ROOT/tools.
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Compilare și rulare" [11285-11998] -->
+<h3 class="sectionedit14" id="device_pentru_android">Device pentru android</h3>
+<div class="level3">
+
+<p>
+Pentru a instala doar target-ul necesar:
+</p>
+<pre class="code"># Recomandam instalarea celor cu API 22
+android list sdk
+
+android update sdk --no-ui --filter 4,25,38,tool,platform-tool
+# Numerele pot diferi in functie de output-ul comenzii de mai sus. In cazul nostru:
+# 4 - SDK Platform Android 5.1.1, API 22, revision 2
+# 25 - Google APIs, Android API 22, revision 1
+# 38 - Google APIs ARM EABI v7a System Image, Google Inc. API 22, revision 1
+
+android list targets
+
+android create avd -n myandroid22 \
+    -t &quot;Google Inc.:Google APIs:22&quot; \
+    --abi google_apis/armeabi-v7a</pre>
+
+</div>
+<!-- EDIT14 SECTION "Device pentru android" [11999-12600] -->
+<h3 class="sectionedit15" id="compilare">Compilare</h3>
+<div class="level3">
+
+<p>
+Pentru a compila un fișer <code>C</code> vom folosi cross-compiler-ul de ARM <code>arm-linux-gnueabi-gcc</code>.
+<p><div class="noteimportant">
+Pentru temă vom genera cod pentru ARM v3.
+Datorită unui bug în gcc, vom rula cu opțiunea <code>-march=armv4</code>.
+
+</div></p>
+Opțiunile sunt similare cu cele date pentru gcc.
+Arhitectura dorită va fi specificată cu <code>-march=armv4</code>.
+</p>
+
+<p>
+Pentru a obține asamblarea, folosiți <code>-S</code>.
+</p>
+
+<p>
+Pentru a putea rula executabilele generate folosind emulatoarele, trebuie ca acestea să fie link-ate static (prin transmiterea opțiunii <code>-static</code> către <code>arm-linux-gnueabi-gcc</code>)
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Compilare" [12601-13196] -->
+<h3 class="sectionedit16" id="emulare">Emulare</h3>
+<div class="level3">
+
+<p>
+Pentru testare, vom folosi emulatorul de Android și qemu.
+</p>
+
+</div>
+
+<h4 id="emulatorul_de_android">Emulatorul de Android</h4>
+<div class="level4">
+<pre class="code">emulator -avd myandroid22 &amp; # porniti emulatorul de android
+adb push binar /data/binar  # copiati binarul pe device
+adb shell /data/binar       # rulati binarul</pre>
+
+<p>
+Pentru a putea rula aceste comenzi, trebuie adăugată în <code>PATH</code> calea către directorul <code>$ANDROID_SDK_ROOT/tools</code>.
+În cazul în care se folosește un sistem de operare pe 32 biți, este nevoie de forțarea folosirii binarelor pe 32 de biți prin exportarea variabilei de mediu ANDROID_EMULATOR_FORCE_32BIT=true.
+</p>
+
+</div>
+
+<h4 id="qemu">Qemu</h4>
+<div class="level4">
+<pre class="code">qemu-arm binar              # rulati binarul</pre>
+
+</div>
+<!-- EDIT16 SECTION "Emulare" [13197-13872] -->
+<h2 class="sectionedit17" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+<p>
+<a href="../../../../_media/cpl/labs/lab07.zip" class="media mediafile mf_zip" title="cpl:labs:lab07.zip (39.2 KB)">Arhiva</a> laboratorului.
+</p>
+
+</div>
+<!-- EDIT17 SECTION "Exerciții" [13873-13941] -->
+<h3 class="sectionedit18" id="exercitiul_1">Exercițiul 1</h3>
+<div class="level3">
+
+<p>
+Scrieți un program <code>C</code> care printează <code>“Hello World!”</code>. Compilați programul și obțineți fișierul .s. Asamblați și link-ați fișierul pentru a obține un fișier ELF. Rulați ELF-ul folosind cele 2 emulatoare (Android și qemu).
+</p>
+
+</div>
+<!-- EDIT18 SECTION "Exercițiul 1" [13942-14207] -->
+<h3 class="sectionedit19" id="exercitiul_2">Exercițiul 2</h3>
+<div class="level3">
+
+<p>
+Completați funcția <code>sum</code> din fișierul <strong>ex2.s</strong> pentru a întoarce suma elementelor vectorului dat ca parametru. Adresa vectorului este transmisă prin registrul <code>R0</code>, iar numărul elementelor este transmis prin registrul <code>R1</code>. Rezultatul trebuie intors prin registrul <code>R0</code>. Link-ați <strong>ex2.s</strong> împreună cu <strong>ex2.c</strong> și rulați executabilul.<p><div class="noteimportant">
+Funcția nu trebuie sa suprascrie niciun registru rezervat pentru program counter, return address și stack pointer.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT19 SECTION "Exercițiul 2" [14208-14728] -->
+<h3 class="sectionedit20" id="exercitiul_3">Exercițiul 3</h3>
+<div class="level3">
+
+<p>
+Copiați directorul cpl din arhiva în directorul lib/Target al dristribuției de LLVM de mașinile din laborator.
+Înregistrați target-ul Cpl în cadrul framework-ului de LLVM.
+După ce ați modificat toate fișierele, compilați <strong>llc</strong> cu suport pentru noul target:
+</p>
+<pre class="code"> cd ~/packages/llvm-3.6.2/build
+ cmake -DLLVM_TARGETS_TO_BUILD=Cpl path_to_llvm_src
+ make -j2 llc</pre>
+
+<p>
+Pentru a testa, compilați fișierul ex3.a.ll folosind opțiunea <code>-filetype=null</code> pentru llc.
+<p><div class="notewarning">
+Compilarea llc va dura în jur de 20 minute.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT20 SECTION "Exercițiul 3" [14729-15291] -->
+<h3 class="sectionedit21" id="exercitiul_4">Exercițiul 4</h3>
+<div class="level3">
+
+<p>
+Completați în target-ul de Cpl pentru a genera cod pentru următoarele funcții echivalente în <code>C</code>.
+Funcțiile se află în fișierele <code>ex4_&lt;no&gt;.ll</code>.
+</p>
+
+</div>
+
+<h4 id="f">f</h4>
+<div class="level4">
+
+<p>
+Va trebui să implementați funcția <code>CplInstPrinter::printOperand</code>.
+</p>
+<pre class="code">void f() {}</pre>
+
+</div>
+
+<h4 id="ident">ident</h4>
+<div class="level4">
+
+<p>
+Va trebui să completați fisierul <code>CplCallingConv.td</code>
+</p>
+<pre class="code">int ident(int a) {
+  return a;
+}</pre>
+
+</div>
+
+<h4 id="or">or</h4>
+<div class="level4">
+
+<p>
+Va trebui să adăugați instructiunea <code>or</code> în fișierul <code>CplInstrInfo.td</code> și un pattern pentru nodul <code>or</code> în fișierul <code>CplPatterns.td</code>
+</p>
+<pre class="code">int or(int a, int b) {
+  return a | b;
+}</pre>
+
+</div>
+
+<h4 id="second">second</h4>
+<div class="level4">
+
+<p>
+Va trebui să implementați funcția <code>CplInstrInfo::copyPhysReg</code>.
+</p>
+<pre class="code">int second(int a, int b) {
+  return b;
+}</pre>
+
+</div>
+<!-- EDIT21 SECTION "Exercițiul 4" [15292-] --></div>
+</body>
+</html>

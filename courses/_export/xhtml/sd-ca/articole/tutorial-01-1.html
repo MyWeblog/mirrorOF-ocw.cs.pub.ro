@@ -1,0 +1,329 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>sd-ca:articole:tutorial-01-1</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-02-24T13:26:36+0200"/>
+<meta name="keywords" content="sd-ca,articole,tutorial-01-1"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=sd-ca:articole"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="tutorial-01-1.html"/>
+<link rel="canonical" href="../../../../sd-ca/articole/tutorial-01-1.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sd-ca:articole';var JSINFO = {"id":"sd-ca:articole:tutorial-01-1","namespace":"sd-ca:articole","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="tutorial-01-1.html#tutorial_11_-_resizablearray">Tutorial 1.1 - ResizableArray</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="tutorial-01-1.html#obiective">Obiective</a></div></li>
+<li class="level2"><div class="li"><a href="tutorial-01-1.html#dezvoltare">Dezvoltare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tutorial-01-1.html#varianta_de_baza_a_lui_struct_resizablearray">Varianta de baza a lui struct ResizableArray</a></div></li>
+<li class="level3"><div class="li"><a href="tutorial-01-1.html#adaugarea_de_elemente_si_redimensionare">Adaugarea de elemente si redimensionare</a></div></li>
+<li class="level3"><div class="li"><a href="tutorial-01-1.html#adaugarea_de_alte_elemente_eg_sortarea">Adaugarea de alte elemente (e.g. sortarea)</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="tutorial-01-1.html#testare_si_evaluare">Testare si Evaluare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="tutorial-01-1.html#program_de_test">Program de test</a></div></li>
+<li class="level3"><div class="li"><a href="tutorial-01-1.html#verificare_cu_valgrind">Verificare cu Valgrind</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="tutorial_11_-_resizablearray">Tutorial 1.1 - ResizableArray</h1>
+<div class="level1">
+
+<p>
+In acest tutorial, ne propunem sa construim o structura de tip Array capabil sa se redimensioneze automat atunci cand se umple.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Tutorial 1.1 - ResizableArray" [1-174] -->
+<h2 class="sectionedit2" id="obiective">Obiective</h2>
+<div class="level2">
+
+<p>
+Ne dorim:
+</p>
+<ul>
+<li class="level1"><div class="li"> să construim struct ResizableArray, cu un membru astfel încât să poată reține un vector de elemente de tip int, cu o dimensiune initiala specificata printr-un define</div>
+</li>
+<li class="level1"><div class="li"> să adaugam lui struct ResizableArray o metodă de adăugare a unui element nou. Dacă vectorul intern este deja plin, se va aloca un nou vector de dimensiune dublă, se va copia conținutul original și se va adăuga apoi noul element ca în mod obișnuit</div>
+</li>
+<li class="level1"><div class="li"> să adaugam si alte functionalitati lui struct ResizableArray, precum sortarea elementelor</div>
+</li>
+<li class="level1"><div class="li"> să testam struct ResizableArray printr-un cod simplu care arată cum se adaugă elemente și cum se redimensionează structura de date</div>
+</li>
+<li class="level1"><div class="li"> să verificam cu Valgrind că nu sunt memory leaks.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Obiective" [175-936] -->
+<h2 class="sectionedit3" id="dezvoltare">Dezvoltare</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "Dezvoltare" [937-960] -->
+<h3 class="sectionedit4" id="varianta_de_baza_a_lui_struct_resizablearray">Varianta de baza a lui struct ResizableArray</h3>
+<div class="level3">
+
+<p>
+Vom considera ca varianta de baza o structura care contine un array de MAX_SIZE elemente, unde MAX_SIZE este initializat printr-un define.
+</p>
+<pre class="code cpp"><span class="co2">#ifndef __RESIZABLE_ARRAY__</span>
+<span class="co2">#define __RESIZABLE_ARRAY__</span>
+&nbsp;
+<span class="co2">#define MAX_SIZE 100 // o dimensiune maxima prestabilita</span>
+&nbsp;
+<span class="kw4">struct</span> ResizableArray <span class="br0">&#123;</span>
+	<span class="kw4">int</span> array<span class="br0">&#91;</span> MAX_SIZE <span class="br0">&#93;</span><span class="sy4">;</span> 
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co2">#endif // __RESIZABLE_ARRAY__</span></pre>
+
+</div>
+<!-- EDIT4 SECTION "Varianta de baza a lui struct ResizableArray" [961-1374] -->
+<h3 class="sectionedit5" id="adaugarea_de_elemente_si_redimensionare">Adaugarea de elemente si redimensionare</h3>
+<div class="level3">
+
+<p>
+Pentru a putea adauga elemente si a sti cand vectorul este plin avem nevoie de capacitatea acestuia si de dimensiunea sa la un moment dat. De asemenea, ca sa il putem realoca, array-ul nu va fi initializat static!
+</p>
+<pre class="code cpp"><span class="kw4">struct</span> ResizableArray <span class="br0">&#123;</span>
+	<span class="kw4">int</span> <span class="sy2">*</span>array<span class="sy4">;</span>
+	<span class="kw4">int</span> capacity<span class="sy4">;</span>
+	<span class="kw4">int</span> size<span class="sy4">;</span>
+&nbsp;
+	<span class="co1">// Metoda de initializare</span>
+	<span class="kw4">void</span> init<span class="br0">&#40;</span><span class="kw4">int</span> capacity<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		this<span class="sy2">-</span><span class="sy1">&gt;</span>capacity <span class="sy1">=</span> capacity<span class="sy4">;</span>
+		this<span class="sy2">-</span><span class="sy1">&gt;</span>size <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span>
+		this<span class="sy2">-</span><span class="sy1">&gt;</span>array <span class="sy1">=</span> <span class="kw3">new</span> <span class="kw4">int</span><span class="br0">&#91;</span> capacity <span class="br0">&#93;</span><span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Metoda care adauga un element in vector ar trebui initial sa verifice daca mai este loc. In caz afirmativ, elementul se va pune pe urmatoarea pozitie libera in vector. Altfel, capacitatea vectorului se va dubla si se va actualiza la noua valoare. De asemenea, deoarece in C++ nu folosim “realloc”, vom folosi un pointer auxiliar pentru noua dimensiune pe care il vom completa cu valorile deja existente.
+</p>
+<pre class="code cpp"><span class="kw4">void</span> push_back<span class="br0">&#40;</span><span class="kw4">int</span> value<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="co1">// Verific daca vectorul intern este plin</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>size <span class="sy1">==</span> capacity<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="co1">// Voi face o realocare. La final copiez elementele in noul vectorl</span>
+&nbsp;
+		<span class="co1">// Aloc un nou vector de dimensiune dubla.</span>
+		<span class="kw4">int</span> <span class="sy2">*</span>tmpArray <span class="sy1">=</span> <span class="kw3">new</span> <span class="kw4">int</span><span class="br0">&#91;</span> <span class="nu0">2</span><span class="sy2">*</span>capacity <span class="br0">&#93;</span><span class="sy4">;</span>
+&nbsp;
+		<span class="co1">// Copiez elementele in noul vector</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span> <span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> size<span class="sy4">;</span> <span class="sy2">++</span>i <span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			tmpArray<span class="br0">&#91;</span> i <span class="br0">&#93;</span> <span class="sy1">=</span> array<span class="br0">&#91;</span> i <span class="br0">&#93;</span><span class="sy4">;</span>
+		<span class="br0">&#125;</span>
+&nbsp;
+		<span class="co1">// Eliberez memoria ocupata de vechiul vector.</span>
+		<span class="kw3">delete</span><span class="br0">&#91;</span><span class="br0">&#93;</span> array<span class="sy4">;</span>
+&nbsp;
+		<span class="co1">// Salvez vectorul nou format, care are capacitate dubla.</span>
+		array <span class="sy1">=</span> tmpArray<span class="sy4">;</span>
+		capacity <span class="sy1">=</span> <span class="nu0">2</span> <span class="sy2">*</span> capacity<span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co1">// Adaug elementul la finalul vectorului</span>
+	<span class="co1">// Pozitia noului element este size;</span>
+	array<span class="br0">&#91;</span> size <span class="br0">&#93;</span> <span class="sy1">=</span> value<span class="sy4">;</span>
+	size<span class="sy2">++</span><span class="sy4">;</span> <span class="co1">// urmatorul element adaugat va fi adaugat la o urmatoarea pozitie</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT5 SECTION "Adaugarea de elemente si redimensionare" [1375-3017] -->
+<h3 class="sectionedit6" id="adaugarea_de_alte_elemente_eg_sortarea">Adaugarea de alte elemente (e.g. sortarea)</h3>
+<div class="level3">
+<pre class="code cpp"><span class="co1">// Metoda care sorteaza crescator elementele vectorului.</span>
+<span class="kw4">void</span> sort<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="kw1">for</span> <span class="br0">&#40;</span> <span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> size<span class="sy4">;</span> <span class="sy2">++</span>i <span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span> <span class="kw4">int</span> j <span class="sy1">=</span> i <span class="sy2">+</span> <span class="nu0">1</span><span class="sy4">;</span> j <span class="sy1">&lt;</span> size<span class="sy4">;</span> <span class="sy2">++</span>j <span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			<span class="kw1">if</span> <span class="br0">&#40;</span>array<span class="br0">&#91;</span> i <span class="br0">&#93;</span> <span class="sy1">&gt;</span> array<span class="br0">&#91;</span> j <span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+				<span class="kw4">int</span> tmp <span class="sy1">=</span> array<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy4">;</span>
+				array<span class="br0">&#91;</span> i <span class="br0">&#93;</span> <span class="sy1">=</span> array<span class="br0">&#91;</span> j <span class="br0">&#93;</span><span class="sy4">;</span>
+				array<span class="br0">&#91;</span> j <span class="br0">&#93;</span> <span class="sy1">=</span> tmp<span class="sy4">;</span>
+				<span class="co1">// sau std::swap(array[i], array[j]);</span>
+				<span class="co1">// sau array[i] ^= array[j], array[j] ^= array[i], array[i] ^= array[j];</span>
+			<span class="br0">&#125;</span>
+		<span class="br0">&#125;</span>
+	<span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">// Metoda care afiseaza elementele vectorului.</span>
+<span class="kw4">void</span> print<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;Continut: &quot;</span><span class="sy4">;</span>
+	<span class="kw1">for</span> <span class="br0">&#40;</span> <span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> size<span class="sy4">;</span> <span class="sy2">++</span>i <span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> array<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy1">&lt;&lt;</span> <span class="st0">' '</span><span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">'<span class="es1">\n</span>'</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT6 SECTION "Adaugarea de alte elemente (e.g. sortarea)" [3018-3665] -->
+<h2 class="sectionedit7" id="testare_si_evaluare">Testare si Evaluare</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Testare si Evaluare" [3666-3698] -->
+<h3 class="sectionedit8" id="program_de_test">Program de test</h3>
+<div class="level3">
+
+<p>
+In continuare vom face un program care prima data citeste n numere intr-un ResizableArray de dimensiune n, apoi mai citeste inca m numere pe care le introduce in acelasi ResizableArray pentru a demonstra realocarea, iar apoi va afisa elementele inainte si dupa sortarea acestora.
+</p>
+<pre class="code cpp"><span class="co2">#include &lt;iostream&gt;</span>
+<span class="co2">#include &quot;ResizableArray.h&quot;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="co1">// Declararea unui element de tip ResizableArray</span>
+	ResizableArray ra<span class="sy4">;</span> 
+&nbsp;
+	<span class="co1">// Initializarea (alocarea vectorului intern). Presupunem ca are o dimensiune n;</span>
+	<span class="kw4">int</span> n<span class="sy4">;</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;n = &quot;</span><span class="sy4">;</span>
+	std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> n<span class="sy4">;</span>
+	ra.<span class="me1">init</span><span class="br0">&#40;</span>n<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="co1">// Citirea si adaugarea a n elemente.</span>
+	<span class="kw1">for</span> <span class="br0">&#40;</span> <span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> n<span class="sy4">;</span> <span class="sy2">++</span>i <span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw4">int</span> x<span class="sy4">;</span> <span class="co1">// al i-lea element citit de la tastatura</span>
+		std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> x<span class="sy4">;</span>
+		ra.<span class="me1">push_back</span><span class="br0">&#40;</span>x<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+		<span class="co1">// Observatie: Capacitatea vectorului intern nu se modifica.</span>
+		std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;Dimensiune: &quot;</span> <span class="sy1">&lt;&lt;</span> ra.<span class="me1">size</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot; Capacitate &quot;</span> <span class="sy1">&lt;&lt;</span> ra.<span class="me1">capacity</span> <span class="sy1">&lt;&lt;</span> <span class="st0">'<span class="es1">\n</span>'</span><span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co1">// Afisare continut vector</span>
+	ra.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="co1">// Vom adauga in continuare inca m elemente;</span>
+	<span class="kw4">int</span> m<span class="sy4">;</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;m = &quot;</span><span class="sy4">;</span>
+	std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> m<span class="sy4">;</span>
+	<span class="kw1">for</span> <span class="br0">&#40;</span> <span class="kw4">int</span> i <span class="sy1">=</span> <span class="nu0">0</span><span class="sy4">;</span> i <span class="sy1">&lt;</span> m<span class="sy4">;</span> <span class="sy2">++</span>i <span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw4">int</span> x<span class="sy4">;</span> <span class="co1">// al i-lea element citit de la tastatura</span>
+		std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> x<span class="sy4">;</span>
+		ra.<span class="me1">push_back</span><span class="br0">&#40;</span>x<span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+		<span class="co1">// Observatie: Se poate modifica capacitatea vectorului intern!</span>
+		std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;Dimensiune: &quot;</span> <span class="sy1">&lt;&lt;</span> ra.<span class="me1">size</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot; Capacitate &quot;</span> <span class="sy1">&lt;&lt;</span> ra.<span class="me1">capacity</span> <span class="sy1">&lt;&lt;</span> <span class="st0">'<span class="es1">\n</span>'</span><span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="co1">// Afisare continut vector</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;Inainte de sortare<span class="es1">\n</span>&quot;</span><span class="sy4">;</span>
+	ra.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="co1">// Vom sorta elementele apoi vom afisa din nou continutul.</span>
+	ra.<span class="me1">sort</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+	std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> <span class="st0">&quot;Dupa sortare<span class="es1">\n</span>&quot;</span><span class="sy4">;</span>
+	ra.<span class="me1">print</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+&nbsp;
+	<span class="co1">// Eliberare memorie</span>
+	<span class="kw3">delete</span><span class="br0">&#91;</span><span class="br0">&#93;</span> ra.<span class="me1">array</span><span class="sy4">;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Exemplu:
+</p>
+<pre class="code bash">n = <span class="nu0">5</span>
+<span class="nu0">1</span>         
+Dimensiune: <span class="nu0">1</span> Capacitate <span class="nu0">5</span>
+<span class="nu0">7</span>
+Dimensiune: <span class="nu0">2</span> Capacitate <span class="nu0">5</span>
+<span class="nu0">13</span>
+Dimensiune: <span class="nu0">3</span> Capacitate <span class="nu0">5</span>
+<span class="nu0">2</span>
+Dimensiune: <span class="nu0">4</span> Capacitate <span class="nu0">5</span>
+<span class="nu0">41</span>
+Dimensiune: <span class="nu0">5</span> Capacitate <span class="nu0">5</span>
+Continut: <span class="nu0">1</span> <span class="nu0">7</span> <span class="nu0">13</span> <span class="nu0">2</span> <span class="nu0">41</span> 
+m = <span class="nu0">6</span>
+<span class="nu0">1</span>
+Dimensiune: <span class="nu0">6</span> Capacitate <span class="nu0">10</span>
+<span class="nu0">5</span>
+Dimensiune: <span class="nu0">7</span> Capacitate <span class="nu0">10</span>
+<span class="nu0">2</span>
+Dimensiune: <span class="nu0">8</span> Capacitate <span class="nu0">10</span>
+<span class="re5">-2</span>
+Dimensiune: <span class="nu0">9</span> Capacitate <span class="nu0">10</span>
+<span class="nu0">1</span>
+Dimensiune: <span class="nu0">10</span> Capacitate <span class="nu0">10</span>
+<span class="nu0">4</span>
+Dimensiune: <span class="nu0">11</span> Capacitate <span class="nu0">20</span>
+Inainte de sortare
+Continut: <span class="nu0">1</span> <span class="nu0">7</span> <span class="nu0">13</span> <span class="nu0">2</span> <span class="nu0">41</span> <span class="nu0">1</span> <span class="nu0">5</span> <span class="nu0">2</span> <span class="re5">-2</span> <span class="nu0">1</span> <span class="nu0">4</span> 
+Dupa sortare
+Continut: <span class="re5">-2</span> <span class="nu0">1</span> <span class="nu0">1</span> <span class="nu0">1</span> <span class="nu0">2</span> <span class="nu0">2</span> <span class="nu0">4</span> <span class="nu0">5</span> <span class="nu0">7</span> <span class="nu0">13</span> <span class="nu0">41</span></pre>
+
+</div>
+<!-- EDIT8 SECTION "Program de test" [3699-5782] -->
+<h3 class="sectionedit9" id="verificare_cu_valgrind">Verificare cu Valgrind</h3>
+<div class="level3">
+
+<p>
+Pentru acelasi test rulat cu 
+</p>
+<pre class="code bash"> <span class="kw2">valgrind</span> .<span class="sy0">/</span>main.out </pre>
+
+<p>
+ toata memoria va fi eliberata.
+</p>
+<pre class="code bash">==<span class="nu0">8090</span>== HEAP SUMMARY:
+==<span class="nu0">8090</span>==     <span class="kw1">in</span> use at exit: <span class="nu0">0</span> bytes <span class="kw1">in</span> <span class="nu0">0</span> blocks
+==<span class="nu0">8090</span>==   total heap usage: <span class="nu0">3</span> allocs, <span class="nu0">3</span> frees, <span class="nu0">140</span> bytes allocated
+==<span class="nu0">8090</span>== 
+==<span class="nu0">8090</span>== All heap blocks were freed <span class="re5">--</span> no leaks are possible
+==<span class="nu0">8090</span>== 
+==<span class="nu0">8090</span>== For counts of detected and suppressed errors, rerun with: <span class="re5">-v</span>
+==<span class="nu0">8090</span>== ERROR SUMMARY: <span class="nu0">0</span> errors from <span class="nu0">0</span> contexts <span class="br0">&#40;</span>suppressed: <span class="nu0">0</span> from <span class="nu0">0</span><span class="br0">&#41;</span></pre>
+
+</div>
+<!-- EDIT9 SECTION "Verificare cu Valgrind" [5783-] --></div>
+</body>
+</html>

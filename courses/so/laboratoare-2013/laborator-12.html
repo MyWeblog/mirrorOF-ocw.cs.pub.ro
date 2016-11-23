@@ -1,0 +1,993 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 12 - Profiling    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-05T22:19:57+0200"/>
+<meta name="keywords" content="so,laboratoare-2013,laborator-12"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so:laboratoare-2013"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so/laboratoare-2013/laborator-12.html"/>
+<link rel="canonical" href="laborator-12.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so:laboratoare-2013';var JSINFO = {"id":"so:laboratoare-2013:laborator-12","namespace":"so:laboratoare-2013","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so/"><img height="70" src="../../res/sigla_so.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="laborator-12%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="laborator-12%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_12_-_profiling">Laborator 12 - Profiling</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so/res/laboratoare/lab12-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so/res/laboratoare/lab12-slides.pdf"  rel="nofollow"> lab12-slides.pdf</a> </div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit3" id="nice_to_watch">Nice to Watch</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="http://www.youtube.com/watch?v=73IyVBMf2uY" class="urlextern" title="http://www.youtube.com/watch?v=73IyVBMf2uY"  rel="nofollow"> Google I/O 2010 - Measure in milliseconds: Meet Speed Tracer</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-172-performance-engineering-of-software-systems-fall-2010/video-lectures/lecture-5-performance-engineering-with-profiling-tools/" class="urlextern" title="http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-172-performance-engineering-of-software-systems-fall-2010/video-lectures/lecture-5-performance-engineering-with-profiling-tools/"  rel="nofollow"> MIT Lecture: Performance Engineering with Profiling Tools</a></div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit4" id="latency_comparison_numbers">Latency Comparison Numbers</h3>
+<div class="level3">
+<div class="table sectionedit5"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Operation </th><th class="col1"> Time (ns) </th><th class="col2"> Notes </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> L1 cache reference </td><td class="col1">0.5 ns </td><td class="col2"> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 leftalign"> Branch mispredict  </td><td class="col1 leftalign">5   ns  </td><td class="col2"> </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> L2 cache reference </td><td class="col1 leftalign">7   ns  </td><td class="col2">14x L1 cache</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 leftalign"> Mutex lock/unlock  </td><td class="col1">25   ns </td><td class="col2"> </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> Main memory reference </td><td class="col1">100   ns</td><td class="col2">20x L2 cache, 200x L1 cache </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> Compress 1K bytes with Zippy </td><td class="col1">3,000 ns </td><td class="col2"> </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> Send 1K bytes over 1 Gbps network </td><td class="col1">10,000 ns </td><td class="col2">0.01 ms</td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 leftalign"> Read 4K randomly from SSD*        </td><td class="col1 leftalign">150,000 ns  </td><td class="col2"> 0.15 ms</td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"> Read 1 <abbr title="Megabyte">MB</abbr> sequentially from memory </td><td class="col1 leftalign">250,000 ns  </td><td class="col2"> 0.25 ms</td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 leftalign"> Round trip within same datacenter   </td><td class="col1 leftalign">500,000 ns   </td><td class="col2">0.5 ms</td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 leftalign"> Read 1 <abbr title="Megabyte">MB</abbr> sequentially from SSD*   </td><td class="col1 leftalign">1,000,000 ns  </td><td class="col2">1 ms,  4X memory</td>
+	</tr>
+	<tr class="row12">
+		<td class="col0 leftalign"> Disk seek                         </td><td class="col1 leftalign">10,000,000 ns  </td><td class="col2">10 ms,  20x datacenter roundtrip</td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 leftalign"> Read 1 <abbr title="Megabyte">MB</abbr> sequentially from disk  </td><td class="col1 centeralign">   20,000,000   ns  </td><td class="col2"> 20 ms  80x memory, 20X SSD</td>
+	</tr>
+	<tr class="row14">
+		<td class="col0 leftalign"> Send packet Caracal - NY - Caracal   </td><td class="col1 centeralign">  150,000,000   ns  </td><td class="col2">150 ms </td>
+	</tr>
+</table></div>
+
+<p>
+Credits:
+</p>
+<ul>
+<li class="level1"><div class="li"> By Jeff Dean:               <a href="http://research.google.com/people/jeff/" class="urlextern" title="http://research.google.com/people/jeff/"  rel="nofollow">http://research.google.com/people/jeff/</a></div>
+</li>
+<li class="level1"><div class="li"> Originally by Peter Norvig: <a href="http://norvig.com/21-days.html#answers" class="urlextern" title="http://norvig.com/21-days.html#answers"  rel="nofollow">http://norvig.com/21-days.html#answers</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit6" id="prezentare_teoretica">Prezentare teoretică</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit7" id="introducere">Introducere</h3>
+<div class="level3">
+
+<p>
+Un <strong>profiler</strong> este un utilitar de analiză a <strong>performanței</strong> care ajută programatorul să determine punctele critice – <strong>bottleneck</strong> – ale unui program. Acest lucru se realizează prin investigarea comportamentului programului, evaluarea consumului de memorie și relația dintre modulele acestuia.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="tehnici_de_profiling">Tehnici de profiling</h3>
+<div class="level3">
+
+</div>
+
+<h3 class="sectionedit9" id="tehnica_de_instrumentare">Tehnica de instrumentare</h3>
+<div class="level3">
+
+<p>
+Profiler-ele bazate pe această tehnică necesită de obicei <strong>modificări</strong> în codul programului: se inserează secțiuni de cod la începutul și sfârșitul funcției ce se dorește analizată. De asemenea, se rețin și funcțiile apelate. Astfel, se poate estima timpul total al apelului în sine cât și al apelurilor de subfuncții.
+<strong>Dezavantajul</strong> major al acestor profilere este legat de modificarea codului: în funcții de dimensiune scăzută și des apelate, acest overhead poate duce la o interpretare greșită e rezultatelor.
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="tehnica_de_esantionare_sampling">Tehnica de eșantionare (sampling)</h3>
+<div class="level3">
+
+<p>
+Profiler-ele bazate pe sampling <strong>nu fac schimbări</strong> în codul programului, ci verifică periodic procesorul cu scopul de a determina ce funcție (instrucțiune) se execută la momentul respectiv. Apoi estimează frecvența și timpul de execuție al unei anumite funcții într-o perioada de timp.
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="suport_pentru_profiler">Suport pentru profiler</h3>
+<div class="level3">
+
+<p>
+Suportul pentru profilere este disponibil la nivel de:
+</p>
+<ul>
+<li class="level1"><div class="li"><strong>bibliotecă C</strong> (GNU libc), prin informații legate de timpul de viață al alocărilor de memorie,</div>
+</li>
+<li class="level1"><div class="li"><strong>compilator</strong>, prin modificarea codului în tehnica de <strong>instrumentare</strong> se poate realiza ușor în procesul de compilare, compilatorul fiind cel ce inserează secțiunile de cod necesare,</div>
+</li>
+<li class="level1"><div class="li"><strong>nucleu</strong> al sistemului de operare, prin punerea la dispoziție de apeluri de sistem specifice,</div>
+</li>
+<li class="level1"><div class="li"><strong>hardware</strong>, unele procesoare sunt dotate cu contoare de temporizare (<a href="http://en.wikipedia.org/wiki/Time_Stamp_Counter" class="urlextern" title="http://en.wikipedia.org/wiki/Time_Stamp_Counter"  rel="nofollow">Time Stamp Counter - TSC</a>) sau contoare de performanță care numără evenimente precum cicluri de procesor sau TLB miss-uri.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit12" id="unelte">Unelte</h2>
+<div class="level2">
+
+<p>
+În continuare sunt prezentate câteva unelte folosite în profiling.
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="gprof">gprof</h3>
+<div class="level3">
+
+<p>
+<code>gprof</code> este utilitarul de instrumentare folosit în combinație cu <code>GCC</code>. Vom lua ca exemplu următoarea secvență de cod:
+</p>
+<dl class="code">
+<dt><a href="../../_export/code/so/laboratoare-2013/laborator-12%3Fcodeblock=0" title="Download Snippet" class="mediafile mf_c">main.c</a></dt>
+<dd><pre class="code c"><span class="kw4">void</span> a_foo<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;a_foo<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        usleep<span class="br0">&#40;</span><span class="nu0">2100</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> b_foo<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;b_foo<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        usleep<span class="br0">&#40;</span><span class="nu0">4200</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">int</span> i<span class="sy0">;</span>
+        <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> <span class="nu0">1000</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                a_foo<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+                b_foo<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+                a_foo<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Pentru folosirea <code>gprof</code> trebuie compilat programul cu suport de profiling prin folosirea opțiunii <code>-pg</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"> Compilare:<pre class="code bash"> <span class="kw2">gcc</span> <span class="re5">-Wall</span> <span class="re5">-g</span> <span class="re5">-pg</span> main.c <span class="re5">-o</span> main </pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Rulare:<pre class="code bash"> .<span class="sy0">/</span>main </pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Analiză:  <pre class="code bash"> $ <span class="kw2">ls</span>
+gmon.out  main  main.c</pre>
+</div>
+</li>
+</ul>
+
+<p>
+Avem un fișier <code>gmon.out</code> care conține datele analizei. Acestea pot fi afișate în mai multe forme:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://sourceware.org/binutils/docs/gprof/Flat-Profile.html#Flat-Profile" class="urlextern" title="http://sourceware.org/binutils/docs/gprof/Flat-Profile.html#Flat-Profile"  rel="nofollow">flat profile</a>: arată cât timp durează execuția unei funcții și de câte ori a fost apelată fiecare funcție.</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://sourceware.org/binutils/docs/gprof/Call-Graph.html#Call-Graph" class="urlextern" title="http://sourceware.org/binutils/docs/gprof/Call-Graph.html#Call-Graph"  rel="nofollow">call graph</a>: arată pentru fiecare funcție - funcțiile apelante, funcțiile apelate și de câte ori.</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://sourceware.org/binutils/docs/gprof/Annotated-Source.html#Annotated-Source" class="urlextern" title="http://sourceware.org/binutils/docs/gprof/Annotated-Source.html#Annotated-Source"  rel="nofollow">annotate source listing</a>: copie a programului inițial împreună cu numărul de execuții pentru fiecare linie.</div>
+</li>
+</ul>
+
+<p>
+Folosim acum <code>gprof</code> pentru a afișa flat profile și call graph pentru programul <code>main.c</code>.
+</p>
+<pre class="code bash">$ gprof .<span class="sy0">/</span>main
+Flat profile:
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+ <span class="kw1">time</span>   seconds   seconds    calls  us<span class="sy0">/</span>call  us<span class="sy0">/</span>call  name    
+ <span class="nu0">50.33</span>      <span class="nu0">0.01</span>     <span class="nu0">0.01</span>     <span class="nu0">2000</span>     <span class="nu0">2.52</span>     <span class="nu0">2.52</span>  a_foo
+ <span class="nu0">50.33</span>      <span class="nu0">0.01</span>     <span class="nu0">0.01</span>     <span class="nu0">1000</span>     <span class="nu0">5.03</span>     <span class="nu0">5.03</span>  b_foo
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+&nbsp;
+Call graph 
+index <span class="sy0">%</span> <span class="kw1">time</span>    self  children    called         name
+                                                 <span class="sy0">&lt;</span>spontaneous<span class="sy0">&gt;</span>
+<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>    <span class="nu0">100.0</span>    <span class="nu0">0.00</span>    <span class="nu0">0.01</span>                     main <span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>
+                <span class="nu0">0.01</span>    <span class="nu0">0.00</span>    <span class="nu0">2000</span><span class="sy0">/</span><span class="nu0">2000</span>        a_foo <span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span>
+                <span class="nu0">0.01</span>    <span class="nu0">0.00</span>    <span class="nu0">1000</span><span class="sy0">/</span><span class="nu0">1000</span>        b_foo <span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span>
+<span class="re5">-----------------------------------------------</span>
+                <span class="nu0">0.01</span>    <span class="nu0">0.00</span>    <span class="nu0">2000</span><span class="sy0">/</span><span class="nu0">2000</span>        main <span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>
+<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span>     <span class="nu0">50.0</span>    <span class="nu0">0.01</span>    <span class="nu0">0.00</span>    <span class="nu0">2000</span>             a_foo <span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span>
+<span class="re5">-----------------------------------------------</span>
+                <span class="nu0">0.01</span>    <span class="nu0">0.00</span>    <span class="nu0">1000</span><span class="sy0">/</span><span class="nu0">1000</span>        main <span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>
+<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span>     <span class="nu0">50.0</span>    <span class="nu0">0.01</span>    <span class="nu0">0.00</span>    <span class="nu0">1000</span>             b_foo <span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span>
+<span class="re5">-----------------------------------------------</span></pre>
+
+<p>
+Observați că:
+</p>
+<ul>
+<li class="level1"><div class="li"> timpul de execuție al fiecărei funcții este aproximativ egal cu timpul din <code>usleep</code>.</div>
+</li>
+<li class="level1"><div class="li"> timpul total de execuție al funcției <code>a_foo</code> este egal cu cel al funcției <code>b_foo</code>.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit14" id="perfcounters">perfcounters</h3>
+<div class="level3">
+
+<p>
+Majoritatea procesoarelor moderne oferă registre speciale (<code>performance counters</code>) care contorizează diferite tipuri de evenimente hardware: instrucțiuni executate, cache-miss-uri, instrucțiuni de salt anticipate greșit, fără să afecteze performanța nucleului sau a aplicațiilor. Aceste registre pot declanșa întreruperi atunci când se acumulează un anumit număr de evenimente și astfel se pot folosi pentru analiza codului care rulează pe procesorul în cauză. 
+</p>
+
+<p>
+Subsistemul <code>perfcounters</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"> se găsește în nucleul Linux începând cu versiunea <a href="http://lwn.net/Articles/339361/" class="urlextern" title="http://lwn.net/Articles/339361/"  rel="nofollow"> 2.6.31</a>  (<code>CONFIG_PERF_COUNTERS=y</code> )</div>
+</li>
+<li class="level1"><div class="li"> este înlocuitorul lui <code>oprofile</code></div>
+</li>
+<li class="level1"><div class="li"> oferă suport pentru:</div>
+<ul>
+<li class="level2"><div class="li"> <code>evenimente hardware</code> (instrucțiuni, accese cache, ciclii de magistrală).</div>
+</li>
+<li class="level2"><div class="li"> <code>evenimente software</code> (page fault, cpu-clock, cpu migrations).</div>
+</li>
+<li class="level2"><div class="li"> <code>tracepoints</code> (e.g: sys_enter_open, sys_exit_open).</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit15" id="perf">perf</h3>
+<div class="level3">
+
+<p>
+Utilitarul <code>perf</code> este interfața subsistemului <code>perfcounters</code> cu utilizatorul. Oferă o linie de comandă asemănătoare cu <code>git</code> și nu necesită existența unui daemon. 
+</p>
+
+<p>
+Un tutorial despre perf - <a href="https://perf.wiki.kernel.org/index.php/Tutorial" class="urlextern" title="https://perf.wiki.kernel.org/index.php/Tutorial"  rel="nofollow">tutorial perf</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit16" id="utilizare">Utilizare</h2>
+<div class="level2">
+<pre class="code bash"><span class="co4">$ </span>perf <span class="br0">&#91;</span>--version<span class="br0">&#93;</span> <span class="br0">&#91;</span>--help<span class="br0">&#93;</span> COMMAND <span class="br0">&#91;</span>ARGS<span class="br0">&#93;</span></pre>
+
+<p>
+Cele mai folosite <code>comenzi</code> sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>annotate</code> - Citește <code>perf.data</code> și afișează codul cu adnotări</div>
+</li>
+<li class="level1"><div class="li"> <code>list</code>     - Listează numele simbolice ale tuturor tipurilor de evenimente ce pot fi urmărite de <code>perf</code></div>
+</li>
+<li class="level1"><div class="li"> <code>lock</code>     - Analizează evenimentele de tip lock</div>
+</li>
+<li class="level1"><div class="li"> <code>record</code>   - Rulează o comandă și salvează informațiile de profiling în fișierul <code>perf.data</code></div>
+</li>
+<li class="level1"><div class="li"> <code>report</code>   - Citește <code>perf.data</code> (creat de <code>perf record</code>) și afișează profilul</div>
+</li>
+<li class="level1"><div class="li"> <code>sched</code>    - Utilitar pentru măsurarea proprietăților planificatorului (latențe)</div>
+</li>
+<li class="level1"><div class="li"> <code>stat</code>     - Rulează o comandă și afișează statisticile înregistrate de subsistemul performance counters</div>
+</li>
+<li class="level1"><div class="li"> <code>top</code>      - Generează și afișează informații în timp real despre încărcarea unui sistem</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit17" id="perf_list">perf list</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://manpages.ubuntu.com/manpages/natty/man1/perf-list.1.html" class="urlextern" title="http://manpages.ubuntu.com/manpages/natty/man1/perf-list.1.html"  rel="nofollow">man perf-list</a></div>
+</li>
+</ul>
+
+<p>
+Afișează numele simbolice ale tuturor tipurilor de evenimente ce pot fi urmărite de <code>perf</code>. 
+</p>
+<pre class="code bash">$ perf list 
+List of pre-defined events <span class="br0">&#40;</span>to be used <span class="kw1">in</span> -e<span class="br0">&#41;</span>:
+&nbsp;
+  cpu-cycles OR cycles                       <span class="br0">&#91;</span>Hardware event<span class="br0">&#93;</span>
+  instructions                               <span class="br0">&#91;</span>Hardware event<span class="br0">&#93;</span>
+&nbsp;
+  cpu-clock                                  <span class="br0">&#91;</span>Software event<span class="br0">&#93;</span>
+  page-faults OR faults                      <span class="br0">&#91;</span>Software event<span class="br0">&#93;</span>
+&nbsp;
+  L1-dcache-loads                            <span class="br0">&#91;</span>Hardware cache event<span class="br0">&#93;</span>
+  L1-dcache-load-misses                      <span class="br0">&#91;</span>Hardware cache event<span class="br0">&#93;</span>
+&nbsp;
+  rNNN                                       <span class="br0">&#91;</span>Raw hardware event descriptor<span class="br0">&#93;</span>
+&nbsp;
+  mem:<span class="sy0">&lt;</span>addr<span class="sy0">&gt;</span><span class="br0">&#91;</span>:access<span class="br0">&#93;</span>                        <span class="br0">&#91;</span>Hardware breakpoint<span class="br0">&#93;</span>
+&nbsp;
+  syscalls:sys_enter_accept                  <span class="br0">&#91;</span>Tracepoint event<span class="br0">&#93;</span>
+  syscalls:sys_exit_accept                   <span class="br0">&#91;</span>Tracepoint event<span class="br0">&#93;</span></pre>
+
+<p>
+Atunci când un eveniment nu este disponibil în forma simbolică, poate fi folosit cu perf în forma procesorului din sistemul analizat.
+</p>
+
+</div>
+
+<h2 class="sectionedit18" id="perf_stat">perf stat</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://manpages.ubuntu.com/manpages/lucid/man1/perf-stat.1.html" class="urlextern" title="http://manpages.ubuntu.com/manpages/lucid/man1/perf-stat.1.html"  rel="nofollow">perf-stat</a></div>
+</li>
+</ul>
+
+<p>
+Rulează o comandă și afișează statisticile înregistrate de subsistemul performance counters.
+</p>
+<pre class="code bash">$ perf <span class="kw2">stat</span> <span class="kw2">ls</span> <span class="re5">-R</span> <span class="sy0">/</span>usr<span class="sy0">/</span>src<span class="sy0">/</span>linux
+ Performance counter stats <span class="kw1">for</span> <span class="st_h">'ls -R /usr/src/linux'</span>:
+&nbsp;
+         <span class="nu0">934.512846</span>  task-clock-msecs         <span class="co0">#      0.114 CPUs </span>
+               <span class="nu0">1695</span>  context-switches         <span class="co0">#      0.002 M/sec</span>
+                <span class="nu0">163</span>  CPU-migrations           <span class="co0">#      0.000 M/sec</span>
+                <span class="nu0">306</span>  page-faults              <span class="co0">#      0.000 M/sec</span>
+          <span class="nu0">725144010</span>  cycles                   <span class="co0">#    775.959 M/sec </span>
+          <span class="nu0">419392509</span>  instructions             <span class="co0">#      0.578 IPC   </span>
+           <span class="nu0">80242637</span>  branches                 <span class="co0">#     85.866 M/sec </span>
+            <span class="nu0">5680112</span>  branch-misses            <span class="co0">#      7.079 %     </span>
+          <span class="nu0">174667968</span>  cache-references         <span class="co0">#    186.908 M/sec </span>
+            <span class="nu0">4178882</span>  cache-misses             <span class="co0">#      4.472 M/sec </span>
+&nbsp;
+        <span class="nu0">8.199187316</span>  seconds <span class="kw1">time</span> elapsed</pre>
+
+<p>
+<code>perf stat</code> oferă posibilitatea colectării datelor în urma rulării de mai multe ori a unui program specificând opțiunea <code>-r</code>.
+</p>
+<pre class="code bash">$ perf <span class="kw2">stat</span> <span class="re5">-r</span> <span class="nu0">6</span> <span class="kw2">sleep</span> <span class="nu0">1</span>
+ Performance counter stats <span class="kw1">for</span> <span class="st_h">'sleep 1'</span> <span class="br0">&#40;</span><span class="nu0">6</span> runs<span class="br0">&#41;</span>:
+&nbsp;
+           <span class="nu0">1.757147</span>  task-clock-msecs <span class="co0">#      0.002 CPUs    ( +-   3.000% )</span>
+                  <span class="nu0">1</span>  context-switches <span class="co0">#      0.001 M/sec   ( +-  14.286% )</span>
+                  <span class="nu0">0</span>  CPU-migrations   <span class="co0">#      0.000 M/sec   ( +- 100.000% )</span>
+                <span class="nu0">144</span>  page-faults      <span class="co0">#      0.082 M/sec   ( +-   0.147% )</span>
+            <span class="nu0">1373254</span>  cycles           <span class="co0">#    781.525 M/sec   ( +-   2.856% )</span>
+             <span class="nu0">588831</span>  instructions     <span class="co0">#      0.429 IPC     ( +-   0.667% )</span>
+             <span class="nu0">106846</span>  branches         <span class="co0">#     60.806 M/sec   ( +-   0.324% )</span>
+              <span class="nu0">11312</span>  branch-misses    <span class="co0">#     10.587 %       ( +-   0.851% )</span>
+        <span class="nu0">1.002619407</span>  seconds <span class="kw1">time</span> elapsed   <span class="br0">&#40;</span> +-   <span class="nu0">0.012</span><span class="sy0">%</span> <span class="br0">&#41;</span></pre>
+
+<p>
+Observați mai sus evenimentele cele mai importante contorizate.
+</p>
+
+</div>
+
+<h2 class="sectionedit19" id="perf_top">perf top</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://manpages.ubuntu.com/manpages/natty/man1/perf-top.1.html" class="urlextern" title="http://manpages.ubuntu.com/manpages/natty/man1/perf-top.1.html"  rel="nofollow">man perf-top</a></div>
+</li>
+</ul>
+
+<p>
+Generează și afișează informații în timp real despre încărcarea unui sistem.
+</p>
+<pre class="code bash">$ <span class="kw2">ls</span> <span class="re5">-R</span> <span class="sy0">/</span>home
+$ perf top <span class="re5">-p</span> $<span class="br0">&#40;</span><span class="kw2">pidof</span> <span class="kw2">ls</span><span class="br0">&#41;</span>
+<span class="re5">--------------------------------------------------------------</span>
+   PerfTop:     <span class="nu0">181</span> irqs<span class="sy0">/</span>sec  kernel:<span class="nu0">72.4</span><span class="sy0">%</span> <span class="br0">&#40;</span>target_pid: <span class="nu0">10421</span><span class="br0">&#41;</span>
+<span class="re5">--------------------------------------------------------------</span>
+             samples  pcnt <span class="kw1">function</span>             DSO
+             _______ _____ ____________________ ___________________
+&nbsp;
+              <span class="nu0">270.00</span> <span class="nu0">15.8</span><span class="sy0">%</span> __d_lookup           <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  
+              <span class="nu0">145.00</span>  <span class="nu0">8.5</span><span class="sy0">%</span> __GI___strcoll_l     <span class="sy0">/</span>lib<span class="sy0">/</span>libc-2.12.1.so
+               <span class="nu0">99.00</span>  <span class="nu0">5.8</span><span class="sy0">%</span> link_path_walk       <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  
+               <span class="nu0">97.00</span>  <span class="nu0">5.7</span><span class="sy0">%</span> find_inode_fast      <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  
+               <span class="nu0">91.00</span>  <span class="nu0">5.3</span><span class="sy0">%</span> __GI_strncmp         <span class="sy0">/</span>lib<span class="sy0">/</span>libc-2.12.1.so
+               <span class="nu0">55.00</span>  <span class="nu0">3.2</span><span class="sy0">%</span> move_freepages_block <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  
+               <span class="nu0">44.00</span>  <span class="nu0">2.6</span><span class="sy0">%</span> ext3_dx_find_entry   <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  
+               <span class="nu0">41.00</span>  <span class="nu0">2.4</span><span class="sy0">%</span> ext3_find_entry      <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  
+               <span class="nu0">40.00</span>  <span class="nu0">2.3</span><span class="sy0">%</span> dput                 <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  
+               <span class="nu0">39.00</span>  <span class="nu0">2.3</span><span class="sy0">%</span> ext3_check_dir_entry <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  </pre>
+
+<p>
+Observăm că funcțiile de lucru cu fișiere (parcurgere, căutare) sunt cele care apar cel mai des în outputul lui perf-top corespunzător rulării comenzii de listare recursivă a directorului <code>home</code>.
+</p>
+
+</div>
+
+<h2 class="sectionedit20" id="perf_record">perf record</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://manpages.ubuntu.com/manpages/natty/man1/perf-record.1.html" class="urlextern" title="http://manpages.ubuntu.com/manpages/natty/man1/perf-record.1.html"  rel="nofollow"> man perf-record</a></div>
+</li>
+</ul>
+
+<p>
+Rulează o comandă și salvează informațiile de profiling în fișierul <code>perf.data</code>.
+</p>
+<pre class="code bash">$ perf record <span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>so<span class="sy0">/</span>wiki<span class="sy0">/</span>laboratoare<span class="sy0">/</span>laborator-<span class="nu0">12</span>
+&nbsp;
+<span class="br0">&#91;</span> perf record: Woken up <span class="nu0">1</span> <span class="kw3">times</span> to <span class="kw2">write</span> data <span class="br0">&#93;</span>
+<span class="br0">&#91;</span> perf record: Captured and wrote <span class="nu0">0.008</span> MB perf.data <span class="br0">&#40;</span>~<span class="nu0">334</span> samples<span class="br0">&#41;</span> <span class="br0">&#93;</span>
+&nbsp;
+$ <span class="kw2">ls</span>
+laborator-<span class="nu0">12</span>  perf.data</pre>
+
+</div>
+
+<h2 class="sectionedit21" id="perf_report">perf report</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://manpages.ubuntu.com/manpages/natty/man1/perf-report.1.html" class="urlextern" title="http://manpages.ubuntu.com/manpages/natty/man1/perf-report.1.html"  rel="nofollow"> man perf-report</a></div>
+</li>
+</ul>
+
+<p>
+Interpretează datele salvate în <code>perf.data</code> în urma analizei folosind <code>perf record</code>. Astfel pentru exemplul <code>wget</code> de mai sus avem:
+</p>
+<pre class="code bash">$ perf report 
+<span class="co0"># Events: 13  cycles</span>
+<span class="co0">#</span>
+<span class="co0"># Overhead  Command      Shared Object  Symbol</span>
+<span class="co0"># ........  .......  .................  ......</span>
+<span class="co0">#</span>
+    <span class="nu0">86.43</span><span class="sy0">%</span>     <span class="kw2">wget</span>             e8ee21  <span class="br0">&#91;</span>.<span class="br0">&#93;</span> 0x00000000e8ee21
+    <span class="nu0">11.03</span><span class="sy0">%</span>     <span class="kw2">wget</span>  <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  <span class="br0">&#91;</span>k<span class="br0">&#93;</span> prep_new_page
+     <span class="nu0">2.37</span><span class="sy0">%</span>     <span class="kw2">wget</span>  <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  <span class="br0">&#91;</span>k<span class="br0">&#93;</span> sock_aio_read
+     <span class="nu0">0.11</span><span class="sy0">%</span>     <span class="kw2">wget</span>  <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  <span class="br0">&#91;</span>k<span class="br0">&#93;</span> perf_event_comm
+     <span class="nu0">0.05</span><span class="sy0">%</span>     <span class="kw2">wget</span>  <span class="br0">&#91;</span>kernel.kallsyms<span class="br0">&#93;</span>  <span class="br0">&#91;</span>k<span class="br0">&#93;</span> native_write_msr_safe</pre>
+
+</div>
+
+<h3 class="sectionedit22" id="alte_utilitare">Alte utilitare</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so/wiki/laboratoare/resurse/oprofile" class="urlextern" title="http://elf.cs.pub.ro/so/wiki/laboratoare/resurse/oprofile"  rel="nofollow">Oprofile</a> </div>
+</li>
+<li class="level1"><div class="li"><a href="http://www.microsoft.com/downloads/details.aspx?familyid=d6e95259-8d9d-4c22-89c4-fad382eddcd1&amp;displaylang=en" class="urlextern" title="http://www.microsoft.com/downloads/details.aspx?familyid=d6e95259-8d9d-4c22-89c4-fad382eddcd1&amp;displaylang=en"  rel="nofollow">Kernrate</a> este un echivalent al oprofile pentru Windows.</div>
+</li>
+<li class="level1"><div class="li"><a href="http://kcachegrind.sourceforge.net/html/Home.html" class="urlextern" title="http://kcachegrind.sourceforge.net/html/Home.html"  rel="nofollow">KCachegrind</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://code.google.com/p/google-perftools/" class="urlextern" title="http://code.google.com/p/google-perftools/"  rel="nofollow"> perf-tools</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://blogs.msdn.com/ntdebugging/archive/2008/04/03/windows-performance-toolkit-xperf.aspx" class="urlextern" title="http://blogs.msdn.com/ntdebugging/archive/2008/04/03/windows-performance-toolkit-xperf.aspx"  rel="nofollow">XPerf</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://sourceware.org/binutils/docs/gprof" class="urlextern" title="http://sourceware.org/binutils/docs/gprof"  rel="nofollow">GNU gprof</a></div>
+</li>
+</ul>
+
+</div>
+
+<h1 class="sectionedit23" id="exercitii">Exerciții</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li">Folosiți arhiva <a href="http://elf.cs.pub.ro/so/res/laboratoare/lab12-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/so/res/laboratoare/lab12-tasks.zip"  rel="nofollow"> lab12-tasks.zip</a> aferentă laboratorului.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">Instalați utilitarul perf pe stațiile din laborator:
+</p>
+<ul>
+<li class="level1"><div class="li"> sudo apt-get update</div>
+</li>
+<li class="level1"><div class="li"> sudo apt-get install linux-tools-3.5.0-17</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+<ol>
+<li class="level1"><div class="li"> (<strong>2 puncte</strong>) Intrați în directorul <code>01-bubble-sort</code>.</div>
+<ul>
+<li class="level2"><div class="li"> Analizați conținutul fișierului <code>bubble-sort.c</code>.</div>
+</li>
+<li class="level2"><div class="li"> Implementați funcția <code>bubble_sort</code>. Aceasta va realiza:</div>
+<ul>
+<li class="level3"><div class="li"> sortarea crescătoare a unui șir de întregi folosind algoritmul <a href="http://en.wikipedia.org/wiki/Bubble_sort" class="urlextern" title="http://en.wikipedia.org/wiki/Bubble_sort"  rel="nofollow">Bubble sort</a>.</div>
+</li>
+<li class="level3"><div class="li"> va folosi funcția <code>swap</code> pentru a interschimba 2 elemente.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Comparați, folosind <code>gprof</code>, rezultatele obținute în momentul utilizării funcției <code>bubble_sort</code> implementate în C și funcției <code>bubble_sort</code> implementate în limbaj de asamblare:</div>
+<ul>
+<li class="level3"><div class="li"> definiți <code>TYPE</code> cu valoarea <code>ASSEMBLY__</code> și salvați rezultatele în <code>gmon-as.out</code>. </div>
+<ul>
+<li class="level4"><div class="li"> <code>$gprof ./bubble-sort &gt; gmon-as.out</code></div>
+</li>
+</ul>
+</li>
+<li class="level3"><div class="li"> definiți <code>TYPE</code> cu valoarea <code>C__</code> și salvați rezultatele în <code>gmon-c.out</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Folosiți <strong>apoi</strong> flag-ul <code>-O2</code> pentru a compila sursa folosind suportul de optimizări ale compilatorului și comparați rezultatele de profiling obținute cu cele anterioare.</div>
+<ul>
+<li class="level3"><div class="li"> Observați <code>CFLAGS</code> din <code>Makefile</code>.</div>
+</li>
+<li class="level3"><div class="li"> Salvați rezultatele în fișierele <code>gmon-as-O2.out</code> respectiv <code>gmon-c-02.out</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Care sunt părțile din cod unde programul petrece cel mai mult timp?</div>
+</li>
+<li class="level2"><div class="li"> <strong>Hints</strong>:</div>
+<ul>
+<li class="level3"><div class="li"> Revedeți secțiunea <a href="laborator-12.html#gprof" title="so:laboratoare-2013:laborator-12 ↵" class="wikilink1"> gprof</a> din laborator.</div>
+</li>
+<li class="level3"><div class="li"> Puteți folosi opțiunea <code>-b</code> cu <code>gprof</code> pentru a evita încărcarea output-ului cu explicații.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>1 punct</strong>) Intrați în directorul <code>02-major</code>.</div>
+<ul>
+<li class="level2"><div class="li"> Folosind utilitarul <code>perf_3.2</code> determinați dacă limbajul C este column-major sau row-major (<a href="http://en.wikipedia.org/wiki/Row-major_order" class="urlextern" title="http://en.wikipedia.org/wiki/Row-major_order"  rel="nofollow">row-major-order</a>). </div>
+<ul>
+<li class="level3"><div class="li"> Completați programul <code>row.c</code> astfel încât să incrementeze elementele unei matrice pe linii.</div>
+</li>
+<li class="level3"><div class="li"> Completați programul <code>columns.c</code> astfel încât să incrementeze elementele unei matrice pe coloane.</div>
+</li>
+<li class="level3"><div class="li"> Determinați numărul de cache-miss-uri comparativ cu numărul de accese la cache.</div>
+</li>
+<li class="level3"><div class="li"> Folosiți <code>perf stat</code> pentru a urmări evenimentele <code>L1-dcache-loads</code> și <code>L1-dcache-load-misses</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> <strong>Hints</strong>:</div>
+<ul>
+<li class="level3"><div class="li"> Folosiți opțiunea <code>-e</code> a utilitarului <code>perf</code> pentru a specifica un anumit eveniment de urmărit.</div>
+</li>
+<li class="level3"><div class="li"> Revedeți secțiunea <a href="laborator-12.html#perfcounters" title="so:laboratoare-2013:laborator-12 ↵" class="wikilink1"> perfcounters</a> din laborator.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>0.5 puncte</strong>) Intrați în directorul <code>03-busy</code></div>
+<ul>
+<li class="level2"><div class="li"> Inspectați fișierul <code>busy.c</code>.</div>
+</li>
+<li class="level2"><div class="li"> Rulați programul <code>busy</code> și analizați încărcarea sistemului folosind comanda <code>perf top</code>.</div>
+</li>
+<li class="level2"><div class="li"> Ce funcție pare să încarce sistemul?</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>2.5 puncte</strong>) Intrați în directorul <code>04-hash/</code>.</div>
+<ul>
+<li class="level2"><div class="li"> În directorul <code>04-hash/</code> se găsește o implementare a unui algoritm pentru tabele de dispersie. </div>
+</li>
+<li class="level2"><div class="li"> Deși dimensiunea tabelului este dublă față de numărul de cuvinte, programul are o comportare ineficientă.</div>
+</li>
+<li class="level2"><div class="li"> Folosiți <code>gprof</code> pentru a îmbunătăți comportarea programului.</div>
+</li>
+<li class="level2"><div class="li"> <strong>Hints</strong>:</div>
+<ul>
+<li class="level3"><div class="li"> Determinați funcțiile cu cele mai multe apeluri, funcțiile care per total rulează cel mai mult.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>2 puncte</strong>) Intrați în directorul <code>05-find-char/</code>.</div>
+<ul>
+<li class="level2"><div class="li"> Analizați conținutul fișierului <code>find-char.c</code>.</div>
+</li>
+<li class="level2"><div class="li"> Compilați fișierul <code>find-char.c</code> și rulați executabilul obținut.</div>
+</li>
+<li class="level2"><div class="li"> Identificați, folosind <code>gprof</code>, care este funcția care ocupă cel mai mult timp de procesor și încercați să îmbunătățiți performanțele programului.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>2 puncte</strong>) Intrați în directorul <code>06-tlb/</code>.</div>
+<ul>
+<li class="level2"><div class="li"> Analizați conținutul fișierelor <code>tlb-processes.c</code>, respectiv <code>tlb-threads.c</code>. Compilați cele două programe.</div>
+<ul>
+<li class="level3"><div class="li"> <code>tlb-processes.c</code> - folosește 2 procese ce accesează o zonă de memorie partajată.</div>
+</li>
+<li class="level3"><div class="li"> <code>tlb-threads.c</code>   - folosește 2 fire de execuție ce accesează o zonă de memorie partajată.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Contorizați timpul de execuție folosind <code>time</code>. </div>
+</li>
+<li class="level2"><div class="li"> Care program se rulează mai repede? De ce? Folosiți <code>perf stat</code> pentru a determina acest lucru.</div>
+</li>
+<li class="level2"><div class="li"> <strong>Hints</strong>:</div>
+<ul>
+<li class="level3"><div class="li"> Care dintre cele 2 programe obține cele mai multe <code>tlb-misses</code>?</div>
+</li>
+<li class="level3"><div class="li"> Folosiți <code>perf list</code> pentru a determina evenimentul corespunzător cu <code>data tlb misses</code>.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+
+
+
+</div>
+
+<h1 class="sectionedit24" id="resurse_utile">Resurse utile</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"><a href="http://sourceware.org/binutils/docs/gprof/" class="urlextern" title="http://sourceware.org/binutils/docs/gprof/"  rel="nofollow"> GNU grof manual</a> </div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.linux.no/linux+v2.6.38/tools/perf/" class="urlextern" title="http://lxr.linux.no/linux+v2.6.38/tools/perf/"  rel="nofollow"> linux/tools/perf</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://lkml.org/lkml/2009/6/6/149" class="urlextern" title="http://lkml.org/lkml/2009/6/6/149"  rel="nofollow"> [Announce] Performance Counters for Linux, v8</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://www.pixelbeat.org/programming/profiling/" class="urlextern" title="http://www.pixelbeat.org/programming/profiling/"  rel="nofollow"> Profiling tools and techniques</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html" class="urlextern" title="http://kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html"  rel="nofollow"> Is Parallel Programming Hard, And, If So, What Can You Do About It?</a></div>
+</li>
+</ul>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_so">Informații generale SO</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_67092736058357c0ead9c3" data-jsajax="%26skipfile%3D%253D/so%253Ainfo%253Astart/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/documentatie.html" class="wikilink1" title="so:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../info/feed.html" class="wikilink1" title="so:info:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../info/hall.html" class="wikilink1" title="so:info:hall">Hall of SO</a></div></li>
+<li class="level1"><div class="li"><a href="../info/lista-discutii.html" class="wikilink1" title="so:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../info/mv.html" class="wikilink1" title="so:info:mv">Mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="../info/trimitere-teme.html" class="wikilink1" title="so:info:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale SO" [12-194] -->
+<h1 class="sectionedit2" id="informatii_so_2015-2016">Informații SO 2015-2016</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_169796445858357c0eb08a3" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../meta/examen.html" class="indexmenu_idx_head">Examen CA/CC</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../meta/examen/2012-2013.html" class="wikilink1" title="so:meta:examen:2012-2013">Examen CA/CC 2012-2013</a></div></li>
+<li class="level2"><div class="li"><a href="../meta/examen/2013-2014.html" class="wikilink1" title="so:meta:examen:2013-2014">Examen CA/CC 2013-2014</a></div></li>
+<li class="level2"><div class="li"><a href="../meta/examen/2014-2015.html" class="wikilink1" title="so:meta:examen:2014-2015">Examen CA/CC 2014-2015</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../meta/notare/reguli-notare-ca-cc.html" class="wikilink1" title="so:meta:notare:reguli-notare-ca-cc">Notare CA/CC</a></div></li>
+<li class="level2"><div class="li"><a href="../meta/notare/reguli-notare-cb.html" class="wikilink1" title="so:meta:notare:reguli-notare-cb">Notare CB</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../meta/anunturi.html" class="wikilink1" title="so:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/calendar.html" class="wikilink1" title="so:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/catalog.html" class="wikilink1" title="so:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/echivalari.html" class="wikilink1" title="so:meta:echivalari">Echivalări teme</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/karma.html" class="wikilink1" title="so:meta:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/need-to-know.html" class="wikilink1" title="so:meta:need-to-know">SO Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/orar.html" class="wikilink1" title="so:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații SO 2015-2016" [195-261] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_153462111058357c0eb27da" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../laboratoare/resurse.html" class="indexmenu_idx_head">Resurse</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/c_tips.html" class="wikilink1" title="so:laboratoare:resurse:c_tips">C/SO Tips</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/die.html" class="wikilink1" title="so:laboratoare:resurse:die">Macro-ul DIE</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/gdb.html" class="wikilink1" title="so:laboratoare:resurse:gdb">GDB</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/home.html" class="wikilink1" title="so:laboratoare:resurse:home">Resurse</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/injections.html" class="wikilink1" title="so:laboratoare:resurse:injections">Function Hooking and Windows Dll Injection</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/oprofile.html" class="wikilink1" title="so:laboratoare:resurse:oprofile">Oprofile</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/recapitulare.html" class="wikilink1" title="so:laboratoare:resurse:recapitulare">Recapitulare</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/threaduri_extra.html" class="wikilink1" title="so:laboratoare:resurse:threaduri_extra">Thread-uri - Extra</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/vs_tips.html" class="wikilink1" title="so:laboratoare:resurse:vs_tips">Visual Studio Tips and Tricks</a></div></li>
+<li class="level2"><div class="li"><a href="../laboratoare/resurse/windows-video.html" class="wikilink1" title="so:laboratoare:resurse:windows-video">windows-video</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-01.html" class="wikilink1" title="so:laboratoare:laborator-01">Laborator 01 - Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-02.html" class="wikilink1" title="so:laboratoare:laborator-02">Laborator 02 - Operații I/O simple</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-03.html" class="wikilink1" title="so:laboratoare:laborator-03">Laborator 03 - Procese</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-04.html" class="wikilink1" title="so:laboratoare:laborator-04">Laborator 04 - Semnale</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-05.html" class="wikilink1" title="so:laboratoare:laborator-05">Laborator 05 - Gestiunea memoriei</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-06.html" class="wikilink1" title="so:laboratoare:laborator-06">Laborator 06 - Memoria virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-07.html" class="wikilink1" title="so:laboratoare:laborator-07">Laborator 07 - Profiling &amp; Debugging</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-08.html" class="wikilink1" title="so:laboratoare:laborator-08">Laborator 08 - Thread-uri Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-09.html" class="wikilink1" title="so:laboratoare:laborator-09">Laborator 09 - Thread-uri Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-10.html" class="wikilink1" title="so:laboratoare:laborator-10">Laborator 10 - Operații IO avansate - Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-11.html" class="wikilink1" title="so:laboratoare:laborator-11">Laborator 11 - Operații IO avansate - Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../laboratoare/laborator-12.html" class="wikilink1" title="so:laboratoare:laborator-12">Laborator 12 - Implementarea sistemelor de fișiere</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [262-322] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_81648073558357c0eb471c" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../cursuri/curs-01.html" class="indexmenu_idx_head">Curs 01 - Introducere</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-02.html" class="indexmenu_idx_head">Curs 02 - Sistemul de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-03.html" class="indexmenu_idx_head">Curs 03 - Procese</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-04.html" class="indexmenu_idx_head">Curs 04 - Planificarea execuției. IPC</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-05.html" class="indexmenu_idx_head">Curs 05 - Gestiunea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-06.html" class="indexmenu_idx_head">Curs 06 - Memoria virtuală</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-07.html" class="indexmenu_idx_head">Curs 07 - Securitatea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-08.html" class="indexmenu_idx_head">Curs 08 - Fire de execuție</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-09.html" class="indexmenu_idx_head">Curs 09 - Sincronizare</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-10.html" class="indexmenu_idx_head">Curs 10 - Dispozitive de intrare/ieșire</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-11.html" class="indexmenu_idx_head">Curs 11 - Networking în sistemul de operare</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-12.html" class="indexmenu_idx_head">Curs 12 - Implementarea sistemelor de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/curs-13.html" class="indexmenu_idx_head">Curs 13 - Securitatea sistemului</a></div></li>
+<li class="closed"><div class="li"><a href="../cursuri/quiz/start.html" class="indexmenu_idx_head">Quizz-uri curs</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs-extra-2.html" class="wikilink1" title="so:cursuri:curs-extra-2">Curs extra - Android</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs-extra-3.html" class="wikilink1" title="so:cursuri:curs-extra-3">Curs extra - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs-extra.html" class="wikilink1" title="so:cursuri:curs-extra">Curs extra - Sincronizarea proceselor</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/note.html" class="wikilink1" title="so:cursuri:note">Note de curs</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [323-374] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_206280996758357c0eb6661" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../teme/tema-asist.html" class="indexmenu_idx_head">Tema Asistenți - Guardian process</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/contestatii.html" class="wikilink1" title="so:teme:contestatii">Contestații</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/folosire-gitlab.html" class="wikilink1" title="so:teme:folosire-gitlab">Git. Indicații folosire GitLab</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/general.html" class="wikilink1" title="so:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema-1.html" class="wikilink1" title="so:teme:tema-1">Tema 1 Multi-platform Development</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema-2.html" class="wikilink1" title="so:teme:tema-2">Tema 2 Mini-shell</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema-3.html" class="wikilink1" title="so:teme:tema-3">Tema 3 Memorie virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema-4.html" class="wikilink1" title="so:teme:tema-4">Tema 4 Planificator de threaduri</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema-5.html" class="wikilink1" title="so:teme:tema-5">Tema 5 Server web asincron</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [375-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-12.html#laborator_12_-_profiling">Laborator 12 - Profiling</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-12.html#materiale_ajutatoare">Materiale ajutătoare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-12.html#nice_to_watch">Nice to Watch</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#latency_comparison_numbers">Latency Comparison Numbers</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-12.html#prezentare_teoretica">Prezentare teoretică</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-12.html#introducere">Introducere</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#tehnici_de_profiling">Tehnici de profiling</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#tehnica_de_instrumentare">Tehnica de instrumentare</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#tehnica_de_esantionare_sampling">Tehnica de eșantionare (sampling)</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#suport_pentru_profiler">Suport pentru profiler</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-12.html#unelte">Unelte</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-12.html#gprof">gprof</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#perfcounters">perfcounters</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-12.html#perf">perf</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-12.html#utilizare">Utilizare</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-12.html#perf_list">perf list</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-12.html#perf_stat">perf stat</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-12.html#perf_top">perf top</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-12.html#perf_record">perf record</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-12.html#perf_report">perf report</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-12.html#alte_utilitare">Alte utilitare</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="laborator-12.html#exercitii">Exerciții</a></div></li>
+<li class="level1"><div class="li"><a href="laborator-12.html#resurse_utile">Resurse utile</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so/laboratoare-2013/laborator-12.txt · Last modified: 2014/03/05 22:19 (external edit)          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="laborator-12%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="laborator-12%3Fdo=media&amp;ns=so%253Alaboratoare-2013.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="laborator-12.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so%253Alaboratoare-2013%253Alaborator-12&amp;1479900174" width="2" height="1" alt="" /></div>
+</body>
+</html>

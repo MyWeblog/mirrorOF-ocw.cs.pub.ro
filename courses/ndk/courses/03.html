@@ -1,0 +1,605 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    03. Android Internals    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-23T21:06:26+0200"/>
+<meta name="keywords" content="ndk,courses,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=ndk:courses"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/ndk/courses/03.html"/>
+<link rel="canonical" href="03.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ndk:courses';var JSINFO = {"id":"ndk:courses:03","namespace":"ndk:courses","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_ndk.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="03%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="03%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="android_internals">03. Android Internals</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Description: In-depth view of the Android lower components: Linux kernel, Dalvik, Binder, Android framework, Managers</div>
+</li>
+<li class="level1"><div class="li"> Practical part: Android NDK installation, tools and building simple Apps</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit2" id="lecture">Lecture</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="../../_media/ndk/courses/lecture-3.pdf" class="media mediafile mf_pdf" title="ndk:courses:lecture-3.pdf (1.8 MB)"> Lecture Slides</a></div>
+</li>
+</ul>
+
+<p>
+<iframe title="" src="../../_media/ndk/courses/lecture-3.pdf" style="width:98%; height:400px"></iframe>
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="practical">Practical</h3>
+<div class="level3">
+
+<p>
+Solved tasks: <a href="../../_media/ndk/courses/lab-3-solved.zip" class="media mediafile mf_zip" title="ndk:courses:lab-3-solved.zip (4.1 MB)">lab-3-solved.zip</a>
+</p>
+
+</div>
+
+<h4 id="task_0_-_set_ndk_path">Task 0 - Set NDK Path</h4>
+<div class="level4">
+
+<p>
+In Eclipse you must set the NDK path if it is not set already. In the top menu select <strong>Window &gt; Preferences</strong>, then go to <strong>Android &gt; NDK</strong>. NDK Location should be set to the NDK path. If you are using Beacon Mountain on Linux the default the path is /opt/intel/beaconmountain/NDK.
+</p>
+
+</div>
+
+<h4 id="task_1_-_create_a_native_project">Task 1 - Create a Native Project</h4>
+<div class="level4">
+
+<p>
+Create a new project. Name it native1 and make sure the package is com.example.native1. Then right click on the project in the <strong>Project Explorer</strong> window and select <strong>Android Tools &gt; Add Native Support</strong> from the menu. set the library to native1 as well. This creates a jni folder in your project which contains two files: native1.cpp and Android.mk.
+</p>
+
+<p>
+Edit native1.cpp and add the following function:
+</p>
+<pre class="code C++"><span class="kw2">extern</span> <span class="st0">&quot;C&quot;</span> <span class="br0">&#123;</span>
+	jstring Java_com_example_native1_MainActivity_getString<span class="br0">&#40;</span>JNIEnv <span class="sy0">*</span>env<span class="sy0">,</span> jobject thiz<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+jstring Java_com_example_native1_MainActivity_getString<span class="br0">&#40;</span>JNIEnv <span class="sy0">*</span>env<span class="sy0">,</span> jobject thiz<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw1">return</span> env<span class="sy0">-&gt;</span>NewStringUTF<span class="br0">&#40;</span><span class="st0">&quot;Hello world from JNI!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+C++ adds decorators to functions so the Dalvik VM would not be able to locate them if not declared as <strong>extern “C”</strong>.
+</p>
+
+<p>
+The equivalent C code is:
+</p>
+<pre class="code C">jstring Java_com_example_native1_MainActivity_getString<span class="br0">&#40;</span>JNIEnv <span class="sy0">*</span>env<span class="sy0">,</span> jobject thiz<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw1">return</span> <span class="br0">&#40;</span><span class="sy0">*</span>env<span class="br0">&#41;</span><span class="sy0">-&gt;</span>NewStringUTF<span class="br0">&#40;</span>env<span class="sy0">,</span> <span class="st0">&quot;Hello world from JNI!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+As you can see the function name is a bit special: it starts with Java and contains the full class name (including package) and ends with the name of the function. The first two parameters are always a pointer to a JNIEnv class (or structure in C) which is an interface to the virtual machine and a jobject which is a reference to the object this method is called from (or a jclass for static methods).
+</p>
+
+<p>
+To call the function from Java you must do two things: load the library and declare the method as a function. Add the following lines to your MainActivity.
+</p>
+<pre class="code Java"><span class="kw1">static</span> <span class="br0">&#123;</span>
+	<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">loadLibrary</span><span class="br0">&#40;</span><span class="st0">&quot;native1&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw1">private</span> <span class="kw1">native</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> getString<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Then, make sure your activity has a TextView (with an id to reference it), and at onCreate, set the TextView to the String returned by getString(). Test by running the application in the ARM emulator, since this is what it will compile to by default.
+</p>
+
+<p>
+There is a more practical way of generating function prototypes: using javah. Declare all your native functions in the Java files first and then call javah to generate the headers.
+</p>
+
+<p>
+For example:
+</p>
+<pre class="code">javah -classpath android_workspace/native1/bin/classes/ com.example.native1.MainActivity</pre>
+
+<p>
+will generate com_example_native1_MainActivity.h
+which contains
+</p>
+<pre class="code C"><span class="coMULTI">/* DO NOT EDIT THIS FILE - it is machine generated */</span>
+<span class="co2">#include &lt;jni.h&gt;</span>
+<span class="coMULTI">/* Header for class com_example_native1_MainActivity */</span>
+&nbsp;
+<span class="co2">#ifndef _Included_com_example_native1_MainActivity</span>
+<span class="co2">#define _Included_com_example_native1_MainActivity</span>
+<span class="co2">#ifdef __cplusplus</span>
+<span class="kw2">extern</span> <span class="st0">&quot;C&quot;</span> <span class="br0">&#123;</span>
+<span class="co2">#endif</span>
+<span class="coMULTI">/*
+ * Class:     com_example_native1_MainActivity
+ * Method:    getString
+ * Signature: ()Ljava/lang/String;
+ */</span>
+JNIEXPORT jstring JNICALL Java_com_example_native1_MainActivity_getString
+  <span class="br0">&#40;</span>JNIEnv <span class="sy0">*,</span> jobject<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co2">#ifdef __cplusplus</span>
+<span class="br0">&#125;</span>
+<span class="co2">#endif</span>
+<span class="co2">#endif</span></pre>
+
+<p>
+You can compile the native part of the project outside the IDE by using the ndk-build tool. You can run it in the folder directly, or from another folder by using the -C parameter.
+</p>
+<pre class="code">ndk-build -C /path/to/jni/folder/</pre>
+
+</div>
+
+<h4 id="task_2_-_makefiles">Task 2 - Makefiles</h4>
+<div class="level4">
+
+<p>
+The NDK uses a build-ndk command to build the libraries. The build system contains multiple smaller makefiles called fragments which are called at build time depending on the declarations in two files: Android.mk and Application.mk. Application.mk contains global declarations such as: what modules are used (APP_MODULES), optimization (APP_OPTIM), compilation flags (APP_CFLAGS and APP_CPPFLAGS), the architecture (APP_ABI).
+</p>
+
+<p>
+First, let&#039;s make the application compile on x86 architectures. To do this add Application.mk to the jni folder in your project and add
+</p>
+<pre class="code">APP_ABI = x86</pre>
+
+<p>
+The valid APP_ABI targets for now are: x86, armeabi, armeabi-v7a, mips and all. You can add more than one architecture at a time or use all if you want to target all available architectures.
+</p>
+
+<p>
+APP_OPTIM can be set to debug or release. Set it to debug.
+</p>
+<pre class="code">APP_OPTIM = debug</pre>
+
+<p>
+Now let&#039;s take a look at Android.mk. This is what Eclipse generates when adding native support:
+</p>
+<pre class="code">LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := native1
+LOCAL_SRC_FILES := native1.cpp
+
+include $(BUILD_SHARED_LIBRARY)</pre>
+
+<p>
+LOCAL_PATH is the path to the files, in this case it&#039;s the <strong>jni/</strong> directory.
+</p>
+
+<p>
+include $(CLEAR_VARS) clears all the LOCAL_ variables except LOCAL_PATH.
+</p>
+
+<p>
+LOCAL_MODULE is the name of the library: in this case it will generate <strong>libnative1.so</strong>.
+LOCAL_SRC_FILES are the files that make up the module, native1.cpp in this case.
+</p>
+
+<p>
+Finally, include $(BUILD_SHARED_LIBRARY) will include the fragments necessary to build the library.
+</p>
+
+<p>
+To add another library you can simply add another sets of declarations like these, for example:
+</p>
+<pre class="code">include $(CLEAR_VARS)
+
+LOCAL_MODULE    := native2
+LOCAL_SRC_FILES := native2.cpp
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := native1
+LOCAL_SRC_FILES := native1.cpp
+
+include $(BUILD_SHARED_LIBRARY)</pre>
+
+<p>
+You added native2 declaration at the top because we will have to build it first for the next tasks, but they can be in any order otherwise.
+</p>
+
+<p>
+Add native2.cpp and see if it generate libnative2.so. Add the following content:
+</p>
+<pre class="code C"><span class="kw4">int</span> getRandInt<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="kw1">return</span> <span class="nu0">4</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">char</span> <span class="sy0">*</span> getRandString<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="kw4">int</span> i <span class="sy0">=</span> getRandInt<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">switch</span><span class="br0">&#40;</span>i<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw1">case</span> <span class="nu0">0</span><span class="sy0">:</span>
+			<span class="kw1">return</span> <span class="st0">&quot;NULL&quot;</span><span class="sy0">;</span>
+		<span class="kw1">case</span> <span class="nu0">1</span><span class="sy0">:</span>
+			<span class="kw1">return</span> <span class="st0">&quot;NOT NULL&quot;</span><span class="sy0">;</span>
+		<span class="kw1">case</span> <span class="nu0">2</span><span class="sy0">:</span>
+			<span class="kw1">return</span> <span class="st0">&quot;OFF BY ONE ERROR&quot;</span><span class="sy0">;</span>
+		<span class="kw1">default</span><span class="sy0">:</span>
+			<span class="kw1">return</span> <span class="st0">&quot;COUNTING IS DIFFICULT&quot;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Select from the top menu <strong>Build &gt; Build all</strong> and then check the <strong>Console</strong> tab in the lower part of the screen or the <strong>libs/</strong> folder in the <strong>Project Explorer</strong>.
+</p>
+
+</div>
+
+<h4 id="task_3_-_shared_library">Task 3 - Shared library</h4>
+<div class="level4">
+
+<p>
+Add native2.h file
+</p>
+<pre class="code C"><span class="co2">#ifndef NATIVE2_H_</span>
+<span class="co2">#define NATIVE2_H_</span>
+&nbsp;
+<span class="kw2">extern</span> <span class="kw4">int</span> getRandInt<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw2">extern</span> <span class="kw4">char</span> <span class="sy0">*</span> getRandString<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+&nbsp;
+<span class="co2">#endif /* NATIVE2_H_ */</span></pre>
+
+<p>
+and include it in both native1.cpp and native2.cpp.
+</p>
+
+<p>
+You want to call native2 functions from native1. To do this, you must tell the linker to link the two files together. Add
+</p>
+<pre class="code">LOCAL_SHARED_LIBRARIES := native2</pre>
+
+<p>
+to Android.mk in the section corresponding to native1 module.
+</p>
+
+<p>
+Also add
+</p>
+<pre class="code Java"><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">loadLibrary</span><span class="br0">&#40;</span><span class="st0">&quot;native2&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+before the loading native1, otherwise native2 will not get loaded.
+</p>
+
+<p>
+Replace the return in the getString function with
+</p>
+<pre class="code C"><span class="kw1">return</span> env<span class="sy0">-&gt;</span>NewStringUTF<span class="br0">&#40;</span>getRandString<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h4 id="task_4_-_static_libraries">Task 4 - Static libraries</h4>
+<div class="level4">
+
+<p>
+There is no point in dynamically loading the native2 library, so you can change it to a static library. To do this, you need to change two lines. First, change
+</p>
+<pre class="code">include $(BUILD_SHARED_LIBRARY)</pre>
+
+<p>
+to
+</p>
+<pre class="code">include $(BUILD_STATIC_LIBRARY)</pre>
+
+<p>
+for the native2 module and 
+</p>
+<pre class="code">LOCAL_SHARED_LIBRARIES := native2</pre>
+
+<p>
+to
+</p>
+<pre class="code">LOCAL_STATIC_LIBRARIES := native2</pre>
+
+<p>
+for the native module.
+</p>
+
+<p>
+Remove
+</p>
+<pre class="code Java"><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">loadLibrary</span><span class="br0">&#40;</span><span class="st0">&quot;native2&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+from your activity.
+</p>
+
+</div>
+
+<h4 id="task_5_-_standalone_binary">Task 5 - Standalone binary</h4>
+<div class="level4">
+
+<p>
+To compile a binary you can use Android.mk, but include BUILD_EXECUTABLE instead.
+</p>
+<pre class="code">include $(CLEAR_VARS)
+
+LOCAL_MODULE    := native3
+LOCAL_SRC_FILES := native3.cpp
+
+LOCAL_STATIC_LIBRARIES := native2
+
+include $(BUILD_EXECUTABLE)</pre>
+
+<p>
+Run build from the top menu (<strong>Project &gt; Build all</strong>). This will generate a native 3 executable in the <strong>libs/</strong> folder, which will not get included in the APK.
+</p>
+
+<p>
+Use this code for native3.cpp:
+</p>
+<pre class="code C"><span class="co2">#include &lt;stdio.h&gt;</span>
+<span class="co2">#include &quot;native2.h&quot;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> getRandString<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Running is the executable is only possible if you have root and are able to set the execution bit in a folder which allows it (/sdcard is probably locked, but /data or /system should allow this).
+</p>
+
+</div>
+
+<h4 id="task_6_-_logging_from_native_code">Task 6 - Logging from Native Code</h4>
+<div class="level4">
+
+<p>
+To use logging from native code you will have to include &lt;android/log.h&gt;. Add this include to native2.cpp. You will have to also link this module against liblog. To do this add to the native2 module:
+</p>
+<pre class="code">LOCAL_LDLIBS := -llog</pre>
+
+<p>
+Then, to print something, you need to use this macro:
+</p>
+<pre class="code C">__android_log_print<span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/log.html"><span class="kw3">log</span></a> level<span class="sy0">,</span> string tag<span class="sy0">,</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a> format<span class="sy0">,</span> variables according to format<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+For example
+</p>
+<pre class="code C">__android_log_print<span class="br0">&#40;</span>ANDROID_LOG_VERBOSE<span class="sy0">,</span> <span class="st0">&quot;TAG1&quot;</span><span class="sy0">,</span> <span class="st0">&quot;variable 1 = %ld&quot;</span><span class="sy0">,</span> var1<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Instrument the two functions in native2 library to tell you they have been called.
+</p>
+
+<p>
+You might have to add -llog to your other modules (since they include native2).
+</p>
+
+</div>
+
+<h4 id="task_7_-_making_getrandint_work">Task 7 - Making getRandInt() work</h4>
+<div class="level4">
+
+<p>
+Make getRandInt return a random integer between 0 and and 5 and log the results.
+</p>
+
+<p>
+Hint: stdlib and time 
+</p>
+
+<p>
+Add a button to your Activity and call getRandString each time you push the button and update the text to the new string.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<p>
+<a href="../grading.html" class="wikilink1" title="ndk:grading">Rules and Grading</a> <br/>
+
+<a href="../register.html" class="wikilink1" title="ndk:register">Class Register</a>
+</p>
+
+<h1 class="sectionedit1" id="lectures_labs">Lectures &amp; labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_184199013758357ac8e03ee" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="ndk:courses:01">01. Android Technology</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="ndk:courses:02">02. Android Platform</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="03.html" class="wikilink1" title="ndk:courses:03">03. Android Internals</a></span></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="ndk:courses:04">04. C, Bionic and Low-Level Libraries</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="ndk:courses:05">05. NDK Integration (JNI)</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="ndk:courses:06">06. NDK Integration (JNI)</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="ndk:courses:07">07. Debugging and Profiling</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="ndk:courses:08">08. OpenGL on Android</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="ndk:courses:09">09. Native Activity</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="ndk:courses:10">10. Renderscript</a></div></li>
+<li class="level1"><div class="li"><a href="11.html" class="wikilink1" title="ndk:courses:11">11. NDK Optimization and Portability</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Lectures & labs" [73-130] -->
+<h1 class="sectionedit2" id="resources">Resources</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_36613128258357ac8e138a" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resources/01.html" class="wikilink1" title="ndk:resources:01">Resources</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Resources" [131-184] -->
+<h1 class="sectionedit3" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_52482850958357ac8e2329" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/project.html" class="wikilink1" title="ndk:assignments:project">Project</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/warmup.html" class="wikilink1" title="ndk:assignments:warmup">Warm-up assignment</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Assignments" [185-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="03.html#android_internals">03. Android Internals</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="03.html#lecture">Lecture</a></div></li>
+<li class="level3"><div class="li"><a href="03.html#practical">Practical</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="03.html#task_0_-_set_ndk_path">Task 0 - Set NDK Path</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#task_1_-_create_a_native_project">Task 1 - Create a Native Project</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#task_2_-_makefiles">Task 2 - Makefiles</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#task_3_-_shared_library">Task 3 - Shared library</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#task_4_-_static_libraries">Task 4 - Static libraries</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#task_5_-_standalone_binary">Task 5 - Standalone binary</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#task_6_-_logging_from_native_code">Task 6 - Logging from Native Code</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#task_7_-_making_getrandint_work">Task 7 - Making getRandInt() work</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          ndk/courses/03.txt · Last modified: 2014/03/23 21:06 by petre.eftime          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="03%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="03%3Fdo=media&amp;ns=ndk%253Acourses.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="03.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=ndk%253Acourses%253A03&amp;1479899848" width="2" height="1" alt="" /></div>
+</body>
+</html>

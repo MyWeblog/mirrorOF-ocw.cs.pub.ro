@@ -1,0 +1,148 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:08:contents:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-05-04T16:56:38+0300"/>
+<meta name="keywords" content="saisp,labs,08,contents,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/08/contents/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:08:contents';var JSINFO = {"id":"saisp:labs:08:contents:06","namespace":"saisp:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_interconectare_masini_virtuale">06. [15p] Interconectare mașini virtuale</h3>
+<div class="level3">
+
+<p>
+Creați 2 imagini de disk pornind de la imaginea de baza <code>base.qcow2</code> cu numele <code>sda-vm1.qcow2</code> și <code>sda-vm2.qcow2</code>.
+</p>
+
+<p>
+Până în acest moment am creat mașini virtuale fără nici o legătură către Internet. Dorim să asigurăm accesul la Internet pentru acestea. Pentru acest lucru trebuie să adăugăm la crearea mașinii virtuale o interfață de rețea cu ajutorul parametrului &#039;-net&#039;:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> sda-vm1.qcow2 <span class="re5">-m</span> <span class="nu0">256</span> <span class="re5">-smp</span> <span class="nu0">2</span> <span class="re5">-net</span> nic,<span class="re2">model</span>=e1000,<span class="re2">macaddr</span>=00:<span class="nu0">11</span>:<span class="nu0">22</span>:<span class="nu0">33</span>:<span class="nu0">44</span>:<span class="nu0">55</span> <span class="re5">-net</span> tap,<span class="re2">ifname</span>=tap-vm1</pre>
+
+<p>
+<p><div class="notewarning">Obligatoriu trebuie să porniți mașina virtuală ca utilizator privilegiat pentru a putea să fie create interfețele de tip <code>tap</code>.
+</div></p>
+</p>
+
+<p>
+<p><div class="notewarning">Ignorați warning-ul referitor la <code>tap</code>.
+</div></p>
+</p>
+
+<p>
+Cu ajutorul primei opțiuni <code>-net nic</code> specificăm proprietățile interfeței din mașina virtuală (în cazul de față se dorește emularea unei interfațe Intel e1000 cu adresa MAC <code>00:11:22:33:44:55</code>).
+</p>
+
+<p>
+Toate opțiunile adăugate nu sunt obligatorii (dacă nu se specifică se folosesc valori implicite). A doua opțiune <code>-net tap</code> specifică tipul interfeței virtuale din mașina fizică ce are corespondență 1 la 1 cu interfața din mașina virtuală (tot traficul trimis pe interfața <code>eth0</code> de pe masina virtuala ajunge pe interfața <code>tap-vm1</code> în mașina fizică). De asemenea toți parametri sunt opționali.
+</p>
+
+<p>
+Porniți o a doua mașină virtuală folosind imaginea <code>sda-vm2.qcow2</code> și adăugați-i o interfață de rețea cu adresa MAC <code>AA:11:22:33:44:55</code> ce are corespondență în mașina fizică o interfață de tip <code>tap</code> cu numele <code>tap-vm2</code>.
+</p>
+<pre class="code">root@saisp:~# kvm -hda sda-vm2.qcow2 -m 256 -smp 2 -net nic,model=e1000,macaddr=AA:11:22:33:44:55 -net tap,ifname=tap-vm2</pre>
+
+<p>
+Modificați hostname-urile mașinilor la <code>VM1</code>, respectiv <code>VM2</code>:
+</p>
+<pre class="code bash"><span class="co4">root@VM:~# </span><span class="kw2">hostname</span> VM1
+<span class="co4">root@VM:~# </span><span class="kw2">su</span> -
+<span class="co4">root@VM1:~# </span>
+&nbsp;
+<span class="co4">root@VM:~# </span><span class="kw2">hostname</span> VM2
+<span class="co4">root@VM:~# </span><span class="kw2">su</span> -
+<span class="co4">root@VM2:~# </span></pre>
+
+<p>
+Logați-vă din nou ca <code>root</code> pentru a se modifica prompt-ul.
+</p>
+
+<p>
+În acest moment am creat 2 legături virtuale între instanțele KVM și mașina fizică. În mod uzual se dorește ca mașinile virtuale și mașina fizică să aparțină aceleiași rețele. Pentru acest lucru avem nevoie de un <em>switch virtual</em> în care să conectăm legăturile create anterior (<code>tap-vm1</code> și <code>tap-vm2</code>) împreună cu mașina fizică. <em>Switch-ul virtual</em> poate fi emulat folosind conceptul de  <em>bridge</em> din kernelul de Linux. 
+</p>
+
+<p>
+Vom crea bridge-ul/switch-ul virtual denumit <code>brX</code>, unde <code>X</code> va fi <code>0</code> (<em>br</em> urmat de un index):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>brctl addbr br0
+<span class="co4">root@saisp:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev br0 up</pre>
+
+<p>
+<p><div class="noteimportant">Întotdeauna, nu uitați să ridicați nivelul 2 al bridge-ului
+</div></p>
+Vom conecta cele două interfețe virtuale <code>tap-vm1</code> și <code>tap-vm2</code> in bridge:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>brctl addif br0 tap-vm1
+<span class="co4">root@saisp:~# </span>brctl addif br0 tap-vm2</pre>
+
+<p>
+Configurați pe interfața <code>br0</code> adresa IP <code>192.168.1.1/24</code>, iar pe mașinile virtuale adresele IP <code>192.168.1.2/24</code>, respectiv <code>192.168.1.3/24</code>. Verificați conectivitatea între cele 3 adrese IP folosind comanda <code>ping</code>.
+</p>
+
+<p>
+În acest moment avem conectivitate între toate cele host-uri (<code>saisp</code>, <code>VM1</code>, <code>VM2</code>). Pentru a asigura conectivitatea la Internet trebuie să activăm rutarea și translatarea de adrese (NAT) pe mașina fizică:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw3">echo</span> <span class="nu0">1</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>proc<span class="sy0">/</span>sys<span class="sy0">/</span>net<span class="sy0">/</span>ipv4<span class="sy0">/</span>ip_forward
+<span class="co4">root@saisp:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-o</span> ethX <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+unde <code>ethX</code> este placa de retea de pe masina fizica.
+</p>
+
+<p>
+Ne mai rămâne să configurăm ruta implicită și serverul de <abbr title="Domain Name System">DNS</abbr> pe mașinile virtuale. Conectați-vă folosind SSH la mașinile virtuale și adăugați ca rută implicită adresa <code>192.168.1.1</code> (mașina fizică) și ca server de <abbr title="Domain Name System">DNS</abbr> <code>8.8.8.8</code>. Verificați cu ajutorul comenzii <code>ping</code> că site-ul <code><a href="http://www.google.ro" class="urlextern" title="http://www.google.ro"  rel="nofollow">www.google.ro</a></code> răspunde la cereri.
+</p>
+
+<p>
+Scoatem interfețele <code>tap-vm1</code> și <code>tap-vm2</code> din bridge, după care îl ștergem pe acesta:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>brctl delif br0 tap-vm1
+<span class="co4">root@saisp:~# </span>brctl delif br0 tap-vm2
+<span class="co4">root@saisp:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev br0 down
+<span class="co4">root@saisp:~# </span>brctl delbr br0</pre>
+
+<p>
+Închideți mașinile virtuale și ștergeți imaginile create (<code>sda-vm1.qcow2</code> și <code>sda-vm2.qcow2</code>).
+</p>
+
+</div>
+<!-- EDIT1 SECTION "06. [15p] Interconectare mașini virtuale" [2-] --></div>
+</body>
+</html>

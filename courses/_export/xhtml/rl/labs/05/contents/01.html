@@ -1,0 +1,107 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:05:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-10-30T23:59:11+0200"/>
+<meta name="keywords" content="rl,labs,05,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:05:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/05/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:05:contents';var JSINFO = {"id":"rl:labs:05:contents:01","namespace":"rl:labs:05:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_default_gateway">01. [10p] Configurare default gateway</h3>
+<div class="level3">
+
+<p>
+În topologia de la <a href="../../../../../../_media/rl/labs/05/contents/rl_lab-05_default_gw.pkt" class="media mediafile mf_pkt" title="rl:labs:05:contents:rl_lab-05_default_gw.pkt (7.5 KB)">această adresă</a> se află două rețele interconectate printr-un ruter.
+</p>
+
+<p>
+Observați că există conectivitate între ruter și oricare stație; folosiți comanda <code>ping</code> de pe ruter sau mesajele din Packet Tracer (vezi <a href="../../../../../../rl/labs/02/contents/00.html" class="wikilink1" title="rl:labs:02:contents:00">00. [5p] Introducere în Packet Tracer</a>).
+</p>
+
+<p>
+<p><div class="noteimportant">
+În Cisco IOS primul pachet trimis poate să nu fie de fapt trimis din cauza absenței tabelei ARP. De aceea când trimiteți un pachet în Packet Tracer la sau de la ruter, prima oară nu va funcționa. Următoarele pachete, însă, vor funcționa. Detalii <a href="http://blog.ipspace.net/2007/04/why-is-first-ping-lost.html" class="urlextern" title="http://blog.ipspace.net/2007/04/why-is-first-ping-lost.html"  rel="nofollow">aici</a>.
+
+</div></p>
+</p>
+
+<p>
+Observați că <strong>nu</strong> există conectivitate între stații din rețele diferite, deși adresele IP și măștile de rețea sunt configurate pe ruter și pe toate stațiile. Nu există conectivitate pentru că o stație nu are configurată rută către rețeaua cealaltă. Pentru a asigura conectivitate între stații din rețele diferite, va trebui să adăugăm, pe fiecare stație, rută către cealaltă rețea având ca next hop ruterul. Vom realiza în continuare acest lucru – conectivitatea între toate stațiile.
+</p>
+
+<p>
+Pentru a asigura conectivitate între toate stațiile, indiferent din ce rețea fac parte trebuie să configurăm o rută implicită (<em>default gateway</em>) pe fiecare stație. Pașii urmați vor fi:
+</p>
+<ol>
+<li class="level1"><div class="li"> Determinăm adresele IP ale interfețelor ruterului.</div>
+</li>
+<li class="level1"><div class="li"> Pentru fiecare stație, adăugăm o rută implicită (de tip <em>default gateway</em>) având ca next hop adresa IP a interfeței ruterului din rețeaua din care face parte stația.</div>
+</li>
+<li class="level1"><div class="li"> Folosim comanda <code>ping</code> de pe ruter sau mesajele din Packet Tracer pentru a vedea conectivitatea între oricare două stații, chiar aflate în rețele diferite.</div>
+</li>
+</ol>
+
+<p>
+Pentru început, vrem să aflăm adresele IP configurate pe fiecare interfață a ruterului. Dați click pe <code>Router0</code>, și mergeți pe tab-ul <code>CLI</code>, unde aveți acces la consola ruterului, și rulați comenzile:
+</p>
+<pre class="code">Router&gt;enable
+Router#show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+ 
+FastEthernet0/0        172.16.100.1    YES manual up                    up
+ 
+FastEthernet1/0        192.168.100.1   YES manual up                    up</pre>
+
+<p>
+Interfața <code>FastEthernet0/0</code> este conectată la rețeaua din care fac parte stațiile <code>PC0</code> și <code>PC1</code>. Adresa IP a acestei interfețe este <code>172.16.100.1</code>. Pentru a asigura conectivitate cu stațiile din cealaltă rețea, pe stațiile <code>PC0</code> și <code>PC1</code> vom configura o rută implicită (de tip <em>default gateway</em>) având ca next hop adresa <code>172.16.100.1</code>. Pentru a configura <em>default gateway</em>, faceți click în Packet Tracer pe stația dorită (<code>PC0</code> sau <code>PC1</code>), mergeți pe tab-ul <code>Desktop</code> și apăsați pe iconița <code>IP Configuration</code>. În zona de text cu eticheta <em>Default gateway</em> completați adresa <code>172.16.100.1</code>.
+</p>
+
+<p>
+În mod similar, configurați pe stațiile <code>PC2</code> și <code>PC3</code> adresa <code>192.168.100.1</code> (adresa interfeței <code>FastEthernet1/0</code>) pe post de <em>default gateway</em>.
+</p>
+
+<p>
+Observați conectivitatea între oricare două stații indiferent de rețeaua de care aparțin.
+</p>
+
+</div>
+</div>
+</body>
+</html>

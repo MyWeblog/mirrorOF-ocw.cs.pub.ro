@@ -1,0 +1,112 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:08:contents:13</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-12-09T11:21:05+0200"/>
+<meta name="keywords" content="rl,labs,08,contents,13"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="13.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/08/contents/13.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:08:contents';var JSINFO = {"id":"rl:labs:08:contents:13","namespace":"rl:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_copiere_fisiere_cu_diverse_protocoaledurata_si_consum_de_resurse">13. [5p] Copiere fișiere cu diverse protocoale: durată și consum de resurse</h3>
+<div class="level3">
+
+<p>
+Ne propunem să măsurăm timpul de copiere și consumul de resurse pentru un transfer realizat între două stații folosind, pe rând, transfer direct, <abbr title="File Transfer Protocol">FTP</abbr> și SSH. În directorul home al utilizatorului <code>student</code> de pe stația <code>green</code> există un fișier <code>file-100M.dat</code>. Vom transfera acest fișier în directorul home al utilizatorului <code>student</code> de pe stația <code>host</code>. Vom folosi transfer direct, transfer <abbr title="File Transfer Protocol">FTP</abbr> și transfer SSH. Pentru fiecare caz, stația <code>host</code> va rula server-ul, iar stația <code>green</code> clientul.
+</p>
+
+<p>
+<p><div class="notetip">
+Dați copy-paste la comenzile de mai jos ca să vă asigurați că le scrieți corect. Pentru paste folosiți, în terminal, combinația de taste <code>Shift+Insert</code>.
+
+</div></p>
+</p>
+
+<p>
+<strong>Transfer direct</strong>
+</p>
+
+<p>
+Pentru transfer direct vom porni un server simplu TCP pe stația <code>host</code> și un client pe stația <code>green</code>; vom folosi utilitarul <code>netcat</code>, prescurtat și <code>nc</code>. Rulați pe stația <code>host</code>, în contul utilizatorului <code>student</code>, comanda
+</p>
+<pre class="code bash"><span class="co4">student@host:~$ </span>nc <span class="re5">-l</span> <span class="nu0">12345</span> <span class="sy0">&gt;</span> file-100M-nc.dat</pre>
+
+<p>
+ Comanda deschide un server TCP care ascultă conexiuni pe portul <code>12345</code>. Comanda rămâne activă în așteptarea unei conexiuni de la un client.
+</p>
+
+<p>
+De pe stația <code>green</code>, din contul utilizatorului <code>student</code>, transferați fișierul și măsurați timpul de transfer și consumul de resurse prin rularea comenzii<sup><a href="13.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>
+</p>
+<pre class="code bash"><span class="co4">student@green:~$ </span><span class="sy0">/</span>usr<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw1">time</span> <span class="re5">-v</span> <span class="kw2">cat</span> file-100M.dat <span class="sy0">|</span> nc host <span class="nu0">12345</span></pre>
+
+<p>
+Comanda de mai sus trimite un fișier comenzii <code>nc</code>, iar comanda <code>nc</code> are rolul unui client TCP care se conectează la stația <code>host</code> pe portul <code>12345</code>.
+</p>
+
+<p>
+<strong>Transfer <abbr title="File Transfer Protocol">FTP</abbr></strong>
+</p>
+
+<p>
+Pentru transfer <abbr title="File Transfer Protocol">FTP</abbr>, serverul de <abbr title="File Transfer Protocol">FTP</abbr> este deja pornit pe stația <code>host</code>. De pe stația <code>green</code>, din contul utilizatorului <code>student</code>, transferați fișierul și măsurați timpul de transfer și consumul de resurse prin rularea comenzii
+</p>
+<pre class="code bash"><span class="co4">student@green:~$ </span><span class="sy0">/</span>usr<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw1">time</span> <span class="re5">-v</span> curl <span class="re5">-T</span> file-100M.dat <span class="re5">-u</span> student:student ftp:<span class="sy0">//</span>host<span class="sy0">/</span>file-100M-ftp.dat</pre>
+
+<p>
+<strong>Transfer SSH</strong>
+</p>
+
+<p>
+Pentru transfer SSH, serverul de SSH este deja pornit și configurat pe stația <code>host</code>. De pe stația <code>green</code>, în contul utilizatorului <code>student</code>, transferați fișierul și măsurați timpul de transfer și consumul de resurse prin rularea comenzii
+</p>
+<pre class="code bash"><span class="co4">student@green:~$ </span><span class="sy0">/</span>usr<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw1">time</span> <span class="re5">-v</span> <span class="kw2">scp</span> file-100M.dat student<span class="sy0">@</span>host:file-100M-scp.dat</pre>
+
+<p>
+Urmăriți timpii de rulare și consumul de memorie și de procesor pentru cele trei cazuri de mai sus. Observați valorile ridicate pentru SSH pentru timpul utilizator (<em>User time</em>) și procentul de procesor (<em>Percent of CPU</em>). Acesta valori ridicate se datorează componentei de criptare a SSH: această componentă asigură securizarea datelor cu un cost de reducere de performanță.
+</p>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="13.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+În cazul unui transfer prin rețea folosind <code>netcat</code> nu se face verificare de integritate (<em>integrity check</em>). Există riscul (mic, dar există) ca fișierul să nu fie transferat corespunzător. De aceea e bine să verificați integritatea acestuia prin calcularea sumei de control (<em>checksum</em>) folosind, de exemplu, utilitarul <code>sha512sum</code>.</div>
+</div>
+</div>
+</body>
+</html>

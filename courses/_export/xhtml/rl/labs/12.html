@@ -1,0 +1,992 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:12</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-12-02T11:59:13+0200"/>
+<meta name="keywords" content="rl,labs,12"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=rl:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="12.html"/>
+<link rel="canonical" href="../../../../rl/labs/12.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs';var JSINFO = {"id":"rl:labs:12","namespace":"rl:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="laborator_12_autentificarea_in_retelele_locale">Laborator 12. Autentificarea în rețelele locale</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 12. Autentificarea în rețelele locale" [12-76] -->
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Configurare server și client PPPoE (<em>Point to Point Protocol over Ethernet</em>)</div>
+</li>
+<li class="level1"><div class="li"> Tipuri de autentificare în PPPoE</div>
+</li>
+<li class="level1"><div class="li"> Formatul cadrului în PPPoE</div>
+</li>
+<li class="level1"><div class="li"> Stocarea credențialelor în baze de date</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cunoștințe și abilități ce vor fi dobândite" [77-340] -->
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Vom rula o masină virtuală în <a href="http://cloud.curs.pub.ro" class="urlextern" title="http://cloud.curs.pub.ro"  rel="nofollow"> cloud-ul facultății</a></div>
+</li>
+<li class="level1"><div class="li"> Pentru a porni o astfel de masină urmăriți tutorialul de la <a href="https://cloud.curs.pub.ro/about/tutorial-for-students/" class="urlextern" title="https://cloud.curs.pub.ro/about/tutorial-for-students/"  rel="nofollow"> această adresă</a></div>
+</li>
+<li class="level1"><div class="li"> Pentru a pregăti configurația de laborator, pe mașina virtuală (stația <code>host</code>) folosiți comenzile următoare din contul utilizatorului <code>root</code> de pe stația <code>host</code> (puteți da copy/paste la comenzi în terminal):<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">wget</span> https:<span class="sy0">//</span>raw.github.com<span class="sy0">/</span>RL-UPB<span class="sy0">/</span>rl-lab-prepare<span class="sy0">/</span>master<span class="sy0">/</span>rl-lab-<span class="nu0">12</span>-prepare
+<span class="co4">root@host:~# </span><span class="kw2">chmod</span> +x rl-lab-<span class="nu0">12</span>-prepare
+<span class="co4">root@host:~# </span>.<span class="sy0">/</span>rl-lab-<span class="nu0">12</span>-prepare</pre>
+
+<p>
+ Comanda durează circa 20 de secunde. Lasați-o să ruleze complet.
+</p>
+</div>
+</li>
+<li class="level1"><div class="li"> Deschideți trei noi tab-uri în terminal (folosiți combinația de taste <code>Ctrl+Shift+t</code>), și conectați-vă, din nou, la mașina virtuală folosind comanda <code>ssh</code> de mai sus.</div>
+<ul>
+<li class="level2"><div class="li"> De pe cele trei noi tab-uri, conectați-vă la cele trei containere (<code>red</code>, <code>green</code> și <code>blue</code>).</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Detalii rulare masina virtuala VMware local
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Detalii rulare masina virtuala VMware local
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><ul>
+<li class="level1"><div class="li"> Deschideți VMware și porniți mașina virtuală <code>RL_lab</code>.</div>
+</li>
+<li class="level1"><div class="li"> Dorim să folosim terminalul sistemului fizic și să lucrăm peste SSH cu mașina virtuală VMware (denumită și <code>host</code>). În acest fel vom putea folosi copy-paste în terminal sau alte facilități. Pentru aceasta urmați pașii de mai jos:</div>
+<ul>
+<li class="level2"><div class="li"> Autentificați-vă în mașina virtuală folosind contul <code>root</code> cu parola <code>student</code>.</div>
+</li>
+<li class="level2"><div class="li"> Aflați adresa IP a mașinii virtuale de pe interfața <code>eth0</code>:<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ifconfig</span> eth0</pre>
+</div>
+</li>
+<li class="level2"><div class="li"> De pe sistemul fizic, deschideți un terminal și realizați o sesiune SSH folosind:<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span><span class="re1">$ADRESA_IP_MV</span></pre>
+
+<p>
+unde <code>$ADRESA_IP_MV</code> este adresa IP a mașinii virtuale așa cum ați obținut-o mai sus.
+</p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div></div>
+<p>
+<p><div class="noteclassic">
+Pentru a vedea cum accesați stațiile <code>red</code>, <code>green</code> și <code>blue</code> (containere LXC configurate peste mașina virtuală VMware - stația <code>host</code>) urmăriți pașii de <a href="../../../../rl/info/resurse/vm-laborator.html#instructiuni_utilizare" class="wikilink1" title="rl:info:resurse:vm-laborator"> aici</a>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Conturile de acces la mașina virtuală (stația <code>host</code>) sunt (<code>username:parola</code>):
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>root:student</code></div>
+</li>
+<li class="level1"><div class="li"> <code>student:student</code></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Pregătire infrastructură de laborator" [341-2633] -->
+<h2 class="sectionedit4" id="topologie">Topologie</h2>
+<div class="level2">
+
+<p>
+<a href="../../../../_detail/rl/topologie.png%3Fid=rl%253Alabs%253A12.html" class="media" title="rl:topologie.png"><img src="../../../../_media/rl/topologie.png" class="mediacenter" alt="" /></a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Topologie" [2634-2682] -->
+<h2 class="sectionedit5" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="../../../../rl/labs/12.html" class="wikilink1" title="rl:labs:12">Laboratorul 12</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT6 PLUGIN_INCLUDE_START "rl:labs:12:meta:nav" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_72395760583560c29f7ff" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/01.html" class="wikilink1" title="rl:labs:12:contents:01">01. [15p] Necesitatea autentificării în rețeaua locală</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/02.html" class="wikilink1" title="rl:labs:12:contents:02">02. [15p] Configurare server de PPPoE</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/03.html" class="wikilink1" title="rl:labs:12:contents:03">03. [20p] Configurare client de PPPoE pe stația red</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/04.html" class="wikilink1" title="rl:labs:12:contents:04">04. [20p] Configurare client de PPPoE pe stațiile green și blue</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/05.html" class="wikilink1" title="rl:labs:12:contents:05">05. [10p] Acces la Internet pentru clienții PPPoE</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/06.html" class="wikilink1" title="rl:labs:12:contents:06">06. [20p] Configurare manuală a unui client PPPoE</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/07.html" class="wikilink1" title="rl:labs:12:contents:07">07. [BONUS - 10p] Autentificare prin RADIUS pentru server de PPPoE</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT7 PLUGIN_INCLUDE_END "rl:labs:12:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Navigare" [2683-2792] -->
+<h2 class="sectionedit8" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT9 PLUGIN_INCLUDE_START "rl:labs:12:contents:01" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:contents:01">
+
+<h3 class="sectionedit11" id="p_necesitatea_autentificarii_in_reteaua_locala">01. [15p] Necesitatea autentificării în rețeaua locală</h3>
+<div class="level3">
+
+<p>
+Se poate întâmpla ca într-o rețea locală un utilizator să folosească adresa IP a altui utilizator pentru diverse beneficii. De exemplu, în situația în care are accesul la Internet-ul blocat, un utilizator schimbă adresa IP (eventual și adresa MAC) și folosește accesul la Internet cu privilegiile utilizatorului căruia i-a “furat” adresa IP. Soluția folosită de furnizorii de servicii Internet este autentificarea utilizatorilor, lucru realizat folosind PPPoE (<em>Point to Point Protocol over Ethernet</em>).
+</p>
+
+<p>
+Ne propunem să punem la punct un astfel de scenariu în care o stație “fură” adresa IP a altei stații. Pentru aceasta, vom conecta stațiile <code>host</code>, <code>red</code> și <code>green</code> în aceeași rețea de nivel 2. Vom crea un bridge în care vom adăuga toate stațiile și vom configura adrese IP din aceeași rețea.
+</p>
+
+<p>
+Pentru început, creați pe stația <code>host</code> un switch virtual în Linux (bridge) denumit <code>br0</code> în care să adăugați interfețele <code>veth-red</code> și <code>veth-green</code>. Urmăriți indicațiile din <a href="../../../../rl/labs/11/contents/01.html" class="wikilink1" title="rl:labs:11:contents:01">laboratorul 11</a> (partea de jos, unde se lucrează cu bridge-uri).
+</p>
+
+<p>
+<p><div class="noteimportant">
+Trebuie să activați interfața <code>br0</code> – interfața bridge-ului. Folosiți comanda <code>ip link</code>.
+
+</div></p>
+</p>
+
+<p>
+Configurați pe interfața <code>br0</code> (interfața de tip bridge) de pe stația <code>host</code> adresa IP <code>192.168.0.1/24</code>. Pe stațiile <code>red</code> și <code>green</code> configurați adresa IP <code>192.168.0.2/24</code> pe interfața <code>eth0</code> a acestora.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pe ambele stații (<code>red</code> și <code>green</code>) să fie aceeași adresă IP pe interfața <code>eth0</code>: <code>192.168.0.2/24</code>.
+
+</div></p>
+</p>
+
+<p>
+Pe stația <code>red</code> aflăm adresa MAC a interfeței <code>eth0</code> și apoi trimitem pachete către stația <code>host</code> (adică spre adresa <code>192.168.0.1/24</code> aferentă interfeței <code>br0</code> a bridge-ului de pe <code>host</code>):
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip link</span> show dev eth0
+<span class="nu0">22</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+<span class="co4">root@red:~# </span><span class="kw2">ping</span> 192.168.0.1
+PING 192.168.0.1 <span class="br0">&#40;</span>192.168.0.1<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 192.168.0.1: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.379</span> ms
+^C
+<span class="re5">---</span> 192.168.0.1 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">1</span> packets transmitted, <span class="nu0">1</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 0ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.379</span><span class="sy0">/</span><span class="nu0">0.379</span><span class="sy0">/</span><span class="nu0">0.379</span><span class="sy0">/</span><span class="nu0">0.000</span> ms</pre>
+
+<p>
+Urmărim pe stația <code>host</code> tabela ARP a interfeței <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip neigh</span> show dev br0
+192.168.0.2 lladdr 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> REACHABLE</pre>
+
+<p>
+Observăm că intrarea aferentă adresei IP <code>192.168.0.2</code> conține adresa MAC a interfeței <code>eth0</code> a stației <code>red</code>.
+</p>
+
+<p>
+Acum, pe stația <code>green</code> aflăm adresa MAC a interfeței <code>eth0</code> și apoi trimitem pachete către stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span><span class="kw2">ip link</span> show dev eth0 
+<span class="nu0">25</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> brd ff:ff:ff:ff:ff:ff
+<span class="co4">root@green:~# </span><span class="kw2">ping</span> 192.168.0.1
+PING 192.168.0.1 <span class="br0">&#40;</span>192.168.0.1<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 192.168.0.1: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.416</span> ms
+^C
+<span class="re5">---</span> 192.168.0.1 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">1</span> packets transmitted, <span class="nu0">1</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 0ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.416</span><span class="sy0">/</span><span class="nu0">0.416</span><span class="sy0">/</span><span class="nu0">0.416</span><span class="sy0">/</span><span class="nu0">0.000</span> ms</pre>
+
+<p>
+Urmărim, din nou, pe stația <code>host</code> tabela ARP a interfeței <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip neigh</span> show dev br0
+192.168.0.2 lladdr 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> REACHABLE</pre>
+
+<p>
+Observăm că intrarea aferentă adresei IP <code>192.168.0.2</code> conține acum adresa MAC a interfeței <code>eth0</code> a stației <code>green</code>.
+</p>
+
+<p>
+Dacă executăm comanda
+</p>
+<pre class="code bash"><span class="kw2">ping</span> 192.168.0.1</pre>
+
+<p>
+simultan de pe stațiile <code>red</code> și <code>green</code>, observăm că doar o stație primește la un moment dat răspunsul: cea care are adresa MAC asociată la acel moment adresei IP <code>192.168.0.2</code> în tabela ARP a interfeței <code>br0</code>. După cum am precizat la început, acest lucru este întâlnit frecvent în rețele de dimensiuni medii și mari unde utilizatorii își pun aceeași adresă IP cu a unui alt calculator din rețea în încercarea de a fura identitatea acestuia.
+</p>
+
+<p>
+Pentru a ne asigura că utilizatorii nu folosesc alte adrese IP, folosim autentificare la nivelul 2; adică să condiționăm conectarea la Internet de furnizarea unei adrese IP și a unei parole. Ținând cont de prevalența rețelelor bazate pe Ethernet, este indicat să folosim un protocol de autentificare peste Ethernet. Una dintre cele mai întâlnite soluții este PPPoE (<em>Point to Point Protocol over Ethernet</em>).
+</p>
+
+<p>
+<p><div class="noteclassic">
+Autentificarea utilizatorului pentru a obține conectivitate la Internet este unul dintre motivele pentru care mulți furnizori de servicii Internet folosesc PPPoE pentru accesul la Internet (rețeaua din campusul Regie, rețeaua RDS etc.).
+
+</div></p>
+</p>
+
+<p>
+În secțiunile următoare vom configura un server și clienți de PPPoE.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Înainte de a trece la configurarea serverului de PPPoE ștergeți adresele IP de pe interfețele <code>eth0</code> ale containerelor <code>red</code> și <code>green</code>. Bridge-ul <code>br0</code> va fi în continuare activ cu adresa <code>192.168.0.1/24</code> și va avea conectate interfețele <code>veth-red</code> și <code>veth-green</code>.
+</p>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "01. [15p] Necesitatea autentificării în rețeaua locală" [1-] --><!-- EDIT10 PLUGIN_INCLUDE_END "rl:labs:12:contents:01" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT12 PLUGIN_INCLUDE_START "rl:labs:12:contents:02" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:contents:02">
+
+<h3 class="sectionedit14" id="p_configurare_server_de_pppoe">02. [15p] Configurare server de PPPoE</h3>
+<div class="level3">
+
+<p>
+Pentru a putea autentifica stațiile <code>red</code>, <code>green</code> și <code>blue</code> vom folosi stația <code>host</code> pe post de server de autentificare. Pentru acest lucru vom instala un server de PPPoE:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">apt-get update</span>
+<span class="co4">root@host:~# </span><span class="kw2">apt-get install</span> pppoe</pre>
+
+<p>
+<p><div class="noteimportant">
+Încărcați modulul de kernel <code>pppoe</code> pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>modprobe pppoe</pre>
+
+<p>
+În general, acest pas nu este necesar pentru că este realizat automat. În situația noastră însă, containerele nu pot încărca automat modulul pentru că nu au permisiuni de alterare a nucleului. De aceea încărcăm modulul de kernel în sistemul fizic și va fi ulterior prezent și în containere.
+
+</div></p>
+</p>
+
+<p>
+Configurarea serverului de PPPoE presupune, minimal, doi pași:
+</p>
+<ol>
+<li class="level1"><div class="li"> configurarea credențialelor pentru fiecare client PPPoE (username și parolă)</div>
+</li>
+<li class="level1"><div class="li"> configurarea spațiului de adrese IP disponibile clienților PPPoE</div>
+</li>
+</ol>
+
+<p>
+Un client PPPoE este o stație ce solicită o adresă IP pentru conectare.
+</p>
+
+<p>
+În cazul PPP(oE) există două protocoale de autentificare: CHAP (<em>Challenge-Handshake Authentication Protocol</em> și PAP (<em>Password Authentication Protocol</em>). Întrucât CHAP este considerat mai sigur, vom folosi CHAP.
+</p>
+
+<p>
+Configurarea credențialelor CHAP pentru clienții PPPoE este realizată în fișierul <code>/etc/ppp/chap-secrets</code>. Vom configura parole și nume de utilizator simple, cu uz didactic, conținând chiar numele stațiilor. Într-un scenariu real, parolele vor fi complexe pentru a preveni ghicirea lor. Edităm fișierul <code>/etc/ppp/chap-secrets</code> cu parolele pentru conturile celor trei stații de tip container; acesta va avea în final forma de mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>chap-secrets
+<span class="co0"># Secrets for authentication using CHAP</span>
+<span class="co0"># client        server  secret                  IP addresses</span>
+<span class="kw2">red</span>             <span class="sy0">*</span>       <span class="kw2">red</span>                     <span class="sy0">*</span>
+green           <span class="sy0">*</span>       green                   <span class="sy0">*</span>
+blue            <span class="sy0">*</span>       blue                    <span class="sy0">*</span></pre>
+
+<p>
+Cele patru coloane din cadrul fișierului <code>/etc/ppp/chap-secrets</code> reprezintă:
+</p>
+<ul>
+<li class="level1"><div class="li"> prima coloană (<code>client</code>) este username-ul clientului (<code>red</code>, <code>green</code>, <code>blue</code>);</div>
+</li>
+<li class="level1"><div class="li"> a doua coloană (<code>server</code>) se referă la serverul PPP ce va fi folosi autentificarea (în cazul nostru am folosit <code>*</code>, adică orice server, implicit și cel de PPPoE);</div>
+</li>
+<li class="level1"><div class="li"> a treia coloană (<code>secret</code>) este parola (<code>red</code>, <code>green</code>, <code>blue</code>);</div>
+</li>
+<li class="level1"><div class="li"> a patra coloană (<code>IP addresses</code>) se referă la adresele IP ce pot folosi aceste credențiale și este folosită în general în conexiuni VPN peste Internet (am folosit <code>*</code> întrucât în cazul PPPoE nu avem adresă IP sursă; este folosit direct protocolul Ethernet).</div>
+</li>
+</ul>
+
+<p>
+Pentru fiecare conexiune PPPoE dorim să alocăm automat adresele IP clienților. Serverul de PPPoE poate face acest lucru implicit fără a mai fi nevoie instalarea unui server de DHCP. Trebuie să definim spațiul de adrese IP în fișierul <code>/etc/ppp/ipaddress_pool</code> la fel ca mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool
+192.168.0.2-<span class="nu0">5</span></pre>
+
+<p>
+Modul în care definim spațiul de adrese IP este: prima adresă IP alocabilă urmată de caracterul <code>-</code> și limita superioară a ultimului octet.
+</p>
+
+<p>
+După configurarea credențialelor de autentificare și a spațiului de adrese, vom putea porni serverul de PPPoE și vom verifica pornirea sa:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options
+<span class="co4">root@host:~# </span><span class="kw2">ps</span> <span class="re5">-ef</span> <span class="sy0">|</span> <span class="kw2">grep</span> pppoe-server
+root     <span class="nu0">10706</span>     <span class="nu0">1</span>  <span class="nu0">0</span> Dec29 ?        00:00:00 pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options</pre>
+
+<p>
+Semnificația parametrilor este după cum urmează:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>-C isp</code> - numele serverului PPPoE;</div>
+</li>
+<li class="level1"><div class="li"> <code>-L 192.168.0.1</code> - adresa IP a serverului de PPPoE (cu aceasta adresă vor comunica stațiile de tip client);</div>
+</li>
+<li class="level1"><div class="li"> <code>-p /etc/ppp/ipaddress_pool</code> - fișierul în care este specificat spațiul de adrese IP ce vor fi furnizate clienților;</div>
+</li>
+<li class="level1"><div class="li"> <code>-I br0</code> - interfața pe care ascultă (în acest caz este interfața de tip bridge <code>br0</code>, interfață la care sunt conectate toate containerele);</div>
+</li>
+<li class="level1"><div class="li"> <code>-O /etc/ppp/options</code> - opțiunile serverului PPPoE; le vom folosi pe cele implicite.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">
+Dacă, pe parcursul laboratorului, aveți probleme la configurarea PPPoE, este posibil să fie nevoie să reporniți serverul:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>pkill <span class="re5">-f</span> pppoe-server
+<span class="co4">root@host:~# </span>pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT14 SECTION "02. [15p] Configurare server de PPPoE" [1-] --><!-- EDIT13 PLUGIN_INCLUDE_END "rl:labs:12:contents:02" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT15 PLUGIN_INCLUDE_START "rl:labs:12:contents:03" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:contents:03">
+
+<h3 class="sectionedit17" id="p_configurare_client_de_pppoe_pe_statia_red">03. [20p] Configurare client de PPPoE pe stația red</h3>
+<div class="level3">
+
+<p>
+Având pornit serverul de PPPoE, putem acum să configurăm clienții de PPPoE. Clienții, adică stațiile de tip client, se vor autentifica la serverul de PPPoE pornit anterior și vor primi o adresă IP.
+</p>
+
+<p>
+Pentru configurarea unui client, cel mai simplu este să folosim utilitarul <code>pppoeconf</code>. Acest utilitar prezintă întrebări de configurare utilizatorului și generează informațiile necesare în fișierele de configurare din <code>/etc/ppp/</code>. Fișierele de configurare ce vor fi alterate sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>/etc/ppp/pap-secrets</code>: configurare pentru autentificare folosind PAP (<em>Password Authentication Protocol</em>)</div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/ppp/chap-secrets</code>: configurare pentru autentificare folosind CHAP (<em>Challenge-Handshake Authentication Protocol</em>)</div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/ppp/peers/dsl-provider</code>: configurare pentru conectarea la serverul PPPoE</div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/network/interfaces</code>: configurare persistentă pentru conexiunea PPPoE</div>
+</li>
+</ul>
+
+<p>
+Pentru început vom configura pe stația <code>red</code> un client PPPoE. Vom rula comanda:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span>pppoeconf</pre>
+
+<p>
+ și vom ține cont de următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> la username și parolă folosim <code>red</code> (le-am configurat anterior în server)</div>
+</li>
+<li class="level1"><div class="li"> la toate celelalte opțiuni lăsăm valorile implicite</div>
+</li>
+</ul>
+
+<p>
+Pentru a valida configurarea corectă, inspectăm mesajele PPPoE folosind comanda <code>plog</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span>plog
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">670</span><span class="br0">&#93;</span>: Plugin rp-pppoe.so loaded.
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: pppd 2.4.5 started by root, uid <span class="nu0">0</span>
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: PPP session is <span class="nu0">1</span>
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: Connected to 7e:9e:4a:5a:<span class="nu0">49</span>:<span class="nu0">77</span> via interface eth0
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: Using interface ppp0
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: Connect: ppp0 <span class="sy0">&lt;</span>--<span class="sy0">&gt;</span> eth0
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">26</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: peer from calling number 7E:9E:4A:5A:<span class="nu0">49</span>:<span class="nu0">77</span> authorized
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">26</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: <span class="kw3">local</span>  IP address 192.168.0.2
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">26</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: remote IP address 192.168.0.1</pre>
+
+<p>
+Din output-ul comenzii <code>plog</code> observăm că:
+</p>
+<ul>
+<li class="level1"><div class="li"> stația se conectează la serverul PPPoE prin intermediul interfeței <code>eth0</code></div>
+</li>
+<li class="level1"><div class="li"> se creează interfața <code>ppp0</code></div>
+</li>
+<li class="level1"><div class="li"> se atașează interfeței <code>ppp0</code> adresa <code>192.168.0.2</code> (<code>local</code>) pe o legătură punct-la-punct cu interfața de pe server (<code>192.168.0.1</code>).</div>
+</li>
+</ul>
+
+<p>
+Observăm crearea interfeței <code>ppp0</code> și atașarea adresei <code>192.168.0.2</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev ppp0
+<span class="nu0">13</span>: ppp0: <span class="sy0">&lt;</span>POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1492</span> qdisc pfifo_fast state UNKNOWN qlen <span class="nu0">3</span>
+    link<span class="sy0">/</span>ppp
+    inet 192.168.0.2 peer 192.168.0.1<span class="sy0">/</span><span class="nu0">32</span> scope global ppp0</pre>
+
+<p>
+Verificăm conectivitatea la serverul PPPoE folosind comanda <code>ping</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> 192.168.0.1
+PING 192.168.0.1 <span class="br0">&#40;</span>192.168.0.1<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 192.168.0.1: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">1.63</span> ms
+<span class="nu0">64</span> bytes from 192.168.0.1: <span class="re2">icmp_req</span>=<span class="nu0">2</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.270</span> ms
+^C</pre>
+
+<p>
+Observăm că pe stația <code>host</code> a apărut de asemenea o interfață <code>ppp0</code>, perechea interfeței create pe stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> a s
+<span class="nu0">32</span>: ppp0: <span class="sy0">&lt;</span>POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1492</span> qdisc pfifo_fast state UNKNOWN qlen <span class="nu0">3</span>
+    link<span class="sy0">/</span>ppp 
+    inet 192.168.0.1 peer 192.168.0.2<span class="sy0">/</span><span class="nu0">32</span> scope global ppp0</pre>
+
+<p>
+Interfața <code>ppp0</code> de pe stația <code>host</code> are adresa <code>192.168.0.1</code>, adresa aferentă stației host.
+</p>
+
+<p>
+O dată configurată, conexiunea PPPoE poate fi pornită folosind comanda <code>pon dsl-provider</code> și oprită folosind <code>poff dsl-provider</code>. Comanda <code>pon dsl-provider</code> este în general rulată în momentul configurării (adică în momentul folosirii comenzii <code>pppoeconf</code>); este ultimul ecran de interogare a utilizatorului furnizat de comanda <code>pppoeconf</code>.
+</p>
+
+<p>
+Doar pentru testare, vom opri și vom porni conexiunea PPPoE pe stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev ppp0
+<span class="nu0">13</span>: ppp0: <span class="sy0">&lt;</span>POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1492</span> qdisc pfifo_fast state UNKNOWN qlen <span class="nu0">3</span>
+    link<span class="sy0">/</span>ppp
+    inet 192.168.0.2 peer 192.168.0.1<span class="sy0">/</span><span class="nu0">32</span> scope global ppp0
+<span class="co4">root@red:~# </span>poff dsl-provider
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev ppp0
+Device <span class="st0">&quot;ppp0&quot;</span> does not exist.
+<span class="co4">root@red:~# </span>pon dsl-provider
+Plugin rp-pppoe.so loaded.
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev ppp0
+<span class="nu0">15</span>: ppp0: <span class="sy0">&lt;</span>POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1492</span> qdisc pfifo_fast state UNKNOWN qlen <span class="nu0">3</span>
+    link<span class="sy0">/</span>ppp
+    inet 192.168.0.3 peer 192.168.0.1<span class="sy0">/</span><span class="nu0">32</span> scope global ppp0</pre>
+
+<p>
+Observăm că la a doua rulare am obținut altă adresă IP (<code>192.168.0.3</code>), următoarea din spațiul de adrese expus de serverul de PPPoE. Aceasta se întâmplă pentru că la fiecare conectare la serverul PPPoE se obține următoarea adresă nefolosită. La un număr suficient de mari de rulări ale comenzilor <code>poff dsl-provider</code> și <code>pon dsl-provider</code> se poate reajunge la adresa IP <code>192.168.0.3</code>.
+</p>
+
+<p>
+Ca să vedem cum se realizează conectarea între cele două capete consultăm tabela de rutare:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip route</span>
+default dev ppp0  scope <span class="kw2">link</span>
+192.168.0.1 dev ppp0  proto kernel  scope <span class="kw2">link</span>  src 192.168.0.3</pre>
+
+<p>
+Observăm că ruta implicită este specificată folosind doar interfața de ieșire (<code>ppp0</code>). Acest lucru este suficient întrucât este o conexiune punct-la-punct și nu un mediu multi-acces cum este Ethernet. Legătura este punct la punct motiv pentru care nu avem mască aferentă rutei către <code>192.168.0.1</code>. Este vorba de o rută punct la punct. Similar arată tabela de rutare și pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> r s dev ppp0
+192.168.0.3  proto kernel  scope <span class="kw2">link</span>  src 192.168.0.1</pre>
+
+<p>
+Să urmărim conținutul mesajelor PPPoE. Vom captura cadrele <code>Ethernet</code> pe stația <code>host</code> folosind comanda <code>tcpdump</code> pe interfața <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>tcpdump <span class="re5">-n</span> <span class="re5">-i</span> br0 <span class="re5">-e</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Opțiunea <code>-e</code> a comenzii <code>tcpdump</code> afișează și antetul de nivel 2, adică antetul Ethernet și implicit, antetul PPP.
+</p>
+
+<p>
+Pe stația red pornim comanda ping către stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> 192.168.0.1
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Acum observăm pe stația <code>host</code> rezultatul capturii:
+</p>
+<pre class="code bash"><span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="nu0">23</span>:<span class="nu0">29</span>:<span class="nu0">20.668204</span> 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> <span class="br0">&#40;</span>oui Unknown<span class="br0">&#41;</span> <span class="sy0">&gt;</span> 7e:9e:4a:5a:<span class="nu0">49</span>:<span class="nu0">77</span> <span class="br0">&#40;</span>oui Unknown<span class="br0">&#41;</span>, ethertype PPPoE S <span class="br0">&#40;</span>0x8864<span class="br0">&#41;</span>, length <span class="nu0">106</span>: PPPoE  <span class="br0">&#91;</span>ses 0x1<span class="br0">&#93;</span> IP <span class="br0">&#40;</span>0x0021<span class="br0">&#41;</span>, length <span class="nu0">86</span>: 192.168.0.3 <span class="sy0">&gt;</span> 192.168.0.1: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">732</span>, <span class="kw2">seq</span> <span class="nu0">47</span>, length <span class="nu0">64</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+În cadrul capturat mai sus observăm următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> adresa MAC sursă este adresa MAC a interfeței <code>eth0</code> a stației <code>red</code>: <code>00:16:3e:8e:84:21</code>;</div>
+</li>
+<li class="level1"><div class="li"> adresa MAC destinație este adresa MAC a interfeței de tip bridge <code>br0</code> de pe stația <code>host</code>: <code>7e:9e:4a:5a:49:77</code>;</div>
+</li>
+<li class="level1"><div class="li"> tipul protocolului încapsulat în cadrul Ethernet este PPPoE (<code>0x8864</code> – faza de sesiune); în mod obișnuit ar fi fost IP (<code>0x0800</code>)<sup><a href="12.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>;</div>
+</li>
+<li class="level1"><div class="li"> pachetul <code>PPPoE</code> încasulează la rândul său protocolul IP.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT17 SECTION "03. [20p] Configurare client de PPPoE pe stația red" [1-] --><!-- EDIT16 PLUGIN_INCLUDE_END "rl:labs:12:contents:03" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT18 PLUGIN_INCLUDE_START "rl:labs:12:contents:04" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:contents:04">
+
+<h3 class="sectionedit20" id="p_configurare_client_de_pppoe_pe_statiile_green_si_blue">04. [20p] Configurare client de PPPoE pe stațiile green și blue</h3>
+<div class="level3">
+
+<p>
+Urmărind pașii de la exercițiu anterior, creați o conexiunea PPPoE și pentru stațiile <code>green</code> și <code>blue</code>. Veți folosi credențialele, respectiv, <code>green</code>/<code>green</code>, respectiv <code>blue</code>/<code>blue</code>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Va trebui să adăugați interfața <code>veth-blue</code> în brige-ul <code>br0</code> pentru a permite conexiunea stației <code>blue</code> la stația <code>host</code> și, deci, la serverul PPPoE.
+
+</div></p>
+</p>
+
+<p>
+După conectarea la server, folosiți comanda <code>ping</code> pentru validare.
+</p>
+
+<p>
+Listați interfețele de pe stația <code>host</code> și urmăriți interfețele de tip PPP create.
+</p>
+
+<p>
+Urmăriți tabela de rutare pe stațiile <code>green</code>, <code>blue</code> și <code>host</code>.
+</p>
+
+</div>
+<!-- EDIT20 SECTION "04. [20p] Configurare client de PPPoE pe stațiile green și blue" [1-] --><!-- EDIT19 PLUGIN_INCLUDE_END "rl:labs:12:contents:04" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT21 PLUGIN_INCLUDE_START "rl:labs:12:contents:05" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:contents:05">
+
+<h3 class="sectionedit23" id="p_acces_la_internet_pentru_clientii_pppoe">05. [10p] Acces la Internet pentru clienții PPPoE</h3>
+<div class="level3">
+
+<p>
+Până în acest punct am obținut adrese IP pentru stațiile <code>red</code>, <code>green</code> și <code>blue</code> prin folosirea serverului PPPoE de pe stația <code>host</code>. Fiecare dintre cele trei stații de tip container au legătură de tip punct la punct cu stația <code>host</code>. Întrucât rutarea nu este activată pe stația <code>host</code>, cele trei stații de tip containere nu pot comunica între ele.
+</p>
+
+<p>
+Dorim ca stațiile de tip container (<code>red</code>, <code>green</code> și <code>blue</code>) să poată comunica între ele și să aibă acces la Internet. Pentru acest lucru, activați rutarea și configurați NAT (<code>MASQUERADE</code>) pe stația <code>host</code> (urmăriți indicațiile din <a href="../../../../rl/labs/09/contents/01.html" class="wikilink1" title="rl:labs:09:contents:01">laboratorul 9</a>). După configurare, verificați că stațiile pot comunica între ele și că au acces la Internet.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Precizați în regula de tip <code>MASQUERADE</code> interfața de ieșire pentru translatare: <code>-o eth0</code>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT23 SECTION "05. [10p] Acces la Internet pentru clienții PPPoE" [1-] --><!-- EDIT22 PLUGIN_INCLUDE_END "rl:labs:12:contents:05" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT24 PLUGIN_INCLUDE_START "rl:labs:12:contents:06" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:contents:06">
+
+<h3 class="sectionedit26" id="p_configurare_manuala_a_unui_client_pppoe">06. [20p] Configurare manuală a unui client PPPoE</h3>
+<div class="level3">
+
+<p>
+După cum am precizat mai sus, comanda <code>pppoeconf</code> este folosită pentru configurarea conexiunii PPPoE, inclusiv activarea acesteia. Configurația dată de comanda <code>pppoeconf</code> poate fi realizată și manual<sup><a href="12.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup>. O asemenea situație poate apărea în cazul în care există mai multe conexiuni de tip PPPoE pentru acces la Internet.
+</p>
+
+<p>
+Argumentul <code>dsl-provider</code> transmis comenzilor <code>pon</code> și <code>poff</code> este aferent fișierului <code>/etc/ppp/peers/dsl-provider</code> care descrie conexiunea de tip PPPoE. Se pot crea mai multe astfel de fișiere pentru conexiuni diferite.
+</p>
+
+<p>
+Adăugați pe serverul PPPoE (adică pe stația <code>host</code>) credențialele <code>extra</code>/<code>extra</code> (adică username <code>extra</code> și parola <code>extra</code>). Configurați <strong>manual</strong> pe stația <code>red</code> o conexiune PPPoE nouă, denumită <code>rl-dsl-provider</code>, care să se autentifice la serverul PPPoE folosind credențialele <code>extra</code>/<code>extra</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Întrucât va trebui să repornim serverul PPPoE, dezactivați conexiunile PPPoE anterioare (cele create folosind <code>pppoeconf</code>) pe stațiile <code>red</code>, <code>green</code> și <code>blue</code> folosind comanda <code>poff</code>.
+</p>
+
+<p>
+După ce ați realizat configurația pe stația <code>host</code>, opriți și reporniți serverul PPPoE. Pentru oprire folosiți comanda <code>pkill</code> iar pentru pornire comanda <code>pppoe-server</code> așa cum e indicat în partea finală din secțiunea <a href="../../../../rl/labs/12/contents/02.html" class="wikilink1" title="rl:labs:12:contents:02">02. [15p] Configurare server de PPPoE</a>.
+</p>
+
+<p>
+Pe stația <code>red</code> va trebui:
+</p>
+<ul>
+<li class="level1"><div class="li"> să creați fișierul <code>/etc/ppp/peers/rl-dsl-provider</code> cu informații legate de noul furnizor;</div>
+</li>
+<li class="level1"><div class="li"> să actualizați fișierul <code>/etc/ppp/chap-secrets</code> cu noile credențiale (adăugați-le pe lângă cele existente).</div>
+</li>
+</ul>
+
+<p>
+Cel mai bine este ca, pentru a crea fișierul <code>/etc/ppp/peers/rl-dsl-provider</code>, să faceți o copie a fișierului <code>/etc/ppp/peers/dsl-provider</code> cu numele <code>/etc/ppp/peers/rl-dsl-provider</code>. Modificările de făcut sunt minore.
+</p>
+
+<p>
+Folosiți comanda <code>pon rl-dsl-provider</code> pentru a porni conexiunea PPPoE creată manual.
+</p>
+
+<p>
+Folosiți indicațiile din <a href="https://help.ubuntu.com/community/ADSLPPPoE#Configuration_by_hand" class="urlextern" title="https://help.ubuntu.com/community/ADSLPPPoE#Configuration_by_hand"  rel="nofollow">pagina ADSLPPoE a comunității Ubuntu</a>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT26 SECTION "06. [20p] Configurare manuală a unui client PPPoE" [1-] --><!-- EDIT25 PLUGIN_INCLUDE_END "rl:labs:12:contents:06" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT27 PLUGIN_INCLUDE_START "rl:labs:12:contents:07" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:contents:07">
+
+<h3 class="sectionedit29" id="bonus_-_10p_autentificare_prin_radius_pentru_server_de_pppoe">07. [BONUS - 10p] Autentificare prin RADIUS pentru server de PPPoE</h3>
+<div class="level3">
+
+<p>
+Un furnizor de servicii (precum un ISP) folosește credențialele unui utilizator pentru a asigura autentificarea în mai multe situații: PPPoE, VPN, switch-uri, Network Access Server etc. În această situație este util un server centralizat pentru autentificare. Un protocol care furnizează AAA (<em>Authentication, Authorization, and Accounting</em>) este RADIUS. RADIUS este un protocol client-server folosit pentru gestiunea accesului la resursele unui furnizor de servicii.
+</p>
+
+<p>
+Un server de PPPoE poate folosi ca backend pentru autentificare un server de RADIUS. În cele ce urmează vom instala și configura un server de RADIUS și vom configura PPPoE să folosească acest server de RADIUS pentru autentificare.
+</p>
+
+<p>
+Înainte de a configura serverul de RADIUS și suportul PPPoE prin RADIUS, vom dezactiva configurările anterioare. Vom dezactiva conexiunea PPPoE de pe stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span>poff rl-dsl-provider</pre>
+
+<p>
+și vom opri serverul de PPPoE pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ps</span> <span class="re5">-ef</span> <span class="sy0">|</span> <span class="kw2">grep</span> pppoe-server
+root     <span class="nu0">21893</span>     <span class="nu0">1</span>  <span class="nu0">0</span> <span class="nu0">17</span>:06 ?        00:00:00 pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options
+<span class="co4">root@host:~# </span><span class="kw2">kill</span> <span class="nu0">21893</span></pre>
+
+<p>
+Apoi vom urma pașii<sup><a href="12.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup>:
+</p>
+<ol>
+<li class="level1"><div class="li"> instalare server de RADIUS</div>
+</li>
+<li class="level1"><div class="li"> configurare și testare server de RADIUS</div>
+</li>
+<li class="level1"><div class="li"> configurare client de RADIUS</div>
+</li>
+<li class="level1"><div class="li"> configurare server de PPPoE cu suport RADIUS</div>
+</li>
+<li class="level1"><div class="li"> pornire server de PPPoE</div>
+</li>
+<li class="level1"><div class="li"> crearea de conexiuni PPPoE pe noua configurație</div>
+</li>
+</ol>
+
+<p>
+Instalăm serverul de RADIUS (pachetul <code>freeradius</code>) pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">apt-get install</span> freeradius</pre>
+
+<p>
+Adăugăm intrări pentru credențialele de conectare PPP în fișierul <code>/etc/freeradius/users</code>. Putem adăuga intrările la sfârșitul fisierului:
+</p>
+<pre class="code">red	Cleartext-Password := &quot;red&quot;
+	Service-Type = Framed-User,
+	Framed-Protocol = PPP,
+	Framed-Compression = Van-Jacobsen-TCP-IP
+
+green	Cleartext-Password := &quot;green&quot;
+	Service-Type = Framed-User,
+	Framed-Protocol = PPP,
+	Framed-Compression = Van-Jacobsen-TCP-IP
+
+blue	Cleartext-Password := &quot;blue&quot;
+	Service-Type = Framed-User,
+	Framed-Protocol = PPP,
+	Framed-Compression = Van-Jacobsen-TCP-IP
+
+extra	Cleartext-Password := &quot;extra&quot;
+	Service-Type = Framed-User,
+	Framed-Protocol = PPP,
+	Framed-Compression = Van-Jacobsen-TCP-IP</pre>
+
+<p>
+Cele patru perechi de credențiale (username și parolă) sunt cele pe care le configuram până acum direct în serverul PPPoE.
+</p>
+
+<p>
+După configurare repornim serverul PPPoE:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>freeradius restart</pre>
+
+<p>
+<p><div class="noteimportant">
+Este posibil să nu funcționeze comanda de mai jos (folosirea <code>radtest</code>). Asta pentru că pentru testare, clientul <code>radtest</code> se conectează de pe adresa IP a interfeței <code>eth0</code> în loc de adresa de localhost <code>127.0.0.1</code>. Dacă nu funcționează, atunci editați fișierul <code>/etc/freeradius/clients.conf</code> astfel încât în loc de construcția
+</p>
+<pre class="code">client localhost {
+    [...]
+    ipaddr = 127.0.0.1
+    [...]
+}</pre>
+
+<p>
+să aveți construcția
+</p>
+<pre class="code">client &lt;adresa-IP-eth0&gt; {
+    [...]
+    ipaddr = &lt;adresa-IP-eth0&gt;
+    [...]
+}</pre>
+
+<p>
+unde <code>&lt;adresa-IP-eth0&gt;</code> este adresa IP a interfeței <code>eth0</code> a stației <code>host</code>.
+</p>
+
+<p>
+După acestă acțiune de configurare, reporniți serviciul FreeRADIUS folosind comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>freeradius restart</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Pentru a testa configurarea, folosim utilitarul <code>radtest</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>radtest <span class="kw2">red</span> <span class="kw2">red</span> 127.0.0.1 <span class="nu0">0</span> testing123
+Sending Access-Request of <span class="kw2">id</span> <span class="nu0">21</span> to 127.0.0.1 port <span class="nu0">1812</span>
+	User-Name = <span class="st0">&quot;red&quot;</span>
+	User-Password = <span class="st0">&quot;red&quot;</span>
+	NAS-IP-Address = 127.0.0.1
+	NAS-Port = <span class="nu0">0</span>
+rad_recv: Access-Accept packet from host 127.0.0.1 port <span class="nu0">1812</span>, <span class="re2">id</span>=<span class="nu0">21</span>, <span class="re2">length</span>=<span class="nu0">38</span>
+	Service-Type = Framed-User
+	Framed-Protocol = PPP
+	Framed-Compression = Van-Jacobson-TCP-IP
+&nbsp;
+<span class="co4">root@host:~# </span>radtest green green 127.0.0.1 <span class="nu0">0</span> testing123
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+&nbsp;
+<span class="co4">root@host:~# </span>radtest blue blue 127.0.0.1 <span class="nu0">0</span> testing123
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+&nbsp;
+<span class="co4">root@host:~# </span>radtest extra extra 127.0.0.1 <span class="nu0">0</span> testing123
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Pentru ca un alt serviciu să poată folosi serviciul de RADIUS este nevoie de configurarea unui client RADIUS care va interedia comunicarea cu serverul. Pentru aceasta vom instala clientul de RADIUS:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">apt-get install</span> radiusclient1</pre>
+
+<p>
+Configurația implicită a acestuia este suficientă în fișierul <code>/etc/radiusclient/radiusclient.conf</code>, dar trebuie precizat serverul de RADIUS la care se va conecta în fișierul <code>/etc/radiusclient/servers</code>. Pentru aceasta adăugăm linia cu cheia implicită a serverului:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>radiusclient<span class="sy0">/</span>servers 
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+127.0.0.1					testing123</pre>
+
+<p>
+Testăm configurația clientului de RADIUS folosind comanda <code>radlogin</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>radlogin
+<span class="br0">&#40;</span><span class="re1">$Id</span>: radlogin.c,v <span class="nu0">1.3</span> <span class="nu0">1997</span><span class="sy0">/</span><span class="nu0">12</span><span class="sy0">/</span><span class="nu0">29</span> <span class="nu0">23</span>:07:<span class="nu0">25</span> lf Exp $<span class="br0">&#41;</span>
+<span class="re5">-----------------------------------------------------</span>
+Linux 3.2.0-<span class="nu0">53</span>-generic-pae <span class="br0">&#40;</span>host<span class="br0">&#41;</span> <span class="br0">&#40;</span>port <span class="nu0">0</span><span class="br0">&#41;</span>
+<span class="re5">-----------------------------------------------------</span>
+&nbsp;
+login: <span class="kw2">red</span>
+Password: 
+RADIUS: Authentication OK
+Starting.
+RADIUS_FRAMED_COMPRESSION = Van-Jacobson-TCP-IP
+RADIUS_FRAMED_PROTOCOL = PPP
+RADIUS_SERVICE_TYPE = Framed-User
+RADIUS_USER_NAME = <span class="kw2">red</span></pre>
+
+<p>
+Având configurat clientul de RADIUS putem să configurăm serverul de PPPoE să folosească suportul de RADIUS. Pentru această adăugăm cele două linii de mai jos în fișierul <code>/etc/ppp/options</code>:
+</p>
+<pre class="code">plugin radius.so
+plugin radattr.so</pre>
+
+<p>
+Întrucât este posibil să întâlnim probleme de configurare, este recomandat să activăm mesajele de debug în server prin decomentarea liniei ce conține șirul <code>debug</code> în fișierul <code>/etc/ppp/options</code>:
+</p>
+<pre class="code">debug</pre>
+
+<p>
+Apoi comentăm credențialele CHAP (vom folosi acum autentificarea prin RADIUS):
+</p>
+<pre class="code">root@host:~# cat /etc/ppp/chap-secrets 
+# Secrets for authentication using CHAP
+# client	server	secret			IP addresses
+#red		*	red			*
+#green		*	greeen			*
+#blue		*	blue			*
+#extra		*	extra			*</pre>
+
+<p>
+După configurarea suportului RADIUS, repornim serverul de PPPoE:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>pkill <span class="re5">-f</span> pppoe-server
+<span class="co4">root@host:~# </span>pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options
+<span class="co4">root@host:~# </span><span class="kw2">ps</span> <span class="re5">-ef</span> <span class="sy0">|</span> <span class="kw2">grep</span> pppoe
+root     <span class="nu0">29492</span>     <span class="nu0">1</span>  <span class="nu0">0</span> <span class="nu0">19</span>:<span class="nu0">11</span> ?        00:00:00 pppoe-server <span class="re5">-C</span> isp <span class="re5">-L</span> 192.168.0.1 <span class="re5">-p</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>ipaddress_pool <span class="re5">-I</span> br0 <span class="re5">-O</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ppp<span class="sy0">/</span>options</pre>
+
+<p>
+După aceasta putem porni conexiuni PPPoE pe stațiile client PPPoE. Mai jos am pornit conexiunea pe stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span>pon dsl-provider
+Plugin rp-pppoe.so loaded.
+<span class="co4">root@red:~# </span>plog
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:02 <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">680</span><span class="br0">&#93;</span>: Exit.
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">733</span><span class="br0">&#93;</span>: Plugin rp-pppoe.so loaded.
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">735</span><span class="br0">&#93;</span>: pppd 2.4.5 started by root, uid <span class="nu0">0</span>
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">735</span><span class="br0">&#93;</span>: PPP session is <span class="nu0">2</span>
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">735</span><span class="br0">&#93;</span>: Connected to 3e:5a:9f:d4:3a:6a via interface eth0
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">735</span><span class="br0">&#93;</span>: Using interface ppp0
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">735</span><span class="br0">&#93;</span>: Connect: ppp0 <span class="sy0">&lt;</span>--<span class="sy0">&gt;</span> eth0
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">735</span><span class="br0">&#93;</span>: peer from calling number 3E:5A:9F:D4:3A:6A authorized
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">735</span><span class="br0">&#93;</span>: <span class="kw3">local</span>  IP address 192.168.0.3
+Dec <span class="nu0">31</span> <span class="nu0">17</span>:<span class="nu0">15</span>:<span class="nu0">16</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">735</span><span class="br0">&#93;</span>: remote IP address 192.168.0.1</pre>
+
+<p>
+Cu opțiunea de debug activată putem urmări fișierele jurnal cu informații de conectare:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">tail</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>syslog
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+Dec <span class="nu0">30</span> <span class="nu0">19</span>:<span class="nu0">15</span>:<span class="nu0">16</span> host pppd<span class="br0">&#91;</span><span class="nu0">29773</span><span class="br0">&#93;</span>: rcvd <span class="br0">&#91;</span>IPCP ConfAck <span class="re2">id</span>=0x1 <span class="sy0">&lt;</span>addr 192.168.0.1<span class="sy0">&gt;</span><span class="br0">&#93;</span>
+Dec <span class="nu0">30</span> <span class="nu0">19</span>:<span class="nu0">15</span>:<span class="nu0">16</span> host pppd<span class="br0">&#91;</span><span class="nu0">29773</span><span class="br0">&#93;</span>: rcvd <span class="br0">&#91;</span>IPCP ConfReq <span class="re2">id</span>=0x2 <span class="sy0">&lt;</span>addr 0.0.0.0<span class="sy0">&gt;</span><span class="br0">&#93;</span>
+Dec <span class="nu0">30</span> <span class="nu0">19</span>:<span class="nu0">15</span>:<span class="nu0">16</span> host pppd<span class="br0">&#91;</span><span class="nu0">29773</span><span class="br0">&#93;</span>: sent <span class="br0">&#91;</span>IPCP ConfNak <span class="re2">id</span>=0x2 <span class="sy0">&lt;</span>addr 192.168.0.3<span class="sy0">&gt;</span><span class="br0">&#93;</span>
+Dec <span class="nu0">30</span> <span class="nu0">19</span>:<span class="nu0">15</span>:<span class="nu0">16</span> host pppd<span class="br0">&#91;</span><span class="nu0">29773</span><span class="br0">&#93;</span>: rcvd <span class="br0">&#91;</span>IPCP ConfReq <span class="re2">id</span>=0x3 <span class="sy0">&lt;</span>addr 192.168.0.3<span class="sy0">&gt;</span><span class="br0">&#93;</span>
+Dec <span class="nu0">30</span> <span class="nu0">19</span>:<span class="nu0">15</span>:<span class="nu0">16</span> host pppd<span class="br0">&#91;</span><span class="nu0">29773</span><span class="br0">&#93;</span>: sent <span class="br0">&#91;</span>IPCP ConfAck <span class="re2">id</span>=0x3 <span class="sy0">&lt;</span>addr 192.168.0.3<span class="sy0">&gt;</span><span class="br0">&#93;</span>
+Dec <span class="nu0">30</span> <span class="nu0">19</span>:<span class="nu0">15</span>:<span class="nu0">16</span> host pppd<span class="br0">&#91;</span><span class="nu0">29773</span><span class="br0">&#93;</span>: <span class="kw3">local</span>  IP address 192.168.0.1
+Dec <span class="nu0">30</span> <span class="nu0">19</span>:<span class="nu0">15</span>:<span class="nu0">16</span> host pppd<span class="br0">&#91;</span><span class="nu0">29773</span><span class="br0">&#93;</span>: remote IP address 192.168.0.3</pre>
+
+<p>
+Folosirea RADIUS permite centralizarea informațiilor de autentificare. Aceste informații pot fi folosite atât de serverul de PPPoE cât și de alte servicii precum servere VPN, Network Access Servers, switch-uri. Mai sus am explicitat configurația pentru serverul de PPPoE, permițând clienților de PPPoE să se autentifice și să primească adresă IP prin credențiale stocate de serverul de RADIUS.
+</p>
+
+</div>
+<!-- EDIT29 SECTION "07. [BONUS - 10p] Autentificare prin RADIUS pentru server de PPPoE" [1-] --><!-- EDIT28 PLUGIN_INCLUDE_END "rl:labs:12:contents:07" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT30 PLUGIN_INCLUDE_START "rl:labs:12:contents:sidebar" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:contents:sidebar">
+
+<h3 class="sectionedit32" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="../../../../rl/labs/12.html" class="wikilink1" title="rl:labs:12">Laboratorul 12</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT33 PLUGIN_INCLUDE_START "rl:labs:12:meta:nav" [0-] --><div class="plugin_include_content plugin_include__rl:labs:12:meta:nav">
+<div class="level3">
+
+<div><div id="nojs_indexmenu_72395760583560c29f7ff" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/01.html" class="wikilink1" title="rl:labs:12:contents:01">01. [15p] Necesitatea autentificării în rețeaua locală</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/02.html" class="wikilink1" title="rl:labs:12:contents:02">02. [15p] Configurare server de PPPoE</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/03.html" class="wikilink1" title="rl:labs:12:contents:03">03. [20p] Configurare client de PPPoE pe stația red</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/04.html" class="wikilink1" title="rl:labs:12:contents:04">04. [20p] Configurare client de PPPoE pe stațiile green și blue</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/05.html" class="wikilink1" title="rl:labs:12:contents:05">05. [10p] Acces la Internet pentru clienții PPPoE</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/06.html" class="wikilink1" title="rl:labs:12:contents:06">06. [20p] Configurare manuală a unui client PPPoE</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/12/contents/07.html" class="wikilink1" title="rl:labs:12:contents:07">07. [BONUS - 10p] Autentificare prin RADIUS pentru server de PPPoE</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT34 PLUGIN_INCLUDE_END "rl:labs:12:meta:nav" [0-] --></div>
+<div class="level3">
+
+</div>
+<!-- EDIT32 SECTION "Navigare" [1-] --><!-- EDIT31 PLUGIN_INCLUDE_END "rl:labs:12:contents:sidebar" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT8 SECTION "Exerciții" [2793-] --><div class="footnotes">
+<div class="fn"><sup><a href="12.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+tipurile de protocoale încapsulate într-un cadru Ethernet sunt listate în <code>/etc/ethertypes</code></div>
+<div class="fn"><sup><a href="12.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+detalii despre configurarea manuală a clientului PPPoE se găsesc <a href="http://wiki.mikrotik.com/wiki/Manual:Interface/PPPoE" class="urlextern" title="http://wiki.mikrotik.com/wiki/Manual:Interface/PPPoE"  rel="nofollow">aici</a></div>
+<div class="fn"><sup><a href="12.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+detalii despre configurarea PPPoE cu suport RADIUS se găsesc <a href="http://blog.webdir.bg/linux-pppoe-server-with-radius-suuport/" class="urlextern" title="http://blog.webdir.bg/linux-pppoe-server-with-radius-suuport/"  rel="nofollow">aici</a></div>
+</div>
+</div>
+</body>
+</html>

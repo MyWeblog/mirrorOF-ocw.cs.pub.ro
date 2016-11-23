@@ -1,0 +1,148 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:05:contents:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-11-01T21:27:15+0200"/>
+<meta name="keywords" content="rl,labs,05,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:05:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/05/contents/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:05:contents';var JSINFO = {"id":"rl:labs:05:contents:05","namespace":"rl:labs:05:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_rute_statice">05. [10p] Configurare rute statice</h3>
+<div class="level3">
+
+<p>
+În topologia de la <a href="../../../../../../_media/rl/labs/05/contents/rl_lab-05_rute-statice.pkt" class="media mediafile mf_pkt" title="rl:labs:05:contents:rl_lab-05_rute-statice.pkt (7.9 KB)">această adresă</a> se află două rețele interconectate prin două rutere cascadate. Fiecare rețea conține un switch și două stații. Observați că există conectivitate între stațiile din aceeași rețea și ruterul conectat la acea rețea.
+</p>
+
+<p>
+Observați că nu există conectivitate între stații din rețele diferite. Mai mult nu există conectivate între cele două rutere: trimiteți mesaje Packet Tracer între rutere.
+</p>
+
+<p>
+Pentru a asigura conectivitate completă în cadrul topologie vom realiza următorii pași:
+</p>
+<ol>
+<li class="level1"><div class="li"> Vom configura adrese IP în rețeaua formată de cele două rutere, adică pe legătura <code>Router0(Fa1/0)</code> ↔ <code>Router1(Fa1/0)</code>. După acest pas ruterele vor comunica între ele.</div>
+</li>
+<li class="level1"><div class="li"> Vom configura, pe fiecare ruter, o rută către rețeaua la care nu are acces. Ruta va trece prin celălalt ruter. În acest moment vom avea conectivitate la nivelul întregii topologii.</div>
+</li>
+</ol>
+
+<p>
+Pentru început observăm că ruterele nu au configurate adrese IP pe interfețele de legătură între ele. În cazul ruterului <code>Router0</code>, interfața <code>FastEthernet1/0</code> nu are adresă IP:
+</p>
+<pre class="code">Router0&gt;enable
+Router0#show ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol
+ 
+FastEthernet0/0        14.14.14.1      YES manual up                    up
+ 
+FastEthernet1/0        unassigned      YES unset  up                    down</pre>
+
+<p>
+Vom folosi spațiul <code>30.30.30.32/30</code> pentru a aloca două adrese IP în vederea conectării celor două rutere. Vom configura adresa IP <code>30.30.30.33</code> cu masca <code>255.255.255.252</code> pe interfața <code>FastEthernet1/0</code> a ruterului <code>Router0</code> și adresa IP <code>30.30.30.34</code> cu masca <code>255.255.255.252</code> pe interfața <code>FastEthernet1/0</code> ruterului <code>Router1</code>:
+</p>
+<pre class="code">Router0#configure terminal
+Router0(config)#interface fastEthernet 1/0
+Router0(config-if)#ip address 30.30.30.33 255.255.255.252
+Router0(config-if)#no shutdown 
+
+Router1#configure terminal
+Router1(config)#interface fastEthernet 1/0
+Router1(config-if)#ip address 30.30.30.34 255.255.255.252
+Router1(config-if)#no shutdown </pre>
+
+<p>
+Observați că acum există conectivitate între cele două rutere: puteți folosi comanda <code>ping</code> din consola ruterului sau mesaje de tip Packet Tracer. Există de asemenea, conectivitate între stații și ruterul direct conectat la rețeaua lor.
+</p>
+
+<p>
+Nu există însă conectivitate între stațiile din rețele diferite. Intrați în modul <code>Simulation</code> și observați că pachetele trimise de la <code>PC0</code> la <code>PC2</code> se opresc la <code>Router0</code> întrucât acesta nu șite unde se află rețeaua din care face parte <code>PC2</code> (<code>15.15.15.0/24</code>); adică nu are rută către rețeaua <code>15.15.15.0/24</code>. Pentru această trebuie să adăugăm pe fiecare ruter o rută către rețeaua la care nu este conectat în mod direct:
+</p>
+<ul>
+<li class="level1"><div class="li"> pe ruterul <code>Router0</code> o rută către rețeaua <code>15.15.15.0/24</code> având ca next hop ruterul <code>Router1</code> (mai precis prin interfața <code>FastEthernet1/0</code> a ruterului <code>Router1</code>)</div>
+</li>
+<li class="level1"><div class="li"> pe ruterul <code>Router1</code> o rută către rețeaua <code>14.14.14.0/24</code> având ca next hop ruterul <code>Router0</code> (mai precis prin interfața <code>FastEthernet1/0</code> a ruterului <code>Router0</code>)</div>
+</li>
+</ul>
+
+<p>
+Adică vom realiza următoarele configurări:
+</p>
+<ul>
+<li class="level1"><div class="li"> Pe ruterul <code>Router0</code> vom adăuga o rută statică în care specificăm că toate pachete destinate rețelei <code>15.15.15.0/24</code> să fie trimise către adresa <code>30.30.30.34</code> (adresa IP a interfeței <code>FastEthernet1/0</code> a ruterului <code>Router1</code>):<pre class="code">Router0#configure terminal
+Router0(config)#ip route 15.15.15.0 255.255.255.0 30.30.30.34</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Pe ruterul <code>Router1</code> vom adăuga o rută statică în care specificăm că toate pachete destinate rețelei <code>14.14.14.0/24</code> să fie trimise către adresa <code>30.30.30.33</code> (adresa IP a interfeței <code>FastEthernet1/0</code> a ruterului <code>Router0</code>):<pre class="code">Router1#configure terminal
+Router1(config)#ip route 14.14.14.0 255.255.255.0 30.30.30.33</pre>
+</div>
+</li>
+</ul>
+
+<p>
+Formatul comenzii de adăugare de rute este următorul:
+</p>
+<ul>
+<li class="level1"><div class="li"> șirul <code>ip route</code></div>
+</li>
+<li class="level1"><div class="li"> adresa de rețea: <code>15.15.15.0</code> respectiv <code>14.14.14.0</code></div>
+</li>
+<li class="level1"><div class="li"> masca de rețea: <code>255.255.255.0</code></div>
+</li>
+<li class="level1"><div class="li"> next hop-ul, adică adresa către care trebuie să fie trimise pachetele: <code>30.30.30.34</code> respectiv <code>30.30.30.33</code></div>
+</li>
+</ul>
+
+<p>
+Dacă aveți o configurație corespunzătoare, veți avea conectivitate între toate stațiile din topologie.
+</p>
+
+<p>
+<p><div class="notetip">
+În modul <code>Simulation</code> puteți observa cum se modifică la fiecare pas cum se modifică adresele MAC ale pachetului (adresa MAC sursă și adresa MAC destinație) și câmpul <code>TTL</code>.
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

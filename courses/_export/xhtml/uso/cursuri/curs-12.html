@@ -1,0 +1,574 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>uso:cursuri:curs-12</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-01-10T20:44:25+0200"/>
+<meta name="keywords" content="uso,cursuri,curs-12"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=uso:cursuri"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="curs-12.html"/>
+<link rel="canonical" href="../../../../uso/cursuri/curs-12.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='uso:cursuri';var JSINFO = {"id":"uso:cursuri:curs-12","namespace":"uso:cursuri","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="curs-12.html#curs_12_-_elemente_de_securitate">Curs 12 - Elemente de securitate</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="curs-12.html#demo-uri">Demo-uri</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="curs-12.html#folosire_umask_pentru_configurarea_permisiunilor_de_creare">Folosire umask pentru configurarea permisiunilor de creare</a></div></li>
+<li class="level3"><div class="li"><a href="curs-12.html#folosire_john_the_ripper_pentru_password_cracking">Folosire John the Ripper pentru password cracking</a></div></li>
+<li class="level3"><div class="li"><a href="curs-12.html#criptaredecriptare_folosind_chei_simetrice">Criptare/decriptare folosind chei simetrice</a></div></li>
+<li class="level3"><div class="li"><a href="curs-12.html#criptaredecriptare_folosind_chei_asimetrice">Criptare/decriptare folosind chei asimetrice</a></div></li>
+<li class="level3"><div class="li"><a href="curs-12.html#semnareverificare_folosind_chei_asimetrice">Semnare/verificare folosind chei asimetrice</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="curs_12_-_elemente_de_securitate">Curs 12 - Elemente de securitate</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/uso/res/cursuri/curs-12/curs-12-handout.pdf" class="urlextern" title="http://elf.cs.pub.ro/uso/res/cursuri/curs-12/curs-12-handout.pdf"  rel="nofollow"> Slide-uri curs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/uso/res/cursuri/curs-12/curs-12-handout-4on1-notes.pdf" class="urlextern" title="http://elf.cs.pub.ro/uso/res/cursuri/curs-12/curs-12-handout-4on1-notes.pdf"  rel="nofollow"> Handout 4on1 and notes space</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/uso/res/cursuri/curs-12/curs-12-handout-8on1.pdf" class="urlextern" title="http://elf.cs.pub.ro/uso/res/cursuri/curs-12/curs-12-handout-8on1.pdf"  rel="nofollow"> Handout 8on1</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Cuvinte cheie</strong>: securitate, privilegii, principii de securitate, agenți, obiecte, <code>umask</code>, autentificare, autorizare, controlul accesului, <code>root</code>, <code>sudo</code>, parole, <em>password cracking</em>, <em>passphrase</em>, <code>/etc/passwd</code>, <code>/etc/shadow</code>, criptografie, criptare, decriptare, <em>plain text</em>, <em>ciphertext</em>, chei simetrice, chei asimetrice, semnătură digitală, semnare, verificare</div>
+</li>
+<li class="level1"><div class="li"> <strong>Suport de curs</strong></div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://books.google.com/books?id=_JFGzyRxQGcC" class="urlextern" title="http://books.google.com/books?id=_JFGzyRxQGcC"  rel="nofollow"> Introducere în sisteme de operare</a></div>
+<ul>
+<li class="level3"><div class="li"> <a href="http://books.google.com/books?id=_JFGzyRxQGcC&amp;pg=PA279" class="urlextern" title="http://books.google.com/books?id=_JFGzyRxQGcC&amp;pg=PA279"  rel="nofollow"> Capitolul 10 - Elemente de securitate</a></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <center>
+    <iframe src="http://docs.google.com/viewer?url=http://elf.cs.pub.ro/uso/res/cursuri/curs-12/curs-12-handout.pdf&embedded=true" width="600" height="480" style="border: none;">
+    </iframe>
+  </center>
+
+</div>
+<!-- EDIT1 SECTION "Curs 12 - Elemente de securitate" [1-1197] -->
+<h2 class="sectionedit2" id="demo-uri">Demo-uri</h2>
+<div class="level2">
+
+<p>
+Pentru rularea demo-urilor de mai jos folosim <a href="http://repository.grid.pub.ro/cs/uso/USO%20Demo.ova" class="urlextern" title="http://repository.grid.pub.ro/cs/uso/USO%20Demo.ova"  rel="nofollow">mașina virtuală USO Demo</a>. Mașina virtuală (în format OVA) poate fi importată în VirtualBox. Comenzile le vom rula în cadrul mașinii virtuale.
+</p>
+
+<p>
+Mașina virtuală deține două interfețe de rețea:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>eth0</code> pentru accesul la Internet (interfață de tipul NAT)</div>
+</li>
+<li class="level1"><div class="li"> <code>eth1</code> pentru comunicarea cu sistemul fizic (gazdă, <em>host</em>) (interfață de tipul <em>Host-only Adapter</em>)</div>
+</li>
+</ul>
+
+<p>
+Pentru a rula demo-ul avem două opțiuni:
+</p>
+<ol>
+<li class="level1"><div class="li"> Folosim direct consola mașinii virtuale.</div>
+</li>
+<li class="level1"><div class="li"> Aflăm adresa IP de pe interfața <code>eth1</code> a mașinii virtuale și ne conectăm prin SSH, de pe sistemul fizic, folosind comanda<pre class="code">ssh student@&lt;adresa-IP-vm-eth1&gt;</pre>
+
+<p>
+ unde <code>&lt;adresa-IP-vm-eth1&gt;</code> este adresa IP a interfeței <code>eth1</code> din cadrul mașinii virtuale.
+</p>
+</div>
+</li>
+</ol>
+
+<p>
+Pentru conectarea la mașina virtuală folosim numele de utilizator <code>student</code> cu parola <code>student</code>. Contul <code>student</code> are permsiuni de <code>sudo</code>. Folosind comanda
+</p>
+<pre class="code">sudo su -</pre>
+
+<p>
+obținem permisiuni privilegiate (de <code>root</code>) în shell.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Dacă dorim să ne conectăm pe SSH iar mașina virtuală nu are adresă IP configurată pe interfața <code>eth1</code> atunci folosim comanda
+</p>
+<pre class="code">sudo dhclient eth1</pre>
+
+<p>
+pentru a obține o adresă IP.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Dacă optăm pentru rularea prin SSH iar sistemul fizic rulează Windows, putem folosi <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/" class="urlextern" title="http://www.chiark.greenend.org.uk/~sgtatham/putty/"  rel="nofollow">Putty</a> pe post de client SSH pe sistemul fizic.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Comenzile folosite sunt de uz general. Actualizând adresele IP cu adrese potrivite, putem rula cu succes comenzile pe orice sistem sau mașină virtuală Linux.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Demo-uri" [1198-2922] -->
+<h3 class="sectionedit3" id="folosire_umask_pentru_configurarea_permisiunilor_de_creare">Folosire umask pentru configurarea permisiunilor de creare</h3>
+<div class="level3">
+
+<p>
+Unul dintre cele mai importante principii în securitate este principiul celui mai mic privilegiu (<em>least privilege</em>). Pentru aceasta, inclusiv în sistemul de fișiere (fișiere, directoare), se recomandă permisiuni (drepturi de acces minime). Acestea pot fi schimbate folosind comanda <code>chmod</code>. Dorim, însă, să putem configura permisiunile implicite la crearea intrărilor în sistemul de fișiere. Pentru aceasta folosim comanda <code>umask</code>.
+</p>
+
+<p>
+La o rulare simplă, comanda <code>umask</code> ne afișează valoarea sa:
+</p>
+<pre class="code">student@uso-demo:~$ umask
+0022</pre>
+
+<p>
+Comanda <code>umask</code> indică permisiunile care vor fi <strong>absente</strong> în momentul creării unor intrări. Regulile de stabilire a permisiunilor de creare sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> pentru fișiere: 666 &amp; ~umask (adică 666 <strong>ȘI logic</strong> cu masca negată)</div>
+</li>
+<li class="level1"><div class="li"> pentru directoare: 777 &amp; ~umask (adică 777 <strong>ȘI logic</strong> cu masca negată)</div>
+</li>
+</ul>
+
+<p>
+Pentru <code>umask = 0022</code>, <code>~umask = 7755</code>. Rezultă permisiunile de creare:
+</p>
+<ul>
+<li class="level1"><div class="li"> pentru fișiere: <code>666 &amp; 7755 = 0644</code></div>
+</li>
+<li class="level1"><div class="li"> pentru directoare: <code>777 &amp; 7755 = 0755</code></div>
+</li>
+</ul>
+
+<p>
+Putem verifica acest lucru creând un fișier și un director:
+</p>
+<pre class="code">student@uso-demo:~$ touch test-file
+student@uso-demo:~$ mkdir test-dir
+student@uso-demo:~$ ls -l
+total 4
+drwxr-xr-x 2 student student 4096 Jan  5 11:31 test-dir
+-rw-r--r-- 1 student student    0 Jan  5 11:31 test-file</pre>
+
+<p>
+Observăm că fișierul (<code>test-file</code>) a fost creat cu permisiunile <code>rw-r--r--</code> (adică <code>644</code>) iar directorul (<code>test-dir</code>) a fost creat cu permisiunile <code>rwxr-xr-x</code> (adică <code>755</code>). Adică valorile așteptate.
+</p>
+
+<p>
+În ideea de <em>least privilege</em>, este uzual să oferim permisiuni doar utilizatorului (<code>user</code>) și nici o permisiune pentru <code>group</code> și <code>others</code>. Pentru aceasta stabilim valoarea <code>umask</code> la <code>077</code>, folosind comanda
+</p>
+<pre class="code">student@uso-demo:~$ umask 077
+student@uso-demo:~$ umask
+0077</pre>
+
+<p>
+Observăm din a doua comandă că acum valoarea <code>umask</code> este alta.
+</p>
+
+<p>
+Creăm un nou fișier și un nou director și verificăm aplicarea noii valori a <code>umask</code> pentru stabilirea permisiunilor de creare:
+</p>
+<pre class="code">student@uso-demo:~$ touch test-file-2
+student@uso-demo:~$ mkdir test-dir-2
+student@uso-demo:~$ ls -l 
+total 8
+drwxr-xr-x 2 student student 4096 Jan  5 11:31 test-dir
+drwx------ 2 student student 4096 Jan  5 11:36 test-dir-2
+-rw-r--r-- 1 student student    0 Jan  5 11:31 test-file
+-rw------- 1 student student    0 Jan  5 11:36 test-file-2</pre>
+
+<p>
+Observăm că fișierul (<code>test-file-2</code>) a fost creat cu permisiunile <code>rw-------</code> (adică <code>600</code>) iar directorul (<code>test-dir</code>) a fost creat cu permisiunile <code>rwx------</code> (adică <code>700</code>). Adică valorile așteptate, rezultate în urma calculului:
+</p>
+<ul>
+<li class="level1"><div class="li"> pentru fișier: <code>666 &amp; ~umask = 666 &amp; ~0077 = 666 &amp; 7700 = 600 = rw-------</code></div>
+</li>
+<li class="level1"><div class="li"> pentru director: <code>777 &amp; ~umask =777 &amp; ~0077 = 777 &amp; 7700 = 700 = rwx------</code></div>
+</li>
+</ul>
+
+<p>
+Valoarea <code>umask</code> este configurată funcție de nevoile utilizatorului ținând cont și de principiul celui mai mic privilegiu.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Valoarea <code>umask</code> este pe 4 cifre în octal. Prima cifră este aferentă biților speciali (<code>setuid</code>, <code>setgid</code>, <code>sticky</code>) folosiți în permisiuni. Nu insistăm pe acest lucru. Puteți găsi informații în secțiunile aferente din <a href="http://man7.org/linux/man-pages/man1/chmod.1.html" class="urlextern" title="http://man7.org/linux/man-pages/man1/chmod.1.html"  rel="nofollow">pagina de manual a chmod</a>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Pentru configurarea persistentă a valorii <code>umask</code> se recomandă plasarea comenzii de configurare într-un fișier de configurare a sesiunii de shell (precum <code>~/.bashrc</code>).
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Folosire umask pentru configurarea permisiunilor de creare" [2923-6504] -->
+<h3 class="sectionedit4" id="folosire_john_the_ripper_pentru_password_cracking">Folosire John the Ripper pentru password cracking</h3>
+<div class="level3">
+
+<p>
+Din perspectiva atacatorului (sau a unui <a href="http://www.computerhope.com/jargon/e/ethihack.htm" class="urlextern" title="http://www.computerhope.com/jargon/e/ethihack.htm"  rel="nofollow">hacker etic</a>) este util să putem “sparge” parolele dintr-un sistem. Dacă ajungem să avem acces la baza de date cu parole a unui sistem putem încerca spargerea acestora. Un utilitar pentru acest lucru este <a href="http://www.openwall.com/john/" class="urlextern" title="http://www.openwall.com/john/"  rel="nofollow">John the Ripper</a>.
+</p>
+
+<p>
+Pentru a folosi <code>john</code> întâi îl vom instala:
+</p>
+<pre class="code">student@uso-demo:~$ sudo apt-get install john
+Reading package lists... Done
+Building dependency tree       
+[...]
+Setting up john-data (1.8.0-2) ...
+Setting up john (1.8.0-2) ...</pre>
+
+<p>
+John vine în mod implicit cu un dicționar de parole comune de folosit în fișierul <code>/usr/share/john/password.lst</code>
+</p>
+<pre class="code">student@uso-demo:~$ head -20 /usr/share/john/password.lst 
+#!comment: This list has been compiled by Solar Designer of Openwall Project
+#!comment: in 1996 through 2011.  It is assumed to be in the public domain.
+#!comment:
+#!comment: This list is based on passwords most commonly seen on a set of Unix
+#!comment: systems in mid-1990&#039;s, sorted for decreasing number of occurrences
+#!comment: (that is, more common passwords are listed first).  It has been
+#!comment: revised to also include common website passwords from public lists
+#!comment: of &quot;top N passwords&quot; from major community website compromises that
+#!comment: occurred in 2006 through 2010.
+#!comment:
+#!comment: Last update: 2011/11/20 (3546 entries)
+#!comment:
+#!comment: For more wordlists, see http://www.openwall.com/wordlists/
+123456
+12345
+password
+password1
+123456789
+12345678
+1234567890
+student@uso-demo:~$ wc -l /usr/share/john/password.lst
+3559 /usr/share/john/password.lst</pre>
+
+<p>
+Există fișiere de parole mai bune care, în general, costă bani.
+</p>
+
+<p>
+Aceste parole sunt parole frecvente folosite de utilizatori și care pot fi ușor sparte cu John.
+</p>
+
+<p>
+Pentru verificare, să creăm doi utilizatori (<code>ana</code> și <code>bogdan</code>) cu parole relativ comune <code>test123</code> și <code>qazwsx</code>:
+</p>
+<pre class="code">student@uso-demo:~$ sudo useradd -m -d /home/ana -s /bin/bash ana
+student@uso-demo:~$ sudo useradd -m -d /home/bogdan -s /bin/bash bogdan
+student@uso-demo:~$ less /usr/share/john/password.lst
+student@uso-demo:~$ echo &quot;ana:test123&quot; | sudo chpasswd
+student@uso-demo:~$ echo &quot;bogdan:qazwsx&quot; | sudo chpasswd
+student@uso-demo:~$ id ana
+uid=1001(ana) gid=1001(ana) groups=1001(ana)
+student@uso-demo:~$ id bogdan
+uid=1002(bogdan) gid=1002(bogdan) groups=1002(bogdan)</pre>
+
+<p>
+Mai sus am creat cei doi utilizatori cu parolele dorite.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Comanda <code>chpasswd</code> este o comandă care schimbă/actualizează parola unuia sau mai mulți utilizatori. Parola primește la intarea standard linii în forma <code>&lt;username&gt;:&lt;password&gt;</code> și actualizează parola utilizatorului <code>&lt;username&gt;</code> cu valoarea <code>&lt;password&gt;</code>.
+
+</div></p>
+</p>
+
+<p>
+Parolele utilizatorilor sunt stocate în forma criptată (<em>hash</em>) în fișierul <code>/etc/shadow</code>, accesibil doar cu permisiuni privilegiate
+</p>
+<pre class="code">student@uso-demo:~$ tail -2 /etc/shadow
+tail: cannot open ‘/etc/shadow’ for reading: Permission denied
+student@uso-demo:~$ ls -l /etc/shadow
+-rw-r----- 1 root shadow 1276 Jan  5 11:59 /etc/shadow
+student@uso-demo:~$ sudo tail -2 /etc/shadow
+ana:$6$Lz4VGpO.$NhGn3XzSJ8dRd.EURfPRnPPlU3rvTG5C7xEvvh8taiPCLEFb0V2LAFG.6s.GlXWZqby326wvZm91QMDoCXCoU0:16805:0:99999:7:::
+bogdan:$6$AJ8cjSHz$QdI1KrolofQtAk4F2bHweL7vxzGYcM3gHxfLgRiUzR7UtEugUZyWARc66zo8YMEiMmAWob5PJMlaoUyA8rfCx.:16805:0:99999:7:::</pre>
+
+<p>
+Dacă avem acces la hash-urile parolelor putem încerca spargerea lor cu John. În cazul de față vom reuși pentru că parolele sunt foarte simple:
+</p>
+<pre class="code">student@uso-demo:~$ sudo tail -2 /etc/shadow &gt; shadow-entries
+student@uso-demo:~$ cat shadow-entries 
+ana:$6$Lz4VGpO.$NhGn3XzSJ8dRd.EURfPRnPPlU3rvTG5C7xEvvh8taiPCLEFb0V2LAFG.6s.GlXWZqby326wvZm91QMDoCXCoU0:16805:0:99999:7:::
+bogdan:$6$AJ8cjSHz$QdI1KrolofQtAk4F2bHweL7vxzGYcM3gHxfLgRiUzR7UtEugUZyWARc66zo8YMEiMmAWob5PJMlaoUyA8rfCx.:16805:0:99999:7:::
+
+student@uso-demo:~$ /usr/sbin/john -wordlist:/usr/share/john/password.lst shadow-entries
+Created directory: /home/student/.john
+Loaded 2 password hashes with 2 different salts (crypt, generic crypt(3) [?/32])
+Press &#039;q&#039; or Ctrl-C to abort, almost any other key for status
+test123          (ana)
+qazwsx           (bogdan)
+2g 0:00:00:33 100% 0.05959g/s 62.93p/s 71.51c/s 71.51C/s pretty..celtic
+Use the &quot;--show&quot; option to display all of the cracked passwords reliably
+Session completed</pre>
+
+<p>
+Mai sus, pentru început, am extras cele două intrări din <code>/etc/shadow</code> și apoi am folosit John ca să încercăm spargerea lor. În mod așteptat, parolele fiind simple, John a reușit spargerea lor.
+</p>
+
+<p>
+În general, un atacator va încerca să obțină accesul la baza de date cu parole. Chiar dacă acestea sunt criptate, atacatorul va încerca să le spargă. Doar parolele puternice (cu multe caractere dintr-un set mai mare) pot supraviețui suficient de mult timp unui atacator. Chiar și așa, se recomandă actualizarea parolelor după o perioadă de 6 luni sau 1 an.
+</p>
+
+<p>
+<p><div class="noteclassic">
+John are diverse opțiuni care permit scheme de alterare a parolelor din wordlist-uri. Aceste scheme prelungesc posibilitățile de parole încercate; de exemplu înlocuirea <code>a</code> cu <code>@</code> sau <code>e</code> cu <code>3</code>. Cu un word list bun, multe parole pot fi sparte relativ rapid.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Folosire John the Ripper pentru password cracking" [6505-11863] -->
+<h3 class="sectionedit5" id="criptaredecriptare_folosind_chei_simetrice">Criptare/decriptare folosind chei simetrice</h3>
+<div class="level3">
+
+<p>
+Pentru securizarea informației transmise sau stocate este recomandat ca aceasta să fie criptată. În Internet, foarte multe site-uri folosesc acum <code>HTTPS</code> (HTTP securizat). Pentru date locale se pot folosi utilitare de criptare.
+</p>
+
+<p>
+Un utilitar folosit pentru criptare (și alte operații criptografice) este <code>openssl</code>. Cu <code>openssl</code> putem cripta și folosind chei simetrice și chei asimetrice.
+</p>
+
+<p>
+Pentru testare, să creăm un fișier <em>plain text</em> (ușor de citit):
+</p>
+<pre class="code">student@uso-demo:~$ echo &quot;This is my life&#039;s biggest secret: I have no life&quot; &gt; plain.txt
+student@uso-demo:~$ cat plain.txt 
+This is my life&#039;s biggest secret: I have no life</pre>
+
+<p>
+Pentru a cripta accest fișier, folosim algoritmul <code>AES</code> (<em>Advanced Encryption Standard</em>), un standard de facto de criptare, cu ajutorul comenzii
+</p>
+<pre class="code">student@uso-demo:~$ openssl enc -e -aes-256-cbc -in plain.txt -out encrypted.dat
+enter aes-256-cbc encryption password:
+Verifying - enter aes-256-cbc encryption password:
+student@uso-demo:~$ ls -l encrypted.dat 
+-rw------- 1 student student 80 Jan  5 12:17 encrypted.dat
+student@uso-demo:~$ xxd encrypted.dat 
+0000000: 5361 6c74 6564 5f5f 6b32 c1b2 6580 bcfe  Salted__k2..e...
+0000010: f988 bd4d 4432 9aa3 8925 0097 4262 1732  ...MD2...%..Bb.2
+0000020: 119a c5c8 f5de bca0 3a9e 4d96 57c7 1e1f  ........:.M.W...
+0000030: 3e22 e8ec eeec 3905 4e93 3ee8 fb5e c04a  &gt;&quot;....9.N.&gt;..^.J
+0000040: e443 955f c693 7171 fa10 f5ac ded1 f947  .C._..qq.......G</pre>
+
+<p>
+În prima comandă am realizat criptarea fișierului <code>plain.txt</code> în fișierul <code>encrypted.dat</code>. Utilitarul ne-a cerut cheia de criptare și apoi a realizat criptarea în fișierul <code>encrypted.dat</code>. Fișierul este un fișier binar; putem urmări conținutul său folosind comanda <code>xxd</code>.
+</p>
+
+<p>
+De obicei vom șterge fișierul <code>plain.txt</code> și apoi vom decripta, la nevoie, fișierul <code>encrypted.dat</code>. Facem acest lucru folosind comenzile de mai jos
+</p>
+<pre class="code">student@uso-demo:~$ rm plain.txt 
+student@uso-demo:~$ openssl enc -d -aes-256-cbc -in encrypted.dat -out plain.txt
+enter aes-256-cbc decryption password:
+student@uso-demo:~$ cat plain.txt 
+This is my life&#039;s biggest secret: I have no life</pre>
+
+<p>
+Observăm că, după ștergerea fișierului <em>plain text</em> inițial, și după operația de decriptare căreia i-am transmis cheia folosită la pasul anterior, am obținut fișierul inițial.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Sunt și alți algoritmi posibili pentru criptare simetrică folosind comanda <code>openssl</code>. Pentru a-i determina folosim comanda
+</p>
+<pre class="code">student@uso-demo:~$ openssl enc -help</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Dacă dorim să stocăm fișierul criptat într-o formă de fișier text (dar tot criptat) putem realiza o codificare <a href="https://en.wikipedia.org/wiki/Base64" class="urlextern" title="https://en.wikipedia.org/wiki/Base64"  rel="nofollow">base64</a> a acestuia. Pentru aceasta, folosim pentru criptare și decriptare comenzile în forma de mai jos:
+</p>
+<pre class="code">student@uso-demo:~$ openssl enc -e -base64 -aes-256-cbc -in plain.txt -out encrypted.dat
+enter aes-256-cbc encryption password:
+Verifying - enter aes-256-cbc encryption password:
+student@uso-demo:~$ cat encrypted.dat 
+U2FsdGVkX18HD7U8AkSTfWFQEryHAjfJ7hQlWZQSdMvmdwZSES76zQz7JioIultg
+x4sLDHbAA6xTo8ioX3gG/L+7REMUuN46hUXCBB+G1c4=
+
+student@uso-demo:~$ openssl enc -d -base64 -aes-256-cbc -in encrypted.dat -out plain.txt
+enter aes-256-cbc decryption password:
+student@uso-demo:~$ cat plain.txt 
+This is my life&#039;s biggest secret: I have no life</pre>
+
+<p>
+Observăm mai sus că avem o formă <abbr title="American Standard Code for Information Interchange">ASCII</abbr> a fișierului criptat <code>encrypted.dat</code>.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Criptare/decriptare folosind chei simetrice" [11864-15383] -->
+<h3 class="sectionedit6" id="criptaredecriptare_folosind_chei_asimetrice">Criptare/decriptare folosind chei asimetrice</h3>
+<div class="level3">
+
+<p>
+Criptarea cu chei simetrice are avantajul vitezei dar dezavantajul că trebuie știută (și partajată între cel care criptează și cel care decriptează) cheia de criptare. Mai mult, dacă acea cheie este slabă, un atacator poate sparge cheia și decripta fișierul.
+</p>
+
+<p>
+Criptarea cu chei asimetrice folosește cheia publică pentru criptare; oricine poate astfel cripta. Pentru decriptare se folosește cheia privată și doar cel care o deține poate decripta.
+</p>
+
+<p>
+Pentru aceasta, vom folosi tot utilitarul <code>openssl</code>. Vom folosi algoritmul <code>RSA</code> (<em>Rivest-Shamir-Adleman</em>) pentru criptarea asimetrică. Pentru început vom genera cheia privată și cheia publică:
+</p>
+<pre class="code">student@uso-demo:~$ openssl genrsa -out privkey 2048
+Generating RSA private key, 2048 bit long modulus
+......................................................+++
+.....................+++
+e is 65537 (0x10001)
+student@uso-demo:~$ cat privkey 
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA4o1PEkzZawYItZFdxsPwA/7kbffcDLQOSCtbdORA23uO6zk8
+[...]
+-----END RSA PRIVATE KEY-----
+student@uso-demo:~$ openssl rsa -pubout -in privkey -out pubkey
+writing RSA key
+student@uso-demo:~$ cat pubkey 
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4o1PEkzZawYItZFdxsPw
+A/7kbffcDLQOSCtbdORA23uO6zk8+4WLYrc1tgh827N2qcW28UsIxaA2YlowXJu7
+[...]
+-----END PUBLIC KEY-----</pre>
+
+<p>
+Mai sus am generat cheia privată în fișierul <code>privkey</code> și cheia publică în fișierul <code>pubkey</code>. Cheia publică este derivată din cheia privată. Formatul în care sunt stocate cele 2 cheie se numește PEM (<em>Privacy-enhanced Electronic Mail</em>).
+</p>
+
+<p>
+Ca să criptăm fișierul <code>plain.txt</code> folosind cheia publică din fișierul <code>pubkey</code>, vom rula comanda
+</p>
+<pre class="code">student@uso-demo:~$ openssl rsautl -encrypt -in plain.txt -out encrypted.dat -pubin -inkey pubkey 
+
+student@uso-demo:~$ xxd encrypted.dat 
+0000000: 97e7 bc72 4d76 708f 5b2b 7437 b698 2937  ...rMvp.[+t7..)7
+[...]
+00000f0: dfd0 3bfc f5b1 9a17 9655 2b9b e441 7bba  ..;......U+..A{.</pre>
+
+<p>
+Fișierul criptat este un fișier binar; îl putem vizualiza folosind comanda <code>xxd</code>.
+</p>
+
+<p>
+Pentru a decripta fișierul <code>encrypted.dat</code> înapoi în fișierul <code>plain.txt</code> folosind cheia privată din fișierul <code>privkey</code> vom rula comanda de mai jos:
+</p>
+<pre class="code">student@uso-demo:~$ openssl rsautl -decrypt -in encrypted.dat -out plain.txt -inkey privkey
+student@uso-demo:~$ cat plain.txt 
+This is my life&#039;s biggest secret: I have no life</pre>
+
+<p>
+<p><div class="noteclassic">
+Cheia privată, la fel cum este cheia/parola în criptare simetrică, trebuie ținută în siguranță. O recomandare este ca o cheie privată să fie protejată și de un passphrase. Introducerea passphrase-ului condiționează folosirea cheii private. O altă recomandare este folosirea unui <a href="http://lifehacker.com/5529133/five-best-password-managers" class="urlextern" title="http://lifehacker.com/5529133/five-best-password-managers"  rel="nofollow">Password manager</a> care să rețină toate parolele și cheile în mod sigur (să nu fie scrise plain text undeva) sub protecția unui master password.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Criptare/decriptare folosind chei asimetrice" [15384-18416] -->
+<h3 class="sectionedit7" id="semnareverificare_folosind_chei_asimetrice">Semnare/verificare folosind chei asimetrice</h3>
+<div class="level3">
+
+<p>
+Un alt scenariu de folosire a cheilor asimetrice este pentru semnarea unor mesaje. Semnarea se face cu ajutorul cheii private (doar posesorul are acces) iar verificarea cu ajutorul cheii publice (oricine poate verifica). De obicei se transmite mesajul în plain text dar este de știut că cel care a trimis mesajul chiar este cel care l-a trimis, și pentru aceea se atașează fișierul de tip semnătură mesajului.
+</p>
+
+<p>
+Vom folosi tot cheia privată <code>privkey</code> și cheia publică <code>pubkey</code> de mai sus.
+</p>
+
+<p>
+Pentru semnarea mesajului vom folosi
+</p>
+<pre class="code">student@uso-demo:~$ openssl rsautl -sign -in plain.txt -out signature -inkey privkey 
+student@uso-demo:~$ xxd signature 
+0000000: 910f be3f 6a47 b150 f239 8105 3d64 a60d  ...?jG.P.9..=d..
+[...]
+00000f0: 7ffd 183f 26e4 221f c9dc 90b5 9510 7eca  ...?&amp;.&quot;.......~.</pre>
+
+<p>
+Pentru verificarea semnăturii vom folosi comanda
+</p>
+<pre class="code">student@uso-demo:~$ openssl rsautl -verify -in signature -pubin -inkey pubkey 
+This is my life&#039;s biggest secret: I have no life</pre>
+
+<p>
+<p><div class="noteclassic">
+Pentru criptare/decriptare și semnare/verifcare cu chei asimetrice putem folosi și suita <a href="https://www.gnupg.org/" class="urlextern" title="https://www.gnupg.org/"  rel="nofollow">GnuPG</a> (<em>GNU Privacy Guard</em>).
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Semnare/verificare folosind chei asimetrice" [18417-] --></div>
+</body>
+</html>

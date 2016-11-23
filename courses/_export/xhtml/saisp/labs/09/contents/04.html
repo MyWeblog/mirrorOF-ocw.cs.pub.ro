@@ -1,0 +1,99 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:09:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-05T13:02:42+0300"/>
+<meta name="keywords" content="saisp,labs,09,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/09/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:09:contents';var JSINFO = {"id":"saisp:labs:09:contents:04","namespace":"saisp:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_caching_in_varnish">04. [15p] Caching în Varnish</h3>
+<div class="level3">
+
+<p>
+Vrem să vedem cum se comportă cache-ul în Varnish. Intrările în Varnish sunt cache-uite pentru o perioadă de timp înainte să expire. După expirarea timpului respectiv, se realizează o nouă cerere către serverul web pentru obținerea din nou a paginii.
+</p>
+
+<p>
+Timpul de viață al cache-ului este dat de o variabilă TTL internă a Varnish. Valoarea sa este în mod implicit configurată la <code>120</code> de secunde. Putem determina acest lucru prin intermediul comenzii:
+</p>
+<pre class="code">root@varnish:~# varnishadm param.show default_ttl</pre>
+
+<p>
+Valorea implicită, afișată de comanda de mai sus este <code>120</code> de secunde. Această valoare poate fi configurată în fișierul <code>/etc/default/varnish</code>; este vorba de directiva <code>VARNISH_TTL</code>.
+</p>
+
+<p>
+Ca să urmărim expirarea cache-ului, vom folosi comanda <code>varnishlog</code> în forma de mai jos:
+</p>
+<pre class="code">root@varnish:~# varnishlog -i VCL_Call</pre>
+
+<p>
+Apoi facem cereri către fișierele cu extensia <code>.dat</code> menționate în exercițiul anterior.
+</p>
+
+<p>
+Observăm că apare un mesaj ce conține cuvântul <code>miss</code> atunci când informația nu se găsește în cache, și apoi un mesaj ce conține cuvântul <code>hit</code> când informația este în cache. După <code>120</code> de secunde cache-ul va expira și atunci un acces va genera un <code>miss</code>.
+</p>
+
+<p>
+După ce ați generat un mesaj <code>miss</code> pe fișierul <code>100k.dat</code>, adică informația nu era, dar acum este, în cache, rescrieți fișierul pe serverul web, în directorul <code>/var/www/data/100k.dat</code> folosind comanda:
+</p>
+<pre class="code">root@web:/var/www/html/data# dd if=/dev/urandom of=100k.dat bs=100k count=1</pre>
+
+<p>
+Apoi accesați din nou fișierul și urmăriți output-ul comenzii <code>varnishlog</code>. Veți observa că fișierul a fost obținut din cache. Până când cache-ul nu expiră orice modificare a fișierului nu va fi vizibilă în cache.
+</p>
+
+<p>
+Pentru a preveni rămânerea în cache a unui obiect dat, se poate folosi <a href="https://www.varnish-cache.org/docs/3.0/tutorial/purging.html" class="urlextern" title="https://www.varnish-cache.org/docs/3.0/tutorial/purging.html"  rel="nofollow">purging sau banning</a>. După ce au ajuns în cache fișierele cu extensia <code>.dat</code>, faceți ban acelor fișiere pentru a fi recitite de pe server.
+</p>
+
+<p>
+<p><div class="notetip">
+Urmăriți indicațiile de <a href="https://www.varnish-cache.org/docs/3.0/tutorial/purging.html#bans" class="urlextern" title="https://www.varnish-cache.org/docs/3.0/tutorial/purging.html#bans"  rel="nofollow">aici</a>. Folosiți comanda <code>varnishadm</code> pentru a accesa CLI-ul de configurare Varnish.
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

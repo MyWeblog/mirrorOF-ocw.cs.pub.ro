@@ -1,0 +1,30 @@
+    
+    
+
+#ifndef __HASHTABLE__H
+#define __HASHTABLE__H
+#include <list>
+
+template<typename Tkey, typename Tvalue>
+struct elem_info {
+    Tkey key;
+    Tvalue value;
+};
+
+template<typename Tkey, typename Tvalue>
+class Hashtable {
+private:
+        std::list<struct elem_info<Tkey, Tvalue> > *H;
+        int HMAX;
+        unsigned int (*hash) (Tkey);
+public:
+        Hashtable(int hmax, unsigned int (*h)(Tkey));
+        ~Hashtable();
+        
+        void put(Tkey key, Tvalue value);
+        void remove(Tkey key);
+        Tvalue get(Tkey key);
+        bool has_key(Tkey key);
+};
+
+#endif // __HASHTABLE__H

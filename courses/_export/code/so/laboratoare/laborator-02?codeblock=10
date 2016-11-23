@@ -1,0 +1,53 @@
+    
+    
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include <sys/types.h>	/* open */
+#include <sys/stat.h>	/* open */
+#include <fcntl.h>	/* O_CREAT, O_RDONLY */
+#include <unistd.h>	/* close, lseek, read, write */
+
+#include "utils.h"
+
+/* Print the last 100 bytes from a file */
+
+int main (void)
+{
+	int fd, rc;
+	char *buf;
+	ssize_t bytes_read;
+
+	/* alocate space for the read buffer */
+	buf = malloc(101);
+	DIE(buf == NULL, "malloc");
+
+	/* open file */
+	fd = open("file.txt", O_RDONLY);
+	DIE(fd < 0, "open");
+
+	/* set file pointer at 100 characters
+	 _before_ the end of the file */
+	rc = lseek(fd, -100, SEEK_END);
+	DIE(rc < 0, "lseek");
+
+	/* read the last 100 characthers */
+	bytes_read = read(fd, buf, 100);
+	DIE(bytes_read < 0, "read");
+
+	/* set '\0' at end of buffer for printing purposes*/
+	buf[bytes_read] = '\0';
+
+	printf("the last %ld bytes: \n%s\n", bytes_read, buf);
+
+	/* close file */
+	rc = close(fd);
+	DIE(rc < 0, "close");
+
+	/* cleanup */
+	free(buf);
+
+	return 0;
+}

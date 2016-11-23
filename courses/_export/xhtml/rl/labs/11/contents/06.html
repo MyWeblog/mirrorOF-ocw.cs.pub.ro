@@ -1,0 +1,130 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:11:contents:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-01-15T21:16:34+0200"/>
+<meta name="keywords" content="rl,labs,11,contents,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:11:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/11/contents/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:11:contents';var JSINFO = {"id":"rl:labs:11:contents:06","namespace":"rl:labs:11:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_retele_distincte_pentru_containere">06. [15p] Rețele distincte pentru containere</h3>
+<div class="level3">
+
+<p>
+Ne propunem să realizăm o configurație în care fiecare container se găsește în fiecare rețea. Vom renunța la bridge-uri și vom face legături unu-la-unu între containere și stația <code>host</code>.
+</p>
+
+<p>
+Pentru început, extrageți (ștergeți) interfețele din bridge-uri și apoi ștergeți bridge-urile (<code>br0</code> și <code>br1</code>). Urmăriți pagina de manual a comenzii <code>brctl</code> pentru opțiunile utile.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Rulați comenzile de ștergere a bridge-urilor direct pe mașina virtuală în interfața VMware. Prin SSH veți pierde conexiunea cu stația <code>host</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pentru a putea șterge un bridge, interfața aferentă acestuia trebuie dezactivată (trebuie să fie <code>DOWN</code>). Folosiți <code>ip link</code> pentru a realiza acest lucru.
+
+</div></p>
+</p>
+
+<p>
+Apoi ștergeți vechile configurații (adrese IP, rute implicite) de pe containere.
+</p>
+
+<p>
+După aceea realizați următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> Obțineți din noua adresa IP a interfeței <code>eth0</code> a stației <code>host</code> folosind comanda<pre class="code bash"><span class="co4">root@host:~# </span>dhclient eth0</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Atribuiți adrese din rețeaua <code>10.10.10.0/24</code> pe legătura <code>host(veth-red)</code> ↔ <code>red(eth0)</code>.</div>
+</li>
+<li class="level1"><div class="li"> Atribuiți adrese din rețeaua <code>20.20.20.0/24</code> pe legătura <code>host(veth-green)</code> ↔ <code>green(eth0)</code>.</div>
+</li>
+<li class="level1"><div class="li"> Atribuiți adrese din rețeaua <code>30.30.30.0/24</code> pe legătura <code>host(veth-blue)</code> ↔ <code>blue(eth0)</code>.</div>
+</li>
+<li class="level1"><div class="li"> Configurați pe fiecare container <em>default gateway</em>-ul aferent.</div>
+</li>
+<li class="level1"><div class="li"> Activați rutarea pe stația <code>host</code>.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">
+Adică trebuie să aveți configurate adrese atât pe interfețele de tip <code>veth</code> de pe stația <code>host</code> și pe interfețele <code>eth0</code> de pe containere. De exemplu, petnru legătura <code>host(veth-red)</code> ↔ <code>red(eth0)</code> puteți configura:
+</p>
+<ul>
+<li class="level1"><div class="li"> adresa <code>10.10.10.1/24</code> pe interfața <code>veth-red</code> de pe stația <code>host</code></div>
+</li>
+<li class="level1"><div class="li"> adresa <code>10.10.10.2/24</code> pe interfața <code>eth0</code> de pe stația <code>red</code></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+Este posibil să “dispară” adrese de pe interfețele <code>eth0</code> ale containerele. Verificați acest lucru folosind comanda
+</p>
+<pre class="code"># ip a s</pre>
+
+<p>
+ și, dacă au dispărut, refaceți rapid configurația pe containerul în cauză.
+
+</div></p>
+</p>
+
+<p>
+În cazul unei configurări corecte, veți avea conectivitate între toate containerele, prin intermediul stației <code>host</code> pe post de ruter. Folosiți <code>ping</code> pentru testarea conectivității.
+</p>
+
+</div>
+</div>
+</body>
+</html>

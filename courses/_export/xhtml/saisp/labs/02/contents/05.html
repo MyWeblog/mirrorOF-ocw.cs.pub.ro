@@ -1,0 +1,142 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:02:contents:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-03T00:19:17+0200"/>
+<meta name="keywords" content="saisp,labs,02,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:02:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/02/contents/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:02:contents';var JSINFO = {"id":"saisp:labs:02:contents:05","namespace":"saisp:labs:02:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_actualizare_configurare_pentru_server">05. [10p] Actualizare configurare pentru server</h3>
+<div class="level3">
+
+<p>
+Serverul de LDAP are două tipuri de baze de date. O bază de date internă, pentru configuare, și o bază de date cu informații LDAP. Baza de date internă permite serverului de LDAP configurarea acestuia tot prin comenzi LDAP; se asigură astfel o interfață unificată și, mai mult, posibilitatea de a realiza configurații fără a fi nevoie de repornirea serverului.
+</p>
+
+<p>
+Pentru a urmări și configura întreaga bază de date de internă a serverului rulăm, pe stația de tip server, comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;cn=config&quot;</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Sunt afișate foarte multe informații, practic toată baza de date internă a serverului LDAP. Dacă vrem să afișăm doar informațiile ce țin de configurarea informațiilor, vom investiga intrarea <code>olcDatabase={1}hdb,cn=config</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span>
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">olcDatabase</span>=<span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb,<span class="re2">cn</span>=config
+objectClass: olcDatabaseConfig
+objectClass: olcHdbConfig
+olcDatabase: <span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb
+olcDbDirectory: <span class="sy0">/</span>var<span class="sy0">/</span>lib<span class="sy0">/</span>ldap
+olcSuffix: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Dacă vrem să afișăm informații legate strict de configurarea serverului LDAP (număr de thread-uri folosite, nivel de jurnalizare, certificat) vom investiga doar baza intrării <code>cn=config</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;cn=config&quot;</span> <span class="re5">-s</span> base
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">cn</span>=config
+objectClass: olcGlobal
+cn: config
+olcArgsFile: <span class="sy0">/</span>var<span class="sy0">/</span>run<span class="sy0">/</span>slapd<span class="sy0">/</span>slapd.args
+olcLogLevel: none
+olcPidFile: <span class="sy0">/</span>var<span class="sy0">/</span>run<span class="sy0">/</span>slapd<span class="sy0">/</span>slapd.pid
+olcTLSCACertificateFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>cacert.org_root.pem
+olcTLSCertificateFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>slapd-cert.pem
+olcTLSCertificateKeyFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>private<span class="sy0">/</span>slapd-key.pem
+olcToolThreads: <span class="nu0">1</span></pre>
+
+<p>
+Directivele de configurare în serverul LDAP sunt atribute în intrările cu dn-uri care se termină în <code>cn=config</code>. Atributele încep cu prefixul <code>olc</code> însemnând <em>OpenLDAP Configuration</em>.
+</p>
+
+<p>
+Dorim să configurăm nivelul de jurnalizare al serverului LDAP. Directiva de configurare se numește <code>olcLogLevel</code>, așa cum este documentată <a href="http://www.openldap.org/doc/admin24/slapdconf2.html#cn=config" class="urlextern" title="http://www.openldap.org/doc/admin24/slapdconf2.html#cn=config"  rel="nofollow">aici</a>. Observăm că area valoarea <code>none</code>. Vrem să-i schimbăm valoarea la <code>stats</code>.
+</p>
+
+<p>
+Pentru aceasta construim un fișier LDIF:
+</p>
+<dl class="file">
+<dt><a href="../../../../../code/saisp/labs/02/contents/05%3Fcodeblock=3" title="Download Snippet" class="mediafile mf_ldif">change-log-level.ldif</a></dt>
+<dd><pre class="code file none">dn: cn=config
+changetype: modify
+replace: olcLogLevel
+olcLogLevel: stats</pre>
+</dd></dl>
+
+<p>
+ apoi încărcăm fișierul în baza de date LDAP:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapadd <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-f</span> change-log-level.ldif
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+modifying entry <span class="st0">&quot;cn=config&quot;</span></pre>
+
+<p>
+ și verificăm faptul că a fost încărcat corespunzător:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;cn=config&quot;</span> <span class="re5">-s</span> base olcLogLevel
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">cn</span>=config
+olcLogLevel: stats</pre>
+
+<p>
+În exemplul de mai sus am creat un fișier LDIF care a modificat valoarea atributului <code>olcLogLevel</code> la valoarea <code>stats</code>. Putem observa informațiile de jurnalizare generate de serverul de LDAP în fișierul <code>/var/log/syslog</code> de pe stația server; eventual facem niște cereri de interogare LDAP (folosind <code>ldapsearch</code>) de pe stația client.
+</p>
+
+<p>
+<strong>Exercițiu</strong>: Modificați nivelul de jurnalizare al serverului LDAP astfel încât să jurnalizeze și mesaje de tipul <code>stats</code> și mesaje de tipul <code>stats2</code>. E ceva simplu <img src="../../../../../../lib/images/smileys/icon_smile.gif" class="icon" alt=":-)" />
+</p>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,978 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 3 - Kernel API    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-21T13:48:47+0200"/>
+<meta name="keywords" content="so2,laboratoare,lab03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/laboratoare/lab03.html"/>
+<link rel="canonical" href="lab03.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab03","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab03%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab03%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_3_-_kernel_api">Laborator 3 - Kernel API</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> familiarizarea cu <abbr title="Application Programming Interface">API</abbr>-ul de bază pentru nucleul Linux</div>
+</li>
+<li class="level1"><div class="li"> descrierea mecanismelor de alocare a memoriei</div>
+</li>
+<li class="level1"><div class="li"> descrierea mecanismelor de locking</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> contexte de execuție</div>
+</li>
+<li class="level1"><div class="li"> <code>printk</code></div>
+</li>
+<li class="level1"><div class="li"> <code>kmalloc</code> / <code>kfree</code></div>
+</li>
+<li class="level1"><div class="li"> <code>list_head</code></div>
+</li>
+<li class="level1"><div class="li"> <code>spinlock_t</code></div>
+</li>
+<li class="level1"><div class="li"> <code>struct semaphore</code></div>
+</li>
+<li class="level1"><div class="li"> <code>atomic_t</code></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab03-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab03-slides.pdf"  rel="nofollow">Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow">SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="notiuni_generale">Noțiuni generale</h2>
+<div class="level2">
+
+<p>
+În cadrul laboratorului curent se prezintă un set de concepte și funcții de bază necesare programării kernel. Este important de reținut faptul că programarea kernel diferă extrem de mult față de programarea în user space. Kernel-ul este o entitate de sine stătătoare, care nu poate folosi bibliotecile din user-space (nici chiar <code>libc</code> în Linux sau <code>kernel32.dll</code> în Windows). Drept urmare, funcțiile uzuale utilizate în user-space (<code>printf</code>, <code>malloc</code>, <code>free</code>, <code>open</code>, <code>read</code>, <code>write</code>, <code>memcpy</code>, <code>strcpy</code> etc.) nu mai pot fi folosite. În concluzie, programarea kernel se bazează pe un <abbr title="Application Programming Interface">API</abbr> total nou și independent, ce nu are legătură cu <abbr title="Application Programming Interface">API</abbr>-ul din user-space, fie că ne referim la POSIX, Win32 sau <a href="http://www.acm.uiuc.edu/webmonkeys/book/c_guide/" class="urlextern" title="http://www.acm.uiuc.edu/webmonkeys/book/c_guide/"  rel="nofollow"> ANSI C</a> (funcțiile standard de bibliotecă pentru limbajul C).
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="accesarea_memoriei">Accesarea memoriei</h3>
+<div class="level3">
+
+<p>
+O diferență importantă în programarea kernel este modul de accesare și alocare a memoriei. Din cauza faptului că programarea kernel se face la un nivel foarte aproape de mașina fizică, există reguli importante în ceea ce privește gestiunea memoriei. În primul rând, se lucrează cu mai multe tipuri de memorie:
+</p>
+<ul>
+<li class="level1"><div class="li">memorie fizică</div>
+</li>
+<li class="level1"><div class="li">memorie virtuală din spațiul de adresare kernel</div>
+</li>
+<li class="level1"><div class="li">memorie virtuală din spațiul de adresare al unui proces</div>
+</li>
+<li class="level1"><div class="li">memorie rezidentă – știm sigur că paginile accesate sunt prezente în memoria fizică</div>
+</li>
+</ul>
+
+<p>
+Memoria virtuală din spațiul de adresare al unui proces nu poate fi considerată rezidentă din cauza mecanismelor de memorie virtuală implementate de sistemul de operare: paginile pot fi în swap, sau pur și simplu pot să nu fie prezente în memoria fizică drept rezultat al mecanismului de demand paging. Memoria din spațiul de adresare kernel poate fi rezidentă sau nu. Atât segmentele de date și cod ale unui modul, cât și stiva kernel a unui proces sunt rezidente (în Windows, dacă se dorește, și acestea se pot swapa). Memoria dinamică poate fi sau nu rezidentă, în funcție de modul în care se alocă.
+</p>
+
+<p>
+Atunci când se lucrează cu memorie rezidentă lucrurile sunt simple: memoria se poate accesa oricând. Dacă se lucrează însă cu memorie nerezidentă, atunci aceasta se poate accesa doar din anumite contexte. Memoria nerezidentă se poate accesa doar din context proces. Accesarea memoriei nerezidente din context întrerupere are rezultate impredictibile și, din această cauză, atunci când sistemul de operare detectează un astfel de acces, va lua măsuri drastice: blocarea sau resetarea sistemului, pentru a preveni coruperi grave.
+</p>
+
+<p>
+Memoria virtuală a unui proces nu se poate accesa direct din kernel. În general este descurajată total accesarea spațiului de adresă al unui process, dar există situații în care un device driver trebuie să o facă. Cazul tipic este cel în care device driver-ul trebuie să acceseze un buffer din user-space. În acest caz, device driverul trebuie să folosească funcții speciale și nu să acceseze direct bufferul. Acest lucru este necesar pentru a preveni accesarea unor zone invalide de memorie.
+</p>
+
+<p>
+O altă diferență față de programarea din userspace, relativ la lucrul cu memoria, este datorată stivei, stivă a cărei dimensiune este fixă și limitată. În nucleul Linux 2.6.x se folosește implicit o stivă de <code>4K</code>, iar în Windows se folosește o stivă de <code>12K</code>. Din această cauză, trebuie evitate alocarea unor structuri de mari dimensiuni pe stivă sau folosirea apelurilor recursive.
+</p>
+
+</div>
+
+<h3 class="sectionedit7" id="contexte_de_executie">Contexte de execuție</h3>
+<div class="level3">
+
+<p>
+Relativ la modul de execuție în kernel, distingem două contexte: context <strong>proces</strong> și context <strong>întrerupere</strong>. Ne aflăm în context proces atunci când rulăm cod ca urmare a unui apel de sistem sau când rulăm în contextul unui kernel thread. Atunci când rulăm în rutina de tratare a unei întreruperi sau a unei acțiuni amânabile, rulăm în context întrerupere.
+</p>
+
+<p>
+Unele dintre apelurile din <abbr title="Application Programming Interface">API</abbr>-ul kernel pot duce la blocarea procesului curent. Exemple comune sunt folosirea unui semafor sau așteptarea unei condiții. În acest caz, procesul este trecut în starea <code>WAITING</code> și alt proces este rulat. O situație interesantă apare în momentul în care o funcție ce poate duce la suspendarea procesului curent este chemată din context întrerupere. În acest caz, nu există un proces curent, și din această cauză rezultatele sunt impredictibile. De câte ori sistemul de operare detectează această condiție va genera o condiție de eroare care va duce la oprirea sistemului de operare.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="locking">Locking</h3>
+<div class="level3">
+
+<p>
+Una dintre cele mai importante caracteristici ale programării în kernel este paralelismul. Atât Linux, cât și Windows suportă sisteme SMP, cu mai multe procesoare, dar și preemptivitate în kernel. Acest lucru face programarea kernel mai dificilă, deoarece accesul la variabilele globale trebuie sincronizat, fie cu primitive de spinlock, fie cu primitive blocante. Deși este recomandat să se folosească primitive blocante, acestea nu pot fi folosite în context întrerupere, așa că singura soluție de locking în context întrerupere sunt spinlock-urile.
+</p>
+
+<p>
+Spinlock-urile sunt folosite pentru realizarea excluderii mutuale. Atunci când nu pot obține accesul la regiunea critică nu suspendă procesul curent, ci folosesc mecanismul de busy-waiting (așteaptă într-un ciclu while eliberarea lock-ului). Codul care se execută în regiunea critică protejată de un spinlock nu are voie să suspende procesul curent (trebuie să respecte condițiile execuției în context întrerupere). Mai mult, nu se va ceda procesorul decât pentru servirea întreruperilor. Datorită mecanismului folosit, este important ca un spinlock să fie deținut cât mai puțin timp posibil.
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="preemptivitate">Preemptivitate</h3>
+<div class="level3">
+
+<p>
+Atât Linux, cât și Windows folosesc nuclee preemptive. Nu trebuie confundată noțiunea de multitasking preemptiv cu noțiunea de kernel preemptiv. Noțiunea de multitasking preemptiv se referă la faptul că sistemul de operare întrerupe rularea unui proces în mod forțat, atunci când acestuia i-a expirat cuanta de timp și rulează în user-space, pentru a rula alt proces. Un kernel este preemptiv dacă un proces ce rulează în kernel-mode (ca urmare a unui apel de sistem) poate fi întrerupt pentru a rula un alt proces. 
+</p>
+
+<p>
+Datorită preemptivității, atunci când partajăm resurse între două porțiuni de cod ce pot rula din contexte proces diferite, trebuie să ne protejăm cu primitive de sincronizare, chiar și în cazul uni-procesor.
+</p>
+
+</div>
+
+<h2 class="sectionedit10" id="linux_kernel_api">Linux Kernel API</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit11" id="conventie_indicare_erori">Convenție indicare erori</h3>
+<div class="level3">
+
+<p>
+Pentru programarea în nucleul Linux, convenția folosită la apelul funcțiilor pentru a indica <em>succes</em> este identică cu cea din programarea UNIX: 0 pentru success, sau o valoare diferită de 0 pentru insucces. Pentru insucces se returnează valori negative, așa cum este prezentat în exemplul de mai jos:
+</p>
+<pre class="code C"><span class="kw1">if</span> <span class="br0">&#40;</span>alloc_memory<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+    <span class="kw1">return</span> <span class="sy0">-</span>ENOMEM<span class="sy0">;</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#40;</span>user_parameter_valid<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+    <span class="kw1">return</span> <span class="sy0">-</span>EINVAL<span class="sy0">;</span></pre>
+
+<p>
+Lista exhaustivă a erorilor și o sumară explicație găsiți în <a href="http://lxr.free-electrons.com/source/include/uapi/asm-generic/errno-base.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/uapi/asm-generic/errno-base.h?v=3.13"  rel="nofollow"> include/asm-generic/errno-base.h</a> și <a href="http://lxr.free-electrons.com/source/include/uapi/asm-generic/errno.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/uapi/asm-generic/errno.h?v=3.13"  rel="nofollow"> include/asm-generic/ernno.h</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit12" id="siruri_de_caractere">Șiruri de caractere</h3>
+<div class="level3">
+
+<p>
+În Linux, programatorului de kernel i se pun la dispoziție funcțiile uzuale de lucru pe șiruri: <code>strcpy</code>, <code>strncpy</code>, <code>strlcpy</code>, <code>strcat</code>, <code>strncat</code>, <code>strlcat</code>, <code>strcmp</code>, <code>strncmp</code>, <code>strnicmp</code>, <code>strchr</code>, <code>strnchr</code>, <code>strrchr</code>, <code>strstr</code>, <code>strlen</code>, <code>memset</code>, <code>memcpy</code>, <code>memmove</code>, <code>memscan</code>, <code>memcmp</code>, <code>memchr</code>. Aceste funcții sunt declarate în headerul <a href="http://lxr.free-electrons.com/source/include/linux/string.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/string.h?v=3.13"  rel="nofollow">include/linux/string.h</a> și sunt implementate în kernel în fișierul <a href="http://lxr.free-electrons.com/source/lib/string.c?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/lib/string.c?v=3.13"  rel="nofollow">lib/string.c</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="printk">printk</h3>
+<div class="level3">
+
+<p>
+Echivalentul <code>printf</code> în kernel este <code>printk</code>, definit în <a href="http://lxr.free-electrons.com/source/include/linux/printk.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/printk.h?v=3.13"  rel="nofollow">include/linux/printk.h</a>. Sintaxa printk seamănă foarte mult cu cea a printf. Primul parametru al printk decide categoria de mesaje în care se încadrează mesajul curent:
+</p>
+<pre class="code C"><span class="co2">#define KERN_EMERG   &quot;&lt;0&gt;&quot;  /* system is unusable */</span>
+<span class="co2">#define KERN_ALERT   &quot;&lt;1&gt;&quot;  /* action must be taken immediately */</span>
+<span class="co2">#define KERN_CRIT    &quot;&lt;2&gt;&quot;  /* critical conditions */</span>
+<span class="co2">#define KERN_ERR     &quot;&lt;3&gt;&quot;  /* error conditions */</span>
+<span class="co2">#define KERN_WARNING &quot;&lt;4&gt;&quot;  /* warning conditions */</span>
+<span class="co2">#define KERN_NOTICE  &quot;&lt;5&gt;&quot;  /* normal but significant condition */</span>
+<span class="co2">#define KERN_INFO    &quot;&lt;6&gt;&quot;  /* informational */</span>
+<span class="co2">#define KERN_DEBUG   &quot;&lt;7&gt;&quot;  /* debug-level messages */</span></pre>
+
+<p>
+Astfel, un mesaj în kernel de tip warning ar fi trimis cu:
+</p>
+<pre class="code C">printk<span class="br0">&#40;</span>KERN_WARNING <span class="st0">&quot;my_module input string %s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> buff<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+În cazul în care nivelul de logging lipsește din apelul printk, se realizează logging cu nivelul implicit de la momentul apelului. Un lucru ce trebuie reținut este că mesajele trimise cu printk sunt vizibile doar pe consolă <sup><a href="lab03.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup> și doar dacă nivelul lor depășește nivelul implicit setat pe consolă <sup><a href="lab03.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup>.
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="alocare_memorie">Alocare memorie</h3>
+<div class="level3">
+
+<p>
+În Linux se poate aloca doar memorie <strong>rezidentă</strong>, cu ajutorul apelului <a href="http://lxr.free-electrons.com/source/include/linux/slab.h?v=3.13#L441" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/slab.h?v=3.13#L441"  rel="nofollow"> kmalloc</a>. Un apel tipic kmalloc este prezentat în continuare:
+</p>
+<pre class="code C"><span class="co2">#include &lt;linux/slab.h&gt;</span>
+&nbsp;
+string <span class="sy0">=</span> kmalloc <span class="br0">&#40;</span>string_len <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">,</span> GFP_KERNEL<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span>string<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">//report error: -ENOMEM;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+După cum se observă, primul parametru indică dimensiunea în octeți a zonei de alocat. Funcția întoarce un pointer către o zonă de memorie ce poate fi folosită direct în kernel, sau <code>NULL</code> dacă nu s-a putut aloca memorie. Cel de-al doilea parametru specifică modul în care se dorește să se facă alocarea, iar cele mai folosite valori sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>GFP_KERNEL</code> - folosirea acestei valori poate duce la suspendarea procesului curent; astfel, nu poate fi folosită în context întrerupere;</div>
+</li>
+<li class="level1"><div class="li"><code>GFP_ATOMIC</code> - atunci când se folosește această valoare se garantează ca funcția kmalloc nu suspendă procesul curent; poate fi folosită oricând.</div>
+</li>
+</ul>
+
+<p>
+Complementara funcției <code>kmalloc</code> este <a href="http://lxr.free-electrons.com/source/mm/slab.c?v=3.13#L3650" class="urlextern" title="http://lxr.free-electrons.com/source/mm/slab.c?v=3.13#L3650"  rel="nofollow"> kfree</a>, funcție ce primește ca argument o zonă alocată de <code>kmalloc</code>. Această funcție nu suspendă procesul curent și, în consecință, poate fi apelată din orice context.
+</p>
+
+</div>
+
+<h3 class="sectionedit15" id="liste">Liste</h3>
+<div class="level3">
+
+<p>
+Pentru că listele înlănțuite sunt deseori folosite, Linux kernel <abbr title="Application Programming Interface">API</abbr> pune la dispoziție o modalitate unitară de definire și folosire a listelor. Aceasta implică folosirea unui element de tipul <code>struct list_head</code> în cadrul structurii pe care vrem să o considerăm nod al unei liste. Structura <code>list_head</code> este definită în <a href="http://lxr.free-electrons.com/source/include/linux/list.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/list.h?v=3.13"  rel="nofollow"> include/linux/list.h</a> alături de toate celelalte funcții ce lucrează pe liste. Codul următor arată definiția structurii <code>list_head</code> și folosirea unui element din acest tip într-o altă structură bine cunoscută din kernelul Linux:
+</p>
+<pre class="code C"><span class="kw4">struct</span> list_head <span class="br0">&#123;</span>
+    <span class="kw4">struct</span> list_head <span class="sy0">*</span>next<span class="sy0">,</span> <span class="sy0">*</span>prev<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> task_struct <span class="br0">&#123;</span>
+    ...
+    <span class="kw4">struct</span> list_head children<span class="sy0">;</span>
+    ...
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Rutinele uzuale pentru lucrul cu liste sunt următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>LIST_HEAD(name)</code> este folosit pentru a declara santinela unei liste</div>
+</li>
+<li class="level1"><div class="li"><code>INIT_LIST_HEAD(struct list_head *list)</code> se folosește pentru a inițializa santinela unei liste, atunci când alocarea se face în mod dinamic, prin setarea valorii câmpurilor <code>next</code> și <code>prev</code> la <code>list</code>.</div>
+</li>
+<li class="level1"><div class="li"><code>list_add(struct list_head *new, struct list_head *head)</code> adaugă elementul <code>new</code> după elementul <code>head</code>.</div>
+</li>
+<li class="level1"><div class="li"><code>list_del(struct list_head *entry)</code> șterge elementul aflat la adresa <code>entry</code> din lista din care face parte.</div>
+</li>
+<li class="level1"><div class="li"><code>list_entry(ptr, type, member)</code> întoarce stuctura de tip <code>type</code> care conține elementul <code>ptr</code> din listă cu numele <code>member</code> în cadrul structurii.</div>
+</li>
+<li class="level1"><div class="li"><code>list_for_each(pos, head)</code> iterează o listă, folosind <code>pos</code> drept cursor.</div>
+</li>
+<li class="level1"><div class="li"><code>list_for_each_safe(pos, n, head)</code> iterează o listă, folosind <code>pos</code> drept cursor și <code>n</code> cursor temporar. Acest macro este folosit în cazul în care se dorește ștergerea unui element din listă.</div>
+</li>
+</ul>
+
+<p>
+Următorul cod arată modul de folosire a acestor rutine:
+</p>
+<pre class="code C"><span class="co2">#include &lt;linux/slab.h&gt;</span>
+<span class="co2">#include &lt;linux/list.h&gt;</span>
+&nbsp;
+<span class="kw4">struct</span> pid_list <span class="br0">&#123;</span>
+    pid_t pid<span class="sy0">;</span>
+    <span class="kw4">struct</span> list_head list<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+LIST_HEAD<span class="br0">&#40;</span>my_list<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> add_pid<span class="br0">&#40;</span>pid_t pid<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> pid_list <span class="sy0">*</span>ple <span class="sy0">=</span> kmalloc<span class="br0">&#40;</span><span class="kw4">sizeof</span> <span class="sy0">*</span>ple<span class="sy0">,</span> GFP_KERNEL<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span>ple<span class="br0">&#41;</span>
+        <span class="kw1">return</span> <span class="sy0">-</span>ENOMEM<span class="sy0">;</span>
+&nbsp;
+    ple<span class="sy0">-&gt;</span>pid <span class="sy0">=</span> pid<span class="sy0">;</span>
+    list_add<span class="br0">&#40;</span><span class="sy0">&amp;</span>ple<span class="sy0">-&gt;</span>list<span class="sy0">,</span> <span class="sy0">&amp;</span>my_list<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> del_pid<span class="br0">&#40;</span>pid_t pid<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> list_head <span class="sy0">*</span>i<span class="sy0">,</span> <span class="sy0">*</span>tmp<span class="sy0">;</span>
+    <span class="kw4">struct</span> pid_list <span class="sy0">*</span>ple<span class="sy0">;</span>
+&nbsp;
+    list_for_each_safe<span class="br0">&#40;</span>i<span class="sy0">,</span> tmp<span class="sy0">,</span> <span class="sy0">&amp;</span>my_list<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ple <span class="sy0">=</span> list_entry<span class="br0">&#40;</span>i<span class="sy0">,</span> <span class="kw4">struct</span> pid_list<span class="sy0">,</span> list<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>ple<span class="sy0">-&gt;</span>pid <span class="sy0">==</span> pid<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            list_del<span class="br0">&#40;</span>i<span class="br0">&#41;</span><span class="sy0">;</span>
+            kfree<span class="br0">&#40;</span>ple<span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="sy0">-</span>EINVAL<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> destroy_list<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> list_head <span class="sy0">*</span>i<span class="sy0">,</span> <span class="sy0">*</span>n<span class="sy0">;</span>
+    <span class="kw4">struct</span> pid_list <span class="sy0">*</span>ple<span class="sy0">;</span>
+&nbsp;
+    list_for_each_safe<span class="br0">&#40;</span>i<span class="sy0">,</span> n<span class="sy0">,</span> <span class="sy0">&amp;</span>my_list<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ple <span class="sy0">=</span> list_entry<span class="br0">&#40;</span>i<span class="sy0">,</span> <span class="kw4">struct</span> pid_list<span class="sy0">,</span> list<span class="br0">&#41;</span><span class="sy0">;</span>
+        list_del<span class="br0">&#40;</span>i<span class="br0">&#41;</span><span class="sy0">;</span>
+        kfree<span class="br0">&#40;</span>ple<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Evoluția listei poate fi văzută în următoarea figură:
+</p>
+
+<p>
+<a href="../../_detail/so2/laboratoare/lab03/list.png%3Fid=so2%253Alaboratoare%253Alab03.html" class="media" title="so2:laboratoare:lab03:list.png"><img src="../../_media/so2/laboratoare/lab03/list.png%3Fw=680&amp;tok=beba4c" class="media" title="Structura listelor kernel" alt="Structura listelor kernel" width="680" /></a>
+</p>
+
+<p>
+Se observă comportamentul de tip stivă introdus de macro-ul <code>list_add</code>, precum și folosirea unei santinele.
+</p>
+
+<p>
+Din exemplul de mai sus se observă că modalitatea de definire și folosire a unei liste (dublu înlănțuite) este generică și, în același timp, nu introduce un overhead suplimentar. Structura <code>list_head</code> este folosită pentru a menține legăturile între elementele listei. Se observă, de asemenea, că iterarea prin listă se face tot cu ajutorul acestei structuri, iar obținerea elementelor din listă se face cu ajutorul <code>list_entry</code>. Această idee de implementare și folosire a unei liste nu este nouă, ea fiind descrisă în <code>The Art of Computer Programming</code> de Donald Knuth în anii &#039;80.
+</p>
+
+<p>
+Mai multe funcții și macrodefiniții de lucru cu liste kernel sunt prezentate și explicate în headerul <a href="http://lxr.free-electrons.com/source/include/linux/list.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/list.h?v=3.13"  rel="nofollow"> include/linux/list.h</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit16" id="locking1">Locking</h3>
+<div class="level3">
+
+</div>
+
+<h3 class="sectionedit17" id="spinlock-uri">Spinlock-uri</h3>
+<div class="level3">
+
+<p>
+<code>spinlock_t</code> (definit in <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13"  rel="nofollow"> linux/spinlock.h</a>) este tipul de bază ce implementează conceptul de spinlock în Linux. El descrie un spinlock, iar operațiile asociate cu un spinlock sunt <code>spin_lock_init</code>, <code>spin_lock</code>, <code>spin_unlock</code>. Un exemplu de utilizare este prezentat mai jos:
+</p>
+<pre class="code C"><span class="co2">#include &lt;linux/spinlock.h&gt;</span>
+&nbsp;
+DEFINE_SPINLOCK<span class="br0">&#40;</span>lock1<span class="br0">&#41;</span><span class="sy0">;</span>
+spinlock_t lock2<span class="sy0">;</span>
+&nbsp;
+spin_lock_init<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock2<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+spin_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock1<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="coMULTI">/* critical region */</span>
+spin_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock1<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+spin_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock2<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="coMULTI">/* critical region */</span>
+spin_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock2<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+În Linux se pot folosi spinlock-uri de tip read/write, utile în probleme de genul cititori-scriitor. Aceste tipuri de lockuri sunt identificate de <code>rwlock_t</code>, iar funcțiile cu care se poate opera asupra unui spinlock de tip read/write sunt <code>rwlock_init</code>, <code>read_lock</code>, <code>write_lock</code>. Un exemplu de utilizare:
+</p>
+<pre class="code C"><span class="co2">#include &lt;linux/spinlock.h&gt;</span>
+&nbsp;
+DEFINE_RWLOCK<span class="br0">&#40;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> pid_list <span class="br0">&#123;</span>
+    pid_t pid<span class="sy0">;</span>
+    <span class="kw4">struct</span> list_head list<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span> 
+&nbsp;
+<span class="kw4">int</span> have_pid<span class="br0">&#40;</span><span class="kw4">struct</span> list_head <span class="sy0">*</span>lh<span class="sy0">,</span> <span class="kw4">int</span> pid<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> list_head <span class="sy0">*</span>i<span class="sy0">;</span>
+    <span class="kw4">void</span> <span class="sy0">*</span>elem<span class="sy0">;</span>
+&nbsp;
+    read_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+    list_for_each<span class="br0">&#40;</span>i<span class="sy0">,</span> lh<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw4">struct</span> pid_list <span class="sy0">*</span>pl <span class="sy0">=</span> list_entry<span class="br0">&#40;</span>i<span class="sy0">,</span> <span class="kw4">struct</span> pid_list<span class="sy0">,</span> list<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>pl<span class="sy0">-&gt;</span>pid <span class="sy0">==</span> pid<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            read_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="kw1">return</span> <span class="nu0">1</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+    read_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> add_pid<span class="br0">&#40;</span><span class="kw4">struct</span> list_head <span class="sy0">*</span>lh<span class="sy0">,</span> <span class="kw4">struct</span> pid_list <span class="sy0">*</span>pl<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    write_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+    list_add<span class="br0">&#40;</span><span class="sy0">&amp;</span>pl<span class="sy0">-&gt;</span>list<span class="sy0">,</span> lh<span class="br0">&#41;</span><span class="sy0">;</span>
+    write_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit18" id="semafoare">Semafoare</h3>
+<div class="level3">
+
+<p>
+Un semafor este reprezentat de o variabilă de tipul <code>struct semaphore</code> (definit în <a href="http://lxr.free-electrons.com/source/include/linux/semaphore.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/semaphore.h?v=3.13"  rel="nofollow"> linux/semaphore.h</a>). Funcțiile și macro-urile pentru lucrul cu semafoare sunt prezentate în continuare:
+</p>
+<pre class="code C"><span class="co2">#include &lt;linux/semaphore.h&gt;</span>
+&nbsp;
+<span class="coMULTI">/* functii pentru initializarea semaforului */</span>
+<span class="kw4">void</span> sema_init<span class="br0">&#40;</span><span class="kw4">struct</span> semaphore <span class="sy0">*</span>sem<span class="sy0">,</span> <span class="kw4">int</span> val<span class="br0">&#41;</span><span class="sy0">;</span>
+DECLARE_MUTEX<span class="br0">&#40;</span>name<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> init_MUTEX<span class="br0">&#40;</span><span class="kw4">struct</span> semaphore <span class="sy0">*</span>sem<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> init_MUTEX_LOCKED<span class="br0">&#40;</span><span class="kw4">struct</span> semaphore <span class="sy0">*</span>sem<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* functii pentru achiziționarea semaforului */</span>
+<span class="kw4">void</span> down<span class="br0">&#40;</span><span class="kw4">struct</span> semaphore <span class="sy0">*</span>sem<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> down_interruptible<span class="br0">&#40;</span><span class="kw4">struct</span> semaphore <span class="sy0">*</span>sem<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> down_trylock<span class="br0">&#40;</span><span class="kw4">struct</span> semaphore <span class="sy0">*</span>sem<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* functie pentru eliberarea semaforului */</span>
+<span class="kw4">void</span> up<span class="br0">&#40;</span><span class="kw4">struct</span> semaphore <span class="sy0">*</span>sem<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcția <code>down</code> decrementează valoarea semaforului și se blochează până când aceasta devine iar nenegativă. Funcția <code>down_interruptible</code> face același lucru, numai că operația poate fi întreruptă. Se recomandă testarea de fiecare dată a valorii întoarse de această funcție, deoarece o valoare diferită de 0 înseamnă că operația a fost întreruptă și apelantul nu a obținut semaforul. Funcția <code>down_trylock</code> este varianta nonblocantă pentru achiziționarea unui semafor: dacă nu se poate lua semaforul, se întoarce o valoare diferită de 0.
+</p>
+
+<p>
+Trebuie reținut faptul că nu este permisă o operație <code>down</code> blocantă în context de întrerupere sau într-o regiune în care se deține un spinlock (context atomic).
+</p>
+
+<p>
+După apelul funcției <code>up</code>, apelantul nu mai deține semaforul.
+</p>
+
+</div>
+
+<h3 class="sectionedit19" id="variabile_atomice">Variabile atomice</h3>
+<div class="level3">
+
+<p>
+De multe ori, este nevoie doar de sincronizarea accesului la o variabilă simplă, de exemplu un contor. Pentru  aceasta se poate folosi o variabilă de tip <code>atomic_t</code> (definit în <a href="http://lxr.free-electrons.com/source/include/linux/atomic.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/atomic.h?v=3.13"  rel="nofollow"> include/linux/atomic.h</a>) care ține o valoare întreagă. Mai jos sunt prezentate unele operații care pot fi efectuate asupra unei variabile <code>atomic_t</code>:
+</p>
+<pre class="code C"><span class="co2">#include &lt;asm/atomic.h&gt;</span>
+&nbsp;
+<span class="kw4">void</span> atomic_set<span class="br0">&#40;</span>atomic_t <span class="sy0">*</span>v<span class="sy0">,</span> <span class="kw4">int</span> i<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> atomic_read<span class="br0">&#40;</span>atomic_t <span class="sy0">*</span>v<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> atomic_add<span class="br0">&#40;</span><span class="kw4">int</span> i<span class="sy0">,</span> atomic_t <span class="sy0">*</span>v<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> atomic_sub<span class="br0">&#40;</span><span class="kw4">int</span> i<span class="sy0">,</span> atomic_t <span class="sy0">*</span>v<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> atomic_inc<span class="br0">&#40;</span>atomic_t <span class="sy0">*</span>v<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> atomic_dec<span class="br0">&#40;</span>atomic_t <span class="sy0">*</span>v<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> atomic_inc_and_test<span class="br0">&#40;</span>atomic_t <span class="sy0">*</span>v<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> atomic_dec_and_test<span class="br0">&#40;</span>atomic_t <span class="sy0">*</span>v<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> atomic_cmpxchg<span class="br0">&#40;</span>atomic_t <span class="sy0">*</span>v<span class="sy0">,</span> <span class="kw4">int</span> old<span class="sy0">,</span> <span class="kw4">int</span> new<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h4 id="utilizarea_variabilelor_atomice">Utilizarea variabilelor atomice</h4>
+<div class="level4">
+
+<p>
+Un mod frecvent de utilizare a variabilelor atomice este pentru a menține starea unei acțiuni (de exemplu un flag). Putem folosi astfel o variabilă atomică pentru a marca acțiuni exclusive. De exemplu, considerăm că o variabilă atomică poate avea valorile <code>LOCKED</code> și <code>UNLOCKED</code> și, dacă <code>LOCKED</code> atunci o funcție anume să se întoarcă cu un mesaj <code>-EBUSY</code>. Modul de folosire este indicat schematic în codul de mai jos:
+</p>
+<pre class="code C"><span class="co2">#define LOCKED		0</span>
+<span class="co2">#define UNLOCKED	1</span>
+&nbsp;
+<span class="kw4">static</span> atomic_t flag<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_acquire<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> initial_flag<span class="sy0">;</span>
+&nbsp;
+	<span class="coMULTI">/*
+	 * Check if flag is UNLOCKED; if not, lock it and do it atomically.
+	 *
+	 * This is the atomic equivalent of
+	 * 	if (flag == UNLOCKED)
+	 * 		flag = LOCKED;
+	 * 	else
+	 * 		return -EBUSY;
+	 */</span>
+	initial_flag <span class="sy0">=</span> atomic_cmpxchg<span class="br0">&#40;</span><span class="sy0">&amp;</span>flag<span class="sy0">,</span> UNLOCKED<span class="sy0">,</span> LOCKED<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>initial_flag <span class="sy0">==</span> LOCKED<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		printk<span class="br0">&#40;</span>KERN_ALERT <span class="st0">&quot;Already locked.<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="kw1">return</span> <span class="sy0">-</span>EBUSY<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="coMULTI">/* Do your thing after getting the lock. */</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> my_release<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="coMULTI">/* Release flag; mark it as unlocked. */</span>
+	atomic_set<span class="br0">&#40;</span><span class="sy0">&amp;</span>flag<span class="sy0">,</span> UNLOCKED<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> my_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+	<span class="coMULTI">/* Atomic variable is initially unlocked. */</span>
+	atomic_set<span class="br0">&#40;</span><span class="sy0">&amp;</span>flag<span class="sy0">,</span> UNLOCKED<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Codul de mai sus este echivalentul folosirii unei operații de tipul <code>trylock</code> (precum <a href="http://linux.die.net/man/3/pthread_mutex_lock" class="urlextern" title="http://linux.die.net/man/3/pthread_mutex_lock"  rel="nofollow">pthread_mutex_trylock</a>).
+</p>
+<hr />
+
+<p>
+Putem, de asemenea, folosi o variabilă pentru a reține dimensiunea unui buffer și pentru actualizări atomice ale acesteia. De exemplu codul de mai jos:
+</p>
+<pre class="code C"><span class="kw4">static</span> <span class="kw4">unsigned</span> <span class="kw4">char</span> buffer<span class="br0">&#91;</span>MAX_SIZE<span class="br0">&#93;</span><span class="sy0">;</span>
+<span class="kw4">static</span> atomic_t size<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> add_to_buffer<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">char</span> value<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	buffer<span class="br0">&#91;</span>atomic_read<span class="br0">&#40;</span><span class="sy0">&amp;</span>size<span class="br0">&#41;</span><span class="br0">&#93;</span> <span class="sy0">=</span> value<span class="sy0">;</span>
+	atomic_inc<span class="br0">&#40;</span><span class="sy0">&amp;</span>size<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">unsigned</span> <span class="kw4">char</span> remove_from_buffer<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">unsigned</span> <span class="kw4">char</span> value<span class="sy0">;</span>
+&nbsp;
+	value <span class="sy0">=</span> buffer<span class="br0">&#91;</span>atomic_read<span class="br0">&#40;</span><span class="sy0">&amp;</span>size<span class="br0">&#41;</span><span class="br0">&#93;</span><span class="sy0">;</span>
+	atomic_dec<span class="br0">&#40;</span><span class="sy0">&amp;</span>size<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">return</span> value
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> reset_buffer<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	atomic_set<span class="br0">&#40;</span><span class="sy0">&amp;</span>size<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> my_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+	<span class="coMULTI">/* Initilized buffer and size. */</span>
+	atomic_set<span class="br0">&#40;</span><span class="sy0">&amp;</span>size<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/memset.html"><span class="kw3">memset</span></a><span class="br0">&#40;</span>buffer<span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>buffer<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit20" id="operatii_atomice_pe_biti">Operatii atomice pe biți</h3>
+<div class="level3">
+
+<p>
+Kernelul pune la dispoziție un set de funcții (în <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/atomic.h?v=3.13#L65" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/atomic.h?v=3.13#L65"  rel="nofollow"> asm/bitops.h</a>) care modifică sau testează biți în mod atomic.
+</p>
+<pre class="code C"><span class="co2">#include &lt;asm/bitops.h&gt;</span>
+&nbsp;
+<span class="kw4">void</span> set_bit<span class="br0">&#40;</span><span class="kw4">int</span> nr<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>addr<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> clear_bit<span class="br0">&#40;</span><span class="kw4">int</span> nr<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>addr<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> change_bit<span class="br0">&#40;</span><span class="kw4">int</span> nr<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>addr<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> test_and_set_bit<span class="br0">&#40;</span><span class="kw4">int</span> nr<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>addr<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> test_and_clear_bit<span class="br0">&#40;</span><span class="kw4">int</span> nr<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>addr<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> test_and_change_bit<span class="br0">&#40;</span><span class="kw4">int</span> nr<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>addr<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<code>addr</code> reprezintă adresa zonei de memorie ai cărei biți se modifică sau testează, iar <code>nr</code> reprezintă bitul asupra căruia se efectuează operația.
+</p>
+
+</div>
+
+<h2 class="sectionedit21" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Linux Device Drivers, 3rd edition</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch05.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch05.pdf"  rel="nofollow"> Chapter 5. Concurrency and Race Conditions</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch08.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch08.pdf"  rel="nofollow"> Chapter 8.  Allocating Memory</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch11.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch11.pdf"  rel="nofollow"> Chapter 11. Data Types in the Kernel</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.gnugeneration.com/books/linux/2.6.20/kernel-api/" class="urlextern" title="http://www.gnugeneration.com/books/linux/2.6.20/kernel-api/"  rel="nofollow"> The Linux Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://isis.poly.edu/kulesh/stuff/src/klist/" class="urlextern" title="http://isis.poly.edu/kulesh/stuff/src/klist/"  rel="nofollow"> Linux Kernel Linked-List Explained</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://kernelbook.sourceforge.net/kernel-locking.html/" class="urlextern" title="http://kernelbook.sourceforge.net/kernel-locking.html/"  rel="nofollow"> Unreliable Guide To Locking</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://excess.org/article/2008/07/oclug-june-kernel-walkthrough/" class="urlextern" title="http://excess.org/article/2008/07/oclug-june-kernel-walkthrough/"  rel="nofollow"> Linux Kernel Walkthrough Screencast</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://linuxwell.com/2012/11/10/magical-container_of-macro/" class="urlextern" title="http://linuxwell.com/2012/11/10/magical-container_of-macro/"  rel="nofollow"> Magical container_of() Macro</a></div>
+</li>
+</ol>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="lab03.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+În Linux consola este terminalul virtual curent; din această cauză, atunci când folosiți X Windows, aceste mesaje nu or sa apară în emulatorul de terminal <code>xterm</code>. Le puteți afișa, însă, folosind comanda <code>dmesg</code> sau accesând fișierul de logging <code>/var/log/syslog</code>.</div>
+<div class="fn"><sup><a href="lab03.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+Pentru mai multe detalii despre configurări pentru logging consultați <a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02"> Laboratorul 2</a>.</div>
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_12200263258355b52c5046" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_120140720058355b52c7f19" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></span></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_130223470258355b52cadfa" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab03.html#laborator_3_-_kernel_api">Laborator 3 - Kernel API</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab03.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab03.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab03.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab03.html#notiuni_generale">Noțiuni generale</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab03.html#accesarea_memoriei">Accesarea memoriei</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#contexte_de_executie">Contexte de execuție</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#locking">Locking</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#preemptivitate">Preemptivitate</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab03.html#linux_kernel_api">Linux Kernel API</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab03.html#conventie_indicare_erori">Convenție indicare erori</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#siruri_de_caractere">Șiruri de caractere</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#printk">printk</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#alocare_memorie">Alocare memorie</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#liste">Liste</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#locking1">Locking</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#spinlock-uri">Spinlock-uri</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#semafoare">Semafoare</a></div></li>
+<li class="level3"><div class="li"><a href="lab03.html#variabile_atomice">Variabile atomice</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab03.html#utilizarea_variabilelor_atomice">Utilizarea variabilelor atomice</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="lab03.html#operatii_atomice_pe_biti">Operatii atomice pe biți</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab03.html#resurse_utile">Resurse utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/laboratoare/lab03.txt · Last modified: 2016/03/21 13:48 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab03%3Fdo=media&amp;ns=so2%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab03.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Alaboratoare%253Alab03&amp;1479891794" width="2" height="1" alt="" /></div>
+</body>
+</html>

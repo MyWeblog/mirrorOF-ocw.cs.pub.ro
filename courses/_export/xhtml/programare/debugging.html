@@ -1,0 +1,252 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>programare:debugging</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-31T08:57:58+0200"/>
+<meta name="keywords" content="programare,debugging"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=programare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="debugging.html"/>
+<link rel="canonical" href="../../../programare/debugging.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='programare';var JSINFO = {"id":"programare:debugging","namespace":"programare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="debugging.html#debugging">Debugging</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="debugging.html#erori_de_compilare">Erori de compilare</a></div></li>
+<li class="level3"><div class="li"><a href="debugging.html#warning-uri_de_compilare">Warning-uri de compilare</a></div></li>
+<li class="level3"><div class="li"><a href="debugging.html#segmentation_faultstack_smashing_detected">Segmentation fault / stack smashing detected</a></div></li>
+<li class="level3"><div class="li"><a href="debugging.html#pun_printf_dar_nu_apare_iar_apoi_crapa_programul">Pun printf dar nu apare, iar apoi crapă programul</a></div></li>
+<li class="level3"><div class="li"><a href="debugging.html#other">Other</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="debugging">Debugging</h2>
+<div class="level2">
+
+<p>
+Programele pot să nu meargă din mai multe motive. Pagina aceasta prezintă câteva abordări pe care să le urmați pentru a face <strong>debugging</strong> atunci când programele voastre nu funcționează. Lista nu este exhaustivă, ci doar prezintă câteva erori frecvente și moduri în care ați putea să le rezolvați.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Debugging" [1-340] -->
+<h3 class="sectionedit2" id="erori_de_compilare">Erori de compilare</h3>
+<div class="level3">
+
+<p>
+Dacă programul vostru nu este scris corect din punct de vedere sintactic, atunci acesta va da erori la compilare.
+</p>
+
+<p>
+<strong>gcc generează un excutabil</strong> doar dacă <strong>NU</strong> au existat erori de compilare. Dacă generează output, înseamnă că există probleme. Trebuie să vă asigurați întotdeauna că <em>gcc</em> nu a generat niciun output, pentru a fi siguri că aveți un executabil nou generat.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Uneori <em>gcc</em> generează erori și astfel nu se generează fișierul executabil dorit. Dacă totuși există un executabil, înseamnă că este cel creat înainte ca compilarea să înceapă să genereze erori. Aceasta este o greșeală frecventă.
+
+</div></p>
+<p><div class="notewarning">
+Asigurați-vă întotdeauna de faptul că <strong>gcc nu produce niciun output</strong>.<br/>
+
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Erori de compilare" [341-1130] -->
+<h3 class="sectionedit3" id="warning-uri_de_compilare">Warning-uri de compilare</h3>
+<div class="level3">
+
+<p>
+<em>gcc</em> poate identifica unele probleme, dar care nu generează erori, ci warning-uri. În cazul acesta, compilarea reușește și generează un executabil nou.
+</p>
+
+<p>
+Warning-urile nu sunt erori pentru că sunt cazuri în care programatorul consecințele acestora și pot face parte din rezolvarea voită a programului.
+</p>
+
+<p>
+Pentru a forța compilatorul să afișeze toate warning-urile folosiți paramentrul <strong>-Wall</strong>. Exemplu:
+</p>
+<pre class="code">gcc -Wall ex1.c -o exe</pre>
+
+<p>
+În cadrul cursului de programare nu vom avea niciodată nevoie de construcții ce sunt ok chiar dacă compilatorul arată warning-uri. De aceea vă încurajăm să scăpați întotdeauna de ele.
+</p>
+
+<p>
+Warning-urile pot duce la rezultate eronate. Exemplu de posibile warning-uri:
+</p>
+<ul>
+<li class="level1"><div class="li"> folosirea unei variabile neinițializate</div>
+</li>
+<li class="level1"><div class="li"> atribuirea de număr cu semn unui întreg fără semn</div>
+</li>
+<li class="level1"><div class="li"> cast-uri de la int la char (deci cu diminuare de spațiu)</div>
+</li>
+<li class="level1"><div class="li"> atribuirea de pointeri la variabile numerice</div>
+</li>
+<li class="level1"><div class="li"> etc.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning">
+Toate aceste warning-uri pot face ca rezultatul calculat să nu fie cel dorit. <br/>
+
+Amintiți-vă de exemplele din <a href="../../../programare/laboratoare/lab02.html#exercitii_laborator_cbcd" class="urlextern" title="http://ocw.cs.pub.ro/courses/programare/laboratoare/lab02#exercitii_laborator_cbcd"  rel="nofollow">laboratorul 02</a>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Warning-uri de compilare" [1131-2363] -->
+<h3 class="sectionedit4" id="segmentation_faultstack_smashing_detected">Segmentation fault / stack smashing detected</h3>
+<div class="level3">
+
+<p>
+Erorile de genul aceasta înseamnă, pe scurt, că undeva faceți un acces nevalid de memorie. Cel mai frecvent, cauza poate să fie una din următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> accesați printr-un indice un element într-un vector nealocat (exemplu: dacă vectorul a fost declarat <em>int v[100]</em>, iar voi accesați <em>v[100]</em> sau chiar cu un indice mai mare sau cu unul negativ)</div>
+</li>
+<li class="level1"><div class="li"> folosiți o funcție recursivă care nu are condiție de oprire, sau condiția acesteia nu funcționează corect sau nu acoperă cazul din testul rulat</div>
+</li>
+<li class="level1"><div class="li"> apelați funcția <em>free</em> pe o zonă de memorie nealocată sau pe una care a fost eliberată anterior</div>
+</li>
+<li class="level1"><div class="li"> etc.</div>
+</li>
+</ul>
+
+<p>
+Pentru a identifica problemele în cazul acesta puteți să folosiți <a href="../../../programare/debugging%3F&amp;.html#other" class="urlextern" title="http://ocw.cs.pub.ro/courses/programare/debugging?&amp;#other"  rel="nofollow">printf stylel debugging</a>, cu mențiunea de <a href="../../../programare/debugging%3F&amp;.html#pun_printf_dar_nu_apare_iar_apoi_crapa_programul" class="urlextern" title="http://ocw.cs.pub.ro/courses/programare/debugging?&amp;#pun_printf_dar_nu_apare_iar_apoi_crapa_programul"  rel="nofollow">a fi atenți cum folosiți afișarea</a>.
+</p>
+
+<p>
+Pentru a identifica mai ușor punctul în care se întâmplă eroarea recomandăm folosirea <a href="https://www.cs.cmu.edu/~gilpin/tutorial/" class="urlextern" title="https://www.cs.cmu.edu/~gilpin/tutorial/"  rel="nofollow">gdb</a> sau <a href="http://valgrind.org/docs/manual/QuickStart.html" class="urlextern" title="http://valgrind.org/docs/manual/QuickStart.html"  rel="nofollow">valgrind</a>.
+</p>
+
+<p>
+Pentru ambele tool-uri vom avea nevoie să adăugăm la compilare flag-ul <strong>-g</strong> pentru a activa simbolurile de debugging. Astfel:
+</p>
+<pre class="code">gcc -g -Wall ex1.c -o exe </pre>
+
+<p>
+Spre exemplu, o rulare simplă cu <em>valgrind</em> ar arăta așa (dacă programul are argumente le adăugați în continuare):
+</p>
+<pre class="code">valgrind ./exe</pre>
+
+<p>
+Urmăriți output-ul generat. Ar trebui să vă spună exact linia pe care se întâmplă eroarea și cauza acesteia. Mai multe detalii în tutoriale.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Segmentation fault / stack smashing detected" [2364-4059] -->
+<h3 class="sectionedit5" id="pun_printf_dar_nu_apare_iar_apoi_crapa_programul">Pun printf dar nu apare, iar apoi crapă programul</h3>
+<div class="level3">
+
+<p>
+<strong>printf</strong> este o funcție care înainte de a afișa datele pe ecran le scrie într-un buffer intern pe care-l afișează pe ecran <strong>doar în următoarele cazuri</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> se umple bufferul (este destul de mare!)</div>
+</li>
+<li class="level1"><div class="li"> este forțată afișarea (folosind apelul: <em>fflush(stdout);</em>)</div>
+</li>
+<li class="level1"><div class="li"> este afișat caracterul newline (adică <em>&#039;\n&#039;</em>)</div>
+</li>
+</ul>
+
+<p>
+Dacă voi scrieți ceva în buffer (exemplu: <em>printf(“Hello!”);</em>) iar după aceea apare o eroare de genul <em>segmentation fault</em>, nu înseamnă că programul vostru nu a ajuns să execute instrucțiunea printf. Înseamnă doar că buffer-ul respectiv nu a ajuns să fie afișat pe ecran.
+</p>
+
+<p>
+<p><div class="notewarning">
+Recomandăm să folosiți caracterul newline întotdeauna pentru debugging. Astfel:
+</p>
+<pre class="code">printf(&quot;Hello\n&quot;);</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Ieșirea standard de eroare nu bufferează datele, ci le afișează imediat pe ecran. Puteți folosi acest flux, dacă doriți, astfel:
+</p>
+<pre class="code">printf(&quot;Hello&quot;);</pre>
+
+<p>
+devine:
+</p>
+<pre class="code">fprintf(stderr, &quot;Hello&quot;);</pre>
+
+</div>
+<!-- EDIT5 SECTION "Pun printf dar nu apare, iar apoi crapă programul" [4060-5104] -->
+<h3 class="sectionedit6" id="other">Other</h3>
+<div class="level3">
+
+<p>
+Dacă rezultatul nu este cel așteptat, înseamnă că undeva s-a produs o eroare în cod.
+De multe ori poate fi un indice pus prost, sau o relație de inegalitate greșită. Pentru aceste cazuri, recomandăm să faceți verificări în diversele puncte ale programului.
+</p>
+
+<p>
+Puteți fie să folosiți un debugger pentru a verifica ce valori iau diversele variabile pe parcursul execuției programului, fie să folosiți așa numitul <strong>printf style debugging</strong>. Pentru aceasta încercați să afișați valorile în diverse puncte ale programului pentru a identifica zona în care rezultatul <em>se strică</em>. 
+</p>
+
+<p>
+Recomandăm să începeți să afișați diversele valori esențiale de sus în jos. Cel mai probabil primul pas de verificat este imediat după citirea datelor de intrare. Asigurați-vă că ati citit valorile corect. Este o greșeală des întâlnită, mai ales printre începători, pentru că folosesc funcția <em>scanf</em> cu diverse formate fără să înțeleagă pe deplin ce se întâmplă.
+</p>
+
+<p>
+După ce ați verificat că ați citit corect datele, afișați valorile esențiale după fiecare secvență care le modifică în programul vostru. Nu puneți printf peste tot încă de la început, abordați incremental. Pentru bucle recomandăm să afișați indicele pentru fiecare iterație alături de alte valori pentru a putea urmări cum evoluează acestea.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Other" [5105-] --></div>
+</body>
+</html>

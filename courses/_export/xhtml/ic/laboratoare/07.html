@@ -1,0 +1,158 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>ic:laboratoare:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-16T20:04:04+0200"/>
+<meta name="keywords" content="ic,laboratoare,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=ic:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../ic/laboratoare/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ic:laboratoare';var JSINFO = {"id":"ic:laboratoare:07","namespace":"ic:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#laboratorul_07_-_correlation_power_analysis">Laboratorul 07 - Correlation Power Analysis</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#exercise_1_2p">Exercise 1 (2p)</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#exercise_2_4p">Exercise 2 (4p)</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#exercise_3_4p">Exercise 3 (4p)</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="laboratorul_07_-_correlation_power_analysis">Laboratorul 07 - Correlation Power Analysis</h2>
+<div class="level2">
+
+<p>
+In this lab we&#039;ll implement a side-channel attack known as <strong>Correlation Power Analysis</strong>.
+</p>
+
+<p>
+The principle is quite simple:
+</p>
+<ol>
+<li class="level1"><div class="li"> Choose your target (generally the S-box output of some block cipher - in our case AES)</div>
+</li>
+<li class="level1"><div class="li"> Obtain a large number (thousands) of leakage samples for that target, when processing different plaintexts</div>
+</li>
+<li class="level1"><div class="li"> Choose a suitable leakage model (usually the hamming weight of the target value)</div>
+</li>
+<li class="level1"><div class="li"> For each possible key candidate (e.g. all values from 0 to 255), compute <a href="http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient" class="urlextern" title="http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient"  rel="nofollow"> Person&#039;s correlation coefficient</a> between the leakage model estimate for that key candidate and the leakage traces.</div>
+</li>
+<li class="level1"><div class="li"> Decide for the key that gives maximum correlation</div>
+</li>
+</ol>
+
+<p>
+We&#039;ll discuss more in detail at the lab.
+</p>
+
+<p>
+In this lab we shall use Matlab or Octave (MATLAB is preferred for speed reasons):
+</p>
+
+<p>
+<a href="http://www.gnu.org/software/octave/" class="urlextern" title="http://www.gnu.org/software/octave/"  rel="nofollow"> Octave main page</a>
+<a href="http://wiki.octave.org/Octave_for_Windows" class="urlextern" title="http://wiki.octave.org/Octave_for_Windows"  rel="nofollow"> Download link for Windows</a>
+</p>
+
+<p>
+You might also need these additional packages:
+</p>
+
+<p>
+<a href="http://sourceforge.net/projects/octave/files/Octave%20Windows%20binaries/" class="urlextern" title="http://sourceforge.net/projects/octave/files/Octave%20Windows%20binaries/"  rel="nofollow"> Link for additional packages</a>
+</p>
+
+<p>
+Use these files as starting point:
+<a href="../../../../_media/sasc/laboratoare/lab6.zip" class="media mediafile mf_zip" title="sasc:laboratoare:lab6.zip (454 KB)">lab6.zip</a>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laboratorul 07 - Correlation Power Analysis" [1-1284] -->
+<h3 class="sectionedit2" id="exercise_1_2p">Exercise 1 (2p)</h3>
+<div class="level3">
+
+<p>
+Open the file lab6_cpa.m and plot the leakage data from simdata.mat and the correlation for the first key hypothesis.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Exercise 1 (2p)" [1285-1430] -->
+<h3 class="sectionedit3" id="exercise_2_4p">Exercise 2 (4p)</h3>
+<div class="level3">
+
+<p>
+Compute the correlation for all the possible key values. Plot this correlation against all the possible key values.
+That is, use the plot(x, y) command, where x is a vector having values [0:255] (or [1:256]) and y is a vector with the correlation values corresponding to each key value).
+</p>
+
+<p>
+<p><div class="noteclassic">
+The correlation is computed easily with corrcoef, but this returns a matrix of size 2&times;2 in our case. Select the element with index (1, 2) as the value we&#039;ll use. The values (1,1) and (2,2) are in fact the variance of each variable (Hamming weight and leakage data). We&#039;ll let you figure out who is the element (2,1).
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Exercise 2 (4p)" [1431-2079] -->
+<h3 class="sectionedit4" id="exercise_3_4p">Exercise 3 (4p)</h3>
+<div class="level3">
+
+<p>
+To evaluate the security of a device against these attacks, evaluation labs typically compute a measure known as the success rate, which measures how effective is a side channel attack. To compute the success rate, do the following.
+</p>
+
+<p>
+Run the attack on different sets of traces (e.g. R=50 subsets of N traces) and for each attack determine whether the correct key (K) leads to the highest correlation. Then compute the success rate as the number of times the correct key lead to the highest correlation divided by the total number of experiments: $SR={#correct key first}/{#experiments}$
+</p>
+
+<p>
+Compute the success rate (SR) for different amounts of leakage traces (e.g. $N \in \{10, 20, 50, 100, 200, 500, 1000\}$) and then plot the SR as a function of N.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Exercise 3 (4p)" [2080-] --></div>
+</body>
+</html>

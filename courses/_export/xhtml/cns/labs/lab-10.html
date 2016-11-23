@@ -1,0 +1,333 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cns:labs:lab-10</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-01-04T21:03:38+0200"/>
+<meta name="keywords" content="cns,labs,lab-10"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="lab-10.html"/>
+<link rel="canonical" href="../../../../cns/labs/lab-10.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-10","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-10.html#lab_10_-_password_breaking">Lab 10 - Password Breaking</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-10.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="lab-10.html#supporting_files">Supporting files</a></div></li>
+<li class="level2"><div class="li"><a href="lab-10.html#introduction">Introduction</a></div></li>
+<li class="level2"><div class="li"><a href="lab-10.html#side-channel_attack">1. Side-channel attack</a></div></li>
+<li class="level2"><div class="li"><a href="lab-10.html#password_breaking_toolkit">2. Password breaking toolkit</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="lab_10_-_password_breaking">Lab 10 - Password Breaking</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Lab 10 - Password Breaking" [1-42] -->
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Side_channel_attack" class="urlextern" title="http://en.wikipedia.org/wiki/Side_channel_attack"  rel="nofollow">Side-channel attack</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions" class="urlextern" title="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions"  rel="nofollow">SHA hash length table</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://crackstation.net/" class="urlextern" title="https://crackstation.net/"  rel="nofollow">CrackStation.net hash lookup table</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.hashkiller.co.uk/" class="urlextern" title="http://www.hashkiller.co.uk/"  rel="nofollow">HashKiller lookup table</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.openwall.com/john/" class="urlextern" title="http://www.openwall.com/john/"  rel="nofollow">John the Ripper</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Resources" [43-420] -->
+<h2 class="sectionedit3" id="supporting_files">Supporting files</h2>
+<div class="level2">
+
+<p>
+You will use this <a href="http://elf.cs.pub.ro/oss/res/labs/lab-10.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-10.tar.gz"  rel="nofollow">lab archive</a> throughout the lab.
+</p>
+
+<p>
+Please download the lab archive an then unpack it using the commands below:
+</p>
+<pre class="code bash">$ <span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>oss<span class="sy0">/</span>res<span class="sy0">/</span>labs<span class="sy0">/</span>lab-<span class="nu0">10</span>.tar.gz
+$ <span class="kw2">tar</span> xzf lab-<span class="nu0">10</span>.tar.gz</pre>
+
+<p>
+After unpacking, you will get the <code>lab-10/</code> folder:
+</p>
+<pre class="code bash">$ <span class="kw3">cd</span> lab-<span class="nu0">10</span><span class="sy0">/</span>
+$ <span class="kw2">ls</span> <span class="re5">-F</span>
+breaking_skeleton.py  dict<span class="sy0">/</span>  passwords.hash  pexpect_skeleton.py  sidechannel<span class="sy0">*</span>  sidechannel.c</pre>
+
+<p>
+You also need to have <a href="https://www.dlitz.net/software/pycrypto/api/current/" class="urlextern" title="https://www.dlitz.net/software/pycrypto/api/current/"  rel="nofollow">PyCrypto</a> and <a href="http://pexpect.sourceforge.net/pexpect.html" class="urlextern" title="http://pexpect.sourceforge.net/pexpect.html"  rel="nofollow">pexpect</a> installed:
+</p>
+<pre class="code">$ sudo apt-get install python-crypto python-pexpect</pre>
+
+</div>
+<!-- EDIT3 SECTION "Supporting files" [421-1146] -->
+<h2 class="sectionedit4" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+With origins in ancient times, passwords constitute the most widespread method to authenticate users before granting them access to target resources. As explained in the <a href="../../../../cns/labs/lab-09.html" class="wikilink1" title="cns:labs:lab-09">previous lab</a>, modern applications store (salted) password hashes in their databases. As such, even if the system is compromised, the attacker would still need to use brute-force approaches in order to recover the plaintext.
+</p>
+
+<p>
+It is a well known fact that the expense of brute-forcing grows exponentially with the length of the solution. During this lab we will investigate ways to reduce this computational effort, based on information about the user&#039;s password picking behavior.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Introduction" [1147-1842] -->
+<h2 class="sectionedit5" id="side-channel_attack">1. Side-channel attack</h2>
+<div class="level2">
+
+<p>
+But, before going into that, let&#039;s take a look at the picture from the perspective of the program doing the authentication. The password is, essentially, a string which needs to be checked against the user input. As you would expect, this usually goes as follows:
+</p>
+<pre class="code c">  <span class="kw1">for</span> i <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">,</span>length<span class="br0">&#40;</span>password<span class="br0">&#41;</span>
+      <span class="kw1">if</span> password<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">!=</span> input<span class="br0">&#91;</span>i<span class="br0">&#93;</span>
+         <span class="kw1">return</span> FAIL
+  <span class="kw1">return</span> SUCCESS</pre>
+
+<p>
+Therefore, the more iterations the for-loop does, the closer the input is to the truth. Exploits based on information about the physical implementation of the authentication system (such as execution time / power consumption / resources allocated, for different inputs) are called <a href="http://en.wikipedia.org/wiki/Side_channel_attack" class="urlextern" title="http://en.wikipedia.org/wiki/Side_channel_attack"  rel="nofollow">side-channel attacks</a>.
+</p>
+
+<p>
+<strong>[1.5p]</strong> The <code>sidechannel</code> program authenticates users if they enter the correct passphrase, which has the following structure
+</p>
+<pre class="code">&lt;article&gt; &lt;adjective&gt; &lt;noun&gt;</pre>
+
+<p>
+The composing words are randomly chosen from the dictionaries in the <code>dict</code> directory. The check is done in plaintext and the program also reports its execution time (in microseconds).
+</p>
+<ol>
+<li class="level1"><div class="li"> inspect the dictionaries and determine how different inputs affect the execution time</div>
+</li>
+<li class="level1"><div class="li"> design and implement a side-channel attack to guess the passphrase</div>
+</li>
+</ol>
+
+<p>
+Tip: you can use <code>pexpect_skeleton.py</code>, which demonstrates the use of pexpect to interact with shell programs.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "1. Side-channel attack" [1843-3249] -->
+<h2 class="sectionedit6" id="password_breaking_toolkit">2. Password breaking toolkit</h2>
+<div class="level2">
+
+<p>
+If you weren&#039;t already convinced, we have just seen yet another reason why it is more secure to work with password hashes instead of the plaintext. But who said hashes are bullet-proof? In the second part of the lab, we will give you a step-by-step guide to building your very-own password breaking toolkit.
+</p>
+
+<p>
+<code>passwords.hash</code> contains a list of SHA-256 password hashes, with varying strengths and weaknesses and we have to determine the associated plaintexts. We recommend that you write modular code, since some components will be reused in subsequent tasks. A good recipe is placed in the lab archive, in the <code>breaking_skeleton.py</code> file.
+</p>
+
+</div>
+
+<h5 id="p_a_brute_force_module">[1p] a. Brute force module</h5>
+<div class="level5">
+
+<p>
+Write a module that generates all the possible 4-5-character passwords and compares their hashes to the ones in the database. The charset to consider is composed of all the symbols on a standard US keyboard.
+</p>
+
+<p>
+There are 10 passwords to be cracked this way.
+</p>
+
+<p>
+<p><div class="noteimportant">
+This task might take a <strong>very long</strong> time to complete; it will probably take more than two hours, depending on your choice of the charset, but don&#039;t worry about that, just leave it running long enough so that it finds the 4-character passwords and <em>maybe some</em> of the 5-character passwords. Just make sure to leave it running in background while solving the other tasks.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notewarning">
+Do not pregenerate possible passwords that you would then feed to the hash function. It will waste the system RAM and most likely require you to do a hard reboot (by using the power button).
+
+</div></p>
+</p>
+
+</div>
+
+<h5 id="p_b_dictionary_attack_module">[1p] b. Dictionary attack module</h5>
+<div class="level5">
+
+<p>
+Build a module for a dictionary attack and use the dictionary in <code>dict/words</code> to crack 10 passwords.
+</p>
+
+<p>
+<p><div class="notetip">
+Do you need to consider all the words?
+
+</div></p>
+</p>
+
+</div>
+
+<h5 id="p_c_hybrid_attack_module">[2.5p] c. Hybrid attack module</h5>
+<div class="level5">
+
+<p>
+Consider the following common substitutions:
+</p>
+<pre class="code">a -&gt; @
+e -&gt; 3
+i -&gt; !
+o -&gt; 0
+s -&gt; $</pre>
+
+<p>
+<strong>[1p]</strong> Develop a module that re-runs the dictionary attack, while making all these substitutions simultaneously.
+An additional 10 passwords will be broken this way.
+</p>
+
+<p>
+<strong>[1.5p]</strong> Extend your previous two modules to add punctuation marks at the end of the password, either <code>.</code> or <code>...</code> or <code>!</code> or <code>?</code>. You will find 10 additional solutions.
+</p>
+
+</div>
+
+<h5 id="p_d_salting_module">[3.5p] d. Salting module</h5>
+<div class="level5">
+
+<p>
+Some entries in the database have a larger size than the others, because they also store a salt string, either <strong>prefixed</strong>
+</p>
+<pre class="code python">salt.<span class="me1">decode</span><span class="br0">&#40;</span><span class="st0">'hex'</span><span class="br0">&#41;</span> + <span class="kw2">hash</span></pre>
+
+<p>
+or <strong>suffixed</strong>.
+</p>
+
+<p>
+The convention is that if the database entry has the salt <strong>prefixed</strong>, then the salt was appended at the beginning of the password before salting. Similarly, a salt that is stored <strong>suffixed</strong> was appended after the password before hashing.
+</p>
+
+<p>
+<strong>[2p]</strong> Consult the <a href="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions" class="urlextern" title="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions"  rel="nofollow">hash length table</a> and use it to determine the salt lengths. Write a module that runs a salted dictionary attack, which will identify 5 suffixed and 5 prefixed passwords.
+</p>
+
+<p>
+<strong>[1.5p]</strong> Now combine the salting and hybrid attack modules and determine 10 additional passwords.
+</p>
+
+</div>
+
+<h5 id="p_e_lookup_tables">[1p] e. Lookup tables</h5>
+<div class="level5">
+
+<p>
+Finally, run the remaining hashes through a lookup table such as <a href="https://crackstation.net/" class="urlextern" title="https://crackstation.net/"  rel="nofollow">CrackStation.net</a>.
+</p>
+
+</div>
+
+<h5 id="bonus_1p_f_social_engineering">[Bonus 1p] f. Social engineering</h5>
+<div class="level5">
+
+<p>
+After all the above, you will be left with one uncracked hash. This account belongs to David, who used a lowercase space-separated passphrase. His Facebook profile is littered with the latest internet memes and it appears that he is a member in the Tolkien Society. Finally, he frequently uses the username boromir90. 
+</p>
+
+<p>
+Can you guess his passphrase?
+</p>
+
+</div>
+
+<h5 id="bonus_1p_g_john_the_ripper">[Bonus 1p] g. John the Ripper</h5>
+<div class="level5">
+
+<p>
+As an alternative to our password breaking toolkit, install <a href="http://www.openwall.com/john/" class="urlextern" title="http://www.openwall.com/john/"  rel="nofollow">John the Ripper</a> to assess how well it performs. John combines the methods above to attempt password breaking (see <a href="http://www.openwall.com/john/doc/MODES.shtml" class="urlextern" title="http://www.openwall.com/john/doc/MODES.shtml"  rel="nofollow">cracking modes</a> for more details).
+</p>
+
+<p>
+The official version doesn&#039;t know how to brute-force SHA256 hashes, so download the <a href="http://www.openwall.com/john/j/john-1.8.0-jumbo-1.tar.xz" class="urlextern" title="http://www.openwall.com/john/j/john-1.8.0-jumbo-1.tar.xz"  rel="nofollow">jumbo version</a> in the lab directory and compile it:
+</p>
+<pre class="code">$ wget http://www.openwall.com/john/j/john-1.8.0-jumbo-1.tar.xz
+$ tar xf john-1.8.0-jumbo-1.tar.xz
+$ cd john-1.8.0-jumbo-1/src
+$ ./configure
+$ make</pre>
+
+<p>
+<p><div class="noteclassic">The <a href="http://www.openwall.com/john/" class="urlextern" title="http://www.openwall.com/john/"  rel="nofollow">official page</a> mentions that OpenSSL is a dependency of this version of John. If you run into any configuration/compilation problems, try installing the <code>libssl-dev</code> package.
+</div></p>
+</p>
+
+<p>
+Now go back to the lab directory and create a file <code>non-salted.hash</code> containing the non-salted passwords from <code>passwords.hash</code>. Next, run <code>john</code> to attempt breaking the passwords:
+</p>
+<pre class="code">$ ./john-1.8.0-jumbo-1/run/john --format=raw-sha256 non-salted.hash</pre>
+
+<p>
+or
+</p>
+<pre class="code">$ ./john-1.8.0-jumbo-1/run/john --format=raw-sha256 --wordlist=dict/words --rules non-salted.hash</pre>
+
+<p>
+<p><div class="notetip">John the Ripper saves passwords in a file called <code>john.pot</code> in the <code>run</code> directory, so that you can interrupt cracking and resume later.
+</div></p>
+</p>
+
+<p>
+How many of the passwords did it crack almost instantaneously? How many passwords were cracked in the first 10 minutes?
+</p>
+
+</div>
+<!-- EDIT6 SECTION "2. Password breaking toolkit" [3250-] --></div>
+</body>
+</html>

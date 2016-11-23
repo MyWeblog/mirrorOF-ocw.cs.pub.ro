@@ -1,0 +1,434 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cns:labs:lab-09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-12-14T21:34:03+0200"/>
+<meta name="keywords" content="cns,labs,lab-09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="lab-09.html"/>
+<link rel="canonical" href="../../../../cns/labs/lab-09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-09","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-09.html#lab_09_-_encryption_hashing_apis">Lab 09 - Encryption. Hashing. APIs</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-09.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="lab-09.html#supporting_files">Supporting files</a></div></li>
+<li class="level2"><div class="li"><a href="lab-09.html#introduction">Introduction</a></div></li>
+<li class="level2"><div class="li"><a href="lab-09.html#i_hashing">I. Hashing</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-09.html#p_0_api">[1.5p] 0. API</a></div></li>
+<li class="level3"><div class="li"><a href="lab-09.html#p_1_rainbow_tables">[1.5p] 1. Rainbow tables</a></div></li>
+<li class="level3"><div class="li"><a href="lab-09.html#p_2_salting_dictionary_attack">[2p] 2. Salting. Dictionary attack</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-09.html#ii_encryption">II. Encryption</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-09.html#api">0. API</a></div></li>
+<li class="level3"><div class="li"><a href="lab-09.html#p_1_symmetric_stream_ciphersxor_rc4">[2.5p] 1. Symmetric stream ciphers: xor, RC4</a></div></li>
+<li class="level3"><div class="li"><a href="lab-09.html#p_2_privatepublic_key_encryptionrsa">[2.5p] 2. Private/public key encryption: RSA</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="lab_09_-_encryption_hashing_apis">Lab 09 - Encryption. Hashing. APIs</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Lab 09 - Encryption. Hashing. APIs" [1-51] -->
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.dlitz.net/software/pycrypto/api/current/" class="urlextern" title="https://www.dlitz.net/software/pycrypto/api/current/"  rel="nofollow">PyCrypto API documentation</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Hash_function" class="urlextern" title="http://en.wikipedia.org/wiki/Hash_function"  rel="nofollow">Hash function basics</a>, <a href="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions" class="urlextern" title="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions"  rel="nofollow">Output length of popular hash functions</a></div>
+</li>
+<li class="level1"><div class="li"> Hash lookup tables: <a href="https://crackstation.net/" class="urlextern" title="https://crackstation.net/"  rel="nofollow">CrackStation.net</a> <a href="http://www.hashkiller.co.uk/" class="urlextern" title="http://www.hashkiller.co.uk/"  rel="nofollow">HashKiller.co.uk</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://crackstation.net/hashing-security.htm" class="urlextern" title="https://crackstation.net/hashing-security.htm"  rel="nofollow">Password salting best practices</a>, <a href="https://defuse.ca/password-policy-hall-of-shame.htm" class="urlextern" title="https://defuse.ca/password-policy-hall-of-shame.htm"  rel="nofollow">Password policy hall of shame</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Exclusive_or" class="urlextern" title="http://en.wikipedia.org/wiki/Exclusive_or"  rel="nofollow">XOR basics</a> <a href="http://en.wikipedia.org/wiki/XOR_cipher" class="urlextern" title="http://en.wikipedia.org/wiki/XOR_cipher"  rel="nofollow">XOR stream cipher</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/RC4" class="urlextern" title="http://en.wikipedia.org/wiki/RC4"  rel="nofollow">RC4 stream cipher</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/RSA_(algorithm)" class="urlextern" title="http://en.wikipedia.org/wiki/RSA_(algorithm)"  rel="nofollow">RSA cryptosystem</a>, <a href="https://freedom-to-tinker.com/blog/nadiah/new-research-theres-no-need-panic-over-factorable-keys-just-mind-your-ps-and-qs/" class="urlextern" title="https://freedom-to-tinker.com/blog/nadiah/new-research-theres-no-need-panic-over-factorable-keys-just-mind-your-ps-and-qs/"  rel="nofollow">RSA duplicates and factorization study</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Resources" [52-1055] -->
+<h2 class="sectionedit3" id="supporting_files">Supporting files</h2>
+<div class="level2">
+
+<p>
+You will use this <a href="http://elf.cs.pub.ro/oss/res/labs/lab-09.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-09.tar.gz"  rel="nofollow">lab archive</a> throughout the lab.
+</p>
+
+<p>
+Please download the lab archive an then unpack it using the commands below:
+</p>
+<pre class="code bash">$ <span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>oss<span class="sy0">/</span>res<span class="sy0">/</span>labs<span class="sy0">/</span>lab-09.tar.gz
+$ <span class="kw2">tar</span> xzf lab-09.tar.gz</pre>
+
+<p>
+After unpacking, you will get the <code>lab-09/</code> folder:
+</p>
+<pre class="code bash">$ <span class="kw3">cd</span> lab-09<span class="sy0">/</span>
+$ <span class="kw2">ls</span> <span class="re5">-F</span>
+dict<span class="sy0">/</span>  dict.py  dump_22_11_2013.db  rc4.py  rsa_conversation.txt  rsa_n1.txt  rsa_n2.txt  rsa.py  xor.py</pre>
+
+<p>
+You also need to have <a href="https://www.dlitz.net/software/pycrypto/api/current/" class="urlextern" title="https://www.dlitz.net/software/pycrypto/api/current/"  rel="nofollow">PyCrypto</a> installed:
+</p>
+<pre class="code">$ sudo apt-get install python-crypto</pre>
+
+</div>
+<!-- EDIT3 SECTION "Supporting files" [1056-1716] -->
+<h2 class="sectionedit4" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+Be it the Internet or your dorm&#039;s <abbr title="Local Area Network">LAN</abbr>, cyberspace is a shared medium, hence all traffic, regardless of destination, can be intercepted by any of the connected peers. This lab will introduce you to encryption and hashing algorithms - essential components in the mechanisms designed to protect your sensitive data from unwelcome eyes, throughout its transit on the information highway.
+</p>
+
+<p>
+The tasks are divided into small progressive steps and we rely on your intuition in providing answers to the open questions.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Introduction" [1717-2253] -->
+<h2 class="sectionedit5" id="i_hashing">I. Hashing</h2>
+<div class="level2">
+
+<p>
+A <a href="http://en.wikipedia.org/wiki/Hash_function" class="urlextern" title="http://en.wikipedia.org/wiki/Hash_function"  rel="nofollow">hash function</a> maps its variable-length input (i.e. a message, a password, etc) to a fixed-size output (called the <em>hash</em> or <em>digest</em>). In addition, the following properties:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>One-way</strong>: function evaluations are inexpensive, but it is mathematically impossible or, at least, <em>computationally unfeasible</em> to recover the message, given the hash.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Deterministic</strong>: the same input should always translate to the same output</div>
+</li>
+<li class="level1"><div class="li"> <strong>Numerically unstable</strong>: a slightly altered message should produce a dramatically different hash, when compared to the original.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Non-colliding</strong>: given the difference in size between input and output, there certainly exist two different messages which produce the same hash. However, finding such <em>collisions</em> should be a computationally unfeasible task.</div>
+</li>
+</ul>
+
+<p>
+make for a hash function that can be successfully used in checking message integrity and authentication.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "I. Hashing" [2254-3237] -->
+<h3 class="sectionedit6" id="p_0_api">[1.5p] 0. API</h3>
+<div class="level3">
+
+<p>
+In <a href="https://www.dlitz.net/software/pycrypto/api/current/" class="urlextern" title="https://www.dlitz.net/software/pycrypto/api/current/"  rel="nofollow">PyCrypto</a>, the use of hash functions usually conforms to the following recipe:
+</p>
+<pre class="code python"><span class="kw1">from</span> Crypto.<span class="me1">Hash</span> <span class="kw1">import</span> function_of_choice
+&nbsp;
+myHash <span class="sy0">=</span> function_of_choice.<span class="kw3">new</span><span class="br0">&#40;</span>myMessage<span class="br0">&#41;</span>.<span class="me1">digest</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+
+<p>
+where <code>function_of_choice</code> can be <code>MD5</code>, <code>SHA</code>, <code>SHA256</code> or <a href="https://www.dlitz.net/software/pycrypto/api/current/Crypto.Hash-module.html" class="urlextern" title="https://www.dlitz.net/software/pycrypto/api/current/Crypto.Hash-module.html"  rel="nofollow">others</a>. Afterwards, <code>myHash</code> can be presented in a human-readable format via
+</p>
+<pre class="code python"><span class="kw1">print</span> myHash.<span class="me1">encode</span><span class="br0">&#40;</span><span class="st0">'hex'</span><span class="br0">&#41;</span></pre>
+
+<p>
+To get a feel for this,
+</p>
+
+<p>
+<strong>[1.5p]</strong> Generate an <code>MD5</code>, <code>SHA</code>, <code>SHA256</code> hash of a word generated by <code>get_word()</code> from <code>dict.py</code>. Check if the size of the output is consistent with those provided <a href="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions" class="urlextern" title="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions"  rel="nofollow">here</a>. Repeat the procedure for a sentence generated by <code>get_sentence()</code>.
+</p>
+
+<p>
+<p><div class="noteclassic"> (Usually) Linux systems provide a dictionary file, <code>/usr/share/dict/words</code> – a subset of this is provided in the <code>dict/words</code> file from the lab supporting archive.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "[1.5p] 0. API" [3238-4329] -->
+<h3 class="sectionedit7" id="p_1_rainbow_tables">[1.5p] 1. Rainbow tables</h3>
+<div class="level3">
+
+<p>
+Given the fixed size of their output and the <strong>one-way</strong> property, hash functions are ideal for user authentication. To that end, the supplied password is hashed and compared to the corresponding entry in the account database. This ensures that, even if an attacker somehow gains access to the database, they can not recover the password plaintext. Or does it?
+</p>
+
+<p>
+Several studies (see <a href="https://defuse.ca/blog/cracking-linkedin-hashes-with-crackstation" class="urlextern" title="https://defuse.ca/blog/cracking-linkedin-hashes-with-crackstation"  rel="nofollow">this</a> after the lab) show that users tend to use short, predictable strings (for example, e-mails or dictionary words) as their passwords and, if this wasn&#039;t bad enough, reuse them for several websites/services.
+</p>
+
+<p>
+Attackers can take advantage of this by precomputing a lookup table with hashes of common passwords. <a href="https://crackstation.net/" class="urlextern" title="https://crackstation.net/"  rel="nofollow">CrackStation.net</a>, for example, can be queried for hashes of all the words on Wikipedia and more.
+</p>
+
+<p>
+<strong>[1.5p]</strong> During account creation, a website asks users to enter an answer to one of the following secret questions, for password reset:
+</p>
+<ul>
+<li class="level1"><div class="li"> Which type of pet did you have during childhood?</div>
+</li>
+<li class="level1"><div class="li"> Who is your favorite superhero?</div>
+</li>
+<li class="level1"><div class="li"> In which city did you go to elementary school?</div>
+</li>
+</ul>
+
+<p>
+The answers are hashed, encoded in <code>hex</code> and stored in the database field <code>secret</code>.
+</p>
+<pre class="code sql"><span class="kw1">CREATE</span> <span class="kw1">TABLE</span> <span class="st0">`accounts`</span> <span class="br0">&#40;</span>
+	<span class="st0">`username`</span> <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="nu0">25</span><span class="br0">&#41;</span> <span class="kw1">NOT</span> <span class="kw1">NULL</span><span class="sy0">,</span>
+	<span class="st0">`secret`</span> <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="nu0">40</span><span class="br0">&#41;</span> <span class="kw1">DEFAULT</span> <span class="kw1">NULL</span><span class="sy0">,</span>
+	<span class="st0">`password`</span> <span class="kw1">VARCHAR</span><span class="br0">&#40;</span><span class="nu0">32</span><span class="br0">&#41;</span> <span class="kw1">DEFAULT</span> <span class="kw1">NULL</span><span class="sy0">,</span>
+	<span class="st0">`salt`</span> <span class="kw1">INT</span> <span class="kw1">DEFAULT</span> <span class="nu0">0</span><span class="sy0">,</span>
+	<span class="kw1">PRIMARY</span> <span class="kw1">KEY</span>  <span class="br0">&#40;</span><span class="st0">`username`</span><span class="br0">&#41;</span><span class="sy0">,</span>
+<span class="br0">&#41;</span>;</pre>
+
+<p>
+Inspect <code>dump_22_11_2013.db</code> and try to determine, by consulting <a href="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions" class="urlextern" title="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions"  rel="nofollow">this table</a>, which hash function was used (candidates are <code>MD5</code>, <code>SHA-1</code> and <code>SHA-256</code>). Then feed the hashes to <a href="https://crackstation.net/" class="urlextern" title="https://crackstation.net/"  rel="nofollow">CrackStation.net</a> or <a href="http://www.hashkiller.co.uk/" class="urlextern" title="http://www.hashkiller.co.uk/"  rel="nofollow">HashKiller.co.uk</a> and note the results.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "[1.5p] 1. Rainbow tables" [4330-6209] -->
+<h3 class="sectionedit8" id="p_2_salting_dictionary_attack">[2p] 2. Salting. Dictionary attack</h3>
+<div class="level3">
+
+<p>
+To overcome lookup table attacks, passwords should be <em>salted</em>. A <em>salt</em> is a random string, which is stored in the database (as plaintext!) and appended to the password before hashing. Then, even if a user uses the same information for different websites, an attacker is not able to tell, since the salts will be different (recall the <strong>numerical instability</strong> property). For example,
+</p>
+<pre class="code python"><span class="sy0">&gt;&gt;&gt;</span> SHA.<span class="kw3">new</span><span class="br0">&#40;</span><span class="st0">'velociraptor1'</span><span class="br0">&#41;</span>.<span class="me1">digest</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">encode</span><span class="br0">&#40;</span><span class="st0">'hex'</span><span class="br0">&#41;</span>
+<span class="st0">'709295311532df5ba72b2aef7f02bb60ddf67c5b'</span>
+<span class="sy0">&gt;&gt;&gt;</span> SHA.<span class="kw3">new</span><span class="br0">&#40;</span><span class="st0">'velociraptor2'</span><span class="br0">&#41;</span>.<span class="me1">digest</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">encode</span><span class="br0">&#40;</span><span class="st0">'hex'</span><span class="br0">&#41;</span>
+<span class="st0">'8d6fbe97edb319f931d667209c24eb4bc46bd8cc'</span></pre>
+
+<p>
+Still, this does nothing to prevent brute-forcing. Therefore, if the attacker knows the salt, then a weak password can be easily guessed using a <em>dictionary attack</em>.
+</p>
+
+<p>
+<strong>[2p]</strong> Try to use <a href="https://crackstation.net/" class="urlextern" title="https://crackstation.net/"  rel="nofollow">CrackStation.net</a> or <a href="http://www.hashkiller.co.uk/" class="urlextern" title="http://www.hashkiller.co.uk/"  rel="nofollow">HashKiller.co.uk</a> to reverse the <code>password</code> hashes from the <code>dump_22_11_2013.db</code> database. Did it work? In this case, the salts are string representations of integers, which are then used as <strong>prefixes</strong> to the password before hashing. Use the field length to determine which hash function was used (look for <code>MD5</code>, <code>SHA-1</code> and <code>SHA-256</code> in the <a href="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions" class="urlextern" title="http://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions"  rel="nofollow">table</a>). Then, determine the passwords via brute-force by using the <code>dict/words</code> dictionary from the supporting archive.
+</p>
+
+<p>
+<p><div class="notetip">Watch out for trailing newlines! See <code>dict.py</code> for a simple way to parse the dictionary.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+<strong>After the lab</strong>: Check out the <a href="https://crackstation.net/hashing-security.htm" class="urlextern" title="https://crackstation.net/hashing-security.htm"  rel="nofollow">best practices</a> for salting passwords and how they <a href="https://defuse.ca/password-policy-hall-of-shame.htm" class="urlextern" title="https://defuse.ca/password-policy-hall-of-shame.htm"  rel="nofollow">are (not) implemented</a> by high-profile websites.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "[2p] 2. Salting. Dictionary attack" [6210-8036] -->
+<h2 class="sectionedit9" id="ii_encryption">II. Encryption</h2>
+<div class="level2">
+
+<p>
+Hash functions work well for password authentication since they are only one-way. However, for other applications, such as message passing, recovering the plaintext is a desirable property. Our goal here is to prevent eavesdroppers from understanding the conversation and, therefore, the two interested parties need to possess “extra” information (<em>keys</em>) to <em>encrypt</em> and <em>decrypt</em> messages.
+</p>
+
+<p>
+Encryption algorithms are also called <em>ciphers</em>. Recall from the lecture that they are divided in
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>symmetric</strong> if the encryption key coincides with the one used for decryption; <strong>asymmetric</strong> otherwise</div>
+</li>
+<li class="level1"><div class="li"> <strong>block-level</strong> if they process messages in chunks; <strong>stream</strong> if their operation can be done byte-by-byte</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT9 SECTION "II. Encryption" [8037-8785] -->
+<h3 class="sectionedit10" id="api">0. API</h3>
+<div class="level3">
+
+<p>
+For PyCrypto, the encryption algorithms reside in the <a href="https://www.dlitz.net/software/pycrypto/api/current/Crypto.Cipher-module.html" class="urlextern" title="https://www.dlitz.net/software/pycrypto/api/current/Crypto.Cipher-module.html"  rel="nofollow">Crypto.Cipher</a> (XOR, RC4, etc) and <a href="https://www.dlitz.net/software/pycrypto/api/current/Crypto.PublicKey-module.html" class="urlextern" title="https://www.dlitz.net/software/pycrypto/api/current/Crypto.PublicKey-module.html"  rel="nofollow">Crypto.PublicKey</a> (RSA, etc) modules. While each may have different initialization parameters, the recipes are generally as follows
+</p>
+<pre class="code python"><span class="kw1">from</span> Crypto.<span class="me1">Cipher</span> <span class="kw1">import</span> alg_of_choice
+&nbsp;
+cipher <span class="sy0">=</span> alg_of_choice.<span class="kw3">new</span><span class="br0">&#40;</span>...<span class="sy0">,</span> myKey<span class="sy0">,</span> ...<span class="br0">&#41;</span>
+encMsg <span class="sy0">=</span> cipher.<span class="me1">encrypt</span><span class="br0">&#40;</span>myMsg<span class="br0">&#41;</span>
+decMsg <span class="sy0">=</span> cipher.<span class="me1">decrypt</span><span class="br0">&#40;</span>encMsg<span class="br0">&#41;</span></pre>
+
+<p>
+and
+</p>
+<pre class="code python"><span class="kw1">from</span> Crypto.<span class="me1">PublicKey</span> <span class="kw1">import</span> RSA
+&nbsp;
+privKey <span class="sy0">=</span> RSA.<span class="me1">generate</span><span class="br0">&#40;</span>numBits<span class="br0">&#41;</span>            <span class="co1"># numBits should be 2048 or more</span>
+pubKey <span class="sy0">=</span> privKey.<span class="me1">publickey</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+result <span class="sy0">=</span> pubKey.<span class="me1">encrypt</span><span class="br0">&#40;</span>myMsg<span class="sy0">,</span>0L<span class="br0">&#41;</span>          <span class="co1"># the second argument is ignored (future compatibility)</span>
+encMsg <span class="sy0">=</span> result<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>			   <span class="co1"># encrypt returns a tuple, but the second element is None (future compatibility)</span>
+decMsg <span class="sy0">=</span> privKey.<span class="me1">decrypt</span><span class="br0">&#40;</span>encMsg<span class="br0">&#41;</span></pre>
+
+</div>
+<!-- EDIT10 SECTION "0. API" [8786-9765] -->
+<h3 class="sectionedit11" id="p_1_symmetric_stream_ciphersxor_rc4">[2.5p] 1. Symmetric stream ciphers: xor, RC4</h3>
+<div class="level3">
+
+<p>
+<a href="http://en.wikipedia.org/wiki/Exclusive_or" class="urlextern" title="http://en.wikipedia.org/wiki/Exclusive_or"  rel="nofollow">XOR</a> is the simplest symmetric cipher and an essential ingredient for other, more complex cryptographic algorithms. Its behaviour is given by the eXclusive OR truth table,
+</p>
+<div class="table sectionedit12"><table class="inline">
+	<tr class="row0">
+		<th class="col0 centeralign">    a    </th><th class="col1 centeralign">    b    </th><th class="col2"> a XOR b </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0 centeralign">    0    </td><td class="col1 centeralign">    0    </td><td class="col2 centeralign">    0    </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 centeralign">    0    </td><td class="col1 centeralign">    1    </td><td class="col2 centeralign">    1    </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 centeralign">    1    </td><td class="col1 centeralign">    0    </td><td class="col2 centeralign">    1    </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 centeralign">    1    </td><td class="col1 centeralign">    1    </td><td class="col2 centeralign">    0    </td>
+	</tr>
+</table></div>
+<!-- EDIT12 TABLE [10040-10199] -->
+<p>
+and the following properties:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>symmetric</strong>: a XOR b = b XOR a</div>
+</li>
+<li class="level1"><div class="li"> <strong>self-inverse</strong>: a XOR b XOR b = a</div>
+</li>
+<li class="level1"><div class="li"> <strong>0-neutral</strong>: a XOR 0 = a, which also implies a XOR a = 0</div>
+</li>
+</ul>
+
+<p>
+Notice that, while the cipher can, theoretically, operate at bit level, the CPU can XOR bytes or 64-bit integers in one go. The python operator for XOR is <code>^</code>.
+</p>
+
+<p>
+<strong>[1.5p]</strong> <code>xor.py</code> uses a XOR stream cipher – the message is processed by XOR-ing each of its chars with the corresponding ones from the key. First, analyze the code and determine what happens if the message is longer than the key. Then, observe the first three bytes of the encrypted example message. Can you explain their behavior? Finally, use the properties of XOR to compute the key.
+</p>
+
+<p>
+<p><div class="notetip">
+Both input and output strings are encoded as <code>string_escape</code>, hence unprintable chars can be supplied/are printed via their <abbr title="American Standard Code for Information Interchange">ASCII</abbr> code in hex. For example <code>\x12</code> is the char with <abbr title="American Standard Code for Information Interchange">ASCII</abbr> code 18.
+
+</div></p>
+</p>
+
+<p>
+<a href="http://en.wikipedia.org/wiki/RC4" class="urlextern" title="http://en.wikipedia.org/wiki/RC4"  rel="nofollow">RC4</a> is another symmetric cipher which computes its key-stream via permutations of the vector [0, 1, …, 255], based on a supplied seed. During encryption, the key is byte-wise XOR-ed with the message, just as was the case with the XOR cipher.
+</p>
+
+<p>
+<strong>[1p]</strong> Inspect <code>rc4.py</code> and use the same approach as above to obtain the cipher. Then attempt to decrypt the sample encrypted message. In fact, there is another (read: shorter) way to do this, can you identify it? Notice that the RC4 object is renewed for every supplied message. Comment out line 17 of <code>rc4.py</code>:
+</p>
+<pre class="code python">cipher <span class="sy0">=</span> ARC4.<span class="kw3">new</span><span class="br0">&#40;</span>key<span class="br0">&#41;</span></pre>
+
+<p>
+re-run the script and see if the previous observations still apply. Can you explain why/why not?
+</p>
+
+</div>
+<!-- EDIT11 SECTION "[2.5p] 1. Symmetric stream ciphers: xor, RC4" [9766-11893] -->
+<h3 class="sectionedit13" id="p_2_privatepublic_key_encryptionrsa">[2.5p] 2. Private/public key encryption: RSA</h3>
+<div class="level3">
+
+<p>
+RSA is an asymmetric encryption algorithm which makes use of a key pair: the sender encrypts the message with the public key, which is then decrypted by the receiver with the private key.
+</p>
+
+<p>
+The generation of this key pair is based on two large prime numbers, <strong>p</strong> and <strong>q</strong>. Their product, <strong>n</strong>, is called the <em>modulus</em> and is contained in the public key. The strength of RSA lies in the difficulty of factorizing <strong>n</strong> into <strong>p</strong> and <strong>q</strong>, which are needed for decryption.
+</p>
+
+<p>
+<strong>[1.5p]</strong> A smartcard manufacturer uses RSA to encrypt the communication with the host device. During beta testing, the following vulnerability was discovered: on reset (or power-on) all devices initialize their RNG (Random Number Generator) with the same seed value. Hence, if the RSA key pair is generated immediately after reset, then it would be identical across all of the brand&#039;s devices. In a new revision, the following fix was applied:
+</p>
+<pre class="code">function (p,q) = init_RSA()
+   p = generatePrime()
+   randomizeRNG()                // added in Revision 1.01 to fix key-pair duplication
+   q = generatePrime()
+   ...                           // rest of RSA generation code
+end</pre>
+
+<p>
+Assuming that the randomization is effective (i.e. unique to each device), what would happen after a “reset attack” on the new version? Is this a solution to the problem? The values of the modulus, <strong>n=p*q</strong>, were collected from two devices (running the <code>1.01</code> firmware) after a “reset attack” and are given in <code>rsa_n1.txt</code> and <code>rsa_n2.txt</code>. Complete the skeleton from <code>rsa.py</code> with your solution to factorize the moduli (i.e. obtain <strong>p1, q1</strong> and <strong>p2, q2</strong>).
+</p>
+
+<p>
+<p><div class="notetip">You should find all the necessary tools in the <a href="https://www.dlitz.net/software/pycrypto/api/current/Crypto.Util.number-module.html" class="urlextern" title="https://www.dlitz.net/software/pycrypto/api/current/Crypto.Util.number-module.html"  rel="nofollow">Crypto.Util.number</a> module.
+</div></p>
+</p>
+
+<p>
+<strong>[1p]</strong> Use the obtained values to reconstruct the RSA key-pairs (use <code>genRSAkey(p,q)</code> from <code>rsa.py</code>) and decrypt the messages in the conversation from <code>rsa_conversation.txt</code>. It contains 5 back and forth messages (key1(msg1) → key2(msg2) → key1(msg3) → etc).
+</p>
+
+<p>
+<p><div class="noteclassic">
+For real-world applications, it is strongly <strong>not</strong> recommended to generate the RSA key-pair “manually” from <strong>p</strong> and <strong>q</strong>, as was done in <code>rsa.py</code>. This is just an academic example. Usually, you would use the recipe given in the <abbr title="Application Programming Interface">API</abbr> section above, which automatically takes care of prime number generation.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+<strong>After the lab</strong>: as you can read <a href="https://freedom-to-tinker.com/blog/nadiah/new-research-theres-no-need-panic-over-factorable-keys-just-mind-your-ps-and-qs/" class="urlextern" title="https://freedom-to-tinker.com/blog/nadiah/new-research-theres-no-need-panic-over-factorable-keys-just-mind-your-ps-and-qs/"  rel="nofollow">here</a>, it is not uncommon to have factorizable pairs of moduli in the real world.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "[2.5p] 2. Private/public key encryption: RSA" [11894-] --></div>
+</body>
+</html>

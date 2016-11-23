@@ -1,0 +1,146 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:08:contents:10</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-12-08T11:23:07+0200"/>
+<meta name="keywords" content="rl,labs,08,contents,10"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="10.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/08/contents/10.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:08:contents';var JSINFO = {"id":"rl:labs:08:contents:10","namespace":"rl:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_problema_la_conectarea_ssh_folosind_chei">10. [10p] Problemă la conectarea SSH folosind chei</h3>
+<div class="level3">
+
+<p>
+Din contul utilizatorului <code>student</code> de pe stația <code>red</code> conectați-vă la utilizatorul <code>ana</code> de pe stația <code>host</code> prin SSH prin rularea comenzii
+</p>
+<pre class="code bash"><span class="co4">student@red:~$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> ana host
+ana<span class="sy0">@</span>host<span class="st_h">'s password:</span></pre>
+
+<p>
+Observați că vi se cere parola. Folosiți <code>Ctrl+c</code> pentru a anula promptul de parolă și a reveni la shell-ul inițial.
+</p>
+
+<p>
+Afișați fișierul care conține cheia publică stocată local și cel care conține cheia publică stocată la distanță. Folosiți comenzile
+</p>
+<pre class="code bash"><span class="co4">student@red:~$ </span><span class="kw2">cat</span> ~<span class="sy0">/</span>.ssh<span class="sy0">/</span>id_rsa.pub 
+ssh-rsa AAAAB3NzaC1yc<span class="br0">&#91;</span>...<span class="br0">&#93;</span> student<span class="sy0">@</span><span class="kw2">red</span>
+&nbsp;
+<span class="co4">student@red:~$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> ana host <span class="st0">&quot;cat ~/.ssh/authorized_keys&quot;</span>
+ana<span class="sy0">@</span>host<span class="st_h">'s password: 
+ssh-rsa AAAAB3NzaC1yc[...] student@red</span></pre>
+
+<p>
+Pentru a doua comandă introduceți parola <code>student</code>. Observați că cele două fișiere sunt identice. În mod obișnuit conectarea SSH ar trebui să funcționeze pe bază de chei, nu ar trebui să solicite parolă.
+</p>
+
+<p>
+O primă metodă de identificare a problemelor de conectare este să rulați comanda de conectare cu opțiune de <em>verbosity</em>:
+</p>
+<pre class="code bash"><span class="co4">student@red:~$ </span><span class="kw2">ssh</span> <span class="re5">-vvv</span> <span class="re5">-l</span> ana host
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+debug3: remaining preferred: ,password
+debug3: authmethod_is_enabled password
+debug1: Next authentication method: password
+ana<span class="sy0">@</span>host<span class="st_h">'s password: </span></pre>
+
+<p>
+ Din păcate mesajele afișate nu oferă informații utile. Folosiți <code>Ctrl+c</code> pentru a anula promptul de parolă și a reveni la shell-ul inițial.
+</p>
+
+<p>
+Pentru identificarea problemei vrem să consultăm fișierele jurnal ale serverului de SSH de la distanță. Autentificați ca <code>root</code> pe stația <code>host</code>, folosiți comanda <code>tail</code> pentru a urmări mesajele de jurnalizare. Comanda rulează în continuu și afișează noile mesaje din fișierul primit ca argument pe măsură ce acestea apar:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">tail</span> <span class="re5">-f</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>auth.log 
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+Nov <span class="nu0">14</span> <span class="nu0">16</span>:<span class="nu0">48</span>:<span class="nu0">31</span> host sshd<span class="br0">&#91;</span><span class="nu0">20898</span><span class="br0">&#93;</span>: Authentication refused: bad ownership or modes <span class="kw1">for</span> directory <span class="sy0">/</span>home<span class="sy0">/</span>ana<span class="sy0">/</span>.ssh
+Nov <span class="nu0">14</span> <span class="nu0">16</span>:<span class="nu0">49</span>:09 host sshd<span class="br0">&#91;</span><span class="nu0">20898</span><span class="br0">&#93;</span>: Connection closed by 192.168.1.2 <span class="br0">&#91;</span>preauth<span class="br0">&#93;</span></pre>
+
+<p>
+ Pentru a genera din nou mesaje legate de problemă, pe stația <code>red</code> rulați, din nou, comanda de conectare SSH:
+</p>
+<pre class="code bash"><span class="kw2">ssh</span> <span class="re5">-l</span> ana host</pre>
+
+<p>
+ Folosiți <code>Ctrl+c</code> pentru a anula promptul de parolă și a reveni la shell-ul inițial.
+</p>
+
+<p>
+Urmăriți mesajele de jurnalizare ale serverului. Urmăriți linia care începe cu “Authentication refused:”.
+</p>
+
+<p>
+<p><div class="notetip">
+Problema este la directorul <code>.ssh/</code> din directorul home al utilizatorului <code>ana</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Folosiți comanda
+</p>
+<pre class="code bash"><span class="kw2">ls</span> <span class="re5">-ld</span> <span class="sy0">&lt;</span>director<span class="sy0">&gt;</span></pre>
+
+<p>
+ pe un director pentru a afișa permisiunile pe directorul <code>&lt;director&gt;</code>. Permisiunile ar trebui să corespundă cu permisiuni pe directoarele identice deținute de alți utilizatori.
+
+</div></p>
+</p>
+
+<p>
+Corectați problema indicată de fișierele jurnal.
+</p>
+
+<p>
+După corectarea problemei, verificați funcționarea conectării SSH folosind chei publice:
+</p>
+<pre class="code bash"><span class="co4">student@red:~$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> ana host
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">ana@host:~$ </span></pre>
+
+<p>
+Dacă ați realizat configurația corectă atunci comanda de mai sus va conduce la conectarea SSH prin cheie publică, fără a vă fi solicitată parola de conectare pentru utilizatorul <code>ana</code> de pe stația <code>host</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

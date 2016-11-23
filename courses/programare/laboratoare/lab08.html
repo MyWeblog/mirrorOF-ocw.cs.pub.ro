@@ -1,0 +1,960 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Alocarea dinamică a memoriei. Aplicaţii folosind tablouri şi matrice.    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="date" content="2016-11-21T23:14:45+0200"/>
+<meta name="keywords" content="programare,laboratoare,lab08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=programare:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="http://ocw.cs.pub.ro/courses/_export/xhtml/programare/laboratoare/lab08"/>
+<link rel="canonical" href="lab08.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='programare:laboratoare';var JSINFO = {"id":"programare:laboratoare:lab08","namespace":"programare:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_pc.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="http://ocw.cs.pub.ro/courses/programare/laboratoare/lab08?do=recent"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="http://ocw.cs.pub.ro/courses/programare/laboratoare/lab08?do=login&amp;sectok=f62420cf5b01253da4b50505d148181b"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="alocarea_dinamica_a_memoriei_aplicatii_folosind_tablouri_si_matrice">Alocarea dinamică a memoriei. Aplicaţii folosind tablouri şi matrice.</h2>
+<div class="level2">
+
+<p>
+<strong>Responsabil:</strong> <a href="mailto:&#x6c;&#x61;&#x75;&#x72;&#x61;&#x2e;&#x76;&#x61;&#x73;&#x69;&#x6c;&#x65;&#x73;&#x63;&#x75;&#x40;&#x63;&#x74;&#x69;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x6c;&#x61;&#x75;&#x72;&#x61;&#x2e;&#x76;&#x61;&#x73;&#x69;&#x6c;&#x65;&#x73;&#x63;&#x75;&#x40;&#x63;&#x74;&#x69;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;">Laura Vasilescu</a>
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="obiective">Obiective</h2>
+<div class="level2">
+
+<p>
+În urma parcurgerii acestui laborator studentul va fi capabil:
+</p>
+<ul>
+<li class="level1"><div class="li"> să aloce dinamic o zona de memorie;</div>
+</li>
+<li class="level1"><div class="li"> să elibereze o zona de memorie;</div>
+</li>
+<li class="level1"><div class="li"> să lucreze cu vectori şi matrice alocate dinamic.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="functii_de_alocare_si_eliberare_a_memoriei">Funcţii de alocare şi eliberare a memoriei</h2>
+<div class="level2">
+
+<p>
+Funcțiile standard de alocare și de eliberare a memoriei sunt declarate în fişierul antet <code>stdlib.h</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>void* malloc(size_t size);</code></div>
+</li>
+<li class="level1"><div class="li"> <code>void* calloc(size_t nmemb, size_t size);</code></div>
+</li>
+<li class="level1"><div class="li"> <code>void* realloc(void *ptr, size_t size);</code></div>
+</li>
+<li class="level1"><div class="li"> <code>void free(void *ptr);</code></div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit4" id="alocarea_memoriei">Alocarea memoriei</h3>
+<div class="level3">
+
+<p>
+Cele trei funcţii de alocare (<code>malloc</code>, <code>calloc</code> și <code>realloc</code>) au ca rezultat adresa zonei de memorie alocate (de tip <code>void*</code>) şi ca argument comun dimensiunea, în octeţi, a zonei de memorie alocate (de tip <code>size_t</code> ). Dacă cererea de alocare nu poate fi satisfăcută pentru că nu mai există un bloc continuu de dimensiunea solicitată, atunci funcţiile de alocare au rezultat <code>NULL</code> (ce reprezintă un pointer de tip <code>void *</code> la adresa de memorie 0, care prin convenţie este o adresă nevalidă - nu există date stocate în acea zonă).
+</p>
+
+</div>
+
+<h5 id="exemplu">Exemplu</h5>
+<div class="level5">
+<pre class="code c">  
+<span class="kw4">char</span> <span class="sy0">*</span>str <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span><span class="nu0">30</span><span class="br0">&#41;</span><span class="sy0">;</span>            <span class="co1">// Aloca memorie pentru 30 de caractere</span>
+ <span class="kw4">int</span> <span class="sy0">*</span>a <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// Aloca memorie pt. n numere intregi</span></pre>
+
+<p>
+<p><div class="noteclassic">Dimensiunea memoriei luată ca parametru de <code>malloc()</code> este specificată în <code>octeţi</code>, indiferent de tipul de date care va fi stocat în acea regiune de memorie! Din acest motiv, pentru a aloca suficientă memorie, numărul dorit de elemente trebuie înmulţit cu dimensiunea unui element, atunci când are loc un apel <code>malloc()</code>.
+</div></p>
+</p>
+
+<p>
+ Alocarea de memorie pentru un vector şi iniţializarea zonei alocate cu zerouri se poate face cu funcţia <code>calloc</code>. 
+</p>
+
+</div>
+
+<h5 id="exemplu1">Exemplu</h5>
+<div class="level5">
+<pre class="code c"><span class="kw4">int</span> <span class="sy0">*</span>a<span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/calloc.html"><span class="kw3">calloc</span></a><span class="br0">&#40;</span>n<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// Aloca memorie pentru n numere intregi și inițializează zona cu zero</span></pre>
+
+<p>
+Codul de mai sus este perfect echivalent (dar mai rapid) cu următoarea secvenţă de instrucţiuni:
+</p>
+<pre class="code c"><span class="kw4">int</span> i<span class="sy0">;</span>
+<span class="kw4">int</span> <span class="sy0">*</span>a <span class="sy0">=</span> <span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+<p><div class="noteclassic">În timp ce funcţia <code>malloc()</code> ia un singur parametru (o dimensiune în octeţi), funcţia <code>calloc()</code> primeşte două argumente, o lungime de vector şi o dimensiune a fiecărui element. Astfel, această funcţie este specializată pentru memorie organizată ca un vector, în timp ce <code>malloc()</code> nu ţine cont de structura memoriei.
+</div></p>
+<p><div class="notewarning">Acest lucru aduce și o măsură de siguranță în plus deoarece înmulțirea dintre numărul de elemente și dimensiunea tipului de date ar putea face overflow, iar dimensiunea memoriei alocate să nu fie în realitatea cea așteptată.
+</div></p>
+</p>
+
+<p>
+ Realocarea unui vector care creşte (sau scade) faţă de dimensiunea estimată anterior se poate face cu funcţia <code>realloc</code>, care primeşte adresa veche şi noua dimensiune şi întoarce <strong>noua adresă</strong>:
+</p>
+<pre class="code c"><span class="kw4">int</span> <span class="sy0">*</span>aux<span class="sy0">;</span>
+aux <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/realloc.html"><span class="kw3">realloc</span></a> <span class="br0">&#40;</span>a<span class="sy0">,</span> <span class="nu0">2</span> <span class="sy0">*</span> n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// Dublare dimensiune anterioara (n)</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>aux<span class="br0">&#41;</span> <span class="co1">//daca aux este diferit de NULL</span>
+    a<span class="sy0">=</span>aux<span class="sy0">;</span>
+<span class="kw1">else</span>
+    <span class="co1">//prelucrare in caz de eroare</span></pre>
+
+<p>
+ În exemplul anterior, noua adresă este memorată tot în variabila pointer <code>a</code>, înlocuind vechea adresă (care nu mai este necesară şi nici nu mai trebuie folosită).   Funcţia <code>realloc()</code> realizează următoarele operaţii:
+</p>
+<ul>
+<li class="level1"><div class="li"> alocă o zonă de dimensiunea specificată ca al doilea argument </div>
+</li>
+<li class="level1"><div class="li"> copiază la noua adresă datele de la adresa veche (primul argument al funcţiei) </div>
+</li>
+<li class="level1"><div class="li"> eliberează memoria de la adresa veche.</div>
+</li>
+</ul>
+
+<p>
+In cazul in care nu reuseste sa aloce memorie functia <code>realloc()</code> intoarce NULL lasand pointerul initial nemodificat. Din acest motiv verificam daca realocarea a reusit si apoi asignam rezultatul pointerului <code>a</code>. 
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="eliberarea_memoriei">Eliberarea memoriei</h3>
+<div class="level3">
+
+<p>
+ Funcţia <code>free()</code> are ca argument o adresă (un pointer) şi eliberează zona de la adresa respectivă (alocată prin apelul unei funcţii de tipul <code>[m|c|re]alloc</code>). Dimensiunea zonei nu mai trebuie specificată deoarece este ţinută minte de sistemul de alocare de memorie în nişte structuri interne.  
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="vectori_alocati_dinamic">Vectori alocaţi dinamic</h2>
+<div class="level2">
+
+<p>
+Structura de vector are avantajul simplităţii şi economiei de memorie faţă de alte structuri de date folosite pentru memorarea unei colectii de informaţii între care există anumite relaţii. Între cerinţa de dimensionare constantă a unui vector şi generalitatea programelor care folosesc astfel de vectori există o contradicţie. De cele mai multe ori programele pot afla (din datele citite) dimensiunile vectorilor cu care lucrează şi deci pot face o alocare dinamică a memoriei pentru aceşti vectori. Aceasta este o solutie mai flexibilă, care foloseşte mai bine memoria disponibilă şi nu impune limitări arbitrare asupra utilizării unor programe. În limbajul C nu există practic nici o diferenţă între utilizarea unui vector cu dimensiune fixă şi utilizarea unui vector alocat dinamic, ceea ce încurajează şi mai mult utilizarea unor vectori cu dimensiune variabilă.
+</p>
+
+</div>
+
+<h5 id="exemplu2">Exemplu</h5>
+<div class="level5">
+<pre class="code c"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> n<span class="sy0">,</span>i<span class="sy0">;</span>
+  <span class="kw4">int</span> <span class="sy0">*</span>a<span class="sy0">;</span>                     <span class="co1">// Adresa vector alocat dinamic </span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;n = &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>n<span class="br0">&#41;</span><span class="sy0">;</span>            <span class="co1">// Dimensiune vector</span>
+ 
+  a <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/calloc.html"><span class="kw3">calloc</span></a><span class="br0">&#40;</span>n<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// Alternativ: a = malloc(n * sizeof(int)); </span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Componente vector: <span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>       <span class="co1">// Sau scanf (“%d”, a+i);  </span>
+  <span class="br0">&#125;</span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>    <span class="co1">// Afisare vector </span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d &quot;</span><span class="sy0">,</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span>a<span class="br0">&#41;</span><span class="sy0">;</span>                    <span class="co1">// Nu uitam sa eliberam memoria  </span>
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+ <span class="br0">&#125;</span></pre>
+
+<p>
+Există şi cazuri în care datele memorate într-un vector rezultă din anumite prelucrări, iar numărul lor nu poate fi cunoscut de la începutul execuţiei. Un exemplu poate fi un vector cu toate numerele prime mai mici ca o valoare dată. În acest caz se poate recurge la o realocare dinamică a memoriei. În exemplul următor se citeşte un număr necunoscut de valori întregi într-un vector extensibil:
+</p>
+<pre class="code c"><span class="co2">#define INCR 100 // cu cat creste vectorul la fiecare realocare</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> n<span class="sy0">,</span> i<span class="sy0">,</span> m<span class="sy0">;</span> 
+  <span class="kw4">float</span> x<span class="sy0">,</span> <span class="sy0">*</span>v<span class="sy0">;</span>                   <span class="co1">// v = adresa vector </span>
+  n <span class="sy0">=</span> INCR<span class="sy0">;</span>     
+  i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> 
+&nbsp;
+  v <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">float</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// Dimensiune initiala vector </span>
+&nbsp;
+  <span class="kw1">while</span> <span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%f&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>x<span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">++</span>i <span class="sy0">==</span> n<span class="br0">&#41;</span> <span class="br0">&#123;</span>              <span class="co1">// Daca este necesar... </span>
+      n <span class="sy0">=</span> n <span class="sy0">+</span> INCR<span class="sy0">;</span>              <span class="co1">// ... creste dimensiune vector </span>
+      v <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/realloc.html"><span class="kw3">realloc</span></a><span class="br0">&#40;</span>vector<span class="sy0">,</span> n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">float</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+    <span class="br0">&#125;</span> 
+&nbsp;
+    v<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> x<span class="sy0">;</span>                    <span class="co1">// Memorare in vector numar citit     </span>
+  <span class="br0">&#125;</span>       
+&nbsp;
+  m <span class="sy0">=</span> i<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> m<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>       <span class="co1">// Afisare vector </span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%f &quot;</span><span class="sy0">,</span>v<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span>vector<span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+ <span class="br0">&#125;</span></pre>
+
+</div>
+
+<h2 class="sectionedit7" id="matrice_alocate_dinamic  ">Matrice alocate dinamic  </h2>
+<div class="level2">
+
+<p>
+Alocarea dinamică pentru o matrice este importantă deoarece:
+</p>
+<ul>
+<li class="level1"><div class="li"> foloseşte economic memoria şi evită alocări acoperitoare, estimative. </div>
+</li>
+<li class="level1"><div class="li"> permite matrice cu linii de lungimi diferite (denumite uneori <code>ragged arrays</code>, datorită formelor “zimţate” din reprezentările grafice) </div>
+</li>
+<li class="level1"><div class="li"> reprezintă o soluţie bună la problema argumentelor de funcţii de tip matrice.</div>
+</li>
+</ul>
+
+<p>
+ Daca programul poate afla numărul efectiv de linii şi de coloane al unei matrice (cu dimensiuni diferite de la o execuţie la alta), atunci se va aloca memorie pentru un vector de pointeri (funcţie de numărul liniilor) şi apoi se va aloca memorie pentru fiecare linie (funcţie de numărul coloanelor) cu memorarea adreselor liniilor în vectorul de pointeri. O astfel de matrice se poate folosi la fel ca o matrice declarată cu dimensiuni constante.
+</p>
+
+</div>
+
+<h5 id="exemplu3">Exemplu</h5>
+<div class="level5">
+<pre class="code c"><span class="kw4">int</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> <span class="sy0">**</span>a<span class="sy0">;</span>
+  <span class="kw4">int</span> i<span class="sy0">,</span> j<span class="sy0">,</span> nl<span class="sy0">,</span> nc<span class="sy0">;</span> 
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;nr. linii = &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span>“<span class="sy0">%</span>d”<span class="sy0">,</span> <span class="sy0">&amp;</span>nl<span class="br0">&#41;</span><span class="sy0">;</span>
+ 
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;nr. coloane = &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span>“<span class="sy0">%</span>d”<span class="sy0">,</span> <span class="sy0">&amp;</span>nc<span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+  a <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>nl <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>   <span class="co1">// Alocare pentru vector de pointeri </span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span>
+    a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/calloc.html"><span class="kw3">calloc</span></a><span class="br0">&#40;</span>nc<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// Alocare pentru o linie si initializare la zero </span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// Completare diagonala matrice unitate </span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> nl<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span>
+    a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>                    <span class="co1">// a[i][j]=0 pentru i != j       </span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// Afisare matrice </span>
+  printmat<span class="br0">&#40;</span>a<span class="sy0">,</span> nl<span class="sy0">,</span> nc<span class="br0">&#41;</span><span class="sy0">;</span>  
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> nl<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> 
+     <a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span>a<span class="br0">&#41;</span><span class="sy0">;</span>                           <span class="co1">// Nu uitam sa eliberam! </span>
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span> 
+<span class="br0">&#125;</span></pre>
+
+<p>
+ Funcţia de afişare a matricei se poate defini astfel:
+</p>
+<pre class="code c"><span class="kw4">void</span> printmat<span class="br0">&#40;</span><span class="kw4">int</span> <span class="sy0">**</span>a<span class="sy0">,</span> <span class="kw4">int</span> nl<span class="sy0">,</span> <span class="kw4">int</span> nc<span class="br0">&#41;</span>  <span class="br0">&#123;</span> 
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> nl<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+    <span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> nc<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%2d&quot;</span><span class="sy0">,</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+ 
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+ Notaţia <code>a[i][j]</code> este interpretată astfel pentru o matrice alocată dinamic:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code> a[i]</code> conţine un pointer (o adresă <code>b</code>)</div>
+</li>
+<li class="level1"><div class="li"> <code> b[j]</code> sau <code>b+j</code> conţine întregul din poziţia <code>j</code> a vectorului cu adresa <code>b</code>.</div>
+</li>
+</ul>
+
+<p>
+Astfel, <code>a[i][j]</code> este echivalent semantic cu expresia cu pointeri <code>*(*(a + i) + j)</code>.
+</p>
+
+<p>
+ Totuşi, funcţia <code>printmat()</code> dată anterior nu poate fi apelată dintr-un program care declară argumentul efectiv ca o matrice cu dimensiuni constante. Exemplul următor este corect sintactic dar nu se execută corect:
+</p>
+<pre class="code c"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> x<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span> <span class="br0">&#123;</span><span class="nu0">1</span><span class="sy0">,</span> <span class="nu0">2</span><span class="br0">&#125;</span><span class="sy0">,</span> <span class="br0">&#123;</span><span class="nu0">3</span><span class="sy0">,</span> <span class="nu0">4</span><span class="br0">&#125;</span> <span class="br0">&#125;</span><span class="sy0">;</span> <span class="co1">// O matrice patratica cu 2 linii si 2 coloane   </span>
+  printmat<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="sy0">**</span><span class="br0">&#41;</span>x<span class="sy0">,</span> <span class="nu0">2</span><span class="sy0">,</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="sy0">;</span>   
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+ <span class="br0">&#125;</span></pre>
+
+<p>
+ Explicaţia este interpretarea diferită a conţinutului zonei de la adresa aflată în primul argument: funcţia <code>printmat()</code> consideră că este adresa unui vector de pointeri (<code>int *a[]</code>), iar programul principal consideră că este adresa unui vector de vectori (<code>int x[][2]</code>), care este reprezentat liniar in memorie.
+</p>
+
+<p>
+ Se poate defini şi o funcţie pentru alocarea de memorie la execuţie pentru o matrice.
+</p>
+
+</div>
+
+<h5 id="exemplu4">Exemplu</h5>
+<div class="level5">
+<pre class="code c"><span class="kw4">int</span> <span class="sy0">**</span>newmat<span class="br0">&#40;</span><span class="kw4">int</span> nl<span class="sy0">,</span> <span class="kw4">int</span> nc<span class="br0">&#41;</span> <span class="br0">&#123;</span> <span class="co1">// Rezultat adresa matrice </span>
+  <span class="kw4">int</span> i<span class="sy0">;</span> 
+  <span class="kw4">int</span> <span class="sy0">**</span>p <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>nl <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+    p<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/calloc.html"><span class="kw3">calloc</span></a><span class="br0">&#40;</span>nc<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span> 
+&nbsp;
+  <span class="kw1">return</span> p<span class="sy0">;</span>
+ <span class="br0">&#125;</span></pre>
+
+</div>
+
+<h2 class="sectionedit8" id="stil_de_programare">Stil de programare</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit9" id="exemple_de_programe">Exemple de programe</h3>
+<div class="level3">
+
+<p>
+<strong><code>Exemplul 1</code></strong>: Funcţie echivalentă cu funcţia de bibliotecă <code>strdup()</code>:
+</p>
+<pre class="code c">  
+<span class="co2">#include &lt;string.h&gt;</span>
+ <span class="co2">#include &lt;alloc.h&gt; </span>
+&nbsp;
+<span class="co1">// Alocare memorie si copiere sir </span>
+<span class="kw4">char</span> <span class="sy0">*</span>strdup<span class="br0">&#40;</span><span class="kw4">char</span><span class="sy0">*</span> adr<span class="br0">&#41;</span>  <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> len <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/strlen.html"><span class="kw3">strlen</span></a><span class="br0">&#40;</span>adr<span class="br0">&#41;</span><span class="sy0">;</span> 
+  <span class="kw4">char</span> <span class="sy0">*</span>rez <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>len<span class="br0">&#41;</span><span class="sy0">;</span>
+ 
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/strcpy.html"><span class="kw3">strcpy</span></a><span class="br0">&#40;</span>rez<span class="sy0">,</span> adr<span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+  <span class="kw1">return</span> rez<span class="sy0">;</span>
+ <span class="br0">&#125;</span></pre>
+<pre class="code c">  <span class="co1">// Utilizare &quot;strdup&quot;</span>
+ <span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+ <span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span> 
+  <span class="kw4">char</span> s<span class="br0">&#91;</span><span class="nu0">80</span><span class="br0">&#93;</span><span class="sy0">,</span> <span class="sy0">*</span>d<span class="sy0">;</span> 
+&nbsp;
+  <span class="kw1">do</span> <span class="br0">&#123;</span> 
+    <span class="kw1">if</span> <span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/gets.html"><span class="kw3">gets</span></a><span class="br0">&#40;</span>s<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span>
+      <span class="kw2">break</span><span class="sy0">;</span> 
+    <span class="br0">&#125;</span>
+    d <span class="sy0">=</span> strdup<span class="br0">&#40;</span>s<span class="br0">&#41;</span><span class="sy0">;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/puts.html"><span class="kw3">puts</span></a><span class="br0">&#40;</span>d<span class="br0">&#41;</span><span class="sy0">;</span>  
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span>d<span class="br0">&#41;</span><span class="sy0">;</span> 
+  <span class="br0">&#125;</span> <span class="kw1">while</span> <span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span> 
+<span class="br0">&#125;</span></pre>
+
+<p>
+<strong><code>&#039;Exemplul 2</code></strong>: Vector alocat dinamic (cu dimensiune cunoscută la execuţie)
+</p>
+<pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+ <span class="co2">#include &lt;stdlib.h&gt;</span>
+&nbsp;
+ <span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> n<span class="sy0">,</span> i<span class="sy0">;</span> 
+  <span class="kw4">int</span> <span class="sy0">*</span>a<span class="sy0">;</span> <span class="co1">// Adresa vector </span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;n=&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+   <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>n<span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// Dimensiune vector </span>
+&nbsp;
+  a <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;componente vector: <span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>       <span class="co1">// Citire vector </span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>       <span class="co1">// Afisare vector </span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>  
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span>a<span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span> 
+<span class="br0">&#125;</span></pre>
+
+<p>
+<strong><code> Exemplul 3</code></strong>: Vector realocat dinamic (cu dimensiune necunoscută)
+</p>
+<pre class="code c"> 
+<span class="co2">#include &lt;stdio.h&gt; </span>
+ <span class="co2">#include &lt;stdlib.h&gt;</span>
+&nbsp;
+  <span class="co2">#define INCR 4 </span>
+&nbsp;
+ <span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> n<span class="sy0">,</span> i<span class="sy0">,</span> m<span class="sy0">;</span>
+  <span class="kw4">float</span> x<span class="sy0">,</span> <span class="sy0">*</span>v<span class="sy0">;</span> 
+&nbsp;
+  n <span class="sy0">=</span> INCR<span class="sy0">;</span>
+  i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+&nbsp;
+  v <span class="sy0">=</span> <span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">float</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">while</span> <span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%f&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>x<span class="br0">&#41;</span> <span class="sy0">!=</span> EOF<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>i <span class="sy0">==</span> n<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      n <span class="sy0">=</span> n <span class="sy0">+</span> INCR<span class="sy0">;</span>
+      v <span class="sy0">=</span> <span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/realloc.html"><span class="kw3">realloc</span></a><span class="br0">&#40;</span>v<span class="sy0">,</span> n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">float</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> 
+&nbsp;
+    v<span class="br0">&#91;</span>i<span class="sy0">++</span><span class="br0">&#93;</span> <span class="sy0">=</span> x<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  m <span class="sy0">=</span> i<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> m<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%.2f &quot;</span><span class="sy0">,</span> v<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/free.html"><span class="kw3">free</span></a><span class="br0">&#40;</span>v<span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+ <span class="br0">&#125;</span></pre>
+
+<p>
+<strong><code>Exemplul 4</code></strong>: Matrice alocată dinamic (cu dimensiuni cunoscute la execuţie)
+</p>
+<pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+ <span class="co2">#include &lt;stdlib.h&gt;</span>
+&nbsp;
+  <span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw4">int</span> n<span class="sy0">,</span> i<span class="sy0">,</span> j<span class="sy0">;</span>
+  <span class="kw4">int</span> <span class="sy0">**</span>mat<span class="sy0">;</span> <span class="co1">// Adresa matrice</span>
+&nbsp;
+  <span class="co1">// Citire dimensiuni matrice </span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;n = &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+   <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>n<span class="br0">&#41;</span><span class="sy0">;</span> 
+&nbsp;
+  <span class="co1">// Alocare memorie ptr matrice </span>
+  mat <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span>n <span class="sy0">*</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>  <span class="br0">&#123;</span>
+    mat<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/calloc.html"><span class="kw3">calloc</span></a><span class="br0">&#40;</span>n<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// Completare matrice</span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> n<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+      mat<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span> <span class="sy0">=</span> n <span class="sy0">*</span> i <span class="sy0">+</span> j <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// Afisare matrice</span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>j <span class="sy0">&lt;</span> n<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%6d&quot;</span><span class="sy0">,</span> mat<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+ <span class="br0">&#125;</span></pre>
+
+<p>
+<strong><code>&#039;Exemplul 5</code></strong>: Vector de pointeri la şiruri alocate dinamic
+</p>
+<pre class="code c">  
+<span class="coMULTI">/* Creare / afisare vector de pointeri la siruri */</span>
+&nbsp;
+ <span class="co2">#include &lt;stdio.h&gt; </span>
+<span class="co2">#include &lt;stdlib.h&gt;</span>
+ <span class="co2">#include &lt;string.h&gt;</span>
+&nbsp;
+  <span class="co1">// Afisare siruri reunite in vector de pointeri  </span>
+<span class="kw4">void</span> printstr<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>vp<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy0">,</span> <span class="kw4">int</span> n<span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> i<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> vp<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+ <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// Ordonare vector de pointeri la siruri </span>
+<span class="kw4">void</span> sort<span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span>vp<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy0">,</span> <span class="kw4">int</span> n<span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+  <span class="kw4">int</span> i<span class="sy0">,</span> j<span class="sy0">;</span>
+  <span class="kw4">char</span> <span class="sy0">*</span>tmp<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> n<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n <span class="sy0">-</span> <span class="nu0">1</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> 
+      <span class="kw1">if</span> <span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/strcmp.html"><span class="kw3">strcmp</span></a><span class="br0">&#40;</span>vp<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy0">,</span> vp<span class="br0">&#91;</span>i<span class="sy0">+</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="sy0">&gt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        tmp <span class="sy0">=</span> vp<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy0">;</span>
+        vp<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> vp<span class="br0">&#91;</span>i<span class="sy0">+</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="sy0">;</span>
+        vp<span class="br0">&#91;</span>i<span class="sy0">+</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="sy0">=</span> tmp<span class="sy0">;</span> 
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+ <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// Citire siruri si creare vector de pointeri</span>
+ <span class="kw4">int</span> readstr <span class="br0">&#40;</span><span class="kw4">char</span> <span class="sy0">*</span> vp<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw4">int</span> n <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+  <span class="kw4">char</span> <span class="sy0">*</span>p<span class="sy0">,</span> sir<span class="br0">&#91;</span><span class="nu0">80</span><span class="br0">&#93;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">while</span> <span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%s&quot;</span><span class="sy0">,</span> sir<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">1</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    p <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/malloc.html"><span class="kw3">malloc</span></a><span class="br0">&#40;</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/strlen.html"><span class="kw3">strlen</span></a><span class="br0">&#40;</span>sir<span class="br0">&#41;</span> <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/strcpy.html"><span class="kw3">strcpy</span></a><span class="br0">&#40;</span>p<span class="sy0">,</span> sir<span class="br0">&#41;</span><span class="sy0">;</span>
+    vp<span class="br0">&#91;</span>n<span class="br0">&#93;</span> <span class="sy0">=</span> p<span class="sy0">;</span>
+    <span class="sy0">++</span>n<span class="sy0">;</span>
+  <span class="br0">&#125;</span> 
+&nbsp;
+  <span class="kw1">return</span> n<span class="sy0">;</span>
+ <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw4">int</span> n<span class="sy0">;</span> <span class="kw4">char</span> <span class="sy0">*</span>vp<span class="br0">&#91;</span><span class="nu0">1000</span><span class="br0">&#93;</span><span class="sy0">;</span> <span class="co1">// vector de pointeri, cu dimensiune fixa</span>
+&nbsp;
+  n <span class="sy0">=</span> readstr<span class="br0">&#40;</span>vp<span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// citire siruri si creare vector </span>
+  sort<span class="br0">&#40;</span>vp<span class="sy0">,</span> n<span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// ordonare vector </span>
+  printstr<span class="br0">&#40;</span>vp<span class="sy0">,</span> n<span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// afisare siruri</span>
+&nbsp;
+  retrun <span class="nu0">0</span><span class="sy0">;</span>
+ <span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit10" id="practici_recomandate">Practici recomandate</h3>
+<div class="level3">
+
+<p>
+ Deşi au fost enunţate în momentul în care au fost introduse noţiunile corespunzătoare în cursul acestui material, se pot rezuma câteva reguli importante de folosire a variabilelor de tip pointer:
+</p>
+<ul>
+<li class="level1"><div class="li"> Aveţi grijă ca variabilele de tip pointer să indice către adrese de memorie valide înainte de a fi folosite; consecinţele adresării unei zone de memorie aleatoare sau nevalide (<code>NULL</code>) pot fi dintre cele mai imprevizibile. </div>
+</li>
+<li class="level1"><div class="li"> Utilizaţi o formatare a codului care să sugereze asocierea operatorului <code>*</code> cu variabila asupra căreia operează; acest lucru este în special valabil pentru declaraţiile de pointeri. </div>
+</li>
+<li class="level1"><div class="li"> Nu returnaţi pointeri la variabile sau tablouri definite în cadrul funcţiilor, întrucât valabilitatea acestora încetează odată cu ieşirea din corpul funcţiei.</div>
+</li>
+<li class="level1"><div class="li"> Verificaţi rezultatul funcţiilor de alocare a memoriei, chiar dacă dimensiunea pe care doriţi s-o rezervaţi este mică. Atunci când memoria nu poate fi alocată rezultatul este <code>NULL</code> iar programul vostru ar trebui să trateze explicit acest caz (finalizat, de obicei, prin închiderea “curată” a aplicaţiei). </div>
+</li>
+<li class="level1"><div class="li"> Nu uitaţi să eliberaţi memoria alocată dinamic, folosind funcţia <code>free()</code>. Memoria rămasă neeliberată încetineşte performanţele sistemului şi poate conduce la erori (bug-uri) greu de depistat.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit11" id="anexaclase_de_stocare">Anexă: Clase de stocare</h2>
+<div class="level2">
+
+<p>
+<p><div class="noteclassic">Această secţiune este opţională şi nu este necesară pentru rezolvarea exerciţiilor de laborator, însă ajută la înţelegerea aprofundată a modului în care limbajul C lucrează cu variabilele.
+</div></p>
+</p>
+
+<p>
+  Clasa de stocare (memorare) arată când, cum şi unde se alocă memorie pentru o variabilă (vector). Orice variabilă C are o clasă de memorare care rezultă fie dintr-o declaraţie explicită, fie implicit din locul unde este definită variabila.  Există trei moduri de alocare a memoriei, dar numai două corespund unor clase de memorare:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>Static</code>: memoria este alocată la compilare în segmentul de date din cadrul programului şi nu se mai poate modifica în cursul execuţiei. Variabilele externe, definite în afara funcţiilor, sunt implicit statice, dar pot fi declarate static şi variabile locale, definite în cadrul funcţiilor. </div>
+</li>
+<li class="level1"><div class="li"> <code>Automat</code>: memoria este alocată automat, la activarea unei funcţii, în zona stivă alocată unui program şi este eliberată automat la terminarea funcţiei. Variabilele locale unui bloc (unei funcţii) şi argumentele formale sunt implicit din clasa <code>auto</code>. </div>
+</li>
+<li class="level1"><div class="li"> <code>Dinamic</code>: memoria se alocă la execuţie în zona <code>heap</code> alocată programului, dar numai la cererea explicită a programatorului, prin apelarea unor funcţii de bibliotecă (<code>malloc</code>, <code>calloc</code>, <code>realloc</code>). Memoria este eliberată numai la cerere, prin apelarea funcţiei <code>free</code>. Variabilele dinamice nu au nume şi deci nu se pune problema clasei de memorare (atribut al variabilelor cu nume).</div>
+</li>
+</ul>
+
+<p>
+ Variabilele statice pot fi iniţializate numai cu valori constante (pentru că se face la compilare), dar variabilele auto pot fi iniţializate cu rezultatul unor expresii (pentru că se face la execuţie). Toate variabilele externe (şi statice) sunt automat iniţializate cu valori zero (inclusiv vectorii).   Cantitatea de memorie alocată pentru variabilele cu nume rezultă automat din tipul variabilei şi din dimensiunea declarată pentru vectori. Memoria alocată dinamic este specificată explicit ca parametru al funcţiilor de alocare.
+</p>
+
+<p>
+  O a treia clasă de memorare este clasa <code>register</code> pentru variabile cărora, teoretic, li se alocă registre ale procesorului şi nu locaţii de memorie, pentru un timp de acces mai bun. În practică nici un compilator modern nu mai ţine cont de acest cuvânt cheie, folosind automat registre atunci când codul poate fi optimizat în acest fel (de exemplu când observă că nu se accesează niciodata adresa variabilei în program).
+</p>
+
+<p>
+ Memoria neocupată de datele statice şi de instrucţiunile unui program este împărţită între stivă şi heap. Consumul de memorie pe stivă este mai mare în programele cu funcţii recursive şi număr mare de apeluri recursive, iar consumul de memorie heap este mare în programele cu vectori şi matrice alocate (şi realocate) dinamic.  
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="exercitii_laborator_cbcd">Exercitii laborator CB/CD</h2>
+<div class="level2">
+
+<p>
+Codul sursa se gaseste <a href="http://swarm.cs.pub.ro/~gmuraru/PC/ex.c" class="urlextern" title="http://swarm.cs.pub.ro/~gmuraru/PC/ex.c"  rel="nofollow">aici</a>
+</p>
+
+<p>
+Primul exercitiu presupune modificarea/adaugarea de instructiuni unui cod existent pentru a realiza anumite lucruri. In momentul actual programul citeste o matrice si afiseaza suma elementelor de pe fiecare linie.
+</p>
+<ul>
+<li class="level1"><div class="li"> Nu uitati ca trebuie sa utilizam un coding style adecvat atunci cand scriem sursele.</div>
+</li>
+</ul>
+
+<p>
+Cerinte:
+</p>
+<ul>
+<li class="level1"><div class="li">Sa se mute elementele de pe o anumita linie, intr-un vector, alocat dinamic:</div>
+</li>
+<li class="level1"><div class="li">Sa se mareasca dimensiunea matricea astfel incat sa aiba o linie in plus, iar pointerul specific ultimei linii sa indice spre vectorul generat anterior.</div>
+</li>
+</ul>
+
+<p>
+<strong>Următoarele două probleme vă vor fi date de asistent în cadrul laboratorului.</strong>
+</p>
+
+</div>
+
+<h2 class="sectionedit13" id="exercitii_de_laborator">Exerciţii de Laborator</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> <strong>[2p]</strong> Să se scrie un program care citeşte de la tastatură un număr pozitiv n împreună cu alt număr pozitiv max. Programul va aloca apoi dinamic un vector de întregi de n elemente, pe care îl va iniţializa cu numere aleatoare în intervalul [0..max-1]. Sortaţi vectorul, folosind metoda preferată, afişându-i conţinutul atât înainte, cât şi după ce sortarea a avut loc.</div>
+</li>
+<li class="level1"><div class="li"> <strong>[3p]</strong> Să se scrie un program care citeşte de la tastatură două matrice: una inferior triunghiulară (toate elementele de deasupra diagonalei principale sunt nule), şi cealaltă superior triunghiulară. Ele vor fi reprezentate în memorie cât mai compact cu putinţă (fară a stoca şi zerourile de deasupra, respectiv dedesubtul diagonalei). Se va calcula apoi produsul celor matrice, şi se va afişa.</div>
+</li>
+<li class="level1"><div class="li"> Un număr lung (cu o valoare mult mai mare decât maximul reprezentabil pe un tip de date întreg standard din C), poate fi reprezentat ca un vector char *v de cifre (considerate valori de tip char), în felul următor:</div>
+<ul>
+<li class="level3"><div class="li"> v[0] reprezintă numărul de cifre ale numărului lung. Lungimea vectorului în memorie va fi v[0]+1.</div>
+</li>
+<li class="level3"><div class="li"> v[i], unde i este de la 1 la v[0], reprezintă a i-a cifră a numărului, în ordinea crescătoare a semnificativităţii. Astfel v[1] reprezintă cifra unităţilor, v[2] cifra zecilor, etc. O reprezentare eficientă va avea întotdeauna ultima cifră v[v[0]] nenulă (altfel numărul de cifre ar fi putut fi mai mic şi reprezentarea mai compactă).</div>
+</li>
+<li class="level3"><div class="li"> <strong>[1p]</strong> a) Scrieţi o funcţie care construieşte vectorul de cifre asociat unui număr întreg simplu (de tipul int):<pre class="code">char *build_number(int value);</pre>
+</div>
+</li>
+<li class="level3"><div class="li"> <strong>[2p]</strong> b) Scrieţi o funcţie care adună două numere lungi şi întoarce ca rezultat un alt număr lung:<pre class="code">char *add_numbers(char *a, char *b);</pre>
+</div>
+</li>
+<li class="level3"><div class="li"> <strong>[2p]</strong> c) Scrieţi un program care calculează şirul Fibonacci folosind numere lungi. Se cer primii 100 de termeni ai şirului, afişaţi pe câte o linie în parte. </div>
+</li>
+</ul>
+</li>
+</ol>
+
+<p>
+<p><div class="noteclassic">Toate funcţiile cerute vor aloca dinamic memoria necesară reprezentării vectorului întors. Numerele nefolosite vor trebui eliberate, pentru a evita consumarea memoriei. Trataţi tipul de date char ca pe un tip numeric (deci lucraţi cu vectori de numere, nu cu şiruri de caractere <abbr title="American Standard Code for Information Interchange">ASCII</abbr>).
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="bonus">Bonus</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Considerând structura unui număr lung prezentată la punctul precedent, să se rezolve următoarele:</div>
+<ul>
+<li class="level3"><div class="li"> <strong>[1p]</strong> a) Scrieţi o funcţie care înmulţeşte două numere lungi şi întoarce ca rezultat un alt număr lung:<pre class="code">char *multiply_numbers(char *a, char *b);</pre>
+</div>
+</li>
+<li class="level3"><div class="li"> <strong>[1p]</strong> b) Scrieţi un program care calculează factorialul numerelor de la 1 la 50, afişând câte un număr pe fiecare linie.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>[2p]</strong> Se consideră un paralelipiped tridimensional cu dimensiunile citite de la tastatură, pentru care va trebui să alocaţi memorie. De asemenea, se citeşte apoi un număr pozitiv N, ce reprezintă un număr de bombe care vor fi plasate în paralelipiped. Apoi se citesc N triplete ce reprezintă coordonatele bombelor. Valorile citite vor trebui validate astfel încât să nu depăşească dimensiunile paralelipipedului. Pentru fiecare cub liber se va calcula numărul de bombe din cei maxim 26 de vecini ai săi, şi aceste numere vor fi afişate pe ecran, alături de coordonatele corespunzătoare. La sfârşitul execuţiei programului, memoria alocată va trebui eliberată.</div>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="resurse_generale">Resurse generale</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../regulament-ca.html" class="wikilink1" title="programare:regulament-ca">Regulament: seria CA</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../regulament-cb-cd.html" class="wikilink1" title="programare:regulament-cb-cd">Regulament: seria CB/CD</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../punctaj.html" class="wikilink1" title="programare:punctaj">Punctaj seria CA</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../calendar.html" class="wikilink1" title="programare:calendar">Calendar</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../catalog.html" class="wikilink1" title="programare:catalog">Catalog laborator</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../debugging.html" class="wikilink1" title="programare:debugging">Debugging</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../coding-style.html" class="wikilink1" title="programare:coding-style">Coding style</a> <br/>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Resurse generale" [1-375] -->
+<h2 class="sectionedit2" id="cursuri">Cursuri</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_START "programare:cursuri" [0-] --><div class="plugin_include_content plugin_include__programare:cursuri">
+<div class="level2">
+
+<p>
+<a href="../cursuri/sylabus.html" class="wikilink1" title="programare:cursuri:sylabus">Continutul Tematic</a> <br/>
+
+</p>
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_EDITBTN "programare:cursuri" [0-] --><!-- EDIT4 PLUGIN_INCLUDE_END "programare:cursuri" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Cursuri" [376-444] -->
+<h2 class="sectionedit6" id="laboratoare">Laboratoare</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 PLUGIN_INCLUDE_START "programare:laboratoare" [0-] --><div class="plugin_include_content plugin_include__programare:laboratoare">
+<div class="level2">
+
+<p>
+<a href="lab01.html" class="wikilink1" title="programare:laboratoare:lab01">01. Unelte de programare</a> <br/>
+
+<a href="lab02.html" class="wikilink1" title="programare:laboratoare:lab02">02. Tipuri de date. Operatori.</a> <br/>
+
+<a href="lab03.html" class="wikilink1" title="programare:laboratoare:lab03">03. Instrucțiunile limbajului C</a> <br/>
+
+<a href="lab04.html" class="wikilink1" title="programare:laboratoare:lab04">04. Funcții</a> <br/>
+
+<a href="lab05.html" class="wikilink1" title="programare:laboratoare:lab05">05. Tablouri. Particularizare - vectori</a> <br/>
+
+<a href="lab06.html" class="wikilink1" title="programare:laboratoare:lab06">06. Matrice. Operații cu matrice</a> <br/>
+
+<a href="lab07.html" class="wikilink1" title="programare:laboratoare:lab07">07. Pointeri. Abordarea lucrului cu tablouri folosind pointeri</a> <br/>
+
+<span class="curid"><a href="lab08.html" class="wikilink1" title="programare:laboratoare:lab08">08. Alocarea dinamică a memoriei. Aplicaţii folosind tablouri şi matrice</a></span> <br/>
+
+<a href="lab09.html" class="wikilink1" title="programare:laboratoare:lab09">09. Prelucrarea şirurilor de caractere. Funcţii. Aplicaţii</a> <br/>
+
+<a href="lab10.html" class="wikilink1" title="programare:laboratoare:lab10">10. Structuri. Uniuni. Aplicație: Matrice rare</a> <br/>
+
+<a href="lab11.html" class="wikilink1" title="programare:laboratoare:lab11">11. Operatii cu fişiere. Aplicaţii folosind fişiere.</a> <br/>
+
+<a href="lab12.html" class="wikilink1" title="programare:laboratoare:lab12">12. Parametrii liniei de comandă. Preprocesorul. Funcţii cu număr variabil de parametri</a> <br/>
+
+<a href="lab13.html" class="wikilink1" title="programare:laboratoare:lab13">13. Recapitulare</a> <br/>
+
+<a href="lab14.html" class="wikilink1" title="programare:laboratoare:lab14">14. Probleme diverse</a> <br/>
+
+<a href="lab12cb.html" class="wikilink1" title="programare:laboratoare:lab12cb">12.(CB) Laborator final</a> <br/>
+
+<a href="python.html" class="wikilink1" title="programare:laboratoare:python">Extra: python</a> <br/>
+
+</p>
+
+</div>
+<!-- EDIT9 PLUGIN_INCLUDE_EDITBTN "programare:laboratoare" [0-] --><!-- EDIT8 PLUGIN_INCLUDE_END "programare:laboratoare" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT6 SECTION "Laboratoare" [445-522] -->
+<h2 class="sectionedit10" id="teme_de_casa_general">Teme de casa (general)</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../regulament.html#reguli_de_trimitere_a_temelor" class="wikilink2" title="programare:regulament" rel="nofollow">Trimitere teme</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="programare:teme:general"> Indicații generale</a> <br/>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT10 SECTION "Teme de casa (general)" [523-752] -->
+<h2 class="sectionedit11" id="teme_de_casaseria_ca">Teme de casă: seria CA</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema1_2016_ca.html" class="wikilink1" title="programare:teme_2016:tema1_2016_ca">Tema 1</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema2_2016_ca.html" class="wikilink1" title="programare:teme_2016:tema2_2016_ca">Tema 2</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema3_2016_ca.html" class="wikilink1" title="programare:teme_2016:tema3_2016_ca">Tema 3</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema4_2016_ca.html" class="wikilink1" title="programare:teme_2016:tema4_2016_ca">Tema 4</a> <br/>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT11 SECTION "Teme de casă: seria CA" [753-1946] -->
+<h2 class="sectionedit12" id="teme_de_casaseria_cbcd">Teme de casă: seria CB/CD</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema1_2016_cbd.html" class="wikilink1" title="programare:teme_2016:tema1_2016_cbd">Tema 1</a> <br/>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT12 SECTION "Teme de casă: seria CB/CD" [1947-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab08.html#alocarea_dinamica_a_memoriei_aplicatii_folosind_tablouri_si_matrice">Alocarea dinamică a memoriei. Aplicaţii folosind tablouri şi matrice.</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#obiective">Obiective</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#functii_de_alocare_si_eliberare_a_memoriei">Funcţii de alocare şi eliberare a memoriei</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab08.html#alocarea_memoriei">Alocarea memoriei</a></div></li>
+<li class="level3"><div class="li"><a href="lab08.html#eliberarea_memoriei">Eliberarea memoriei</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab08.html#vectori_alocati_dinamic">Vectori alocaţi dinamic</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#matrice_alocate_dinamic  ">Matrice alocate dinamic  </a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#stil_de_programare">Stil de programare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab08.html#exemple_de_programe">Exemple de programe</a></div></li>
+<li class="level3"><div class="li"><a href="lab08.html#practici_recomandate">Practici recomandate</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab08.html#anexaclase_de_stocare">Anexă: Clase de stocare</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#exercitii_laborator_cbcd">Exercitii laborator CB/CD</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#exercitii_de_laborator">Exerciţii de Laborator</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab08.html#bonus">Bonus</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          programare/laboratoare/lab08.txt · Last modified: 2016/11/21 23:14 by george.muraru          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="http://ocw.cs.pub.ro/courses/programare/laboratoare/lab08?do=media&amp;ns=programare%3Alaboratoare"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab08.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="http://ocw.cs.pub.ro/courses/lib/exe/indexer.php?id=programare%3Alaboratoare%3Alab08&amp;1479891470" width="2" height="1" alt="" /></div>
+</body>
+</html>

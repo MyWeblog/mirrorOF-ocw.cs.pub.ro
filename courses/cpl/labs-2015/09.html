@@ -1,0 +1,1084 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    09. Data Flow Analysis    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T07:34:08+0300"/>
+<meta name="keywords" content="cpl,labs-2015,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cpl:labs-2015"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cpl/labs-2015/09.html"/>
+<link rel="canonical" href="09.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs-2015';var JSINFO = {"id":"cpl:labs-2015:09","namespace":"cpl:labs-2015","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cpl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="09%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="09%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="data_flow_analysis">09. Data Flow Analysis</h1>
+<div class="level1">
+
+<p>
+Analiza fluxului de date oferă informație globală despre modul în care o procedură sau, în general, un segment de program manipulează datele.
+</p>
+
+<p>
+Un exemplu de optimizare ce se poate realiza cu o analiză a fluxului de date este propagarea constantelor:
+</p>
+<ul>
+<li class="level1"><div class="li"> se identifică toate atribuirile prin care o variabilă primește ca valoare o constantă</div>
+</li>
+<li class="level1"><div class="li"> se determină, pentru fiecare punct din program în care este folosită o variabilă, câte și care dintre atribuirile acelei variabile la o constantă sunt vizibile în acel punct</div>
+</li>
+<li class="level1"><div class="li"> dacă toate atribuirile vizibile în acel punct atribuie aceeași constantă variabilei, atunci folosirea variabilei se poate înlocui cu acea constantă</div>
+</li>
+</ul>
+
+<p>
+Pentru ca un analizor să poată emite astfel de judecăți asupra programului analizat trebuie să mențină pentru fiecare punct de interes din programul analizat (de obicei pentru fiecare intrare sau ieșire dintr-un basic block) o structură de date cu informații despre cum sunt manipulate datele. În cele ce urmează vom prezenta modelul matematic folosit cel mai des pentru reprezentarea acestei informații precum și un algoritm iterativ de analiză a fluxului de date.
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="cadrul_conceptual">Cadrul conceptual</h2>
+<div class="level2">
+
+<p>
+Analiza fluxului de date se realizează prin executarea de operații asupra unei structuri algebrice denumită <strong>latice</strong>. Elementele laticei reprezintă proprietăti abstracte ale variabilelor, expresiilor sau altor componente din program. Fiecărei portiuni de interes din program (instrucțiune, basic block sau procedură) i se asociază un element de latice care memorează proprietățile urmărite de analiză pentru respectiva porțiune.
+</p>
+
+<p>
+Aceste proprietăți se referă la toate execuțiile posibile în cadrul unei proceduri (dacă vorbim de analiza intra-procedurală), fără a ține seama de datele de intrare și de drumurile în graful fluxului de control al procedurii. Mai precis, cele mai multe metode de analiză de date nu țin cont dacă o condiție este îndeplinită sau nu (cu alte cuvinte care din ramuri este executată) sau de câte ori se execută o buclă. Totuși, informațiile cu care operează analiza vor fi <strong>conservative</strong> (de exemplu, se poate presupune ca ambele ramuri ale unei conditii pot fi executate) pentru ca să nu se tragă concluzii greșite asupra programului (care ar putea duce la efectuarea unor transformări/optimizări care să facă programul incorect).
+</p>
+
+<p>
+Pentru a modela efectul pe care îl are fiecare componentă a programului asupra elementelor de latice, se defineste o așa numită <strong>funcție de flux</strong>. Se asociază câte o funcție de flux fiecărei porțiuni de interes (instrucțiune, basic block sau procedură). Spre exemplu, o funcție de flux asociată unei instructiuni primește ca parametru un element de latice și întoarce elementul de latice transformat în urma execuției instrucțiunii respective. O funcție de flux asociată unui bloc de bază are ca intrare tot un element de latice și întoarce elementul de latice așa cum este el transformat în urma execuției blocului respectiv. De obicei, funcția de flux asociată unui basic block este rezultată din compunerea funcțiilor de flux asociate instrucțiunilor din bloc.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="propietati_importante">Propietăți importante</h3>
+<div class="level3">
+
+<p>
+În general, o latice L este formată dintr-o mulțime de valori și două operații pe care le vom nota ∩ (<strong>meet</strong>) și ∪ (<strong>join</strong>) care au următoarele proprietăți:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>închidere</strong> - ∀x ∈ L, ∀y ∈ L ∃z ∈ L și ∃w ∈ L unici, astfel încât x ∩ y = z și x ∪ y = w</div>
+</li>
+<li class="level1"><div class="li"> <strong>comutativitate</strong> - orice x, y ∈ L, x ∩ y = y ∩ x si x ∪ y = y ∪ x</div>
+</li>
+<li class="level1"><div class="li"> <strong>asociativitate</strong> - orice x, y, z ∈ L, (x ∩ y) ∩ z = x ∩ (y ∩ z) și (x ∪ y) ∪ z = x ∪ (y ∪ z)</div>
+</li>
+<li class="level1"><div class="li"> <strong>absorbție</strong> - orice x, y ∈ L, (x ∩ y) ∪ y = y si (x ∪ y) ∩ x = x</div>
+</li>
+<li class="level1"><div class="li"> <strong>existenei și unicitatea elementelor de minim și maxim</strong> - min (notat ⊥) și max (notat T), astfel încât ∀x ∈ L, x ∩ ⊥ = ⊥ și x ∪ T = T</div>
+</li>
+<li class="level1"><div class="li"> <strong>distributivitate</strong> - numeroase latici sunt <code>distributive</code> - ∀x ∈ L, ∀y ∈ L, ∀z ∈ L, (x ∩ y) ∪ z = (x ∪ z) ∩ (y ∪ z) și (x ∪ y) ∩ z = (x ∩ z) ∪ (y ∩ z)</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="exemplu_de_latice">Exemplu de latice</h4>
+<div class="level4">
+
+<p>
+Următorul tip de latice este foarte des folosit:
+</p>
+<ul>
+<li class="level1"><div class="li"> elemente constituente - vectori de biți</div>
+</li>
+<li class="level1"><div class="li"> operațiile de bază</div>
+<ul>
+<li class="level2"><div class="li"> meet - AND pe biți</div>
+</li>
+<li class="level2"><div class="li"> join - OR pe biți</div>
+</li>
+<li class="level2"><div class="li"> elementul ⊥ - vectorul de biți în care toti biții sunt 0</div>
+</li>
+<li class="level2"><div class="li"> elementul T - vectorul în care toți biții sunt 1.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Folosim notatia BV<sup>n</sup> pentru a desemna o latice de vectori de biți de lungime n. Figura de mai jos contine o prezentare grafica a laticei BV<sup>3</sup>
+</p>
+
+<p>
+<a href="../../_detail/cpl/labs/laborator10-latice.gif%3Fid=cpl%253Alabs-2015%253A09.html" class="media" title="cpl:labs:laborator10-latice.gif"><img src="../../_media/cpl/labs/laborator10-latice.gif" class="media" title="Latice" alt="Latice" /></a>
+</p>
+
+</div>
+
+<h4 id="relatia_de_incluziune">Relația de incluziune</h4>
+<div class="level4">
+
+<p>
+Relația de incluziune(notată cu ⊆) este o relație de ordine parțială pe elementele laticei. Aceasta poate fi definită folosind operatia ∩ astfel: x ⊆ y ⇔ x ∩ y = x. Se poate da și o definiție duală folosind operatia ∪. Următoarele proprietăți ale relației ⊆ se demonstrează cu ușurință pe baza proprietăților operațiilor ∪ și ∩:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>reflexivitate</strong> - ∀x ∈ L, x ⊆ x</div>
+</li>
+<li class="level1"><div class="li"> <strong>antisimetrie</strong> - ∀x ∈ L, ∀y ∈ L, dacă x ⊆ y și y ⊆ x atunci x = y</div>
+</li>
+<li class="level1"><div class="li"> <strong>tranzitivitate</strong> - ∀x ∈ L, ∀y ∈ L, ∀z ∈ L, dacă x ⊆ y și y ⊆ z, atunci x ⊆ y</div>
+</li>
+</ul>
+
+<p>
+În mod corespunzator se definesc și relatiile ⊂, ⊃, ⊇.
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="monotonia_functiilor_de_flux">Monotonia funcțiilor de flux</h3>
+<div class="level3">
+
+<p>
+O funcție de flux ce mapează laticea pe ea însăși (f : L → L) este monotonă dacă ∀x ∈ L, ∀y ∈ L, x ⊆ y ⇒ f(x) ⊆ f(y). De exemplu, funcția f : BV<sup>3</sup> → BV<sup>3</sup> definită prin f(&lt;x<sub>1</sub>x<sub>2</sub>x<sub>3</sub>&gt;) = &lt;x<sub>1</sub>1x<sub>3</sub>&gt; este monotonă.
+</p>
+
+<p>
+<strong>Înălțimea unei latice</strong> este lungimea celui mai lung lanț strict crescător din latice, adică cel mai mare n astfel încât ⊥ = x<sub>1</sub> ⊂ x<sub>2</sub> ⊂ … ⊂ x<sub>n</sub> = T. De exemplu, înălțimea laticei BV<sup>3</sup> din figura de mai sus este 4.
+</p>
+
+<p>
+Pentru o problemă particulară de analiză a fluxului de date, o funcție de flux modelează efectul unei porțiuni de interes. Pentru a putea rezolva o problemă de analiză de flux de date impunem ca toate funcțiile de flux să fie monotone. Acest lucru este rezonabil ținând cont că scopul unei funcții de flux este să modeleze informația (despre problema de flux de date) oferită de o porțiune de program și, deci, nu ar trebui să scadă cantitatea de informație deja obținută. Monotonia este de asemenea esențială pentru a demonstra că algoritmii de analiză a fluxului de date se termină și pentru a calcula complexitatea lor.
+</p>
+
+<p>
+Fiind dat un set de ecuații de flux de date, valoarea pe care vrem să o calculăm este așa-numita soluție “meet-over-all-paths” (MOP).Fie:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>G = &lt;N, E&gt;</code> - CFG  (control flow graph)</div>
+</li>
+<li class="level1"><div class="li"> <code>Path(B)</code> - mulțimea tuturor căilor de la blocul <code>entry</code> la B cu B ∈ N</div>
+</li>
+<li class="level1"><div class="li"> <code>p</code> - o cale oarecare din Path(B)</div>
+</li>
+<li class="level1"><div class="li"> <code>F<sub>B</sub></code> - funcția de flux reprezentând fluxul prin blocul B</div>
+</li>
+<li class="level1"><div class="li"> <code>F<sub>p</sub></code> - compunerea funcțiilor de flux întâlnite pe calea p</div>
+</li>
+<li class="level1"><div class="li"> dacă <code>B<sub>1</sub> = entry, …, B<sub>n</sub> = B</code> sunt blocurile ce constituie calea <code>p</code>, atunci <code>F<sub>P</sub> = F<sub>Bn</sub> o … o F<sub>B1</sub></code></div>
+</li>
+<li class="level1"><div class="li"> <code>init</code> - valoarea din latice asociata cu blocul <code>entry</code></div>
+</li>
+</ul>
+
+<p>
+Atunci, solutia MOP este: $MOP(B) = \sqcap_{p\in\mathbf{Path(B)}}{F_p(Init)}$, relația fiind aplicată pentru <code>entry</code>, <code>B<sub>1</sub>, … , B<sub>n</sub></code>, <code>exit</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">Din nefericire se poate arata că pentru o problemă arbitrară de analiză de flux de date, în care funcțiile de flux sunt monotone, s-ar putea să nu existe un algoritm care să calculeze soluția MOP pentru toate CFG-urile posibile. Ceea ce calculează algoritmii prezentați în secțiunile următoare este de fapt soluția <strong>MFP (maximum-fixed-point)</strong> (soluția maximală a ecuațiilor de flux de date raportat la relația de ordine a laticei sau, altfel spus, soluția care oferă cât mai multă informație).
+S-a demonstrat ca în problemele de flux de date care <strong>relațiile sunt distributive</strong>, algoritmul iterativ(prezentat în continuare) calculeaza <strong>soluția MFP, care este identică cu soluția MOP</strong>.
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit5" id="clasificarea_problemelor_de_analiza_a_fluxului_de_date">Clasificarea problemelor de analiză a fluxului de date</h2>
+<div class="level2">
+
+<p>
+Problemele de analiză de date se clasifică după urmatoarele criterii:
+</p>
+<ul>
+<li class="level1"><div class="li"> informația pe care trebuie să o ofere</div>
+</li>
+<li class="level1"><div class="li"> atributele urmărite (relaționale sau independente)</div>
+</li>
+<li class="level1"><div class="li"> tipurile de latice folosite, semnificațiile elementelor de latice și funcțiile definite pe acestea</div>
+</li>
+<li class="level1"><div class="li"> direcția fluxului de informație:</div>
+<ul>
+<li class="level2"><div class="li"> probleme de tip “înainte” - în direcția execuției programului</div>
+</li>
+<li class="level2"><div class="li"> probleme de tip “înapoi” - în direcția opusă execuției programului</div>
+</li>
+<li class="level2"><div class="li"> probleme “bidirecționale” - în ambele direcții</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Toate problemele pe care le tratăm aici sunt probleme cu atribute independente (atribuie un element al laticei fiecarui obiect de interes – de exemplu definire de variabilă, calcul de expresie etc.). Problemele relaționale au o complexitate computațională mult mai mare decât cele cu atribute independente. Similar, aproape toate problemele pe care le tratăm sunt unidirecționale (de tip înainte sau de tip înapoi). Problemele bidirecționale impun propagarea informației și înainte, și înapoi în acelasi timp și sunt mult mai complicat de formulat, înteles și rezolvat decât cele unidirecționale.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="tipuri_de_probleme">Tipuri de probleme</h2>
+<div class="level2">
+
+<p>
+Tipuri importante probleme de analiza fluxului de date:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Vizibilitatea definirilor (reaching definitions)</strong> - găsirea definirilor unei variabile (adică locurile unde acelei variabile îi este atribuită o valoare) care ajung să fie utilizate la un anumit punct în procedură. De exemplu: <pre class="code c">a <span class="sy0">=</span> <span class="nu0">5</span> <span class="co1">// definirea #1</span>
+<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span>a<span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// definirea #1 este utilizata aici</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>b <span class="sy0">&gt;</span> c<span class="br0">&#41;</span>
+    a <span class="sy0">=</span> <span class="nu0">10</span><span class="sy0">;</span> <span class="co1">// definirea #2</span>
+<span class="kw1">return</span> a<span class="sy0">;</span> <span class="co1">// ambele definiri pot fi utilizate aici</span></pre>
+
+<p>
+. Aceasta este o problema de tip <strong>înainte</strong>, care folosește o latice de vectori de biți în care fiecare bit corespunde unei definiri a unei variabile.
+</p>
+</div>
+</li>
+<li class="level1"><div class="li"> <strong>Folosirile expuse (exposed uses)</strong> - este problema duală celei de mai sus - pentru fiecare punct al programului în care este definită o variabilă se determină ce folosiri ale variabilei pot utiliza acea definire (sunt expuse acelei definiri). Este o problema de tip <strong>înapoi</strong> și folosește o latice de vectori de biți, în care fiecarui bit îi este asociată o folosire a unei variabile.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Expresiile disponibile (available expressions)</strong> - determinarea expresiilor disponibile în fiecare punct din procedură, în sensul că pe orice cale, de la intrarea în procedură până în acel punct, are loc o evaluare a expresiei și nici una din variabilele folosite în expresie nu primește o valoare nouă între ultima evaluare a expresiei și respectivul punct din program. Aceasta este o problema de tip <strong>înainte</strong> care folosește o latice de vectori de biți în care fiecare bit este asociat unei definiri a unei expresii.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Variabilele în viață (live variables)</strong> - determinarea pentru o anumită variabilă și un anumit punct din program dacă mai există o folosire a valorii variabile până la ieșirea din procedură. Aceasta este o problema de tip <strong>înapoi</strong> și elementul de latice este un vector de biti în care fiecare bit este asociat unei variabile.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Propagarea copierilor (copy propagation)</strong> - determinarea dacă pe fiecare cale de la o copiere a unei variabile x ← y la o folosire a variabilei x, valoarea lui y rămâne neschimbată. Aceasta este o problema de tip <strong>înainte</strong> care folosește vectori de biți, iar fiecare bit reprezintă o copiere a unei variabile.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Propagarea constantelor (constant propagation)</strong> - determinarea valorii unei variabile într-un anumit punct, dacă aceasta valoare este constantă. Problema e de tip <strong>înainte</strong> și nu folosește o latice de vectori de biți.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Analiza parțială a redundanței (partial redundancy)</strong> - determinarea calculelor care se efectuează de mai multe ori pe o anumită cale de execuție, fără ca operanzii să se fi modificat între timp. De asemenea se determină și definirile redundante (nefolosite) ale unei variabile. Problema este de tip <strong>bidirecțional</strong> și folosește vectori de biți în care fiecare poziție reprezintă o calculare a expresiei.</div>
+</li>
+</ul>
+
+<p>
+Problemele de mai sus nu sunt singurele de analiză de date, dar sunt dintre cele mai importante. Există mai multe abordări în rezolvarea problemelor de flux de date. Aici vom descrie algoritmul iterativ al lui <strong>Kildall</strong>.
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="analiza_iterativa_a_fluxului_de_date_-_algoritmul_lui_kildall">Analiza iterativă a fluxului de date - Algoritmul lui Kildall</h2>
+<div class="level2">
+
+<p>
+În continuare vom prezenta metoda iterativă de analiză a fluxului de date, întrucât este cel mai simplu de implementat și, ca urmare, cel mai frecvent folosită. Vom avea în vedere analiza de tip <strong>înainte</strong>. Problemele de tip înapoi reprezintă o simplă adaptare a metodei.
+</p>
+
+<p>
+Pentru un CFG, <code>G = &lt;N, E&gt;</code> unde <code>entry</code> și <code>exit</code> sunt blocuri în N, se dorește să se calculeze:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>in(B)</strong> ∈ L, ∀B ∈ N - informația despre fluxul de date la intrarea în blocul B</div>
+<ul>
+<li class="level2"><div class="li"> $in(B) = \left\{\begin{array}{ll} Init &amp; \mbox{ daca } B = entry \\ \sqcap_{p\in\mathbf{pred(B)}}{out(p)} &amp; \mbox{ altfel } \end{array} \right.$</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <strong>out(B)</strong> ∈ L, ∀B ∈ N - informația despre fluxul de date la ieșirea din blocul B</div>
+<ul>
+<li class="level2"><div class="li"> $out(B) = F_{B}(in(B))$</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+unde:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>Init</code>  - valoarea inițială pentru informația despre fluxul de date la intrarea în procedură</div>
+</li>
+<li class="level1"><div class="li"> <code>F<sub>B</sub>()</code> - transformarea asupra informației de flux de date corespunzătoare executării blocului <code>B</code></div>
+</li>
+<li class="level1"><div class="li"> $\sqcap$ - modelează efectul combinării informației de flux de date de pe arcele care intră într-un bloc.</div>
+</li>
+</ul>
+
+<p>
+În funcție de problemă, efectul combinării informației de flux de date de pe arcele care intră într-un bloc poate fi modelat de ∪ sau de ∩. Analog, valoarea lui <code>Init</code> poate fi ⊥ sau T. Ecuațiile pot fi exprimate doar în funcție de <code>in(B)</code> astfel:
+$$in(B) = \left\{\begin{array}{ll} Init &amp; \mbox{ daca } B = entry \\ \sqcap_{p\in\mathbf{pred(B)}}{F_{p}(in(p))} &amp; \mbox{ altfel } \end{array} \right.$$
+</p>
+
+<p>
+Algoritmul <strong>AnalizaIterativa</strong> foloseste doar informații <code>in()</code>. Strategia acestuia este aceea de a aplica în mod iterativ ecuațiile date mai sus și de a menține o listă de blocuri pentru care valorile <code>in()</code> s-au schimbat la ultima iterație, până când se golește lista.
+Inițializări:
+</p>
+<ul>
+<li class="level1"><div class="li"> lista conține toate blocurile din CFG, exceptând blocul <code>entry</code>, deoarece informația acestuia nu se schimbă niciodată.</div>
+</li>
+<li class="level1"><div class="li"> <code>totalEffect</code> este inițializat cu T pentru că am considerat că ∩ modelează efectul combinării informației de flux de date de pe arcele care intră într-un nod.</div>
+</li>
+</ul>
+<pre class="code c">procedure AnalizaIterativa<span class="br0">&#40;</span>N<span class="sy0">,</span> entry<span class="sy0">,</span> F<span class="sy0">,</span> Init<span class="sy0">,</span> in<span class="br0">&#41;</span>
+N<span class="sy0">:</span>        in     set of Node
+entry<span class="sy0">:</span>    in     Node
+F<span class="sy0">:</span>        in     <span class="br0">&#40;</span>Node x L<span class="br0">&#41;</span> <span class="sy0">-&gt;</span> L
+Init<span class="sy0">:</span>     in     L
+in<span class="sy0">:</span>       out    Node <span class="sy0">-&gt;</span> L
+&nbsp;
+begin
+    B<span class="sy0">,</span> P<span class="sy0">:</span> Node
+    nodeList<span class="sy0">:</span> set of Node
+    totalEffect<span class="sy0">:</span> L
+&nbsp;
+    in<span class="br0">&#40;</span>entry<span class="br0">&#41;</span> <span class="sy0">=</span> Init
+    nodeList <span class="sy0">=</span> N <span class="sy0">-</span> <span class="br0">&#123;</span>entry<span class="br0">&#125;</span>
+    <span class="kw1">for</span> each B ∈ N <span class="kw1">do</span>
+        in<span class="br0">&#40;</span>B<span class="br0">&#41;</span> <span class="sy0">=</span> T
+    done
+&nbsp;
+    repeat
+        B <span class="sy0">=</span> an element from nodeList
+        nodeList <span class="sy0">=</span> nodeList <span class="sy0">-</span> <span class="br0">&#123;</span>B<span class="br0">&#125;</span>
+        totalEffect <span class="sy0">=</span> T
+        <span class="kw1">for</span> each p ∈ pred<span class="br0">&#40;</span>B<span class="br0">&#41;</span> <span class="kw1">do</span>
+            totalEffect <span class="sy0">=</span> totalEffect ∩ Fp<span class="br0">&#40;</span>in<span class="br0">&#40;</span>p<span class="br0">&#41;</span><span class="br0">&#41;</span>
+        done
+&nbsp;
+        <span class="kw1">if</span> <span class="br0">&#40;</span>in<span class="br0">&#40;</span>B<span class="br0">&#41;</span> <span class="sy0">!=</span> totalEffect<span class="br0">&#41;</span> then
+            in<span class="br0">&#40;</span>B<span class="br0">&#41;</span> <span class="sy0">=</span> totalEffect
+            nodeList <span class="sy0">=</span> nodeList ∪ succ<span class="br0">&#40;</span>B<span class="br0">&#41;</span>
+        fi
+    until nodeList <span class="sy0">=</span> ∅
+end</pre>
+
+<p>
+Eficiența computațională a algoritmului depinde de câțiva factori:
+</p>
+<ul>
+<li class="level1"><div class="li"> dimensiunea laticei</div>
+</li>
+<li class="level1"><div class="li"> funcțiile de flux <code>F<sub>B</sub></code></div>
+</li>
+<li class="level1"><div class="li"> felul în care se administrează lista de blocuri</div>
+</li>
+</ul>
+
+<p>
+Primii doi factori depind de problemă, în timp ce felul în care este administrată lista este independent de problemă.
+Cea mai simplă implementare este aceea în care se folosește o stivă sau o coadă, fără a ține seama de relațiile dintre blocuri (arcele din CFG). Pe de altă parte, însă, dacă se procesează toți predecesorii unui bloc înaintea prelucrarii acestuia, atunci se va obține efect maxim asupra informației blocului de fiecare dată când este întâlnit. Pot fi astfel de rezultate dacă, de exemplu, lista va fi completată în ordine inversa printr-o parcurgere postordine și se va opera apoi asupra ei precum asupra unei structuri de date de tip coadă. În acest context, dacă A este numarul maxim de arce înapoi pe oricare drum aciclic din CFG, atunci A+2 iteratii prin bucla <code>repeat</code> vor fi suficiente pentru terminarea algoritmului. În practică este A ≤ 3 și, cel mai frecvent, A = 1.
+</p>
+
+</div>
+
+<h2 class="sectionedit8" id="exemple">Exemple</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit9" id="vizibilitatea_definirilor_reaching_definitions">Vizibilitatea definirilor (reaching definitions)</h3>
+<div class="level3">
+<div class="table sectionedit10"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Pseudocod </th><th class="col1"> CFG </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> <pre class="code asm"><span class="nu0">1</span>      receive m
+<span class="nu0">2</span>      f0 &lt;<span class="sy1">-</span> <span class="nu0">0</span>
+<span class="nu0">3</span>      f1 &lt;<span class="sy1">-</span> <span class="nu0">1</span>
+<span class="nu0">4</span>      if m &lt;= <span class="nu0">1</span> goto L3
+<span class="nu0">5</span>      i &lt;<span class="sy1">-</span> <span class="nu0">2</span>
+<span class="nu0">6</span>  L1<span class="sy1">:</span> if i &lt;= m goto L2
+<span class="nu0">7</span>      return f2
+<span class="nu0">8</span>  L2<span class="sy1">:</span> f2 &lt;<span class="sy1">-</span> f0<span class="sy1">+</span>f1
+<span class="nu0">9</span>      f0 &lt;<span class="sy1">-</span> f1
+<span class="nu0">10</span>     f1 &lt;<span class="sy1">-</span> f2
+<span class="nu0">11</span>     i &lt;<span class="sy1">-</span> i<span class="sy1">+</span><span class="nu0">1</span>
+<span class="nu0">12</span>     goto L1
+<span class="nu0">13</span> L3<span class="sy1">:</span> return m</pre>
+</td><td class="col1"> <a href="../../_detail/cpl/labs/laborator-10-cfg.jpg%3Fid=cpl%253Alabs-2015%253A09.html" class="media" title="cpl:labs:laborator-10-cfg.jpg"><img src="../../_media/cpl/labs/laborator-10-cfg.jpg" class="media" title="CFG" alt="CFG" /></a> </td>
+	</tr>
+</table></div>
+
+<p>
+In tabelul de mai jos sunt prezentate corespondența dintre pozițiile biților în cadrul vectorilor, definirea variabilei și blocul în care aceasta are loc.
+</p>
+<div class="table sectionedit11"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Poziția bitului </th><th class="col1"> Definirea </th><th class="col2"> Basic block </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> 1 </td><td class="col1"> m din instrucțiunea 1 </td><td class="col2"> B<sub>1</sub> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> 2 </td><td class="col1"> f0 din instrucțiunea 2 </td><td class="col2"> B<sub>1</sub> </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> 3 </td><td class="col1"> f1 din instrucțiunea 3 </td><td class="col2"> B<sub>1</sub> </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> 4 </td><td class="col1"> i din instrucțiunea 5 </td><td class="col2"> B<sub>3</sub> </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> 5 </td><td class="col1"> f2 din instrucțiunea 8 </td><td class="col2"> B<sub>6</sub> </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> 6 </td><td class="col1"> f0 din instrucțiunea 9 </td><td class="col2"> B<sub>6</sub> </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> 7 </td><td class="col1"> f1 din instrucțiunea 10 </td><td class="col2"> B<sub>6</sub> </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"> 8 </td><td class="col1"> i din instrucțiunea 11 </td><td class="col2"> B<sub>6</sub> </td>
+	</tr>
+</table></div>
+
+<p>
+Funcțiile de flux pentru fiecare bloc sunt prezentate în tabelul de mai jos (<code>id</code> este funcția identitate). La aceste funcții se ajunge relativ ușor folosind seturi <strong>kill/gen</strong> și explicația procedeului constituie primul exercițiu din acest laborator.
+</p>
+<div class="table sectionedit12"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Funcția asociată unui bloc </th><th class="col1"> Valoarea funcției </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> F<sub>entry</sub> </td><td class="col1"> id </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> F<sub>B1</sub>(&lt;x<sub>1</sub> x<sub>2</sub> x<sub>3</sub> x<sub>4</sub> x<sub>5</sub> x<sub>6</sub> x<sub>7</sub> x<sub>8</sub>&gt;) </td><td class="col1"> &lt;1 1 1 x<sub>4</sub> x<sub>5</sub> 0 0 x<sub>8</sub>&gt; </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> F<sub>B2</sub> </td><td class="col1"> id </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> F<sub>B3</sub>(&lt;x<sub>1</sub> x<sub>2</sub> x<sub>3</sub> x<sub>4</sub> x<sub>5</sub> x<sub>6</sub> x<sub>7</sub> x<sub>8</sub>&gt;) </td><td class="col1"> &lt;x<sub>1</sub> x<sub>2</sub> x<sub>3</sub> 1 x<sub>5</sub> x<sub>6</sub> x<sub>7</sub> 0&gt; </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> F<sub>B4</sub> </td><td class="col1"> id </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> F<sub>B5</sub> </td><td class="col1"> id </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> F<sub>B6</sub>(&lt;x<sub>1</sub> x<sub>2</sub> x<sub>3</sub> x<sub>4</sub> x<sub>5</sub> x<sub>6</sub> x<sub>7</sub> x<sub>8</sub>&gt;) </td><td class="col1"> &lt;x<sub>1</sub> 0 0 0 1 1 1 1&gt; </td>
+	</tr>
+</table></div>
+
+<p>
+Valoarea inițială pentru <code>in(B)</code> pentru toate blocurile este <code>&lt;00000000&gt;</code>. Operatorul de combinare a efectelor de pe arcele care intră într-un bloc este U (în acest caz operatorul SAU aplicat pe vectori de biți).
+</p>
+
+</div>
+
+<h4 id="pasi_algoritm">Pași algoritm</h4>
+<div class="level4">
+<div class="table sectionedit13"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Pas </th><th class="col1"> Operații </th><th class="col2"> Lista de blocuri rezultată </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> 1 </td><td class="col1"> Inițializare </td><td class="col2"> {B<sub>1</sub>,B<sub>2</sub>,B<sub>3</sub>,B<sub>4</sub>,B<sub>5</sub>,B<sub>6</sub>,exit} </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> 2 </td><td class="col1"> La intrarea în bucla <code>repeat</code>, valoarea inițiala a lui B este B<sub>1</sub>.<br><br>Singurul predecesor al lui B<sub>1</sub> este p = <code>entry</code> și rezultatul calculării lui <code>totalEffect</code> este <code>&lt;00000000&gt;</code>, neschimbat față de valoarea inițială a lui <code>in(B<sub>1</sub>)</code>, deci succesorii lui B<sub>1</sub> nu sunt adăugați în listă. </td><td class="col2"> {B<sub>2</sub>,B<sub>3</sub>,B<sub>4</sub>,B<sub>5</sub>,B<sub>6</sub>,exit} → {B<sub>2</sub>,B<sub>3</sub>,B<sub>4</sub>,B<sub>5</sub>,B<sub>6</sub>,exit} </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> 3 </td><td class="col1"> Se ia B = B<sub>2</sub>.<br><br>Singurul predecesor al lui B<sub>2</sub> este p = B<sub>1</sub> și rezultatul calculării lui totalEffect este <code>&lt;11100000&gt;</code>, care devine noua valoare a lui <code>in(B<sub>2</sub>)</code>, deci în lista de lucru se adaugă prin reuniune lista succesorilor lui B<sub>2</sub> - {exit}. </td><td class="col2"> {B<sub>3</sub>,B<sub>4</sub>,B<sub>5</sub>,B<sub>6</sub>,exit} → {B<sub>3</sub>,B<sub>4</sub>,B<sub>5</sub>,B<sub>6</sub>,exit} </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0"> 4 </td><td class="col1"> Se ia B = B<sub>3</sub>.<br><br>B<sub>3</sub> are un singur predecesor, și anume B<sub>1</sub>, iar rezultatul calculării lui totalEffect este <code>&lt;11100000&gt;</code>, care devine noua valoare a lui <code>in(B<sub>3</sub>)</code>. În lista de lucru se adaugă prin reuniune succesorii lui B<sub>3</sub>. </td><td class="col2"> {B<sub>4</sub>,B<sub>5</sub>,B<sub>6</sub>,exit} → {B<sub>4</sub>,B<sub>5</sub>,B<sub>6</sub>,exit} </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0"> 5 </td><td class="col1"> Se ia B = B<sub>4</sub>.<br><br>B<sub>4</sub> are doi predecesori, B<sub>3</sub> si B<sub>6</sub>. B<sub>3</sub> contribuie cu valoarea &lt;11110000&gt;, B<sub>6</sub> contribuie cu <code>&lt;00001111&gt;</code> și totalEffect va fi <code>&lt;11111111&gt;</code>, altul decât valoarea anterioară a lui <code>in(B<sub>4</sub>)</code>. În lista de lucru se adaugă succesorii lui B<sub>4</sub>, B<sub>5</sub> și B<sub>6</sub> care sunt deja în lista și aceasta rămâne nemodificată. </td><td class="col2"> {B<sub>5</sub>,B<sub>6</sub>,exit} → {B<sub>5</sub>,B<sub>6</sub>,exit} </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> 6 </td><td class="col1"> Se continuă cu B = B<sub>5</sub>.<br><br>B<sub>5</sub> are un singur predecesor, anume B<sub>4</sub> care contribuie cu valoarea <code>&lt;11111111&gt;</code> la calcularea lui totalEffect, valoare diferită de vechiul <code>in(B<sub>5</sub>)</code>, deci unicul succesor, <code>exit</code>, se adaugă în listă. </td><td class="col2"> {B<sub>6</sub>,exit} → {B<sub>6</sub>,exit} </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0"> 7 </td><td class="col1"> Urmează B = B<sub>6</sub>.<br><br>B<sub>4</sub>, singurul predecesor al lui B<sub>6</sub>, contribuie cu valoarea <code>&lt;11111111&gt;</code> la calcularea lui totalEffect. <code>in(B<sub>6</sub>)</code> este modificat și succesorii lui B<sub>6</sub> se adaugă la sfârșitul listei. </td><td class="col2"> {exit} → {exit, B<sub>4</sub>} </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0"> 8 </td><td class="col1"> Apoi B = exit.<br><br>Predecesorii lui, B<sub>2</sub> si B<sub>5</sub> fac ca <code>in(exit)</code> sa devina <code>&lt;1111111&gt;</code>. Acesta nu mai are succesori.</td><td class="col2"> {B<sub>4</sub>} → {B<sub>4</sub>} </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0"> 9 </td><td class="col1"> Apoi se ia din nou B = B<sub>4</sub>.<br><br>În acest moment <code>in(B<sub>4</sub>) = &lt;11111111&gt;</code>. B<sub>4</sub> are doi predecesori, B<sub>3</sub> si B<sub>6</sub>. Efectul lui B<sub>3</sub> este <code>&lt;11110000&gt;</code> iar al lui B<sub>6</sub> este <code>&lt;10001111&gt;</code>, deoarece, între timp, <code>in(B<sub>6</sub>)</code> a devenit <code>&lt;11111111&gt;</code>. TotalEffect se calculează prin SAU pe biți și rămâne <code>&lt;11111111&gt;</code>, deci <code>in(B<sub>4</sub>)</code> nu s-a modificat în acestă iterație și nu se va mai adăuga nici un nod în listă. Lista de lucru devine vidă si algoritmul se termină. </td><td class="col2"> {} → {} </td>
+	</tr>
+</table></div>
+
+</div>
+
+<h4 id="comentarii_algoritm">Comentarii algoritm</h4>
+<div class="level4">
+
+<p>
+Algoritmul prezentat aici se poate modifica și folosi foarte simplu și pentru o problemă de tip înapoi, bine formulată. Trebuie ales între a asocia informația de flux de date pentru o astfel de problemă fie cu punctul de intrare, fie cu cel de ieșire al fiecărui bloc. Pentru a folosi dualitatea dintre cele doua tipuri problemele, se optează pentru a doua variantă.
+</p>
+
+<p>
+Ca și în problemele de tip înainte, există graful G = &lt;N, E&gt; cu blocurile <code>entry</code> și <code>exit</code> în N și se dorește să se calculeze <code>out(B)</code> ∈ L ∀B ∈ N, unde <code>out(B)</code> reprezintă informația de flux de date la ieșirea din B, exprimată astfel de ecuațiile de flux de date:
+</p>
+<ul>
+<li class="level1"><div class="li"> $out(B) = \left\{\begin{array}{ll} Init &amp; \mbox{ daca } B = exit \\ \sqcap_{s\in\mathbf{succ(B)}}{in(s)} &amp; \mbox{ altfel } \end{array} \right.$</div>
+</li>
+<li class="level1"><div class="li"> $in(B) = F_{B}(out(B))$</div>
+</li>
+</ul>
+
+<p>
+Semnificațiile notațiilor rămân aceleași ca și la problemele de tip înainte. De asemenea, ecuațiile pot fi exprimate doar în funcție de <code>out(B)</code>, la fel de ușor. În aceste conditii, algoritmul iterativ pentru probleme de tip înapoi este identic cu cel pentru probleme de tip înainte prezentat mai sus, dacă se fac înlocuirile:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>out()</code> devine <code>in()</code></div>
+</li>
+<li class="level1"><div class="li"> <code>exit</code> devine <code>entry</code></div>
+</li>
+<li class="level1"><div class="li"> <code>succ()</code> devine <code>pred()</code></div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit14" id="propagarea_constantelor_constant_propagation">Propagarea constantelor (constant propagation)</h3>
+<div class="level3">
+
+<p>
+<strong>Propagarea constantelor</strong> este utilă pentru detectarea variabilelor cu valori constante în anumite puncte din program. Aceste variabile pot fi înlocuite și pot duce la formarea unor operații ale căror operazi sunt constanți. De aceea, este folosită împreună cu <strong>împachetarea constantelor (constant folding)</strong>.
+</p>
+
+<p>
+Următorul exemplu (preluat de pe Wikipedia) este utilizat pentru evidențierea modului de funcționare ale acestor două analize:
+</p>
+<div class="table sectionedit15"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Înainte de optimiazări </th><th class="col1"> După o aplicare a optimizărilor </th><th class="col2"> După a doua aplicare a optimizărilor </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> <pre class="code c"><span class="kw4">int</span> a <span class="sy0">=</span> <span class="nu0">30</span><span class="sy0">;</span>
+<span class="kw4">int</span> b <span class="sy0">=</span> <span class="nu0">9</span> <span class="sy0">-</span> a <span class="sy0">/</span> <span class="nu0">5</span><span class="sy0">;</span>
+<span class="kw4">int</span> c<span class="sy0">;</span>
+&nbsp;
+c <span class="sy0">=</span> b <span class="sy0">*</span> <span class="nu0">4</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>c <span class="sy0">&gt;</span> <span class="nu0">10</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    c <span class="sy0">=</span> c <span class="sy0">-</span> <span class="nu0">10</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="kw1">return</span> c <span class="sy0">*</span> <span class="br0">&#40;</span><span class="nu0">60</span> <span class="sy0">/</span> a<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</td><td class="col1"> <pre class="code c"><span class="kw4">int</span> a <span class="sy0">=</span> <span class="nu0">30</span><span class="sy0">;</span>
+<span class="kw4">int</span> b <span class="sy0">=</span> <span class="nu0">3</span><span class="sy0">;</span>
+<span class="kw4">int</span> c<span class="sy0">;</span>
+&nbsp;
+c <span class="sy0">=</span> b <span class="sy0">*</span> <span class="nu0">4</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>c <span class="sy0">&gt;</span> <span class="nu0">10</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    c <span class="sy0">=</span> c <span class="sy0">-</span> <span class="nu0">10</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="kw1">return</span> c <span class="sy0">*</span> <span class="nu0">2</span><span class="sy0">;</span></pre>
+</td><td class="col2"> <pre class="code c"><span class="kw4">int</span> a <span class="sy0">=</span> <span class="nu0">30</span><span class="sy0">;</span>
+<span class="kw4">int</span> b <span class="sy0">=</span> <span class="nu0">3</span><span class="sy0">;</span>
+<span class="kw4">int</span> c<span class="sy0">;</span>
+&nbsp;
+c <span class="sy0">=</span> <span class="nu0">12</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span><span class="nu0">12</span> <span class="sy0">&gt;</span> <span class="nu0">10</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    c <span class="sy0">=</span> <span class="nu0">2</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="kw1">return</span> c <span class="sy0">*</span> <span class="nu0">2</span><span class="sy0">;</span></pre>
+</td>
+	</tr>
+</table></div>
+
+<p>
+Efectul celor două analize se termină aici. Dacă la “optimization spaghetti”-ul obținut se mai adaugă eliminarea codului mort și detecția faptului că <code>if</code>-ul întotdeuna merge pe calea <code>true</code>, se ajunge (eventual în mai mulți pași) la:
+</p>
+<pre class="code c"><span class="kw1">return</span> <span class="nu0">4</span><span class="sy0">;</span></pre>
+
+<p>
+Așadar, analizele de propagare și împachetare a constatelor sunt utile, mai ales aplicate împreună cu alte optimizări. Deși se pot implementa aceste două analize folosind <strong>reaching definitions</strong> și simularea evaluării expresiilor constante în mod iterativ, se propune să se proiecteze un algoritm de tip <strong>Kildall</strong> care sa le facă pe amândouă în același timp fără a folosi alte informații.
+</p>
+
+</div>
+
+<h4 id="latice">Latice</h4>
+<div class="level4">
+
+<p>
+Pentru asta se definește laticea în următorul mod: pentru fiecare instrucțiune <code>I</code> se definesc seturile <code>in(I)</code> și <code>out(I)</code> care conțin valori pentru toate variabilele vizibile.
+O variabilă poate avea una din următoarele valori:
+</p>
+<ul>
+<li class="level1"><div class="li"> T - semnifică faptul ca variabila poate fi constantă</div>
+</li>
+<li class="level1"><div class="li"> C<sub>i</sub> - variabila are valoarea constantă C<sub>i</sub> (true, false, 1, -2 etc.)</div>
+</li>
+<li class="level1"><div class="li"> ⊥ - variabila sigur nu e constantă</div>
+</li>
+</ul>
+
+<p>
+Analiza se va face la nivel de instrucțiune și va fi de tip înainte (se poate adapta analiza la nivel de bloc). <strong>Funcția de flux</strong> pentru o instrucțiune ce nu este definită va fi funcția identitate: <strong>out(I) = in(I)</strong>. Pentru o definire de forma v<sub>1</sub> = v<sub>2</sub> op v<sub>3</sub>, funcția de flux este descrisă de urmatoarele relații:
+</p>
+<pre class="code">pentru i != 1 out(I, vi) = in(I, vi)
+   dacă in(I, v2) și in(I, v3) sunt ambele constante atunci
+      out(I, v1) = in(I, v2) op in(I, v3)
+   altfel dacă unul din in(I, v2) sau in(I, v3) este ⊥ atunci
+      out(I, v1) = ⊥
+   altfel
+      out(I, v1) = T</pre>
+
+<p>
+Următorul pas este să se stabilească cum se transferă informația de la o instrucțiune la alta prin CFG (operatorul <strong>meet</strong>). Cazul instrucțiunilor cu un singur predecesor este trivial: <strong>in(I) = out(P)</strong>. Când există mai mulți predecesori se ține seama de următoarele relații ce descriu operatorul $\sqcap$ (meet). Relațiile sunt date pentru doi operanzi, dar sunt ușor extensibile la mai mulți (în caz că există mai mult de doi predecesori):
+</p>
+<ul>
+<li class="level1"><div class="li"> $any \sqcap \top = any$ </div>
+</li>
+<li class="level1"><div class="li"> $any \sqcap \perp = \perp$</div>
+</li>
+<li class="level1"><div class="li"> $C_i \sqcap C_i = C_i$</div>
+</li>
+<li class="level1"><div class="li"> $C_i \sqcap C_j = \perp$</div>
+</li>
+</ul>
+
+<p>
+De menționat că <code>any</code>, după cum îi spune și numele, poate fi oricare din valori (inclusiv T și ⊥). Pentru a avea algoritmul specificat complet, mai trebuie stabilit cu ce sunt inițializate valorile din latice la începutul algoritmului: in(I, v<sub>i</sub>) = T, având semnificația “la inceput toate variabilele sunt posibil constante”.
+</p>
+
+</div>
+
+<h2 class="sectionedit16" id="in_loc_de_incheiere">În loc de încheiere</h2>
+<div class="level2">
+
+<p>
+Există o gamă largă de modalități de rezolvare a problemei analizei de date – de la executarea abstractă a unei proceduri care ar putea determina, de exemplu, că aceasta calculează funcția <code>factorial</code>, până la abordări mai simple, ca cea descrisă aici. În toate cazurile, însă, trebuie avută în vedere corectitudinea informației date de analiza fluxului de date, astfel că aceasta să nu reprezinte în mod greșit modul în care procedura analizată acționează asupra fluxului de date. Trebuie avut grijă să se garanteze că transformarile de cod care se bazează pe analiza de date nu iau decizii incorecte din cauza unor greșeli în proiectarea ecuațiilor de flux de date. Astfel, soluțiile acestor ecuații sunt, dacă nu o reprezentare exactă a modului în care procedura își manipulează datele, atunci, cel puțin, o aproximare conservativă a acesteia.
+</p>
+
+</div>
+
+<h1 class="sectionedit17" id="exercitii_de_laborator_10p">Exerciții de laborator (10p)</h1>
+<div class="level1">
+
+<p>
+<p><div class="noteclassic">
+Laboratorul este compus dintr-o serie de probleme ce vor fi parcurse împreună cu asistentul la tablă / sub forma unor discuții. De preferat pentru fiecare problemă va fi un student care va răspunde la aceasta. Se vor da explicații suplimentare, astfel încât toată lumea să înțeleagă.
+</p>
+
+<p>
+La final, va exista un exercițiu individual, de implementare.
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit18" id="problema_1">Problema 1</h2>
+<div class="level2">
+
+<p>
+Explicati cum s-a ajuns la funcțiile de flux pentru fiecare basic block în analiza vizibilității definirilor din textul laboratorului. Hint: folositi seturi <strong>kill/gen</strong>
+</p>
+
+</div>
+
+<h2 class="sectionedit19" id="problema_2">Problema 2</h2>
+<div class="level2">
+
+<p>
+Adaptați algoritmul Kildall pentru a calcula folosirile expuse (exposed uses). Urmăriți pașii de mai jos:
+</p>
+<ul>
+<li class="level1"><div class="li"> definirea laticei și structura de date folosită. Direcția analizei. (Hint: le puteți găsi în textul laboratorului)</div>
+</li>
+<li class="level1"><div class="li"> modul de obținere a funcțiilor de flux pentru un bloc.</div>
+</li>
+<li class="level1"><div class="li"> operatorul <code>meet</code> sau cum se transmite informația prin CFG.</div>
+</li>
+<li class="level1"><div class="li"> inițializarea structurilor de date la începutul algoritmului.</div>
+</li>
+<li class="level1"><div class="li"> exemplificați pașii de mai sus pe exemplul folosit în analiza vizibilității definirilor</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit20" id="problema_3">Problema 3</h2>
+<div class="level2">
+
+<p>
+Aceleași cerințe ca la problema anterioară, dar pentru analiza propagarii copierilor.
+</p>
+
+</div>
+
+<h2 class="sectionedit21" id="problema_4">Problema 4</h2>
+<div class="level2">
+
+<p>
+<a href="../../_detail/cpl/labs/laborator-10-cfg2.jpg%3Fid=cpl%253Alabs-2015%253A09.html" class="media" title="cpl:labs:laborator-10-cfg2.jpg"><img src="../../_media/cpl/labs/laborator-10-cfg2.jpg" class="media" title="CFG" alt="CFG" /></a>
+</p>
+
+<p>
+Pentru CFG-ul din figură calculați :
+</p>
+<ul>
+<li class="level1"><div class="li"> unde se definesc variabilele folosite într-o instrucțiune (ud-chain)</div>
+</li>
+<li class="level1"><div class="li"> unde sunt folosite variabilele definite într-o instrucțiune (du-chain)</div>
+</li>
+<li class="level1"><div class="li"> variabilele în viață la sfârșitul fiecărui bloc</div>
+</li>
+<li class="level1"><div class="li"> expresiile disponibile</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit22" id="exercitiul_1">Exercițiul 1</h2>
+<div class="level2">
+
+<p>
+<p><div class="noteclassic">
+În acest exercițiu se va folosi <a href="http://llvm.org/docs/Passes.html#mem2reg-promote-memory-to-register" class="urlextern" title="http://llvm.org/docs/Passes.html#mem2reg-promote-memory-to-register"  rel="nofollow">mem2reg</a> ca prim “pass” de transformare. Optimizarea obține o reprezentare în forma SSA cu noduri phi. Folosim această optimizare pentru a aduce codul IR la o formă mai ușor de analizat de passurile/optimizările ulterioare. Mai multe informații despre forma SSA și nodurile phi vor fi prezentate în cursul/laboratorul 10. 
+
+</div></p>
+</p>
+
+<p>
+“Dead Code Elimination” este o optimizare prin care se elimină instrucțiunile al căror rezultat nu influențeaza rezultatul final al programului. Analiza fluxului de date poate oferi informații utile pentru detectarea acestor instrucțiuni. În LLVM sunt implementate mai multe pass-uri ce pot elimina astfel de instrucțiuni, de ex: <a href="http://llvm.org/docs/Passes.html#die-dead-instruction-elimination" class="urlextern" title="http://llvm.org/docs/Passes.html#die-dead-instruction-elimination"  rel="nofollow">-die</a>, <a href="http://llvm.org/docs/Passes.html#dse-dead-store-elimination" class="urlextern" title="http://llvm.org/docs/Passes.html#dse-dead-store-elimination"  rel="nofollow">-dse</a>, <a href="http://llvm.org/docs/Passes.html#dce-dead-code-elimination" class="urlextern" title="http://llvm.org/docs/Passes.html#dce-dead-code-elimination"  rel="nofollow">-dce</a> sau <a href="http://llvm.org/docs/Passes.html#adce-aggressive-dead-code-elimination" class="urlextern" title="http://llvm.org/docs/Passes.html#adce-aggressive-dead-code-elimination"  rel="nofollow">-adce</a>.
+</p>
+<ul>
+<li class="level1"><div class="li"> Compilați fișierul test.c de la sfârșitul exercițiului și aplicați pe rând pass-urile “dce” și “adce”. Care e diferența dintre cele două optimizări? De ce “dce” nu reușește să elimine toate instrucțiunile (ex cele din <em>for.body</em>)?</div>
+</li>
+</ul>
+<pre class="code bash">clang <span class="re5">-O0</span> <span class="re5">-emit-llvm</span> test.c <span class="re5">-c</span> <span class="re5">-o</span> test.bc
+opt <span class="re5">-p</span> <span class="re5">-mem2reg</span> <span class="re5">-dce</span> <span class="sy0">&lt;</span> test.bc <span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null
+opt <span class="re5">-p</span> <span class="re5">-mem2reg</span> <span class="re5">-adce</span> <span class="sy0">&lt;</span> test.bc <span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null</pre>
+<ul>
+<li class="level1"><div class="li"> Analizați implementările celor două pass-uri (<code>DCE.cpp</code>, <code>ADCE.cpp</code>) pentru a observa diferențele. Găsiți sursele în subdirectorul <code>~/llvm-3.6.2/src/lib/Transforms/Scalar</code> din locația în care ați instalat llvm.</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Pentru a întelege mai bine limitările primului pass, modificați <code>DCE.cpp</code> astfel încât să afișeze lista instrucțiunilor care folosesc instrucțiunea curentă (<a href="http://llvm.org/docs/ProgrammersManual.html#iterating-over-def-use-use-def-chains" class="urlextern" title="http://llvm.org/docs/ProgrammersManual.html#iterating-over-def-use-use-def-chains"  rel="nofollow">def-use chain</a>) la fiecare iterație prin WorkList (while (<code>!WorkList.empty())</code>).</div>
+<ul>
+<li class="level2"><div class="li"> Pentru modificarea pass-ului, copiați sursa <code>DCE.cpp</code> într-un pass custom (ca în laboratorul anterior) și modificați linia cu <code>INITIALIZE_PASS</code> în <code>static RegisterPass&lt;DCE&gt; X(“mydce”, “My DCE Pass”);</code>.</div>
+</li>
+<li class="level2"><div class="li"> La execuție folosiți parametrul <code>load</code> cu calea către noul pass, ex:</div>
+</li>
+</ul>
+</li>
+</ul>
+<pre class="code bash">opt <span class="re5">-p</span> <span class="re5">-mem2reg</span> <span class="re5">-load</span> ..<span class="sy0">/</span>llvm-3.6.2<span class="sy0">/</span>src<span class="sy0">/</span>Release+Asserts<span class="sy0">/</span>lib<span class="sy0">/</span>DCE.so <span class="re5">-mydce</span> <span class="sy0">&lt;</span> test.bc <span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null</pre>
+<ul>
+<li class="level1"><div class="li"> Ce observați?</div>
+</li>
+</ul>
+<pre class="code c"><span class="coMULTI">/* test.c */</span>
+&nbsp;
+<span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> test<span class="br0">&#40;</span><span class="kw4">int</span> x<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw4">int</span> a<span class="sy0">,</span> b<span class="sy0">,</span> c<span class="sy0">;</span>
+        <span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> <span class="nu0">1000000000</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                x <span class="sy0">=</span> x <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+                a <span class="sy0">=</span> x <span class="sy0">+</span> <span class="nu0">2</span><span class="sy0">;</span>
+                b <span class="sy0">=</span> a <span class="sy0">-</span> <span class="nu0">3</span><span class="sy0">;</span>
+                c <span class="sy0">=</span> a <span class="sy0">+</span> b<span class="sy0">;</span>
+                x <span class="sy0">=</span> x <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+                x <span class="sy0">=</span> x <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+                x <span class="sy0">=</span> x <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+                x <span class="sy0">=</span> x <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+                x <span class="sy0">=</span> x <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+                x <span class="sy0">=</span> x <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span>
+                x <span class="sy0">=</span> a <span class="sy0">+</span> b<span class="sy0">;</span>
+                x <span class="sy0">=</span> a <span class="sy0">+</span> b<span class="sy0">;</span>
+                x <span class="sy0">=</span> a <span class="sy0">+</span> b<span class="sy0">;</span>
+                x <span class="sy0">=</span> a <span class="sy0">+</span> b<span class="sy0">;</span>
+                x <span class="sy0">=</span> a <span class="sy0">+</span> b<span class="sy0">;</span>
+                x <span class="sy0">=</span> a <span class="sy0">+</span> b<span class="sy0">;</span>
+        <span class="br0">&#125;</span>                                                                                                                                                      
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw4">int</span> a <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">,</span> b <span class="sy0">=</span> <span class="nu0">2</span><span class="sy0">;</span>
+        test<span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h1 class="sectionedit23" id="resurse">Resurse</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://drona.csa.iisc.ernet.in/~deepakd/pav-07/Lecture11.pdf" class="urlextern" title="http://drona.csa.iisc.ernet.in/~deepakd/pav-07/Lecture11.pdf"  rel="nofollow">Explicatii Kildal si MOP</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Kildall" class="urlextern" title="http://en.wikipedia.org/wiki/Kildall"  rel="nofollow">Kildall</a></div>
+</li>
+</ul>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_cpl">Informații generale CPL</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_1728311741583579064008c" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/documentatie.html" class="wikilink1" title="cpl:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../info/lista-discutii.html" class="wikilink1" title="cpl:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../info/trimitere-teme.html" class="wikilink1" title="cpl:info:trimitere-teme">Trimitere teme</a></div></li>
+<li class="level1"><div class="li"><a href="../info/vm.html" class="wikilink1" title="cpl:info:vm">Mașina virtuală</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale CPL" [12-86] -->
+<h1 class="sectionedit2" id="informatii_cpl_2016-2017">Informații CPL 2016-2017</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_725983844583579064102f" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../meta/notare/reguli-notare.html" class="wikilink1" title="cpl:meta:notare:reguli-notare">Notare</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../meta/anunturi.html" class="wikilink1" title="cpl:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/calendar.html" class="wikilink1" title="cpl:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/catalog.html" class="wikilink1" title="cpl:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/examen.html" class="wikilink1" title="cpl:meta:examen">Examen</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/need-to-know.html" class="wikilink1" title="cpl:meta:need-to-know">CPL Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/orar.html" class="wikilink1" title="cpl:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații CPL 2016-2017" [87-155] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_4999551135835790641fcd" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../labs/01.html" class="wikilink1" title="cpl:labs:01">01. Introduction to Flex</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/02.html" class="wikilink1" title="cpl:labs:02">02. Introduction to Bison</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/03.html" class="wikilink1" title="cpl:labs:03">03. Bison Advanced</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/04.html" class="wikilink1" title="cpl:labs:04">04. Introduction to LLVM</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/05.html" class="wikilink1" title="cpl:labs:05">05. LLVM IR - C++ API</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/06.html" class="wikilink1" title="cpl:labs:06">06. Code generation. Structure of data and objects in memory</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/07.html" class="wikilink1" title="cpl:labs:07">07. Code generation. Function calls and stack frames</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/08.html" class="wikilink1" title="cpl:labs:08">08. LLVM backend</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/09.html" class="wikilink1" title="cpl:labs:09">09. LLVM Passes - displaying code structure</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/10.html" class="wikilink1" title="cpl:labs:10">10. LLVM Passes - code analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/11.html" class="wikilink1" title="cpl:labs:11">11. LLVM Passes - code optimizations</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/12.html" class="wikilink1" title="cpl:labs:12">12. Linkers and Loaders</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/llvm-pass.html" class="wikilink1" title="cpl:labs:llvm-pass">LLVM Passes</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [156-209] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_8594021725835790642f6d" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="cpl:courses:01">Cursul 01. Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="cpl:courses:02">Cursul 02. Analiză sintatică LL</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="cpl:courses:03">Cursul 03. Analiză sintatică LR</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="cpl:courses:04">Cursul 04. Analiză semantică</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="cpl:courses:05">Cursul 05. Generarea codului obiect. Arhitectura setului de instrucțiuni</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="cpl:courses:06">Cursul 06. Generarea apelurilor de funcții și a codului orientat obiect.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/07.html" class="wikilink1" title="cpl:courses:07">Cursul 07. Optimizări. Analiza fluxului de control (CFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/08.html" class="wikilink1" title="cpl:courses:08">Cursul 08. Analiza fluxului de date (DFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/09.html" class="wikilink1" title="cpl:courses:09">Cursul 09. Analiza fluxului de date. Forma SSA. Extragerea codului invariant din bucle. Variabile de inducție.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/10.html" class="wikilink1" title="cpl:courses:10">Cursul 10. Arhitectura Calculatoarelor. Dependență. Planificarea instrucțiunilor</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/11.html" class="wikilink1" title="cpl:courses:11">Cursul 11. Garbage Collection</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/12.html" class="wikilink1" title="cpl:courses:12">Cursul 12. Alocarea de registre. Linkers.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/13.html" class="wikilink1" title="cpl:courses:13">Cursul 13. Just in Time Compilers (JIT)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [210-262] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_11614455225835790643f0d" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../teme/concurs.html" class="wikilink1" title="cpl:teme:concurs">Concurs</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/general.html" class="wikilink1" title="cpl:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema1.html" class="wikilink1" title="cpl:teme:tema1">Tema de casă 1 - Analiza sintactică</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema2.html" class="wikilink1" title="cpl:teme:tema2">Tema de casă 2 - Generarea de cod</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema3.html" class="wikilink1" title="cpl:teme:tema3">Tema de casa 3 - Backend</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [263-310] -->
+<h1 class="sectionedit6" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_16017969995835790644eae" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/materiale.html" class="wikilink1" title="cpl:res:materiale">Nice to read</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 SECTION "Resurse" [311-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="09.html#data_flow_analysis">09. Data Flow Analysis</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="09.html#cadrul_conceptual">Cadrul conceptual</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="09.html#propietati_importante">Propietăți importante</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="09.html#exemplu_de_latice">Exemplu de latice</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#relatia_de_incluziune">Relația de incluziune</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="09.html#monotonia_functiilor_de_flux">Monotonia funcțiilor de flux</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="09.html#clasificarea_problemelor_de_analiza_a_fluxului_de_date">Clasificarea problemelor de analiză a fluxului de date</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#tipuri_de_probleme">Tipuri de probleme</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#analiza_iterativa_a_fluxului_de_date_-_algoritmul_lui_kildall">Analiza iterativă a fluxului de date - Algoritmul lui Kildall</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#exemple">Exemple</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="09.html#vizibilitatea_definirilor_reaching_definitions">Vizibilitatea definirilor (reaching definitions)</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="09.html#pasi_algoritm">Pași algoritm</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#comentarii_algoritm">Comentarii algoritm</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="09.html#propagarea_constantelor_constant_propagation">Propagarea constantelor (constant propagation)</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="09.html#latice">Latice</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="09.html#in_loc_de_incheiere">În loc de încheiere</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="09.html#exercitii_de_laborator_10p">Exerciții de laborator (10p)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="09.html#problema_1">Problema 1</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#problema_2">Problema 2</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#problema_3">Problema 3</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#problema_4">Problema 4</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#exercitiul_1">Exercițiul 1</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="09.html#resurse">Resurse</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cpl/labs-2015/09.txt · Last modified: 2016/10/04 07:34 by bogdan.nitulescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="09%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="09%3Fdo=media&amp;ns=cpl%253Alabs-2015.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="09.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cpl%253Alabs-2015%253A09&amp;1479899398" width="2" height="1" alt="" /></div>
+</body>
+</html>

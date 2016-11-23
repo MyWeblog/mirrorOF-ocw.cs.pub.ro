@@ -1,0 +1,724 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:laboratoare:lab05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-23T03:43:21+0200"/>
+<meta name="keywords" content="so2,laboratoare,lab05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="lab05.html"/>
+<link rel="canonical" href="../../../../so2/laboratoare/lab05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab05","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab05.html#laborator_5_-_intreruperi">Laborator 5 - Întreruperi</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab05.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab05.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab05.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab05.html#notiuni_generale">Noțiuni generale</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05.html#comunicatia_cu_hardware-ul">Comunicația cu hardware-ul</a></div></li>
+<li class="level3"><div class="li"><a href="lab05.html#tratarea_intreruperilor">Tratarea întreruperilor</a></div></li>
+<li class="level3"><div class="li"><a href="lab05.html#locking">Locking</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab05.html#comunicarea_cu_hardware-ul_in_linux">Comunicarea cu hardware-ul în Linux</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05.html#alocarea_porturilor_io">Alocarea porturilor I/O</a></div></li>
+<li class="level3"><div class="li"><a href="lab05.html#operatii_de_scriere_si_citire_a_porturilor_io">Operații de scriere și citire a porturilor I/O</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab05.html#intreruperi_in_linux">Întreruperi în Linux</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05.html#obtinerea_unei_intreruperi">Obținerea unei întreruperi</a></div></li>
+<li class="level3"><div class="li"><a href="lab05.html#implementarea_rutinei_de_tratare_a_intreruperii">Implementarea rutinei de tratare a întreruperii</a></div></li>
+<li class="level3"><div class="li"><a href="lab05.html#locking1">Locking</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab05.html#utilizare_spinlock-uri">Utilizare spinlock-uri</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="lab05.html#statistici_despre_intreruperi">Statistici despre întreruperi</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab05.html#resurse_utile">Resurse utile</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05.html#port_serial">Port serial</a></div></li>
+<li class="level3"><div class="li"><a href="lab05.html#port_paralel">Port paralel</a></div></li>
+<li class="level3"><div class="li"><a href="lab05.html#controller_tastatura">Controller tastatură</a></div></li>
+<li class="level3"><div class="li"><a href="lab05.html#linux">Linux</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_5_-_intreruperi">Laborator 5 - Întreruperi</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 5 - Întreruperi" [1-42] -->
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> înțelegerea modului de comunicare cu dispozitivele periferice</div>
+</li>
+<li class="level1"><div class="li"> deprinderea de cunoștințe de implementare a rutinelor de tratare a întreruperilor </div>
+</li>
+<li class="level1"><div class="li"> înțelegerea particularităților în sincronizarea cu rutinele de tratarea a întreruperilor</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Obiectivele laboratorului" [43-339] -->
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> IRQ</div>
+</li>
+<li class="level1"><div class="li"> port I/O</div>
+</li>
+<li class="level1"><div class="li"> adresă I/O</div>
+</li>
+<li class="level1"><div class="li"> adresă de bază</div>
+</li>
+<li class="level1"><div class="li"> UART</div>
+</li>
+<li class="level1"><div class="li"> request_region / release_region</div>
+</li>
+<li class="level1"><div class="li"> inb / outb</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Cuvinte cheie" [340-485] -->
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-slides.pdf"  rel="nofollow">Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow">SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Materiale ajutătoare" [486-704] -->
+<h2 class="sectionedit5" id="notiuni_generale">Noțiuni generale</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Noțiuni generale" [705-735] -->
+<h3 class="sectionedit6" id="comunicatia_cu_hardware-ul">Comunicația cu hardware-ul</h3>
+<div class="level3">
+
+<p>
+Un dispozitiv periferic este controlat prin scrierea și citirea registrelor sale. De cele mai multe ori, un dispozitiv are mai multe registre, care pot fi accesate la adrese consecutive, fie în <strong>spațiul de adrese din memorie</strong>, fie în <strong>spațiul de adrese I/O</strong>. Fiecare dispozitiv conectat la magistrala I/O are un set de adrese I/O, numite <strong>porturi I/O</strong>. Porturile I/O pot fi mapate la adrese din memoria fizică, astfel încât procesorul va putea realiza comunicarea cu dispozitivul prin instrucțiuni care operează direct cu memoria. Din motive de simplitate, vom folosi în mod direct porturile I/O (fără mapare la adrese din memoria fizică) pentru comunicarea cu dispozitivele fizice.
+</p>
+
+<p>
+Porturile I/O ale fiecărui dispozitiv sunt structurate într-un set de registre specializate, pentru a oferi o interfață uniformă pentru programare. Astfel, majoritatea dispozitivelor vor avea următoarele tipuri de registre:
+</p>
+<ul>
+<li class="level1"><div class="li"> registre de <strong>control</strong>, care primesc comenzi pentru dispozitiv</div>
+</li>
+<li class="level1"><div class="li"> registre de <strong>stare</strong>, care conțin informații despre starea internă a dispozitivului</div>
+</li>
+<li class="level1"><div class="li"> registre de <strong>intrare</strong>, din care se preiau datele de la dispozitiv</div>
+</li>
+<li class="level1"><div class="li"> registre de <strong>ieșire</strong>, în care se scriu datele pentru a le transmite către dispozitiv</div>
+</li>
+</ul>
+
+<p>
+În majoritatea cazurilor, porturile fizice sunt diferențiate după numărul de biți: pot fi porturi pe 8, 16 sau 32 de biți.
+</p>
+
+<p>
+Spre exemplu, portul paralel are 8 porturi de I/O pe 8 biți, începând de la adresa de bază <code>0x378</code>. Registrul de date se găsește la adresa de bază (<code>0x378</code>), registrul de status la adresa de bază + 1 (<code>0x379</code>), iar cel de control la adresa de bază + 2 (<code>0x37a</code>). Registrul de date este atât registru de intrare cât și de ieșire.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Comunicația cu hardware-ul" [736-2516] -->
+<h3 class="sectionedit7" id="tratarea_intreruperilor">Tratarea întreruperilor</h3>
+<div class="level3">
+
+<p>
+Deși există echipamente care pot fi controlate în întregime folosind porturi I/O sau zone de memorie speciale, există și situații în care acest lucru este insuficient. Principala problemă care mai trebuie tratată e faptul că anumite evenimente au loc la intervale de timp nedeterminate și este ineficient ca procesorul (CPU) să interogheze repetat echipamentele despre starea lor (<em>polling</em>). Modalitatea de rezolvare a acestei probleme o reprezintă <strong>IRQ</strong> (<em>Interrupt ReQuest</em>), notificări hardware prin care procesorul este anunțat de apariția unui anumit eveniment extern.
+</p>
+
+<p>
+Pentru ca IRQ-urile să fie utile, trebuie să existe secvențe de cod care să le trateze. Deoarece, în multe situații, numărul de întreruperi disponibile este limitat, un device driver trebuie să aibă un comportament cât mai “civilizat” cu întreruperile: adică întreruperile trebuie să fie cerute înainte de a fi utilizate și eliberate atunci când nu mai este nevoie de ele. În plus, în anumite situații, device driver-ele trebuie să folosească în comun o întrerupere sau să se sincronizeze cu întreruperile. Despre toate acestea vom discuta în continuare.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Tratarea întreruperilor" [2517-3735] -->
+<h3 class="sectionedit8" id="locking">Locking</h3>
+<div class="level3">
+
+<p>
+Atunci când trebuie să accesăm resurse partajate între o rutină de tratare a întreruperii (A) și cod ce rulează în context proces sau într-o rutină de tratare a unei acțiuni amânabile (B), trebuie să folosim un mod special de sincronizare. În (A) trebuie să folosim o primitivă de tip spinlock, iar în (B) trebuie să dezactivăm întreruperile <strong>ȘI</strong> să folosim o primitivă de tip spinlock. Dezactivarea întreruperilor nu este suficientă pentru că rutina de întrerupere poate rula pe un alt procesor decât cel pe care rulează (B).
+</p>
+
+<p>
+Folosirea doar a unui spinlock poate duce la deadlock. Exemplul clasic de deadlock în acest caz este:
+</p>
+<ol>
+<li class="level1"><div class="li"> rulăm în context proces, pe procesorul X, și achiziționăm lock-ul</div>
+</li>
+<li class="level1"><div class="li"> înainte de a elibera lock-ul, se generează o întrerupere pe procesorul X</div>
+</li>
+<li class="level1"><div class="li"> rutina de tratare a întreruperii va încerca să achiziționeze și ea lock-ul și va intra într-o buclă infinită</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT8 SECTION "Locking" [3736-4695] -->
+<h2 class="sectionedit9" id="comunicarea_cu_hardware-ul_in_linux">Comunicarea cu hardware-ul în Linux</h2>
+<div class="level2">
+
+<p>
+În Linux, conceptul de porturi I/O este implementat pe toate platformele.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Comunicarea cu hardware-ul în Linux" [4696-4821] -->
+<h3 class="sectionedit10" id="alocarea_porturilor_io">Alocarea porturilor I/O</h3>
+<div class="level3">
+
+<p>
+Înainte de a putea lucra cu porturile I/O, trebuie să ne asigurăm că avem acces exclusiv la ele. Pentru a obține porturile dorite, se folosește funcția <a href="http://lxr.free-electrons.com/source/include/linux/ioport.h?v=3.13#L174" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/ioport.h?v=3.13#L174"  rel="nofollow">request_region</a>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/ioport.h&gt;</span>
+&nbsp;
+<span class="kw4">struct</span> resource <span class="sy0">*</span>request_region<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">long</span> first<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> n<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span>name<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Parametrul <code>first</code> specifică adresa de bază pentru dispozitiv, iar <code>n</code> numărul de porturi dorite. Adresa de bază este începutul zonei contigue de adrese (sau de porturi I/O) asociate dispozitivului și trebuie să fie unică pentru fiecare dispozitiv. Parametrul <code>name</code> reprezintă numele dispozitivului.
+</p>
+
+<p>
+Pentru eliberarea porturilor rezervate, se folosește funcția <a href="http://lxr.free-electrons.com/source/include/linux/ioport.h?v=3.13#L188" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/ioport.h?v=3.13#L188"  rel="nofollow">release_region</a>:
+</p>
+<pre class="code c"><span class="kw4">void</span> release_region<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">long</span> start<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> n<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Spre exemplu, portul serial <code>COM1</code> are adresa de bază <code>0x3F8</code> și deține 8 porturi. Secvența de cod pentru alocarea porturilor asociate acestuia este următoarea:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/ioport.h&gt;</span>
+<span class="co2">#define MY_BASEPORT 0x3F8</span>
+<span class="co2">#define MY_NR_PORTS 8</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span> request_region<span class="br0">&#40;</span>MY_BASEPORT<span class="sy0">,</span> MY_NR_PORTS<span class="sy0">,</span> <span class="st0">&quot;com1&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* handle error */</span>
+    <span class="kw1">return</span> <span class="sy0">-</span>ENODEV<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+iar cea pentru eliberare:
+</p>
+<pre class="code c">release_region<span class="br0">&#40;</span>MY_BASEPORT<span class="sy0">,</span> MY_NR_PORTS<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+De cele mai multe ori, alocarea porturilor se realizează la inițializarea driver-ului, în funcția <code>init_module</code>, iar eliberarea acestora la deinițializare, în funcția <code>cleanup_module</code>.
+</p>
+
+<p>
+Toate porturile alocate apar în <code>/proc/ioports</code>:
+</p>
+<pre class="code">$ cat /proc/ioports
+0000-001f : dma1
+0020-0021 : pic1
+0040-005f : timer
+0060-006f : keyboard
+0070-0077 : rtc
+0080-008f : dma page reg
+00a0-00a1 : pic2
+00c0-00df : dma2
+00f0-00ff : fpu
+0170-0177 : ide1
+01f0-01f7 : ide0
+0376-0376 : ide1
+0378-037a : parport0
+037b-037f : parport0
+03c0-03df : vga+
+03f6-03f6 : ide0
+03f8-03ff : serial
+...</pre>
+
+</div>
+<!-- EDIT10 SECTION "Alocarea porturilor I/O" [4822-6846] -->
+<h3 class="sectionedit11" id="operatii_de_scriere_si_citire_a_porturilor_io">Operații de scriere și citire a porturilor I/O</h3>
+<div class="level3">
+
+<p>
+După ce un driver a obținut intervalul de porturi I/O dorite, trebuie să realizeze operații de citire sau scriere pe aceste porturi. Întrucât porturile fizice sunt diferențiate după numărul de biți (8, 16 sau 32 de biți), există diferite funcții de acces a porturilor în funcție de dimensiunea lor. În <code><a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13"  rel="nofollow">asm/io.h</a></code> sunt definite următoarele funcții de acces a porturilor:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>unsigned <a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L132" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L132"  rel="nofollow">inb</a>(int port)</code>, citește porturi de dimensiune un octet (8 biți)</div>
+</li>
+<li class="level1"><div class="li"> <code>void <a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L142" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L142"  rel="nofollow">outb</a>(unsigned char byte, int port)</code>, scrie porturi de dimensiune un octet (8 biți)</div>
+</li>
+<li class="level1"><div class="li"> <code>unsigned <a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L132" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L132"  rel="nofollow">inw</a>(int port)</code>, citește porturi de dimensiune doi octeți (16 biți)</div>
+</li>
+<li class="level1"><div class="li"> <code>void <a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L147" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L147"  rel="nofollow">outw</a>(unsigned short word, int port)</code>, scrie porturi de dimensiune doi octeți (16 biți)</div>
+</li>
+<li class="level1"><div class="li"> <code>unsigned <a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L137" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L137"  rel="nofollow">inl</a>(int port)</code>, citește porturi de dimensiune patru octeți (32 biți)</div>
+</li>
+<li class="level1"><div class="li"> <code>void <a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L152" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L152"  rel="nofollow">outl</a>(unsigned long word, int port)</code>, scrie porturi de dimensiune patru octeți (32 biți)</div>
+</li>
+</ul>
+
+<p>
+Argumentul port specifică adresa portului de unde se citește sau se scrie, iar tipul său este dependent de platformă (poate fi <code>unsigned long</code> sau <code>unsigned short</code>).
+</p>
+
+<p>
+Anumite platforme pot avea probleme atunci când procesorul încearcă să transfere date prea rapid către și de la dispozitiv. Soluția este inserarea unei întârzieri după fiecare instrucțiune de I/O, în cazul în care urmează o altă instrucțiune de același tip. În cazul în care dispozitivul pierde date, se pot folosi funcții care introduc această întârziere; numele acestora este similar cu cele descrise mai sus, cu deosebirea că se termină în <code>_p</code>: <code><a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L157" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L157"  rel="nofollow">inb_p</a></code>, <code><a href="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L160" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/io.h?v=3.13#L160"  rel="nofollow">outb_p</a></code> etc.
+</p>
+
+<p>
+Spre exemplu, următoarea secvență scrie un octet pe portul serial <code>COM1</code> și apoi îl citește:
+</p>
+<pre class="code c"><span class="co2">#include &lt;asm/io.h&gt;</span>
+<span class="co2">#define MY_BASEPORT 0x3F8</span>
+&nbsp;
+<span class="kw4">unsigned</span> <span class="kw4">char</span> value <span class="sy0">=</span> <span class="nu12">0xFF</span><span class="sy0">;</span>
+outb<span class="br0">&#40;</span>value<span class="sy0">,</span> MY_BASEPORT<span class="br0">&#41;</span><span class="sy0">;</span>
+value <span class="sy0">=</span> inb<span class="br0">&#40;</span>MY_BASEPORT<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Operații I/O în user space
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Operații I/O în user space
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Deși funcțiile descrise mai sus sunt definite pentru device drivere, ele pot fi folosite și din user space, prin includerea header-ului <code>&lt;sys/io.h&gt;</code>. Pentru a putea fi folosite, vor trebui apelate mai întâi funcțiile <code><a href="http://www.kernel.org/doc/man-pages/online/pages/man2/ioperm.2.html" class="urlextern" title="http://www.kernel.org/doc/man-pages/online/pages/man2/ioperm.2.html"  rel="nofollow">ioperm</a></code> sau <code><a href="http://www.kernel.org/doc/man-pages/online/pages/man2/iopl.2.html" class="urlextern" title="http://www.kernel.org/doc/man-pages/online/pages/man2/iopl.2.html"  rel="nofollow">iopl</a></code> pentru obținerea permisiunii de a realiza operații cu porturile. Funcția <code>ioperm</code> obține permisiunea pentru porturi individuale, în timp ce <code>iopl</code> pentru întregul spațiu de adrese I/O. Pentru a putea folosi aceste funcții utilizatorul trebuie să fie <code>root</code>.
+</p>
+
+<p>
+Următoarea secvență folosită în user space obține permisiunea pentru primele 3 porturi ale portului serial, și apoi le eliberează:
+</p>
+<pre class="code c"><span class="co2">#include &lt;sys/io.h&gt;</span>
+<span class="co2">#define MY_BASEPORT 0x3F8</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#40;</span>ioperm<span class="br0">&#40;</span>MY_BASEPORT<span class="sy0">,</span> <span class="nu0">3</span><span class="sy0">,</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* handle error */</span>
+<span class="br0">&#125;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>ioperm<span class="br0">&#40;</span>MY_BASEPORT<span class="sy0">,</span> <span class="nu0">3</span><span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* handle error */</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Al treilea parametru al funcției <code>ioperm</code> este 1 pentru obținerea permisiunii și 0 pentru eliberare.
+</p>
+</div></div>
+</div>
+<!-- EDIT11 SECTION "Operații de scriere și citire a porturilor I/O" [6847-10622] -->
+<h2 class="sectionedit12" id="intreruperi_in_linux">Întreruperi în Linux</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT12 SECTION "Întreruperi în Linux" [10623-10658] -->
+<h3 class="sectionedit13" id="obtinerea_unei_intreruperi">Obținerea unei întreruperi</h3>
+<div class="level3">
+
+<p>
+La fel ca și în cazul celorlalte resurse, un driver trebuie să obțină accesul la o linie de întreruperi înainte de a o putea utiliza și să o elibereze la finalul execuției.
+</p>
+
+<p>
+În Linux, cererea de obținere și respectiv eliberare a unei întreruperi se face cu ajutorul funcțiilor <code><a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128"  rel="nofollow">request_irq</a></code> și <code><a href="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L1336" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L1336"  rel="nofollow">free_irq</a></code>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/interrupt.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> request_irq<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">int</span> irq_no<span class="sy0">,</span>
+                irqreturn_t <span class="br0">&#40;</span><span class="sy0">*</span>handler<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">int</span> irq_no<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>dev_id<span class="br0">&#41;</span><span class="sy0">,</span>
+                <span class="kw4">unsigned</span> <span class="kw4">long</span> flags<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span>dev_name<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>dev_id<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> free_irq<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">int</span> irq_no<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>dev_id<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Se observă că pentru obținerea unei întreruperi dezvoltatorul apelează funcția <code><a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128"  rel="nofollow">request_irq</a></code>. În cadrul funcției <code><a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128"  rel="nofollow">request_irq</a></code> trebuie să specifice <strong>numărul întreruperii</strong> (<code>irq_no</code>), un <strong>handler</strong> ce va fi chemat în momentul generării întreruperii (<code>handler</code>), <strong>flag</strong>-uri ce vor instrui kernelul despre comportamentul dorit (<code>flags</code>), <strong>numele dispozitivului</strong> ce folosește această întrerupere (<code>dev_name</code>), și un pointer ce poate fi configurat de către utilizator la orice valoare, și care nu are semnificație globală (<code>dev_id</code>). De cele mai multe ori, <code>dev_id</code> va fi configurat la pointerul către datele private ale dispozitivului. În schimb, la eliberarea întreruperii, folosind funcția <code><a href="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L1336" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L1336"  rel="nofollow">free_irq</a></code> dezvoltatorul trebuie să transmită aceeași valoare a pointerului (<code>dev_id</code>), împreună cu numărul întreruperii (<code>irq_no</code>). Numele dispozitivului (<code>dev_name</code>) este folosit pentru afișarea de statistici în <code>/proc/interrupts</code>.
+</p>
+
+<p>
+Valoarea pe care o întoarce <code><a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128"  rel="nofollow">request_irq</a></code> este 0 în cazul în care înregistrarea s-a efectuat cu succes sau un cod de eroare negativ care indică motivul eșecului. O valoare uzuală este <code>-EBUSY</code> care este întoarsă atunci când întreruperea este ocupată deja de un alt echipament.
+</p>
+
+<p>
+<a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L39" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L39"  rel="nofollow">Flag-urile</a> ce pot fi transmise la obținerea unei întreruperi sunt <code>IRQF_SHARED</code> și <code>IRQF_DISABLED</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"><code><a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L62" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L62"  rel="nofollow">IRQF_SHARED</a></code> anunță kernelul că întreruperea poate fi partajată cu alte dispozitive. Dacă acest flag nu este setat, atunci, dacă există deja un handler asociat cu întreruperea cerută, cererea de obținere a unei întreruperi va eșua. O întrerupere partajată este tratată prin execuția tuturor rutinelor înregistrate. Această abordare duce la o situație interesantă: cum își poate da seama un device driver dacă rutina de tratare a întreruperii a fost activată de o întrerupere generată de dispozitivul pe care îl gestionează? Răspunsul este simplu: toate dispozitivele care oferă suport pentru întreruperi au asociate un registru de stare, care poate fi interogat în rutina de tratare pentru a afla dacă întreruperea a fost sau nu generată de dispozitiv (în cazul portului serial, acest registru de stare este <code>IIR</code> - <em>Interrupt Information Register</em>). La cererea unei întreruperi partajate cu <code><a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128"  rel="nofollow">request_irq</a></code>, argumentul <code>dev_id</code> trebuie să fie unic în kernel; poate fi setat la un pointer către datele private ale modulului, dar nu poate fi <code>NULL</code>.</div>
+</li>
+<li class="level1"><div class="li"><code><a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L61" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L61"  rel="nofollow">IRQF_DISABLED</a></code> anunță kernelul că handler-ul se va executa cu toate întreruperile dezactivate pe procesorul local; un device driver nu trebuie să folosească acest flag, el este folosit doar în cazuri speciale - de exemplu la tratarea întreruperii de ceas.</div>
+</li>
+</ul>
+
+<p>
+Obținerea întreruperii se poate realiza fie la inițializarea driver-ului, în funcția <code>init_module</code>, fie atunci când dispozitivul este deschis prima dată, în funcția <code>open</code>.
+</p>
+
+<p>
+Următorul exemplu realizează obținerea întreruperii pentru portul serial <code>COM1</code>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/interrupt.h&gt;</span>
+&nbsp;
+<span class="co2">#define MY_BASEPORT 0x3F8</span>
+<span class="co2">#define MY_IRQ 4</span>
+&nbsp;
+<span class="kw4">static</span> my_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+	<span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data<span class="sy0">;</span>
+	<span class="kw4">int</span> err<span class="sy0">;</span>
+&nbsp;
+	err <span class="sy0">=</span> request_irq<span class="br0">&#40;</span>MY_IRQ<span class="sy0">,</span> my_handler<span class="sy0">,</span> IRQF_SHARED<span class="sy0">,</span>
+			       <span class="st0">&quot;com1&quot;</span><span class="sy0">,</span> my_data<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>err <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="coMULTI">/* handle error*/</span>
+		<span class="kw1">return</span> err<span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+După cum se poate observa, IRQ-ul pentru portul serial <code>COM1</code> este 4, care este folosit în mod partajat (<code>IRQF_SHARED</code>).
+</p>
+
+<p>
+<p><div class="notewarning">
+La cererea  unei întreruperi partajate (<code>IRQF_SHARED</code>) cu <code><a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L128"  rel="nofollow">request_irq</a></code>, argumentul <code>dev_id</code> <strong>nu</strong> poate fi <code>NULL</code>.
+
+</div></p>
+</p>
+
+<p>
+Pentru eliberarea întreruperii asociate portului serial se va executa următoarea secvență:
+</p>
+<pre class="code c">free_irq<span class="br0">&#40;</span>MY_IRQ<span class="sy0">,</span> my_data<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+In funcția de inițializare, <code>init_module</code>, sau în funcția de deschidere a dispozitivului, <code>open</code>, trebuie activate întreruperile pentru a putea fi generate de către dispozitiv. Această operație este dependentă de dispozitivul folosit, dar de cele mai multe ori presupune setarea unui bit din registrul de control.
+</p>
+
+<p>
+Pentru portul serial trebuie realizate două operații pentru activarea întreruperilor:
+</p>
+<ol>
+<li class="level1"><div class="li"> se activează toate întreruperile prin setarea bitului 3 (<code>Aux Output 2</code>) în registrul <code>MCR</code> - <em>Modem Control Register</em></div>
+</li>
+<li class="level1"><div class="li"> se activează întreruperea dorită (<code>RDAI</code> - <em>Receive Data Available Interrupt</em>, <code>THREI</code> - <em>Transmit Holding Register Empty Interrupt</em>) prin setarea bitului corespunzător în registrul <code>IER</code> - <em>Interrupt Enable Register</em>.</div>
+</li>
+</ol>
+
+<p>
+În exemplul de mai jos se activează întreruperea <code>RDAI</code> pentru portul <code>COM1</code>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;asm/io.h&gt;</span>
+<span class="co2">#define MY_BASEPORT 0x3F8</span>
+&nbsp;
+outb<span class="br0">&#40;</span><span class="nu12">0x08</span><span class="sy0">,</span> MY_BASEPORT<span class="sy0">+</span><span class="nu0">4</span><span class="br0">&#41;</span><span class="sy0">;</span>
+outb<span class="br0">&#40;</span><span class="nu12">0x01</span><span class="sy0">,</span> MY_BASEPORT<span class="sy0">+</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT13 SECTION "Obținerea unei întreruperi" [10659-16923] -->
+<h3 class="sectionedit14" id="implementarea_rutinei_de_tratare_a_intreruperii">Implementarea rutinei de tratare a întreruperii</h3>
+<div class="level3">
+
+<p>
+Să examinăm acum <a href="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L88" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/interrupt.h?v=3.13#L88"  rel="nofollow">signatura funcției de tratare a întreruperii</a>:
+</p>
+<pre class="code c">irqreturn_t <span class="br0">&#40;</span><span class="sy0">*</span>handler<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">int</span> irq_no<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>dev_id<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcția primește ca parametri numărul întreruperii pe care rutina o tratează și pointer-ul trimis la cererea de obținere a întreruperii. Rutina de tratare a întreruperii trebuie să întoarcă o valoare cu tipul <code><a href="http://lxr.free-electrons.com/source/include/linux/irqreturn.h?v=3.13#L16" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/irqreturn.h?v=3.13#L16"  rel="nofollow">irqreturn_t</a></code>. Pentru versiunea curentă de kernel, există doar două valori valide: <code><a href="http://lxr.free-electrons.com/source/include/linux/irqreturn.h?v=3.13#L11" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/irqreturn.h?v=3.13#L11"  rel="nofollow">IRQ_NONE</a></code> și <code><a href="http://lxr.free-electrons.com/source/include/linux/irqreturn.h?v=3.13#L12" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/irqreturn.h?v=3.13#L12"  rel="nofollow">IRQ_HANDLED</a></code>. Device driverul trebuie să întoarcă <code>IRQ_NONE</code> dacă observă că întreruperea nu a fost generată de dispozitivul pe care îl comandă. În caz contrar, device driverul trebuie să întoarcă <code>IRQ_HANDLED</code>.
+</p>
+
+<p>
+Un handler de întrerupere va avea următoarea structură:
+</p>
+<pre class="code c">irqreturn_t my_handler<span class="br0">&#40;</span><span class="kw4">int</span> irq_no<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>dev_id<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> dev_id<span class="sy0">;</span>
+&nbsp;
+	<span class="coMULTI">/* if interrupt is not for this device (shared interrupts) */</span>
+	<span class="coMULTI">/* return IRQ_NONE;*/</span>
+	<span class="coMULTI">/* clear interrupt-pending bit */</span>
+	<span class="coMULTI">/* read from device or write to device*/</span>
+&nbsp;
+	<span class="kw1">return</span> IRQ_HANDLED<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+De obicei, primul lucru executat în rutina de tratare a întreruperii este să se determine dacă întreruperea a fost generată de dispozitivul comandat de driver. Pentru aceasta, de obicei se citesc informații din registrul de control al dispozitivului, care indică daca acesta a generat întreruperea. Al doilea lucru constă în resetarea bitului <code>interrupt-pending</code> pe dispozitivul fizic; cele mai multe dispozitive nu vor mai genera întreruperi până când acest bit nu a fost resetat. Acest pas depinde doar de dispozitiv, și poate și lipsi (cum e cazul portului paralel, care nu are un astfel de bit). Portul serial are un astfel de bit: bitul 0 din registrul <code>IIR</code>.
+</p>
+
+</div>
+<!-- EDIT14 SECTION "Implementarea rutinei de tratare a întreruperii" [16924-19063] -->
+<h3 class="sectionedit15" id="locking1">Locking</h3>
+<div class="level3">
+
+<p>
+Deoarece rutinele de tratare pentru întreruperi se execută în <a href="http://elf.cs.pub.ro/so2/wiki/laboratoare/lab03#contexte-de-executie" class="urlextern" title="http://elf.cs.pub.ro/so2/wiki/laboratoare/lab03#contexte-de-executie"  rel="nofollow">context întrerupere</a>, acțiunile care se pot efectua sunt limitate: nu se poate accesa memoria din user space, nu se pot apela funcții blocante, nu se poate face sincronizare doar cu spinlock-uri deoarece acest lucru ar duce la deadlock în cazul în care spinlock-ul este deja obținut de către un proces care a fost întrerupt.
+</p>
+
+<p>
+Totuși, există cazuri în care device driverele trebuie să se sincronizeze cu întreruperile. În aceste situații este necesară dezactivarea întreruperii cu care dorim să ne sincronizăm (nu se pot dezactiva întreruperile partajate) cu ajutorul funcțiilor <code><a href="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L413" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L413"  rel="nofollow">disable_irq</a></code>, <code><a href="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L395" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L395"  rel="nofollow">disable_irq_nosync</a></code> și <code><a href="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L454" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/irq/manage.c?v=3.13#L454"  rel="nofollow">enable_irq</a></code>. Dezactivarea are loc la nivelul tuturor procesoarelor din sistem și apelurile pot să fie imbricate: dacă se apelează de două ori <code>disable_irq</code> vor fi necesare tot atâtea apeluri <code>enable_irq</code> pentru activarea ei. Diferența dintre <code>disable_irq</code> și <code>disable_irq_nosync</code> e că prima din ele va aștepta terminarea handler-elor aflate în execuție. Din această cauză <code>disable_irq_nosync</code> este în general mai rapidă.
+</p>
+
+<p>
+Spre exemplu, următoarea secvență dezactivează și apoi activează întreruperea pentru portul serial <code>COM1</code>:
+</p>
+<pre class="code c"><span class="co2">#define MY_IRQ 4</span>
+&nbsp;
+disable_irq<span class="br0">&#40;</span>MY_IRQ<span class="br0">&#41;</span><span class="sy0">;</span>
+enable_irq<span class="br0">&#40;</span>MY_IRQ<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Este posibilă și dezactivarea tuturor întreruperilor pentru procesorul curent. Dezactivarea tuturor întreruperilor de către device drivere pentru sincronizare este neadecvată. Funcțiile care dezactivează / reactivează întreruperile pe procesorul local sunt <code><a href="http://lxr.free-electrons.com/source/include/linux/irqflags.h?v=3.13#L91" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/irqflags.h?v=3.13#L91"  rel="nofollow">local_irq_disable</a></code> și <code><a href="http://lxr.free-electrons.com/source/include/linux/irqflags.h?v=3.13#L89" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/irqflags.h?v=3.13#L89"  rel="nofollow">local_irq_enable</a></code>. În general, nu puteți folosi aceste funcții pentru sincronizare din cauza problemelor ce apar în sisteme multiprocesor.
+</p>
+
+<p>
+Pentru sincronizare, uneori este necesar să se folosească un spinlock și să se dezactiveze și întreruperile. În acest scop, există funcții de locking care dezactivează, respectiv reactivează întreruperile: <code><a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321"  rel="nofollow">spin_lock_irqsave</a></code>, <code><a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L234" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L234"  rel="nofollow">spin_unlock_irqrestore</a></code>, <code><a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L316" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L316"  rel="nofollow">spin_lock_irq</a></code> și <code><a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L341" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L341"  rel="nofollow">spin_unlock_irq</a></code>.
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/spinlock.h&gt;</span>
+&nbsp;
+<span class="kw4">void</span> spin_lock_irqsave<span class="br0">&#40;</span>spinlock_t <span class="sy0">*</span>lock<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> flags<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> spin_unlock_irqrestore<span class="br0">&#40;</span>spinlock_t <span class="sy0">*</span>lock<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> flags<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> spin_lock_irq<span class="br0">&#40;</span>spinlock_t <span class="sy0">*</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> spin_unlock_irq<span class="br0">&#40;</span>spinlock_t <span class="sy0">*</span>lock<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcția <code><a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321"  rel="nofollow">spin_lock_irqsave</a></code> dezactivează întreruperile pentru procesorul local înainte de a obține spinlock-ul; starea anterioara a întreruperilor este salvată în <code>flags</code>. În cazul în care sunteți siguri că întreruperile pe procesorul curent nu au fost deja dezactivate de altcineva (deci sunteți siguri că trebuie să activați întreruperile când eliberați spinlock-ul), puteți folosi funcția <code><a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L316" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L316"  rel="nofollow">spin_lock_irq</a></code>.
+</p>
+
+<p>
+Pentru spinlock-urile de tip read / write există funcții similare:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code><a href="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L69" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L69"  rel="nofollow">read_lock_irqsave</a></code></div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L104" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L104"  rel="nofollow">read_unlock_irqrestore</a></code></div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L95" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L95"  rel="nofollow">read_lock_irq</a></code></div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L101" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L101"  rel="nofollow">read_unlock_irq</a></code></div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L74" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L74"  rel="nofollow">write_lock_irqsave</a></code></div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L111" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L111"  rel="nofollow">write_unlock_irqrestore</a></code></div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L97" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L97"  rel="nofollow">write_lock_irq</a></code></div>
+</li>
+<li class="level1"><div class="li"> <code><a href="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L102" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/rwlock.h?v=3.13#L102"  rel="nofollow">write_unlock_irq</a></code>.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="utilizare_spinlock-uri">Utilizare spinlock-uri</h4>
+<div class="level4">
+
+<p>
+Pentru a folosi o resursă partajată atât în context proces cât și în rutina de tratare a întreruperii, se vor folosi funcțiile descrise mai sus astfel:
+</p>
+<pre class="code c"><span class="kw4">static</span> spinlock_t lock<span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* IRQ handling routine: interrupt context */</span>
+irqreturn_t so2_kbd_interrupt_handle<span class="br0">&#40;</span><span class="kw4">int</span> irq_no<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>dev_id<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+	spin_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="coMULTI">/* critical region - access shared resource */</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+	spin_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="coMULTI">/* Process context: disable interrupts when locking */</span>
+<span class="kw4">static</span> <span class="kw4">void</span> my_access<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">unsigned</span> <span class="kw4">long</span> flags<span class="sy0">;</span>
+&nbsp;
+	spin_lock_irqsave<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="sy0">,</span> flags<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="coMULTI">/* critical region - access shared resource */</span>
+	spin_unlock_irqrestore<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="sy0">,</span> flags<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> my_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+	spin_lock_init<span class="br0">&#40;</span><span class="sy0">&amp;</span>lock<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Funcția <code>my_access</code> de mai sus rulează în context proces. Atunci când facem sincronizare dezactivăm întreruperile și folosim spinlock-ul <code>lock</code>, adică funcțiile <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321"  rel="nofollow">spin_lock_irqsave</a> și <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L234" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L234"  rel="nofollow">spin_unlock_irqrestore</a>.
+</p>
+
+<p>
+În rutina de tratare a întreruperii, folosim funcțiile <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L291" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L291"  rel="nofollow">spin_lock</a> și <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L331" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L331"  rel="nofollow">spin_unlock</a> pentru acces la resursa partajată.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Atunci când folosim argumentul <code>flags</code> în cazul funcțiilor <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321"  rel="nofollow">spin_lock_irqsave</a> și <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L234" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L234"  rel="nofollow">spin_unlock_irqrestore</a>, acesta este trimis prin valoare. Funcția <a href="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/spinlock.h?v=3.13#L321"  rel="nofollow">spin_lock_irqsave</a> modifică valoarea flag-ului, dar această funcție este de fapt un macro și poate folosi flag-ul trimis prin valoare.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT15 SECTION "Locking" [19064-25647] -->
+<h3 class="sectionedit16" id="statistici_despre_intreruperi">Statistici despre întreruperi</h3>
+<div class="level3">
+
+<p>
+Informații și statistici despre întreruperile din sistem pot fi găsite în <code>/proc/interrupts</code> sau <code>/proc/stat</code>. În fișierul <code>/proc/interrupts</code> apar numai întreruperile din sistem care au câte un handler asociat:
+</p>
+<pre class="code"> # cat /proc/interrupts
+                CPU0
+  0:         7514294       IO-APIC-edge   timer
+  1:            4528       IO-APIC-edge   i8042
+  6:               2       IO-APIC-edge   floppy
+  8:               1       IO-APIC-edge   rtc
+  9:               0       IO-APIC-level  acpi
+ 12:            2301       IO-APIC-edge   i8042
+ 15:              41       IO-APIC-edge   ide1
+ 16:            3230       IO-APIC-level  ioc0
+ 17:            1016       IO-APIC-level  vmxnet ether
+NMI:               0
+LOC:         7229438
+ERR:               0
+MIS:               0</pre>
+
+<p>
+În prima coloană se specifică numărul IRQ-ului asociat întreruperii; în coloana următoare se afișează numărul de întreruperi care au fost generate pentru fiecare procesor din sistem; ultimele două coloane oferă informații despre controller-ul de întreruperi și numele dispozitivului care a înregistrat un handler pentru acea întrerupere.
+</p>
+
+<p>
+Fișierul <code>/proc/stat</code> oferă informații despre activitatea sistemului, inclusiv numărul de întreruperi generate de la ultima boot-are a sistemului:
+</p>
+<pre class="code"># cat /proc/stat | grep intr
+intr 7765626 7754228 4620 0 0 0 0 2 0 1 0 0 0 2377 0 0 41 3259 1098 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</pre>
+
+<p>
+Fiecare linie din fișierul <code>/proc/stat</code> începe cu un text care specifică semnificația informațiilor de pe linie; pentru informații despre întreruperi, acest text este <code>intr</code>. Primul număr de pe linie reprezintă numărul total de întreruperi, iar celelalte numere reprezintă numărul de întreruperi pentru fiecare IRQ, începând de la 0. Valoarea contorului reprezintă numărul de întreruperi pentru toate procesoarele din sistem.
+</p>
+
+</div>
+<!-- EDIT16 SECTION "Statistici despre întreruperi" [25648-27983] -->
+<h2 class="sectionedit17" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT17 SECTION "Resurse utile" [27984-28010] -->
+<h3 class="sectionedit18" id="port_serial">Port serial</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Serial_port" class="urlextern" title="http://en.wikipedia.org/wiki/Serial_port"  rel="nofollow">Serial Port</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.beyondlogic.org/serial/serial.htm" class="urlextern" title="http://www.beyondlogic.org/serial/serial.htm"  rel="nofollow">Interfacing the Serial / RS232 Port</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT18 SECTION "Port serial" [28011-28184] -->
+<h3 class="sectionedit19" id="port_paralel">Port paralel</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/lab06/Port_paralel.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/lab06/Port_paralel.pdf"  rel="nofollow">Documentație port paralel</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/lab06/Par_control_lin.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/lab06/Par_control_lin.zip"  rel="nofollow">Program de test pentru portul paralel (Linux)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.beyondlogic.org/spp/parallel.htm" class="urlextern" title="http://www.beyondlogic.org/spp/parallel.htm"  rel="nofollow">Interfacing the Standard Parallel Port</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.lvr.com/parport.htm" class="urlextern" title="http://www.lvr.com/parport.htm"  rel="nofollow">Parallel Port Central</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="ftp://ftp.armory.com/pub/user/rstevew/LPT/" class="urlextern" title="ftp://ftp.armory.com/pub/user/rstevew/LPT/"  rel="nofollow">Resurse suplimentare port paralel</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT19 SECTION "Port paralel" [28185-28642] -->
+<h3 class="sectionedit20" id="controller_tastatura">Controller tastatură</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Intel_8042" class="urlextern" title="http://en.wikipedia.org/wiki/Intel_8042"  rel="nofollow">Intel 8042</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://gunnarwrobel.de/wiki/Linux-and-the-keyboard.html" class="urlextern" title="http://gunnarwrobel.de/wiki/Linux-and-the-keyboard.html"  rel="nofollow">Linux and the keyboard</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.linux.no/linux+v2.6.32/drivers/input/serio/i8042.c" class="urlextern" title="http://lxr.linux.no/linux+v2.6.32/drivers/input/serio/i8042.c"  rel="nofollow">drivers/input/serio/i8042.c</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.linux.no/linux+v2.6.32/drivers/input/keyboard/atkbd.c" class="urlextern" title="http://lxr.linux.no/linux+v2.6.32/drivers/input/keyboard/atkbd.c"  rel="nofollow">drivers/input/keyboard/atkbd.c</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT20 SECTION "Controller tastatură" [28643-29024] -->
+<h3 class="sectionedit21" id="linux">Linux</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch09.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch09.pdf"  rel="nofollow">Linux Device Drivers, 3rd ed., Ch. 9 - Communicating with Hardware</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/images/pdf/LDD3/ch10.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch10.pdf"  rel="nofollow">Linux Device Drivers, 3rd ed., Ch. 10 - Interrupt Handling</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://tldp.org/LDP/lkmpg/2.6/html/x1256.html" class="urlextern" title="http://tldp.org/LDP/lkmpg/2.6/html/x1256.html"  rel="nofollow">Interrupt Handlers</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT21 SECTION "Linux" [29025-] --></div>
+</body>
+</html>

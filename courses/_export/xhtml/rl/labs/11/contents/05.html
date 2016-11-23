@@ -1,0 +1,189 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:11:contents:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-12-13T12:33:11+0200"/>
+<meta name="keywords" content="rl,labs,11,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:11:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/11/contents/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:11:contents';var JSINFO = {"id":"rl:labs:11:contents:05","namespace":"rl:labs:11:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_filtrare_pe_bridge">05. [15p] Filtrare pe bridge</h3>
+<div class="level3">
+
+<p>
+Vrem să facem o legătură simplă directă doar între două containere (<code>red</code> și <code>green</code>) astfel încât să comunice între ele fără ca pachetele să fie prelucrate de sistemul <code>host</code>. Pentru aceasta vom scoate interfețele aferente din bridge-ul <code>br0</code> și vom crea un nou bridge.
+</p>
+
+<p>
+Pentru început scoatem interfețele aferente containerelor <code>red</code> (<code>veth-red</code>) și <code>green</code> (<code>veth-green</code>) din bridge-ul <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>brctl delif br0 veth-red
+<span class="co4">root@host:~# </span>brctl delif br0 veth-green
+<span class="co4">root@host:~# </span>brctl show br0
+bridge name	bridge <span class="kw2">id</span>		STP enabled	interfaces
+br0		8000.000c2919b1b2	no		eth0
+                                                        veth-blue</pre>
+
+<p>
+Creăm un nou bridge (<code>br1</code>) și adăugăm interfețele <code>veth-red</code> și <code>veth-green</code> în acesta:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>brctl addbr br1
+<span class="co4">root@host:~# </span>brctl addif br1 veth-red
+<span class="co4">root@host:~# </span>brctl addif br1 veth-green
+<span class="co4">root@host:~# </span>brctl show br1
+bridge name	bridge <span class="kw2">id</span>		STP enabled	interfaces
+br1		<span class="nu0">8000</span>.f67659f52916	no		veth-green
+							veth-red
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> l s dev br1 up
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a s dev br1
+<span class="nu0">13</span>: br1: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc noqueue state UP
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Configurăm adrese pe stațiile <code>red</code> și <code>green</code> și verificăm apoi conectiviatea între acestea. Configurăm adresele <code>172.16.12.1/24</code>, respectiv <code>172.16.12.2/24</code> și verificăm conectivitatea între acestea:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> a a 172.16.12.1<span class="sy0">/</span><span class="nu0">24</span> dev eth0
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">9</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 172.16.12.1<span class="sy0">/</span><span class="nu0">24</span> scope global eth0
+&nbsp;
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a a 172.16.12.2<span class="sy0">/</span><span class="nu0">24</span> dev eth0
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">6</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> brd ff:ff:ff:ff:ff:ff
+    inet 172.16.12.2<span class="sy0">/</span><span class="nu0">24</span> scope global eth0
+&nbsp;
+<span class="co4">root@red:~# </span><span class="kw2">ping</span> 172.16.12.2
+PING 172.16.12.2 <span class="br0">&#40;</span>172.16.12.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 172.16.12.2: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.319</span> ms
+^C
+<span class="re5">---</span> 172.16.12.2 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">1</span> packets transmitted, <span class="nu0">1</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 0ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.319</span><span class="sy0">/</span><span class="nu0">0.319</span><span class="sy0">/</span><span class="nu0">0.319</span><span class="sy0">/</span><span class="nu0">0.000</span> ms
+&nbsp;
+<span class="co4">root@green:~# </span><span class="kw2">ping</span> 172.16.12.1
+PING 172.16.12.1 <span class="br0">&#40;</span>172.16.12.1<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 172.16.12.1: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.191</span> ms
+^C
+<span class="re5">---</span> 172.16.12.1 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">1</span> packets transmitted, <span class="nu0">1</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 0ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.191</span><span class="sy0">/</span><span class="nu0">0.191</span><span class="sy0">/</span><span class="nu0">0.191</span><span class="sy0">/</span><span class="nu0">0.000</span> ms</pre>
+
+<p>
+Avem conectivitate completă între cele două stații (<code>red</code> și <code>green</code>) inclusiv la nivel de serviciu. Stația <code>green</code> poate accesa serviciile SSH, <abbr title="File Transfer Protocol">FTP</abbr>, telnet de pe stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span><span class="kw2">ssh</span> root<span class="sy0">@</span>172.16.12.1
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~#
+</span>
+<span class="co4">root@green:~# </span><span class="kw2">ftp</span> 172.16.12.1
+Connected to 172.16.12.1.
+<span class="nu0">220</span> <span class="br0">&#40;</span>vsFTPd 2.3.5<span class="br0">&#41;</span>
+Name <span class="br0">&#40;</span>172.16.12.1:root<span class="br0">&#41;</span>: <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+&nbsp;
+<span class="co4">root@green:~# </span>telnet 172.16.12.1
+Trying 172.16.12.1...
+Connected to 172.16.12.1.
+Escape character is <span class="st_h">'^]'</span>.
+Ubuntu 12.04.3 LTS
+<span class="kw2">red</span> login: <span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Ne propunem să blocăm traficul nesigur (adică <abbr title="File Transfer Protocol">FTP</abbr> și telnet) de la stația <code>green</code> la stația <code>red</code>. Avem soluția configurării unui firewall pe stația <code>red</code> folosind utilitarul <code>iptables</code>. Această soluție are două neajunsuri:
+</p>
+<ul>
+<li class="level1"><div class="li"> când folosim tehnologii bazate pe containere, este problematică folosirea <code>iptables</code>;</div>
+</li>
+<li class="level1"><div class="li"> în cazul folosirii soluțiilor de virtualizare, dorim să avem controlul pe sistemul de bază (pe hypervisor)</div>
+</li>
+</ul>
+
+<p>
+De aceea dorim să filtrăm acele pachete direct de pe stația <code>host</code>. Stația <code>host</code> nu face însă prelucrarea pachetelor, acestea trec prin bridge-ul <code>br1</code> deci nu putem folosi <code>iptables</code> sau alt utilitar de prelucrare a traficului. Soluția o reprezintă însă utilitarul <a href="http://ebtables.sourceforge.net/" class="urlextern" title="http://ebtables.sourceforge.net/"  rel="nofollow">ebtables</a> care permite configurarea de firewall la nivelul bridge-ului.
+</p>
+
+<p>
+Pentru început vom instala <code>ebtables</code> pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">apt-get install</span> ebtables</pre>
+
+<p>
+Apoi configurăm <code>ebtables</code> pentru a împiedica traficul telnet și <abbr title="File Transfer Protocol">FTP</abbr> care vine de la stația <code>green</code> către stația <code>red</code>. Sintaxa este similară <code>iptables</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>ebtables <span class="re5">-A</span> FORWARD <span class="re5">-p</span> IPv4 <span class="re5">--ip-src</span> 172.16.12.2 <span class="re5">--ip-dst</span> 172.16.12.1 <span class="re5">--ip-proto</span> tcp <span class="re5">--ip-destination-port</span> <span class="nu0">21</span> <span class="re5">-j</span> DROP
+<span class="co4">root@host:~# </span>ebtables <span class="re5">-A</span> FORWARD <span class="re5">-p</span> IPv4 <span class="re5">--ip-src</span> 172.16.12.2 <span class="re5">--ip-dst</span> 172.16.12.1 <span class="re5">--ip-proto</span> tcp <span class="re5">--ip-destination-port</span> <span class="nu0">23</span> <span class="re5">-j</span> DROP
+<span class="co4">root@host:~# </span>ebtables <span class="re5">-L</span> FORWARD 
+Bridge table: filter
+&nbsp;
+Bridge chain: FORWARD, entries: <span class="nu0">2</span>, policy: ACCEPT
+<span class="re5">-p</span> IPv4 <span class="re5">--ip-src</span> 172.16.12.2 <span class="re5">--ip-dst</span> 172.16.12.1 <span class="re5">--ip-proto</span> tcp <span class="re5">--ip-dport</span> <span class="nu0">21</span> <span class="re5">-j</span> DROP 
+<span class="re5">-p</span> IPv4 <span class="re5">--ip-src</span> 172.16.12.2 <span class="re5">--ip-dst</span> 172.16.12.1 <span class="re5">--ip-proto</span> tcp <span class="re5">--ip-dport</span> <span class="nu0">23</span> <span class="re5">-j</span> DROP</pre>
+
+<p>
+Verificăm din nou, conectivitatea SSH, <abbr title="File Transfer Protocol">FTP</abbr> și telnet de la stația <code>green</code> la stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span><span class="kw2">ssh</span> root<span class="sy0">@</span>172.16.12.1
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~# </span>
+&nbsp;
+<span class="co4">root@green:~# </span>telnet 172.16.12.1
+Trying 172.16.12.1...
+^C
+<span class="co4">root@green:~# </span><span class="kw2">ftp</span> 172.16.12.1
+^C</pre>
+
+<p>
+Observăm că este în continuare funcțională doar conexiunea SSH, nu și <abbr title="File Transfer Protocol">FTP</abbr> și telnet (blocate folosind <code>ebtables</code>). Avem obiectivul îndeplinit: doar conexiunile sigure (pe porturile implicite) sunt permise între <code>green</code> și <code>red</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+<code>ebtables</code> nu are acțiune de tip <code>REJECT</code> ci doar <code>DROP</code>. Astfel, inițiatorul unei conexiuni filtrate nu va fi înștiințat de filtrarea pachetelor. Acestea vor fi filtrate iar inițiatorul va trebui să deducă faptul că există o formă de blocare a pachetelor pe drum.
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

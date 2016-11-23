@@ -1,0 +1,1175 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>eim:laboratoare:laborator08</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-25T18:09:54+0300"/>
+<meta name="keywords" content="eim,laboratoare,laborator08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=eim:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="laborator08.html"/>
+<link rel="canonical" href="../../../../eim/laboratoare/laborator08.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='eim:laboratoare';var JSINFO = {"id":"eim:laboratoare:laborator08","namespace":"eim:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator08.html#laborator_08_implementarea_serviciilor_de_retea">Laborator 08. Implementarea Serviciilor de Rețea</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator08.html#tipuri_de_servicii">Tipuri de Servicii</a></div></li>
+<li class="level2"><div class="li"><a href="laborator08.html#configurare">Configurare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator08.html#jmdns_obligatoriu">JmDNS (obligatoriu)</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator08.html#inregistrareadeinregistrarea_unui_serviciu">Înregistrarea / Deînregistrarea unui Serviciu</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator08.html#jmdns">JmDNS</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator08.html#descoperirea_serviciilor_accesibile">Descoperirea Serviciilor Accesibile</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator08.html#jmdns1">JmDNS</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator08.html#rezolvarea_serviciilor_descoperite_anterior">Rezolvarea Serviciilor Descoperite Anterior</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator08.html#jmdns2">JmDNS</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator08.html#gestiunea_unei_conexiuni_catre_servicii_disponibile">Gestiunea unei Conexiuni către Servicii Disponibile</a></div></li>
+<li class="level2"><div class="li"><a href="laborator08.html#activitate_de_laborator">Activitate de Laborator</a></div></li>
+<li class="level2"><div class="li"><a href="laborator08.html#resurse_utile">Resurse Utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_08_implementarea_serviciilor_de_retea">Laborator 08. Implementarea Serviciilor de Rețea</h1>
+<div class="level1">
+
+<p>
+În Android, prin intermediul serviciilor, sunt puse la dispoziție funcționalități care pot fi accesate de către dispozitivele care se găsesc în aceeași rețea locală. De obicei, o astfel de abordare se folosește pentru stabilirea de conexiuni punct la punct peste care pot fi dezvoltare jocuri la care pot participa mai mulți utilizatori, aplicații de partajare a unor resurse sau pentru transmiterea de mesaje. Totodată, pot fi expuse și servicii ale unor alte dispozitive din cadrul rețelei locale cum ar fi: calculatoare, imprimante, televizoare, ceasuri inteligente, acestea putând fi astfel accesate la distanță.
+</p>
+
+<p>
+Serviciile pot fi implementate folosind două variante:
+</p>
+<ol>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/training/connect-devices-wirelessly/nsd.html" class="urlextern" title="http://developer.android.com/training/connect-devices-wirelessly/nsd.html"  rel="nofollow">Android Network Service Discovery (NSD)</a>, un protocol integrat în Android începând cu nivelul de <abbr title="Application Programming Interface">API</abbr> 16 (Jelly Bean), pentru implementarea de servicii disponibile în rețeaua locală; (opțional în acest laborator).</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://jmdns.sourceforge.net/" class="urlextern" title="http://jmdns.sourceforge.net/"  rel="nofollow">JmDNS</a>, un proiect open-source care își propune implementarea în Java a unor funcționalități legate de proiectarea și dezvoltarea de servicii disponibile în rețeaua locală, fără a realiza nici un fel de configurări legate de infrastructura de comunicație.</div>
+</li>
+</ol>
+
+<p>
+<p><div class="noteclassic">Atât Android NSD cât și JmDNS folosesc <a href="http://www.multicastdns.org/" class="urlextern" title="http://www.multicastdns.org/"  rel="nofollow">multi-cast DNS</a> (utilizarea de operații <abbr title="Domain Name System">DNS</abbr> în rețele de dimensiuni mici, în care nu există un server propriu-zis pentru un astfel de serviciu) pentru accesul la servicii în rețeaua locală.
+</div></p>
+</p>
+
+<p>
+Operațiile utilizate în implementarea serviciilor de rețea sunt:
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>configurarea</strong> diferiților parametri (pregătirea mediului de lucru);</div>
+</li>
+<li class="level1"><div class="li"> <strong>înregistrarea</strong> unui serviciu, prin care celelalte dispozitive din rețeaua locală pot afla detalii cu privire la funcționalitatea oferită (tip de serviciu, adresă, port, descriere);</div>
+</li>
+<li class="level1"><div class="li"> <strong>descoperirea</strong> unui serviciu, prin care un dispozitiv este informat cu privire la serviciile care pot fi accesate în rețeaua locală, filtrându-le în funcție de denumire și tip;</div>
+</li>
+<li class="level1"><div class="li"> <strong>rezolvarea</strong> unui serviciu, prin care sunt identificate adresa și portul la care trebuie realizată o conexiune în vederea exploatării funcționalității pe care acesta o pune la dispoziție.</div>
+</li>
+</ol>
+
+<p>
+<p><div class="notetip">Operațiile de înregistrare respectiv descoperire / rezolvare sunt independente, astfel încât o aplicație poate alege doar să înregistreze un serviciu, în timp ce altă aplicație poate doar să descopere / rezolve serviciile din rețeua locală. Totodată, operațiile pot fi realizate și împreună, fără a exista o ordine prestabilită.
+</div></p>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laborator 08. Implementarea Serviciilor de Rețea" [1-2755] -->
+<h2 class="sectionedit2" id="tipuri_de_servicii">Tipuri de Servicii</h2>
+<div class="level2">
+
+<p>
+Cele mai multe servicii accesibile prin rețeaua locală sunt descrise prin intermediul unui tip care are de obicei forma <code>_&lt;protocol_nivel_aplicatie&gt;._&lt;protocol_nivel_transport&gt;.</code>, unde:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>&lt;protocol_nivel_aplicatie&gt;</code> poate fi standard sau definit de utilizator;</div>
+</li>
+<li class="level1"><div class="li"> <code>&lt;protocol_nivel_transport&gt;</code> este de regulă <code>tcp</code> sau <code>udp</code> (sau variații ale acestora).</div>
+</li>
+</ul>
+
+<p>
+Se poate consulta <a href="http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml" class="urlextern" title="http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml"  rel="nofollow">lista cu tipurile de servicii rezervate</a>, gestionată de IANA (Autoritatea Internațională pentru Numere Alocate). Unele tipuri de servicii au definite și porturile pe care pot fi accesate.Pentru rezervarea unui astfel de tip de serviciu, este necesară o solicitare prealabilă, care poate fi aprobată sau respinsă, după caz.
+</p>
+
+<p>
+Pentru Android NSD, pentru cele mai multe servicii nespecifice, se poate folosi tipul <code>_http._tcp.</code> (se folosește transferul de date prin HTTP folosind protocolul de transport TCP).
+</p>
+
+<p>
+În cazul JmDNS, trebuie să se precizeze faptul că serviciul rulează local, definindu-se un tip corespunzător aplicației care implementează funcționalitatea respectivă (<code>_&lt;denumire_aplicatie&gt;._tcp.local.</code>).
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Tipuri de Servicii" [2756-4007] -->
+<h2 class="sectionedit3" id="configurare">Configurare</h2>
+<div class="level2">
+
+<p>
+Inițializarea mediului de lucru presupune instanțierea unor obiecte care gestionează operațiile ce pot fi realizate la nivelul serviciilor de rețea, respectiv a unor obiecte ascultător pentru evenimentele care pot surveni în cadrul acestora.
+</p>
+
+<p>
+În fișierul <code>AndroidManifest.xml</code>, singurele permisiuni care trebuie oferite aplicației sunt cele legate de accesul la rețeaua locală:
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator08%3Fcodeblock=1" title="Download Snippet" class="mediafile mf_xml">AndroidManifest.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;manifest</span> <span class="re0">xmlns:android</span>=<span class="st0">&quot;http://schemas.android.com/apk/res/android&quot;</span></span>
+<span class="sc3">    <span class="re0">package</span>=<span class="st0">&quot;ro.pub.cs.systems.eim.lab08.chatservice&quot;</span></span>
+<span class="sc3">    <span class="re0">android:versionCode</span>=<span class="st0">&quot;1&quot;</span></span>
+<span class="sc3">    <span class="re0">android:versionName</span>=<span class="st0">&quot;1.0&quot;</span><span class="re2">&gt;</span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;uses-permission</span> </span>
+<span class="sc3">        <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.INTERNET&quot;</span> <span class="re2">/&gt;</span></span>
+&nbsp;
+    <span class="sc-1">&lt;!-- ... --&gt;</span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT3 SECTION "Configurare" [4008-8300] -->
+<h3 class="sectionedit4" id="jmdns_obligatoriu">JmDNS (obligatoriu)</h3>
+<div class="level3">
+
+<p>
+Întrucât <a href="http://sourceforge.net/projects/jmdns/" class="urlextern" title="http://sourceforge.net/projects/jmdns/"  rel="nofollow">versiunea curentă a JmDNS (3.4.1)</a> oferă o bibliotecă sub forma unei arhive .jar care nu poate fi procesată în momentul în care este transformată în formatul <code>.dex</code>, este necesar ca aceasta să fie prelucrată, în sensul menținerii acelor clase care sunt strict necesare pentru gestiunea serviciilor de rețea, și anume cele din pachetul <code>javax.jmdns</code>.
+</p>
+<pre class="code">student@eim2016:~$ jar xf jmdns.jar
+student@eim2016:~$ jar cfm jmdns.jar META-INF/MANIFEST.MF javax/</pre>
+
+<p>
+JmDNS folosește pachete de tip multicast pentru a gestiona serviciile disponibile în rețea. Politica Android este de a dezactiva implicit astfel de transferuri, pentru a optimiza bateria, motiv pentru care această funcționalitate trebuie activată temporar, doar pe parcursul aplicației Android. În acest sens, trebuie obținut mutext-ul corespunzător operațiilor de acest tip, care va fi eliberat ulterior:
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator08%3Fcodeblock=3" title="Download Snippet" class="mediafile mf_java">ChatActivity.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">public</span> <span class="kw1">class</span> ChatActivity <span class="kw1">extends</span> Activity <span class="br0">&#123;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  <span class="kw1">protected</span> WifiManager wifiManager <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onCreate<span class="br0">&#40;</span>Bundle state<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onCreate</span><span class="br0">&#40;</span>state<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co1">// ...</span>
+&nbsp;
+    WifiManager wifiManager <span class="sy0">=</span> <span class="br0">&#40;</span>WifiManager<span class="br0">&#41;</span>getSystemService<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a>.<span class="me1">WIFI_SERVICE</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    multicastLock <span class="sy0">=</span> wifiManager.<span class="me1">createMulticastLock</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    multicastLock.<span class="me1">setReferenceCounted</span><span class="br0">&#40;</span><span class="kw2">true</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    multicastLock.<span class="me1">acquire</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onDestroy<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onDestroy</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co1">// ...</span>
+&nbsp;
+    <span class="kw1">if</span> <span class="br0">&#40;</span>multicastLock <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      multicastLock.<span class="me1">relase</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      multicastLock <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Configurarea JmDNS presupune crearea unei instanțe a unui obiect de tipul <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html"  rel="nofollow">JmDNS</a>, care oferă funcționalități referitoare la gestiunea serviciilor existente doar în cadrul rețelei locale. Se utilizează metoda statică <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#create%28java.net.InetAddress,%20java.lang.String%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#create%28java.net.InetAddress,%20java.lang.String%29"  rel="nofollow">create(InetAddress, String)</a>, care primește ca parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> adresa mașinii, obținută prin intermediul metodei <code>getIpAddress()</code> apelată pe obiectul <code>ConnectionInfo</code> asociat obiectului care gestoniează interfața pentru comunicația prin intermediul rețelei fără fir;</div>
+</li>
+<li class="level1"><div class="li"> denumirea mașinii (determinată pe baza adresei, prin rezoluție inversă).</div>
+</li>
+</ul>
+<pre class="code java"><span class="kw1">try</span> <span class="br0">&#123;</span>
+  WifiManager wifiManager <span class="sy0">=</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>ChatActivity<span class="br0">&#41;</span>context<span class="br0">&#41;</span>.<span class="me1">getWifiManager</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+inetaddress"><span class="kw3">InetAddress</span></a> address <span class="sy0">=</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+inetaddress"><span class="kw3">InetAddress</span></a>.<span class="me1">getByAddress</span><span class="br0">&#40;</span>
+    ByteBuffer.<span class="me1">allocate</span><span class="br0">&#40;</span><span class="nu0">4</span><span class="br0">&#41;</span>.<span class="me1">putInt</span><span class="br0">&#40;</span>
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+integer"><span class="kw3">Integer</span></a>.<span class="me1">reverseBytes</span><span class="br0">&#40;</span>wifiManager.<span class="me1">getConnectionInfo</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getIpAddress</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <span class="br0">&#41;</span>.<span class="me1">array</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+  <span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> name <span class="sy0">=</span> address.<span class="me1">getHostName</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;address = &quot;</span> <span class="sy0">+</span> address <span class="sy0">+</span> <span class="st0">&quot; name = &quot;</span> <span class="sy0">+</span> name<span class="br0">&#41;</span><span class="sy0">;</span>
+  jmDns <span class="sy0">=</span> JmDNS.<span class="me1">create</span><span class="br0">&#40;</span>address, name<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>	</pre>
+
+<p>
+<p><div class="noteimportant">Instanțierea unui obiect de tip <code>JmDNS</code> trebuie să se realizeze pe firul de execuție al comunicației prin rețea, în caz contrar generându-se o excepție de tipul <code>android.os.NetworkOnMainThreadException</code>.
+</div></p>
+</p>
+
+<p>
+<abbr title="Application Programming Interface">API</abbr>-ul pe care îl pune la dispoziție un astfel de obiect este asincron, astfel încât metodele apelate în cadrul claselor ascultător pentru diferite evenimente (înregistrare, descoperire, rezolvare) sunt executate în contextul unor fire de execuție dedicate, așa cum trebuie procedat în condițiile unor operații ce implică comunicația prin rețea.
+</p>
+<ul>
+<li class="level1"><div class="li"> înregistrare</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#registerService%28javax.jmdns.ServiceInfo%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#registerService%28javax.jmdns.ServiceInfo%29"  rel="nofollow">registerService(ServiceInfo)</a> - folosită pentru înregistrarea unui serviciu, care să poată fi disponibil ulterior în cadrul rețelei locale;</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#unregisterService%28javax.jmdns.ServiceInfo%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#unregisterService%28javax.jmdns.ServiceInfo%29"  rel="nofollow">unregisterService(ServiceInfo)</a> sau <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#unregisterAllServices%28%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#unregisterAllServices%28%29"  rel="nofollow">unregisterAllServices()</a>- folosită pentru deînregistrarea unui serviciu, astfel încât acesta să nu mai poată fi accesat, atunci când nu mai este necesar sau aplicația Android este distrusă.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> descoperire</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#addServiceListener%28java.lang.String,%20javax.jmdns.ServiceListener%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#addServiceListener%28java.lang.String,%20javax.jmdns.ServiceListener%29"  rel="nofollow">addServiceListener(String, ServiceListener)</a> - folosită pentru pornirea descoperirii de servicii accesibile în rețeaua locală, operație care va fi realizată permanent, până când se va specifica altfel (explicit), afectând resurse precum transferul de informații prin rețeaua locală (lățimea de bandă) și bateria; vor fi monitorizate doar serviciile de un anumit tip;</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#removeServiceListener%28java.lang.String,%20javax.jmdns.ServiceListener%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#removeServiceListener%28java.lang.String,%20javax.jmdns.ServiceListener%29"  rel="nofollow">removeServiceListener(ServiceListener)</a> - folosită pentru oprirea descoperirii de servicii de un anumit tip, atunci când acesta nu mai este necesară sau aplicația Android este întreruptă temporar.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> rezolvare - <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#requestServiceInfo%28java.lang.String,%20java.lang.String%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#requestServiceInfo%28java.lang.String,%20java.lang.String%29"  rel="nofollow">requestServiceInfo(String, String)</a>, pentru a identifica parametrii de conexiune (adresă și port) ai unui serviciu pentru care se cunoaște tipul și denumirea.â</div>
+</li>
+</ul>
+
+<p>
+Se observă că de regulă aceste metode primesc parametrii de tip:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceInfo.html" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceInfo.html"  rel="nofollow">ServiceInfo</a> - în care sunt stocate perechi de tipul (atribut, valoare) cu privire la serviciul disponibil în rețea:</div>
+<ul>
+<li class="level2"><div class="li"> denumire;</div>
+</li>
+<li class="level2"><div class="li"> tip / subtip;</div>
+</li>
+<li class="level2"><div class="li"> adresă / denumire dispozitiv care găzduiește serviciul;</div>
+</li>
+<li class="level2"><div class="li"> port pe care poate fi accesat serviciul;</div>
+</li>
+<li class="level2"><div class="li"> prioritate;</div>
+</li>
+<li class="level2"><div class="li"> protocol</div>
+</li>
+<li class="level2"><div class="li"> date</div>
+</li>
+<li class="level2"><div class="li"> <abbr title="Uniform Resource Locator">URL</abbr>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> ascultător pentru diferite evenimente legate de operațiile cu serviciile accesibile în rețea (înregistrare, descoperire, rezolvare), fiecare definind metode care descriu comportamentul pentru fiecare rezultat posibil al acestora.</div>
+</li>
+</ul>
+
+<p>
+Resusele asociate obiectului de tip <code>JmDNS</code> trebuie eliberate în momentul în care acesta nu mai este necesar (aplicația Android este distrusă):
+</p>
+<pre class="code java"><span class="kw1">try</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>jmDns <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    jmDns.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    jmDns <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În fișierul <code>AndroidManifest.xml</code>, permisiunile care trebuie oferite aplicației vizează:
+</p>
+<ul>
+<li class="level1"><div class="li"> accesul la Internet;</div>
+</li>
+<li class="level1"><div class="li"> schimbarea politicii cu privire la procesarea pachetelor de tip multi-cast (implicit dezactivate, pentru a optimiza consumul de energie);</div>
+</li>
+<li class="level1"><div class="li"> accesul la starea rețelei fără fir;</div>
+</li>
+<li class="level1"><div class="li"> accesul la starea rețelei cu fir.</div>
+</li>
+</ul>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator08%3Fcodeblock=6" title="Download Snippet" class="mediafile mf_xml">AndroidManifest.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;manifest</span> <span class="re0">xmlns:android</span>=<span class="st0">&quot;http://schemas.android.com/apk/res/android&quot;</span></span>
+<span class="sc3">    <span class="re0">package</span>=<span class="st0">&quot;ro.pub.cs.systems.eim.lab08.chatservice&quot;</span></span>
+<span class="sc3">    <span class="re0">android:versionCode</span>=<span class="st0">&quot;1&quot;</span></span>
+<span class="sc3">    <span class="re0">android:versionName</span>=<span class="st0">&quot;1.0&quot;</span><span class="re2">&gt;</span></span>
+&nbsp;
+    <span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">        <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.INTERNET&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">        <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.CHANGE_WIFI_MULTICAST_STATE&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">        <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.ACCESS_WIFI_STATE&quot;</span> <span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">        <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.ACCESS_NETWORK_STATE&quot;</span> <span class="re2">/&gt;</span></span>
+&nbsp;
+    <span class="sc-1">&lt;!-- ... --&gt;</span>
+&nbsp;
+<span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT4 SECTION "JmDNS (obligatoriu)" [8301-15926] -->
+<h2 class="sectionedit5" id="inregistrareadeinregistrarea_unui_serviciu">Înregistrarea / Deînregistrarea unui Serviciu</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Înregistrarea / Deînregistrarea unui Serviciu" [15927-21696] -->
+<h3 class="sectionedit6" id="jmdns">JmDNS</h3>
+<div class="level3">
+
+<p>
+Pentru <strong>înregistrarea unui serviciu</strong>, se apelează metoda <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#registerService%28javax.jmdns.ServiceInfo%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#registerService%28javax.jmdns.ServiceInfo%29"  rel="nofollow">registerService(ServiceInfo)</a> din clasa <code>JmDNS</code>, ulterior serviciul putând fi accesat din cadrul altor mașini fizice / dispozitive mobile.
+</p>
+
+<p>
+Pentru <strong>deînregistrarea unui serviciu</strong>, se poate apela una din metodele <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#unregisterService%28javax.jmdns.ServiceInfo%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#unregisterService%28javax.jmdns.ServiceInfo%29"  rel="nofollow">unregisterService(ServiceInfo)</a>, respectiv <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#unregisterAllServices()" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#unregisterAllServices()"  rel="nofollow">unregisterAllServices()</a> din clasa <code>JmDNS</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">Aceste metode primesc ca parametru un obiect de tip <code>ServiceInfo</code>, ce reține informații precum denumirea și tipul serviciului, adresa și portul mașinii / dispozitivului pe care va fi disponibil (ce pot fi preluate, din cadrul unui obiect de tip <code>ServerSocket</code>).
+</div></p>
+</p>
+
+<p>
+<p><div class="notewarning">JmDNS nu oferă informații cu privire la rezultatul operațiilor de înregistrare / deînregistrare.
+</div></p>
+</p>
+<pre class="code java"><span class="kw1">public</span> <span class="kw4">void</span> registerNetworkService<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="kw1">throws</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a> <span class="br0">&#123;</span>
+  chatServer <span class="sy0">=</span> <span class="kw1">new</span> ChatServer<span class="br0">&#40;</span><span class="kw1">this</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+serversocket"><span class="kw3">ServerSocket</span></a> serverSocket <span class="sy0">=</span> chatServer.<span class="me1">getServerSocket</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>serverSocket <span class="sy0">==</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">throw</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+exception"><span class="kw3">Exception</span></a><span class="br0">&#40;</span><span class="st0">&quot;Could not get server socket&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  chatServer.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  ServiceInfo serviceInfo <span class="sy0">=</span> ServiceInfo.<span class="me1">create</span><span class="br0">&#40;</span>
+    Constants.<span class="me1">SERVICE_TYPE</span>,
+    Constants.<span class="me1">SERVICE_NAME</span>,
+    port,
+    Constants.<span class="me1">SERVICE_DESCRIPTION</span>
+  <span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">if</span> <span class="br0">&#40;</span>jmDns <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">&amp;&amp;</span> serviceInfo <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    serviceName <span class="sy0">=</span> serviceInfo.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    jmDns.<span class="me1">registerService</span><span class="br0">&#40;</span>serviceInfo<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw4">void</span> unregisterNetworkService<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>jmDns <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    jmDns.<span class="me1">unregisterAllServices</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>	
+&nbsp;
+  chatServer.<span class="me1">stopThread</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+<!-- EDIT6 SECTION "JmDNS" [21697-23524] -->
+<h2 class="sectionedit7" id="descoperirea_serviciilor_accesibile">Descoperirea Serviciilor Accesibile</h2>
+<div class="level2">
+
+<p>
+Operațiile de <strong>pornire</strong> / <strong>oprire</strong> a descoperirii serviciilor disponibile trebuie să aibă în vedere resursele afectate precum și impactul asupra altor funcționalități cum ar fi viteza de transfer prin rețea, respectiv autonomia.
+</p>
+
+<p>
+De regulă, pornirea operației de descoperire a serviciilor disponibile este realizată pe metoda <code>onResume()</code>, adică din momentul în care activitatea este vizibilă.
+</p>
+
+<p>
+Similar, oprirea operației de descoperire a serviciilor disponibile este realizată pe metoda <code>onPause()</code>, adică din momentul în care activitatea nu este vizibilă.
+</p>
+
+<p>
+Totodată, este recomandat să se pună la dispoziția utilizatorilor elemente în cadrul interfeței grafice prin intermediul cărora aceste operații să poată fi controlate prin interacțiunea cu cei care folosesc aplicația Android.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Descoperirea Serviciilor Accesibile" [23525-30779] -->
+<h3 class="sectionedit8" id="jmdns1">JmDNS</h3>
+<div class="level3">
+
+<p>
+<strong>Pornirea </strong> operației de descoperire a serviciilor disponibile se face prin intermediul metodei <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#addServiceListener%28java.lang.String,%20javax.jmdns.ServiceListener%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#addServiceListener%28java.lang.String,%20javax.jmdns.ServiceListener%29"  rel="nofollow">addServiceListener(String, ServiceListener)</a> din clasa <code>JmDNS</code> care primește ca parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> tipul de serviciu;</div>
+</li>
+<li class="level1"><div class="li"> un obiect ascultător de tipul <code>ServiceListener</code>, care reacționează la evenimentele legate de serviciile găsite / pierdute.</div>
+</li>
+</ul>
+
+<p>
+<strong>Oprirea</strong> operației de descoperire a serviciilor disponibile se face prin intermediul metodei <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#removeServiceListener%28java.lang.String,%20javax.jmdns.ServiceListener%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#removeServiceListener%28java.lang.String,%20javax.jmdns.ServiceListener%29"  rel="nofollow">removeServiceListener(String, ServiceListener)</a> din clasa <code>JmDNS</code> care primește ca parametru un obiect ascultător de tipul <code>ServiceListener</code>, care reacționează la evenimentele legate de serviciile găsite / pierdute.
+</p>
+
+<p>
+Ca atare, informațiile cu privire la găsirea / pierderea serviciilor în rețeaua locală vor fi furnizate numai între apelurile metodelor <code>addServiceListener()</code>, respectiv <code>removeServiceListener()</code>.
+</p>
+<pre class="code java"><span class="kw1">public</span> <span class="kw4">void</span> startNetworkServiceDiscovery<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>jmDns <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">&amp;&amp;</span> serviceListener <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    jmDns.<span class="me1">addServiceListener</span><span class="br0">&#40;</span>Constants.<span class="me1">SERVICE_TYPE</span>, serviceListener<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw4">void</span> stopNetworkServiceDiscovery<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>jmDns <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">&amp;&amp;</span> serviceListener <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    jmDns.<span class="me1">removeServiceListener</span><span class="br0">&#40;</span>Constants.<span class="me1">SERVICE_TYPE</span>, serviceListener<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pentru obiectul de tip <code>ServiceListener</code> trebuie implementate metodele apelate în mod automat în momentul în care un serviciu este găsit, respectiv este pierdut:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceListener.html#serviceAdded%28javax.jmdns.ServiceEvent%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceListener.html#serviceAdded%28javax.jmdns.ServiceEvent%29"  rel="nofollow">serviceAdded(ServiceEvent)</a> - se verifică parametrii serviciului descoperit (tip și denumire), putându-se întâlni următoarele situații:</div>
+<ol>
+<li class="level2"><div class="li"> tip de serviciu necunoscut (cu toate că descoperirea implică filtrarea după un tip de servicii specific);</div>
+</li>
+<li class="level2"><div class="li"> descoperirea serviciului oferit de mașina curentă / dispozitivul curent - se realizează comparația dintre denumirea serviciului găsit și denumirea serviciului curent;</div>
+</li>
+<li class="level2"><div class="li"> descoperirea unui serviciu oferit de o altă mașină / un alt dispozitiv (se poate folosi un șablon pe denumirea serviciului) - se trece la rezolvarea serviciului respectiv (prin invocarea metodei <code>requestServiceInfo(String, String)</code> din cadrul obiectului de tip <code>JmDNS</code>.</div>
+</li>
+</ol>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">
+Alternativ, rezolvarea serviciului descoperit poate fi realizată ad-hoc (fără a se apela metoda <code>serviceResolved()</code>), prin apelul metodei <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#getServiceInfo%28java.lang.String,%20java.lang.String%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#getServiceInfo%28java.lang.String,%20java.lang.String%29"  rel="nofollow">getServiceInfo(String, String)</a>, cu precizarea că timpul său de execuție poate fi considerabil:
+</p>
+<pre class="code java">ServiceInfo serviceInfo <span class="sy0">=</span> serviceEvent.<span class="me1">getDNS</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">getServiceInfo</span><span class="br0">&#40;</span>
+  serviceEvent.<span class="me1">getType</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, 
+  serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceListener.html#serviceRemoved%28javax.jmdns.ServiceEvent%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceListener.html#serviceRemoved%28javax.jmdns.ServiceEvent%29"  rel="nofollow">serviceRemoved(ServiceEvent)</a> - se gestionează corespunzător lista de servicii descoperite.</div>
+</li>
+</ul>
+
+<p>
+Un obiect de tipul <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceInfo.html" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceInfo.html"  rel="nofollow">ServiceInfo</a> conține, printre altele, și informații cu privire la:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceInfo.html#getInetAddresses%28%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceInfo.html#getInetAddresses%28%29"  rel="nofollow">getInetAddresses()</a> - adresele la care poate fi accesat serviciul;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceInfo.html#getPort%28%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceInfo.html#getPort%28%29"  rel="nofollow">getPort()</a> - portul pe care poate fi accesat serviciul.</div>
+</li>
+</ul>
+<pre class="code java">ServiceListener serviceListener <span class="sy0">=</span> <span class="kw1">new</span> ServiceListener<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> serviceAdded<span class="br0">&#40;</span>ServiceEvent serviceEvent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span>serviceEvent.<span class="me1">getType</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">equals</span><span class="br0">&#40;</span>Constants.<span class="me1">SERVICE_TYPE</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;Unknown Service Type: &quot;</span> <span class="sy0">+</span> serviceEvent.<span class="me1">getType</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> <span class="kw1">else</span> <span class="kw1">if</span> <span class="br0">&#40;</span>serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">equals</span><span class="br0">&#40;</span>serviceName<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;The service running on the same machine has been discovered: &quot;</span> <span class="sy0">+</span> serviceName<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> <span class="kw1">else</span> <span class="kw1">if</span> <span class="br0">&#40;</span>serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">contains</span><span class="br0">&#40;</span>Constants.<span class="me1">SERVICE_NAME_SEARCH_KEY</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;The service should be resolved now: &quot;</span> <span class="sy0">+</span> serviceEvent<span class="br0">&#41;</span><span class="sy0">;</span>
+      jmDns.<span class="me1">requestServiceInfo</span><span class="br0">&#40;</span>serviceEvent.<span class="me1">getType</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> serviceRemoved<span class="br0">&#40;</span><span class="kw1">final</span> ServiceEvent serviceEvent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    ServiceInfo serviceInfo <span class="sy0">=</span> serviceEvent.<span class="me1">getInfo</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>serviceInfo <span class="sy0">==</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;Service Info for Service is null!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">return</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> hosts <span class="sy0">=</span> serviceInfo.<span class="me1">getHostAddresses</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> host <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>hosts.<span class="me1">length</span> <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      host <span class="sy0">=</span> hosts<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy0">;</span>
+      <span class="kw1">if</span><span class="br0">&#40;</span>host.<span class="me1">startsWith</span><span class="br0">&#40;</span><span class="st0">&quot;/&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        host <span class="sy0">=</span> host.<span class="me1">substring</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw4">int</span> port <span class="sy0">=</span> serviceInfo.<span class="me1">getPort</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="co1">// ...</span>
+&nbsp;
+    ArrayList<span class="sy0">&lt;</span>NetworkService<span class="sy0">&gt;</span> discoveredServices <span class="sy0">=</span> chatActivity.<span class="me1">getDiscoveredServices</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    NetworkService networkService <span class="sy0">=</span> <span class="kw1">new</span> NetworkService<span class="br0">&#40;</span>serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, host, port, <span class="sy0">-</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>discoveredServices.<span class="me1">contains</span><span class="br0">&#40;</span>networkService<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw4">int</span> index <span class="sy0">=</span> discoveredServices.<span class="me1">indexOf</span><span class="br0">&#40;</span>networkService<span class="br0">&#41;</span><span class="sy0">;</span>
+      discoveredServices.<span class="me1">remove</span><span class="br0">&#40;</span>index<span class="br0">&#41;</span><span class="sy0">;</span>
+      chatActivity.<span class="me1">setDiscoveredServices</span><span class="br0">&#40;</span>discoveredServices<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT8 SECTION "JmDNS" [30780-36221] -->
+<h2 class="sectionedit9" id="rezolvarea_serviciilor_descoperite_anterior">Rezolvarea Serviciilor Descoperite Anterior</h2>
+<div class="level2">
+
+<p>
+Rezolvarea unui serviciu descoperit anterior implică obținerea de informații suplimentare cu privire la acesta. 
+</p>
+
+<p>
+Astfel, pentru un serviciu pentru care se cunoaște doar tipul și denumirea, se poate determina, prin intermediul multi-cast <abbr title="Domain Name System">DNS</abbr>, adresa și portul la care acesta este disponibil, putând fi accesat.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Rezolvarea Serviciilor Descoperite Anterior" [36222-40230] -->
+<h3 class="sectionedit10" id="jmdns2">JmDNS</h3>
+<div class="level3">
+
+<p>
+În cadrul metodei <code>serviceAdded()</code> din ascultătorul de tip <code>ServiceListener</code>, în situația în care denumirea serviciului corespunde unui anumit șablon (deși o astfel de condiție nu este întotdeauna necesară), se invocă metoda <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#requestServiceInfo%28java.lang.String,%20java.lang.String%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/JmDNS.html#requestServiceInfo%28java.lang.String,%20java.lang.String%29"  rel="nofollow">requestServiceInfo(String, String)</a> care primește ca parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> tipul serviciului;</div>
+</li>
+<li class="level1"><div class="li"> denumirea serviciului.</div>
+</li>
+</ul>
+<pre class="code java">Service serviceListener <span class="sy0">=</span> <span class="kw1">new</span> ServiceListener<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="co1">// ...</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> serviceAdded<span class="br0">&#40;</span>ServiceEvent serviceEvent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+    <span class="co1">// ...</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">contains</span><span class="br0">&#40;</span>Constants.<span class="me1">SERVICE_NAME_SEARCH_KEY</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;The service should be resolved now: &quot;</span> <span class="sy0">+</span> serviceEvent<span class="br0">&#41;</span><span class="sy0">;</span>
+      jmDns.<span class="me1">requestServiceInfo</span><span class="br0">&#40;</span>serviceEvent.<span class="me1">getType</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>				
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+În situația în care operația de rezolvare a serviciului a fost realizată cu succes, se apelează metoda <a href="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceListener.html#serviceResolved%28javax.jmdns.ServiceEvent%29" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/javax/jmdns/ServiceListener.html#serviceResolved%28javax.jmdns.ServiceEvent%29"  rel="nofollow">serviceResolved(ServiceEvent)</a> în cadrul aceluiași obiect ascultător (de tip <code>ServiceListener</code>). Aceasta primește ca parametru un obiect <code>ServiceEvent</code> care încapsulează informații cu privire la serviciul rezolvat, sub forma unui obiect de tip <code>ServiceInfo</code>. Și în această situație se va gestiona corespunzător lista de servicii descoperite în rețeaua locală, obținându-se și un canal de comunicație către parametrii determinați.
+</p>
+<pre class="code java">ServiceListener serviceListener <span class="sy0">=</span> <span class="kw1">new</span> ServiceListener<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> serviceResolved<span class="br0">&#40;</span>ServiceEvent serviceEvent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">equals</span><span class="br0">&#40;</span>serviceName<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;The service running on the same machine has been discovered.&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">return</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    ServiceInfo serviceInfo <span class="sy0">=</span> serviceEvent.<span class="me1">getInfo</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>serviceInfo <span class="sy0">==</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;Service Info for Service is null!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">return</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span> hosts <span class="sy0">=</span> serviceInfo.<span class="me1">getHostAddresses</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> host <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>hosts.<span class="me1">length</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;No host addresses returned for the service!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">return</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    host <span class="sy0">=</span> hosts<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy0">;</span>
+    <span class="kw1">if</span><span class="br0">&#40;</span>host.<span class="me1">startsWith</span><span class="br0">&#40;</span><span class="st0">&quot;/&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      host <span class="sy0">=</span> host.<span class="me1">substring</span><span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw4">int</span> port <span class="sy0">=</span> serviceInfo.<span class="me1">getPort</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    ArrayList<span class="sy0">&lt;</span>NetworkService<span class="sy0">&gt;</span> discoveredServices <span class="sy0">=</span> chatActivity.<span class="me1">getDiscoveredServices</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    NetworkService networkService <span class="sy0">=</span> <span class="kw1">new</span> NetworkService<span class="br0">&#40;</span>serviceEvent.<span class="me1">getName</span><span class="br0">&#40;</span><span class="br0">&#41;</span>, host, port, Constants.<span class="me1">CONVERSATION_TO_SERVER</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span>discoveredServices.<span class="me1">contains</span><span class="br0">&#40;</span>networkService<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      discoveredServices.<span class="me1">add</span><span class="br0">&#40;</span>networkService<span class="br0">&#41;</span><span class="sy0">;</span>
+      communicationToServers.<span class="me1">add</span><span class="br0">&#40;</span><span class="kw1">new</span> ChatClient<span class="br0">&#40;</span><span class="kw2">null</span>, host, port<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      chatActivity.<span class="me1">setDiscoveredServices</span><span class="br0">&#40;</span>discoveredServices<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;A service has been discovered on &quot;</span> <span class="sy0">+</span> host <span class="sy0">+</span> <span class="st0">&quot;:&quot;</span> <span class="sy0">+</span> port<span class="br0">&#41;</span><span class="sy0">;</span>				
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+</div>
+<!-- EDIT10 SECTION "JmDNS" [40231-43235] -->
+<h2 class="sectionedit11" id="gestiunea_unei_conexiuni_catre_servicii_disponibile">Gestiunea unei Conexiuni către Servicii Disponibile</h2>
+<div class="level2">
+
+<p>
+Fiecare dispozitiv poate fi avea în același timp rolul de:
+</p>
+<ul>
+<li class="level1"><div class="li"> server pentru serviciile pe care le-a înregistrat, putând primi solicitări din partea clienților;</div>
+</li>
+<li class="level1"><div class="li"> client pentru serviciile pe care le-a descoperit, putând trimite solicitări către servere.</div>
+</li>
+</ul>
+
+<p>
+În acest sens, va trebui menținut un obiect server, care va gestiona comunicația cu clienții.
+</p>
+
+<p>
+Totodată, vor trebui menținuți mai mulți clienți, reprezentând canalele de comunicație de tip punct-la-punct care pot fi de două tipuri:
+</p>
+<ul>
+<li class="level1"><div class="li"> canale de comunicație pentru solicitări primite (clienți);</div>
+</li>
+<li class="level1"><div class="li"> canale de comunicație pentru servicii descoperite (servere).</div>
+</li>
+</ul>
+<pre class="code java"><span class="kw1">public</span> <span class="kw1">class</span> NetworkServiceDiscoveryOperations <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> ChatServer chatServer <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> List<span class="sy0">&lt;</span>ChatClient<span class="sy0">&gt;</span> communicationToServers   <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+  <span class="kw1">private</span> List<span class="sy0">&lt;</span>ChatClient<span class="sy0">&gt;</span> communicationFromClients <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+
+<p>
+Actualizarea acestor obiecte va fi realizată mai ales în situația în care un serviciu este rezolvat, respectiv un serviciu este pierdut.
+</p>
+
+<p>
+Obiectul de tip <strong><code>ChatServer</code></strong> este de fapt un fir de execuție pe care se instanțiază un obiect de tip <code>ServerSocket</code>, așteptându-se, în bucla principală, solicitări de la clienți, actualizându-se corespunzător lista conținând canalele de comunicație pentru solicitările primite.
+</p>
+
+<p>
+De remarcat faptul că a fost definită și o metodă pentru oprirea firului de execuție și închiderea obiectului <code>ServerSocket</code>, aceasta urmând a fi apelată la deînregistrarea serviciului respectiv.
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator08%3Fcodeblock=21" title="Download Snippet" class="mediafile mf_java">ChatServer.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">public</span> <span class="kw1">class</span> ChatServer <span class="kw1">extends</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> NetworkServiceDiscoveryOperations networkServiceDiscoveryOperations <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+serversocket"><span class="kw3">ServerSocket</span></a> serverSocket <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> ChatServer<span class="br0">&#40;</span>NetworkServiceDiscoveryOperations networkServiceDiscoveryOperations, <span class="kw4">int</span> port<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">this</span>.<span class="me1">networkServiceDiscoveryOperations</span> <span class="sy0">=</span> networkServiceDiscoveryOperations<span class="sy0">;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      serverSocket <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+serversocket"><span class="kw3">ServerSocket</span></a><span class="br0">&#40;</span>port<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An error has occurred during server run: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      <span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy0">!</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a>.<span class="me1">currentThread</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">isInterrupted</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket <span class="sy0">=</span> serverSocket.<span class="me1">accept</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        List<span class="sy0">&lt;</span>ChatClient<span class="sy0">&gt;</span> communicationFromClients <span class="sy0">=</span> networkServiceDiscoveryOperations.<span class="me1">getCommunicationFromClients</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        communicationFromClients.<span class="me1">add</span><span class="br0">&#40;</span><span class="kw1">new</span> ChatClient<span class="br0">&#40;</span><span class="kw2">null</span>, socket<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        networkServiceDiscoveryOperations.<span class="me1">setCommunicationFromClients</span><span class="br0">&#40;</span>communicationFromClients<span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An error has occurred during server run: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> stopThread<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    interrupt<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>serverSocket <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        serverSocket.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An error has occurred while closing server socket: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Obiectul de tip <strong><code>ChatClient</code></strong> definește un canal de comunicație bidirecțional între două mașini / dispozitive, care poate fi creat pe baza unuei adrese și a unui port (conexiune către server) sau pe baza altui canal de comunicație (conexiune de la client).
+</p>
+
+<p>
+Acesta încapsulează două fire de execuție:
+</p>
+<ol>
+<li class="level1"><div class="li"> <code>SendThread</code> - pentru trimiterea de mesaje;</div>
+</li>
+<li class="level1"><div class="li"> <code>ReceiveThread</code> - pentru primirea de mesaje.</div>
+</li>
+</ol>
+
+<p>
+Atât mesajele trimise cât și mesajele trimise sunt plasate și în interfața grafică (dacă aceasta este vizibilă) dar și într-un obiect membru al clasei.
+</p>
+
+<p>
+Au fost definite metode atât pentru pornirea cât și pentru oprirea firelor de execuție. Astfel, firele de execuție pentru trimiterea / primirea de mesaje rulează cât timp nu sunt întrerupte.
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator08%3Fcodeblock=22" title="Download Snippet" class="mediafile mf_java">ChatClient.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">public</span> <span class="kw1">class</span> ChatClient <span class="br0">&#123;</span>
+  <span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a>  socket  <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> SendThread    sendThread    <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+  <span class="kw1">private</span> ReceiveThread receiveThread <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> BlockingQueue<span class="sy0">&lt;</span>String<span class="sy0">&gt;</span> messageQueue        <span class="sy0">=</span> <span class="kw1">new</span> ArrayBlockingQueue<span class="sy0">&lt;</span>String<span class="sy0">&gt;</span><span class="br0">&#40;</span>Constants.<span class="me1">MESSAGE_QUEUE_CAPACITY</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">private</span> List<span class="sy0">&lt;</span>Message<span class="sy0">&gt;</span>         conversationHistory <span class="sy0">=</span> <span class="kw1">new</span> ArrayList<span class="sy0">&lt;</span>Message<span class="sy0">&gt;</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> ChatClient<span class="br0">&#40;</span><span class="kw1">final</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> host, <span class="kw1">final</span> <span class="kw4">int</span> port<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      socket <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a><span class="br0">&#40;</span>host, port<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred while creating the socket: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>socket <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      startThreads<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> ChatClient<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a> context, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+socket"><span class="kw3">Socket</span></a> socket<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">this</span>.<span class="me1">socket</span>  <span class="sy0">=</span> socket<span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>socket <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      startThreads<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> sendMessage<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> message<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      messageQueue.<span class="me1">put</span><span class="br0">&#40;</span>message<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> interruptedException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> interruptedException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        interruptedException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw1">class</span> SendThread <span class="kw1">extends</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> <span class="br0">&#123;</span>
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+printwriter"><span class="kw3">PrintWriter</span></a> printWriter <span class="sy0">=</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a>.<span class="me1">getWriter</span><span class="br0">&#40;</span>socket<span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>printWriter <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw1">try</span> <span class="br0">&#123;</span>
+          <span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy0">!</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a>.<span class="me1">currentThread</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">isInterrupted</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> content <span class="sy0">=</span> messageQueue.<span class="me1">take</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span>content <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+              printWriter.<span class="me1">println</span><span class="br0">&#40;</span>content<span class="br0">&#41;</span><span class="sy0">;</span>
+              printWriter.<span class="me1">flush</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+              Message message <span class="sy0">=</span> <span class="kw1">new</span> Message<span class="br0">&#40;</span>content, Constants.<span class="me1">MESSAGE_TYPE_SENT</span><span class="br0">&#41;</span><span class="sy0">;</span>
+              conversationHistory.<span class="me1">add</span><span class="br0">&#40;</span>message<span class="br0">&#41;</span><span class="sy0">;</span>
+              <span class="co1">// display the message in the graphic user interface</span>
+            <span class="br0">&#125;</span>
+          <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> interruptedException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> interruptedException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            interruptedException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw4">void</span> stopThread<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      interrupt<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw1">class</span> ReceiveThread <span class="kw1">extends</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> <span class="br0">&#123;</span>
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+bufferedreader"><span class="kw3">BufferedReader</span></a> bufferedReader <span class="sy0">=</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a>.<span class="me1">getReader</span><span class="br0">&#40;</span>socket<span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>bufferedReader <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw1">try</span> <span class="br0">&#123;</span>
+          <span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy0">!</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a>.<span class="me1">currentThread</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">isInterrupted</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> content <span class="sy0">=</span> bufferedReader.<span class="me1">readLine</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+            <span class="kw1">if</span> <span class="br0">&#40;</span>content <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+              Message message <span class="sy0">=</span> <span class="kw1">new</span> Message<span class="br0">&#40;</span>content, Constants.<span class="me1">MESSAGE_TYPE_RECEIVED</span><span class="br0">&#41;</span><span class="sy0">;</span>
+              conversationHistory.<span class="me1">add</span><span class="br0">&#40;</span>message<span class="br0">&#41;</span><span class="sy0">;</span>
+              <span class="co1">// display the message in the graphic user interface</span>
+            <span class="br0">&#125;</span>
+          <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+          <span class="br0">&#125;</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">public</span> <span class="kw4">void</span> stopThread<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      interrupt<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> setConversationHistory<span class="br0">&#40;</span>List<span class="sy0">&lt;</span>Message<span class="sy0">&gt;</span> conversationHistory<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">this</span>.<span class="me1">conversationHistory</span> <span class="sy0">=</span> conversationHistory<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> List<span class="sy0">&lt;</span>Message<span class="sy0">&gt;</span> getConversationHistory<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">return</span> conversationHistory<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> startThreads<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    sendThread <span class="sy0">=</span> <span class="kw1">new</span> SendThread<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    sendThread.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    receiveThread <span class="sy0">=</span> <span class="kw1">new</span> ReceiveThread<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    receiveThread.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> stopThreads<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    sendThread.<span class="me1">stopThread</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    receiveThread.<span class="me1">stopThread</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>socket <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        socket.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred while closing the socket: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">DEBUG</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        ioException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+<!-- EDIT11 SECTION "Gestiunea unei Conexiuni către Servicii Disponibile" [43236-51287] -->
+<h2 class="sectionedit12" id="activitate_de_laborator">Activitate de Laborator</h2>
+<div class="level2">
+
+<p>
+Se dorește implementarea unei aplicații Android de tip mesagerie instantanee bazată pe legături de tip punct-la-punct stabilite între dispozitive mobile care oferă un serviciu de acest tip și dispozitive mobile care l-au descoperit, putându-l accesa în cadrul rețelei locale.
+</p>
+
+<p>
+Funcționalitățile pe care le implementează această aplicație Android sunt:
+</p>
+<ol>
+<li class="level1"><div class="li"> înregistrarea / deînregistrarea unui serviciu de mesagerie instantanee, pe un anumit port pe care îl specifică;</div>
+</li>
+<li class="level1"><div class="li"> pornirea / oprirea operației de descoperire a serviciilor în rețeaua locală;</div>
+</li>
+<li class="level1"><div class="li"> conectarea / deconectarea la un serviciu descoperit sau la un dispozitiv mobil care a accesat serviciul înregistrat;</div>
+</li>
+<li class="level1"><div class="li"> transmiterea de mesaje în cadrul legăturii de tip punct-la-punct.</div>
+</li>
+</ol>
+
+<p>
+Va fi utilizat următorul cod de culori pentru butoanele care au atașată funcționalitatea de înregistrare / deînregistrare, respectiv pornire / oprire:
+</p>
+<ul>
+<li class="level1"><div class="li"> roșu - serviciul este oprit;</div>
+</li>
+<li class="level1"><div class="li"> verde - serviciul este pornit.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator09/chatservice01.png%3Fw=400&amp;tok=85261a" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+În cazul în care descoperirea serviciilor este pornită, vor fi întreținute două liste:
+</p>
+<ul>
+<li class="level1"><div class="li"> lista cu serviciile descoperite, disponibile în cadrul altor dispozitive mobile din rețeaua locală;</div>
+</li>
+<li class="level1"><div class="li"> lista conținând conversațiile cu alte dispozitive mobile care au accesat serviciul înregistrat.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator09/chatservice02.png%3Fw=400&amp;tok=722b22" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+În situația în care descoperirea serviciilor este oprită, lista cu serviciile descoperite va fi vidă.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator09/chatservice03.png%3Fw=400&amp;tok=3e1c59" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Comunicația se va realiza în cadrul unei ferestre dedicate, în care pot fi vizualizate diferit mesajele trimise și mesajele primite. Din cadrul acestei interfețe grafice se poate reveni în orice moment la panoul de control.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator09/chatservice04.png%3Fw=400&amp;tok=cad57f" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+<strong>1.</strong> În contul Github personal, să se creeze un depozit denumit &#039;Laborator09&#039;. Inițial, acesta trebuie să fie gol (nu trebuie să bifați nici adăugarea unui fișier <code>README.md</code>, nici a fișierului <code>.gitignore</code> sau a a fișierului <code>LICENSE</code>).
+</p>
+
+<p>
+<strong>2.</strong> Să se cloneze în directorul de pe discul local conținutul depozitului la distanță de la <a href="https://www.github.com/eim2016/Laborator08" class="urlextern" title="https://www.github.com/eim2016/Laborator08"  rel="nofollow">https://www.github.com/eim2016/Laborator08</a>. 
+</p>
+
+<p>
+În urma acestei operații, directorul Laborator08 va trebui să se conțină directoarele <code>labtasks</code> și <code>solutions</code>. 
+</p>
+<pre class="code">student@eim2016:~$ git clone https://www.github.com/eim2016/Laborator08</pre>
+
+<p>
+<strong>3.</strong> Să se încarce conținutul descărcat în cadrul depozitului &#039;Laborator08&#039; de pe contul Github personal. 
+</p>
+<pre class="code">student@eim2016:~$ cd Laborator08
+student@eim2016:~/Laborator08$ git remote add Laborator08_perfectstudent https://github.com/perfectstudent/Laborator08
+student@eim2016:~/Laborator08$ git push Laborator08_perfectstudent master</pre>
+
+<p>
+<strong>4.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectul <code>ChatServiceAndroidNSD</code> sau <code>ChatServiceJmDNS</code> din directorul <code>labtasks</code>.
+</p>
+
+<p>
+<strong>5.</strong> Să se ruleze aplicația Android pe două dispozitive mobile care să se găsească în aceeași rețea.
+</p>
+
+<p>
+<p><div class="notetip">
+În cazul Genymotion, se pot crea două imagini pentru două dispozitive mobile (virtuale) de același tip, care vor putea fi rulate separat, fiecare dintre acestea primind adrese Internet diferite din intervalul <code>192.168.56.101</code> → <code>192.168.56.254</code>.
+</p>
+
+<p>
+<img src="http://ocw.cs.pub.ro/courses/_media/laboratoare/laborator09/genymotion01.png?w=600&amp;tok=585896" class="mediacenter" alt="" width="600" />
+</p>
+
+<p>
+În VirtualBox (&gt; versiunea 4.3.26), se verifică faptul că dispozitivele virtuale comunică între ele prin intermediul unei interfețe de rețea, configurată să folosească NAT (Network Address Translation). 
+</p>
+
+<p>
+În acest sens, trebuie realizate următoarele operații:
+</p>
+<ul>
+<li class="level1"><div class="li"> se va crea o rețea NAT în cadrul VirtualBox (<em>File</em> → <em>Preferences</em> sau Ctrl + G)</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator09/virtualbox01.png%3Fw=400&amp;tok=482278" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator09/virtualbox02.png%3Fw=400&amp;tok=6efb3d" class="mediacenter" alt="" width="400" />
+</p>
+<ul>
+<li class="level1"><div class="li"> în configurația aferentă fiecărui dispozitiv virtual (<em>Machine</em> → <em>Settings</em> sau Ctrl + S), se va selecta <em>NAT Network</em> folosind rețeaua astfel definită pentru interfața <em>Adapter 2</em></div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator09/virtualbox03.png%3Fw=400&amp;tok=48f9c0" class="mediacenter" alt="" width="400" />
+
+</div></p>
+</p>
+
+<p>
+Acestea vor putea rula instanțe diferite ale aplicației Android, fiecare folosind <em class="u"><strong>o denumire proprie pentru serviciu</strong></em> (la valoarea generică <code>Constants.SERVICE_NAME</code> definită în pachetul <code>ro.pub.cs.systems.eim.lab08.chatservice.general</code> se sufixează în mod automat un șir de caractere generat aleator, astfel încât aceasta să fie unică în rețeaua locală).
+</p>
+
+<p>
+Se verifică faptul că fiecare aplicație Android rulează pe un dispozitiv diferit:
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator09/genymotion02.png%3Fw=600&amp;tok=03ee5e" class="mediacenter" alt="" width="600" />
+</p>
+
+<p>
+În Logcat, se pot utiliza filtre diferite pentru fiecare dintre dintre instanțele aplicației Android, astfel încât să se faciliteze procesul de depanare.
+</p>
+
+<p>
+<strong>6.</strong> Să se implementeze rutina pentru trimiterea mesajelor, pe metoda <code>run()</code> a firului de execuție <code>SendThread</code> din clasa <code>ChatClient</code> a pachetului <code>ro.pub.cs.systems.eim.lab08.chatservice.networkservicediscoveryoperations</code>.
+</p>
+
+<p>
+Metoda va rula cât timp firul de execuție nu este întrerupt, informație oferită de metoda <code>isInterrupted()</code>.
+</p>
+<pre class="code java"><span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy0">!</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a>.<span class="me1">currentThread</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">isInterrupted</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="co1">// ...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pe fiecare iterație, se vor realiza următoarele operații:
+</p>
+<ol>
+<li class="level1"><div class="li"> se va prelua un mesaj din coada <code>messageQueue</code> (de tip <code>BlockingQueue&lt;String&gt;</code>); metoda <code>take()</code> este blocantă, în așteptarea unei valori care să poată fi furnizată - astfel, în momentul în care firul de execuție este întrerupt, se va genera o excepție de tipul <code>InterruptedException</code> care trebuie tratată;</div>
+</li>
+<li class="level1"><div class="li"> în cazul unui mesaj nenul, sunt realizate următoarele operații:</div>
+<ol>
+<li class="level2"><div class="li"> se trimite mesajul pe canalul de comunicație corespunzător (se apelează metoda <code>println()</code> a obiectului de tip <code>PrintWriter</code>);</div>
+</li>
+<li class="level2"><div class="li"> se construiește un obiect de tip <code>Message</code>, format din:</div>
+<ol>
+<li class="level3"><div class="li"> conținut: valoarea propriu-zisă a mesajului (șirul de caractere);</div>
+</li>
+<li class="level3"><div class="li"> tip: mesaj transmis (<code>Constants.MESSAGE_TYPE_SENT</code>);</div>
+</li>
+</ol>
+</li>
+<li class="level2"><div class="li"> se atașează mesajul istoricului conversației (obiectul <code>conversationHistory</code> este de tipul <code>List&lt;Message&gt;</code>) - în acest fel, chiar dacă interfața grafică nu este vizibilă la momentul în care este trimis mesajul, conversația poate fi încărcată atunci când se întâmplă acest lucru;</div>
+</li>
+<li class="level2"><div class="li"> se afișează mesajul în fragmentul de tip <code>ChatConversationFragment</code> (prin intermediul metodei <code>appendMessage()</code>), dacă acesta este asociat activității la momentul respectiv <pre class="code java"><span class="kw1">if</span> <span class="br0">&#40;</span>context <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  ChatActivity chatActivity <span class="sy0">=</span> <span class="br0">&#40;</span>ChatActivity<span class="br0">&#41;</span>context<span class="sy0">;</span>
+  FragmentManager fragmentManager <span class="sy0">=</span> chatActivity.<span class="me1">getFragmentManager</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  Fragment fragment <span class="sy0">=</span> fragmentManager.<span class="me1">findFragmentByTag</span><span class="br0">&#40;</span>Constants.<span class="me1">FRAGMENT_TAG</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>fragment <span class="kw1">instanceof</span> ChatConversationFragment <span class="sy0">&amp;&amp;</span> fragment.<span class="me1">isVisible</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    ChatConversationFragment chatConversationFragment <span class="sy0">=</span> <span class="br0">&#40;</span>ChatConversationFragment<span class="br0">&#41;</span>fragment<span class="sy0">;</span>
+    chatConversationFragment.<span class="me1">appendMessage</span><span class="br0">&#40;</span>message<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+
+<p>
+<strong>7.</strong> Să se implementeze rutina pentru primirea mesajelor, pe metoda <code>run()</code> a firului de execuție <code>ReceiveThread</code> din clasa <code>ChatClient</code> a pachetului <code>ro.pub.cs.systems.eim.lab08.chatservice.networkservicediscoveryoperations</code>.
+</p>
+
+<p>
+Metoda va rula cât timp firul de execuție nu este întrerupt, informație oferită de metoda <code>isInterrupted()</code>.
+</p>
+<pre class="code java"><span class="kw1">while</span> <span class="br0">&#40;</span><span class="sy0">!</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a>.<span class="me1">currentThread</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">isInterrupted</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="co1">// ...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pe fiecare iterație, se vor realiza următoarele operații:
+</p>
+<ol>
+<li class="level1"><div class="li"> se primește mesajul pe canalul de comunicație corespunzător (se apelează metoda <code>readLine()</code> a obiectului de tip <code>BufferedReader</code>);</div>
+</li>
+<li class="level1"><div class="li"> în cazul unui mesaj nenul, sunt realizate următoarele operații:</div>
+<ol>
+<li class="level2"><div class="li"> se construiește un obiect de tip <code>Message</code>, format din:</div>
+<ol>
+<li class="level3"><div class="li"> conținut: valoarea propriu-zisă a mesajului (șirul de caractere);</div>
+</li>
+<li class="level3"><div class="li"> tip: mesaj transmis (<code>Constants.MESSAGE_TYPE_RECEIVED</code>);</div>
+</li>
+</ol>
+</li>
+<li class="level2"><div class="li"> se atașează mesajul istoricului conversației (obiectul <code>conversationHistory</code> este de tipul <code>List&lt;Message&gt;</code>);</div>
+</li>
+<li class="level2"><div class="li"> se afișează mesajul în fragmentul de tip <code>ChatConversationFragment</code> (prin intermediul metodei <code>appendMessage()</code>), dacă acesta este asociat activității la momentul respectiv.</div>
+</li>
+</ol>
+</li>
+</ol>
+
+<p>
+<strong>8.</strong>  Să se încarce modificările realizate în cadrul depozitului &#039;Laborator08&#039; de pe contul Github personal, folosind un mesaj sugestiv. 
+</p>
+<pre class="code">student@eim2016:~/Laborator08$ git add *
+student@eim2016:~/Laborator08$ git commit -m &quot;implemented tasks for laboratory 08&quot;
+student@eim2016:~/Laborator08$ git push Laborator08_perfectstudent master</pre>
+
+</div>
+<!-- EDIT12 SECTION "Activitate de Laborator" [51288-60106] -->
+<h2 class="sectionedit13" id="resurse_utile">Resurse Utile</h2>
+<div class="level2">
+
+<p>
+<a href="http://www.multicastdns.org/" class="urlextern" title="http://www.multicastdns.org/"  rel="nofollow">Multicast DNS</a><br/>
+
+<a href="http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml" class="urlextern" title="http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml"  rel="nofollow">Service Name and Transport Protocol Port Number Registry</a><br/>
+
+<a href="http://developer.android.com/training/connect-devices-wirelessly/index.html" class="urlextern" title="http://developer.android.com/training/connect-devices-wirelessly/index.html"  rel="nofollow">Android Tutorial on Connecting Devices Wirelessly</a><br/>
+
+<a href="http://jmdns.sourceforge.net/" class="urlextern" title="http://jmdns.sourceforge.net/"  rel="nofollow">JmDNS - Project Official Page</a><br/>
+
+<a href="http://jmdns.sourceforge.net/apidocs/index.html" class="urlextern" title="http://jmdns.sourceforge.net/apidocs/index.html"  rel="nofollow">JmDNS - API Documentation</a><br/>
+
+<a href="http://sourceforge.net/projects/jmdns/" class="urlextern" title="http://sourceforge.net/projects/jmdns/"  rel="nofollow">JmDNS - Library Download</a><br/>
+
+<a href="http://home.heeere.com/tech-androidjmdns.html" class="urlextern" title="http://home.heeere.com/tech-androidjmdns.html"  rel="nofollow">Tutorial on Using JmDNS on Android</a><br/>
+
+<a href="https://developer.appcelerator.com/question/130715/how-to-discovery-deviceor-service-on-andorid" class="urlextern" title="https://developer.appcelerator.com/question/130715/how-to-discovery-deviceor-service-on-andorid"  rel="nofollow">How to discover device (or service) on Android?</a><br/>
+
+<a href="http://stackoverflow.com/questions/10289100/service-discovery-using-jmdns-in-eclipse-wifistatemachine-errors" class="urlextern" title="http://stackoverflow.com/questions/10289100/service-discovery-using-jmdns-in-eclipse-wifistatemachine-errors"  rel="nofollow">Service discovery using JmDNS in Eclipse: Wifi State Machine errors</a>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Resurse Utile" [60107-] --></div>
+</body>
+</html>

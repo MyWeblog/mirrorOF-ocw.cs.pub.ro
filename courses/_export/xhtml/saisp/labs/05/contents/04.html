@@ -1,0 +1,160 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:05:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-24T16:40:15+0200"/>
+<meta name="keywords" content="saisp,labs,05,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:05:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/05/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:05:contents';var JSINFO = {"id":"saisp:labs:05:contents:04","namespace":"saisp:labs:05:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_drbd">04. [20p] DRBD</h3>
+<div class="level3">
+
+<p>
+Dorim sa asiguram replicarea continutului pentru clusterul configurat la punctul anterior. Vom folosi DRBD.
+</p>
+
+<p>
+<a href="../../../../../../_detail/saisp/labs/05/contents/lab05-drbd.jpg%3Fid=saisp%253Alabs%253A05%253Acontents%253A04.html" class="media" title="saisp:labs:05:contents:lab05-drbd.jpg"><img src="../../../../../../_media/saisp/labs/05/contents/lab05-drbd.jpg" class="media" alt="" /></a>
+</p>
+
+<p>
+Vom folosi o legatura directa intre intefetele <code>eth1</code> ale nodurilor. Aceasta legatura va fi folosita pentru traficul de sincronizare si replicare al DRBD.
+</p>
+
+<p>
+Configurati adresele IP pe legatura dedicata:
+</p>
+<pre class="code">saisp-vm-2# ip addr add 10.0.23.2/24 dev eth1
+saisp-vm-2# ip link set eth1 up</pre>
+<pre class="code">saisp-vm-3# ip addr add 10.0.23.3/24 dev eth1
+saisp-vm-3# ip link set eth1 up</pre>
+
+<p>
+Pachetul <code>drbd8-utils</code> este deja instalat.
+</p>
+
+<p>
+Observati faptul ca fisierele <strong>/etc/drbd.conf</strong> si <strong>/etc/drbd.d/global_common.conf</strong> sunt deja create.
+Noi vom defini o noua resursa, in fisierul <strong>/etc/drbd.d/r0.res</strong>. Resursa va avea urmatoarele caracteristici:
+</p>
+<ul>
+<li class="level1"><div class="li"> numele resursei: <strong>r0</strong>;</div>
+</li>
+<li class="level1"><div class="li"> device-ul DRBD: <strong>/dev/drbd0</strong>;</div>
+</li>
+<li class="level1"><div class="li"> partitia de pe disc: <strong>/dev/sdb1</strong>;</div>
+</li>
+<li class="level1"><div class="li"> metadate stocate <strong>intern</strong>.</div>
+</li>
+</ul>
+
+<p>
+<strong>ATENTIE!</strong> Urmatoarele task-uri trebuie efectuate pe <strong>ambele noduri</strong>.
+</p>
+
+<p>
+Creati fisierul <strong>/etc/drbd.d/r0.res</strong>, cu urmatorul continut:
+</p>
+<pre class="code">resource r0 {
+  on saisp-vm-2 {
+    device    /dev/drbd0;
+    disk      /dev/sdb1;
+    address   10.0.23.2:7788;
+    meta-disk internal;
+  }
+  on saisp-vm-3 {
+    device    /dev/drbd0;
+    disk      /dev/sdb1;
+    address   10.0.23.3:7788;
+    meta-disk internal;
+  }
+}</pre>
+
+<p>
+Restartati serviciul <strong>drbd</strong>:
+</p>
+<pre class="code">/etc/init.d/drbd restart</pre>
+
+<p>
+Initializati cu zero partitia <strong>/dev/sdb1</strong>:
+</p>
+<pre class="code">dd if=/dev/zero of=/dev/sdb1 bs=64K</pre>
+
+<p>
+Creati metadatele DRBD pentru resursa <strong>r0</strong>:
+</p>
+<pre class="code">drbdadm create-md r0</pre>
+
+<p>
+Atasati resursa la block-device:
+</p>
+<pre class="code">drbdadm attach r0</pre>
+
+<p>
+Verificati starea DRBD:
+</p>
+<pre class="code">cat /proc/drbd
+drbd-overview</pre>
+
+<p>
+<strong>ATENTIE!</strong> Sincronizarea initiala trebuie pornita doar pe unul dintre noduri!
+Pe nodul care este activ in cluster (are adresa 10.0.0.50 pe interfata eth0:0), porniti sincronizarea initiala:
+</p>
+<pre class="code">drbdadm -- --overwrite-data-of-peer primary r0</pre>
+
+<p>
+Verificati ca sincronizarea a inceput:
+</p>
+<pre class="code">drbd-overview</pre>
+
+<p>
+In timp ce sincronizarea se efectueaza:
+</p>
+
+<p>
+Creati un sistem de fisiere <strong>ext4</strong> pe device-ul <strong>/dev/drbd0</strong>. Acest lucru poate fi efectuat <strong>doar</strong> pe nodul de pe care ati pornit sincronizarea:
+</p>
+<pre class="code">mkfs.ext4 /dev/drbd0</pre>
+
+</div>
+</div>
+</body>
+</html>

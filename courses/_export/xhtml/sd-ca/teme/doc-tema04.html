@@ -1,0 +1,304 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>sd-ca:teme:doc-tema04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-03-02T18:48:02+0200"/>
+<meta name="keywords" content="sd-ca,teme,doc-tema04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=sd-ca:teme"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="doc-tema04.html"/>
+<link rel="canonical" href="../../../../sd-ca/teme/doc-tema04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sd-ca:teme';var JSINFO = {"id":"sd-ca:teme:doc-tema04","namespace":"sd-ca:teme","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="doc-tema04.html#codificare_huffman_folosind_arbori_binari">Codificare Huffman folosind arbori binari</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level3"><div class="li"><a href="doc-tema04.html#informatia_codificarea_informatiei">Informatia. Codificarea informatiei</a></div></li>
+<li class="level3"><div class="li"><a href="doc-tema04.html#codificarea_huffman">Codificarea Huffman</a></div></li>
+<li class="level3"><div class="li"><a href="doc-tema04.html#algoritmul_huffman_de_construire_a_arborelui_binar_de_simboluri">Algoritmul Huffman de construire a arborelui binar de simboluri</a></div></li>
+<li class="level3"><div class="li"><a href="doc-tema04.html#credits">Credits</a></div></li>
+<li class="level3"><div class="li"><a href="doc-tema04.html#bibliografie">Bibliografie</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="codificare_huffman_folosind_arbori_binari">Codificare Huffman folosind arbori binari</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Codificare Huffman folosind arbori binari" [1-57] -->
+<h3 class="sectionedit2" id="informatia_codificarea_informatiei">Informatia. Codificarea informatiei</h3>
+<div class="level3">
+
+<p>
+Notiunea de informatie poate fi privita din mai multe puncte de vedere, precum cel lexicografic (ce se refera la notiuni si fapte), sau filosofic. In inginerie, totusi, informatia are o definitie matematica riguroasa. Ea reprezinta o inlaturare a incertitudinii, si este o marime a carei unitate de masura este bitul. Astfel pentru reprezentarea unei informatii, vom avea nevoie de un anumit numar de biti de informatie (nu neaparat intreg, dupa cum vom vedea mai jos!).
+</p>
+
+<p>
+Intuitiv, ne putem gandi ca odata ce avem mai multi biti de informatie, stim mai multe despre entitatea respectiva, deci incertitudinea este mai bine inlaturata. De exemplu, un numar real este mai bine reprezentat de tipul double (pe 64 de biti), decat de tipul float (pe 32 de biti), iar precizia calculelor este mai buna. Deci putem spune ca tipul double contine mai multa informatie decat tipul float. (Ca un fapt divers, pentru a inlatura in intregime incertitudinea, am avea nevoie de un numar infinit de biti pentru un numar real oarecare.)
+</p>
+
+<p>
+Bine-nteles, in inginerie este nevoie de definitii riguroase, iar definitia cantitatii de informatie este legata de teoria probabilitatilor. Aceasta spune ca pentru o multime formata din n obiecte (simboluri), cu proprietatea ca fiecare obiect i poseda probabilitatea pi de aparitie, incertitudinea (cantitatea de informatie necesara reprezentarii) pentru acest sistem este definita ca:
+</p>
+
+<p>
+H = - p1 * log2(p1) - … - pn * log2(pn)
+</p>
+
+<p>
+Astfel, de exemplu, daca avem o urna cu 8 bile, si extragem o bila intamplare, stiind ca fiecare bila poate fi extrasa cu o probabilitate egala pi = 1/8, atunci cantitatea de informatie, conform formulei de mai sus, este:
+</p>
+
+<p>
+H = - 8 * 1/8 * log2(1/8) = - (-3) = 3
+</p>
+
+<p>
+Deci pentru reprezentarea rezultatului acestui eveniment, avem nevoie de 3 biti de informatie. Acest rezultat era oarecum de asteptat, daca ne gandim ca putem numerota fiecare bila de la 0 la 7, si pentru acest interval de numere putem folosi 3 biti de date.
+</p>
+
+<p>
+Un alt exemplu, de data aceasta mai abstract si mai apropiat de lumea calculatoarelor, este legat de cantitatea de informatie asociata unei litere a alfabetului, care poate aparea intr-un sir de litere. Stiind ca poate fi vorba de oricare dintre cele 26 de litere, cu aceeasi probabilitate de aparitie (1/26), informatia asociata unei litere este:
+</p>
+
+<p>
+H = - 26 * 1/26 * log2(1/26) = 4.7 biti
+</p>
+
+<p>
+Deci pentru a reprezenta o litera din alfabet, avem nevoie de 4.7 biti de informatie. Insa este clar ca nici o masina numerica nu poate lucra cu un numar fractional de biti, astfel ca pentru a reprezenta o litera din alfabet, vor fi necesari minim 5 biti numerici. In acest moment se poate sesiza diferenta clara intre informatia teoretica, si codificarea acesteia, adica modul in care aceasta este reprezentata pe masina numerica.
+</p>
+
+<p>
+De exemplu, pentru numerele de la 0 la 9, informatia asociata unei cifre este 3.32 biti, insa o cifra este reprezentata de obicei pe 4 biti, iar codificarea este asociata ordinii numerice in baza 2: 0000 pentru cifra 0, 0001 pentru 1, 0010 pentru 2, pana la 1001 pentru cifra 9. Acest tip de codificare este numit, din motive evidente, cu lungime fixa. Fiecare cifra (simbol), are asociat acelasi numar de biti. Avantajul major al acestui tip de codificare este simplitatea cu care pot fi manipulate reprezentarile simbolurilor, care pot fi aliniate foarte usor in memorie, iar acest lucru il face foarte popular in informatica. Numerele intregi sunt reprezentate in lungime fixa pe 8, 16, 32 sau 64 de biti, numerele reale pe 32 sau 64 de biti, s.a.m.d.
+</p>
+
+<p>
+Cu toate acestea, reprezentarea pe lungime fixa are un dezavantaj: numarul de biti folositi pentru reprezentare nu este neaparat minim! De exemplu, pentru o cifra sunt folositi 4 biti (numerici) in loc de 3.32 (teoretici). Pentru un sir de 1000 de cifre, vor fi folositi 4000 de biti, in loc de aproximativ 3320. Teoria afirma ca numarul de biti de informatie (teoretici) este minimul posibil care poate fi atins de orice codificare aleasa. Teoria compresiei datelor se ocupa tocmai cu acest lucru: gasirea de metode de codificare a simbolurilor, astfel incat numarul de biti necesari pentru reprezentarea datelor (vazute ca siruri de simboluri), sa fie cat mai mic si mai aproape de limita teoretica.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Informatia. Codificarea informatiei" [58-4359] -->
+<h3 class="sectionedit3" id="codificarea_huffman">Codificarea Huffman</h3>
+<div class="level3">
+
+<p>
+Este evident, din expunerea precedenta, ca folosirea unei codificari cu lungime fixa nu va fi optima in orice situatie. O varianta mai buna de codificare, desi mai costisitoare din punct de vedere computational, este cea cu lungime variabila, in care lungimea fiecarui simbol poate diferi.
+</p>
+
+<p>
+O prima problema care se ridica la codificarea cu lungime variabila este cum se face delimitarea simbolurilor intr-un sir de date. La codificarea cu lungime fixa lucrurile stateau foarte simplu: la fiecare n biti gaseam un nou simbol. Insa in cazul lungimii variabile, secretul sta in gasirea unui algoritm de generare al codificarilor pentru fiecare simbol, astfel incat sa ne putem da seama cand se termina un simbol si putem sa trecem la citirea urmatorului.
+</p>
+
+<p>
+Codificarea Huffman este o varianta foarte populara de codificare cu lungime variabila. Ea presupune ca datele sunt reprezentate, in general, ca un sir de simboluri (octeti, cifre, litere, de exemplu), unde fiecare simbol ai din multimea tuturor simbolurilor posibile (alfabetul A = {a1, a2, …, an} ), are asociata o anumita probabilitate de aparitie pi. Probabilitatile se pot determina fie estimativ (de exemplu pe baza tipului sirului de date: text, imagine, cod executabil), fie inspectand sirul de la cap la coada si numarand aparitiile fiecarui simbol, apoi impartind fiecare contor la numarul total de simboluri.
+</p>
+
+<p>
+Vom considera in continuare, ca exemplu, codificarea Huffman a sirului de date
+</p>
+
+<p>
+“ana are mere”
+</p>
+
+<p>
+Alfabetul A este A =  {&#039;a&#039;, &#039;n&#039;, &#039; &#039;, &#039;r&#039;, &#039;e&#039;, &#039;m&#039;}. Sirul de date are lungimea totala 12, iar pe baza frecventei fiecarui simbol in sir, putem asocia fiecarui simbol probabilitatile de mai jos:
+</p>
+<div class="table sectionedit4"><table class="inline">
+	<tr class="row0">
+		<td class="col0"><strong>Simbol</strong></td><td class="col1"><strong>Probabilitate</strong></td>
+	</tr>
+	<tr class="row1">
+		<td class="col0">&#039;a&#039;</td><td class="col1">1/4</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">&#039;n&#039;</td><td class="col1">1/12</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">&#039; &#039;</td><td class="col1">1/6</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">&#039;r&#039;</td><td class="col1">1/6</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">&#039;e&#039;</td><td class="col1">1/4</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">&#039;m&#039;</td><td class="col1">1/12</td>
+	</tr>
+</table></div>
+<!-- EDIT4 TABLE [6060-6152] -->
+<p>
+Conform formulei cantatii de informatie necesare reprezentarii unui simbol, in cazul nostru un simbol se va reprezenta teoretic prin
+</p>
+
+<p>
+H = 1/4*log2(4) + 1/12*log2(12) + 1/6*log2(6) + 1/6*log2(6) + 1/4*log2(4) + 1/12*log2(12) = 2.45 biti
+</p>
+
+<p>
+Daca vom asocia fiecarui simbol un numar de biti (numerici), I1, …, In, atunci numarul mediu real de biti al unui simbol va fi media ponderata a lungimilor acestora, cu ponderea egala cu probabilitatile de aparitie:
+</p>
+
+<p>
+Imed = I1 * p1 + … + In * pn
+</p>
+
+<p>
+Algoritmul Huffman incearca sa apropie valoarea Imed cat mai mult de cea teoretica, H. Ideea de la baza compresiei Huffman este de a asocia simbolurilor cu ponderea cea mai mare (adica care apar cel mai frecvent in text), coduri de lungime cat mai mica, si viceversa pentru simbolurile cu aparitie foarte rara, si in acelasi timp codurile sa poata fi usor delimitate intr-un sir continuu de simboluri (a se vedea problematica de la codificarile cu lungime variabila).
+</p>
+
+<p>
+Acest lucru este realizat intr-un mod foarte ingenios plasand fiecare simbol intr-un mod convenabil ales in frunzele unui arbore binar, iar codificarea simbolurilor sa fie de fapt calea parcursa prin arbore, de la radacina spre fiecare simbol. Algoritmul Huffman reprezinta algoritmul de constructie al acestui arbore, pornind de la o multime de simboluri A, fiecare avand asociat probabilitatea pi.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Codificarea Huffman" [4360-7512] -->
+<h3 class="sectionedit5" id="algoritmul_huffman_de_construire_a_arborelui_binar_de_simboluri">Algoritmul Huffman de construire a arborelui binar de simboluri</h3>
+<div class="level3">
+
+<p>
+Arborele binar de simboluri contine in fiecare frunza un simbol, alaturi de probabilitatea sa de aparitie. Fiecare nod intern al arborelui va contine doar un numar, si anume suma probabilitatilor simbolurilor descendente. Astfel radacina arborelui va contine probabilitatea 1, intrucat toate simbolurile din alfabet ii sunt descendente. Parcurcand arborele de la radacina catre o frunza, se poate genera codul asociat simbolului din frunza respectiva: la fiecare pas al parcurgerii, pentru o alegere a nodului stang se adauga un &#039;0&#039;, iar pentru o alegere a nodului drept, se adauga un &#039;1&#039;.
+</p>
+
+<p>
+Mai jos este prezentat algoritmul Huffman de constructie a arborelui de simboluri:
+#Construieste cate un nod frunza pentru fiecare simbol si probabilitate asociata.
+#Adauga nodurile frunza intr-o coada, sortandu-le in ordinea crescatoare a probabilitatilor, de la cele mai rare simboluri la cele mai frecvente.
+#Atata timp cat coada contine mai mult de un nod, executa:
+##Extrage primele 2, cele mai infrecvente noduri, si creeaza un alt nod, cu probabilitatea egala cu suma probabilitatilor celor doua noduri.
+##Adauga cele 2 noduri extrase ca descendenti stang, respectiv drept, la noul nod creat.
+##Insereaza nodul creat inapoi in coada, pastrand ordinea de sortare in functie de probabilitatile nodurilor
+#Coada va contine un singur nod, si anume radacina arborelui Huffman, care va avea probabilitatea 1.
+</p>
+
+<p>
+Figura de mai jos prezinta procesul de constructie al arborelui Huffman pentru exemplul considerat:
+</p>
+
+<p>
+<a href="../../../../_detail/sd-ca/teme/huffman1.png%3Fid=sd-ca%253Ateme%253Adoc-tema04.html" class="media" title="sd-ca:teme:huffman1.png"><img src="../../../../_media/sd-ca/teme/huffman1.png" class="mediacenter" alt="" /></a>
+</p>
+
+<p>
+<a href="../../../../_detail/sd-ca/teme/463px-huffman2.png%3Fid=sd-ca%253Ateme%253Adoc-tema04.html" class="media" title="sd-ca:teme:463px-huffman2.png"><img src="../../../../_media/sd-ca/teme/463px-huffman2.png" class="mediacenter" alt="" /></a>
+</p>
+
+<p>
+Pe baza arborelui Huffman generat, fiecare simbol va avea urmatoarea codificare:
+</p>
+<div class="table sectionedit6"><table class="inline">
+	<tr class="row0">
+		<td class="col0"><strong>Simbol</strong></td><td class="col1"><strong>Codificare</strong></td>
+	</tr>
+	<tr class="row1">
+		<td class="col0">&#039;a&#039;</td><td class="col1">01</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0">&#039;n&#039;</td><td class="col1">1100</td>
+	</tr>
+	<tr class="row3">
+		<td class="col0">&#039; &#039;</td><td class="col1">111</td>
+	</tr>
+	<tr class="row4">
+		<td class="col0">&#039;r&#039;</td><td class="col1">00</td>
+	</tr>
+	<tr class="row5">
+		<td class="col0">&#039;e&#039;</td><td class="col1">10</td>
+	</tr>
+	<tr class="row6">
+		<td class="col0">&#039;m&#039;</td><td class="col1">1101</td>
+	</tr>
+</table></div>
+<!-- EDIT6 TABLE [9246-9332] -->
+<p>
+Astfel, sirul “ana are mere” va fi codificat astfel:
+</p>
+
+<p>
+01 1100 01 111 01 00 10 111 1101 10 00 10
+</p>
+
+<p>
+iar numarul total de biti este 30. Intrucat teoria prezicea un numar de biti minim de H*lungime = 2.45 * 12 = 29.4 biti, putem afirma cu incredere ca algoritmul Huffman a comprimat bine datele.
+</p>
+
+<p>
+Daca am fi folosit un cod cu lungime fixa (in cazul nostru lungimea fixa minima ar fi fost de 3 biti), numarul total de biti necesari pentru sirul nostru ar fi fost 3*12 = 36 de biti, semnificativ mai mare decat rezultatul obtinut. Mai mult decat atat, daca am fi reprezentat sirul de caractere ca un vector de coduri <abbr title="American Standard Code for Information Interchange">ASCII</abbr> (8 biti), ar fi fost necesar un numar de 8*12 = 96 de biti pentru reprezentare!
+</p>
+
+<p>
+Astfel, pentru a decomprima un fisier arhivat folosind compresia Huffman, avem nevoie de arborele Huffman (codificat cumva la inceputul arhivei), si de sirul de biti de procesat. Observati ca putem parcurge sirul si sa identificam fiecare simbol in parte: ne pozitionam in radacina arborelui, si pentru fiecare 0 sau 1 citit, avansam in descendentul stang, respectiv drept, pana cand ajungem la o frunza. Atunci stim ca am parcurs un cod intreg, si simbolul codat este continut in fruza respectiva. Apoi ne resetam pozitia pe nodul radacina, pentru a citi urmatorul simbol, si asa mai departe.
+</p>
+
+<p>
+Aparent s-ar putea spune ca bitii castigati la compresie sunt cheltuiti pentru reprezentarea arborelui Huffman din arhiva. Acest lucru este adevarat pentru fisiere mici, unde compresia nu este asa de eficienta. Insa odata cu cresterea dimensiunii fisierului, arborele de simboluri ramane practic constant, insa datele sunt micsorate semnificativ.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Algoritmul Huffman de construire a arborelui binar de simboluri" [7513-10973] -->
+<h3 class="sectionedit7" id="credits">Credits</h3>
+<div class="level3">
+
+<p>
+Întocmită în original de Ştefan Bucur; întreținută de Echipa SD
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Credits" [10974-11064] -->
+<h3 class="sectionedit8" id="bibliografie">Bibliografie</h3>
+<div class="level3">
+
+<p>
+* Huffman Coding (Wikipedia) - <a href="http://en.wikipedia.org/wiki/Huffman_coding" class="urlextern" title="http://en.wikipedia.org/wiki/Huffman_coding"  rel="nofollow">http://en.wikipedia.org/wiki/Huffman_coding</a>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Bibliografie" [11065-] --></div>
+</body>
+</html>

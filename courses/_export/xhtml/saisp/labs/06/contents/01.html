@@ -1,0 +1,132 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:06:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-30T15:51:57+0300"/>
+<meta name="keywords" content="saisp,labs,06,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:06:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/06/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:06:contents';var JSINFO = {"id":"saisp:labs:06:contents:01","namespace":"saisp:labs:06:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_partajarea_de_fisiere_folosind_protocolul_nfs">01. [10p] Partajarea de fișiere folosind protocolul NFS</h3>
+<div class="level3">
+
+<p>
+În general, în centrele de date, dezvoltarea puterii de calcul a fost realizată pe orizontală (scale-out), preferându-se achiziționarea mai multor sisteme cu putere de calcul medie decât super-calculatoare integrate. S-a pus problema ca datele stocate să fie accesibile din orice nod al rețelei. Un serviciu ce poate oferi această facilitate este NFS (Network File System). În arhitectura <code>NFS</code> există un server de stocare care va pune la dispoziție un subset al ierarhiei sale de directoare altor stații numite în continuare clienți.
+</p>
+
+<p>
+Vom instala serverul de NFS pe stația <code>storage1</code> (pe distribuții Debian-based pachetul poartă numele <code>nfs-kernel-server</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> nfs-kernel-server</pre>
+
+<p>
+Vom crea un director <code>/nfs</code> cu un fișier <code>test-nfs</code> în acesta:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span>nfs
+<span class="co4">root@storage1:~# </span><span class="kw3">echo</span> <span class="kw3">test</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>test-nfs</pre>
+
+<p>
+Toate directoarele exportate către clienți vor fi configurate în fișierul <code>/etc/exports</code>. Vom exporta directorul <code>/nfs</code> creat anterior:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>exports <span class="sy0">|</span><span class="kw2">grep</span> <span class="sy0">/</span>nfs
+<span class="sy0">/</span>nfs    192.168.1.2<span class="br0">&#40;</span>rw,<span class="kw2">sync</span>,no_subtree_check<span class="br0">&#41;</span></pre>
+
+<p>
+Pe prima poziție se află directorul care va fi exportat (<code>/nfs</code>), pe a doua poziție se află adresa IP a clientului care va putea accesa acest director, iar în paranteză se află diferite atribute:
+</p>
+<ul>
+<li class="level1"><div class="li"> rw (read/write) - ierarhia de directoare va putea fi citită și scrisă</div>
+</li>
+<li class="level1"><div class="li"> sync - toate datele scrise de către clienți vor ajunge la server în momentul apelului de sistem. Nu se va stoca informația în buffere. Acest lucru este necesar în momentul în care mai multe entități folosesc același director exportat pentru a asigura consistența</div>
+</li>
+<li class="level1"><div class="li"> no_subtree_check - la accesarea oricărui fișier din sistemul de directoare nu se face nici o verificare asupra existenței acelei căi de acces. Acest lucru crește performanța serviciului NFS, dar poate cauza probleme în situații în care un client accesează un anume fișier, iar altul îl redenumește</div>
+</li>
+</ul>
+
+<p>
+După configurarea fișierului <code>/etc/exports</code> trebuie resetat serviciul NFS:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>nfs-kernel-server restart</pre>
+
+<p>
+Pentru a testa funcționalitatea vom crea directorul <code>/nfs</code> pe stația <code>storage2</code> și vom monta directorul exportat de <code>storage1</code> (este necesar să aveți instalat pachetul <code>nfs-common</code>):
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">apt-get install</span> nfs-common
+nfs-common is already the newest version.
+<span class="co4">root@storage2:~# </span><span class="kw2">mkdir</span> <span class="sy0">/</span>nfs
+<span class="co4">root@storage2:~# </span><span class="kw2">mount</span> <span class="re5">-t</span> nfs storage1:<span class="sy0">/</span>nfs <span class="sy0">/</span>nfs
+<span class="co4">root@storage2:~# </span><span class="kw2">ls</span> <span class="re5">-l</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>
+total <span class="nu0">4</span>
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root <span class="nu0">5</span> Mar <span class="nu0">29</span> <span class="nu0">16</span>:<span class="nu0">52</span> test-nfs</pre>
+
+<p>
+În general, este o bună practică să montăm directorul exportat în aceeași ierarhie și pe client, pentru ca sistemul de stocare să fie transparent utilizatorilor, indiferent de nodul folosit.
+</p>
+
+<p>
+Încercați să creați un nou fișier sau să scrieți în fișierul existent:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">touch</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>test-nfs2
+touch: cannot <span class="kw2">touch</span> ‘<span class="sy0">/</span>nfs<span class="sy0">/</span>test-nfs2’: Permission denied</pre>
+
+<p>
+Implicit serverul de NFS nu permite modificarea ierarhiei de directoare exportate dacă aceasta aparține utilizatorului privilegiat <code>root</code>. Pentru a permite acest lucru trebuie adăugată opțiunea <code>no_root_squash</code> la exportarea directorului și resetarea serverului de NFS:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>exports <span class="sy0">|</span><span class="kw2">grep</span> squash
+<span class="sy0">/</span>nfs    192.168.1.2<span class="br0">&#40;</span>rw,<span class="kw2">sync</span>,no_subtree_check,no_root_squash<span class="br0">&#41;</span>
+<span class="co4">root@storage1:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>nfs-kernel-server restart</pre>
+
+<p>
+Observați faptul că acum putem modifica ierarhia de directoare:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">touch</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>test-nfs2
+<span class="co4">root@storage2:~# </span><span class="kw2">ls</span> <span class="re5">-l</span> <span class="sy0">/</span>nfs<span class="sy0">/</span>
+total <span class="nu0">4</span>
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root <span class="nu0">5</span> Mar <span class="nu0">29</span> <span class="nu0">16</span>:<span class="nu0">52</span> test-nfs
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root <span class="nu0">0</span> Mar <span class="nu0">29</span> <span class="nu0">17</span>:<span class="nu0">14</span> test-nfs2</pre>
+
+<p>
+Montați directorul <code>/nfs</code> și pe stația <code>storage3</code>. Nu uitați să adăugați adresa IP a acesteia în fișierul de configurare al serverului NFS și să îl resetați pe acesta (Hint: <code>man exports; /IP networks</code>).
+</p>
+
+</div>
+</div>
+</body>
+</html>

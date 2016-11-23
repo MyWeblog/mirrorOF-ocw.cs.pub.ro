@@ -1,0 +1,30 @@
+    
+    
+
+#include <sys/types.h>	/* open */
+#include <sys/stat.h>	/* open */
+#include <fcntl.h>	/* O_RDWR, O_CREAT, O_TRUNC, O_WRONLY */
+#include <unistd.h>	/* close */
+
+#include "utils.h"
+
+int main(void)
+{
+	int rc;
+	int fd1, fd2;
+
+	fd1 = open("in.txt", O_RDWR | O_CREAT, 0644);
+	DIE(fd1 < 0, "open in.txt");
+
+	/* will fail if out.txt does not exist */
+	fd2 = open("out.txt", O_WRONLY | O_TRUNC);
+	DIE(fd2 < 0, "open out.txt");
+
+	rc = close(fd1);
+        DIE(rc < 0, "close fd1");
+        
+        rc = close(fd2);
+        DIE(rc < 0, "close fd2");
+
+	return 0;
+}

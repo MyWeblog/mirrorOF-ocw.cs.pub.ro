@@ -1,0 +1,149 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:03:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-10T17:46:01+0200"/>
+<meta name="keywords" content="saisp,labs,03,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:03:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/03/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:03:contents';var JSINFO = {"id":"saisp:labs:03:contents:04","namespace":"saisp:labs:03:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_snmp_server_pe_linux">04. [15p] SNMP server pe Linux</h3>
+<div class="level3">
+
+<p>
+În exercițiul <a href="../../../../../../saisp/labs/03/contents/03.html" class="wikilink1" title="saisp:labs:03:contents:03">03. [15p] Configurare server SNMP pe echipamente CISCO</a> am configurat serverul de SNMP pe rutere CISCO. După cum am precizat anterior SNMP este implementat în general pe toate echipamentele, inclusiv pe sistemele Linux. 
+</p>
+
+<p>
+Pe statia <code>gateway</code>, vom instala pachetul <code>snmpd</code> care conține serverul de SNMP:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">apt-get install</span> snmpd</pre>
+
+<p>
+În mod implicit acesta ascultă doar pe <code>localhost</code>. Trebuie să modificăm linia <code>agentAddress  udp:127.0.0.1:161</code> în <code>agentAddress  udp:161</code> (pe orice intefață) din fișierul de configurare al <code>snmpd</code> (<code>/etc/snmp/snmpd.conf</code>) și să resetăm daemonul (<code>/etc/init.d/snmpd restart</code>).
+</p>
+
+<p>
+Dorim să realizăm o interogare de pe stația <code>monitor</code> către stația <code>gateway</code> prin care să listăm toate interfețele:
+</p>
+<pre class="code">root@monitor:~# snmpwalk -v2c -c public 192.168.1.3 IF-MIB::ifName
+IF-MIB::ifName = No more variables left in this MIB View (It is past the end of the MIB tree)</pre>
+
+<p>
+Acest comportament e cauzat tot de o configurație a daemonului <code>snmpd</code>. În fișierul de configurare pe linia în care se specifică comunitatea (parola) <code>rocommunity public  default    -V systemonly</code> se observă opțiunea <code>-V systemonly</code> care limitează proprietățile expuse doar la cele legate de starea sistemului (exemplu: uptime-ul), <code>systemonly</code> fiind un subset de OID-uri definit mai sus în fișier.
+</p>
+
+<p>
+Eliminăm acea opțiune, resetăm serviciul <code>snmpd</code> și refacem interogarea:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>snmp<span class="sy0">/</span>snmpd.conf <span class="sy0">|</span><span class="kw2">grep</span> rocomm
+<span class="co0"># rocommunity public  default    -V systemonly</span>
+rocommunity public  default
+<span class="co4">root@gateway:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>snmpd restart
+<span class="br0">&#91;</span>....<span class="br0">&#93;</span> Restarting network management services::  snmpd
+&nbsp;
+<span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.3 IF-MIB::ifName
+IF-MIB::ifName.1 = STRING: lo
+IF-MIB::ifName.2 = STRING: eth0
+IF-MIB::ifName.3 = STRING: eth1</pre>
+
+<p>
+Cuvântul cheie <code>default</code> din linia ce configurează comunitatea <code>public</code> permite oricărei adresă IP să facă interogarea. Dacă dorim securizarea interogării la o clasă de adrese IP (192.168.1.0/24 în cazul nostru) putem înlocui <code>default</code> cu clasa respectivă (<code>192.168.1.0/24</code>):
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>snmp<span class="sy0">/</span>snmpd.conf<span class="sy0">|</span><span class="kw2">grep</span> <span class="nu0">192</span>.
+ rocommunity public  192.168.1.0<span class="sy0">/</span><span class="nu0">24</span>
+<span class="co4">root@gateway:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>snmpd restart
+<span class="br0">&#91;</span>....<span class="br0">&#93;</span> Restarting network management services::  snmpd
+&nbsp;
+<span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.3 IF-MIB::ifName
+IF-MIB::ifName.1 = STRING: lo
+IF-MIB::ifName.2 = STRING: eth0
+IF-MIB::ifName.3 = STRING: eth1
+&nbsp;
+<span class="co4">root@gateway:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.0.3
+Timeout: No Response from 192.168.0.3
+<span class="co4">root@gateway:~# </span><span class="kw2">tail</span> <span class="re5">-1</span> <span class="sy0">/</span>var<span class="sy0">/</span>log<span class="sy0">/</span>syslog
+Mar  <span class="nu0">9</span> <span class="nu0">19</span>:<span class="nu0">11</span>:<span class="nu0">51</span> gateway snmpd<span class="br0">&#91;</span><span class="nu0">4984</span><span class="br0">&#93;</span>: Connection from UDP: <span class="br0">&#91;</span>192.168.0.3<span class="br0">&#93;</span>:<span class="nu0">55453</span>-<span class="sy0">&gt;</span><span class="br0">&#91;</span>192.168.0.3<span class="br0">&#93;</span>:<span class="nu0">161</span></pre>
+
+<p>
+Se observă că la interogarea folosind adresa IP sursă <code>192.168.0.3</code>, serverul nu mai răspunde (automat se folosește adresa IP sursă <code>192.168.0.3</code> când facem interogarea de pe aceeași mașină către aceeași adresă IP).
+</p>
+
+<p>
+SNMP este un protocol extensibil putând adăuga noi proprietăți care să fie exportate serverelor de management/monitorizare. Putem crea script-uri custom care să preia valori din sistem și să le expună prin SNMP.
+</p>
+
+<p>
+Creați un script pe stația <code>gateway</code> care întoarce numărul de intrări din <code>passwd</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>tmp<span class="sy0">/</span>getUserNo
+<span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="kw3">echo</span> Numarul de utilizatori din sistem este: $<span class="br0">&#40;</span><span class="kw2">getent</span> <span class="kw2">passwd</span> <span class="sy0">|</span> <span class="kw2">wc</span> -l<span class="br0">&#41;</span>
+&nbsp;
+<span class="co4">root@gateway:~# </span><span class="kw2">chmod</span> +x <span class="sy0">/</span>tmp<span class="sy0">/</span>getUserNo
+<span class="co4">root@gateway:~# </span><span class="sy0">/</span>tmp<span class="sy0">/</span>getUserNo
+Numarul de utilizatori din sistem este: <span class="nu0">26</span></pre>
+
+<p>
+Dorim să exportăm rezultatul acestui script prin SNMP pentru ca stația <code>monitor</code> să poată să îl preia. În fișierul <code>/etc/snmp/snmpd.conf</code> avem la dispoziție comanda <code>extend</code> (<code>/extend</code>). Vom adăuga o nouă intrare de tipul <code>extend-sh</code>:
+</p>
+<pre class="code">root@gateway:~# cat /etc/snmp/snmpd.conf |grep getUser
+ extend-sh    userNo   /tmp/getUserNo
+root@gateway:~# /etc/init.d/snmpd restart
+[....] Restarting network management services::  snmpd</pre>
+
+<p>
+Conform comentariilor din <code>snmpd.conf</code> ieșirea scriptului este exportată prin proprietatea <code> NET-SNMP-EXTEND-MIB::nsExtendOutput1Table</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.3 NET-SNMP-EXTEND-MIB::nsExtendOutput1Table<span class="sy0">|</span><span class="kw2">grep</span> userNo
+NET-SNMP-EXTEND-MIB::nsExtendOutput1Line.<span class="st0">&quot;userNo&quot;</span> = STRING: Numarul de utilizatori din sistem este: <span class="nu0">26</span>
+NET-SNMP-EXTEND-MIB::nsExtendOutputFull.<span class="st0">&quot;userNo&quot;</span> = STRING: Numarul de utilizatori din sistem este: <span class="nu0">26</span>
+NET-SNMP-EXTEND-MIB::nsExtendOutNumLines.<span class="st0">&quot;userNo&quot;</span> = INTEGER: <span class="nu0">1</span>
+NET-SNMP-EXTEND-MIB::nsExtendResult.<span class="st0">&quot;userNo&quot;</span> = INTEGER: <span class="nu0">0</span></pre>
+
+<p>
+După cum se vede scriptul este executat, iar output-ul acestuia este trimis prin SNMP. Adăugați un nou user pe stația <code>gateway</code> și executați interogarea de mai sus. Observați modificarea valorii la <code>27</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1935 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>eim:laboratoare:laborator10</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-13T09:20:28+0300"/>
+<meta name="keywords" content="eim,laboratoare,laborator10"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=eim:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="laborator10.html"/>
+<link rel="canonical" href="../../../../eim/laboratoare/laborator10.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='eim:laboratoare';var JSINFO = {"id":"eim:laboratoare:laborator10","namespace":"eim:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator10.html#laborator_10_utilizarea_serviciilor_de_localizare">Laborator 10. Utilizarea Serviciilor de Localizare</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator10.html#configurare">Configurare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator10.html#dispozitiv_fizic">Dispozitiv Fizic</a></div></li>
+<li class="level3"><div class="li"><a href="laborator10.html#dispozitiv_virtual">Dispozitiv Virtual</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="laborator10.html#genymotion">Genymotion</a></div></li>
+<li class="level4"><div class="li"><a href="laborator10.html#avd">AVD</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator10.html#gestiunea_unei_harti_google">Gestiunea unei Hărți Google</a></div></li>
+<li class="level2"><div class="li"><a href="laborator10.html#gestiunea_locatiei_curente_printr-un_client_google_api">Gestiunea Locației Curente printr-un Client Google API</a></div></li>
+<li class="level2"><div class="li"><a href="laborator10.html#codificare_geografica_inversa_geocoding">Codificare Geografică Inversă (Geocoding)</a></div></li>
+<li class="level2"><div class="li"><a href="laborator10.html#implementarea_zonelor_de_restrictie_geografica_geofencing">Implementarea Zonelor de Restricție Geografică (Geofencing)</a></div></li>
+<li class="level2"><div class="li"><a href="laborator10.html#activitate_de_laborator">Activitate de Laborator</a></div></li>
+<li class="level2"><div class="li"><a href="laborator10.html#resurse_utile">Resurse Utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_10_utilizarea_serviciilor_de_localizare">Laborator 10. Utilizarea Serviciilor de Localizare</h1>
+<div class="level1">
+
+<p>
+Datele cu privire la localizare îmbunătățesc experiența utilizatorului, întrucât unele informații furnizate de aplicații pot fi contextualizate în funcție de regiunea în care acesta se găsește în mod curent. O astfel de oportunitate poate fi exploatată cu atât mai mult în cadrul dispozitivelor mobile, care dispun de componente specializate pentru determinarea automată a poziției geografice curente (senzor pentru GPS, folosirea informațiilor furnizate de celula de telefonie mobilă).
+</p>
+
+<p>
+În cadrul SDK-ului Android, sunt implementate <abbr title="Application Programming Interface">API</abbr>-uri pentru proiectarea și dezvoltarea unor aplicații care pun la dispoziția utilizatorilor informații cu privire la <strong>locația în care se află</strong>, disponibile prin intermediul unor metode, fără a fi necesară interacțiunea propriu-zisă cu componentele responsabile cu determinarea acestor date. Totodată, există posibilitatea de a identifica <strong>punctele de interes</strong> care se găsesc în proximitatea utilizatorului, la un moment dat de timp.
+</p>
+
+<p>
+Astfel, funcționalitățile oferite pentru dezvoltatori sunt:
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>furnizarea de servicii integrate pentru localizare</strong>, având următoarele caracteristici: nivelul de detaliu este determinat în funcție de specificațiile utilizatorului (precizie înaltă sau consum scăzut de energie), disponibilitate imediată a celei mai recente locații disponibile, optimizarea nivelului de utilizare al bateriei, luându-se în considerare solicitările existente raportat la senzorii care pot fi utilizați, flexibilitatea în gama de servicii oferite (utilizarea în interfața grafică a aplicației, cu un nivel de detaliu ridicat sau folosirea de către servicii, cu un nivel de detaliu scăzut);</div>
+</li>
+<li class="level1"><div class="li"> <strong>oferirea unei liste cu punctele de interes din proximitate</strong>, raportat la un anumit domeniu (locații turistice, tipuri de organizații), acestea putând fi marcate cu ajutorul unor controale grafice dedicate; pentru fiecare punct de interes pot fi obținute informații suplimentare (descrieri, conținut multimedia), acestea putând fi furnizate și de utilizator, fiind stocate ulterior într-o bază de date Google; se poate determina astfel și locația curentă  împreună cu alte repere din zonă; denumirile specifice ale locurilor respective precum și adresele corespunzătoare pot fi completate facil prin indicarea unor sugestii ce conțin variantele disponibile;</div>
+</li>
+<li class="level1"><div class="li"> transmiterea de notificări legate de <strong>restricția zonală</strong> (<em>eng.</em> geofencing), prin indicarea unor coordonate aflate în proximitate anumitor locații: pot fi gestionate mai multe arealuri geografice de acet tip concomitent, fără a avea un impact semnificativ asupra consumului de energie (actualizările cu privire la locația curentă sunt realizate în funcție de distanța față de zona marcată precum și de tipul de activitate - staționar sau în mișcare: mers, alergat, în vehicul, cu bicicleta); sunt oferite informații atât cu privire la intrarea în arealul geografic cât și cu privire la ieșirea din acesta;</div>
+</li>
+<li class="level1"><div class="li"> determinarea <strong>activității pe care utilizatorul o desfășoară în mod curent</strong> (staționar sau în mișcare: mers, alergat, în vehicul, cu bicicleta), fără un consum de baterie important (folosind senzori de putere mică); o astfel de funcționalitate este foarte utilă în contextul integrării cu aplicațiile care necesită actualizări cu privire la locația curentă, frecvența cu care sunt solicitate acest set de date fiind determinată de tipul de activitate aflat în desfășurare.</div>
+</li>
+</ol>
+
+<p>
+<p><div class="noteclassic">Este recomandat ca informațiile legate de localizarea dispozitivului mobil să se realizeze folosind <abbr title="Application Programming Interface">API</abbr>-ul pus la dispoziție de Google Play Services, în detrimentul mecanismelor precedente pentru localizare (disponibile în pachetul <code>android.location</code>).
+</div></p>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laborator 10. Utilizarea Serviciilor de Localizare" [1-3882] -->
+<h2 class="sectionedit2" id="configurare">Configurare</h2>
+<div class="level2">
+
+<p>
+<strong>1.</strong> În cadrul <a href="https://console.developers.google.com" class="urlextern" title="https://console.developers.google.com"  rel="nofollow">Consolei Google API</a>, se activează <abbr title="Application Programming Interface">API</abbr>-ul <em>Google Maps Android <abbr title="Application Programming Interface">API</abbr></em>, generându-se totodată și o cheie Android prin care aplicația care rulează pe dispozitivul mobil va putea să acceseze o astfel de funcționalitate.
+</p>
+
+<p>
+<p><div class="noteimportant">Trebuie să fiți autentificați folosind numele de utilizator și parola contului Google, altfel va trebui să vă creați un astfel de cont.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+În situația în care nu a fost creat un proiect Google <abbr title="Application Programming Interface">API</abbr> în prealabil, trebuie realizat acest lucru, prin selectarea opțiunii <em>Create Project…</em> din meniul <em>Select a Project</em>.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/createproject01.png" class="mediacenter" alt="" />
+</p>
+
+<p>
+Pentru fiecare proiect trebuie să se precizeze următorii parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> denumirea (se generează în mod automat un identificator pentru proiect);</div>
+</li>
+<li class="level1"><div class="li"> locația în care este găzduit motorul de aplicații;</div>
+</li>
+<li class="level1"><div class="li"> acordul pentru transmiterea de mesaje electronice cu privire la actualizări despre funcționalități, sugestii de performanță, sondaje în vederea precizării de opinii despre serviciile oferite, oferte speciale;</div>
+</li>
+<li class="level1"><div class="li"> acordul pentru folosirea serviciilor și a <abbr title="Application Programming Interface">API</abbr>-urilor asociate în acord cu termenii și condițiile specifice.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/createproject02.png" class="mediacenter" alt="" />
+</p>
+
+<p>
+În cazul în care există un singur proiect, acesta este selectat în mod implicit.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/createproject03.png" class="mediacenter" alt="" />
+
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> În secțiunea <em><abbr title="Application Programming Interface">API</abbr> Manager</em> → <em>Overview</em>, în categoria <em>Google Maps APIs</em>, se accesează opțiunea <em>Google Maps Android <abbr title="Application Programming Interface">API</abbr></em>, activându-se acest serviciu.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare01.png%3Fw=600&amp;tok=46d6a0" class="mediacenter" alt="" width="600" />
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare02.png" class="mediacenter" alt="" />
+</p>
+
+<p>
+Acest <abbr title="Application Programming Interface">API</abbr> nu va putea fi însă utilizat în situația în care nu sunt create credențialele (o cheie pentru <abbr title="Application Programming Interface">API</abbr>), necesare pentru a putea accesa orice serviciu Google.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare09.png" class="mediacenter" alt="" />
+</p>
+<ul>
+<li class="level1"><div class="li"> Credențialele pot fi obținute:</div>
+<ul>
+<li class="level2"><div class="li">  prin accesarea butonului <em>Go to Credentials</em>, care implică următoarele etape:<br/>
+<strong>1.</strong> indicarea tipului de <abbr title="Application Programming Interface">API</abbr> folosit (în cazul de față <em>Google Maps Android <abbr title="Application Programming Interface">API</abbr></em>) și a locației din care va fi accesat <abbr title="Application Programming Interface">API</abbr>-ul (în cazul de față <em>Android</em>), pentru a se identifica tipul de cheie care va fi generată<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare04.png" class="mediacenter" alt="" /><br/>
+<strong>2.</strong> specificarea unei denumiri asociate cheii pentru <abbr title="Application Programming Interface">API</abbr>;<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare05.png" class="mediacenter" alt="" /><br/>
+se va indica și comanda care va trebui rulată pentru generarea cheii respective; folosind utilitarul Java <code>keytool</code>, se generează semnătura digitală a mașinii de pe care se va dezvolta aplicația Android (pentru a putea utiliza acest utilitar, calea căte Java trebuie să se găsească în variabila de mediu <code>$PATH</code>, respectiv <code>%PATH</code>).<br/>
+Linux <pre class="code">student@eim2016:~$ export PATH=$PATH:/usr/local/java/jdk1.8.0_92/bin
+student@eim2016:~$ keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android</pre>
+
+<p>
+<br/>
+Windows 
+</p>
+<pre class="code">C:\Users\Student&gt; set PATH=%PATH%;C:\Program Files\Java\jdk_1.8.0_92\bin
+C:\Users\Student&gt; keytool -list -v -keystore &quot;%USERPROFILE%\.android\debug.keystore&quot; -alias androiddebugkey -storepass android -keypass android</pre>
+
+<p>
+<br/>
+Vor fi furnizate mai multe tipuri de amprente digitale, pentru cheia publică de tip Android fiind necesară cea de tip SHA-1 
+</p>
+<pre class="code">Alias name: androiddebugkey
+Creation date: Mar 5, 2015
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Android Debug, O=Android, C=US
+Issuer: CN=Android Debug, O=Android, C=US
+Serial number: 4a38a96a
+Valid from: Thu Mar 05 13:17:44 EET 2015 until: Sat Feb 25 13:17:44 EET 2045
+Certificate fingerprints:
+         MD5:  FC:1F:95:45:78:ED:50:C6:EE:8E:02:0A:3D:A5:80:D3
+         SHA1: C7:02:98:BB:AD:1C:6E:D1:3A:35:50:8B:88:78:B6:D3:B7:9F:66:C0
+         SHA256: B3:D9:98:33:92:71:2D:CE:65:19:89:73:2A:64:3C:97:B9:37:A1:93:8C:
+50:4F:E1:13:C4:21:C7:08:94:AC:A5
+         Signature algorithm name: SHA256withRSA
+         Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 99 78 63 24 A0 64 DF A8   67 45 8E 82 C6 8E 53 D1  .xc$.d..gE....S.
+0010: B8 C1 89 75                                        ...u
+]
+]</pre>
+
+<p>
+<br/>
+se accesează butonul <em>Add package name and fingerprint</em> pentru a se specifica denumirea pachetului corespunzător aplicației Android care va accesa <abbr title="Application Programming Interface">API</abbr>-ul respectiv și certificatul SHA-1<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare06.png" class="mediacenter" alt="" /><br/>
+<strong>3.</strong> se vizualizează cheia pentru <abbr title="Application Programming Interface">API</abbr> generată care poate fi utilizată pentru accesarea serviciilor Google<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare07.png" class="mediacenter" alt="" /><br/>
+În secțiunea <em>Credentials</em> pot fi vizualizate cheile pentru <abbr title="Application Programming Interface">API</abbr> generate anterior<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare08.png" class="mediacenter" alt="" />
+</p>
+</div>
+</li>
+<li class="level2"><div class="li"> în secțiunea <em>Credentials</em>, prin accesarea opțiunii <em>Create credentials</em> din care este selectat tipul de cheie necesar (în cazul de față <em><abbr title="Application Programming Interface">API</abbr> key</em>); dacă nu se cunoaște tipul de cheie necesar, se poate selecta valoarea <em>Help me choose</em><br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare10.png" class="mediacenter" alt="" /><br/>
+se indică tipul de cheie necesar, în funcție de locația pe care se găsește aplicația din care va fi accesat <abbr title="Application Programming Interface">API</abbr>-ul (în cazul de față <em>Android key</em>)<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare11.png" class="mediacenter" alt="" /></div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+<strong>2.</strong> Pe dispozitivul mobil (fizic sau virtual) pe care se va rula aplicația care accesează serviciul de localizare, trebuie să se găsească cea mai recentă versiune de <em>Google Play Services</em>, asociindu-se totodată contul de utilizator Google pentru care s-a generat cheia publică.
+</p>
+
+<p>
+<strong>3.</strong> Se instalează SDK-ul <em>Google Play Services</em>, necesar accesării serviciului de localizare prin intermediul unei aplicații Android.
+</p>
+<ul>
+<li class="level1"><div class="li"> Linux <pre class="code">student@eim2016:~$ cd /opt/android-sdk-linux/tools
+student@eim2016:/opt/android-sdk-linux/tools$ sudo ./android</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Windows - se deschide un terminal cu drepturi de administrator <pre class="code">C:\Users\Student&gt; cd &quot;..\..\Program Files (x86)\Android\android-sdk\tools&quot;
+C:\Program Files (x86)\Android\android-sdk\tools&gt;android.bat</pre>
+</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare12.png%3Fw=600&amp;tok=08c33c" class="mediacenter" alt="" width="600" />
+</p>
+
+<p>
+Astfel, se instalează următoarele pachete:
+</p>
+<ul>
+<li class="level1"><div class="li"> din secțiunea <em>Android 4.1.2 (<abbr title="Application Programming Interface">API</abbr> 16)</em>, pachetul <em>Google APIs</em>;</div>
+</li>
+<li class="level1"><div class="li"> din secțiunea <em>Extras</em>, pachetul <em>Google Play Services</em>.</div>
+</li>
+</ul>
+
+<p>
+Biblioteca pentru accesarea funcționalității oferite de serviciul de localizare se găsește la <code>&lt;android-sdk&gt;/extras/google/google_play_services/libproject/google-play-services_lib</code>.
+</p>
+
+<p>
+În mediul integrat de dezvoltare Eclipse, se realizează o referință către biblioteca <em>Google Play Services</em>, astfel descărcată.
+</p>
+<ul>
+<li class="level1"><div class="li"> se accesează <em>File</em> → <em>Import</em> → <em>Android</em> → <em>Existing Android Code Into Workspace</em><br/>
+<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare13.png%3Fw=500&amp;tok=200b7d" class="mediacenter" alt="" width="500" /></div>
+</li>
+<li class="level1"><div class="li"> se indică locația unde se găsește instalată biblioteca <em>Google Play Services</em>, creându-se o copie a acestuia în spațiul de lucru (se bifează opțiunea <em>Copy projects into workspace</em>)<br/>
+<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare14.png%3Fw=800&amp;tok=550820" class="mediacenter" alt="" width="800" /></div>
+</li>
+</ul>
+
+<p>
+<strong>4.</strong> În mediul integrat de dezvoltare preferat (Android Studio sau Eclipse), se creează un proiect corespunzător unei aplicații Android, având următoarele proprietăți:
+</p>
+<ul>
+<li class="level1"><div class="li"> denumirea pachetului care identifică aplicația Android în mod unic trebuie să fie aceeași cu cea precizată în momentul în care a fost generată cheia publică;</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> pentru <strong>Android Studio</strong>, trebuie ca în fișierul <code>build.gradle</code> să se specifice dependința către biblioteca Google Play Services (<code>com.google.android.gms:play-services</code>), în secțiunea <code>dependencies</code>: <pre class="code file build.gradle">...
+dependencies {
+  ...
+  compile 'com.google.android.gms:play-services:8.4.0'
+}</pre>
+</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> pentru <strong>Eclipse</strong>, trebuie să existe o referință către biblioteca <em>Google Play Services</em> (click dreapta pe denumirea proiectului în <em>Package Explorer</em> → <em>Properties</em>), se accesează opțiunea <em>Android</em> și se specifică referința către aceasta respectivă în secțiunea <em>Library</em> (accesând butonul <em>Add</em>)<br/>
+<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/configurare15.png%3Fw=800&amp;tok=7faf21" class="mediacenter" alt="" width="800" /></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> în fișierul <code>AndroidManifest.xml</code></div>
+<ul>
+<li class="level2"><div class="li"> se indică permisiunile necesare: <pre class="code xml"><span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.ACCESS_COARSE_LOCATION&quot;</span> <span class="re2">/&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.ACCESS_FINE_LOCATION&quot;</span> <span class="re2">/&gt;</span></span>    
+<span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.ACCESS_NETWORK_STATE&quot;</span> <span class="re2">/&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.INTERNET&quot;</span> <span class="re2">/&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;com.google.android.providers.gsf.permission.READ_GSERVICES&quot;</span> <span class="re2">/&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;</span> <span class="re2">/&gt;</span></span></pre>
+</div>
+<ul>
+<li class="level3"><div class="li"> <code>android.permission.ACCESS_COARSE_LOCATION</code> - obține locația utilizatorului folosind informațiile preluate prin rețele fără fir și datele corespunzătoare celulei în care se găsește dispozitivul mobil;</div>
+</li>
+<li class="level3"><div class="li"> <code>android.permission.ACCESS_FINE_LOCATION</code> - procură locația utilizatorului prin intermediul coordonatelor obținute de la sistemul de poziționare (GPS - <em>eng.</em> Global Positioning System);</div>
+</li>
+<li class="level3"><div class="li"> <code>android.permission.ACCESS_NETWORK_STATE</code> - verifică starea conectivității în rețea, astfel încât să se determine dacă este posibil ca datele să fie descărcate sau nu;</div>
+</li>
+<li class="level3"><div class="li"> <code>android.permission.INTERNET</code> - determină starea conectivității la Internet;</div>
+</li>
+<li class="level3"><div class="li"> <code>com.google.android.providers.gsf.permission.READ_GSERVICES</code> - preia informațiile puse la dispoziție prin intermediul Google Play Services;</div>
+</li>
+<li class="level3"><div class="li"> <code>android.permission.WRITE_EXTERNAL_STORAGE</code> - utilizează un spațiu de stocare pentru informațiile legate de hărți;</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> pentru redarea hărților, precum și pentru operațiile de tip zoom, este necesară folosirea bibliotecii OpenGL <pre class="code xml"><span class="sc3"><span class="re1">&lt;uses-feature</span></span>
+<span class="sc3">  <span class="re0">android:glEsVersion</span>=<span class="st0">&quot;0x00020000&quot;</span></span>
+<span class="sc3">  <span class="re0">android:required</span>=<span class="st0">&quot;true&quot;</span> <span class="re2">/&gt;</span></span> </pre>
+</div>
+</li>
+<li class="level2"><div class="li"> în secțiunea <code>&lt;application&gt; … &lt;/application&gt;</code> se indică:</div>
+<ul>
+<li class="level3"><div class="li"> cheia publică utilizată pentru accesarea funcționalității legată de serviciile de localizare <pre class="code xml"><span class="sc3"><span class="re1">&lt;metadata</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;com.google.android.maps.v2.API_KEY&quot;</span></span>
+<span class="sc3">  <span class="re0">android:value</span>=<span class="st0">&quot;AIzaSyACwBefUuAjtvG3Xi8kOD97Nrrzb2b1FrM&quot;</span> <span class="re2">/&gt;</span></span></pre>
+</div>
+</li>
+<li class="level3"><div class="li"> versiunea folosită pentru biblioteca Google Play Services (preluată din cadrul proiectului referit) <pre class="code xml"><span class="sc3"><span class="re1">&lt;metadata</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;com.google.android.gms.version&quot;</span></span>
+<span class="sc3">  <span class="re0">android:value</span>=<span class="st0">&quot;@integer/google_play_services_version&quot;</span> <span class="re2">/&gt;</span></span></pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> pentru a se asigura faptul că funcționalitatea nu va putea fi accesată decât prin intermediul aplicației Android, se va defini o permisiune, definindu-se o protecție la nivel de semnătură:<pre class="code xml"><span class="sc3"><span class="re1">&lt;permission</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;ro.pub.cs.systems.eim.lab10.googlemaps.permission.MAPS_RECEIVE&quot;</span></span>
+<span class="sc3">  <span class="re0">android:protectionLevel</span>=<span class="st0">&quot;signature&quot;</span> <span class="re2">/&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;uses-permission</span></span>
+<span class="sc3">  <span class="re0">android:name</span>=<span class="st0">&quot;ro.pub.cs.systems.eim.lab10.googlemaps.permission.MAPS_RECEIVE&quot;</span> <span class="re2">/&gt;</span></span></pre>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> se precizează regulile pentru obfuscatorul Proguard (în fișierul <code>proguard-project.txt</code> din rădăcina proiectului), astfel încât acesta să nu elimine clasele necesare:<br/>
+<pre class="code java"><span class="sy0">-</span>keep <span class="kw1">class</span> <span class="sy0">*</span> <span class="kw1">extends</span> java.<span class="me1">util</span>.<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+listresourcebundle"><span class="kw3">ListResourceBundle</span></a> <span class="br0">&#123;</span>
+  <span class="kw1">protected</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+object"><span class="kw3">Object</span></a><span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="br0">&#93;</span> getContents<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="sy0">-</span>keep <span class="kw1">public</span> <span class="kw1">class</span> com.<span class="me1">google</span>.<span class="me1">android</span>.<span class="me1">gms</span>.<span class="me1">common</span>.<span class="me1">internal</span>.<span class="me1">safeparcel</span>.<span class="me1">SafeParcelable</span> <span class="br0">&#123;</span>
+  <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw1">final</span> <span class="sy0">***</span> <span class="kw2">NULL</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="sy0">-</span>keepnames @com.<span class="me1">google</span>.<span class="me1">android</span>.<span class="me1">gms</span>.<span class="me1">common</span>.<span class="me1">annotation</span>.<span class="me1">KeepName</span> <span class="kw1">class</span> <span class="sy0">*</span>
+<span class="sy0">-</span>keepclassmembernames <span class="kw1">class</span> <span class="sy0">*</span> <span class="br0">&#123;</span>
+  @com.<span class="me1">google</span>.<span class="me1">android</span>.<span class="me1">gms</span>.<span class="me1">common</span>.<span class="me1">annotation</span>.<span class="me1">KeepName</span> <span class="sy0">*;</span>
+<span class="br0">&#125;</span>
+<span class="sy0">-</span>keepnames <span class="kw1">class</span> <span class="sy0">*</span> <span class="kw1">implements</span> android.<span class="me1">os</span>.<span class="me1">Parcelable</span> <span class="br0">&#123;</span>
+  <span class="kw1">public</span> <span class="kw1">static</span> <span class="kw1">final</span> <span class="sy0">**</span> CREATOR<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning">Pentru rularea proiectului Eclipse (construirea pachetului <code>.apk</code>) este necesară mai multă memorie ce trebuie alocată mașinii virtuale Java (datorate referinței către biblioteca Google Play Services), aceasta realizându-se prin intermediul valorilor furnizate în cadrul fișierului de configurare <code>eclipse.ini</code>:<br/>
+
+</p>
+<pre class="code">--launcher.XXMaxPermSize
+1024M
+--launcher.XXMaxPermSize
+1024m
+--launcher.appendVmargs
+-vmargs
+-Dosgi.requiredJavaVersion=1.7
+-Xms1024m
+-Xmx1024m</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Configurare" [3883-16323] -->
+<h3 class="sectionedit3" id="dispozitiv_fizic">Dispozitiv Fizic</h3>
+<div class="level3">
+
+<p>
+Pentru accesarea funcționalităților legate de locație pe dispozitivul fizic este necesar să se activeze opțiunea <em>Location</em> din secțiunea de configurări (<em>Settings</em> → <em>Personal</em>).
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/physical_device_01.png%3Fw=400&amp;tok=86eedd" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Valoarea configurației <em>Location</em> trebuie să aibă valoarea <em>On</em>, pentru ca serviciile de localizare să poată fi utilizate. De asemenea, sunt indicate aplicațiile Android care au folosit serviciile de localizare.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/physical_device_02.png%3Fw=400&amp;tok=99ad21" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Se poate controla acuratețea informațiilor furnizate, raportat la consumul de energie, prin intermediul opțiunilor disponibile în secțiunea <em>Location Mode</em> din secțiunea de configurări (<em>Settings</em> → <em>Personal</em> → <em>Location</em> → <em>Mode</em>).
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>High accuracy</em> - locația este determinată folosind toate resursele disponibile (sistemul global de poziționare GPS, rețelele mobile și fără fir);</div>
+</li>
+<li class="level1"><div class="li"> <em>Battery saving</em> - locația este determinată folosind doar informațiile furnizate de rețelele mobile și fără fir;</div>
+</li>
+<li class="level1"><div class="li"> <em>Device only</em> - locația este determinată folosind doar informațiile furnizate de sistemul global de poziționare GPS.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/physical_device_03.png%3Fw=400&amp;tok=ea66c2" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+<p><div class="notetip">Se recomandă ca determinarea locației să se realizeze folosind toate resursele disponibile la un moment dat de timp pentru o precizie cât mai mare (cu un consum de energie corespunzător).
+</div></p>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Dispozitiv Fizic" [16324-17864] -->
+<h3 class="sectionedit4" id="dispozitiv_virtual">Dispozitiv Virtual</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="genymotion">Genymotion</h4>
+<div class="level4">
+
+<p>
+Pentru accesarea funcționalităților legate de locație pe dispozitivul virtual Genymotion este necesar să se activeze serviciul GPS, accesibil din meniul lateral sau folosind combinația de taste Ctrl + 2 (se selectează valoarea <em>On</em>).
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/genymotion_gps_01.png%3Fw=400&amp;tok=48fad8" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Alte informații care pot fi configurate sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> latitudinea - exprimată în grade;</div>
+</li>
+<li class="level1"><div class="li"> longitudinea - exprimată în grade;</div>
+</li>
+<li class="level1"><div class="li"> altitudinea - exprimată în metri;</div>
+</li>
+<li class="level1"><div class="li"> acuratețea (nivelul de precizie) - exprimat în număr de metri cu care să se aproximeze locația exactă;</div>
+</li>
+<li class="level1"><div class="li"> direcția - exprimată în grade.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/genymotion_gps_02.png%3Fw=400&amp;tok=5368e3" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+De asemenea, este implementată și funcționalitatea prin intermediul căreia poate fi vizualizată poziția precizată în cadrul unei hărți Google.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/genymotion_gps_03.png%3Fw=800&amp;tok=b07589" class="mediacenter" alt="" width="800" />
+</p>
+
+</div>
+
+<h4 id="avd">AVD</h4>
+<div class="level4">
+
+<p>
+Pentru accesarea funcționalităților legate de locație pe dispozitivul virtual AVD este necesar ca în secțiunea de configurări corespunzătoare (<em>Settings</em> → <em>Location access</em>) să se specifice următorii parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>Access to my location</em>: <em>On</em> - permite aplicațiilor Android să acceseze locația curentă, pe baza informațiilor furnizate din sursele disponibile;</div>
+</li>
+<li class="level1"><div class="li"> <em>GPS Sattelites</em>: activat - se utilizează sistemul de poziționare globală GPS pentru determinarea locației curente;</div>
+</li>
+<li class="level1"><div class="li"> <em>Wi-Fi &amp; mobile network location</em>: activat - se utilizează o estimare pentru locația curentă pe baza serviciilor oferite de Google; totodată, vor fi transmise informații anonime în acest sens.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/avd_configuration.png%3Fw=600&amp;tok=b700b1" class="mediacenter" alt="" width="600" />
+</p>
+
+<p>
+Controlul poziției curente poate fi realizat prin intermediul perspectivei <em>Android Debug Monitor</em> din Android Studio sau <em>DDMS</em> din Eclipse (<em>Window</em> → <em>Open Perspective</em> → <em>DDMS</em>), unde, în secțiunea <em>Emulator Control</em> → <em>Location Control</em> se stabilesc valorile pentru latitudine și longitudine (în panoul <em>Manual</em>, în format decimal sau sexagesimal), după care se apasă butonul <em>Send</em>. Informații cu privire la locațiile disponibile pot fi precizate și sub forma unor fișiere gpx sau kml, care pot fi încărcate.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/avd_emulator_control.png%3Fw=600&amp;tok=240654" class="mediacenter" alt="" width="600" />
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Dispozitiv Virtual" [17865-20267] -->
+<h2 class="sectionedit5" id="gestiunea_unei_harti_google">Gestiunea unei Hărți Google</h2>
+<div class="level2">
+
+<p>
+Harta Google este implementată în SDK-ul Android:
+</p>
+<ul>
+<li class="level1"><div class="li"> prin intermediul unei componente grafice de tipul <a href="https://developer.android.com/reference/com/google/android/gms/maps/MapView.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/MapView.html"  rel="nofollow">MapView</a>, în acest caz fiind necesar ca metodele care controlează ciclul de viață al aplicației Android să propage evenimentele corespunzătoare și către acest element;</div>
+</li>
+<li class="level1"><div class="li"> în cadrul unui fragment, de tipul <a href="http://developer.android.com/reference/com/google/android/gms/maps/MapFragment.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/MapFragment.html"  rel="nofollow">MapFragment</a>, acesta tratând și evenimentele corespunzătoare ciclului de viață al aplicației Android.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">Obiectele <code>MapView</code> și<code>MapFragment</code> sunt disponibile începând cu nivelul de <abbr title="Application Programming Interface">API</abbr> 12, asigurarea compatibilității cu versiunile anterioare fiind realizată prin intermediul bibliotecilor de suport.
+</div></p>
+</p>
+
+<p>
+Astfel, integrarea unei hărți Google se poate implementa prin specificarea resursei aferente în fișierul XML care descrie interfața grafică.
+</p>
+<pre class="code xml"><span class="sc3"><span class="re1">&lt;fragment</span></span>
+<span class="sc3">  <span class="re0">android:id</span>=<span class="st0">&quot;@+id/google_map&quot;</span></span>
+<span class="sc3">  <span class="re0">android:layout_width</span>=<span class="st0">&quot;match_parent&quot;</span></span>
+<span class="sc3">  <span class="re0">android:layout_height</span>=<span class="st0">&quot;match_parent&quot;</span></span>
+<span class="sc3">  <span class="re0">class</span>=<span class="st0">&quot;com.google.android.gms.maps.MapFragment&quot;</span> <span class="re2">/&gt;</span></span></pre>
+
+<p>
+Pe baza controalelor grafice <code>MapView</code> sau <code>MapFragment</code>, se poate obține o instanță a unui obiect <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html"  rel="nofollow">GoogleMap</a>, prin intermediul căruia sunt invocate toate funcționalitățile pentru operații legate de localizarea pe hartă.
+</p>
+
+<p>
+De regulă, inițializarea este realizată pe una dintre metodele <code>onStart()</code> sau <code>onResume()</code>, după ce în prealabil au fost încărcate toate controalele grafice pentru interacțiunea cu utilizatorul.
+</p>
+
+<p>
+<p><div class="notetip">Se recomandă să se folosească metoda asincronă <a href="http://developer.android.com/reference/com/google/android/gms/maps/MapFragment.html#getMapAsync%28com.google.android.gms.maps.OnMapReadyCallback%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/MapFragment.html#getMapAsync%28com.google.android.gms.maps.OnMapReadyCallback%29"  rel="nofollow">getMapAsync(OnMapReadyCallback)</a> care garantează faptul că obiectul furnizat este nenul. Metoda <code>onMapReady()</code> a clasei ascultător nu va fi apelată în situația în care serviciul Google Play Services nu este disponibil pe dispozitivul mobil sau obiectul este distrus imediat după ce a fost creat.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">Orice operație care implică un obiect de tipul <code>GoogleMap</code> trebuie realizată pe firul de execuție al interfeței grafice (principal), în caz contrar generându-se o excepție.
+</div></p>
+</p>
+<pre class="code java">GoogleMap googleMap <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">// ...</span>
+&nbsp;
+<span class="kw1">if</span> <span class="br0">&#40;</span>googleMap <span class="sy0">==</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>googleMap <span class="sy0">==</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="br0">&#40;</span><span class="br0">&#40;</span>MapFragment<span class="br0">&#41;</span>getFragmentManager<span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">findFragmentById</span><span class="br0">&#40;</span>R.<span class="me1">id</span>.<span class="me1">google_map</span><span class="br0">&#41;</span><span class="br0">&#41;</span>.<span class="me1">getMapAsync</span><span class="br0">&#40;</span><span class="kw1">new</span> OnMapReadyCallback<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      @Override
+      <span class="kw1">public</span> <span class="kw4">void</span> onMapReady<span class="br0">&#40;</span>GoogleMap readyGoogleMap<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        googleMap <span class="sy0">=</span> readyGoogleMap<span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Funcționalitățile pe care le pune la dispoziție un obiect de tipul <code>GoogleMap</code> sunt:
+</p>
+
+<p>
+<strong>1.</strong> gestiunea reperelor de pe harta Google, prin intermediul elementelor <a href="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html"  rel="nofollow">MarkerOptions</a>, pentru care se pot preciza următoarele informații:
+</p>
+<ul>
+<li class="level1"><div class="li"> coordonatele GPS, sub forma unui obiect <a href="http://developer.android.com/reference/com/google/android/gms/maps/model/LatLng.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/model/LatLng.html"  rel="nofollow">LatLng</a> (care încapsulează informații precum latitudinea și longitudinea, de tip <code>double</code>), prin metoda <a href="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#position%28com.google.android.gms.maps.model.LatLng%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#position%28com.google.android.gms.maps.model.LatLng%29"  rel="nofollow">position(LatLng)</a> <pre class="code java">marker.<span class="me1">position</span><span class="br0">&#40;</span><span class="kw1">new</span> LatLng<span class="br0">&#40;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+double"><span class="kw3">Double</span></a>.<span class="me1">parseDouble</span><span class="br0">&#40;</span>latitudeContent<span class="br0">&#41;</span>, 
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+double"><span class="kw3">Double</span></a>.<span class="me1">parseDouble</span><span class="br0">&#40;</span>longitudeContent<span class="br0">&#41;</span>
+  <span class="br0">&#41;</span>
+<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> titlul, prin metoda <a href="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#title%28java.lang.String%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#title%28java.lang.String%29"  rel="nofollow">title(String)</a>; <pre class="code java">marker.<span class="me1">title</span><span class="br0">&#40;</span>nameContent<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> pictograma, prin metoda <a href="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#icon%28com.google.android.gms.maps.model.BitmapDescriptor%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#icon%28com.google.android.gms.maps.model.BitmapDescriptor%29"  rel="nofollow">icon(BitmapDescriptor)</a>, putând fi obținută prin intermediul clasei <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html"  rel="nofollow">BitmapDescriptorFactory</a>:</div>
+<ul>
+<li class="level2"><div class="li"> în formatul standard, disponibil în mai multe culori (metoda <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#defaultMarker%28float%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#defaultMarker%28float%29"  rel="nofollow">defaultMarker(float)</a>); <pre class="code java">marker.<span class="me1">icon</span><span class="br0">&#40;</span>BitmapDescriptorFactory.<span class="me1">defaultMarker</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a>.<span class="me1">getDefaultMarker</span><span class="br0">&#40;</span>markerTypeSpinner.<span class="me1">getSelectedItemPosition</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level2"><div class="li"> într-un format definit de utilizator, în funcție de resursele disponibile în cadrul aplicației Android:</div>
+<ul>
+<li class="level3"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromAsset%28java.lang.String%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromAsset%28java.lang.String%29"  rel="nofollow">fromAsset(String)</a> - în directorul <code>assets</code>, ce conține resurse externe;</div>
+</li>
+<li class="level3"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromBitmap%28android.graphics.Bitmap%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromBitmap%28android.graphics.Bitmap%29"  rel="nofollow">fromBitmap(Bitmap)</a> - dintr-o imagine;</div>
+</li>
+<li class="level3"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromFile%28java.lang.String%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromFile%28java.lang.String%29"  rel="nofollow">fromFile(String)</a> - dintr-un fișier aflat la o cale relativă;</div>
+</li>
+<li class="level3"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromPath%28java.lang.String%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromPath%28java.lang.String%29"  rel="nofollow">fromPath(String)</a> - dintr-un fișier aflat la o cale absolută;</div>
+</li>
+<li class="level3"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromResource%28int%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/BitmapDescriptorFactory.html#fromResource%28int%29"  rel="nofollow">fromResource(int)</a> - în directorul <code>drawable</code>, ce conține resurse care pot fi desenate.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> descrierea, prin metoda <a href="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#snippet%28java.lang.String%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#snippet%28java.lang.String%29"  rel="nofollow">snippet(String)</a>;  <pre class="code java">marker.<span class="me1">snippet</span><span class="br0">&#40;</span>descriptionContent<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> vizibilitatea, prin metoda <a href="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#visible%28boolean%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html#visible%28boolean%29"  rel="nofollow">visible(boolean)</a>.  <pre class="code java">marker.<span class="me1">visible</span><span class="br0">&#40;</span><span class="kw2">true</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+
+<p>
+Un astfel de obiect este atașat unei hărți Google prin intermediul metodei <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#addMarker%28com.google.android.gms.maps.model.MarkerOptions%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#addMarker%28com.google.android.gms.maps.model.MarkerOptions%29"  rel="nofollow">addMarker(MarkerOptions)</a>. 
+</p>
+<pre class="code java">googleMap.<span class="me1">addMarker</span><span class="br0">&#40;</span>marker<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Alte elemente grafice care pot fi vizualizate sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/CircleOptions.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/CircleOptions.html"  rel="nofollow">CircleOptions</a> - formă geometrică de tip cerc;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/GroundOverlayOptions.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/GroundOverlayOptions.html"  rel="nofollow">GroundOverlayOptions</a> - suprapunerea unei alte imagini;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/PolygonOptions.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/PolygonOptions.html"  rel="nofollow">PolygonOptions</a> - formă geometrică de tip poligon;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/PolylineOptions.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/PolylineOptions.html"  rel="nofollow">PolylineOptions</a>  - formă geometrică de tip polinie;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/TileOverlayOptions.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/model/TileOverlayOptions.html"  rel="nofollow">TileOverlay</a> - suprapunerea unei alte imagini, pentru o anumită porțiune.</div>
+</li>
+</ul>
+
+<p>
+Toate aceste controale pot fi înlăturate în momentul în care este folosită metoda <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#clear%28%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#clear%28%29"  rel="nofollow">clear()</a>.
+</p>
+
+<p>
+<strong>2.</strong> poziționarea la anumite coordonate GPS (latitudine, longitudine) este realizată prin actualizarea locației la care se găsește camera prin care este vizualizată harta Google, funcționalitate implementată de clasa <a href="https://developer.android.com/reference/com/google/android/gms/maps/CameraUpdate.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/CameraUpdate.html"  rel="nofollow">CameraUpdate</a>; un astfel de obiect este obținut de regulă prin metoda statică <a href="https://developer.android.com/reference/com/google/android/gms/maps/CameraUpdateFactory.html#newCameraPosition%28com.google.android.gms.maps.model.CameraPosition%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/CameraUpdateFactory.html#newCameraPosition%28com.google.android.gms.maps.model.CameraPosition%29"  rel="nofollow">newCameraPosition(CameraPosition)</a> din clasa fabrică <code>CameraUpdateFactory</code>, prin care pot fi controlate și alte proprietăți (nivelul de detaliere, vizualizarea unui anumit areal geografic); metoda <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#animateCamera%28com.google.android.gms.maps.CameraUpdate%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#animateCamera%28com.google.android.gms.maps.CameraUpdate%29"  rel="nofollow">animateCamera(CameraUpdate)</a> realizează transferul dintre coordonatele vechi și coordonatele noi prin intermediul unei animații.
+</p>
+<pre class="code java">CameraPosition cameraPosition <span class="sy0">=</span> <span class="kw1">new</span> CameraPosition.<span class="me1">Builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">target</span><span class="br0">&#40;</span><span class="kw1">new</span> LatLng<span class="br0">&#40;</span>latitude, longitude<span class="br0">&#41;</span><span class="br0">&#41;</span>
+  .<span class="me1">build</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+googleMap.<span class="me1">animateCamera</span><span class="br0">&#40;</span>CameraUpdateFactory.<span class="me1">newCameraPosition</span><span class="br0">&#40;</span>cameraPosition<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>	</pre>
+
+<p>
+Metoda <code>animateCamera()</code> este supraîncărcată, astfel încât să se poată preciza:
+</p>
+<ul>
+<li class="level1"><div class="li"> durata propriu-zisă a animației (exprimată în milisecunde);</div>
+</li>
+<li class="level1"><div class="li"> un obiect ascultător (de tipul <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.CancelableCallback.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.CancelableCallback.html"  rel="nofollow">GoogleMap.CancelableCallback</a>) care indică momentul în care animația a fost terminată (<code>onFinish()</code>) sau a fost întreruptă (<code>onCancel()</code>).</div>
+</li>
+</ul>
+
+<p>
+În situația în care este în desfășurare o animație, aceasta poate fi oprită printr-un apel al metodei <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#stopAnimation%28%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#stopAnimation%28%29"  rel="nofollow">stopAnimation()</a>.
+</p>
+
+<p>
+<strong>3.</strong> marcarea locației curente este realizată prin intermediul metodei <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setMyLocationEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setMyLocationEnabled%28boolean%29"  rel="nofollow">setMyLocationEnabled(boolean)</a>; de asemenea, este disponibil un control prin intermediul căruia utilizatorul poate activa sau dezactiva această funcționalitate;
+</p>
+
+<p>
+<strong>4.</strong> vizualizarea unor informații suplimentare:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setBuildingsEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setBuildingsEnabled%28boolean%29"  rel="nofollow">setBuildingsEnabled(boolean)</a> - vizualizarea exterioarelor de clădiri în format 3D;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setContentDescription%28java.lang.String%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setContentDescription%28java.lang.String%29"  rel="nofollow">setContentDescription(String)</a> - descriere;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setIndoorEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setIndoorEnabled%28boolean%29"  rel="nofollow">setIndoorEnabled(boolean)</a> - vizualizarea configurațiilor interioarelor de clădiri;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setTrafficEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setTrafficEnabled%28boolean%29"  rel="nofollow">setTrafficEnabled(boolean)</a> - traficul la momentul de timp curent;</div>
+</li>
+</ul>
+
+<p>
+Tipurile de hărți Google implementate sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>GoogleMap.MAP_TYPE_NORMAL</code> - harta politică;</div>
+</li>
+<li class="level1"><div class="li"> <code>GoogleMap.MAP_TYPE_TERRAIN</code> - harta fizică (nu include și drumuri); </div>
+</li>
+<li class="level1"><div class="li"> <code>GoogleMap.MAP_TYPE_SATELLITE</code> - vedere din satelit;</div>
+</li>
+<li class="level1"><div class="li"> <code>GoogleMap.MAP_TYPE_HYBRID</code> - combinație hibridă.</div>
+</li>
+</ul>
+
+<p>
+Specificarea unui tip de hartă se realizează prin intermediul metodei <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setMapType%28int%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#setMapType%28int%29"  rel="nofollow">setMapType()</a>.
+</p>
+
+<p>
+Gestiunea unei hărți Google sub formă de imagine este realizată prin intermediul metodei <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#snapshot%28com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#snapshot%28com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback%29"  rel="nofollow">snapshot(GoogleMap.SnapshotReadyCallback</a>, al cărui obiect ascultător furnizează resursa grafică (în format <code>Bitmap</code>) în momentul în care este disponibilă (se apelează automat metoda <code>onSnapshotReady(Bitmap)</code>.
+</p>
+
+<p>
+Funcționalitatea pe care o oferă harta Google utilizatorului poate fi controlată și prin intermediul obiectului asociat de tip <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html"  rel="nofollow">UiSettings</a>, obținut prin apelul metodei <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#getUiSettings%28%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.html#getUiSettings%28%29"  rel="nofollow">getUiSettings()</a>:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setAllGesturesEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setAllGesturesEnabled%28boolean%29"  rel="nofollow">setAllGesturesEnables(boolean)</a> - permite sau nu toate tipurile de operații care pot fi realizate prin intermediul hărții Google;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setCompassEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setCompassEnabled%28boolean%29"  rel="nofollow">setCompassEnabled(boolean)</a> - activează sau dezactivează busola;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setIndoorLevelPickerEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setIndoorLevelPickerEnabled%28boolean%29"  rel="nofollow">setIndoorLevelPickerEnabled(boolean)</a> - stabilește permisiunile de selectare a unui nivel în cazul unor hărți de interior;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setMapToolbarEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setMapToolbarEnabled%28boolean%29"  rel="nofollow"> setMapToolbarEnabled(boolean)</a> - indică configurările de vizualizare pentru bara de unelte;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setMyLocationButtonEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setMyLocationButtonEnabled%28boolean%29"  rel="nofollow">setMyLocationButtonEnabled(boolean)</a> - referă vizualizarea controlului grafic pentru centrarea hărții Google în funcție de locația curentă;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setRotateGesturesEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setRotateGesturesEnabled%28boolean%29"  rel="nofollow"> setRotateGesturesEnabled(boolean)</a> - precizează dreptul de utilizare al gesturilor legate de rotirea camerei pentru perspectiva de vizualizare;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setScrollGesturesEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setScrollGesturesEnabled%28boolean%29"  rel="nofollow"> setScrollGesturesEnabled(boolean)</a> - determină posibilitatea de folosire a gesturilor pentru derulare, folosind un deget;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setTiltGesturesEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setTiltGesturesEnabled%28boolean%29"  rel="nofollow">setTiltGesturesEnabled(boolean)</a> - instaurează politica referitoare la gesturile de derulare, folosind două degete;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setZoomControlsEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setZoomControlsEnabled%28boolean%29"  rel="nofollow">setZoomControlsEnabled(boolean)</a> - desemnează vizualizarea sau nu a unor controale grafice pentru gradul de detaliere a hărții Google;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setZoomGesturesEnabled%28boolean%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/UiSettings.html#setZoomGesturesEnabled%28boolean%29"  rel="nofollow">setZoomGesturesEnabled(boolean)</a> - controlează utilizarea gesturilor pentru vizualizarea hărții Google folosind un anumit grad de detaliere.</div>
+</li>
+</ul>
+
+<p>
+Pentru interacțiunea cu utilizatorul au fost definite mai multe clase ascultător, ale căror metode semnalează declanșarea unor evenimente specifice:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnCameraChangeListener.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnCameraChangeListener.html"  rel="nofollow">GoogleMap.OnCameraChangeListener</a> - modificarea poziției camerei prin care este vizualizată harta Google;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnIndoorStateChangeListener.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnIndoorStateChangeListener.html"  rel="nofollow">GoogleMap.OnIndoorStateChangeListener</a> - schimbarea stării legate de vizualizarea la nivel de interior al clădirii (clădirea curentă, etajul la care se găsește utilizatorul);</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnInfoWindowClickListener.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnInfoWindowClickListener.html"  rel="nofollow">GoogleMap.OnInfoWindowClickListener</a> - evenimente legate de fereastra ce conține informații suplimentare cu privire la o locație;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMapClickListener.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMapClickListener.html"  rel="nofollow">GoogleMap.OnMapClickListener</a> - acțiune de tipul apăsare scurtă a unei poziții de pe harta Google;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMapLoadedCallback.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMapLoadedCallback.html"  rel="nofollow">GoogleMap.OnMapLoadedCallback</a> - marcarea momentului în care sunt vizibile toate componentele necesare la un moment dat;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMapLongClickListener.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMapLongClickListener.html"  rel="nofollow">GoogleMap.OnMapLongClickListener</a> - acțiune de tipul apăsare lungă a unei poziții de pe harta Google;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMarkerClickListener.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMarkerClickListener.html"  rel="nofollow">GoogleMap.OnMarkerClickListener</a> - descrie interacțiunea de tip apăsare a unui reper de pe harta Google;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMarkerDragListener.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMarkerDragListener.html"  rel="nofollow">GoogleMap.OnMarkerDragListener</a> - descrie interacțiunea de tip mutare a unui reper de pe harta Google;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMyLocationButtonClickListener.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/maps/GoogleMap.OnMyLocationButtonClickListener.html"  rel="nofollow">GoogleMap.OnMyLocationButtonClickListener</a> - accesarea butonului pentru centrarea hărții în funcție de locația curentă.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Gestiunea unei Hărți Google" [20268-37176] -->
+<h2 class="sectionedit6" id="gestiunea_locatiei_curente_printr-un_client_google_api">Gestiunea Locației Curente printr-un Client Google API</h2>
+<div class="level2">
+
+<p>
+<abbr title="Application Programming Interface">API</abbr>-ul Android pune la dispoziția utilizatorilor un <a href="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html"  rel="nofollow">furnizor integrat de servicii de localizare</a>, prin care aceștia pot specifica anumiți parametrii de configurare, cum ar fi nivelul de precizie și gradul de utilizare al bateriei.
+</p>
+
+<p>
+Funcționalitatea legată de gestiunea locației curente (ca de altfel toate funcționalitățile legate de biblioteca Google Play Services) este disponibilă prin intermediul unui obiect de tip <a href="http://developer.android.com/reference/com/google/android/gms/common/api/GoogleApiClient.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/GoogleApiClient.html"  rel="nofollow">GoogleApiClient</a>, a cărui instanță este obținută de regulă pe metoda <code>onCreate()</code> a aplicației Android, eliberarea resurselor corespunzătoare acesteia fiind făcută pe metoda <code>onDestroy()</code>.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/clientul_google_api.png%3Fw=600&amp;tok=dd8843" class="mediacenter" alt="" width="600" />
+</p>
+<pre class="code java">@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onCreate<span class="br0">&#40;</span>Bundle savedInstanceState<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onCreate</span><span class="br0">&#40;</span>savedInstanceState<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  googleApiClient <span class="sy0">=</span> <span class="kw1">new</span> GoogleApiClient.<span class="me1">Builder</span><span class="br0">&#40;</span><span class="kw1">this</span><span class="br0">&#41;</span>
+    .<span class="me1">addConnectionCallbacks</span><span class="br0">&#40;</span><span class="kw1">this</span><span class="br0">&#41;</span>
+    .<span class="me1">addOnConnectionFailedListener</span><span class="br0">&#40;</span><span class="kw1">this</span><span class="br0">&#41;</span>
+    .<span class="me1">addApi</span><span class="br0">&#40;</span>LocationServices.<span class="me1">API</span><span class="br0">&#41;</span>
+    .<span class="me1">build</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onDestroy<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  googleApiClient <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+  <span class="kw1">super</span>.<span class="me1">onDestroy</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pentru clientul Google <abbr title="Application Programming Interface">API</abbr>, s-a indicat funcționalitatea pentru care va fi accesat (<code>LocationServices.<abbr title="Application Programming Interface">API</abbr></code>) prin intermediul metodei <code>addApi()</code>, precum și clasele ascultător pentru evenimentele care pot fi generate legat de acesta (metodele corespunzătoare fiind asincrone):
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/common/api/GoogleApiClient.ConnectionCallbacks.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/GoogleApiClient.ConnectionCallbacks.html"  rel="nofollow">GoogleApiClient.ConnectionCallbacks</a> gestionează operațiile de tip conectare / deconectare la serviciu, metodele implementate fiind:</div>
+<ul>
+<li class="level2"><div class="li"> <code>onConnected(Bundle)</code> - apelată în momentul în care clientul Google <abbr title="Application Programming Interface">API</abbr> s-a conectat cu succes la funcționalitatea dorită;</div>
+</li>
+<li class="level2"><div class="li"> <code>onConnectionSuspended(int)</code> - apelată în momentul în care clientul Google <abbr title="Application Programming Interface">API</abbr> este deconectat (temporar) de la funcționalitatea solicitată, indicându-se și motivul care a generat un astfel de comportament:</div>
+<ul>
+<li class="level3"><div class="li"> <code>CAUSE_NETWORK_LOST</code> - deconectare de la Internet;</div>
+</li>
+<li class="level3"><div class="li"> <code>CAUSE_SERVICE_DISCONNECTED</code> - oprirea serviciului corespunzător.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/common/api/GoogleApiClient.OnConnectionFailedListener.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/GoogleApiClient.OnConnectionFailedListener.html"  rel="nofollow">GoogleApiClient.OnConnectionFailedListener</a> controlează situațiile în care nu este posibilă realizarea unei legături, metoda aferentă, <code>onConnectionFailed(ConnectionResult)</code>, specificând rezultatul ce conține codul de eroare.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">Este recomandat ca metodele ascultător care controlează starea conexiunii clientului Google <abbr title="Application Programming Interface">API</abbr> la serviciul de localizare să fie implementate în aceeași clasă cu activitatea principală, aceasta implementând interfețele necesare.
+</div></p>
+</p>
+
+<p>
+Operațiile de conectare / deconectare a clientului Google <abbr title="Application Programming Interface">API</abbr> la serviciu trebuie realizate în contextul metodelor care controlează ciclul de viață al aplicației Android, astfel:
+</p>
+<ul>
+<li class="level1"><div class="li"> metoda <code>connect()</code> se apelează în cadrul metodei <code>onStart()</code>;</div>
+</li>
+<li class="level1"><div class="li"> metoda <code>disconnect()</code> se apelează în cadrul metodei <code>onStop()</code>.</div>
+</li>
+</ul>
+<pre class="code java">@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onStart<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onStart</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  googleApiClient.<span class="me1">connect</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+<span class="br0">&#125;</span>
+&nbsp;
+@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onStop<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  <span class="kw1">if</span> <span class="br0">&#40;</span>googleApiClient <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">&amp;&amp;</span> googleApiClient.<span class="me1">isConnected</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    googleApiClient.<span class="me1">disconnect</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <span class="kw1">super</span>.<span class="me1">onStop</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Momentul în care sunt disponibile informațiile cu privire la <strong>cea mai recentă locație a dispozitivului mobil</strong> este determinat de conectarea cu succes a clientului Google <abbr title="Application Programming Interface">API</abbr>, motiv pentru care se obișnuiește ca aceste date să fie interogate pe metoda <code>onConnected(Bundle)</code> a intefeței <code>GoogleApiClient.ConnectionCallbacks</code>, apelată în mod automat la producerea evenimentului respectiv. În acest sens, se apelează metoda <a href="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html#getLastLocation%28com.google.android.gms.common.api.GoogleApiClient%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html#getLastLocation%28com.google.android.gms.common.api.GoogleApiClient%29"  rel="nofollow">getLastLocation(GoogleApiClient)</a> din clasa <a href="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html"  rel="nofollow">FusedLocationProviderApi</a>.
+</p>
+
+<p>
+<p><div class="noteclassic">Se furnizează o locație al cărui grad de precizie este determinat în funcție de permisiunile pe care le deține aplicația Android.
+</div></p>
+</p>
+<pre class="code java">@Override
+<span class="kw1">public</span> <span class="kw4">void</span> onConnected<span class="br0">&#40;</span>Bundle connectionHint<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;onConnected() callback method has been invoked&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  lastLocation <span class="sy0">=</span> LocationServices.<span class="me1">FusedLocationApi</span>.<span class="me1">getLastLocation</span><span class="br0">&#40;</span>googleApiClient<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+
+<p>
+Informațiile referitoare la locația curentă sunt descrise sub forma unui obiect <a href="http://developer.android.com/reference/android/location/Location.html" class="urlextern" title="http://developer.android.com/reference/android/location/Location.html"  rel="nofollow">Location</a>, care conține mai multe informații, precum:
+</p>
+<ul>
+<li class="level1"><div class="li"> acuratețea (exprimată în metri);</div>
+</li>
+<li class="level1"><div class="li"> altitudinea (exprimată în metri, având drept referință elipsoidul WGS 84);</div>
+</li>
+<li class="level1"><div class="li"> palierul (exprimat în grade);</div>
+</li>
+<li class="level1"><div class="li"> latitudine și longitudine (exprimată în grade);</div>
+</li>
+<li class="level1"><div class="li"> furnizor;</div>
+</li>
+<li class="level1"><div class="li"> viteză (exprimată în m/s);</div>
+</li>
+<li class="level1"><div class="li"> momentul de timp (exprimat în milisecunde, raportat la 1 ianuarie 1970).</div>
+</li>
+</ul>
+
+<p>
+De asemenea, pentru acest tip de obiect pot fi asociate informații suplimentare, sub forma unui <code>Bundle</code>, în câmpul <code>extras</code>.
+</p>
+
+<p>
+Totodată, pot fi obținute <strong>actualizări periodice</strong> cu privire la locația curentă, pe baza furnizorilor disponibili (transfer de date în rețeaua GSM / fără fir, sistemul global de poziționare GPS) funcționalitate utilă în momentul în care se dorește să se identifice activitatea pe care o desfășoară utilizatorul pentru a contextualiza conținutul oferit în funcție de aceasta. 
+</p>
+
+<p>
+Acuratețea datelor generate poate fi controlată și prin intermediul configurațiilor conținute în solicitarea corespunzătoare, exprimată prin intermediul unui obiect de tip <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html"  rel="nofollow">LocationRequest</a>:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setExpirationDuration%28long%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setExpirationDuration%28long%29"  rel="nofollow">setExpiration(long)</a> - durata solicitării (exprimată în milisecunde), după care nu mai sunt furnizate actualizări cu privire la locația curentă (momentul de timp la care sunt raportate este cel în care este apelată metoda, nu cel în care este realizată solicitarea propriu-zisă);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setExpirationTime%28long%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setExpirationTime%28long%29"  rel="nofollow">setExpirationTime(long)</a> - momentul de timp după care nu mai sunt furnizate actualizări cu privire la locația curentă, exprimat în milisecunde raportat la perioada în care dispozitivul mobil a fost pornit;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setInterval%28long%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setInterval%28long%29"  rel="nofollow">setInterval(long)</a> - indică intervalul de timp (exprimat în milisecunde) la care se dorește să se primească actualizările cu privire la locația curentă; acesta poate fi însă:</div>
+<ul>
+<li class="level2"><div class="li"> mai mic, dacă dispozitivul mobil are probleme legate de conectivitate;</div>
+</li>
+<li class="level2"><div class="li"> mai mare, dacă există alte aplicații care au stabilit alte rate de transfer.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setFastestInterval%28long%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setFastestInterval%28long%29"  rel="nofollow">setFastestInterval(long)</a> - precizează intervalul la care aplicația Android poate să gestioneze actualizările cu privire la locația curentă, în situația în care există și alte aplicații care au specificat alte rate de transfer, pentru a preîntâmpina situații cum ar fi imposibilitatea de actualizare corespunzătoare a interfeței grafice sau lipsa de spațiu de stocare disponibil pentru informațiile respective;</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">Frecvența cu care sunt transmise actualizările periodice cu privire la modificarea locației curentă este dată de cea mai rapidă rată de transfer specificată de toate aplicațiile care accesează o astfel de funcționalitate.
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">În situația în care aplicația Android realizează procesări complexe, care implică o perioadă de timp considerabilă, este recomandat ca valoarea transmisă metodei <code>setFastestInterval()</code> să fie corespunzătoare, astfel încât să nu fie furnizate valori care nu pot fi utilizate.
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setMaxWaitTime%28long%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setMaxWaitTime%28long%29"  rel="nofollow">setMaxWaitTime(long)</a> - specifică perioada de așteptare maximă pentru transmiterea actualizărilor periodice referitoare la locația curentă; astfel, mai multe informații de acest tip pot fi livrate împreună, cu frecvența indicată de acest interval, optimizând consumul de baterie (actualizările periodice sunt primite la intervale de maxWaitTime, numărul de seturi de date fiind maxWaitTime / interval);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setNumUpdates%28int%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setNumUpdates%28int%29"  rel="nofollow">setNumUpdates(int)</a> - determină numărul de actualizări necesare, în caz contrar fiind furnizate valori de acest tip continuu, între apelurile metodelor <code>requestLocationUpdates()</code> și <code>removeLocationUpdates()</code>;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setPriority%28int%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setPriority%28int%29"  rel="nofollow">setPriority()</a> - stabilește prioritatea solicitării, oferind informații cu privire la furnizorul de servicii care va fi utilizat:</div>
+<ul>
+<li class="level2"><div class="li"> <code>PRIORITY_BALANCED_POWER_ACCURACY</code> - gradul de acuratețe este relativ (aproximativ 100 de metri), consumul de energie fiind moderat;</div>
+</li>
+<li class="level2"><div class="li"> <code>PRIORITY_HIGH_ACCURACY</code> - gradul de acuratețe este ridicat (aproximativ 10 metri), pe baza informațiilor provenite de la sistemul global de poziționare (GPS), cu un consum mare de energie;</div>
+</li>
+<li class="level2"><div class="li"> <code>PRIORITY_LOW_POWER</code> - gradul de acuratețe este scăzut (aproximativ 10 kilometri), sursele folosite fiind rețeaua mobilă / fără fir, cu un consum mic de energie;</div>
+</li>
+<li class="level2"><div class="li"> <code>PRIORITY_NO_POWER</code> - utilizat atunci când se dorește transmiterea de actualizări periodice cu privire la locația curentă, fără un impact semnificativ asupra consumului de energie (de regulă, astfel de informații sunt preluate de la alte aplicații);</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setSmallestDisplacement%28float%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationRequest.html#setSmallestDisplacement%28float%29"  rel="nofollow">setSmallestDisplacement(int)</a> - indică distanța minimă dintre locații pentru care se primește actualizare periodică (implicit, are valoarea 0).</div>
+</li>
+</ul>
+
+<p>
+De regulă, instanțierea unui obiect de tip <code>LocationRequest</code> precum și precizarea parametrilor ce caracterizează solicitările cu privire la actualizările periodice sunt realizate o singură dată, în momentul în care aplicația Android este pornită (pe metoda <code>onCreate()</code>), urmând ca eliberarea resurselor să fie realizată atunci când aplicația Android este oprită (pe metoda <code>onDestroy()</code>).
+</p>
+<pre class="code java">locationRequest <span class="sy0">=</span> <span class="kw1">new</span> LocationRequest<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+locationRequest.<span class="me1">setInterval</span><span class="br0">&#40;</span>Constants.<span class="me1">LOCATION_REQUEST_INTERVAL</span><span class="br0">&#41;</span><span class="sy0">;</span>
+locationRequest.<span class="me1">setFastestInterval</span><span class="br0">&#40;</span>Constants.<span class="me1">LOCATION_REQUEST_FASTEST_INTERVAL</span><span class="br0">&#41;</span><span class="sy0">;</span>
+locationRequest.<span class="me1">setPriority</span><span class="br0">&#40;</span>LocationRequest.<span class="me1">PRIORITY_HIGH_ACCURACY</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+O aplicație Android primește actualizări periodice cu privire la locația curentă între momentele de timp la care specifică explicit acest lucru, prin apelul metodelor corespunzătoare:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html#requestLocationUpdates%28com.google.android.gms.common.api.GoogleApiClient,%20com.google.android.gms.location.LocationRequest,%20com.google.android.gms.location.LocationListener%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html#requestLocationUpdates%28com.google.android.gms.common.api.GoogleApiClient,%20com.google.android.gms.location.LocationRequest,%20com.google.android.gms.location.LocationListener%29"  rel="nofollow">requestLocationUpdates(GoogleApiClient, LocationRequest, LocationListener)</a> - pornește transmitersa actualizărilor periodice;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html#removeLocationUpdates%28com.google.android.gms.common.api.GoogleApiClient,%20com.google.android.gms.location.LocationListener%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/FusedLocationProviderApi.html#removeLocationUpdates%28com.google.android.gms.common.api.GoogleApiClient,%20com.google.android.gms.location.LocationListener%29"  rel="nofollow">removeLocationUpdates(GoogleApiClient, LocationListener)</a> - oprește transmiterea actualizărilor periodice.</div>
+</li>
+</ul>
+
+<p>
+Întrucât aceste metode primesc un parametru de tip <code>GoogleApiClient</code>, este necesar ca acesta să fie nenul și să fie conectat. Din acest motiv, o practică curentă vizează realizarea suplimentară a acestor verificări anterior invocării lor propriu-zise.
+</p>
+<pre class="code java"><span class="kw1">protected</span> <span class="kw4">void</span> startLocationUpdates<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  LocationServices.<span class="me1">FusedLocationApi</span>.<span class="me1">requestLocationUpdates</span><span class="br0">&#40;</span>
+    googleApiClient,
+    locationRequest,
+    <span class="kw1">this</span>
+  <span class="br0">&#41;</span><span class="sy0">;</span>
+  locationUpdatesStatus <span class="sy0">=</span> <span class="kw2">true</span><span class="sy0">;</span>
+  googleMap.<span class="me1">setMyLocationEnabled</span><span class="br0">&#40;</span><span class="kw2">true</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>lastLocation <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    navigateToLocation<span class="br0">&#40;</span>lastLocation<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw1">protected</span> <span class="kw4">void</span> stopLocationUpdates<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  LocationServices.<span class="me1">FusedLocationApi</span>.<span class="me1">removeLocationUpdates</span><span class="br0">&#40;</span>
+    googleApiClient,
+    <span class="kw1">this</span>
+  <span class="br0">&#41;</span><span class="sy0">;</span>
+  locationUpdatesStatus <span class="sy0">=</span> <span class="kw2">false</span><span class="sy0">;</span>
+  googleMap.<span class="me1">setMyLocationEnabled</span><span class="br0">&#40;</span><span class="kw2">false</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pentru ca impactul asupra consumului de energie să fie optim, se recomandă ca pe metodele care controlează ciclul de viață al unei aplicații Android să se gestioneze corespunzător starea transmiterii de actualizări periodice, în intervalele de timp în care aceasta nu este activă / vizibilă.
+</p>
+<pre class="code java">@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onStart<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onStart</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  <span class="kw1">if</span> <span class="br0">&#40;</span>googleApiClient <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">&amp;&amp;</span> googleApiClient.<span class="me1">isConnected</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">&amp;&amp;</span> locationUpdatesStatus<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    startLocationUpdates<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onStop<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  stopLocationUpdates<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  <span class="kw1">super</span>.<span class="me1">onStop</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Metodele care gestionează starea transmiterii de actualizări periodice cu privire la locația curentă primesc ca parametru și un obiect ascultător de tip <a href="http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html"  rel="nofollow">LocationListener</a> care notifică utilizatorul în momentul în care sunt disponibile informațiile propriu-zise: metoda <code>onLocationChanged(Location)</code>, apelată în mod automat, oferă informații cu privire la poziția din momentul de timp respectiv.
+</p>
+<pre class="code java">@Override
+<span class="kw1">public</span> <span class="kw4">void</span> onLocationChanged<span class="br0">&#40;</span>Location location<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  lastLocation <span class="sy0">=</span> location<span class="sy0">;</span>
+  navigateToLocation<span class="br0">&#40;</span>lastLocation<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Aplicația Android trebuie să aibă un comportament consistent în situația în care se produc modificări de configurație, astfel încât diferiții parametrii trebuie salvați și încărcați pe metodele corespunzătoare (<code>onSaveInstanceState(Bundle)</code>, respectiv <code>onRestoreInstanceState(Bundle)</code>):
+</p>
+<pre class="code java">@Override
+<span class="kw1">public</span> <span class="kw4">void</span> onSaveInstanceState<span class="br0">&#40;</span>Bundle savedInstanceState<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  saveValues<span class="br0">&#40;</span>savedInstanceState<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">super</span>.<span class="me1">onSaveInstanceState</span><span class="br0">&#40;</span>savedInstanceState<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw1">protected</span> <span class="kw4">void</span> saveValues<span class="br0">&#40;</span>Bundle state<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  state.<span class="me1">putBoolean</span><span class="br0">&#40;</span>Constants.<span class="me1">LOCATION_UPDATES_STATUS</span>, locationUpdatesStatus<span class="br0">&#41;</span><span class="sy0">;</span>
+  state.<span class="me1">putParcelable</span><span class="br0">&#40;</span>Constants.<span class="me1">LAST_LOCATION</span>, lastLocation<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+@Override
+<span class="kw1">public</span> <span class="kw4">void</span> onRestoreInstanceState<span class="br0">&#40;</span>Bundle savedInstanceState<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onRestoreInstanceState</span><span class="br0">&#40;</span>savedInstanceState<span class="br0">&#41;</span><span class="sy0">;</span>
+  restoreValues<span class="br0">&#40;</span>savedInstanceState<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw1">protected</span> <span class="kw4">void</span> restoreValues<span class="br0">&#40;</span>Bundle state<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>state.<span class="me1">keySet</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">contains</span><span class="br0">&#40;</span>Constants.<span class="me1">LAST_LOCATION</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    lastLocation <span class="sy0">=</span> state.<span class="me1">getParcelable</span><span class="br0">&#40;</span>Constants.<span class="me1">LAST_LOCATION</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>state.<span class="me1">keySet</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">contains</span><span class="br0">&#40;</span>Constants.<span class="me1">LOCATION_UPDATES_STATUS</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    locationUpdatesStatus <span class="sy0">=</span> state.<span class="me1">getBoolean</span><span class="br0">&#40;</span>Constants.<span class="me1">LOCATION_UPDATES_STATUS</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Informațiile de interes sunt starea referitoare la transmiterea actualizărilor periodice, respectiv la cea mai recentă locație.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Gestiunea Locației Curente printr-un Client Google API" [37177-53030] -->
+<h2 class="sectionedit7" id="codificare_geografica_inversa_geocoding">Codificare Geografică Inversă (Geocoding)</h2>
+<div class="level2">
+
+<p>
+În Android, clasa <a href="http://developer.android.com/reference/android/location/Geocoder.html" class="urlextern" title="http://developer.android.com/reference/android/location/Geocoder.html"  rel="nofollow">Geocoder</a> permite realizarea de conversii dintre coordonate GPS (latitudine / longitudine) și adresa poștală, operație denumită codificare geografică inversă.
+</p>
+
+<p>
+Metodele <code>getFromLocation()</code> / <code>getFromLocationName()</code>, disponibile în mai multe forme, furnizează o listă de obiecte de tip <a href="http://developer.android.com/reference/android/location/Address.html" class="urlextern" title="http://developer.android.com/reference/android/location/Address.html"  rel="nofollow">Address</a>, care încapsulează, pe lângă datele propriu-zise, dispuse sub formă de rânduri distincte și alte informații precum latitudine, longitudine, localitate, cod poștal, telefon, <abbr title="Uniform Resource Locator">URL</abbr>, împrejurimi:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/location/Geocoder.html#getFromLocation%28double,%20double,%20int%29" class="urlextern" title="http://developer.android.com/reference/android/location/Geocoder.html#getFromLocation%28double,%20double,%20int%29"  rel="nofollow">getFromLocation(double, double, int)</a> - primește ca parametrii coordonatele GPS (latitudinea / longitudinea);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/location/Geocoder.html#getFromLocationName%28java.lang.String,%20int,%20double,%20double,%20double,%20double%29" class="urlextern" title="http://developer.android.com/reference/android/location/Geocoder.html#getFromLocationName%28java.lang.String,%20int,%20double,%20double,%20double,%20double%29"  rel="nofollow">getFromLocationName(String, int, double, double, double, double)</a> - primește ca parametrii o descriere a locației precum și o zonă geografică descrisă prin coordonatele GPS (latitudine / longitudine) ale punctelor stânga sus - dreapta jos;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/location/Geocoder.html#getFromLocationName%28java.lang.String,%20int%29" class="urlextern" title="http://developer.android.com/reference/android/location/Geocoder.html#getFromLocationName%28java.lang.String,%20int%29"  rel="nofollow">getFromLocationName(String, int)</a> - primește ca parametru o descriere a locației.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">Toate aceste metode primesc un parametru care indică numărul de rezultate care se doresc a fi furnizate. De regulă, acesta are valoarea 1.
+</div></p>
+</p>
+
+<p>
+Metodele care realizează codificarea geografică inversă sunt sincrone, iar procesările pe care le realizează pot să dureze un interval de timp considerabil. Din acest motiv, este recomandat ca invocarea acestora să nu se facă pe firul de execuție al interfeței grafice (principal) întrucât poate afecta experiența utilizatorului, ci pe un fir de execuție care rulează în fundal, de tip <a href="http://developer.android.com/reference/android/app/IntentService.html" class="urlextern" title="http://developer.android.com/reference/android/app/IntentService.html"  rel="nofollow">IntentService</a> (utilizarea clasei <code>AsyncTask</code> nu este indicată în această situație întrucât comportamentul său în cazul producerii unor întreruperi nu corespunde funcționalității dorite). Un astfel de obiect pornește în momentul în care este necesar să se realizeze o operație (fiind invocat prin intermediul unei intenții, la care pot fi atașate informații suplimentare), realizată pe un fir de execuție dedicat, fiind oprit în momentul în care nu mai este necesar să realizeze alte procesări.
+</p>
+
+<p>
+Acest serviciu asociat unei intenții trebuie să fie specificat în fișierul <code>AndroidManifest.xml</code>, în secțiunea <code>&lt;application&gt; … &lt;/application&gt;</code>:
+</p>
+<pre class="code xml"><span class="sc3"><span class="re1">&lt;manifest</span> ...<span class="re2">&gt;</span></span>
+  <span class="sc-1">&lt;!-- other elements --&gt;</span>
+  <span class="sc3"><span class="re1">&lt;application</span> ...<span class="re2">&gt;</span></span>
+    <span class="sc-1">&lt;!-- other elements --&gt;</span>
+    <span class="sc3"><span class="re1">&lt;service</span></span>
+<span class="sc3">      <span class="re0">android:name</span>=<span class="st0">&quot;.service.GetLocationAddressIntentService&quot;</span></span>
+<span class="sc3">      <span class="re0">android:exported</span>=<span class="st0">&quot;false&quot;</span><span class="re2">/&gt;</span></span>
+   <span class="sc3"><span class="re1">&lt;/application<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span></pre>
+
+<p>
+Nu este necesar să se specifice și un filtru de intenții, de vreme ce serviciul va fi lansat în execuție explicit, prin transmiterea în cadrul intenției corespunzătoare a denumirii clasei care îl implementează.
+</p>
+
+<p>
+Obiectele care vor fi transmise serviciului prin intermediul intenției sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> un obiect de tip <a href="http://developer.android.com/reference/android/os/ResultReceiver.html" class="urlextern" title="http://developer.android.com/reference/android/os/ResultReceiver.html"  rel="nofollow">ResultReceiver</a>, prin intermediul căruia este furnizat rezultatul, atunci când acesta este disponibil; <pre class="code java"><span class="kw1">private</span> <span class="kw1">class</span> AddressResultReceiver <span class="kw1">extends</span> ResultReceiver <span class="br0">&#123;</span>
+  <span class="kw1">public</span> AddressResultReceiver<span class="br0">&#40;</span>Handler handler<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span><span class="br0">&#40;</span>handler<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onReceiveResult<span class="br0">&#40;</span><span class="kw4">int</span> resultCode, Bundle bundle<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> address <span class="sy0">=</span> bundle.<span class="me1">getString</span><span class="br0">&#40;</span>Constants.<span class="me1">RESULT</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    addressTextView.<span class="me1">setText</span><span class="br0">&#40;</span>address<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">switch</span><span class="br0">&#40;</span>resultCode<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">case</span> Constants.<span class="me1">RESULT_SUCCESS</span><span class="sy0">:</span>
+        Toast.<span class="me1">makeText</span><span class="br0">&#40;</span>GoogleMapsActivity.<span class="kw1">this</span>, <span class="st0">&quot;An address was found&quot;</span>, Toast.<span class="me1">LENGTH_SHORT</span><span class="br0">&#41;</span>.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">case</span> Constants.<span class="me1">RESULT_FAILURE</span><span class="sy0">:</span>
+        Toast.<span class="me1">makeText</span><span class="br0">&#40;</span>GoogleMapsActivity.<span class="kw1">this</span>, <span class="st0">&quot;An address was not found&quot;</span>, Toast.<span class="me1">LENGTH_SHORT</span><span class="br0">&#41;</span>.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">break</span><span class="sy0">;</span>	                
+    <span class="br0">&#125;</span>
+&nbsp;
+    getAddressLocationStatus <span class="sy0">=</span> <span class="kw2">false</span><span class="sy0">;</span>
+    getLocationAddressButton.<span class="me1">setEnabled</span><span class="br0">&#40;</span><span class="kw2">true</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+ Se observă că atunci când rezultatul este disponibil, se apelează în mod automat metoda <code>onReceiveResult()</code> care primește ca parametrii un cod de rezultat numeric (succes sau eșec, definit de utilizator) și un obiect de tip <code>Bundle</code> în care sunt plasate informații suplimentare (adresa propriu-zisă sau mesajul de eroare - în funcție de rezultat -, vizualizată într-un control grafic).
+</p>
+</div>
+</li>
+<li class="level1"><div class="li"> locația care se dorește a fi rezolvată (obiect de tip <code>Location</code>, incluzând informații de tip latitudine și longitudine).</div>
+</li>
+</ul>
+
+<p>
+Mecanismul prin care se pornește un serviciu prin intermediul unei intenții este similar cu cel prin care se pornește o activitate prin intermediul unei intenții:
+</p>
+<ol>
+<li class="level1"><div class="li"> se instanțiază un obiect de tip <code>Intent</code> specificând clasa corespunzătoare serviciului care se dorește a fi lansat în execuție;</div>
+</li>
+<li class="level1"><div class="li"> se plasează informațiile în obiectul <code>Bundle</code> disponibil în secțiunea <code>extra</code>.</div>
+</li>
+</ol>
+<pre class="code java">Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="kw1">this</span>, GetLocationAddressIntentService.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+intent.<span class="me1">putExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">RESULT_RECEIVER</span>, addressResultReceiver<span class="br0">&#41;</span><span class="sy0">;</span>
+intent.<span class="me1">putExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">LOCATION</span>, lastLocation<span class="br0">&#41;</span><span class="sy0">;</span>
+startService<span class="br0">&#40;</span>intent<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Procesarea pe care o realizează serviciul lansat în execuție prin intermediul unei intenții este plasată în cadrul metodei <code>onHandleIntent(Intent)</code>, apelată în mod automat.
+</p>
+<pre class="code java">@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onHandleIntent<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> errorMessage <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  resultReceiver <span class="sy0">=</span> intent.<span class="me1">getParcelableExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">RESULT_RECEIVER</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>resultReceiver <span class="sy0">==</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    errorMessage <span class="sy0">=</span> <span class="st0">&quot;No result receiver was provided to handle the information&quot;</span><span class="sy0">;</span>
+    Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> errorMessage<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  Location location <span class="sy0">=</span> intent.<span class="me1">getParcelableExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">LOCATION</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>location <span class="sy0">==</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    errorMessage <span class="sy0">=</span> <span class="st0">&quot;No location data was provided&quot;</span><span class="sy0">;</span>
+    Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> errorMessage<span class="br0">&#41;</span><span class="sy0">;</span>
+    handleResult<span class="br0">&#40;</span>Constants.<span class="me1">RESULT_FAILURE</span>, errorMessage<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  Geocoder geocoder <span class="sy0">=</span> <span class="kw1">new</span> Geocoder<span class="br0">&#40;</span><span class="kw1">this</span>, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+locale"><span class="kw3">Locale</span></a>.<span class="me1">getDefault</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  List<span class="sy0">&lt;</span>Address<span class="sy0">&gt;</span> addressList <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">try</span> <span class="br0">&#123;</span>
+    addressList <span class="sy0">=</span> geocoder.<span class="me1">getFromLocation</span><span class="br0">&#40;</span>
+      location.<span class="me1">getLatitude</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+      location.<span class="me1">getLongitude</span><span class="br0">&#40;</span><span class="br0">&#41;</span>,
+      Constants.<span class="me1">NUMBER_OF_ADDRESSES</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+ioexception"><span class="kw3">IOException</span></a> ioException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    errorMessage <span class="sy0">=</span> <span class="st0">&quot;The background geocoding service is not available&quot;</span><span class="sy0">;</span>
+    Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> ioException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+illegalargumentexception"><span class="kw3">IllegalArgumentException</span></a> illegalArgumentException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    errorMessage <span class="sy0">=</span> <span class="st0">&quot;The latitude / longitude values that were provided are invalid &quot;</span> <span class="sy0">+</span> location.<span class="me1">getLatitude</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot; / &quot;</span> <span class="sy0">+</span> location.<span class="me1">getLongitude</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> illegalArgumentException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">if</span> <span class="br0">&#40;</span>errorMessage <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">&amp;&amp;</span> <span class="sy0">!</span>errorMessage.<span class="me1">isEmpty</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    handleResult<span class="br0">&#40;</span>Constants.<span class="me1">RESULT_FAILURE</span>, errorMessage<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">if</span> <span class="br0">&#40;</span>addressList <span class="sy0">==</span> <span class="kw2">null</span> <span class="sy0">||</span> addressList.<span class="me1">isEmpty</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    errorMessage <span class="sy0">=</span> <span class="st0">&quot;The geocoder could not find an address for the given latitude / longitude&quot;</span><span class="sy0">;</span>
+    Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> errorMessage<span class="br0">&#41;</span><span class="sy0">;</span>
+    handleResult<span class="br0">&#40;</span>Constants.<span class="me1">RESULT_FAILURE</span>, errorMessage<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+stringbuffer"><span class="kw3">StringBuffer</span></a> result <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+stringbuffer"><span class="kw3">StringBuffer</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>Address address<span class="sy0">:</span> addressList<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> k <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> k <span class="sy0">&lt;</span> address.<span class="me1">getMaxAddressLineIndex</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> k<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      result.<span class="me1">append</span><span class="br0">&#40;</span>address.<span class="me1">getAddressLine</span><span class="br0">&#40;</span>k<span class="br0">&#41;</span> <span class="sy0">+</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">getProperty</span><span class="br0">&#40;</span><span class="st0">&quot;line.separator&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    result.<span class="me1">append</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">getProperty</span><span class="br0">&#40;</span><span class="st0">&quot;line.separator&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  handleResult<span class="br0">&#40;</span>Constants.<span class="me1">RESULT_SUCCESS</span>, result.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Operațiile realizate de serviciu, pe firul de execuție separat, sunt:
+</p>
+<ol>
+<li class="level1"><div class="li"> preluarea informațiilor necesare (obiect de tip <code>ResultReceiver</code>, locația care se dorește a fi rezolvată) printr-un obiect <code>Bundle</code>, din cadrul secțiunii <code>extra</code> a intenției prin care a fost invocat; în situația în care acestea nu pot fi obținute, se generează un mesaj de eroare;</div>
+</li>
+<li class="level1"><div class="li"> instanțierea unui obiect de tip <code>Geocoder</code>, folosind contextul (serviciul) și un obiect <a href="http://developer.android.com/reference/java/util/Locale.html" class="urlextern" title="http://developer.android.com/reference/java/util/Locale.html"  rel="nofollow">Locale</a>, care conține informații cu privire la modul de prezentare a unor informații în funcție de zona geografică;</div>
+</li>
+<li class="level1"><div class="li"> invocarea metodelor <code>getFromLocation()</code> / <code>getFromLocationName()</code> (furnizând informațiile necesare ca parametri) și gestionând corespunzător tipurile de eroare ce pot fi generate:</div>
+<ol>
+<li class="level2"><div class="li"> serviciul Geocoding nu este disponibil (se aruncă o excepție de tip <code>IOException</code>);</div>
+</li>
+<li class="level2"><div class="li"> informațiile cu privire la coordonatele GPS (latitudine / longitudine) nu sunt corecte (se aruncă o excepție de tipul <code>IllegalArgumentException</code>);</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> se semnalează situația în care nu a putut fi identificată nici o adresă poștală asociată datelor specificate;</div>
+</li>
+<li class="level1"><div class="li"> pentru fiecare adresă poștală furnizată, se concatenează rândurile distincte:</div>
+<ol>
+<li class="level2"><div class="li"> numărul de rânduri conținute este întors de metoda <a href="http://developer.android.com/reference/android/location/Address.html#getMaxAddressLineIndex%28%29" class="urlextern" title="http://developer.android.com/reference/android/location/Address.html#getMaxAddressLineIndex%28%29"  rel="nofollow">getMaxAddressLineIndex()</a>;</div>
+</li>
+<li class="level2"><div class="li"> un rând de la o anumită poziție este dat de metoda <a href="http://developer.android.com/reference/android/location/Address.html#getAddressLine%28int%29" class="urlextern" title="http://developer.android.com/reference/android/location/Address.html#getAddressLine%28int%29"  rel="nofollow">getAddressLine(int)</a>;</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> se transmite codul de rezultat (numeric - succes sau eșec) precum și rezultatul propriu-zis (adresa sau mesajul de eroare) către obiectul de tip <code>ResultReceiver</code>, prin intermediul metodei <a href="http://developer.android.com/reference/android/os/ResultReceiver.html#send%28int,%20android.os.Bundle%29" class="urlextern" title="http://developer.android.com/reference/android/os/ResultReceiver.html#send%28int,%20android.os.Bundle%29"  rel="nofollow">send(int, Bundle)</a> care face ca la nivelul acestui obiect să se apeleze în mod automat metoda <code>onReceiveResult()</code>; informațiile vor fi plasate în cadrul unui obiect <code>Bundle</code>, ca pereche (cheie, valoare): <pre class="code java"><span class="kw1">private</span> <span class="kw4">void</span> handleResult<span class="br0">&#40;</span><span class="kw4">int</span> resultCode, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> message<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  Bundle bundle <span class="sy0">=</span> <span class="kw1">new</span> Bundle<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  bundle.<span class="me1">putString</span><span class="br0">&#40;</span>Constants.<span class="me1">RESULT</span>, message<span class="br0">&#41;</span><span class="sy0">;</span>
+  resultReceiver.<span class="me1">send</span><span class="br0">&#40;</span>resultCode, bundle<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT7 SECTION "Codificare Geografică Inversă (Geocoding)" [53031-63446] -->
+<h2 class="sectionedit8" id="implementarea_zonelor_de_restrictie_geografica_geofencing">Implementarea Zonelor de Restricție Geografică (Geofencing)</h2>
+<div class="level2">
+
+<p>
+În Android, în contextul transmiterii de actualizări periodice cu privire la locația curentă, există posibilitatea ca un utilizator să fie notificat cu privire la acțiunile legate de o anumită zonă de restricție geografică, definită ca arie circulară, caracterizată printr-un centru, dat de coordonate GPS (latitudine / longitudine) și de o rază.
+</p>
+
+<p>
+Este impusă restricția de a gestiona simultan maxim 100 de zone de restricție geografică active la un moment dat (fiecare restricție geografică are o perioadă de valabilitate). 
+</p>
+
+<p>
+Evenimentele generate în legătură cu o zonă de restricție geografică sunt legate de intrare, respectiv de ieșirea utilizatorului din acest spațiu, însă notificările pot fi temporizate o anumită perioadă. Acestea trebuie procesate pe un fir de execuție dedicat, a cărui execuție trebuie să fie limitată la procesările legate de un anumit tip de eceniment. În acest sens, va fi utilizat un obiect de tip <code>IntentService</code>, instanțiat în momentul în care aplicația Android este creată (pe metoda <code>onCreate()</code>), resursele aferente fiind eliberate în momentul în care aplicația Android este distrusă (pe metoda <code>onDestroy()</code>). Acesta va fi reutilizat atât pentru operația de tip adăugare cât și pentru operația de tip ștergere a unei zone de restricție geografică.
+</p>
+<pre class="code java">Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="kw1">this</span>, GeofenceTrackerIntentService.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+geofenceTrackerPendingIntent <span class="sy0">=</span> PendingIntent.<span class="me1">getService</span><span class="br0">&#40;</span><span class="kw1">this</span>, <span class="nu0">0</span>, intent, PendingIntent.<span class="me1">FLAG_UPDATE_CURRENT</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Disponibilitatea unui serviciu care să realizeze procesări legate de zonele de restricție geografică trebuie menționată în cadrul fișierului <code>AndroidManifest.xml</code>:
+</p>
+<pre class="code xml"><span class="sc3"><span class="re1">&lt;manifest</span> ...<span class="re2">&gt;</span></span>
+  <span class="sc-1">&lt;!-- other elements --&gt;</span>
+  <span class="sc3"><span class="re1">&lt;application</span> ...<span class="re2">&gt;</span></span>
+    <span class="sc-1">&lt;!-- other elements --&gt;</span>
+    <span class="sc3"><span class="re1">&lt;service</span></span>
+<span class="sc3">      <span class="re0">android:name</span>=<span class="st0">&quot;.service.GeofenceTrackerIntentService&quot;</span></span>
+<span class="sc3">      <span class="re0">android:exported</span>=<span class="st0">&quot;false&quot;</span><span class="re2">/&gt;</span></span>
+   <span class="sc3"><span class="re1">&lt;/application<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span></pre>
+
+<p>
+Metoda <code>onHandleIntent(Intent)</code> a serviciului lansat în execuție prin intermediul unei intenții va procesa evenimentul legat de zona de restricție geografică (<a href="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html"  rel="nofollow">GeofencingEvent</a>) care îi este transmis:
+</p>
+<ol>
+<li class="level1"><div class="li"> se verifică situația în care evenimentul legat de zona de restricție geografică conține o eroare (informație furnizată de metoda <a href="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html#hasError%28%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html#hasError%28%29"  rel="nofollow">hasError()</a>), aceasta fiind procesată în mod corespunzător (codul de eroare este furnizat de metoda <a href="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html#getErrorCode%28%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html#getErrorCode%28%29"  rel="nofollow">getErrorCode()</a>:</div>
+<ol>
+<li class="level2"><div class="li"> <code>GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE</code> - serviciul de restricționare geografică nu este disponibil;</div>
+</li>
+<li class="level2"><div class="li"> <code>GEOFENCE_TOO_MANY_GEOFENCES</code> - au fost definite mai multe zone de restricție geografică (restricționate la maxim 100);</div>
+</li>
+<li class="level2"><div class="li"> <code>GEOFENCE_TOO_MANY_PENDING_INTENTS</code> - există mai multe servicii care procesează evenimente legate de restricționarea geografică;</div>
+</li>
+<li class="level2"><div class="li"> alt tip de eroare.</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> este obținut tipul de tranziție, prin intermediul metodei <a href="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html#getGeofenceTransition%28%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html#getGeofenceTransition%28%29"  rel="nofollow">getGeofenceTransition()</a></div>
+<ol>
+<li class="level2"><div class="li"> <code>Geofence.GEOFENCE_TRANSITION_ENTER</code> - utilizatorul a intrat în zona de restricție geografică;</div>
+</li>
+<li class="level2"><div class="li"> <code>Geofence.GEOFENCE_TRANSITION_EXIT</code> - utilizatorul a ieșit din zona de restricție geografică.</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> se obține lista cu zonele de restricție geografică care au determinat declanșarea evenimentelor respective, prin apelarea metodei <a href="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html#getTriggeringGeofences%28%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/GeofencingEvent.html#getTriggeringGeofences%28%29"  rel="nofollow">getTriggeringGeofences()</a>; pentru fiecare obiect <code>Geofence</code> implicat, se obține identificatorul (generat de regulă aleator), concatenându-se la mesajul ce conține detaliile tranziției;</div>
+</li>
+<li class="level1"><div class="li"> este creată o notificare, la accesarea căreia se va lansa o activitate Android în care va putea fi vizualizat mesajul cu detaliile tranziției.</div>
+</li>
+</ol>
+<pre class="code java">@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onHandleIntent<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  GeofencingEvent geofencingEvent <span class="sy0">=</span> GeofencingEvent.<span class="me1">fromIntent</span><span class="br0">&#40;</span>intent<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>geofencingEvent.<span class="me1">hasError</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> errorMessage <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+    <span class="kw1">switch</span><span class="br0">&#40;</span>geofencingEvent.<span class="me1">getErrorCode</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">case</span> GeofenceStatusCodes.<span class="me1">GEOFENCE_NOT_AVAILABLE</span><span class="sy0">:</span>
+        errorMessage <span class="sy0">=</span> Constants.<span class="me1">GEOFENCE_NOT_AVAILABLE_ERROR</span><span class="sy0">;</span>
+        <span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">case</span> GeofenceStatusCodes.<span class="me1">GEOFENCE_TOO_MANY_GEOFENCES</span><span class="sy0">:</span>
+	errorMessage <span class="sy0">=</span> Constants.<span class="me1">GEOFENCE_TOO_MANY_GEOFENCES_ERROR</span><span class="sy0">;</span>
+        <span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">case</span> GeofenceStatusCodes.<span class="me1">GEOFENCE_TOO_MANY_PENDING_INTENTS</span><span class="sy0">:</span>
+	errorMessage <span class="sy0">=</span> Constants.<span class="me1">GEOFENCE_TOO_MANY_PENDING_INTENTS_ERROR</span><span class="sy0">;</span>
+        <span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">default</span><span class="sy0">:</span>
+	errorMessage <span class="sy0">=</span> Constants.<span class="me1">GEOFENCE_UNKNOWN_ERROR</span><span class="sy0">;</span>
+        <span class="kw1">break</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> errorMessage<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <span class="kw4">int</span> geofenceTransition <span class="sy0">=</span> geofencingEvent.<span class="me1">getGeofenceTransition</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>geofenceTransition <span class="sy0">==</span> Geofence.<span class="me1">GEOFENCE_TRANSITION_ENTER</span> <span class="sy0">||</span>
+    geofenceTransition <span class="sy0">==</span> Geofence.<span class="me1">GEOFENCE_TRANSITION_EXIT</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    List<span class="sy0">&lt;</span>Geofence<span class="sy0">&gt;</span> triggeringGeofences <span class="sy0">=</span> geofencingEvent.<span class="me1">getTriggeringGeofences</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+stringbuffer"><span class="kw3">StringBuffer</span></a> transitionStringDetails <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+    <span class="kw1">switch</span><span class="br0">&#40;</span>geofenceTransition<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">case</span> Geofence.<span class="me1">GEOFENCE_TRANSITION_ENTER</span><span class="sy0">:</span>
+        transitionStringDetails <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+stringbuffer"><span class="kw3">StringBuffer</span></a><span class="br0">&#40;</span>Constants.<span class="me1">GEOFENCE_TRANSITION_ENTER</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">case</span> Geofence.<span class="me1">GEOFENCE_TRANSITION_EXIT</span><span class="sy0">:</span>
+	transitionStringDetails <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+stringbuffer"><span class="kw3">StringBuffer</span></a><span class="br0">&#40;</span>Constants.<span class="me1">GEOFENCE_TRANSITION_EXIT</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">default</span><span class="sy0">:</span>
+        transitionStringDetails <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+stringbuffer"><span class="kw3">StringBuffer</span></a><span class="br0">&#40;</span>Constants.<span class="me1">GEOFENCE_TRANSITION_UNKNOWN</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">break</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    transitionStringDetails.<span class="me1">append</span><span class="br0">&#40;</span><span class="st0">&quot;: &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span>Geofence geofence<span class="sy0">:</span> triggeringGeofences<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      transitionStringDetails.<span class="me1">append</span><span class="br0">&#40;</span>geofence.<span class="me1">getRequestId</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot;, &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> transitionString <span class="sy0">=</span> transitionStringDetails.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>transitionString.<span class="me1">endsWith</span><span class="br0">&#40;</span><span class="st0">&quot;, &quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      transitionString <span class="sy0">=</span> transitionString.<span class="me1">substring</span><span class="br0">&#40;</span><span class="nu0">0</span>, transitionString.<span class="me1">length</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">-</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    sendNotification<span class="br0">&#40;</span>transitionString<span class="br0">&#41;</span><span class="sy0">;</span>
+    Log.<span class="me1">i</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;The geofence tansaction has been processed: &quot;</span> <span class="sy0">+</span> transitionString<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+    Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> Constants.<span class="me1">GEOFENCE_TRANSITION_UNKNOWN</span> <span class="sy0">+</span> <span class="st0">&quot; &quot;</span> <span class="sy0">+</span> geofenceTransition<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Transmiterea propriu-zisă a notificării implică invocarea unei activități prin intermediul unui obiect de tip <code>PendingIntent</code>. Aceasta este atașată unei ierarhii, fiind transmisă prin plasarea sa pe stiva de activități.
+</p>
+<pre class="code xml"><span class="sc3"><span class="re1">&lt;manifest</span> ...<span class="re2">&gt;</span></span>
+  <span class="sc-1">&lt;!-- other elements --&gt;</span>
+  <span class="sc3"><span class="re1">&lt;application</span> ...<span class="re2">&gt;</span></span>
+    <span class="sc-1">&lt;!-- other elements --&gt;</span>
+    <span class="sc3"><span class="re1">&lt;activity</span></span>
+<span class="sc3">      <span class="re0">android:name</span>=<span class="st0">&quot;.graphicuserinterface.GoogleMapsGeofenceEventActivity&quot;</span></span>
+<span class="sc3">      <span class="re0">android:parentActivityName</span>=<span class="st0">&quot;.graphicuserinterface.GoogleMapsActivity&quot;</span><span class="re2">&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;metadata</span></span>
+<span class="sc3">        <span class="re0">android:name</span>=<span class="st0">&quot;android.support.PARENT_ACTIVITY&quot;</span></span>
+<span class="sc3">        <span class="re0">android:value</span>=<span class="st0">&quot;.graphicuserinterface.GoogleMapsActivity&quot;</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;/activity<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;/application<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span></pre>
+<pre class="code java"><span class="kw1">private</span> <span class="kw4">void</span> sendNotification<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> notificationDetails<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  Intent notificationIntent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span>getApplicationContext<span class="br0">&#40;</span><span class="br0">&#41;</span>, GoogleMapsGeofenceEventActivity.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  notificationIntent.<span class="me1">putExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">NOTIFICATION_DETAILS</span>, notificationDetails<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  TaskStackBuilder stackBuilder <span class="sy0">=</span> TaskStackBuilder.<span class="me1">create</span><span class="br0">&#40;</span><span class="kw1">this</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  stackBuilder.<span class="me1">addParentStack</span><span class="br0">&#40;</span>GoogleMapsGeofenceEventActivity.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  stackBuilder.<span class="me1">addNextIntent</span><span class="br0">&#40;</span>notificationIntent<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  PendingIntent notificationPendingIntent <span class="sy0">=</span> stackBuilder.<span class="me1">getPendingIntent</span><span class="br0">&#40;</span><span class="nu0">0</span>, PendingIntent.<span class="me1">FLAG_UPDATE_CURRENT</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  NotificationCompat.<span class="me1">Builder</span> builder <span class="sy0">=</span> <span class="kw1">new</span> NotificationCompat.<span class="me1">Builder</span><span class="br0">&#40;</span><span class="kw1">this</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  builder.<span class="me1">setSmallIcon</span><span class="br0">&#40;</span>R.<span class="me1">drawable</span>.<span class="me1">ic_launcher</span><span class="br0">&#41;</span>
+    .<span class="me1">setLargeIcon</span><span class="br0">&#40;</span>BitmapFactory.<span class="me1">decodeResource</span><span class="br0">&#40;</span>getResources<span class="br0">&#40;</span><span class="br0">&#41;</span>, R.<span class="me1">drawable</span>.<span class="me1">ic_launcher</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+    .<span class="me1">setColor</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+color"><span class="kw3">Color</span></a>.<span class="me1">RED</span><span class="br0">&#41;</span>
+    .<span class="me1">setContentTitle</span><span class="br0">&#40;</span>Constants.<span class="me1">GEOFENCE_TRANSITION_EVENT</span><span class="br0">&#41;</span>
+    .<span class="me1">setContentText</span><span class="br0">&#40;</span>notificationDetails<span class="br0">&#41;</span>
+    .<span class="me1">setContentIntent</span><span class="br0">&#40;</span>notificationPendingIntent<span class="br0">&#41;</span><span class="sy0">;</span>
+  builder.<span class="me1">setAutoCancel</span><span class="br0">&#40;</span><span class="kw2">true</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  NotificationManager notificationManager <span class="sy0">=</span> <span class="br0">&#40;</span>NotificationManager<span class="br0">&#41;</span> getSystemService<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a>.<span class="me1">NOTIFICATION_SERVICE</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  notificationManager.<span class="me1">notify</span><span class="br0">&#40;</span><span class="nu0">0</span>, builder.<span class="me1">build</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Operațiile care pot fi realizate legate de o zonă de restricție geografică sunt:
+</p>
+
+<p>
+<strong>1.</strong> adăugarea unei zone de restricție geografică.
+</p>
+
+<p>
+O zonă de restricție geografică este construit prin intermediul unei clase <a href="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html"  rel="nofollow">Geofence.Builder</a>, în care se specifică parametrii acesteia:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setCircularRegion%28double,%20double,%20float%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setCircularRegion%28double,%20double,%20float%29"  rel="nofollow">setCircularRegion(double, double, float)</a> - se indică coordonatele zonei de restricție geografice:</div>
+<ul>
+<li class="level2"><div class="li"> centru - latitudine + longitudine;</div>
+</li>
+<li class="level2"><div class="li"> raza;</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setExpirationDuration%28long%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setExpirationDuration%28long%29"  rel="nofollow">setExpirationDuration(long)</a> - se precizează durata de timp (exprimată în milisecunde) după care zona de restricția geografică nu va mai fi activă;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setLoiteringDelay%28int%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setLoiteringDelay%28int%29"  rel="nofollow">setLoiteringDelay(int)</a> - se exprimă o durată de timp (exprimată în milisecunde) în care este temporizată transmiterea de notificări, în situația în care se produc evenimente legate de zona de restricție geografică, cu durata mai mică decât cea indicată;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setNotificationResponsiveness%28int%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setNotificationResponsiveness%28int%29"  rel="nofollow">setNotificationResponsiveness(int)</a> - se stabilește durata de timp (exprimată în milisecunde) după care va fi transmisă notificarea;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setRequestId%28java.lang.String%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setRequestId%28java.lang.String%29"  rel="nofollow">setRequestId(String)</a> - se asociază un identificator unic, prin care zona de restricție geografică va putea fi referită în cadrul aplicației Android;</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setTransitionTypes%28int%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/Geofence.Builder.html#setTransitionTypes%28int%29"  rel="nofollow">setTransitionTypes(int)</a> - se asociază tipurile de tranziții pentru care se vor transmite notificări (de regulă, <code>Geofence.GEOFENCE_TRANSITION_ENTER</code> și <code>Geofence.GEOFENCE_TRANSITION_EXIT</code>).</div>
+</li>
+</ul>
+
+<p>
+O solicitare legată de o zonă de restricție geografică, conținută de un obiect <a href="http://developer.android.com/reference/com/google/android/gms/location/GeofencingRequest.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/GeofencingRequest.html"  rel="nofollow">GeofencingRequest</a>, este construită prin apelul metodelor <code>addGeofence(Geofence)</code> / <code>addGeofences(List&lt;Geofence&gt;)</code>, respectiv <code>build()</code> din cadrul clasei ajutătoare <a href="http://developer.android.com/reference/com/google/android/gms/location/GeofencingRequest.Builder.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/GeofencingRequest.Builder.html"  rel="nofollow">GeofencingRequest.Builder</a>.
+</p>
+
+<p>
+Operația de adăugare este realizată prin apelul metodei <a href="http://developer.android.com/reference/com/google/android/gms/location/GeofencingApi.html#addGeofences%28com.google.android.gms.common.api.GoogleApiClient,%20com.google.android.gms.location.GeofencingRequest,%20android.app.PendingIntent%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/GeofencingApi.html#addGeofences%28com.google.android.gms.common.api.GoogleApiClient,%20com.google.android.gms.location.GeofencingRequest,%20android.app.PendingIntent%29"  rel="nofollow">addGeofences(GoogleApiClient, GeofencingRequest, PendingIntent)</a> din clasa <a href="http://developer.android.com/reference/com/google/android/gms/location/GeofencingApi.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/GeofencingApi.html"  rel="nofollow">GeofencingApi</a>. Rezultatul acestei operații este furnizat prin intermediul unei clase ascultător <a href="http://developer.android.com/reference/com/google/android/gms/common/api/ResultCallback.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/ResultCallback.html"  rel="nofollow">ResultCallback&lt;T&gt;</a>, pentru care se implementează metoda <code>onResult(T)</code>. Aceasta trebuie precizată explicit prin metoda <a href="http://developer.android.com/reference/com/google/android/gms/common/api/PendingResult.html#setResultCallback%28com.google.android.gms.common.api.ResultCallback%3CR%3E%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/PendingResult.html#setResultCallback%28com.google.android.gms.common.api.ResultCallback%3CR%3E%29"  rel="nofollow">setREsultCallback(ResultCallback&lt;T&gt;)</a>, aplicabilă obiectului de tip <a href="http://developer.android.com/reference/com/google/android/gms/common/api/PendingResult.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/PendingResult.html"  rel="nofollow">PendingResult</a>, construit anterior.
+</p>
+<pre class="code java"><span class="kw1">private</span> <span class="kw4">void</span> addGeofence<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> latitude, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> longitude, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> radius<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>googleApiClient <span class="sy0">==</span> <span class="kw2">null</span> <span class="sy0">||</span> <span class="sy0">!</span>googleApiClient.<span class="me1">isConnected</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    Toast.<span class="me1">makeText</span><span class="br0">&#40;</span>
+      GoogleMapsActivity.<span class="kw1">this</span>,
+      <span class="st0">&quot;Google API Client is null or not connected!&quot;</span>,
+      Toast.<span class="me1">LENGTH_SHORT</span>
+    <span class="br0">&#41;</span>.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>latitude <span class="sy0">==</span> <span class="kw2">null</span> <span class="sy0">||</span> latitude.<span class="me1">isEmpty</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">||</span>
+    longitude <span class="sy0">==</span> <span class="kw2">null</span> <span class="sy0">||</span> longitude.<span class="me1">isEmpty</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">||</span>
+    radius <span class="sy0">==</span> <span class="kw2">null</span> <span class="sy0">||</span> radius.<span class="me1">isEmpty</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    Toast.<span class="me1">makeText</span><span class="br0">&#40;</span>
+      GoogleMapsActivity.<span class="kw1">this</span>,
+      <span class="st0">&quot;All fields (gps coordinates, radius) should be filled!&quot;</span>,
+      Toast.<span class="me1">LENGTH_SHORT</span>
+    <span class="br0">&#41;</span>.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  geofenceList.<span class="me1">add</span><span class="br0">&#40;</span><span class="kw1">new</span> Geofence.<span class="me1">Builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    .<span class="me1">setRequestId</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a>.<span class="me1">generateGeofenceIdentifier</span><span class="br0">&#40;</span>Constants.<span class="me1">GEOFENCE_IDENTIFIER_LENGTH</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+    .<span class="me1">setCircularRegion</span><span class="br0">&#40;</span>
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+double"><span class="kw3">Double</span></a>.<span class="me1">parseDouble</span><span class="br0">&#40;</span>latitude<span class="br0">&#41;</span>,
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+double"><span class="kw3">Double</span></a>.<span class="me1">parseDouble</span><span class="br0">&#40;</span>longitude<span class="br0">&#41;</span>,
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+float"><span class="kw3">Float</span></a>.<span class="me1">parseFloat</span><span class="br0">&#40;</span>radius<span class="br0">&#41;</span>
+    <span class="br0">&#41;</span>
+    .<span class="me1">setExpirationDuration</span><span class="br0">&#40;</span>Constants.<span class="me1">GEOFENCE_EXPIRATION_IN_MILLISECONDS</span><span class="br0">&#41;</span>
+    .<span class="me1">setTransitionTypes</span><span class="br0">&#40;</span>
+      Geofence.<span class="me1">GEOFENCE_TRANSITION_ENTER</span> <span class="sy0">|</span>
+      Geofence.<span class="me1">GEOFENCE_TRANSITION_EXIT</span>
+    <span class="br0">&#41;</span>
+    .<span class="me1">build</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  GeofencingRequest.<span class="me1">Builder</span> builder <span class="sy0">=</span> <span class="kw1">new</span> GeofencingRequest.<span class="me1">Builder</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  builder.<span class="me1">setInitialTrigger</span><span class="br0">&#40;</span>GeofencingRequest.<span class="me1">INITIAL_TRIGGER_ENTER</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  builder.<span class="me1">addGeofences</span><span class="br0">&#40;</span>geofenceList<span class="br0">&#41;</span><span class="sy0">;</span>
+  GeofencingRequest geofencingRequest <span class="sy0">=</span> builder.<span class="me1">build</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  LocationServices.<span class="me1">GeofencingApi</span>.<span class="me1">addGeofences</span><span class="br0">&#40;</span>
+    googleApiClient,
+    geofencingRequest,
+    geofenceTrackerPendingIntent
+  <span class="br0">&#41;</span>.<span class="me1">setResultCallback</span><span class="br0">&#40;</span>GoogleMapsActivity.<span class="kw1">this</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+<strong>2.</strong> ștergerea unei zone de restricție geografică:
+</p>
+
+<p>
+Operația de ștergere este realizată prin apelul metodei <a href="https://developer.android.com/reference/com/google/android/gms/location/GeofencingApi.html#removeGeofences%28com.google.android.gms.common.api.GoogleApiClient,%20android.app.PendingIntent%29" class="urlextern" title="https://developer.android.com/reference/com/google/android/gms/location/GeofencingApi.html#removeGeofences%28com.google.android.gms.common.api.GoogleApiClient,%20android.app.PendingIntent%29"  rel="nofollow">removeGeofences(GoogleApiClient,  PendingIntent)</a> din clasa <a href="http://developer.android.com/reference/com/google/android/gms/location/GeofencingApi.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/GeofencingApi.html"  rel="nofollow">GeofencingApi</a>, aceasta referindu-se la toate zonele de restricție geografică. Rezultatul acestei operații este furnizat prin intermediul unei clase ascultător <a href="http://developer.android.com/reference/com/google/android/gms/common/api/ResultCallback.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/ResultCallback.html"  rel="nofollow">ResultCallback&lt;T&gt;</a>, pentru care se implementează metoda <code>onResult(T)</code>. Aceasta trebuie precizată explicit prin metoda <a href="http://developer.android.com/reference/com/google/android/gms/common/api/PendingResult.html#setResultCallback%28com.google.android.gms.common.api.ResultCallback%3CR%3E%29" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/PendingResult.html#setResultCallback%28com.google.android.gms.common.api.ResultCallback%3CR%3E%29"  rel="nofollow">setREsultCallback(ResultCallback&lt;T&gt;)</a>, aplicabilă obiectului de tip <a href="http://developer.android.com/reference/com/google/android/gms/common/api/PendingResult.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/common/api/PendingResult.html"  rel="nofollow">PendingResult</a>, construit anterior.
+</p>
+<pre class="code java"><span class="kw1">private</span> <span class="kw4">void</span> removeGeofence<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>googleApiClient <span class="sy0">==</span> <span class="kw2">null</span> <span class="sy0">||</span> <span class="sy0">!</span>googleApiClient.<span class="me1">isConnected</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    Toast.<span class="me1">makeText</span><span class="br0">&#40;</span>
+      GoogleMapsActivity.<span class="kw1">this</span>,
+      <span class="st0">&quot;Google API Client is null or not connected!&quot;</span>,
+      Toast.<span class="me1">LENGTH_SHORT</span>
+    <span class="br0">&#41;</span>.<span class="me1">show</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  latitudeEditText.<span class="me1">setText</span><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  longitudeEditText.<span class="me1">setText</span><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  radiusEditText.<span class="me1">setText</span><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  geofenceList.<span class="me1">clear</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  LocationServices.<span class="me1">GeofencingApi</span>.<span class="me1">removeGeofences</span><span class="br0">&#40;</span>
+    googleApiClient,
+    geofenceTrackerPendingIntent
+  <span class="br0">&#41;</span>.<span class="me1">setResultCallback</span><span class="br0">&#40;</span>GoogleMapsActivity.<span class="kw1">this</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Se poate observa faptul că ambele operații au nevoie de un client Google <abbr title="Application Programming Interface">API</abbr> nenul și care să fie conectat, motiv pentru care anterior sunt realizate verificările de rigoare, cu semnalarea eventualelor erori.
+</p>
+
+<p>
+Zonele de restricție geografică sunt menținute în cadrul unei liste, actualizată corespunzător pentru fiecare dintre operațiile de adăugare / ștergere.
+</p>
+
+<p>
+Metoda <code>onResult(Status)</code>, care furnizează rezultatul operațiilor de adăugare / ștergere a unei zone de restricție geografică, conține informații suplimentare cu privire la situația curentă:
+</p>
+<ol>
+<li class="level1"><div class="li"> <code>isSuccess()</code> - operația a fost realizată cu success sau cu eșec;</div>
+</li>
+<li class="level1"><div class="li"> <code>getStatusCode()</code> - codul de stare, în situația în care s-a produs o eroare.</div>
+</li>
+</ol>
+<pre class="code java">@Override
+<span class="kw1">public</span> <span class="kw4">void</span> onResult<span class="br0">&#40;</span>Status status<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>status.<span class="me1">isSuccess</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    geofenceStatus <span class="sy0">=</span> <span class="sy0">!</span>geofenceStatus<span class="sy0">;</span>
+  <span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> errorMessage <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+    <span class="kw1">switch</span><span class="br0">&#40;</span>status.<span class="me1">getStatusCode</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">case</span> GeofenceStatusCodes.<span class="me1">GEOFENCE_NOT_AVAILABLE</span><span class="sy0">:</span>
+        errorMessage <span class="sy0">=</span> Constants.<span class="me1">GEOFENCE_NOT_AVAILABLE_ERROR</span><span class="sy0">;</span>
+        <span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">case</span> GeofenceStatusCodes.<span class="me1">GEOFENCE_TOO_MANY_GEOFENCES</span><span class="sy0">:</span>
+        errorMessage <span class="sy0">=</span> Constants.<span class="me1">GEOFENCE_TOO_MANY_GEOFENCES_ERROR</span><span class="sy0">;</span>
+        <span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">case</span> GeofenceStatusCodes.<span class="me1">GEOFENCE_TOO_MANY_PENDING_INTENTS</span><span class="sy0">:</span>
+        errorMessage <span class="sy0">=</span> Constants.<span class="me1">GEOFENCE_TOO_MANY_PENDING_INTENTS_ERROR</span><span class="sy0">;</span>
+        <span class="kw1">break</span><span class="sy0">;</span>
+      <span class="kw1">default</span><span class="sy0">:</span>
+	errorMessage <span class="sy0">=</span> Constants.<span class="me1">GEOFENCE_UNKNOWN_ERROR</span><span class="sy0">;</span>
+        <span class="kw1">break</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred while turning the geofencing on/off: &quot;</span> <span class="sy0">+</span> status.<span class="me1">getStatusCode</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot; &quot;</span> <span class="sy0">+</span> errorMessage<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În situația în care aplicația este întreruptă, informațiile legate de zonele geografice trebuie gestionate corespunzător, fiind recomandat ca persistența să fie realizată prin intermediul unui obiect de tip <code>SharedPreferences</code>.
+</p>
+<ol>
+<li class="level1"><div class="li"> atunci când aplicația Android nu mai este vizibilă, se salvează datele și sunt șterse toate zonele de restricție geografică, astfel încât să nu mai fie transmise notificări;</div>
+</li>
+<li class="level1"><div class="li"> atunci când aplicația Android este vizibilă, se încarcă datele și sunt adăugate toate zonele de restricție geografică, în cazul în care acestea au fost definite anterior.</div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT8 SECTION "Implementarea Zonelor de Restricție Geografică (Geofencing)" [63447-81321] -->
+<h2 class="sectionedit9" id="activitate_de_laborator">Activitate de Laborator</h2>
+<div class="level2">
+
+<p>
+<strong>1.</strong> Să se acceseze <a href="https://console.developers.google.com" class="urlextern" title="https://console.developers.google.com"  rel="nofollow">Google Developer&#039;s Console</a>, după ce a fost realizată autentificarea cu datele contului Google (nume de utilizator, parolă):
+</p>
+<ul>
+<li class="level1"><div class="li"> se obține un număr de proiect (dacă această operație nu a fost realizată anterior);</div>
+</li>
+<li class="level1"><div class="li"> se activează serviciul <em>Google Maps Android <abbr title="Application Programming Interface">API</abbr></em>;</div>
+</li>
+<li class="level1"><div class="li"> se generează o semnătură digitală de tip SHA-1 folosind utilitarul Java <code>keytool</code>;</div>
+</li>
+<li class="level1"><div class="li"> se creează o cheie publică pentru transmiterea de mesaje provenind de la un dispozitiv mobil, pe baza semnăturii digitale și a pachetului care identifică în mod unic aplicația respectivă.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">Pentru toate aplicațiile Android va trebui completată cheia publică în fișierul <code>AndroidManifest.xml</code>.
+</div></p>
+</p>
+
+<p>
+Mai multe detalii pot fi obținute în secțiunea <span class="curid"><a href="../../../../eim/laboratoare/laborator10.html#configurare" class="wikilink1" title="eim:laboratoare:laborator10">Configurare</a></span>.
+</p>
+
+<p>
+<strong>2.</strong> În contul Github personal, să se creeze un depozit denumit &#039;Laborator10&#039;. Inițial, acesta trebuie să fie gol (nu trebuie să bifați nici adăugarea unui fișier <code>README.md</code>, nici a fișierului <code>.gitignore</code> sau a a fișierului <code>LICENSE</code>).
+</p>
+
+<p>
+<strong>3.</strong> Să se cloneze în directorul de pe discul local conținutul depozitului la distanță de la <a href="https://www.github.com/eim2016/Laborator10" class="urlextern" title="https://www.github.com/eim2016/Laborator10"  rel="nofollow">https://www.github.com/eim2016/Laborator10</a>. 
+</p>
+
+<p>
+În urma acestei operații, directorul Laborator10 va trebui să se conțină directoarele <code>labtasks</code> și <code>solutions</code>. 
+</p>
+<pre class="code">student@eim2016:~$ git clone https://www.github.com/eim2016/Laborator10</pre>
+
+<p>
+<strong>4.</strong> Să se încarce conținutul descărcat în cadrul depozitului &#039;Laborator10&#039; de pe contul Github personal. 
+</p>
+<pre class="code">student@eim2016:~$ cd Laborator10
+student@eim2016:~/Laborator10$ git remote add Laborator10_perfectstudent https://github.com/perfectstudent/Laborator10
+student@eim2016:~/Laborator10$ git push Laborator10_perfectstudent master</pre>
+
+<p>
+<strong>5.</strong> Să se configureaze mașina pe care va rula aplicația:
+</p>
+<ul>
+<li class="level1"><div class="li"> în cazul în care se utilizează un emulator, se configurează astfel încât acesta să aibă instalat Google Play Services;</div>
+</li>
+<li class="level1"><div class="li"> în cazul în care se utilizează un dispozitiv fizic, acesta trebuie să ruleze un sistem de operare Android cu o versiune ulterioară 2.2, având asociat un cont Google.</div>
+</li>
+</ul>
+
+<p>
+<strong>6.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectele <code>GoogleMapsPlaces</code> și <code>google-play-service_lib</code> (doar pentru Eclipse) din directorul <code>labtasks</code>.
+</p>
+
+<p>
+Se dorește să se implementeze o aplicație care să navigheze către o locație specificată prin intermediul coordonatelor GPS (latitudine / longitudine) și pentru care se dorește plasarea unui reper pe hartă, însoțit de o denumire.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/google_maps_places.png%3Fw=400&amp;tok=6e0cab" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Reperele vor fi stocate în cadrul unei liste (obiect de tip <code>Spinner</code>), astfel încât la selecția unui element din cadrul acesteia, se va vizualiza obiectivul geografic marcat anterior.
+</p>
+
+<p>
+Se cere să se implementeze funcționalitățile pentru adăugarea unui reper și ștergerea tuturor reperelor de pe hartă:
+</p>
+
+<p>
+<strong>a)</strong> pentru adăugarea unui reper:
+</p>
+<ol>
+<li class="level1"><div class="li"> se obțin informațiile legate de latitudine, longitudine și denumire, din câmpurile text corespunzătoare și se verifică să fie completate (în caz contrar generându-se un mesaj de eroare);</div>
+</li>
+<li class="level1"><div class="li"> se realizează navigarea către locația respectivă;</div>
+</li>
+<li class="level1"><div class="li"> se instanțiază un obiect de tip <code>MarkerOptions</code>, desemnând reperul care va fi plasat pe harta Google; <pre class="code java">MarkerOptions marker <span class="sy0">=</span> <span class="kw1">new</span> MarkerOptions<span class="br0">&#40;</span><span class="br0">&#41;</span>
+  .<span class="me1">position</span><span class="br0">&#40;</span><span class="kw1">new</span> LatLng<span class="br0">&#40;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+double"><span class="kw3">Double</span></a>.<span class="me1">parseDouble</span><span class="br0">&#40;</span>latitudeContent<span class="br0">&#41;</span>, 
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+double"><span class="kw3">Double</span></a>.<span class="me1">parseDouble</span><span class="br0">&#40;</span>longitudeContent<span class="br0">&#41;</span>
+  <span class="br0">&#41;</span><span class="br0">&#41;</span>
+  .<span class="me1">title</span><span class="br0">&#40;</span>nameContent<span class="br0">&#41;</span><span class="sy0">;</span>
+marker.<span class="me1">icon</span><span class="br0">&#40;</span>BitmapDescriptorFactory.<span class="me1">defaultMarker</span><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+utilities"><span class="kw3">Utilities</span></a>.<span class="me1">getDefaultMarker</span><span class="br0">&#40;</span>markerTypeSpinner.<span class="me1">getSelectedItemPosition</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> se adaugă reperul pe harta Google;</div>
+</li>
+<li class="level1"><div class="li"> se adaugă reperul în lista de locații (<code>places</code>), notificându-se și adaptorul corespunzător obiectului de tip <code>Spinner</code> (<code>placesAdapter</code>) de această modificare, astfel încât acesta să fie actualizat corespunzător.</div>
+</li>
+</ol>
+
+<p>
+<strong>b)</strong> pentru ștergerea tuturor reperelor de pe hartă:
+</p>
+<ol>
+<li class="level1"><div class="li"> se verifică să fie completate repere pe harta Google (în caz contrar generându-se un mesaj de eroare);</div>
+</li>
+<li class="level1"><div class="li"> se șterg toate reperele pe harta Google;</div>
+</li>
+<li class="level1"><div class="li"> se șterg toate reperele din lista de locații (<code>places</code>), notificându-se și adaptorul corespunzător obiectului de tip <code>Spinner</code> (<code>placesAdapter</code>) de această modificare, astfel încât acesta să fie actualizat corespunzător.</div>
+</li>
+</ol>
+
+<p>
+<strong>7.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectele <code>GoogleMapsLocationUpdate</code> și <code>google-play-service_lib</code> (doar pentru Eclipse) din directorul <code>labtasks</code>.
+</p>
+
+<p>
+Se dorește să se implementeze o aplicație pentru care să se implementeze posibilitatea de actualizare periodică a poziției curente pe hartă, în funcție de starea unui buton, prin care se controlează pornirea / oprirea acestui serviciu.
+</p>
+<ol>
+<li class="level1"><div class="li"> când serviciul este activat, se vizualizează pe hartă doar locația curentă, completându-se în mod automat informații precum latitudinea și longitudinea, actualizându-se corespunzător poziția;</div>
+</li>
+<li class="level1"><div class="li"> când serviciul este dezactivat, utilizatorul are posibilitatea de a controla poziția care se vizualizează pe hartă.</div>
+</li>
+</ol>
+
+<p>
+De asemenea, se dorește să se poată selecta tipul de hartă care să fie afișat.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/google_maps_location_update_01.png%3Fw=400&amp;tok=f2aec8" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/google_maps_location_update_02.png%3Fw=400&amp;tok=7b95c7" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Se cere să se implementeze metodele pentru pornirea și oprirea serviciului de actualizare periodică a locației de pe hartă:
+</p>
+
+<p>
+<strong>a)</strong> metoda <code>startLocationUpdates()</code> din clasa <code>GoogleMapsActivity</code>:
+</p>
+<ol>
+<li class="level1"><div class="li"> se apelează metoda <code>requestLocationUpdates()</code> din clasa <code>FusedLocationProviderApi</code> <pre class="code java">LocationServices.<span class="me1">FusedLocationApi</span>.<span class="me1">requestLocationUpdates</span><span class="br0">&#40;</span>
+  googleApiClient,
+  locationRequest,
+  <span class="kw1">this</span>
+<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> se actualizează starea serviciului de transmitere periodice a locației curente (<code>locationUpdatesStatus</code>);</div>
+</li>
+<li class="level1"><div class="li"> se vizualizează poziția curentă pe harta Google (se apelează metoda <code>setMyLocationEnabled(true)</code>);</div>
+</li>
+<li class="level1"><div class="li"> se modifică textul și culoarea butonului <code>locationUpdateStatusButton</code>;</div>
+</li>
+<li class="level1"><div class="li"> se navighează la locația curentă;</div>
+</li>
+<li class="level1"><div class="li"> se dezactivează controalele grafice <code>latitudeEditText</code>, <code>longitudeEditText</code>, <code>navigateToLocationButton</code>.</div>
+</li>
+</ol>
+
+<p>
+<strong>b)</strong> metoda <code>stopLocationUpdates()</code> din clasa <code>GoogleMapsActivity</code>
+</p>
+<ol>
+<li class="level1"><div class="li"> se apelează metoda <code>removeLocationUpdates()</code> din clasa <code>FusedLocationProviderApi</code> <pre class="code java">LocationServices.<span class="me1">FusedLocationApi</span>.<span class="me1">removeLocationUpdates</span><span class="br0">&#40;</span>
+  googleApiClient,
+  <span class="kw1">this</span>
+<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> se actualizează starea serviciului de transmitere periodice a locației curente (<code>locationUpdatesStatus</code>);</div>
+</li>
+<li class="level1"><div class="li"> nu se vizualizează poziția curentă pe harta Google (se apelează metoda <code>setMyLocationEnabled(false)</code>);</div>
+</li>
+<li class="level1"><div class="li"> se modifică textul și culoarea butonului <code>locationUpdateStatusButton</code>;</div>
+</li>
+<li class="level1"><div class="li"> se activează controalele grafice <code>latitudeEditText</code>, <code>longitudeEditText</code>, <code>navigateToLocationButton</code>, acestea având un conținut vid.</div>
+</li>
+</ol>
+
+<p>
+<strong>8.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectele <code>GoogleMapsGeocoding</code> și  <code>google-play-service_lib</code> (doar pentru Eclipse) din directorul <code>labtasks</code>.
+</p>
+
+<p>
+Se dorește să se implementeze o aplicație care să realizeze procesul de codificare geografică inversă: dându-se un set de coordonate GPS, se dorește să se determine adresa poștală corespunzătoare.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/google_maps_geocoding.png%3Fw=400&amp;tok=774421" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Se cere să se implementeze procesul de conversie propriu-zis, în cadrul serviciului <code>GetLocationAddressIntentService</code>, pe metoda <code>onHandleIntent()</code>.
+</p>
+<ol>
+<li class="level1"><div class="li"> se instanțiază un obiect de tip <code>Geocoder</code> <pre class="code java">Geocoder geocoder <span class="sy0">=</span> <span class="kw1">new</span> Geocoder<span class="br0">&#40;</span><span class="kw1">this</span>, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+locale"><span class="kw3">Locale</span></a>.<span class="me1">getDefault</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> se obține lista de adrese prin invocarea metodei <code>getFromLocation()</code> care primește ca parametri:</div>
+<ol>
+<li class="level2"><div class="li"> latitudinea;</div>
+</li>
+<li class="level2"><div class="li"> longitudinea;</div>
+</li>
+<li class="level2"><div class="li"> numărul de adrese întoarse (<code>Constants.NUMBER_OF_ADDRESSES</code>);</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> se tratează corespunzător tipurile de execepții ce pot fi generate (<code>IOException</code>, <code>IllegalArgumentException</code>) precum și situația în care nu este furnizat nici un rezultat;</div>
+</li>
+<li class="level1"><div class="li"> se parcurge lista de adrese: pentru fiecare adresă în parte se concatenează rândurile distincte, concatenându-se toate rezultatele obținute;</div>
+<ol>
+<li class="level2"><div class="li"> numărul de linii dintr-o adresă este furnizat de metoda <code>getMaxAddressLineIndex()</code>;</div>
+</li>
+<li class="level2"><div class="li"> un rând de la o anumită poziție se obține prin intermediul metodei <code>getAddressLine()</code>;</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> se transmite rezultatul către activitatea principală (se apelează metoda <code>handleResult()</code> cu codul numeric de rezultat (<code>Constants.RESULT_SUCCESS</code>, <code>Constants.RESULT_FAILURE</code>) și rezultatul obținut, respectiv mesajul de eroare, după caz.</div>
+</li>
+</ol>
+
+<p>
+<strong>9.</strong> Să se importe în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectele <code>GoogleMapsGeofencing</code> și  <code>google-play-service_lib</code> (doar pentru Eclipse) din directorul <code>labtasks</code>.
+</p>
+
+<p>
+Se dorește să se implementeze o aplicație care să monitorizeze activitatea unui dispozitiv mobil raportat la o zonă de restricție geografică. 
+</p>
+
+<p>
+Serviciul referitor la monitorizarea unei anumite locații poate fi activat sau dezactivat, specificându-se de fiecare dată coordonatele zonei față de care sunt realizate comparațiile.
+</p>
+
+<p>
+Aplicația va afișa pe hartă în permanență locația curentă prin actualizările periodice care sunt transmise.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator10/google_maps_geofencing_01.png%3Fw=400&amp;tok=47571a" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+Notificările vor fi generate:
+</p>
+<ol>
+<li class="level1"><div class="li"> când utilizatorul intră în zona de restricție geografică<br/>
+<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/google_maps_geofencing_02.png%3Fw=300&amp;tok=a78a88" class="media" alt="" width="300" /> <img src="../../../../_media/eim/laboratoare/laborator10/google_maps_geofencing_03.png%3Fw=300&amp;tok=7994c9" class="media" alt="" width="300" /></div>
+</li>
+<li class="level1"><div class="li"> când utilizatorul iese din zona de restricție geografică<br/>
+<br/>
+<img src="../../../../_media/eim/laboratoare/laborator10/google_maps_geofencing_04.png%3Fw=300&amp;tok=cfe03f" class="media" alt="" width="300" /> <img src="../../../../_media/eim/laboratoare/laborator10/google_maps_geofencing_05.png%3Fw=300&amp;tok=d5a14e" class="media" alt="" width="300" /></div>
+</li>
+</ol>
+
+<p>
+Detaliile cu privire la evenimentul produs vor putea fi vizualizate în cadrul unei activități dedicate.
+</p>
+
+<p>
+Se cere să se analizeze evenimentul legat de zona de restricție geografică în cadrul serviciului <code>GeofenceTrackerIntentService</code>, pe metoda <code>onHandleIntent()</code>.
+</p>
+<ol>
+<li class="level1"><div class="li"> se obține evenimentul legat de zona de restricție geografică, din cadrul intenției cu care a fost lansat în execuție serviciul <pre class="code java">GeofencingEvent geofencingEvent <span class="sy0">=</span> GeofencingEvent.<span class="me1">fromIntent</span><span class="br0">&#40;</span>intent<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> se verifică dacă evenimentul legat de zona de restricție geografică conține vreo eroare (prin apelul metodei <code>hasError()</code>), aceasta fiind tratată corespunzător (se jurnalizează eroarea și metoda se termină):</div>
+<ol>
+<li class="level2"><div class="li"> <code>GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE</code></div>
+</li>
+<li class="level2"><div class="li"> <code>GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES</code></div>
+</li>
+<li class="level2"><div class="li"> <code>GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS</code>.</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> se obține tipul de tranziție geografică <pre class="code java"><span class="kw4">int</span> geofenceTransition <span class="sy0">=</span> geofencingEvent.<span class="me1">getGeofenceTransition</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> se construiește un mesaj explicativ conținând</div>
+<ol>
+<li class="level2"><div class="li"> tipul tranziției: <code>Geofence.GEOFENCE_TRANSITION_ENTER</code> / <code>Geofence.GEOFENCE_TRANSITION_EXIT</code>;</div>
+</li>
+<li class="level2"><div class="li"> identificatorii restricțiilor legate de poziționarea geografică:</div>
+<ol>
+<li class="level3"><div class="li"> se obține lista tuturor restricțiilor legate de poziționarea geografică <pre class="code java">List<span class="sy0">&lt;</span>Geofence<span class="sy0">&gt;</span> triggeringGeofences <span class="sy0">=</span> geofencingEvent.<span class="me1">getTriggeringGeofences</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level3"><div class="li"> se parcurge lista și pentru fiecare obiect se obține identificatorul unic (<code>getRequestId()</code>);</div>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> se transmite mesajul explicativ prin intermediul unei notificări (ca parametru al metodei <code>sendNotification()</code>).</div>
+</li>
+</ol>
+
+<p>
+<strong>10.</strong> Să se încarce modificările realizate în cadrul depozitului &#039;Laborator10&#039; de pe contul Github personal, folosind un mesaj sugestiv. 
+</p>
+<pre class="code">student@eim2016:~/Laborator10$ git add *
+student@eim2016:~/Laborator10$ git commit -m &quot;implemented taks for laboratory 10&quot;
+student@eim2016:~/Laborator10$ git push Laborator10_perfectstudent master</pre>
+
+</div>
+<!-- EDIT9 SECTION "Activitate de Laborator" [81322-93582] -->
+<h2 class="sectionedit10" id="resurse_utile">Resurse Utile</h2>
+<div class="level2">
+
+<p>
+<a href="http://developer.android.com/google/play-services/location.html" class="urlextern" title="http://developer.android.com/google/play-services/location.html"  rel="nofollow">Location &amp; Places</a><br/>
+
+<a href="https://developers.google.com/maps/documentation/android/" class="urlextern" title="https://developers.google.com/maps/documentation/android/"  rel="nofollow">Google Maps Android API v2</a><br/>
+
+<a href="http://developer.android.com/training/location/index.html" class="urlextern" title="http://developer.android.com/training/location/index.html"  rel="nofollow">Tutorial: Making your Application Location-Aware</a><br/>
+
+<a href="http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118199545.html" class="urlextern" title="http://eu.wiley.com/WileyCDA/WileyTitle/productCd-1118199545.html"  rel="nofollow">Wei Meng LEE, Beginning Android 4 Application Development, Wiley, 2012</a> - capitolul 9, <em>Location-Based Services</em><br/>
+
+<a href="http://www.amazon.com/Professional-Android-4-Application-Development/dp/1118102274" class="urlextern" title="http://www.amazon.com/Professional-Android-4-Application-Development/dp/1118102274"  rel="nofollow">Reto MEIER, Professional Android for Application Development, John Wiley &amp; Sons, 2012</a> - capitolul 13 <em>Maps, Geocoding and Location-Based Services</em><br/>
+
+<a href="http://www.apress.com/9781430239307" class="urlextern" title="http://www.apress.com/9781430239307"  rel="nofollow">Satya KOMATINENI, Dave MACLEAN, Pro Android 4, Apress, 2012</a> - capitolul 22, <em>Exploring Maps and Location-based Services</em><br/>
+
+<a href="http://books.google.ro/books/about/The_Android_Developer_s_Cookbook.html?id=Y4JR2yI2Fo0C&amp;redir_esc=y" class="urlextern" title="http://books.google.ro/books/about/The_Android_Developer_s_Cookbook.html?id=Y4JR2yI2Fo0C&amp;redir_esc=y"  rel="nofollow">Ronan SCHWARZ, Phil DUTSON, James STEELE, Nelson TO, Android Developer&#039;s Cookbook, Building Applications with the Android SDK, 2nd Edition, Addison Wesley, 2013</a> - capitolul 12, <em>Location-Based Services</em><br/>
+
+<a href="http://www.bignerdranch.com/we-write/android-programming/" class="urlextern" title="http://www.bignerdranch.com/we-write/android-programming/"  rel="nofollow">Bill PHILLIPS, Brian HARDY, Android Programming. The Big Nerd Ranch Guide, Pearson Technology Group, 2013</a> - capitolul 33, <em>Tracking the Device&#039;s Location</em><br/>
+
+<a href="http://developer.android.com/reference/com/google/android/gms/location/package-summary.html" class="urlextern" title="http://developer.android.com/reference/com/google/android/gms/location/package-summary.html"  rel="nofollow">Package com.google.android.gms.location</a><br/>
+
+<a href="http://www.androidhive.info/2013/08/android-working-with-google-maps-v2/" class="urlextern" title="http://www.androidhive.info/2013/08/android-working-with-google-maps-v2/"  rel="nofollow">Android Working with Google Maps v2</a><br/>
+
+<a href="http://javapapers.com/android/android-get-address-with-street-name-city-for-location-with-geocoding/" class="urlextern" title="http://javapapers.com/android/android-get-address-with-street-name-city-for-location-with-geocoding/"  rel="nofollow">Android Get Address with Street Name, City for Location with Geocoding</a><br/>
+
+<a href="https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project" class="urlextern" title="https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project"  rel="nofollow">Setting up Google Play Services in Android Studio</a>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "Resurse Utile" [93583-] --></div>
+</body>
+</html>

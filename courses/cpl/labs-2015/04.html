@@ -1,0 +1,715 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    04. Introduction to LLVM    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T07:30:49+0300"/>
+<meta name="keywords" content="cpl,labs-2015,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cpl:labs-2015"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cpl/labs-2015/04.html"/>
+<link rel="canonical" href="04.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs-2015';var JSINFO = {"id":"cpl:labs-2015:04","namespace":"cpl:labs-2015","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cpl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="04%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="04%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="introduction_to_llvm">04. Introduction to LLVM</h2>
+<div class="level2">
+
+<p>
+LLVM conține o serie de biblioteci și utilitare care pot fi folosite pentru a construi compilatoare, interpretoare și alte tool-uri similare. Găsiți <a href="http://adriansampson.net/blog/llvm.html" class="urlextern" title="http://adriansampson.net/blog/llvm.html"  rel="nofollow">aici</a> o introducere și câteva exemple interesante de utilizare a LLVM-ului. Pentru și mai multe exemple, există o <a href="http://llvm.org/ProjectsWithLLVM/" class="urlextern" title="http://llvm.org/ProjectsWithLLVM/"  rel="nofollow">pagină cu proiecte</a> care folosesc LLVM.
+</p>
+
+<p>
+Printre cele mai importante componente ale LLVM se află engine-ul de optimizări independente de platformă și de limbaj. Acesta lucrează cu o reprezentare intermediară a programelor, pe care o vom prezenta în cadrul acestui laborator. Această reprezentare este de asemenea liantul între front-end-uri (precum Clang pentru C/C++/Objective-C) și back-end-uri (în prezent, LLVM are back-end-uri pentru x86, ARM, PowerPC, MIPS, Sparc etc).
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="reprezentarea_intermediara_a_llvm_llvm_ir">Reprezentarea intermediară a LLVM (LLVM IR)</h2>
+<div class="level2">
+
+<p>
+Reprezentarea intermediară a LLVM-ului are 3 forme:
+</p>
+<ul>
+<li class="level1"><div class="li"> Reprezentarea în memorie = forma cu care lucrează bibliotecile LLVM-ului, și pe care o vom folosi în laboratorul 5</div>
+</li>
+<li class="level1"><div class="li"> Reprezentarea textuală = forma “human-readable” a IR-ului, folosită mai ales pentru debugging, și cu care vom lucra în acest laborator; de regulă fișierele care conțin IR în formă textuală au extensia <code>.ll</code></div>
+</li>
+<li class="level1"><div class="li"> Reprezentarea binară = forma mai condensată a IR-ului, folosită în general de tool-uri; de regulă fișierele care conțin IR în forma binară au extensia <code>.bc</code></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="tool-uri_pentru_lucrul_cu_ir-ul">Tool-uri pentru lucrul cu IR-ul</h2>
+<div class="level2">
+
+<p>
+Obținerea reprezentării textuale a unui fișier C sau C++:
+</p>
+<pre class="code bash">clang <span class="re5">-S</span> <span class="re5">-emit-llvm</span> yourfile.c <span class="re5">-o</span> yourfile.ll</pre>
+
+<p>
+Obținerea reprezentării binare a unui fișier C sau C++:
+</p>
+<pre class="code bash">clang <span class="re5">-c</span> <span class="re5">-emit-llvm</span> yourfile.c <span class="re5">-o</span> yourfile.bc</pre>
+
+<p>
+Observați utilizarea flag-urilor <code>-S</code>, ca atunci când dorim obținerea unui fișier în limbaj de asamblare, și <code>-c</code>, ca atunci când dorim obținerea unui fișier obiect, urmate de <code>-emit-llvm</code> pentru a obține IR (fie în forma textuală, asemănătoare unui limbaj de asamblare, fie în forma binară, similară unui format obiect). Pentru conversia între cele 2 reprezentări se pot folosi tool-urile <code>llvm-as</code> și <code>llvm-dis</code>.
+</p>
+
+<p>
+Alte utilitare care merită menționate sunt <code>opt</code>, care reprezintă o interfață către engine-ul de optimizări (primește ca input fișiere IR și scoate tot fișiere IR), <code>llc</code>, care poate compila un fișier IR pentru o anumită arhitectură (primește un fișier IR și produce un fișier în limbaj de asamblare sau un fișier obiect), și <code>lli</code>, care poate interpreta un fișier IR (primește un fișier IR și produce rezultatele rulării programului respectiv pe platforma curentă). Mai multe informații despre utilitarele din suita LLVM găsiți <a href="http://llvm.org/docs/CommandGuide/" class="urlextern" title="http://llvm.org/docs/CommandGuide/"  rel="nofollow">aici</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="organizarea_ir-ului">Organizarea IR-ului</h2>
+<div class="level2">
+
+<p>
+În general, fiecare fișier <code>.ll</code> sau <code>.bc</code> va conține un <strong>modul</strong> alcătuit din mai multe declarații de funcții, variabile globale, tipuri etc.
+</p>
+
+<p>
+IR-ul de LLVM pentru fiecare funcție este organizat sub forma unui <strong>control flow graph</strong>, alcătuit din basic block-uri. Un <strong>basic block</strong> este o secvență de instrucțiuni neîntreruptă de transferuri de control. Transferurile de control se realizează prin intermediul unor instrucțiuni de tip <code>branch</code>, <code>return</code>, <code>switch</code> etc (cunoscute sub numele de <code>terminators</code>).
+</p>
+
+<p>
+<strong>Control flow graph</strong>-ul poate fi vizualizat grafic sub forma unui fișier <code>DOT</code>. Pentru obținerea fișierelor, se poate utiliza utilitarul <code>opt</code>:
+</p>
+<pre class="code bash">opt <span class="re5">-dot-cfg</span> yourfile.ll</pre>
+
+<p>
+Rezultatul rulării va consta în câte un fișier <code>DOT</code> pentru fiecare funcție din modul (<code>cfg.f.dot</code>, <code>cfg.g.dot</code> etc). Pentru a vizualiza fișierele în mașina virtuală puteți instala pachetul <code>xdot</code>:
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> <span class="kw2">apt-get install</span> xdot
+xdot cfg.f.dot</pre>
+
+<p>
+Fiecare nod din graful plotat de <code>xdot</code> reprezintă un basic block, în timp ce arcele reprezintă posibile căi de execuție. Fiecare nod va conține secvența de instrucțiuni corepunzătoare basic block-ului pe care îl reprezintă. O descriere completă a tuturor instrucțiunilor din IR-ul de LLVM se găsește <a href="http://llvm.org/docs/LangRef.html" class="urlextern" title="http://llvm.org/docs/LangRef.html"  rel="nofollow">aici</a>. Majoritatea instrucțiunilor sunt destul de intuitive: <strong>add</strong>, <strong>sub</strong>, <strong>mul</strong>, <strong>fadd</strong>, <strong>fsub</strong>, <strong>fmul</strong> etc pentru operații aritmetice, <strong>load</strong> și <strong>store</strong> pentru citiri și scrieri din memorie, <strong>icmp</strong> și <strong>fcmp</strong> pentru realizarea comparațiilor, și așa mai departe. Spre deosebire de limbajele de asamblare tradiționale, IR-ul de LLVM este tipat - fiecare valoare are un anumit tip și tipurile pe care se poate aplica o anumită operație sunt bine definite.
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="sistemul_de_tipuri">Sistemul de tipuri</h3>
+<div class="level3">
+
+<p>
+Tipurile care pot să apară în IR-ul de LLVM includ (lista completă o găsiți <a href="http://llvm.org/docs/LangRef.html#type-system" class="urlextern" title="http://llvm.org/docs/LangRef.html#type-system"  rel="nofollow">aici</a>):
+</p>
+
+</div>
+
+<h5 id="numere_intregi">Numere întregi</h5>
+<div class="level5">
+
+<p>
+Numerele întregi pot fi reprezentate pe un număr oarecare de biți - de exemplu <code>i32</code>, <code>i16</code>, <code>i1</code>, <code>i24</code>. Numărul de biți poate lua orice valoare între 1 și 2^23 - 1.
+</p>
+
+<p>
+Valorile sunt reprezentate în <a href="https://en.wikipedia.org/wiki/Two%27s_complement" class="urlextern" title="https://en.wikipedia.org/wiki/Two%27s_complement"  rel="nofollow">complement față de 2</a>; un aspect important este faptul că valorile întregi nu au semn - în schimb, instrucțiunile care lucrează cu întregi pot ține cont de semn dacă este cazul. De exemplu, operația de adunare este identică pentru numere cu semn și fără semn (și ca urmare există o singură instrucțiune <strong>add</strong>), în schimb împărțirea nu este (drept urmare există instrucțile <strong>sdiv</strong> pentru împărțiri cu semn și <strong>udiv</strong> pentru împărțiri fără semn). Un alt exemplu este instrucțiunea <strong>icmp</strong>, care poate lua flag-uri diferite - de exemplu <strong>sgt</strong> pentru <code>&gt;</code> între numere cu semn și <strong>ugt</strong> între numere fără semn.
+</p>
+
+</div>
+
+<h5 id="numere_in_virgula_mobila">Numere în virgulă mobilă</h5>
+<div class="level5">
+
+<p>
+LLVM conține un număr limitat de reprezentări în virgulă mobilă, dintre care merită menționate <code>double</code> (pe 64 de biți), <code>float</code> (pe 32 de biți), <code>half</code> (pe 16 biți). Instrucțiunile care lucrează cu numere în virgulă mobilă sunt în general prefixate cu litera f: <strong>fadd</strong>, <strong>fmul</strong>, <strong>fcmp</strong> etc.
+</p>
+
+</div>
+
+<h5 id="vectori">Vectori</h5>
+<div class="level5">
+
+<p>
+Vectorii reprezintă valori ce pot fi manipulate de unitățile vectoriale (SIMD) prezente în arhitecturile moderne, precum MMX și SSE pentru x86, NEON pentru ARM, AltiVec pentru PowerPC. Exemple de tipuri vectoriale sunt <code>&lt;4 x i32&gt;</code>, <code>&lt;2 x double&gt;</code> etc. Acestea pot să existe în IR fie pentru că apar explicit în program (unele limbaje precum OpenCL oferă suport pentru tipuri vectoriale, iar pentru C/C++ există de regulă extensii de compilator care pot fi folosite), fie ca urmare a optimizărilor realizate de LLVM.
+</p>
+
+</div>
+
+<h5 id="array-uri">Array-uri</h5>
+<div class="level5">
+
+<p>
+Reprezintă zone contigue de memorie, ca în C - de exemplu <code>[100 x i32]</code>, <code>[10 x [10 x float]]</code>.
+</p>
+
+</div>
+
+<h5 id="pointeri">Pointeri</h5>
+<div class="level5">
+
+<p>
+Reprezintă o locație de memorie, ca în C - de exemplu <code>i32*</code>, <code>float *</code>, <code>[10 x i32] *</code>.
+</p>
+
+</div>
+
+<h5 id="structuri">Structuri</h5>
+<div class="level5">
+
+<p>
+Asemănătoare cu <code>struct</code>-urile din C - de exemplu <code>{ i16, float *, [10 x i8] }</code>. Membrii structurilor nu au nume - ei vor fi accesați prin intremediul unui indice (0 pentru primul membru, 1 pentru al doilea și așa mai departe).
+</p>
+
+</div>
+
+<h5 id="tipuri_de_functii">Tipuri de funcții</h5>
+<div class="level5">
+
+<p>
+Reprezintă semnătura unei funcții - de exemplu <code>i32 (i8 *, i8 *)</code> este tipul unei funcții care primește ca parametri doi pointeri la <code>i8</code> și întoarce un <code>i32</code>.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="instructiuni">Instrucțiuni</h3>
+<div class="level3">
+
+<p>
+Am menționat deja câteva tipuri importante de instrucțiuni - cele aritmetice (<strong>add</strong>, <strong>fmul</strong> etc), cele de lucru cu memoria (<strong>load</strong>, <strong>store</strong>), cele relaționale (<strong>icmp</strong>, <strong>fcmp</strong>), cele de transfer de control (<strong>br</strong>, <strong>ret</strong> etc).
+</p>
+
+<p>
+Alte instrucțiuni care merită menționate sunt:
+</p>
+
+</div>
+
+<h5 id="instructiunile_de_conversie">Instrucțiunile de conversie</h5>
+<div class="level5">
+
+<p>
+Acestea sunt necesare deoarece fiecare instrucțiune din LLVM are cerințe foarte precise asupra tipurilor pe care le acceptă. Exemple de instrucțiuni de conversie sunt <strong>trunc</strong> - pentru trunchierea valorilor la un număr mai mic de biți, <strong>sext</strong> și <strong>zext</strong> pentru extinderea la un număr mai mare de biți (ținând cont de semn sau nu), <strong>sitofp</strong> - signed integer to floating point etc.
+</p>
+
+</div>
+
+<h5 id="instructiunea_getelementptr_gep">Instrucțiunea &#039;&#039;getelementptr&#039;&#039; (&#039;&#039;GEP&#039;&#039;)</h5>
+<div class="level5">
+
+<p>
+Această instrucțiune realizează calcule de adrese, <em class="u">fără a accesa însă memoria</em>. Pornind de la un pointer, este folosită pentru a indexa în array-uri și structuri, ca în exemplul următor:
+</p>
+<pre class="code C"><span class="kw4">struct</span> data <span class="br0">&#123;</span>
+  <span class="kw4">int</span> x<span class="sy0">,</span> y<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> lots_of_data <span class="br0">&#123;</span>
+  <span class="kw4">struct</span> data storage<span class="br0">&#91;</span><span class="nu0">10</span><span class="br0">&#93;</span><span class="sy0">;</span>
+  <span class="kw4">int</span> n<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">// [...]</span>
+<span class="co1">// struct lots_of_data *my_data</span>
+my_data<span class="sy0">-&gt;</span>storage<span class="br0">&#91;</span><span class="nu0">5</span><span class="br0">&#93;</span>.<span class="me1">y</span> <span class="sy0">=</span> <span class="nu0">42</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">// IR-ul va conține instrucțiuni de genul:</span>
+<span class="co1">// %addr = getelementptr inbounds %struct.lots_of_data* %my_data, i32 0, i32 0, i32 5, i32 1</span>
+<span class="co1">// store i32 42, i32* %addr, align 4</span></pre>
+
+<p>
+Primul indice 0 este folosit pentru a indexa în %my_data (gândiți-vă că <code>my_data→storage</code> e echivalent cu <code>my_data[0].storage</code>).
+Al doilea indice 0 este folosit pentru a obține primul membru al structurii <code>lots_of_data</code> (<code>storage</code>). 
+Următorul indice, 5, este folosit pentru a indexa în <code>my_data→storage</code>, iar ultimul indice este folosit pentru a obține membrul <code>y</code> al structurii <code>data</code>.
+</p>
+
+<p>
+Este important de observat faptul că accesul la memorie se face cu ajutorul instrucțiunii <strong>store</strong>, independent de calcularea adresei la care va fi stocată informația.
+</p>
+
+<p>
+Mai multe explicații găsiți <a href="http://llvm.org/docs/GetElementPtr.html" class="urlextern" title="http://llvm.org/docs/GetElementPtr.html"  rel="nofollow">aici</a>.
+</p>
+
+</div>
+
+<h5 id="instructiunea_phi__forma_ssa">Instrucțiunea &#039;&#039;phi&#039;&#039;. Forma SSA</h5>
+<div class="level5">
+
+<p>
+Un aspect important al IR-ului de LLVM este faptul că este în formă SSA - <strong>Static Single Assignment</strong>. În această formă, fiecare valoare poate fi asignată o singură dată (dar folosită de ori câte ori). De exemplu, variabila <code>x</code> din codul de mai jos este asignată de două ori, lucru întâlnit frecvent în limbajele procedurale precum C.
+</p>
+<pre class="code C">x <span class="sy0">=</span> m <span class="sy0">*</span> n<span class="sy0">;</span>
+a <span class="sy0">=</span> x <span class="sy0">+</span> y<span class="sy0">;</span>
+x <span class="sy0">=</span> m <span class="sy0">+</span> n<span class="sy0">;</span>
+b <span class="sy0">=</span> x <span class="sy0">+</span> y<span class="sy0">;</span></pre>
+
+<p>
+La transformarea în formă SSA, vor exista două versiuni diferite ale variabilei <code>x</code> - una reprezentând valoarea de după prima atribuire, una reprezentând valoarea de după cea de-a doua atribuire:
+</p>
+<pre class="code C">x_1 <span class="sy0">=</span> m <span class="sy0">*</span> n<span class="sy0">;</span>
+  a <span class="sy0">=</span> x_1 <span class="sy0">+</span> y<span class="sy0">;</span>
+x_2 <span class="sy0">=</span> m <span class="sy0">+</span> n<span class="sy0">;</span>
+  b <span class="sy0">=</span> x_2 <span class="sy0">+</span> y<span class="sy0">;</span></pre>
+
+<p>
+Această transformare simplifică multe optimizări. Dacă în primul exemplu am fi vrut să calculăm <code>x + y</code> o singură dată și să îl folosim atât în atribuirea lui <code>a</code> cât și a lui <code>b</code>, ar fi trebuit întâi să verificăm că valorile lui <code>x</code> și <code>y</code> nu se schimbă între cele două folosiri. În cel de-al doilea exemplu, este evident de la bun început faptul că cele două expresii sunt diferite - nu e nevoie de nicio analiză suplimentară.
+</p>
+
+<p>
+Să considerăm un exemplu un pic mai complicat:
+</p>
+<pre class="code C"><span class="kw1">if</span> <span class="br0">&#40;</span>cond<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  x <span class="sy0">=</span> m <span class="sy0">*</span> n<span class="sy0">;</span>
+<span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+  x <span class="sy0">=</span> m <span class="sy0">+</span> n<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+a <span class="sy0">=</span> x <span class="sy0">+</span> y<span class="sy0">;</span></pre>
+
+<p>
+Chiar dacă se află pe ramuri diferite ale <code>if</code>-ului, cele două atribuiri ale lui <code>x</code> trebuie versionate: vom avea un <code>x_1</code> pe prima ramură și un <code>x_2</code> pe cea de-a doua. Atribuirea lui <code>a</code> va trebui să folosească fie <code>x_1</code>, fie <code>x_2</code>, în funcție de valoarea lui <code>cond</code>. Pentru a exprima acest lucru, în forma SSA s-a introdus instrucțiunea <strong>phi</strong>:
+</p>
+<pre class="code C"><span class="kw1">if</span> <span class="br0">&#40;</span>cond<span class="br0">&#41;</span>
+  x_1 <span class="sy0">=</span> m <span class="sy0">*</span> n<span class="sy0">;</span>
+<span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+  x_2 <span class="sy0">=</span> m <span class="sy0">+</span> n<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+x_3 <span class="sy0">=</span> phi <span class="br0">&#40;</span>x_1<span class="sy0">,</span> x_2<span class="br0">&#41;</span>
+a <span class="sy0">=</span> x_3 <span class="sy0">+</span> y<span class="sy0">;</span></pre>
+
+<p>
+Astfel, atribuirea lui <code>a</code> va folosi o a treia versiune a lui <code>x</code>, care poate fi fie <code>x_1</code>, fie <code>x_2</code>, în funcție de branch-ul ales la runtime. În sintaxa LLVM, instrucțiunea <strong>phi</strong> va lua câte o pereche de operanzi pentru fiecare basic block din care ar putea ajunge execuția la blocul curent - primul membru al perechii reprezintă valoarea care se va atribui, iar a doua label-ul basic block-ului din care s-a transferat controlul:
+</p>
+<pre class="code llvm">if<span class="sy0">.</span>then<span class="sy0">:</span>
+  <span class="re0">%x.1</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_mul"><span class="kw2">mul</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re0">%m</span><span class="sy0">,</span> <span class="re0">%n</span>
+  <a href="http://llvm.org/docs/LangRef.html#i_br"><span class="kw1">br</span></a> <a href="http://llvm.org/docs/LangRef.html#t_label"><span class="kw16">label</span></a> <span class="re0">%if.end</span>
+&nbsp;
+if<span class="sy0">.</span>else<span class="sy0">:</span>
+  <span class="re0">%x.2</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_add"><span class="kw2">add</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re0">%m</span><span class="sy0">,</span> <span class="re0">%n</span>
+  <a href="http://llvm.org/docs/LangRef.html#i_br"><span class="kw1">br</span></a> <a href="http://llvm.org/docs/LangRef.html#t_label"><span class="kw16">label</span></a> <span class="re0">%if.end</span>
+&nbsp;
+if<span class="sy0">.</span>end<span class="sy0">:</span>
+  <span class="re0">%x.3</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_phi"><span class="kw8">phi</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="br0">&#91;</span> <span class="re0">%x.1</span><span class="sy0">,</span> <span class="re0">%if.then</span><span class="br0">&#93;</span><span class="sy0">,</span> <span class="br0">&#91;</span> <span class="re0">%x.2</span><span class="sy0">,</span> <span class="re0">%if.else</span><span class="br0">&#93;</span>
+  <span class="re0">%a</span> <span class="sy0">=</span> <a href="http://llvm.org/docs/LangRef.html#i_add"><span class="kw2">add</span></a> <a href="http://llvm.org/docs/LangRef.html#t_integer"><span class="re4">i32</span></a> <span class="re0">%x.3</span><span class="sy0">,</span> <span class="re0">%y</span></pre>
+
+</div>
+
+<h5 id="instructinea_alloca">Instrucținea &#039;&#039;alloca&#039;&#039;</h5>
+<div class="level5">
+
+<p>
+Această instrucțiune alocă spațiu pe stivă, care va fi automat eliberat atunci când funcția curentă își termină execuția.
+</p>
+
+</div>
+
+<h3 class="sectionedit7" id="navigare">Navigare</h3>
+<div class="level3">
+
+</div>
+<div class="plugin_include_content plugin_include__cpl:labs:04:meta:nav">
+<div class="level3">
+<div class="inclmeta level">
+	<abbr class="published" title="2015-04-26T23:26:13Z">2015/04/26 23:26</abbr>
+</div>
+
+</div>
+</div>
+<div class="level3">
+
+</div>
+
+<h1 class="sectionedit11" id="exercitii_de_laborator_10p">Exerciții de laborator (10p)</h1>
+<div class="level1">
+
+<p>
+În rezolvarea laboratorului folosiți arhiva de sarcini <a href="../../_media/cpl/labs/lab04-tasks.zip" class="media mediafile mf_zip" title="cpl:labs:lab04-tasks.zip (7.3 KB)">lab04-tasks.zip</a>
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="exercitiul_1_-_control_flow_1p">Exercițiul 1 - Control flow (1p)</h2>
+<div class="level2">
+
+<p>
+Intrați în directorul <code>1-control-flow</code> și inspectați fișierul <code>simple-loop.c</code>. Câte instrucțiuni de tip <code>branch</code> vă așteptați să existe în reprezentarea în LLVM IR?
+</p>
+
+<p>
+Rulați <code>make simple-loop.ll</code>. Acesta va produce fișierele <code>simple-loop.ll</code> și <code>cfg.simple.dot</code>. Vizualizați CFG-ul folosind utilitarul <code>xdot</code> și încercați să urmăriți control flow-ul prin funcție.
+</p>
+
+</div>
+
+<h2 class="sectionedit13" id="exercitiul_2_-_get_element_pointer_1p">Exercițiul 2 - Get element pointer (1p)</h2>
+<div class="level2">
+
+<p>
+Intrați în directorul <code>2-gep</code> și inspectați fișierul <code>gep.c</code>. Ce indici credeți că vor folosi instrucțiunile de tip <code>GEP</code> din funcțiile <code>get1</code>, <code>get2</code> și <code>get3</code>? Există vreo diferență între <code>get2</code> și <code>get3</code>?
+</p>
+
+<p>
+Verificați rulând <code>make gep.ll</code> și inspectând fișierul produs.
+</p>
+
+</div>
+
+<h2 class="sectionedit14" id="exercitiul_3_-_phi_1p">Exercițiul 3 - Phi (1p)</h2>
+<div class="level2">
+
+<p>
+Intrați în directorul <code>3-phi</code> și inspectați fișierul <code>phi.c</code>. Câte instrucțiuni de tip <code>phi</code> credeți că vor exista în IR și ce parametri vor primi?
+</p>
+
+<p>
+Verificați rulând <code>make phi.ll</code> și inspectând fișierul produs (puteți de asemenea să vizualizați <code>cfg.nonsense.dot</code>).
+</p>
+
+</div>
+
+<h2 class="sectionedit15" id="exercitiul_4_-_variabile_globale_1p">Exercițiul 4 - Variabile globale (1p)</h2>
+<div class="level2">
+
+<p>
+Intrați în directorul <code>4-globals</code> și inspectați fișierul <code>globals.c</code>. Câte instrucțiuni de tip <code>phi</code> credeți că vor exista în IR și ce parametri vor primi?
+</p>
+
+<p>
+Rulați <code>make globals.ll</code> și inspectați fișierul produs. Cum este tratată variabila globală? De ce?
+</p>
+
+</div>
+
+<h2 class="sectionedit16" id="exercitiul_5_-_alloca_1p">Exercițiul 5 - Alloca (1p)</h2>
+<div class="level2">
+
+<p>
+Intrați în directorul <code>5-alloca</code> și inspectați fișierul <code>alloca.c</code>. Observați variabila locală <code>x</code>.
+</p>
+
+<p>
+Rulați <code>make alloca.ll</code> și inspectați fișierul produs. De ce este nevoie de instrucțiunea <code>alloca</code>?
+</p>
+
+<p>
+Rulați <code>make alloca.raw.ll</code> și inspectați fișierul produs. Ce diferă?
+</p>
+
+<p>
+<p><div class="noteimportant"><code>alloca.raw.ll</code> este output-ul nemodificat al rulării <code>clang</code> pentru obținerea IR-ului. Pentru claritate, în cadrul laboratorului am folosit flag-ul <code>-mem2reg</code> al optimizorului. Pe baza diferențelor dintre <code>alloca.raw.ll</code> (obținut fără <code>-mem2reg</code>) și <code>alloca.ll</code> (obținut cu <code>-mem2reg</code>), ce credeți că face acest flag?
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit17" id="exercitiul_6_-_putting_it_all_together_5p">Exercițiul 6 - Putting it all together (5p)</h2>
+<div class="level2">
+
+<p>
+Intrați în directorul <code>6-reverse</code> și inspectați fișierul <code>reverse.ll</code> (sau vizualizați <code>cfg.f.dot</code>). Încercați să scrieți un exemplu de cod C care să producă IR-ul din <code>reverse.ll</code> sau ceva cât mai apropiat. Pentru a obține IR-ul corespunzător unui fișier <code>yourfile.c</code> puteți rula <code>make yourfile.rev.ll</code>.
+</p>
+
+</div>
+
+<h2 class="sectionedit18" id="bonus">BONUS</h2>
+<div class="level2">
+
+</div>
+
+<h4 id="cpl_karma_-_clase">1 cpl karma - Clase</h4>
+<div class="level4">
+
+<p>
+Intrați în directorul <code>7-classes</code> și inspectați fișierul <code>classes.cpp</code>. Cum credeți că va arăta definiția lui <code>A</code>? Dar a lui <code>B</code>? Cum va diferenția compilatorul între cele 2 metode <code>g</code> ale lui <code>B</code>?
+</p>
+
+<p>
+Rulați <code>make classes.ll</code> și inspectați fișierul produs. 
+</p>
+
+</div>
+
+<h4 id="cpl_karma_-_metode_virtuale">1 cpl karma - Metode virtuale</h4>
+<div class="level4">
+
+<p>
+Intrați în directorul <code>8-virtual</code> și inspectați fișierul <code>classes.cpp</code>. Cum credeți că vor arăta definițiile claselor <code>A</code> și <code>B</code> în acest caz? Ce metode se vor apela și cum pe obiectele de tip <code>A</code> și <code>B</code> în cadrul funcției <code>val</code>? Dar în cadrul funcției <code>ref</code>? De ce?
+</p>
+
+<p>
+Rulați <code>make classes.simple.ll</code> și inspectați fișierul produs.
+</p>
+
+<p>
+Rulați <code>make classes.ll</code> și inspectați fișierul produs. Ce s-a schimbat?
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_cpl">Informații generale CPL</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_511177092583579024427b" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/documentatie.html" class="wikilink1" title="cpl:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../info/lista-discutii.html" class="wikilink1" title="cpl:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../info/trimitere-teme.html" class="wikilink1" title="cpl:info:trimitere-teme">Trimitere teme</a></div></li>
+<li class="level1"><div class="li"><a href="../info/vm.html" class="wikilink1" title="cpl:info:vm">Mașina virtuală</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale CPL" [12-86] -->
+<h1 class="sectionedit2" id="informatii_cpl_2016-2017">Informații CPL 2016-2017</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_19840336658357902461b3" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../meta/notare/reguli-notare.html" class="wikilink1" title="cpl:meta:notare:reguli-notare">Notare</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../meta/anunturi.html" class="wikilink1" title="cpl:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/calendar.html" class="wikilink1" title="cpl:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/catalog.html" class="wikilink1" title="cpl:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/examen.html" class="wikilink1" title="cpl:meta:examen">Examen</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/need-to-know.html" class="wikilink1" title="cpl:meta:need-to-know">CPL Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/orar.html" class="wikilink1" title="cpl:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații CPL 2016-2017" [87-155] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_127857407958357902480f3" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../labs/01.html" class="wikilink1" title="cpl:labs:01">01. Introduction to Flex</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/02.html" class="wikilink1" title="cpl:labs:02">02. Introduction to Bison</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/03.html" class="wikilink1" title="cpl:labs:03">03. Bison Advanced</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/04.html" class="wikilink1" title="cpl:labs:04">04. Introduction to LLVM</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/05.html" class="wikilink1" title="cpl:labs:05">05. LLVM IR - C++ API</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/06.html" class="wikilink1" title="cpl:labs:06">06. Code generation. Structure of data and objects in memory</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/07.html" class="wikilink1" title="cpl:labs:07">07. Code generation. Function calls and stack frames</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/08.html" class="wikilink1" title="cpl:labs:08">08. LLVM backend</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/09.html" class="wikilink1" title="cpl:labs:09">09. LLVM Passes - displaying code structure</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/10.html" class="wikilink1" title="cpl:labs:10">10. LLVM Passes - code analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/11.html" class="wikilink1" title="cpl:labs:11">11. LLVM Passes - code optimizations</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/12.html" class="wikilink1" title="cpl:labs:12">12. Linkers and Loaders</a></div></li>
+<li class="level1"><div class="li"><a href="../labs/llvm-pass.html" class="wikilink1" title="cpl:labs:llvm-pass">LLVM Passes</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [156-209] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_435461678583579024a036" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="cpl:courses:01">Cursul 01. Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="cpl:courses:02">Cursul 02. Analiză sintatică LL</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="cpl:courses:03">Cursul 03. Analiză sintatică LR</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="cpl:courses:04">Cursul 04. Analiză semantică</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="cpl:courses:05">Cursul 05. Generarea codului obiect. Arhitectura setului de instrucțiuni</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="cpl:courses:06">Cursul 06. Generarea apelurilor de funcții și a codului orientat obiect.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/07.html" class="wikilink1" title="cpl:courses:07">Cursul 07. Optimizări. Analiza fluxului de control (CFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/08.html" class="wikilink1" title="cpl:courses:08">Cursul 08. Analiza fluxului de date (DFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/09.html" class="wikilink1" title="cpl:courses:09">Cursul 09. Analiza fluxului de date. Forma SSA. Extragerea codului invariant din bucle. Variabile de inducție.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/10.html" class="wikilink1" title="cpl:courses:10">Cursul 10. Arhitectura Calculatoarelor. Dependență. Planificarea instrucțiunilor</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/11.html" class="wikilink1" title="cpl:courses:11">Cursul 11. Garbage Collection</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/12.html" class="wikilink1" title="cpl:courses:12">Cursul 12. Alocarea de registre. Linkers.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/13.html" class="wikilink1" title="cpl:courses:13">Cursul 13. Just in Time Compilers (JIT)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [210-262] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_1101841886583579024bf73" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../teme/concurs.html" class="wikilink1" title="cpl:teme:concurs">Concurs</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/general.html" class="wikilink1" title="cpl:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema1.html" class="wikilink1" title="cpl:teme:tema1">Tema de casă 1 - Analiza sintactică</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema2.html" class="wikilink1" title="cpl:teme:tema2">Tema de casă 2 - Generarea de cod</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema3.html" class="wikilink1" title="cpl:teme:tema3">Tema de casa 3 - Backend</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [263-310] -->
+<h1 class="sectionedit6" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_557762915583579024deb8" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/materiale.html" class="wikilink1" title="cpl:res:materiale">Nice to read</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 SECTION "Resurse" [311-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="04.html#introduction_to_llvm">04. Introduction to LLVM</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#reprezentarea_intermediara_a_llvm_llvm_ir">Reprezentarea intermediară a LLVM (LLVM IR)</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#tool-uri_pentru_lucrul_cu_ir-ul">Tool-uri pentru lucrul cu IR-ul</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#organizarea_ir-ului">Organizarea IR-ului</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="04.html#sistemul_de_tipuri">Sistemul de tipuri</a></div></li>
+<li class="level3"><div class="li"><a href="04.html#instructiuni">Instrucțiuni</a></div></li>
+<li class="level3"><div class="li"><a href="04.html#navigare">Navigare</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="04.html#exercitii_de_laborator_10p">Exerciții de laborator (10p)</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#exercitiul_1_-_control_flow_1p">Exercițiul 1 - Control flow (1p)</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#exercitiul_2_-_get_element_pointer_1p">Exercițiul 2 - Get element pointer (1p)</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#exercitiul_3_-_phi_1p">Exercițiul 3 - Phi (1p)</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#exercitiul_4_-_variabile_globale_1p">Exercițiul 4 - Variabile globale (1p)</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#exercitiul_5_-_alloca_1p">Exercițiul 5 - Alloca (1p)</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#exercitiul_6_-_putting_it_all_together_5p">Exercițiul 6 - Putting it all together (5p)</a></div></li>
+<li class="level2"><div class="li"><a href="04.html#bonus">BONUS</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="04.html#cpl_karma_-_clase">1 cpl karma - Clase</a></div></li>
+<li class="level4"><div class="li"><a href="04.html#cpl_karma_-_metode_virtuale">1 cpl karma - Metode virtuale</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cpl/labs-2015/04.txt · Last modified: 2016/10/04 07:30 by bogdan.nitulescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="04%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="04%3Fdo=media&amp;ns=cpl%253Alabs-2015.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="04.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cpl%253Alabs-2015%253A04&amp;1479899394" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,173 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cpl-atm:laboratoare:laborator5.1</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-11-15T13:58:45+0200"/>
+<meta name="keywords" content="cpl-atm,laboratoare,laborator5.1"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cpl-atm:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="laborator5.1.html"/>
+<link rel="canonical" href="../../../../cpl-atm/laboratoare/laborator5.1.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl-atm:laboratoare';var JSINFO = {"id":"cpl-atm:laboratoare:laborator5.1","namespace":"cpl-atm:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="laborator_5">Laborator 5</h1>
+<div class="level1">
+
+<p>
+Scrieți în jison o gramatică (lexer + parser) care generează un arbore AST pentru o expresie matematică cu <code>+</code> și <code>-</code>:
+</p>
+<pre class="code">expresie: numar termen;
+termen: &#039;+&#039; numar termen | &#039;-&#039; numar termen |;
+numar: [0-9]+;</pre>
+
+<p>
+Spre exemplu, pentru expresia <code>1+3</code>, AST-ul arată astfel:
+</p>
+<pre class="code">{&quot;r&quot;:&quot;expresie&quot;,&quot;l&quot;:[{&quot;r&quot;:&quot;numar&quot;,&quot;l&quot;:[&quot;1&quot;]},{&quot;r&quot;:&quot;termen&quot;,&quot;l&quot;:[&quot;+&quot;,{&quot;r&quot;:&quot;numar&quot;,&quot;l&quot;:[&quot;3&quot;]},null]}]}</pre>
+
+<p>
+Pentru expresia <code>1+3+4</code>, arată așa:
+</p>
+<pre class="code">{&quot;r&quot;:&quot;expresie&quot;,&quot;l&quot;:[{&quot;r&quot;:&quot;numar&quot;,&quot;l&quot;:[&quot;1&quot;]},{&quot;r&quot;:&quot;termen&quot;,&quot;l&quot;:[&quot;+&quot;,{&quot;r&quot;:&quot;numar&quot;,&quot;l&quot;:[&quot;3&quot;]},{&quot;r&quot;:&quot;termen&quot;,&quot;l&quot;:[&quot;+&quot;,{&quot;r&quot;:&quot;numar&quot;,&quot;l&quot;:[&quot;4&quot;]},null]}]}]}</pre>
+
+<p>
+Practic, în funcție de tipul fiecărui nod, vom returna în parserul din <code>jison</code> ceva de genul:
+</p>
+<pre class="code">{r:&#039;expresie&#039;, l:[$numar,$termen]}
+{r:&#039;termen&#039;, l:[&#039;+&#039;,$numar,$termen]}
+{r:&#039;termen&#039;, l:[&#039;-&#039;,$numar,$termen]}
+{r:&#039;numar&#039;, l:[$numar]}</pre>
+
+<p>
+Prelucrați arborele AST și realizați adnotări de calcule intermediare pentru a evalua expresia.
+</p>
+
+<p>
+<p><div class="noteclassic">
+</p>
+<pre class="code">var file=require(&#039;./jison.js&#039;).parser;
+var tree=file.parse(&quot;1+3+4&quot;);
+console.log(JSON.stringify(tree,null, 4));</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Pentru expresia <code>1+3</code> ar trebui să arate de forma:
+</p>
+<pre class="code">{
+    &quot;r&quot;: &quot;expresie&quot;,
+    &quot;l&quot;: [
+        {
+            &quot;r&quot;: &quot;numar&quot;,
+            &quot;l&quot;: [
+                &quot;1&quot;
+            ],
+            &quot;valoare&quot;: 1
+        },
+        {
+            &quot;r&quot;: &quot;termen&quot;,
+            &quot;l&quot;: [
+                &quot;+&quot;,
+                {
+                    &quot;r&quot;: &quot;numar&quot;,
+                    &quot;l&quot;: [
+                        &quot;3&quot;
+                    ],
+                    &quot;valoare&quot;: 3
+                },
+                null
+            ],
+            &quot;valoare&quot;: 3
+        }
+    ],
+    &quot;valoare&quot;: 4
+}</pre>
+
+<p>
+Pentru expresia <code>1+3+4</code>:
+</p>
+<pre class="code">{
+    &quot;r&quot;: &quot;expresie&quot;,
+    &quot;l&quot;: [
+        {
+            &quot;r&quot;: &quot;numar&quot;,
+            &quot;l&quot;: [
+                &quot;1&quot;
+            ],
+            &quot;valoare&quot;: 1
+        },
+        {
+            &quot;r&quot;: &quot;termen&quot;,
+            &quot;l&quot;: [
+                &quot;+&quot;,
+                {
+                    &quot;r&quot;: &quot;numar&quot;,
+                    &quot;l&quot;: [
+                        &quot;3&quot;
+                    ],
+                    &quot;valoare&quot;: 3
+                },
+                {
+                    &quot;r&quot;: &quot;termen&quot;,
+                    &quot;l&quot;: [
+                        &quot;+&quot;,
+                        {
+                            &quot;r&quot;: &quot;numar&quot;,
+                            &quot;l&quot;: [
+                                &quot;4&quot;
+                            ],
+                            &quot;valoare&quot;: 4
+                        },
+                        null
+                    ],
+                    &quot;valoare&quot;: 4
+                }
+            ],
+            &quot;valoare&quot;: 7
+        }
+    ],
+    &quot;valoare&quot;: 8
+}
+</pre>
+
+</div>
+</div>
+</body>
+</html>

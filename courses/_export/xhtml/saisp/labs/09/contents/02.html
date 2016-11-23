@@ -1,0 +1,103 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:09:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-05T13:48:58+0300"/>
+<meta name="keywords" content="saisp,labs,09,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/09/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:09:contents';var JSINFO = {"id":"saisp:labs:09:contents:02","namespace":"saisp:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_varnish">02. [20p] Configurare Varnish</h3>
+<div class="level3">
+
+<p>
+Ne propunem să configurăm Varnish ca front-end pentru un server web configurat de noi. Pentru aceasta vom configura instanța Varnish de pe mașina virtuală <code>varnish</code> ca front end pentru serverul web de pe mașina virtuală <code>web</code> și apoi vom face măsurători.
+</p>
+
+<p>
+Pentru început, configurați instanța Varnish de pe mașina virtuală <code>varnish</code> să folosească pe post de back end serviciul web de pe mașina virtuală web.
+</p>
+
+<p>
+<p><div class="notetip">
+Serviciul web de pe mașina virtuală ascultă conexiuni pe portul <code>80</code> la adresa IP <code>192.168.0.2</code>.
+</p>
+
+<p>
+După configurarea Varnish serviciul trebuie repornit folosind comanda
+</p>
+<pre class="code">root@varnish:~# service varnish restart</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Pentru a testa conectați-vă din browser-ul de pe stația gazdă la adresa serverului Varnish: <a href="http://192.168.0.3/" class="urlextern" title="http://192.168.0.3/"  rel="nofollow">http://192.168.0.3/</a>. Dacă totul a mers cum trebuie va apărea o pagină cu mesajul <em>Say hello to my little friend!</em>.
+</p>
+
+<p>
+Același mesaj poate fi accesat direct de la serverul web: <a href="http://192.168.0.2/" class="urlextern" title="http://192.168.0.2/"  rel="nofollow">http://192.168.0.2/</a>, doar că nu va mai trece prin serverul Varnish.
+</p>
+
+<p>
+Pentru a măsura durata transferului cu și fără Varnish, folosiți <code>httperf</code> pe stația gazdă (<code>mjolnir</code>) pentru a descărca un fișier dintre cele accesibile la adresa <a href="http://192.168.0.3/data/" class="urlextern" title="http://192.168.0.3/data/"  rel="nofollow">http://192.168.0.3/data/</a> (sau <a href="http://192.168.0.2/data/" class="urlextern" title="http://192.168.0.2/data/"  rel="nofollow">http://192.168.0.2/data/</a>); de indicat este să folosiți fișierul <code>10M.dat</code> de dimesiunea cea mai mare. Folosiți conectarea la ambele servere (cu și fără suport Varnish) pentru a face diferența.
+</p>
+
+<p>
+În timpul în care rulați <code>httperf</code> urmăriți folosind <code>htop</code> încărcarea pe cele două mașini virtuale. Observați încărcarea serverului Varnish atunci când acesta este folosit, sau a serverului Apache la conexiunile directe.
+</p>
+
+<p>
+<p><div class="notetip">
+Folosiți opțiunea <code>--uri</code> la <code>httperf</code> ca să precizați pagina care să fie accesată. În cazul nostru ar fi vorba de <a href="http://192.168.0.2/data/10M.dat" class="urlextern" title="http://192.168.0.2/data/10M.dat"  rel="nofollow">http://192.168.0.2/data/10M.dat</a> sau <a href="http://192.168.0.3/data/10M.dat" class="urlextern" title="http://192.168.0.3/data/10M.dat"  rel="nofollow">http://192.168.0.3/data/10M.dat</a>.
+
+</div></p>
+</p>
+
+<p>
+Observati diferența de <code>Request rate</code> între conexiunea directă la serverul web și conexiunea prin intermediul serverului Varnish.
+</p>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>iot:labs:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-06-24T23:55:51+0300"/>
+<meta name="keywords" content="iot,labs,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=iot:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../iot/labs/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='iot:labs';var JSINFO = {"id":"iot:labs:07","namespace":"iot:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="07.html#lab_7programming_with_streams">Lab 7: Programming with Streams</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#traffic_lights">Traffic Lights</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#what_you_need">What you need</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#the_setup">The Setup</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#the_code">The Code</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#exercises">Exercises</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="lab_7programming_with_streams">Lab 7: Programming with Streams</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Lab 7: Programming with Streams" [1-45] -->
+<h2 class="sectionedit2" id="traffic_lights">Traffic Lights</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Traffic Lights" [46-72] -->
+<h2 class="sectionedit3" id="what_you_need">What you need</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> One Raspberry Pi connected to Wyliodrin STUDIO;</div>
+</li>
+<li class="level1"><div class="li"> Five LEDs;</div>
+</li>
+<li class="level1"><div class="li"> One button;</div>
+</li>
+<li class="level1"><div class="li"> Six 200 Ohms resistors;</div>
+</li>
+<li class="level1"><div class="li"> Jumper wires;</div>
+</li>
+<li class="level1"><div class="li"> Breadboard.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "What you need" [73-244] -->
+<h2 class="sectionedit4" id="the_setup">The Setup</h2>
+<div class="level2">
+
+<p>
+Connect the LEDs and the button to the Raspberry Pi following the schematics in the figure.
+<a href="../../../../_detail/iot/labs/traffic-lights.png%3Fid=iot%253Alabs%253A07.html" class="media" title="iot:labs:traffic-lights.png"><img src="../../../../_media/iot/labs/traffic-lights.png%3Fw=600&amp;tok=e8f907" class="mediacenter" alt="" width="600" /></a>
+The button is connected in a voltage divider circuit. You can notice that the button has 4 legs. Usually, one leg from one side is connected to the one in front of it. However, there might be the case that the legs care connected side by side, this is why we encourage you to use a measuring device in order to identify how the legs are connected. Once the button is pressed, all the legs get connected.
+<a href="../../../../_detail/iot/labs/connected.png%3Fid=iot%253Alabs%253A07.html" class="media" title="iot:labs:connected.png"><img src="../../../../_media/iot/labs/connected.png%3Fw=200&amp;tok=d48cf3" class="media" title="Button" alt="Button" width="200" /></a>
+</p>
+
+<p>
+In the schematics, the button is connected to a pull-up resistor, that means that the GPIO pin will read the value 1 if the button is pressed and 0 otherwise.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "The Setup" [245-1001] -->
+<h2 class="sectionedit5" id="the_code">The Code</h2>
+<div class="level2">
+
+<p>
+Create a new Wyliodrin STUDIO application and name it <strong>traffic lights</strong>.
+</p>
+
+<p>
+<a href="../../../../_detail/iot/labs/semaphore_button_streams.png%3Fid=iot%253Alabs%253A07.html" class="media" title="iot:labs:semaphore_button_streams.png"><img src="../../../../_media/iot/labs/semaphore_button_streams.png%3Fw=600&amp;tok=67a232" class="mediacenter" title="Traffic Lights Applicatio " alt="Traffic Lights Applicatio " width="600" /></a>
+</p>
+
+<p>
+The previous shows the nodes you need to use and how to connect them. Now let&#039;s see what each node does.
+</p>
+
+<p>
+First of all, notice the <strong>semaphore</strong> function node. This node is connected to the nodes controlling the GPIO pins connected to the LEDs and it outputs the values that need to be written on each pin.
+</p>
+
+<p>
+The figure below shows the code of the function. Basically, it verifies the value of the payload it received and depending on the value, it describes a certain state. The value 0 corresponds to the initial state when the cars lights have their green light turned on and the rest turned off and the pedestrian lights have the red light turned on and the green one turned off. This is why the function returns a list containing the values [0,0,1,1,0]. The block automatically knows to distribute each of these values in a message on the corresponding output (the first value is transmitted on the first output, the second value on the second output and so on). As a result, the <strong>digital write</strong> nodes (red, yellow, green, ped-red and ped-greed) receive the values 0,0,1,1 and respectively 0.
+</p>
+
+<p>
+<a href="../../../../_detail/iot/labs/semaphore_function.png%3Fid=iot%253Alabs%253A07.html" class="media" title="iot:labs:semaphore_function.png"><img src="../../../../_media/iot/labs/semaphore_function.png%3Fw=400&amp;tok=4bdb65" class="mediacenter" title="Semaphore function" alt="Semaphore function" width="400" /></a>
+</p>
+
+<p>
+The <strong>digital write</strong> nodes have names according to the LED they control (the red node controls the red LED of the cars&#039; semaphore and so on). Each node controls a pin by either setting it to HIGH or to LOW. The pin will be set to HIGH if the payload of the message is 1 and to LOW if it equals 0. For each node, you need to select the number of the pin they are controlling. For the <strong>red</strong> node you need to type the number 2 for the pin, as the LED representing the red light is connected to GPIO 2.
+</p>
+
+<p>
+Another important aspect are the two <strong>run</strong> nodes. The one directly connected to the <strong>set 0</strong> node will get triggered once the application start running and then it will send a message every 48 hours. For this, you need to double click the node and mark the <strong>Fire once at start?</strong>. Afterwards, you also need to set the interval to every 48 hours.
+</p>
+
+<p>
+The node connected to <strong>run</strong>. <strong>set 0</strong> is a <strong>change</strong> node and it allows you to change the payload of the message. As the first state of the system is 0, the payload is set to 0 and sent to the function. Basically, the run-set 0- function connection resets the traffic lights every 48 hours. All the other <strong>set</strong> nodes work the same, but they set some other values to the payload.
+<a href="../../../../_detail/iot/labs/change_edit.png%3Fid=iot%253Alabs%253A07.html" class="media" title="iot:labs:change_edit.png"><img src="../../../../_media/iot/labs/change_edit.png%3Fw=400&amp;tok=f98f07" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+<p>
+The other <strong>run</strong> node is connected to <strong>digital read</strong>, so each second a new reading is done.
+</p>
+
+<p>
+The <strong>digital read</strong> node reads the value coming from the button. You have to set the number of the pin the reading should be done from. In this case, the button is connected to pin 6, so go to the node&#039;s properties and set 6 for the pin. 
+</p>
+
+<p>
+If the value read is 1 (HIGH), you need to change the states of the lights, otherwise you can simply ignore the reading. The node named <strong>if button pressed</strong> is a <strong>switch</strong> node that routes messages based on their properties. This specific node has only one output which will send further on any message that has the payload 1, basically it will act as a filter which sends a message only when the button is pressed. The figure below depicts how to filter the values.
+</p>
+
+<p>
+<a href="../../../../_detail/iot/labs/if_button_pressed.png%3Fid=iot%253Alabs%253A07.html" class="media" title="iot:labs:if_button_pressed.png"><img src="../../../../_media/iot/labs/if_button_pressed.png%3Fw=400&amp;tok=9e5c3c" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+<p>
+The <strong>switch</strong> node is then connected to a <strong>trigger</strong> node. This node creates two messages whenever a message arrives on the input and it outputs the messages separated by a distance specified in the properties. For this project the node allows you to automatically send a message after 30 seconds from the pushed button so that the traffic lights system returns to its initial state. The first message has the payload 1 and the second has the payload 0, thus identifying the states the lights need to get to.
+</p>
+
+<p>
+<a href="../../../../_detail/iot/labs/trigger.png%3Fid=iot%253Alabs%253A07.html" class="media" title="iot:labs:trigger.png"><img src="../../../../_media/iot/labs/trigger.png%3Fw=200&amp;tok=c94f94" class="mediacenter" title="Trigger node properties" alt="Trigger node properties" width="200" /></a>
+</p>
+
+<p>
+Further on, depending on the value the <strong>trigger</strong> node outputs, the <strong>filter input</strong> node will set the lights to the intermediate state and after 5 seconds (<strong>delay</strong> node) it will send another message with the value of final state stored in the payload.
+</p>
+
+<p>
+The <strong>filter input</strong> node is also a <strong>switch</strong> node which has two outputs, in this case. The first output is for the value 0 (triggered when the button has just been presses) and the second for the value 1 (triggered when the system needs to get back to its initial state). This way you can differentiate between the two.
+</p>
+
+<p>
+<a href="../../../../_detail/iot/labs/filter_input.png%3Fid=iot%253Alabs%253A07.html" class="media" title="iot:labs:filter_input.png"><img src="../../../../_media/iot/labs/filter_input.png%3Fw=400&amp;tok=bce333" class="mediacenter" title="Filter input node properties" alt="Filter input node properties" width="400" /></a>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "The Code" [1002-5693] -->
+<h2 class="sectionedit6" id="exercises">Exercises</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Use a button in the dashboard to control the traffic lights;</div>
+</li>
+<li class="level1"><div class="li"> Display in the dashboard the state of the traffic lights using the <strong>extra widget</strong>. <strong>Note:</strong> you can use the following pictures: </div>
+</li>
+</ol>
+<ul>
+<li class="level1"><div class="li"> red light on: <a href="https://dl.dropbox.com/s/6xl3vmpk8p4wgfc/trafic-lights-red.png?dl=0" class="urlextern" title="https://dl.dropbox.com/s/6xl3vmpk8p4wgfc/trafic-lights-red.png?dl=0"  rel="nofollow">https://dl.dropbox.com/s/6xl3vmpk8p4wgfc/trafic-lights-red.png?dl=0</a></div>
+</li>
+<li class="level1"><div class="li"> yellow light on: <a href="https://dl.dropbox.com/s/5mg4wecyi5xi6md/trafic-lights-yellow.png?dl=0" class="urlextern" title="https://dl.dropbox.com/s/5mg4wecyi5xi6md/trafic-lights-yellow.png?dl=0"  rel="nofollow">https://dl.dropbox.com/s/5mg4wecyi5xi6md/trafic-lights-yellow.png?dl=0</a></div>
+</li>
+<li class="level1"><div class="li"> green light on: <a href="https://dl.dropbox.com/s/83d90kghg0d53k4/trafic-lights-green.png?dl=0" class="urlextern" title="https://dl.dropbox.com/s/83d90kghg0d53k4/trafic-lights-green.png?dl=0"  rel="nofollow">https://dl.dropbox.com/s/83d90kghg0d53k4/trafic-lights-green.png?dl=0</a></div>
+</li>
+<li class="level1"><div class="li"> pedestrians red light on: <a href="https://dl.dropbox.com/s/sjr52ohr8pxb9he/pedestrian-lights-red.png?dl=0" class="urlextern" title="https://dl.dropbox.com/s/sjr52ohr8pxb9he/pedestrian-lights-red.png?dl=0"  rel="nofollow">https://dl.dropbox.com/s/sjr52ohr8pxb9he/pedestrian-lights-red.png?dl=0</a></div>
+</li>
+<li class="level1"><div class="li"> pedestrians green light on: <a href="https://dl.dropbox.com/s/m1ritf34ethvgt2/pedestrian-lights-green.png?dl=0" class="urlextern" title="https://dl.dropbox.com/s/m1ritf34ethvgt2/pedestrian-lights-green.png?dl=0"  rel="nofollow">https://dl.dropbox.com/s/m1ritf34ethvgt2/pedestrian-lights-green.png?dl=0</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Exercises" [5694-] --></div>
+</body>
+</html>

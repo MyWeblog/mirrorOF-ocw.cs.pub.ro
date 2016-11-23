@@ -1,0 +1,194 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>iot2015:labs:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-06-17T15:45:22+0300"/>
+<meta name="keywords" content="iot2015,labs,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=iot2015:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../iot2015/labs/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='iot2015:labs';var JSINFO = {"id":"iot2015:labs:06","namespace":"iot2015:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="06.html#lab_6connect_and_use_an_lcd">Lab 6: Connect and use an LCD</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="06.html#what_you_need">What you need</a></div></li>
+<li class="level2"><div class="li"><a href="06.html#the_setup">The Setup</a></div></li>
+<li class="level2"><div class="li"><a href="06.html#the_code">The Code</a></div></li>
+<li class="level2"><div class="li"><a href="06.html#exercises">Exercises</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="lab_6connect_and_use_an_lcd">Lab 6: Connect and use an LCD</h1>
+<div class="level1">
+
+<p>
+In this project you are going to connect an LCD to your board and write a short message on it.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Lab 6: Connect and use an LCD" [1-140] -->
+<h2 class="sectionedit2" id="what_you_need">What you need</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">  One Edison connected to Wyliodrin;</div>
+</li>
+<li class="level1"><div class="li">  One 16&times;2 LCD;</div>
+</li>
+<li class="level1"><div class="li">  One breadboard;</div>
+</li>
+<li class="level1"><div class="li">  Sixteen male-male jumper wires;</div>
+</li>
+<li class="level1"><div class="li">  One potentiometer.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "What you need" [141-309] -->
+<h2 class="sectionedit3" id="the_setup">The Setup</h2>
+<div class="level2">
+
+<p>
+The LCD has a parallel interface, meaning that the board has to manage several interface pins at once to control the display. 
+</p>
+
+<p>
+The first pin is the <em>RS</em>(Register Select) that controls where exactly in the LCD&#039;s memory you are writing data to.
+</p>
+
+<p>
+There is an <em>Enable</em> pin that enables writing to the registers.
+</p>
+
+<p>
+The third one is the <em>R/W</em>(Read/Write) pin that selects from reading or writing mode. 
+</p>
+
+<p>
+The LCD also has <em>8 data</em> pins (D0 -D7). The states of these pins (high or low) are the bits that you&#039;re reading to a register when you read, or the values you are writing when you write.
+</p>
+
+<p>
+There are also power supply pins (5V and GND) for powering the LCD, LED Backlight (Bklt- and Bklt+) pins that you can use to turn off and on the LED backlight and a display contrast pin (Vo) to control the display contrast.
+</p>
+
+<p>
+What does 16&times;2 LCD mean? It means that the LCD has 16 columns and 2 rows. You place the LCD on the breadboard and connect it to the board as follows.
+</p>
+
+<p>
+The first two pins on the right are used to power up the LCD. The next four pins, the ones with green cables, are the data pins. They allow the LCD to communicate with the board. The next two pins connected by yellow cables are the control pins. There are also three pins used for contrast. Two of them are used to power on the backlight and there is one more pin directly connected to the potentiometer. This way you can control the contrast just by rotating it.
+<a href="../../../../_detail/iot2015/labs/lcdstreams_bb.png%3Fid=iot2015%253Alabs%253A06.html" class="media" title="iot2015:labs:lcdstreams_bb.png"><img src="../../../../_media/iot2015/labs/lcdstreams_bb.png%3Fw=450&amp;tok=1301d8" class="mediacenter" alt="" width="450" /></a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "The Setup" [310-1810] -->
+<h2 class="sectionedit4" id="the_code">The Code</h2>
+<div class="level2">
+
+<p>
+You go to the Wyliodrin Applications page and create a new application. You name it and select Streams as programming language. Once created, you click on the new application&#039;s name to open it.
+<a href="../../../../_detail/iot2015/labs/lcdtemp.png%3Fid=iot2015%253Alabs%253A06.html" class="media" title="iot2015:labs:lcdtemp.png"><img src="../../../../_media/iot2015/labs/lcdtemp.png%3Fw=400&amp;tok=883735" class="mediacenter" alt="" width="400" /></a>
+Start as usual with the <em>run</em> node.
+To read the value from the temperature sensor through the analog pin. Next, you need the conversion from 0-1024 values to degrees. It is the same function from the project where you first used the temperature sensor. 
+</p>
+
+<p>
+Now you have the temperature, what do you do with it? Let&#039;s write it on the LCD.
+How? Use the simple way of Visual Programming Blocks. 
+</p>
+
+<p>
+Add a visual node and inside it do as follows.
+</p>
+
+<p>
+First of all, you need to initialise the LCD. For this you select the <em>Peripherals/LCD/Init LCD</em> block.
+</p>
+
+<p>
+To write something, you will use the <em>Perpherals/LCD/Print on LCD []</em> block. you place it below the <em>Init</em> block and write the message received from the conversion function in it.
+</p>
+
+<p>
+Once the project runs, you should see the temperature from your room on the LCD, however, the contrast might be high and the text can be difficult to read. In order to modify the contrast, you just turn the rotary angle.
+</p>
+
+<p>
+You run the project. 
+</p>
+
+<p>
+<a href="../../../../_detail/iot2015/labs/lcdd.png%3Fid=iot2015%253Alabs%253A06.html" class="media" title="iot2015:labs:lcdd.png"><img src="../../../../_media/iot2015/labs/lcdd.png%3Fw=300&amp;tok=caa950" class="mediacenter" alt="" width="300" /></a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "The Code" [1811-3078] -->
+<h2 class="sectionedit5" id="exercises">Exercises</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Connect a distance sensor and show the values on an LCD.<br/>
+<a href="../../../../_detail/iot2015/labs/parkingscheme.png%3Fid=iot2015%253Alabs%253A06.html" class="media" title="iot2015:labs:parkingscheme.png"><img src="../../../../_media/iot2015/labs/parkingscheme.png%3Fw=400&amp;tok=58df4e" class="mediacenter" alt="" width="400" /></a> The distance sensor in the picture is connected to an Intel Gaileo Gen2 board. The wiring is the same for the Intel Edison.</div>
+</li>
+<li class="level1"><div class="li"> Connect a gas sensor to an analog pin of the board and show the values on an LCD when they go over a set value (use a slider to set it). If the values stay under this value, show a message on the LCD, <em> There is no gas danger</em> .</div>
+</li>
+<li class="level1"><div class="li"> Add a 7 segment to the  setup. On this display you can choose to display one digit of the value received from a sensor.<br/>
+<a href="../../../../_detail/iot2015/labs/7seg.png%3Fid=iot2015%253Alabs%253A06.html" class="media" title="iot2015:labs:7seg.png"><img src="../../../../_media/iot2015/labs/7seg.png%3Fw=400&amp;tok=b0591e" class="mediacenter" alt="" width="400" /></a> <br/>
+<strong> Hint </strong> In the example you can see a common anode 7 segment, which means that there is one common VCC for all of the 7 LEDs the display consists of. The segments will be alight when the value on the corresponding pins is 0, as this way the circuit is closed. If it has a common cathode, it will be connected to the ground, and the value which turns on the segments is 1. </div>
+</li>
+<li class="level1"><div class="li">  Connect 4 LEDs using a 74HC595 shift register and make them blink one by one, in order. <br/>
+<a href="../../../../_detail/iot2015/labs/595.png%3Fid=iot2015%253Alabs%253A06.html" class="media" title="iot2015:labs:595.png"><img src="../../../../_media/iot2015/labs/595.png%3Fw=400&amp;tok=76ba52" class="mediacenter" alt="" width="400" /></a> <br/>
+<strong> Hint </strong> In the example, there is a 595 shift register used with 8 LEDs. You need only 4, so, when you search for the piece&#039;s datasheet, look which are the first 4 GPIO pins and use only these, starting with 0.</div>
+</li>
+<li class="level1"><div class="li"> Make a setup which works by this rules. You connect a distance sensor, a button, use a ruler and a sheet of paper.<br/>
+At one end of the ruler you put the sensor and, at a certain distance, place the paper. When you press the button, your board should receive the value from the sensor with the distance where it detects the obstacle. Send these values to a chart in the dashboard via a signal. <br/>
+When you add the chart, go in its settings and uncheck the <em>time stamp</em> field. After doing this, you can master not only the Y axes, but the X as well. In streams you will be able to set each one with the <em>change</em> node. X stores the value of the distance on the ruler, while Y, the values sent by the sensor. </div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT5 SECTION "Exercises" [3079-] --></div>
+</body>
+</html>

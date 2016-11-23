@@ -1,0 +1,126 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:07:contents:03</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-11-14T01:02:42+0200"/>
+<meta name="keywords" content="rl,labs,07,contents,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:07:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="03.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/07/contents/03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:07:contents';var JSINFO = {"id":"rl:labs:07:contents:03","namespace":"rl:labs:07:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_adresare_ip_si_rutare">03. [10p] Adresare IP și rutare</h3>
+<div class="level3">
+
+<p>
+Dorim să realizăm conectivitate și între stațiile <code>red</code> și <code>green</code>. Întrucât cele două stații sunt în rețele locale diferite, va trebui să configurăm stația <code>host</code> ca <em>default gateway</em> pe fiecare stație.
+</p>
+
+<p>
+Pentru a adăuga <em>default gateway</em> pe stația <code>red</code> folosiți comenzile:
+</p>
+<pre class="code">root@host:~# go red
+[...]
+root@red:~# ip route add default via 10.10.10.1</pre>
+
+<p>
+După configurare (adăugarea rutei), validăm configurația cu o comandă specifică. În acest caz urmărim tabela de rutare folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip route</span> show
+default via 10.10.10.1 dev eth0 
+10.10.10.0<span class="sy0">/</span><span class="nu0">24</span> dev eth0  proto kernel  scope <span class="kw2">link</span>  src 10.10.10.2</pre>
+
+<p>
+<p><div class="notetip">
+Adresa IP <code>10.10.10.1</code> reprezintă adresa IP a interfeței <code>veth-red</code> de pe stația <code>host</code>.
+
+</div></p>
+</p>
+
+<p>
+Intrați pe stația <code>green</code> și executați:
+</p>
+<pre class="code">root@host:~# go green
+[...]
+root@green:~# ip route add default via 10.10.20.1
+root@green:~# ip route show
+default via 10.10.20.1 dev eth0 
+10.10.20.0/24 dev eth0  proto kernel  scope link  src 10.10.20.2</pre>
+
+<p>
+La fel ca mai sus, am folosit comanda <code>ip route show</code> pentru afișarea tabelei de rutare și, astfel, a validării comenzii de adăugare de <em>default gateway</em>.
+</p>
+
+<p>
+<p><div class="notetip">
+Adresa IP <code>10.10.20.1</code> reprezintă adresa IP a interfeței <code>veth-green</code> de pe stația <code>host</code>.
+
+</div></p>
+</p>
+
+<p>
+Testați conectivitatea între stația <code>green</code> și stația <code>red</code>. Accesați pe <code>red</code> și executați comanda <code>ping</code> către adresa IP a stației <code>green</code>. Observați că nu funcționează. Motivul pentru care nu există conectivitate este reprezentat de faptul că stația <code>host</code> nu are activată rutarea (nu trimite pachetele ce vin de pe o interfață pe altă interfață). Pentru a activa rutarea pe stația <code>host</code> rulați comanda:
+</p>
+<pre class="code">root@host:~# sysctl -w net.ipv4.ip_forward=1</pre>
+
+<p>
+Pentru a valida configurarea de activare a rutării rulăm comanda:
+</p>
+<pre class="code">root@host:~# sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1</pre>
+
+<p>
+Testați din nou conectivitatea între <code>red</code> și <code>green</code> și observați că funcționează.
+</p>
+
+<p>
+Porniți comanda <code>ping</code> de pe stația <code>red</code> către stația <code>green</code>. Deschideți un nou terminal și executați pe stația <code>host</code> comanda:
+</p>
+<pre class="code">root@host:~# tcpdump  -i veth-red
+listening on veth-red, link-type EN10MB (Ethernet), capture size 65535 bytes
+18:46:48.783576 IP red.local &gt; 10.10.20.2: ICMP echo request, id 434, seq 163, length 64
+18:46:48.783622 IP 10.10.20.2 &gt; red.local: ICMP echo reply, id 434, seq 163, length 64</pre>
+
+<p>
+Observați pachetele de tip <code>ICMP echo request/reply</code> care trec prin stația <code>host</code> (sau altfel zis stația <code>host</code> le rutează).
+</p>
+
+</div>
+</div>
+</body>
+</html>

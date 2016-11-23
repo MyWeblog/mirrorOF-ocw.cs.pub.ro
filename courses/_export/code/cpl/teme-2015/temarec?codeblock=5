@@ -1,0 +1,88 @@
+    
+    
+
+start:
+   local
+       number c; number[256] d;
+       number i;
+   end;
+   c = [readArray d];
+   [sort d,c];
+   [writeArray d,c];
+end;
+
+#readArray - is reused from the Unlimited Average example
+
+writeArray number[256] data, number count:
+   local number i; end;
+   i = 0;
+   while i < count;
+       [print ">"];
+       [write data[i]];
+       [print "\n"];
+       i = i + 1;
+   end;
+end;
+
+sort number[256] data, number count:
+   [quickSort data, 0, count];
+end;
+
+quickSort number[256] data, number first, number count:
+   local 
+       number idx; 
+       number value; 
+       number i;
+   end;
+   if count > 1;
+       idx = first + count / 2;
+       value = data[idx];
+       [swap data, idx, first+count-1];
+       idx = first;
+       i = first;
+       while i - first < count - 1;
+           if data[i] < value;
+               [swap data, i, idx];
+               idx = idx + 1;
+           end;
+           i = i + 1;
+       end;
+       [swap data, idx, first+count-1];
+       
+       [quickSort data, first, idx - first];
+       [quickSort data, idx + 1, first + count - idx - 1];
+   end;
+end;
+
+swap number[256] data, number p1, number p2:
+   local number t; end;
+   t = data[p1]; data[p1] = data[p2]; data[p2] = t;
+end;
+
+readArray number[256] data -> number:
+   local number c; number i; end; 
+   [print "Count? "];
+   c = [read];
+   if c > 0;
+       if c > 256;
+           [ print "ERROR: Buffer overflow!\n"];
+           return 0;
+       else
+           i = c;
+           until i = 0;
+               [print ">"];
+               data[c - i] = [ read ];
+               i = i - 1;
+           end;
+       end;
+		
+       return c;
+   end;
+	
+   if c = 0;
+       # do nothing
+   else
+       [ print "ERROR: Count is negative!\n"];
+   end;
+   return 0;
+end;

@@ -1,0 +1,537 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>iocla:laboratoare:laborator-10</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T18:17:19+0300"/>
+<meta name="keywords" content="iocla,laboratoare,laborator-10"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=iocla:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="laborator-10.html"/>
+<link rel="canonical" href="../../../../iocla/laboratoare/laborator-10.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='iocla:laboratoare';var JSINFO = {"id":"iocla:laboratoare:laborator-10","namespace":"iocla:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-10.html#laborator_10exploatarea_memoriei_shellcodes">Laborator 10: Exploatarea memoriei. Shellcodes</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-10.html#concepte_de_baza">Concepte de bază</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-10.html#buffer_overflowcrash">Buffer overflow: Crash</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-10.html#buffer_overflowexploatare">Buffer overflow: Exploatare</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-10.html#setup">Setup</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-10.html#exercitii">Exerciții</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-10.html#p_tutorialgasire_offset_si_suprascrierea_adresei_de_retur">[2p] Tutorial: Găsire offset și suprascrierea adresei de retur</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-10.html#p_1_recon">[2p] 1. Recon</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-10.html#p_2_first_flag">[3p] 2. First flag</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-10.html#p_3_second_flag">[3p] 3. Second flag</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-10.html#p_bonus_graceful_exit">[3p] BONUS Graceful exit</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_10exploatarea_memoriei_shellcodes">Laborator 10: Exploatarea memoriei. Shellcodes</h1>
+<div class="level1">
+
+<p>
+Ca o continuare a laboratorului precedent, vom merge mai în detaliu cu ce putem face în momentul în care deținem controlul asupra unui buffer într-un program, fără ca acesta să fie protejat de un posibil overflow.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laborator 10: Exploatarea memoriei. Shellcodes" [1-285] -->
+<h2 class="sectionedit2" id="concepte_de_baza">Concepte de bază</h2>
+<div class="level2">
+
+<p>
+Securitatea aplicațiilor este un domeniu ce a căpătat amploare în ultimii ani și considerăm relevantă explorarea istoricului acesteia din punct de vedere practic. Țineți cont de faptul că noțunile pe care le vom acoperi în cadrul laboratorului sunt la nivelul anului 1996 (același an în care a fost publicat articolul lui Aleph One, <a href="http://insecure.org/stf/smashstack.html" class="urlextern" title="http://insecure.org/stf/smashstack.html"  rel="nofollow">Smashing the Stack for Fun and Profit</a>).
+</p>
+
+<p>
+Înainte de toate, trebuiesc stabilite noțiunile cu care vom lucra. Un <strong>bug</strong> constă într-un defect în cadrul unei aplicații ce duce la funcționarea eronată a acesteia (spunem despre program că este <em>buggy</em>). O <strong>vulnerabilitate</strong> este un bug ce poate fi exploatat, într-o formă sau alta de către un atacator. Un exemplu comun și relevant pentru noi este cel de buffer overflow.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Concepte de bază" [286-1143] -->
+<h3 class="sectionedit3" id="buffer_overflowcrash">Buffer overflow: Crash</h3>
+<div class="level3">
+
+<p>
+Ilustrativ, putem vedea cum arată un stack frame atunci când are loc un buffer overflow.
+</p>
+
+<p>
+<a href="../../../../_detail/iocla/laboratoare/lab10_-_initial_stack_frame.png%3Fid=iocla%253Alaboratoare%253Alaborator-10.html" class="media" title="iocla:laboratoare:lab10_-_initial_stack_frame.png"><img src="../../../../_media/iocla/laboratoare/lab10_-_initial_stack_frame.png%3Fw=200&amp;tok=0d385c" class="media" alt="" width="200" /></a> <a href="../../../../_detail/iocla/laboratoare/lab10_-_8a.png%3Fid=iocla%253Alaboratoare%253Alaborator-10.html" class="media" title="iocla:laboratoare:lab10_-_8a.png"><img src="../../../../_media/iocla/laboratoare/lab10_-_8a.png%3Fw=200&amp;tok=7eb367" class="media" alt="" width="200" /></a> <a href="../../../../_detail/iocla/laboratoare/lab10_-_16a.png%3Fid=iocla%253Alaboratoare%253Alaborator-10.html" class="media" title="iocla:laboratoare:lab10_-_16a.png"><img src="../../../../_media/iocla/laboratoare/lab10_-_16a.png%3Fw=200&amp;tok=bebace" class="media" alt="" width="200" /></a> <a href="../../../../_detail/iocla/laboratoare/lab10_-_overwritten_ret.png%3Fid=iocla%253Alaboratoare%253Alaborator-10.html" class="media" title="iocla:laboratoare:lab10_-_overwritten_ret.png"><img src="../../../../_media/iocla/laboratoare/lab10_-_overwritten_ret.png%3Fw=200&amp;tok=769caf" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+A se nota că stiva crește în &#039;sus&#039;, de la adrese mari la adrese mici, în timp ce bufferul crește în ordinea firească.
+</p>
+
+<p>
+După cum ați văzut și în laboratorul precedent, un buffer overflow poate fi folosit pentru a citi date, pentru a scrie date sau pentru a altera fluxul programului.
+</p>
+
+<p>
+În situația de mai sus, programul ne va întâmpina cu binele cunoscut <code>Segmentation fault</code>, cu informația adițională <code>EIP at 0x41414141</code>.
+</p>
+
+<p>
+Ce s-a întâmplat, de fapt? Atunci când se iese dintr-o funcție se folosește instrucțiunea <code>ret</code>. Această instrucțiune este echivalentă cu a scrie <code>pop eip</code> (deși aceasta nu este validă). În momentul în care se execută instrucțiunea <code>ret</code>, se pune în instruction pointer (EIP) valoarea de pe vârful stivei. Efectul va fi echivalent cu cel al unui jump la adresa ce se găsește pe stivă.
+</p>
+
+<p>
+Din moment ce adresa de retur a fost suprascrisă cu 4 &#039;A&#039;-uri, programul va încerca să se ”întoarcă” la adresa <code>AAAA</code>, sau în traducerea lui în hexazecimal, <code>0x41414141</code>. Dat fiind că această adresă nu este mapată de către proces, această operație este echivalentă cu un acces invalid la memorie, lucru ce duce la <code>Segmentation fault</code>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Buffer overflow: Crash" [1144-2692] -->
+<h3 class="sectionedit4" id="buffer_overflowexploatare">Buffer overflow: Exploatare</h3>
+<div class="level3">
+
+<p>
+Ce se întâmplă dacă scriem o adresă validă (mapată) în locul celei de retur? La ieșirea din funcție, programul o să se întoarcă la acea adresă.
+</p>
+
+<p>
+Putem să mai facem un pas și să considerăm următorul scenariu:
+</p>
+
+<p>
+<a href="../../../../_detail/iocla/laboratoare/lab10_-_stack_code.png%3Fid=iocla%253Alaboratoare%253Alaborator-10.html" class="media" title="iocla:laboratoare:lab10_-_stack_code.png"><img src="../../../../_media/iocla/laboratoare/lab10_-_stack_code.png%3Fw=800&amp;tok=0a18d9" class="media" alt="" width="800" /></a>
+</p>
+
+<p>
+Dacă reușim să suprascriem adresa de retur cu adresa la care se găsește începutul bufferului pe stivă, atunci am putea să executăm un cod pe care-l <strong>injectăm</strong> prin intermediul bufferului. Din motive istorice, acest cod poartă numele generic de <strong>shellcode</strong>, deoarece de cele mai multe ori când un atacator exploatează o aplicație sau un serviciu, dorește să dobândească un shell prin care să poată interacționa cu sistemul respectiv.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Dacă într-o aplicație se descoperă un buffer overflow, nu înseamnă (neapărat) că acest lucru este o vulnerabilitate. Dacă un atacator nu poate <strong>controla</strong> buffer-ul respectiv, atunci rămâne doar un bug în cadrul aplicației respective.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Buffer overflow: Exploatare" [2693-3735] -->
+<h2 class="sectionedit5" id="setup">Setup</h2>
+<div class="level2">
+
+<p>
+Pentru a putea rula <code>python</code>, <code>gdb</code> și <code>objdump</code> de oriunde (în cadrul acelei console) recomandăm să faceți următorul setup în <code>Command Prompt</code>:
+</p>
+<pre class="code">set PATH=%PATH%;&quot;C:\Program Files (x86)\SASM\MinGW\bin&quot;;&quot;C:\Python27&quot;</pre>
+
+</div>
+<!-- EDIT5 SECTION "Setup" [3736-3999] -->
+<h2 class="sectionedit6" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+<p>
+În cadrul acestui laborator, vom folosi <a href="http://elf.cs.pub.ro/asm/res/laboratoare/lab-10-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/asm/res/laboratoare/lab-10-tasks.zip"  rel="nofollow">arhiva de sarcini a laboratorului</a>.
+</p>
+
+<p>
+<p><div class="notetip">
+Recomandarea noastră este ca pentru fiecare task în parte să vă generați câte un <em>payload</em> aferent.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Puteți folosi orice fel de consolă vi se pare adecvată.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Exerciții" [4000-4365] -->
+<h3 class="sectionedit7" id="p_tutorialgasire_offset_si_suprascrierea_adresei_de_retur">[2p] Tutorial: Găsire offset și suprascrierea adresei de retur</h3>
+<div class="level3">
+
+<p>
+Accesați subdirectorul <code>tutorial/</code> din <a href="http://elf.cs.pub.ro/asm/res/laboratoare/lab-10-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/asm/res/laboratoare/lab-10-tasks.zip"  rel="nofollow">arhiva de sarcini a laboratorului</a>.
+</p>
+
+<p>
+Inspectați sursa <code>tutorial.asm</code> și rulați comanda <code>build_tutorial</code>.
+</p>
+
+<p>
+Programul citește într-un buffer de la intrarea standard folosind funcția <code>gets</code>. Dacă inputul este prea mare, atunci va avea loc un buffer overflow. Rulați <code>tutorial.exe</code> și dați un input de cel puțin 40 de caractere. Observați ce se întâmplă.
+</p>
+
+<p>
+Rulați <code>GDB</code> pe executabilul <code>tutorial.exe</code> folosind comanda:
+</p>
+<pre class="code">&quot;C:\Program Files (x86)\SASM\MinGW\bin\gdb&quot; tutorial.exe</pre>
+
+<p>
+Apoi rulați comenzile de mai jos cu obiectivul de a urmări ce se întâmplă la ieșirea din funcția <code>read_input</code> (în momentul apelării <code>ret</code>):
+</p>
+<pre class="code">(gdb) set disassembly-flavor intel
+(gdb) start
+[...]
+(gdb) disas
+[...]
+(gdb) b read_input
+[...]
+(gdb) b *0x4013ba
+(gdb) c
+Continuing.
+What is your name?</pre>
+
+<p>
+<p><div class="notetip">
+Comanda <code>b *0x4013ba</code> creează un breakpoint la sfârșitul funcției <code>read_input</code>, adică în momentul apelării <code>ret</code> în cadrul acelei funcții.
+
+</div></p>
+</p>
+
+<p>
+Introduceți drept input o secvență lungă (circa 50) de caractere <code>A</code>.
+</p>
+<pre class="code">(gdb) disas
+Dump of assembler code for function read_input:
+   0x004013a4 &lt;+0&gt;:     push   ebp
+   0x004013a5 &lt;+1&gt;:     mov    ebp,esp
+   0x004013a7 &lt;+3&gt;:     sub    esp,0x28
+   0x004013aa &lt;+6&gt;:     sub    esp,0xc
+   0x004013ad &lt;+9&gt;:     lea    eax,[ebp-0x1c]
+   0x004013b0 &lt;+12&gt;:    push   eax
+   0x004013b1 &lt;+13&gt;:    call   0x401b18 &lt;gets&gt;
+   0x004013b6 &lt;+18&gt;:    add    esp,0x10
+   0x004013b9 &lt;+21&gt;:    leave
+=&gt; 0x004013ba &lt;+22&gt;:    ret
+   0x004013bb &lt;+23&gt;:    add    BYTE PTR [ebp-0x77],dl
+End of assembler dump.
+(gdb) x/x $esp
+0x28ff20:       0x41414141
+(gdb) x/s $esp
+0x28ff20:        &quot;AAAAAAA&quot;</pre>
+
+<p>
+Observați că atunci când se ajunge la instrucțiunea <code>ret</code> din funcția <code>read_input</code>, pe vârful stivei se găsește valoarea <code>0x41414141</code>, adică &quot;AAAA&quot; din bufferul nostru.
+</p>
+
+<p>
+La ce offset față de începutul bufferului se găsește adresa de retur? Putem să introducem combinații de câte 4 pentru a ne ușura viața, în felul următor:
+</p>
+<pre class="code">(gdb) r
+What is your name?
+1111222233334444555566667777888899990000
+
+Breakpoint 3, 0x004013ba in read_input ()
+(gdb) c
+Continuing.
+
+Program received signal SIGSEGV, Segmentation fault.
+0x39393939 in ?? ()</pre>
+
+<p>
+Putem vedea că adresa de retur a fost suprascrisă cu valoarea hexazecimală <code>0x39393939</code>, adică <code>9999</code> dacă ne uităm în <a href="http://www.asciitable.com/" class="urlextern" title="http://www.asciitable.com/"  rel="nofollow">tabela ASCII</a>; caracterul <abbr title="American Standard Code for Information Interchange">ASCII</abbr> <code>9</code> are valoarea hexazecimală <code>0x39</code>. Offsetul celor <code>4</code> de <code>9</code> este <code>32</code>; adică la <code>32</code> de octeți de la începutul buffer-ului/șirului se găsește adresa de retur a funcției.
+</p>
+
+<p>
+Având offset-ul, putem completa și folosi script-ul Python <code>tutorial_payload.py</code> pentru a genera un payload care să crape programul în mod consecvent.
+</p>
+
+<p>
+Actualizați în fișierul <code>tutorial_payload.py</code> variabila <code>offset</code> la offset-ul necesar pentru suprascrierea adresei de retur. În cazul nostru este vorba de valoarea <code>32</code>.
+</p>
+
+<p>
+Generati un <code>payload</code> (in afara GDB-ului) folosind comanda
+</p>
+<pre class="code">python tutorial_payload.py</pre>
+
+<p>
+Comanda generează un payload în fișierul <code>payload</code>.
+</p>
+<pre class="code">(gdb) b main
+(gdb) run
+(gdb) p dup2(open(&quot;payload&quot;, 0), 0)
+(gdb) c
+Continuing.
+What is your name?
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0badc0de in ?? ()</pre>
+
+<p>
+Observăm că funcția a încercat să se întoarcă la adresa dată de noi.
+</p>
+
+<p>
+Ca un ultim pas, haideți să găsim o adresă validă la care să ne întoarcem.
+</p>
+<pre class="code">(gdb) r
+(gdb) disas
+Dump of assembler code for function main:
+   0x00401390 &lt;+0&gt;:     push   ebp
+   0x00401391 &lt;+1&gt;:     mov    ebp,esp
+=&gt; 0x00401393 &lt;+3&gt;:     push   0x402000
+   0x00401398 &lt;+8&gt;:     call   0x401b10 &lt;puts&gt;
+   0x0040139d &lt;+13&gt;:    call   0x4013a4 &lt;read_input&gt;
+   0x004013a2 &lt;+18&gt;:    leave
+   0x004013a3 &lt;+19&gt;:    ret
+End of assembler dump.</pre>
+
+<p>
+Am putea lua adresa la care se pune mesajul <em>&quot;What is your name?&quot;</em> pe stivă iar apoi se apelează <code>puts</code>, adică adresa <code>0x401393</code>. Modificați valoarea <code>0x0badc0de</code> din <code>tutorial_payload.py</code> cu cea alesă și mai generați o dată fișierul de intrare. Pentru generarea fișieruli de intrare folosiți comanda
+</p>
+<pre class="code">python tutorial_payload.py</pre>
+
+<p>
+Comanda generează un payload în fișierul <code>payload</code>.
+</p>
+<pre class="code">.\tutorial.exe &lt; payload
+What is your name?
+What is your name?</pre>
+
+<p>
+Programul afișează cele două mesaje, așa cum ne așteptam, și apoi crash-uiește. Vom vedea în exercițiile următoare de ce programul a crash-uit.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "[2p] Tutorial: Găsire offset și suprascrierea adresei de retur" [4366-9089] -->
+<h3 class="sectionedit8" id="p_1_recon">[2p] 1. Recon</h3>
+<div class="level3">
+
+<p>
+Accesați subdirectorul <code>shellcode</code> din <a href="http://elf.cs.pub.ro/asm/res/laboratoare/lab-10-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/asm/res/laboratoare/lab-10-tasks.zip"  rel="nofollow">arhiva de sarcini a laboratorului</a>.
+</p>
+
+<p>
+Identificați vulnerabilitatea de tip buffer overflow din programul <code>shellcode.asm</code>. Faceți programul să crape suprascriind prin buffer overflow o adresă de retur corespunzătoare.
+</p>
+
+<p>
+Pentru a face overflow, cel mai bine este să generați un fișier de tip <code>payload</code> pe care să îl trimiteți ca intrare programului. Pentru a genera fișierul de tip payload, recomandăm folosirea scriptului Python <code>gen_payload.py</code> și urmăriți comentariile marcate cu <code>TODO</code>.
+</p>
+
+<p>
+Determinați offsetul unde ar trebui să se găsească adresa de retur a funcției vulnerabile și completați corespunzător în fișierul <code>gen_payload.py</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Inspectați codul funcției <code>vuln</code> și aflați care este offset-ul de la adresa buffer-ului folosit de funcția <code>gets()</code> până la locul de pe stivă unde este reținută adresa de retur a funcției <code>vuln</code>.
+
+</div></p>
+</p>
+
+<p>
+Generați un payload în consola de Windows (adică nu în consola GDB) folosind comanda
+</p>
+<pre class="code">python gen_payload.py</pre>
+
+<p>
+Comanda generează payload-ul în fișierul <code>payload</code>. Transmiteți acest payload programului în linia de comandă
+</p>
+<pre class="code">.\shellcode.exe &lt; payload</pre>
+
+<p>
+Dacă ați completat corespunzător offset-ul în cadrul scriptului Python, atunci rularea programului va rezulta într-un crash.
+</p>
+
+</div>
+<!-- EDIT8 SECTION "[2p] 1. Recon" [9090-10537] -->
+<h3 class="sectionedit9" id="p_2_first_flag">[3p] 2. First flag</h3>
+<div class="level3">
+
+<p>
+Suprascrieți adresa de retur a funcției vulnerabile astfel încât să se execute codul din funcția <code>flag1</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Modificați <code>gen_payload.py</code> în mod corespunzător. Va trebui să actualizați corespunzător variabila <code>offset</code>, să determinați adresa funcției <code>flag1</code> și să adăugați valoarea cu care să suprascrieți adresa de retur la sfârșitul payload-ului. Valoarea folosită pentru suprascriere este chiar adresa funcției <code>flag1</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru a adăuga adresa funcției <code>flag1</code> la sfârșitul payload-ului va trebui să convertiți acea adresă dintr-o valoarea întreagă (pe 4 octeți) într-un șir de octeți. Pentru aceasta folosiți-vă de funcția <code>dw</code> care exact acest lucru îl face: trece o valoare pe 4 octeți într-un șir de octeți în format little endian. Puteți urmări modul în care este folosită funcția <code>dw</code> în fișierul <code>tutorial_payload.py</code> din cadrul tutorialului de mai devreme.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Dacă doriți să aflați adresa unei funcții folosiți, în GDB, comanda
+</p>
+<pre class="code">p &lt;function-name&gt;</pre>
+
+<p>
+unde <code>&lt;function-name&gt;</code> este numele funcției.
+</p>
+
+<p>
+Pentru alte informații puteți dezasambla funcția folosind, în GDB, comanda
+</p>
+<pre class="code">disass &lt;function-name&gt;</pre>
+
+<p>
+unde <code>&lt;function-name&gt;</code> este numele funcției.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+<strong>Dacă întâmpinați probleme</strong>
+</p>
+
+<p>
+Pentru a depana funcționarea corespunzătoare a payload-ului, recomandăm următorii pași:
+</p>
+<ol>
+<li class="level1"><div class="li"> Porniți programul sub GDB folosind comanda<pre class="code">&quot;C:\Program Files (x86)\SASM\MinGW\bin\gdb&quot; shellcode.exe </pre>
+</div>
+</li>
+<li class="level1"><div class="li"> În consola GDB, creați un breakpoint la funcția <code>main</code><pre class="code">b main</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> În consola GDB rulați programul cu oprire acum la funcția <code>main</code><pre class="code">run</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> În consola GDB fortați citirea intrării de standard din fișierul <code>payload</code><pre class="code">p dup2(open(&quot;payload&quot;, 0), 0)</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Folosiți un breakpoint în funcția <code>vuln</code> și continuați până acolo<pre class="code">b vuln
+c</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Dezasamblați codul și urmăriți pas cu pas (stepping) ce se întâmplă în cadrul funcției <code>vuln</code><pre class="code">disass
+ni
+disass
+ni
+disass
+ni
+[...]</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> <strong>Imediat înainte</strong> de apelul <code>gets</code> (după suficient de multe comenzi de dezasamblare și stepping) urmăriți ce aveți în vârful stivei<pre class="code">x/30wx $esp</pre>
+
+<p>
+ Identificați unde se găsește adresa de retur a funcției.
+</p>
+</div>
+</li>
+<li class="level1"><div class="li"> <strong>Imediat după</strong> apelul <code>gets</code>(după suficient de multe comenzi de dezasamblare și stepping)  urmăriți ce aveți în vârful stivei<pre class="code">x/30wx $esp</pre>
+
+<p>
+ Identificați acum ce se găsește în locul noii adrese de retur a funcției și vedeți dacă totul corespunde.
+</p>
+</div>
+</li>
+<li class="level1"><div class="li"> Vedeți ce se găsește în vârful stivei <strong>imediat înainte</strong> de revenirea din funcție, adică imediat înainte de instrucțiunea <code>ret</code><pre class="code">x/wx $esp</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Mai faceți un step<pre class="code">ni</pre>
+
+<p>
+ În acest moment veți face jump la adresa stocată în vârful stivei adică acolo unde programul așteaptă adresa de retur. Dacă totul e în regulă, veți face jump în funcția <code>flag1</code>.
+</p>
+</div>
+</li>
+</ol>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+Dacă ați completat corect payload-ul, la transmiterea payload-ului către programul <code>shellcode.exe</code> veți avea afișat mesajul dat de variabila <code>honeypot</code> din fișierul <code>shellcode.asm</code>, anume <em>You shouldn&#039;t be here!</em>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "[3p] 2. First flag" [10538-13890] -->
+<h3 class="sectionedit10" id="p_3_second_flag">[3p] 3. Second flag</h3>
+<div class="level3">
+
+<p>
+Modificați sursa <code>gen_payload.py</code> astfel încât să genereze un payload care să aducă programul să apeleze funcția <code>flag2</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Câte argumente are funcția?
+Pentru ce valori ale argumentelor ajunge funcția să treacă testele?
+Cum trebuie să arate bufferul de intrare astfel încât atunci când se ajunge în funcție parametrii să se găsească pe pozițiile corespunzătoare pe stivă?
+
+</div></p>
+</p>
+
+<p>
+Scrieți modificările necesare în <code>gen_payload.py</code> și generați un nou payload.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Dacă ați completat corect payload-ul, la transmiterea payload-ului către programul <code>shellcode.exe</code> veți avea afișat mesajul dat de variabila <code>great</code> din fișierul <code>shellcode.asm</code>, anume <em>Mad skills, yo!</em>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "[3p] 3. Second flag" [13891-14670] -->
+<h3 class="sectionedit11" id="p_bonus_graceful_exit">[3p] BONUS Graceful exit</h3>
+<div class="level3">
+
+<p>
+Ați observat că, pentru payload-ul anterior, în care apelați funcția <code>flag2()</code> deși se execută codul dorit de noi, programul în continuare crapă. De ce? Corectați acest lucru. Generați noi payload-uri prin care după ce se execută codul dorit, programul să se termine cu succes.
+</p>
+
+</div>
+<!-- EDIT11 SECTION "[3p] BONUS Graceful exit" [14671-] --></div>
+</body>
+</html>

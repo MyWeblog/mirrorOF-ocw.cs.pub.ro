@@ -1,0 +1,1634 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>eim:laboratoare:laborator05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-25T07:11:35+0200"/>
+<meta name="keywords" content="eim,laboratoare,laborator05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=eim:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="laborator05.html"/>
+<link rel="canonical" href="../../../../eim/laboratoare/laborator05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='eim:laboratoare';var JSINFO = {"id":"eim:laboratoare:laborator05","namespace":"eim:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator05.html#structura_unei_aplicatii_iii">Structura unei Aplicații (III)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator05.html#servicii">Servicii</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator05.html#tipuri_de_servicii">Tipuri de Servicii</a></div></li>
+<li class="level3"><div class="li"><a href="laborator05.html#gestiunea_unui_serviciu">Gestiunea unui Serviciu</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="laborator05.html#servicii_de_tip_started">Servicii de tip Started</a></div></li>
+<li class="level4"><div class="li"><a href="laborator05.html#servicii_de_tip_bounded">Servicii de tip Bounded</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="laborator05.html#prioritatea_unui_serviciu">Prioritatea unui Serviciu</a></div></li>
+<li class="level3"><div class="li"><a href="laborator05.html#categorii_de_procesari">Categorii de Procesări</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="laborator05.html#servicii_ce_ruleaza_in_prim-plan">Servicii ce Rulează în Prim-Plan</a></div></li>
+<li class="level4"><div class="li"><a href="laborator05.html#procesari_realizate_in_fundal">Procesări Realizate în Fundal</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="laborator05.html#realizarea_de_procesari_prin_intermediul_alarmelor">Realizarea de Procesări prin Intermediul Alarmelor</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator05.html#activitate_de_laborator">Activitate de Laborator</a></div></li>
+<li class="level2"><div class="li"><a href="laborator05.html#resurse_utile">Resurse Utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="structura_unei_aplicatii_iii">Structura unei Aplicații (III)</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Structura unei Aplicații (III)" [1-46] -->
+<h2 class="sectionedit2" id="servicii">Servicii</h2>
+<div class="level2">
+
+<p>
+În Android, clasa <a href="http://developer.android.com/reference/android/app/Service.html" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html"  rel="nofollow">android.app.Service</a> este utilizată pentru componente a căror funcționalitate implică procesări complexe, de lungă durată, necesitând acces la anumite resurse, fără a fi necesar să pună la dispoziție o interfață grafică sau un mecanism de interacțiune cu utilizatorul. Prin intermediul unui serviciu, se asigură faptul că aplicația Android continuă să se găsească în execuție, chiar și atunci când interfața grafică a acesteia nu este vizibilă.
+</p>
+
+<p>
+<p><div class="notetip">Întrucât prioritatea unui serviciu este mai mare decât a unei activități inactive, este mai puțin probabil ca acestea să fie distruse atunci când trebuie eliberate resursele sistemului de operare. De altfel, un serviciu poate fi configurat să fie repornit imediat ce este posibil sau chiar pentru a i se asocia o prioritate echivalentă cu a unei activități active (dacă distrugerea serviciului are un impact la nivelul interfeței grafice).
+</div></p>
+</p>
+
+<p>
+Astfel, un serviciu nu trece prin evenimentele ce fac parte din ciclul de viață al unei activități. Totuși, un serviciu poate fi controlat (pornit, oprit) din contextul altor componente ale unei aplicații Android (activități, ascultători de intenții cu difuzare, alte servicii).
+</p>
+
+<p>
+<strong>Serviciul este rulat pe firul de execuție principal al aplicației Android</strong>. De aceea, în situația în care operațiile pe care le realizează poate influența experiența utilizatorului, acestea trebuie transferate pe alte fire de execuție din fundal (folosind clasele <code>HandlerThread</code> sau <code>AsyncTask</code>).
+</p>
+
+<p>
+Un serviciu continuă să se ruleze chiar și în situația în care componenta aplicației Android care l-a invocat prin intermediul unei intenții devine inactivă (nu mai este vizibilă) sau chiar este distrusă. Acest comportament este adecvat în situația în care serviciul realizează operații de intrare/ieșire intensive, interacționează cu diverse servicii accesibile prin intermediul rețelei sau cu furnizori de conținut.
+</p>
+
+<p>
+<p><div class="notetip">Opțiunea de a utiliza un serviciu în Android trebuie luată în considerare numai în situația în care este necesar ca o anumită funcționalitate să fie realizată independent de starea componentei care a invocat-o. Dacă este necesar ca o operație să fie executată în tandem cu o anumită componentă (doar în perioada în care aceasta este vizibilă, spre exemplu), dar fără a avea un impact asupra experienței utilizatorului (fără a influența timpul de răspuns al aplicației Android), se va utiliza un fir de execuție dedicat, a cărui stare va fi gestionată pe metodele de callback ce guvernează ciclul de viață al componentei respective.
+</div></p>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Servicii" [47-2835] -->
+<h3 class="sectionedit3" id="tipuri_de_servicii">Tipuri de Servicii</h3>
+<div class="level3">
+
+<p>
+În programarea Android, există două tipuri de servicii:
+</p>
+<ol>
+<li class="level1"><div class="li"> servicii <strong>pornite explicit</strong> (<em>eng.</em> started), lansate în execuție prin intermediul metodei <a href="http://developer.android.com/reference/android/content/Context.html#startService%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#startService%28android.content.Intent%29"  rel="nofollow">startService()</a>, invocată din contextul unei componente (activitate, serviciu, ascultător al unor mesaje cu difuzare); astfel de servicii nu furnizează un rezultat (către componenta care l-a apelat), fiind utilizate pentru a realiza o anumită operație la finalizarea căreia, de regulă, sunt terminate (apelându-se, în rutina lor, metoda <a href="http://developer.android.com/reference/android/app/Service.html#stopSelf%28int%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#stopSelf%28int%29"  rel="nofollow">stopSelf()</a>); există posibilitatea ca o altă componentă să îl oprească explicit prin metoda <a href="http://developer.android.com/reference/android/content/Context.html#stopService%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#stopService%28android.content.Intent%29"  rel="nofollow">stopService()</a>; <strong>un serviciu de tip started continuă să ruleze chiar și în situația în care componenta care l-a invocat nu mai există</strong>;</div>
+</li>
+<li class="level1"><div class="li"> servicii <strong>atașate unei (unor) componente</strong> (<em>eng.</em> bounded) sunt lansate în execuție prin intermediul metodei <a href="http://developer.android.com/reference/android/content/Context.html#bindService%28android.content.Intent,%20android.content.ServiceConnection,%20int%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#bindService%28android.content.Intent,%20android.content.ServiceConnection,%20int%29"  rel="nofollow">bindService()</a>, invocată din contextul unei componente (activitate, serviciu, ascultător al unor mesaje cu difuzare) care interacționează cu acesta prin funcționalități pe care le expune; la un moment dat, pot exista mai multe componente atașate aceluiași serviciu; detașarea unei componente la un serviciu se realizează prin intermediul metodei <a href="http://developer.android.com/reference/android/content/Context.html#unbindService%28android.content.ServiceConnection%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#unbindService%28android.content.ServiceConnection%29"  rel="nofollow">unbindService()</a>; <strong>atunci când nu mai există nici o componentă asociată serviciului, acesta se consideră încheiat</strong>.</div>
+</li>
+</ol>
+
+<p>
+Un serviciu poate avea, în același timp, ambele tipuri (started și bounded). Acesta va putea rula o perioadă de timp nedefinită (până în momentul în care procesarea pe care o realizează este încheiată), permițând totodată componentelor unei aplicații Android să interacționeze cu el prin intermediul unor metode pe care le expune.
+</p>
+
+<p>
+Indiferent de modul în care este folosit un serviciu, invocarea sa este realizată, ca pentru orice componentă Android, prin intermediul unei intenții. În cazul serviciilor, se preferă să se utilizeze intenții explicite, în detrimentul intențiilor implicite, din motive de securitate.
+</p>
+
+<p>
+Categoria în care se încadrează un anumit serviciu este determinată de metodele pe care acesta le implementează:
+</p>
+<ol>
+<li class="level1"><div class="li"> pentru un serviciu de tip started, va fi implementată metoda <a href="http://developer.android.com/reference/android/app/Service.html#onStartCommand%28android.content.Intent,%20int,%20int%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onStartCommand%28android.content.Intent,%20int,%20int%29"  rel="nofollow">onStartCommand()</a>, apelată în mod automat în momentul în care serviciul este pornit prin intermediul metodei <code>startService()</code>;</div>
+</li>
+<li class="level1"><div class="li"> pentru un serviciu de tip bounded, vor fi implementate metodele:</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#onBind%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onBind%28android.content.Intent%29"  rel="nofollow">onBind()</a>, apelată în mod automat în momentul în care o componentă este atașată serviciului, prin intermediul metodei <code>bindService()</code>;</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#onUnbind%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onUnbind%28android.content.Intent%29"  rel="nofollow">onUnbind()</a>, apelată în mod automat în momentul în care o componentă este detașată de la serviciu, prin intermediul metodei <code>unbindService()</code>.</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+<!-- EDIT3 SECTION "Tipuri de Servicii" [2836-6474] -->
+<h3 class="sectionedit4" id="gestiunea_unui_serviciu">Gestiunea unui Serviciu</h3>
+<div class="level3">
+
+<p>
+Pentru a putea fi utilizat, orice serviciu trebuie să fie declarat în cadrul fișierului <code>AndroidManifest.xml</code>, prin intermediul etichetei <a href="http://developer.android.com/guide/topics/manifest/service-element.html" class="urlextern" title="http://developer.android.com/guide/topics/manifest/service-element.html"  rel="nofollow">&lt;service&gt;</a> în cadrul elementului <a href="http://developer.android.com/guide/topics/manifest/application-element.html" class="urlextern" title="http://developer.android.com/guide/topics/manifest/application-element.html"  rel="nofollow">&lt;application&gt;</a>. Eventual, se poate indica o permisiune necesară pentru pornirea și oprirea serviciului, astfel încât aceste operații să poată fi realizate numai de anumite aplicații Android.
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=0" title="Download Snippet" class="mediafile mf_xml">AndroidManifest.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;manifest</span> ...<span class="re2">&gt;</span></span>
+  <span class="sc3"><span class="re1">&lt;application</span> ...<span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;service</span></span>
+<span class="sc3">      <span class="re0">android:name</span>=<span class="st0">&quot;ro.pub.cs.systems.eim.lab05.SomeService&quot;</span></span>
+<span class="sc3">      <span class="re0">android:enabled</span>=<span class="st0">&quot;true&quot;</span></span>
+<span class="sc3">      <span class="re0">android:exported</span>=<span class="st0">&quot;true&quot;</span></span>
+<span class="sc3">      <span class="re0">android:permission</span>=<span class="st0">&quot;ro.pub.cs.systems.eim.lab05.SOME_SERVICE_PERMISSION&quot;</span> <span class="re2">/&gt;</span></span>
+  <span class="sc3"><span class="re1">&lt;/application<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+Αtributul <a href="http://developer.android.com/guide/topics/manifest/service-element.html#nm" class="urlextern" title="http://developer.android.com/guide/topics/manifest/service-element.html#nm"  rel="nofollow">android:name</a> este singurul <strong>obligatoriu</strong> în cadrul elementului <code>&lt;service&gt;</code>, desemnând clasa care gestionează operațiile specifice serviciului respectiv. Din momentul în care aplicația Android este publicată, această valoare nu mai poate fi modificată, întrucât poate avea un efect asupra componentelor care utilizează acest serviciu prin intermediul unei intenții explicite folosită la pornirea serviciului sau la asocierea componentei cu serviciul respectiv.
+</p>
+
+<p>
+<p><div class="notewarning">Pentru a asigura securitatea aplicației Android, se recomandă să se folosească numai <strong>intenții explicite</strong> pentru pornirea unui serviciu. Nu este recomandat să se utilizeze filtre de intenții, astfel încât acestea nu ar trebui să se regăsească în fișierul <code>ΑndroidManifest.xml</code>. Totuși, în situația în care acest lucru este absolut necesar, ar trebui să se indice intenției măcar pachetul în care se regăsește serviciul respectiv.
+</div></p>
+</p>
+
+<p>
+Atributul <code>android:enabled</code> indică dacă serviciul poate fi instanțiat de către sistemul de operare.
+</p>
+
+<p>
+Atributul <code>android:exported</code> specifică posibilitatea ca alte componente (aparținând altor aplicații) să poată interacționa cu serviciul. În situația în care serviciul nu conține filtre de intenții, acesta poate fi invocat numai prin precizarea explicită a numelui clasei care îl gestionează (calificată complet), valoarea sa fiind <code>false</code>, fiind destinat invocării din contextul unor componente aparținând aceleiași aplicații Android ca și el. În cazul în care serviciul definește cel puțin un filtru de intenții, valoarea sa este <code>true</code>, fiind destinat invocării din contextul altor aplicații Android.
+</p>
+
+<p>
+Atributul <code>android:permission</code> precizează denumirea unei permisiuni pe care entitatea trebuie să o dețină pentru a putea lansa în execuție un serviciu sau pentru a i se putea asocia. Aceasta trebuie indicată în cadrul intențiilor transmise ca argumente metodelor utilizate pentru a invoca serviciul respectiv (<code>startService()</code>, respectiv <code>bindService()</code>), altfel intenția respectivă nu va fi livrată către serviciu.
+</p>
+
+<p>
+Alte atribute ale elementului <code>&lt;service&gt;</code> sunt: <code>android:icon</code>, <code>android:isolatedProcess</code>, <code>android:label</code>, <code>android:process</code>.
+</p>
+
+<p>
+Un serviciu este o clasă derivată din <code>android.app.Service</code> (sau din subclasele sale), implementând o serie de metode din ciclul de viață al serviciului:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#onCreate%28%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onCreate%28%29"  rel="nofollow">onCreate()</a> - realizând operațiile (unice) asociate construirii serviciului respectiv (legate de configurarea sa); această metodă este invocată doar atunci când este realizată o nouă instanță a serviciului; în situația în care serviciul este invocat, însă acesta există deja în memorie, metoda nu va mai fi apelată;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#onStartCommand%28android.content.Intent,%20int,%20int%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onStartCommand%28android.content.Intent,%20int,%20int%29"  rel="nofollow">onStartCommand()</a> - apelată în mod automat, <strong>numai pentru serviciile de tip started</strong>, în momentul în care serviciul este invocat printr-un apel al metodei <code>startService()</code>; serviciul va fi executat imediat după această metodă; <strong>este responsabilitatea programatorului să oprească serviciul printr-un apel al uneiea dintre metodele <code>stopSelf()</code>, respectiv <code>stopService()</code></strong>, altfel serviciul va rula pentru o perioadă de timp nedefinită; nu este necesar ca metoda să fie implementată, dacă serviciul este de tip bounded;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#onBind%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onBind%28android.content.Intent%29"  rel="nofollow">onBind()</a> - apelată în mod automat, <strong>numai pentru serviciile de tip bounded</strong>, în momentul în care o componentă a fost atașată unui serviciu printr-un apel al metodei <code>bindService()</code>; implementarea acestei metode trebuie să furnizeze un obiect ce implementează interfața <a href="http://developer.android.com/reference/android/os/IBinder.html" class="urlextern" title="http://developer.android.com/reference/android/os/IBinder.html"  rel="nofollow">ΙBinder</a>, prin intermediul căruia serviciul să poată interacționa cu componenta care l-a invocat, punând la dispoziție o anumită funcționalitate, descrisă de metode publice; <strong>toate tipurile de serviciu trebuie să implementeze această metodă</strong>, însă pentru serviciile de tip started, valoarea întoarsă va fi <code>null</code>;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#onUnbind%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onUnbind%28android.content.Intent%29"  rel="nofollow">onUnbind()</a> - apelată în mod automat, <strong>numai pentru serviciile de tip bounded</strong>, în momentul în care toate componentele au fost detașate unui serviciu;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#onRebind%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onRebind%28android.content.Intent%29"  rel="nofollow">onRebind()</a> - apelată în mod automat, <strong>numai pentru serviciile de tip bounded</strong>, în momentul în care o componentă a fost atașată unui serviciu după ce acesta a fost notificat anterior că toate componentele care îi erau asociate au fost detașate (s-a apelat metoda <code>οnUnbind()</code>); o astfel de metodă va fi invocată numai dacă rezultatul întors de metoda <code>οnUnbind()</code> este <code>true</code>;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#onDestroy%28%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onDestroy%28%29"  rel="nofollow">onDestroy()</a> - realizând operațiile asociate distrugerii serviciului respectiv, atunci când acesta nu mai este utilizat (a fost oprit sau sistemul de operare Android solicită memoria pe care o folosește); în cadrul acestei metode sunt eliberate resursele utilizate de serviciu (fire de execuție, obiecte, fluxuri de intrare / ieșire).</div>
+</li>
+</ul>
+<table class="columns-plugin" style="width:100%">
+<tr><td class="columns-plugin first" style="width:50%;">
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=1" title="Download Snippet" class="mediafile mf_java">SomeStartedService.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">import</span> <span class="co2">android.app.Service</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.content.Intent</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.os.IBinder</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> SomeStartedService <span class="kw1">extends</span> Service <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw4">int</span> startMode<span class="sy0">;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onCreate<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">int</span> onStartCommand<span class="br0">&#40;</span>Intent intent, 
+                            <span class="kw4">int</span> flags,
+                            <span class="kw4">int</span> startId<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+    <span class="kw1">return</span> startMode<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> IBinder onBind<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+    <span class="kw1">return</span> <span class="kw2">null</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onDestroy<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onDestroy</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+</td><td class="columns-plugin last">
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=2" title="Download Snippet" class="mediafile mf_java">SomeBoundedService.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">import</span> <span class="co2">android.app.Service</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.content.Intent</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.os.IBinder</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> SomeBoundedService <span class="kw1">extends</span> Service <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> IBinder iBinder<span class="sy0">;</span>
+  <span class="kw1">private</span> <span class="kw4">boolean</span> allowRebind<span class="sy0">;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onCreate<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> IBinder onBind<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+    <span class="kw1">return</span> iBinder<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">boolean</span> onUnbind<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+    <span class="kw1">return</span> allowRebind<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onRebind<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onDestroy<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onDestroy</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+</td></tr></table>
+
+<p>
+<p><div class="noteimportant">În cazul metodelor care guvernează ciclul de viață al unui serviciu, NU este obligatoriu să se apeleze metodele din clasa părinte (nu se va genera nici o excepție în această situație).
+</div></p>
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator05/service_lifecycle.png%3Fw=800&amp;tok=6dd70b" class="mediacenter" alt="" width="800" />
+</p>
+
+<p>
+Se observă faptul că ciclul de viață al unui serviciu are loc între metodele <code>onCreate()</code> și <code>onDestroy()</code>. De cele mai multe ori, este necesar ca un serviciu să folosească unul sau mai multe fire de execuție (dedicate) astfel încât să nu influențeze responsivitatea aplicației Android. Într-o astfel de situație, firul de execuție va fi pornit pe metoda <code>onCreate()</code> și va fi oprit pe metoda <code>onDestroy()</code>. De asemenea, în cadrul metodei <code>onCreate()</code> au loc diferite operații de configurare (inițializări), în timp ce în cadrul metodei <code>onDestroy()</code> realizează eliberarea resurselor folosite. Metodele <code>onCreate()</code> și <code>onDestroy()</code> sunt invocate pentru toate tipurile de servicii, atât pentru cele de tip started, cât și pentru cele de tip bounded.
+</p>
+
+<p>
+În cazul unui serviciu de tip started, perioada activă din ciclul de viață este cuprinsă între apelul metodei <code>onStartCommand()</code> (apelată în mod automat atunci când o componentă apelează metoda <code>startService()</code>, primind ca argument obiectul de tip <code>Intent</code> care a fost folosit la invocarea sa) și apelul metodei <code>onDestroy()</code> (apelat atunci când serviciul este oprit, prin intermediul uneia dintre metodele <code>stopSelf()</code> sau <code>stopService()</code>). 
+</p>
+
+<p>
+În cazul unui serviciu de tip bounded, perioada activă din ciclul de viață este cuprinsă între apelul metodei <code>onBind()</code> (apelată în mod automat atunci când o componentă apelează metoda <code>bindService()</code>, primind ca argument obiectul de tip <code>Intent</code> care a fost folosit la invocarea sa) și apelul metodei <code>onUnbind()</code> (apelată în mod automat atunci când toate componentele asociate serviciului au apelat metoda <code>unbindService()</code>).
+</p>
+
+<p>
+<p><div class="noteclassic">Întrucât un serviciu poate fi simultan atât de tip started cât li de tip bouned, nu este exclus ca ulterior metodei <code>onStartCommand()</code> să fie apelată și metoda <code>onBind()</code>. În această situație serviciul va fi activ până când nu va mai deține nici o componentă asociată. Apelurile metodelor <code>stopSelf()</code> sau <code>stopService()</code> nu vor avea așadar efect atâta timp cât mai există componente conectate la serviciu.
+</div></p>
+</p>
+
+</div>
+
+<h4 id="servicii_de_tip_started">Servicii de tip Started</h4>
+<div class="level4">
+
+<p>
+În momentul în care este pornit (printr-un apel al metodei <code>startService()</code> din cadrul altei componente), un serviciu apelează în mod automat metoda <code>onStartCommand()</code>. În cadrul acestei metode trebuie realizată procesarea pe care o presupune serviciul respectiv. Pentru serviciile de tip started, este necesar ca <strong>serviciul să fie oprit explicit</strong>, fie din propriul său context, printr-un apel al metodei <code>stopSelf()</code>, fie de către o componentă (aceeași sau alta decât cea care l-a invocat), prin intermediul metodei <code>stopService()</code>.
+</p>
+
+<p>
+Metoda <code>onStartCommand()</code> este apelată în mod automat în momentul în care serviciul este pornit prin intermediul metodei <code>startService()</code> și primește ca parametrii:
+</p>
+<ul>
+<li class="level1"><div class="li"> intenția care a invocat serviciul (argumentul transmis la apelul metodei <code>startService()</code>); <strong>acesta poate fi <code>null</code></strong> în situația în care serviciul este repornit după ce procesul din care făcea parte a fost distrus;</div>
+</li>
+<li class="level1"><div class="li"> anumite valori prin care poate fi semnalat modul în care a fost pornit:</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#START_FLAG_REDELIVERY" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#START_FLAG_REDELIVERY"  rel="nofollow">START_FLAG_REDELIVERY</a> - serviciul a fost repornit ca urmare a distrugerii sale de către sistemul de operare înainte de se fi terminat corespunzător;</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#START_FLAG_RETRY" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#START_FLAG_RETRY"  rel="nofollow">START_FLAG_RETRY</a> - serviciul a fost repornit după o execuție anormală;</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> un identificator unic prin care se poate face distincția între apeluri diferite ale aceluiași serviciu.</div>
+</li>
+</ul>
+
+<p>
+Având în vedere faptul că această metodă poate fi apelată de mai multe ori pe parcursul ciclului de viață al unui serviciu, tot aici trebuie implementat și comportamentul în cazul în care acesta este repornit.
+</p>
+
+<p>
+Comportamentul serviciului în situația în care este repornit poate fi controlată prin intermediul valorii întregi care este furnizată ca valoare întoarsă:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#START_STICKY" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#START_STICKY"  rel="nofollow">Service.START_STICKY</a> - mecanism standard, folosit de serviciile care își gestionează propriile stări și care sunt pornite și oprite în funcție de necesități (prin intermediul metodelor <code>startService()</code> și <code>stopService()</code>); prin aceasta, se indică faptul că metoda <code>onStartCommand()</code> va fi invocată de fiecare dată când serviciul este (re)pornit după ce a fost distrus de sistemul de operare Android (situație în care parametrul de tip <code>Intent</code> va avea valoarea <code>null</code>, dacă între timp serviciul nu a mai fost invocat);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#START_NOT_STICKY" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#START_NOT_STICKY"  rel="nofollow">Service.START_NOT_STICKY</a> - mecanism folosit de serviciile utilizate pentru a procesa anumite comenzi, care se opresc singure (printr-un apel al metodei <code>stopSelf()</code>) atunci când operațiile pe care trebuiau să le realizeze s-au terminat; serviciul este (re)pornit după ce a fost distrus de sistemul de operare Android numai în situația în care între timp au mai fost realizate apeluri ale metodei <code>startService()</code>, altfel nu este recreat; un astfel de comportament este adecvat pentru procese care sunt realizate periodic;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/Service.html#START_REDELIVER_INTENT" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#START_REDELIVER_INTENT"  rel="nofollow">Service.START_REDELIVER_INTENT</a> - mecanism utilizat atunci când se dorește să se asigure faptul că procesările asociate serviciului sunt terminate; în situația în care serviciul a fost distrus de sistemul de operare Android, este (re)pornit apelând metoda <code>onStartCommand()</code> folosind ca parametru intenția originală, a cărei procesare nu a fost terminată corespunzător.</div>
+</li>
+</ul>
+<pre class="code java">@Override
+<span class="kw1">public</span> <span class="kw4">int</span> onStartCommand<span class="br0">&#40;</span>Intent intent, <span class="kw4">int</span> flags, <span class="kw4">int</span> startId<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  processInBackground<span class="br0">&#40;</span>intent, startId<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">return</span> startMode<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În toate aceste cazuri, oprirea serviciului trebuie realizată explicit, prin apelul metodelor:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>stopService()</code> din contextul componentei care l-a pornit;</div>
+</li>
+<li class="level1"><div class="li"> <code>stopSelf()</code> din contextul serviciului.</div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="pornirea_unui_serviciu">Pornirea unui Serviciu</h5>
+<div class="level5">
+
+<p>
+Un serviciu este pornit printr-un apel al metodei <code>startService()</code>. Aceasta primește ca parametru un obiect de tip <code>Intent</code> care poate fi creat:
+</p>
+<ul>
+<li class="level1"><div class="li"> explicit, pe baza denumirii clasei care implementează serviciul respectiv; <pre class="code java">Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="kw1">this</span>, SomeService.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+startService<span class="br0">&#40;</span>intent<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> implicit, indicând componenta care gestionează serviciul respectiv (se va indica atât denumirea pachetului cât și denumirea clasei ca argument al metodei <code>setComponent()</code> asociat intenției respective): <pre class="code java">Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+intent.<span class="me1">setComponent</span><span class="br0">&#40;</span><span class="kw1">new</span> ComponentName<span class="br0">&#40;</span><span class="st0">&quot;SomePackage&quot;</span>, <span class="st0">&quot;SomeService&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+startService<span class="br0">&#40;</span>intent<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+
+<p>
+Transmiterea de informații suplimentare către serviciu poate fi realizată prin intermediul metodelor <code>putExtras(Bundle)</code>, <code>putExtra(String, Parcelable)</code> sau <code>put&lt;type&gt;Extra(String, &lt;type&gt;)</code>.
+</p>
+
+<p>
+Metoda <code>startService()</code> presupune livarea unui mesaj asincron la nivelul sistemului de operare Android, astfel încât aceasta se execută instantaneu. Fiecare apel al acestei metode invocarea, în mod automat, al metodei <code>onStartCommand()</code>.
+</p>
+
+<p>
+De regulă, comunicația dintre o componentă și un serviciu este unidirecțională, dintre componenta care invocă către serviciul invocat, prin intermediul datelor încapsulate în intenție. În situația în care se dorește ca serviciul să transmită date către componentă, se utilizează un obiect de tip <a href="http://developer.android.com/reference/android/app/PendingIntent.html" class="urlextern" title="http://developer.android.com/reference/android/app/PendingIntent.html"  rel="nofollow">PendingIntent</a>, prin intermediul căruia pot fi transmise mesaje cu difuzare.
+</p>
+
+</div>
+
+<h5 id="oprirea_unui_serviciu">Oprirea unui Serviciu</h5>
+<div class="level5">
+
+<p>
+Un serviciu poate fi oprit:
+</p>
+<ul>
+<li class="level1"><div class="li"> de către o componentă (aceeași care l-a pornit sau alta), printr-un apel al metodei <code>stopService()</code>, ce primește ca parametru un obiect de tip <code>Intent</code> care poate fi creat explicit sau implicit;</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">Întrucât apelurile metodei <code>startService()</code> nu sunt imbricate, invocarea metodei <code>stopService()</code> oprește numai serviciul corespunzător (dacă se află în execuție).
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> chiar de el însuși, în momentul în care procesările pe care trebuie să le realizeze s-au terminat, printr-un apel al metodei <code>stopSelf()</code>, eliberând resursele pe care sistemul de operare le-ar fi folosit pentru a-l menține în execuție; metoda poate fi apelată:</div>
+<ul>
+<li class="level2"><div class="li"> fără parametri, pentru a forța oprirea imediată;</div>
+</li>
+<li class="level2"><div class="li"> transmițând un parametru de tip întreg, reprezentând identificatorul instanței care rulează, pentru a se asigura faptul că procesarea a fost realizată pentru fiecare apel care a fost realizat; dacă între timp serviciul a mai fost invocat, identificatorul folosit nu va corespunde celui mai recent apel (transmis ca argument al metodei <code>onStartCommand()</code>) și metoda nu va avea nici un efect.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Pentru oprirea unui serviciu este suficient un singur apel al uneia dintre metodele <code>stopSelf()</code> sau <code>stopService()</code>.
+</p>
+
+</div>
+
+<h5 id="utilizarea_clasei_intentservice">Utilizarea clasei IntentService</h5>
+<div class="level5">
+
+<p>
+Recursul la clasa <a href="http://developer.android.com/reference/android/app/IntentService.html" class="urlextern" title="http://developer.android.com/reference/android/app/IntentService.html"  rel="nofollow">IntentService</a> este adecvată în situația în care se dorește implementarea unor servicii care rulează în fundal, <strong>pe un fir de execuție dedicat</strong> realizând un set de operații la un moment dat de timp, atunci când sunt solicitate. În situația în care serviciul este accesat simultan de mai multe componente ale unei (unor) aplicații Android, procesarea acestora va fi realizată secvențial.
+</p>
+
+<p>
+Un obiect de acest tip este lansat în execuție prin pornirea unui serviciu și transmiterea unui obiect de tip <code>Intent</code> care conține toți parametrii necesari pentru realizarea sarcinii respective. Toate operațiile solicitate sunt înregistrate într-o coadă de așteptare și executate succesiv, prin invocarea automată a metodei <a href="http://developer.android.com/reference/android/app/IntentService.html#onHandleIntent(android.content.Intent)" class="urlextern" title="http://developer.android.com/reference/android/app/IntentService.html#onHandleIntent(android.content.Intent)"  rel="nofollow">onHandleIntent()</a>. După ce procesarea a fost finalizată, procesul se oprește singur (nu este necesar să se apeleze metodele <code>stopSelf()</code> sau <code>stopService()</code> explicit).
+</p>
+
+<p>
+<p><div class="notetip">Clasa <code>IntentService</code> oferă o implementare implicită a metodelor <code>onStartCommand()</code> care plasează intenția către coada de așteptare și invocă metoda <code>onHandleIntent()</code> precum și a metodei <code>onBind()</code> care întoarce valoarea <code>null</code>.
+</div></p>
+</p>
+
+<p>
+Prin urmare, o implementare presupune definirea unei clase derivată din <code>IntentService</code> care suprascrie metoda <code>onHandleIntent()</code>, ce primește ca parametru intenția conținând parametrii ce se doresc a fi procesați, execuția sa fiind realizată (în mod transparent) pe un fir de execuție ce rulează în fundal. De asemenea, trebuie furnizat și un constructor implicit.
+</p>
+<pre class="code java"><span class="kw1">import</span> <span class="co2">android.app.IntentService</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.content.Intent</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> SomeStartedService <span class="kw1">extends</span> IntentService <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw1">final</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> name <span class="sy0">=</span> <span class="st0">&quot;SomeStartedService&quot;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> SomeIntentService<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span><span class="br0">&#40;</span>name<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onHandleIntent<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În situația în care este necesar să se suprascrie metodele <code>onCreate()</code>, <code>onDestroy()</code> sau <code>onStartCommand()</code>, este recomandat să se apeleze și metodele din clasa părinte, astfel încât ciclul de viață al firului de execuție pe care sunt realizate procesările să fie actualizat corespunzător.
+</p>
+<pre class="code java">@Override
+<span class="kw1">public</span> <span class="kw4">int</span> onStartCommand<span class="br0">&#40;</span>Intent intent, <span class="kw4">int</span> flags, <span class="kw4">int</span> startId<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="co1">// ...</span>
+  <span class="kw1">return</span> <span class="kw1">super</span>.<span class="me1">onStartCommand</span><span class="br0">&#40;</span>intent, flags, startId<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h5 id="utilizarea_clasei_service">Utilizarea clasei Service</h5>
+<div class="level5">
+
+<p>
+În situația în care este necesar ca serviciul să gestioneze mai multe solicitări concomitent, se implementează o clasă derivată din <code>Service</code>, definindu-se (intern) o clasă de tip fir de execuție (uzual, se folosește o instanță a clasei <a href="http://developer.android.com/reference/android/os/Handler.html" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html"  rel="nofollow">Handler</a>, care permite transmiterea de mesaje) pe care vor fi realizate toate procesările.
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=8" title="Download Snippet" class="mediafile mf_java">SomeStartedService.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">public</span> <span class="kw1">class</span> SomeStartedService <span class="kw1">extends</span> Service <span class="br0">&#123;</span>
+  <span class="kw1">private</span> Looper looper<span class="sy0">;</span>
+  <span class="kw1">private</span> ServiceHandler serviceHandler<span class="sy0">;</span>
+  <span class="kw1">private</span> <span class="kw1">final</span> <span class="kw1">static</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> handlerThreadName <span class="sy0">=</span> <span class="st0">&quot;HandlerThread&quot;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw1">final</span> <span class="kw1">class</span> ServiceHandler <span class="kw1">extends</span> Handler <span class="br0">&#123;</span>
+    <span class="kw1">public</span> ServiceHandler<span class="br0">&#40;</span>Looper looper<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">super</span><span class="br0">&#40;</span>looper<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> handleMessage<span class="br0">&#40;</span>Message message<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="co1">// ...</span>
+      stopSelf<span class="br0">&#40;</span>message.<span class="me1">arg1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onCreate<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    HandlerThread handlerThread <span class="sy0">=</span> <span class="kw1">new</span> HandlerThread<span class="br0">&#40;</span>handlerThreadName, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+process"><span class="kw3">Process</span></a>.<span class="me1">THREAD_PRIORITY_BACKGROUND</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    handlerThread.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    looper <span class="sy0">=</span> handlerThread.<span class="me1">getLooper</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    serviceHandler <span class="sy0">=</span> <span class="kw1">new</span> ServiceHandler<span class="br0">&#40;</span>looper<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">int</span> onStartCommand<span class="br0">&#40;</span>Intent intent, <span class="kw4">int</span> flags, <span class="kw4">int</span> startId<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    Message message <span class="sy0">=</span> serviceHandler.<span class="me1">obtainMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    message.<span class="me1">arg1</span> <span class="sy0">=</span> startId<span class="sy0">;</span>
+    serviceHandler.<span class="me1">sendMessage</span><span class="br0">&#40;</span>message<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span> START_STICKY<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> IBinder onBind<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">return</span> <span class="kw2">null</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Procesarea este realizată în cadrul metodei <a href="http://developer.android.com/reference/android/os/Handler.html#handleMessage%28android.os.Message%29" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html#handleMessage%28android.os.Message%29"  rel="nofollow">handleMessage()</a> a clasei de tip <code>Handler</code>. O instanță a acesteia este creată de fiecare dată când este invocată metoda <a href="http://developer.android.com/reference/android/os/Handler.html#sendMessage%28android.os.Message%29" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html#sendMessage%28android.os.Message%29"  rel="nofollow">sendMessage()</a>, care are drept argument un obiect de tip <a href="http://developer.android.com/reference/android/os/Message.html" class="urlextern" title="http://developer.android.com/reference/android/os/Message.html"  rel="nofollow">Message</a>. Prin intermediul mesajului (obținut ca rezultat al metodei <a href="http://developer.android.com/reference/android/os/Handler.html#obtainMessage%28%29" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html#obtainMessage%28%29"  rel="nofollow">obtainMessage()</a> care furnizează o instanță dintr-o colecție globală), trebuie să se transmită și identificatorul cu care a fost invocat serviciul, astfel încât acesta să fie transmis către metoda <code>stopSelf()</code>, necesară pentru oprirea serviciului. Astfel, se asigură faptul că serviciul nu se termină până ce nu este tratată și cea mai recentă invocare a sa.
+</p>
+
+</div>
+
+<h4 id="servicii_de_tip_bounded">Servicii de tip Bounded</h4>
+<div class="level4">
+
+<p>
+Un serviciu de tip bounded implică o interacțiune permanentă cu una sau mai multe componente ale unei (unor) aplicații Android. Astfel, serviciul poate expune o anumită funcționalitate către componentele aplicației Android (prin intermediul unei interfețe) sau poate fi utilizat ca mecanism de comunicație inter-proces, pentru transmiterea de informații între acestea.
+</p>
+
+<p>
+Arhitectura utilizată într-o astfel de situație este client-server, unde clientul este reprezentat de componenta aplicației Android, iar serverul de către serviciul de tip bounded. Existența unui serviciu de tip bounded este condiționată de existența unor componente atașate la el.
+</p>
+
+<p>
+Implementarea unui serviciu de tip bounded presupune suprascrierea metodei <a href="http://developer.android.com/reference/android/app/Service.html#onBind%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onBind%28android.content.Intent%29"  rel="nofollow">onBind()</a>, apelată în mod automat în momentul în care o componentă a unei aplicații Android este atașată acestuia, printr-un apel al metodei <a href="http://developer.android.com/reference/android/content/Context.html#bindService%28android.content.Intent,%20android.content.ServiceConnection,%20int%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#bindService%28android.content.Intent,%20android.content.ServiceConnection,%20int%29"  rel="nofollow">bindService()</a>. Acesta furnizează ca rezultat un obiect de tip <a href="http://developer.android.com/reference/android/os/IBinder.html" class="urlextern" title="http://developer.android.com/reference/android/os/IBinder.html"  rel="nofollow">IBinder</a>.
+</p>
+
+<p>
+De regulă, se definește o clasă internă de tip <a href="http://developer.android.com/reference/android/os/Binder.html" class="urlextern" title="http://developer.android.com/reference/android/os/Binder.html"  rel="nofollow">Binder</a>, utilizată pentru apelul de metode la distanță în Android. Aceasta furnizează o metodă pentru obținerea unei referințe către serviciu, prin intermediul căreia pot fi accesate funcționalitățile pe care acesta le pune la dispoziție. O astfel de abordare este utilă mai ales în situația în care serviciul este folosit de o singură aplicație Android, <strong>în cadrul aceluiași proces</strong> (nefiind deci necesară comunicația inter-proces).
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=9" title="Download Snippet" class="mediafile mf_java">SomeBoundedService.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">import</span> <span class="co2">android.app.Service</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.content.Intent</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.os.IBinder</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> SomeBoundedService <span class="kw1">extends</span> Service <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">final</span> <span class="kw1">private</span> IBinder binder <span class="sy0">=</span> <span class="kw1">new</span> SomeBinder<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw1">class</span> SomeBinder <span class="kw1">extends</span> Binder <span class="br0">&#123;</span>
+    SomeBoundedService getService<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">return</span> SomeBoundedService.<span class="kw1">this</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onCreate<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onCreate</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> IBinder onBind<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">return</span> binder<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw4">void</span> doWork<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Legătura dintre serviciu și o componentă a unei aplicații Android (locale) este reprezentată sub forma unui obiect de tipul <a href="http://developer.android.com/reference/android/content/ServiceConnection.html" class="urlextern" title="http://developer.android.com/reference/android/content/ServiceConnection.html"  rel="nofollow">ServiceConnection</a>, responsabil cu monitorizarea conexiunii dintre acestea. Implementarea sa presupune definirea metodelor <a href="http://developer.android.com/reference/android/content/ServiceConnection.html#onServiceConnected%28android.content.ComponentName,%20android.os.IBinder%29" class="urlextern" title="http://developer.android.com/reference/android/content/ServiceConnection.html#onServiceConnected%28android.content.ComponentName,%20android.os.IBinder%29"  rel="nofollow">onServiceConnected()</a>, respectiv <a href="http://developer.android.com/reference/android/content/ServiceConnection.html#onServiceDisconnected%28android.content.ComponentName%29" class="urlextern" title="http://developer.android.com/reference/android/content/ServiceConnection.html#onServiceDisconnected%28android.content.ComponentName%29"  rel="nofollow">onServiceDisconnected()</a>. Acestea sunt apelate automat în momentul în care componenta este conectată la serviciu (ca urmare a apelului <code>bindService()</code>), respectiv este deconectată (drept rezultat al apelului <code>unbindService()</code>).
+</p>
+
+<p>
+Metoda <code>onServiceConnected()</code> primește ca argumente, un parametru de tip <code>ComponentName</code> care descrie pachetul și clasa coresunzătoare serviciului, respectiv un parametru de tip <code>IBinder</code> ce reprezintă rezultatul furnizat de metoda de callback <code>onBind()</code> de la nivelul serviciului. Aceasta este utilizată pentru a accesa funcționalitatea pusă la dispoziție de către serviciu. În situația în care conexiunea dintre componentă și serviciu este coruptă, va fi aruncată excepția <a href="http://developer.android.com/reference/android/os/DeadObjectException.html" class="urlextern" title="http://developer.android.com/reference/android/os/DeadObjectException.html"  rel="nofollow">DeadObjectException</a>, care ar trebui să fie tratată pentru a asigura un comportament adecvat al aplicației Android.
+</p>
+
+<p>
+Metoda <code>onServiceDisconnected()</code> primește ca argument un parametru de tip <code>ComponentName</code> care descrie pachetul și clasa coresunzătoare serviciului. De regulă, în cadrul acestei metode sunt eliberate resursele utilizate pentru comunicația dintre componentă și serviciu.
+</p>
+<pre class="code java"><span class="kw1">public</span> <span class="kw1">class</span> SomeActivity <span class="kw1">extends</span> Activity <span class="br0">&#123;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  <span class="kw1">private</span> SomeBoundedService someBoundedService <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+  <span class="kw1">private</span> <span class="kw4">int</span> status<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">private</span> ServiceConnection serviceConnection <span class="sy0">=</span> <span class="kw1">new</span> ServiceConnection<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> onServiceConnected<span class="br0">&#40;</span>ComponentName className, IBinder service<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      someBoundedService <span class="sy0">=</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>SomeBoundedService.<span class="me1">SomeBinder</span><span class="br0">&#41;</span>service<span class="br0">&#41;</span>.<span class="me1">getService</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      status <span class="sy0">=</span> BOUNDED<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> onServiceDisconnected<span class="br0">&#40;</span>ComponentName className<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      someBoundedService <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+      status <span class="sy0">=</span> UNBOUNDED<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Atașarea propriu-zisă a unei componente a unei aplicații Android la un serviciu este realizată de metoda <code>bindService()</code> care primește ca parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> intenția reprezentând serviciul care se asociază activității;</div>
+</li>
+<li class="level1"><div class="li"> un obiect de tip <code>ServiceConnection</code>;</div>
+</li>
+<li class="level1"><div class="li"> anumite valori prin care se controlează modul în care este făcută asocierea între cele două componente ale aplicației Android:</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/content/Context.html#BIND_AUTO_CREATE" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#BIND_AUTO_CREATE"  rel="nofollow">Context.BIND_AUTO_CREATE</a> - serviciul trebuie creat în momentul în care se realizează asocierea;</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/content/Context.html#BIND_ADJUST_WITH_ACTIVITY" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#BIND_ADJUST_WITH_ACTIVITY"  rel="nofollow">Context.BIND_ADJUST_WITH_ACTIVITY</a> - modifică prioritatea serviciului în funcție de importanța activității de care este legat (mai mare atunci când este activă, mai mică atunci când este inactivă);</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/content/Context.html#BIND_ABOVE_CLIENT" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#BIND_ABOVE_CLIENT"  rel="nofollow">Context.BIND_ABOVE_CLIENT</a> / <a href="http://developer.android.com/reference/android/content/Context.html#BIND_IMPORTANT" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#BIND_IMPORTANT"  rel="nofollow">Context.BIND_IMPORTANT</a> - specifică faptul că prioritatea serviciului este mai mare decât a activității asociate;</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/content/Context.html#BIND_NOT_FOREGROUND" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#BIND_NOT_FOREGROUND"  rel="nofollow">Context.BIND_NOT_FOREGROUND</a> - asigură faptul că serviciul atașat activității nu va avea niciodată prioritatea necesară pentru a rula în prim-plan;</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/content/Context.html#BIND_WAIVE_PRIORITY" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#BIND_WAIVE_PRIORITY"  rel="nofollow">Context.BIND_WAIVE_PRIORITY</a> - face ca prioritatea serviciului asociat să nu fie modificată (implicit, prioritatea relativă a serviciului este mărită).</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Asocierea este realizată, de obicei, în cadrul metodei <code>onStart()</code> a unei activități.
+</p>
+
+<p>
+Detașarea unei componente a unei aplicații Android la un serviciu este realizată de metoda <code>unbindService()</code> care primește ca argument un obiect de tip <code>ServiceConnection</code> (care monitorizează starea conectivității dintre componentă și serviciu). Decuplarea este realizată, de obicei, în cadrul metodei <code>onStop()</code> a unei activități.
+</p>
+<pre class="code java"><span class="kw1">public</span> <span class="kw1">class</span> SomeActivity <span class="kw1">extends</span> Activity <span class="br0">&#123;</span>
+&nbsp;
+  <span class="co1">// ...</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onStart<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onStart</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="kw1">this</span>, SomeBoundedService.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    bindService<span class="br0">&#40;</span>intent, serviceConnection, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a>.<span class="me1">BIND_AUTO_CREATE</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onStop<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">super</span>.<span class="me1">onStop</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>status <span class="sy0">==</span> BOUNDED<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      unbindService<span class="br0">&#40;</span>serviceConnection<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+
+<p>
+În situația în care este necesar ca serviciul să fie utilizat și atunci când activitatea se află în fundal, metodele <code>bindService()</code> și <code>unbindService()</code> pot fi apelate pe metodele de callback <code>onCreate()</code> respectiv <code>onDestroy()</code>. Totuși, aceasta implică o probabilitate mai mare ca memoria utilizată de serviciu să fie solicitată de sistemul de operare Android, dacă acesta nu rulează în contextul aceluiași proces ca și componenta cu care interacționează.
+</p>
+
+<p>
+Nu se recomandă ca atașarea, respectiv detașarea unei componente la / de un servicu să fie realizată pe metodele <code>onResume()</code> și <code>onPause()</code> întrucât acestea sunt apelate frecvent, astfel încât procesările realizate în aceste momente să poată determina deprecieri ale performanței sistemului de operare Android. Mai mult, în cazul în care mai multe activități interacționează cu același serviciu, atunci când se realizează transferul între ele, serviciul ar putea fi distrus (pe metoda <code>onPause()</code> se apelează <code>unbindService()</code>, deci toate componentele au fost detașate serviciului), respectiv recreat (pe metoda <code>onResume()</code> se apelează <code>bindService()</code>, deci serviciul are o componentă atașată).
+</p>
+
+<p>
+În situația în care este necesar ca serviciul să poată fi atașat la mai multe componente simultan, aparținând unor procese diferite (realizându-se astfel comunicația inter-proces), realizând procesări pe fire de execuție dedicate, se folosește un obiect de tip <a href="http://developer.android.com/reference/android/os/Messenger.html" class="urlextern" title="http://developer.android.com/reference/android/os/Messenger.html"  rel="nofollow">Messenger</a>. Obiectul de tip <code>Binder</code> asociat acestuia va fi transmis ca rezultat al metodei <code>onBind()</code>. De asemenea, el va încapsula un obiect de tip <code>Handler</code> pe a cărui metodă <code>handleMessage()</code> va fi realizată procesarea corespunzătoare serviciului, acesta putând gestiona tipuri de mesaje diferite, corespunzătoare fiecărui tip specific de componentă. Obiectul <code>Messenger</code> plasează toate apelurile către serviciu într-o coadă de așteptare, toate fiind procesate, secvențial, în contextul aceluiași fir de execuție.
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=12" title="Download Snippet" class="mediafile mf_java">SomeBoundedService.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">public</span> <span class="kw1">class</span> SomeBoundedService <span class="kw1">extends</span> Service <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">class</span> SomeHandler <span class="kw1">extends</span> Handler <span class="br0">&#123;</span>
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> handleMessage<span class="br0">&#40;</span>Message message<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">switch</span> <span class="br0">&#40;</span>msg.<span class="me1">arg1</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="co1">// ...</span>
+        <span class="kw1">default</span><span class="sy0">:</span>
+          <span class="kw1">super</span>.<span class="me1">handleMessage</span><span class="br0">&#40;</span>message<span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">final</span> Messenger messenger <span class="sy0">=</span> <span class="kw1">new</span> Messenger<span class="br0">&#40;</span><span class="kw1">new</span> SomeHandler<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> IBinder onBind<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">return</span> messenger.<span class="me1">getBinder</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Dacă este necesar ca procesarea să fie realizată simultan, poate fi utilizat AIDL (Android Interface Definition Language) care realizează transformarea dintre obiecte și primitive la nivelul sistemului de operare prin intermediul cărora se realizează comunicația inter-proces. În această situație, trebuie avut în vedere faptul că sincronizarea dintre diferitele fire de execuție trebuie realizată manual, operație destul de complexă. Pe baza fișierului <code>.aidl</code> care descrie interfața de programare, se va genera o clasă abstractă responsabilă cu comunicația inter-proces, din care va fi derivat serviciul respectiv.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Gestiunea unui Serviciu" [6475-39796] -->
+<h3 class="sectionedit5" id="prioritatea_unui_serviciu">Prioritatea unui Serviciu</h3>
+<div class="level3">
+
+<p>
+În situația în care este necesar, sistemul de operare Android poate solicita memoria utilizată de un anumit serviciu, în funcție de prioritatea pe care acesta o are.
+</p>
+
+<p>
+Un serviciu de tip started are o prioritate mai mare decât o activitate inactivă, dar mai mică decât o activitate activă. Din acest motiv, este necesar ca programatorul să trateze cazurile în care serviciul este repornit, ca urmare a distrugerii sale de către sistemul de operare Android, în vederea satisfacerii necesarului de memorie.
+</p>
+
+<p>
+Un serviciu de tip bounded are de obicei o prioritate similară cu a activității cu care interacționează, deși aceasta poate fi controlată prin intermediul unor parametrii transmiși în momentul în care este realizată legătura. Este puțin probabil ca un serviciu atașat unei activități active să fie distrus la fel cum este destul de probabil ca un serviciu pentru care toate activitățile atașate sunt inactive să fie distrus.
+</p>
+
+<p>
+Un serviciu care rulează în prim-plan nu este aproape niciodată distrus.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Prioritatea unui Serviciu" [39797-40877] -->
+<h3 class="sectionedit6" id="categorii_de_procesari">Categorii de Procesări</h3>
+<div class="level3">
+
+<p>
+În funcție de firul de execuție pe care rulează precum și de prioritatea care le este atribuită (în funcție de care sistemul de operare Android poate reclama resursele pe care acestea le utilizează), operațiile complexe pot fi realizate prin intermediul unor:
+</p>
+<ul>
+<li class="level1"><div class="li"> servicii care rulează în prim-plan;</div>
+</li>
+<li class="level1"><div class="li"> procesări realizate în fundal.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="servicii_ce_ruleaza_in_prim-plan">Servicii ce Rulează în Prim-Plan</h4>
+<div class="level4">
+
+<p>
+În situația în care un serviciu interacționează cu utilizatorul (sau utilizatorul este conștient de existența sa), prioritatea acestuia trebuie mărită, astfel încât sistemul de operare Android să nu poată reclama resursele pe care le utilizează. Un astfel de serviciu trebuie să poată oferi o notificare în bara de stare, care nu poate fi ascunsă decât atunci când serviciul este distrus sau nu mai rulează în prim-plan.
+</p>
+
+<p>
+Un astfel de comportament poate fi obținut prin marcarea serviciului ca rulând în prim-plan, prin invocarea metodei <a href="http://developer.android.com/reference/android/app/Service.html#startForeground(int,%20android.app.Notification)" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#startForeground(int,%20android.app.Notification)"  rel="nofollow">startForeground()</a> care primește ca parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> identificatorul unei notificări, care <strong>trebuie să fie diferit de zero</strong>;</div>
+</li>
+<li class="level1"><div class="li"> un obiect de tip <a href="http://developer.android.com/reference/android/app/Notification.html" class="urlextern" title="http://developer.android.com/reference/android/app/Notification.html"  rel="nofollow">Notification</a>, care va fi afișată cât timp serviciul se află în prim-plan, întrucât se presupune că serviciul trebuie să aibă o reprezentare vizuală cu care utilizatorul să poată interacționa.</div>
+</li>
+</ul>
+<pre class="code java">Notification notification <span class="sy0">=</span> <span class="kw1">new</span> Notification<span class="br0">&#40;</span>R.<span class="me1">drawable</span>.<span class="me1">icon</span>, 
+                                             <span class="st0">&quot;...&quot;</span>,
+                                             <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">currentTimeMillis</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="kw1">this</span>, SomeActivity.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+PendingIntent pendingIntent <span class="sy0">=</span> PendingIntent.<span class="me1">getActivity</span><span class="br0">&#40;</span><span class="kw1">this</span>, <span class="nu0">0</span>, intent, <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+notification.<span class="me1">setLatestEventInfo</span><span class="br0">&#40;</span><span class="kw1">this</span>, 
+                                <span class="st0">&quot;...&quot;</span>,
+                                <span class="st0">&quot;...&quot;</span>, 
+                                pendingIntent<span class="br0">&#41;</span><span class="sy0">;</span>
+startForeground<span class="br0">&#40;</span>NOTIFICATION_ID, notification<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Este recomandat ca utilizatorii să poată dezactiva ei înșiși rularea serviciului în prim-plan, de regulă prin intermediul obiectului de tip <code>Notification</code>. Același lucru trebuie realizat și în momentul în care rularea serviciului în prim-plan nu mai este necesară. În acest sens, trebuie apelată metoda <code>stopForeground(true)</code> (argumentul metodei indică dacă se dorește și terminarea notificării), aceasta anulând în mod automat notificarea asociată.
+</p>
+
+<p>
+<p><div class="notetip">Nu este indicat să existe mai multe servicii care rulează în prim-plan simultan întrucât acestea nu pot fi distruse de sistemul de operare Android și în situația în care necesarul de memorie devine o problemă critică, performanțele dispozitivului mobil se vor deprecia considerabil.
+</div></p>
+</p>
+
+</div>
+
+<h4 id="procesari_realizate_in_fundal">Procesări Realizate în Fundal</h4>
+<div class="level4">
+
+<p>
+Întrucât responsivitatea aplicației Android reprezintă un criteriu foarte important, asigurarea unei experiențe corespunzătoare a utilizatorului poate fi obținută prin transferul operațiilor complexe de procesare și a operațiilor de intrare / ieșire în fundal, pe un alt fir de execuție. Acest lucru este necesar datorită faptului că pe firul de execuție principal sunt rulate mai multe componente ale aplicației Android (activități, servicii, ascultători ai intențiilor cu difuzare), astfel încât interacțiunea cu utilizatorul poate fi blocată în situația în care procesarea realizată de servicii nu este transferată în fundal.
+</p>
+
+<p>
+<p><div class="noteclassic">În Android, o activitate care nu răsunde la un eveniment în decurs de 5 secunde sau un ascultător al unei intenții cu difuzare a cărei metodă <code>onReceive()</code> nu se termină în 5 secunde sunt considerate blocate.
+</div></p>
+</p>
+
+<p>
+De regulă, sunt plasate pe fire de execuție dedicate operații cu fișiere (scrieri, citiri), căutări în rețea, tranzacții cu baza de date, calcule complexe.
+</p>
+
+<p>
+Android oferă mai multe mecanisme pentru gestiunea serviciilor care rulează în fundal:
+</p>
+<ol>
+<li class="level1"><div class="li"> utilizarea clasei <a href="http://developer.android.com/reference/android/os/AsyncTask.html" class="urlextern" title="http://developer.android.com/reference/android/os/AsyncTask.html"  rel="nofollow">AsyncTask</a> permite definirea unei operații care va fi realizată pe un fir de execuție separat, oferind metode care oferă informații cu privire la progres, ce pot fi consultate de alte fire de execuție;</div>
+</li>
+<li class="level1"><div class="li"> definirea unei clase derivate din <a href="http://developer.android.com/reference/android/content/Loader.html" class="urlextern" title="http://developer.android.com/reference/android/content/Loader.html"  rel="nofollow">Loader</a>;</div>
+</li>
+<li class="level1"><div class="li"> utilizarea clasei <a href="http://developer.android.com/reference/android/os/Handler.html" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html"  rel="nofollow">Handler</a>;</div>
+</li>
+<li class="level1"><div class="li"> implementarea unui fir de execuție definit de utilizator, transmiterea valorilor către interfața grafică fiind realizat prin intermediul clasei <a href="http://developer.android.com/reference/android/os/Handler.html" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html"  rel="nofollow">Handler</a>.</div>
+</li>
+</ol>
+
+</div>
+
+<h5 id="clasa_asynctask">Clasa AsyncTask</h5>
+<div class="level5">
+
+<p>
+Prin intermediul clasei <code>AsyncTask</code> se permite mutarea operațiilor costisitoare din punct de vedere al utilizării procesorului și al memoriei pe fire de execuție rulate în fundal, oferind <strong>sincronizarea</strong> cu firul de execuție ce randează interfața grafică, acesta fiind notificat cu privire la progresul realizat cât și cu privire la momentul în care procesarea a fost terminată.
+</p>
+
+<p>
+<p><div class="notetip">Întrucât clasa <code>AsyncTask</code> nu este persistentă în cazul (re)pornirii unei activități (situație în care firul de execuție asociat este distrus), se recomandă utilizarea sa pentru procese de fundal care nu durează o perioadă de timp prea mare.
+</div></p>
+</p>
+
+<p>
+O implementare a clasei <code>AsyncTask</code> poate fi parametrizată cu tipurile de date care sunt folosite pentru intrare, pentru raportarea progresului și pentru ieșire (rezultate).
+</p>
+
+<p>
+<p><div class="notetip">În situația în care nu se dorește transmiterea unor parametrii de intrare / ieșire sau nu este necesară raportarea progresului, se poate utiliza valoarea <code>Void</code> pentru toate aceste tipuri.
+</div></p>
+</p>
+
+<p>
+Este necesară suprascrierea următoarelor metode:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/os/AsyncTask.html#doInBackground(Params...)" class="urlextern" title="http://developer.android.com/reference/android/os/AsyncTask.html#doInBackground(Params...)"  rel="nofollow">doInBackground()</a> - metoda care va fi executată pe firul de execuție dedicat, care primește parametrii de intrare de tipul specificat; acesta trebuie să conțină procesările complexe care se doresc a fi realizate fără a interacționa însă cu firul de execuție principal; notificările sunt realizate:</div>
+<ul>
+<li class="level2"><div class="li"> prin intermediul metodei <a href="http://developer.android.com/reference/android/os/AsyncTask.html#publishProgress(Progress...)" class="urlextern" title="http://developer.android.com/reference/android/os/AsyncTask.html#publishProgress(Progress...)"  rel="nofollow">publishProgress()</a>, care primește ca parametru progresul realizat, valorile fiind transmise metodei <a href="http://developer.android.com/reference/android/os/AsyncTask.html#onProgressUpdate(Progress...)" class="urlextern" title="http://developer.android.com/reference/android/os/AsyncTask.html#onProgressUpdate(Progress...)"  rel="nofollow">onProgressUpdate()</a>;</div>
+</li>
+<li class="level2"><div class="li"> prin întoarcerea unui rezultat, atunci când procesarea este terminată, valoarea fiind transmisă metodei <a href="http://developer.android.com/reference/android/os/AsyncTask.html#onPostExecute(Result)" class="urlextern" title="http://developer.android.com/reference/android/os/AsyncTask.html#onPostExecute(Result)"  rel="nofollow">onPostExecute()</a>;</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <code>onProgressUpdate()</code> - folosită pentru actualizarea interfeței grafice, cu valorile primite de la metoda <code>publishProgress()</code>; metoda este sincronizată cu firul de execuție principal (care randează interfața grafică), astfel încât diferitele controale pot fi accesate de aici;</div>
+</li>
+<li class="level1"><div class="li"> <code>onPreExecute()</code> - apelată în contextului firului de execuție al interfeței grafice, înainte de metoda <code>doInBackground()</code>;</div>
+</li>
+<li class="level1"><div class="li"> <code>onPostExecute()</code> - apelată în momentul în care procesarea este terminată, primind ca parametru rezultatul întors de metoda <code>doInBackground()</code>; metoda este sincronizată cu firul de execuție principal (care randează interfața grafică), astfel încât diferitele controale pot fi accesate de aici.</div>
+</li>
+</ul>
+<pre class="code java"><span class="kw1">private</span> <span class="kw1">class</span> SomeAsyncTask <span class="kw1">extends</span> AsyncTask<span class="sy0">&lt;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+integer"><span class="kw3">Integer</span></a>, String<span class="sy0">&gt;</span> <span class="br0">&#123;</span>
+  @Override
+  <span class="kw1">protected</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> doInBackground<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a>... <span class="me1">parameter</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> result <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw4">int</span> progress <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span><span class="kw4">int</span> step <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> step <span class="sy0">&lt;=</span> parameter<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">length</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> step<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      progress <span class="sy0">=</span> step<span class="sy0">;</span>
+      result <span class="sy0">+=</span> parameter<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">charAt</span><span class="br0">&#40;</span>parameter<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">length</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">-</span> step<span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="kw1">try</span> <span class="br0">&#123;</span>
+        <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a>.<span class="me1">sleep</span><span class="br0">&#40;</span><span class="nu0">100</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> interruptedException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        Log.<span class="me1">e</span><span class="br0">&#40;</span>Constants.<span class="me1">TAG</span>, <span class="st0">&quot;An exception has occurred: &quot;</span> <span class="sy0">+</span> interruptedException.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+      publishProgress<span class="br0">&#40;</span>progress<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="kw1">return</span> result<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onProgressUpdate<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+integer"><span class="kw3">Integer</span></a>... <span class="me1">progress</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    progressTextView.<span class="me1">setText</span><span class="br0">&#40;</span>progress<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onPreExecute<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">protected</span> <span class="kw4">void</span> onPostExecute<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> result<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    progressTextView.<span class="me1">setText</span><span class="br0">&#40;</span>result<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Rularea unui obiect de tip <code>AsyncTask</code> se face prin invocarea metodei <code>execute()</code> care primește ca parametru informațiile care se doresc a fi procesate.
+</p>
+
+<p>
+<p><div class="noteimportant">Fiecare obiect de tip <code>AsyncTask</code> poate fi rulat o singură dată. Apelurile ulterioare ale metodei <code>execute()</code> vor genera excepții. 
+</div></p>
+</p>
+
+</div>
+
+<h5 id="clasa_loader">Clasa Loader</h5>
+<div class="level5">
+
+<p>
+Clasa abstractă <code>Loader</code> implementează practicile recomandate pentru încărcarea asincronă a informațiilor în cadrul unor controale grafice din interfața cu utilizatorul (afișate în activități sau fragmente).
+</p>
+
+<p>
+O astfel de abordare este utilizată pentru:
+</p>
+<ul>
+<li class="level1"><div class="li"> a încărca date asincron;</div>
+</li>
+<li class="level1"><div class="li"> a monitoriza sursele din care sunt încărcate datele, oferind informații cu privire la rezultatele obținute.</div>
+</li>
+</ul>
+
+<p>
+De regulă, se folosește o implementare a clasei <code>AsyncTaskLoader</code>.
+</p>
+
+</div>
+
+<h5 id="clasa_handler">Clasa Handler</h5>
+<div class="level5">
+
+<p>
+Clasa <code>Handler</code> gestionează transmiterea de mesaje sau execuția unor rutine asociate unor fire de execuție prin intermediul unei cozi de așteptare (de tipul <a href="http://developer.android.com/reference/android/os/MessageQueue.html" class="urlextern" title="http://developer.android.com/reference/android/os/MessageQueue.html"  rel="nofollow">MessageQueue</a>). Un obiect de acest tip este asociat unui singur fir de execuție. Acesta este creat în momentul în care este realizată instanța, cătrea cesta fiind transmise toate mesajele, <strong>secvențial</strong>.
+</p>
+
+<p>
+Prin intermediul acestui obiect, se permite:
+</p>
+<ul>
+<li class="level1"><div class="li"> planificarea mesajelor spre a fi procesate la un moment fix din viitor (metodele de tip <code>send…()</code>: <code>sendEmptyMessage()</code>, <code>sendMessage()</code>, <code>sendMessageAtTime()</code>, <code>sendMessageDelayed()</code>);</div>
+</li>
+<li class="level1"><div class="li"> încapsularea unei acțiuni care va fi executată pe un alt fir de execuție decât firul de execuție al interfeței grafice (metodele de tip <code>post…()</code>: <code>post()</code>, <code>postAtTime()</code>, <code>postDelayed()</code>).</div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="utilizarea_firelor_de_executie_definite_de_utilizator">Utilizarea firelor de execuție definite de utilizator</h5>
+<div class="level5">
+
+<p>
+Folosirea unor fire de execuție definite de utilizator și sincronizarea manuală cu interfața grafică poate fi necesară în situația în care trebuie realizată o gestiune mai complexă decât cea oferită de clasele <code>AsyncTask</code>, <code>Handler</code> sau <code>Loader</code>.
+</p>
+
+<p>
+În acest sens, este folosită o implementare a clasei <code>Thread</code>, procesarea pe un fir de execuție separat fiind realizată în cadrul metodei <code>run()</code>.
+</p>
+<pre class="code java"><span class="kw1">private</span> <span class="kw4">void</span> executeOnDedicatedThread<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> dedicatedThread <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+runnable"><span class="kw3">Runnable</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="co1">// ...</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  dedicatedThread.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Dacă se dorește actualizarea controalelor din cadrul interfeței grafice, este necesar ca firele de execuție care rulează în fundal să fie sincronizate cu firul de execuție principal anterior acestei operații. Acest lucru poate fi realizat:
+</p>
+<ol>
+<li class="level1"><div class="li"> folosind metoda <a href="http://developer.android.com/reference/android/app/Activity.html#runOnUiThread(java.lang.Runnable)" class="urlextern" title="http://developer.android.com/reference/android/app/Activity.html#runOnUiThread(java.lang.Runnable)"  rel="nofollow">Activity.runOnUiThread()</a> care forțează codul transmis să fie executat pe același fir de execuție care redă interfața grafică: <pre class="code java">runOnUiThread<span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+runnable"><span class="kw3">Runnable</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">// ...</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> utilizând un obiect de tip <code>Handler</code> pentru a realiza actualizări în contextul firului de execuție în care acesta a fost creat, utilizând metoda <a href="http://developer.android.com/reference/android/os/Handler.html#post(java.lang.Runnable)" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html#post(java.lang.Runnable)"  rel="nofollow">post()</a>: <pre class="code java"><span class="kw1">private</span> Handler handler <span class="sy0">=</span> <span class="kw1">new</span> Handler<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// created on the main thread</span>
+&nbsp;
+<span class="kw1">private</span> <span class="kw4">void</span> executeOnSeparateThread<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> separateThread <span class="sy0">=</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+runnable"><span class="kw3">Runnable</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    @Override
+    <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="co1">// do some background processing here</span>
+      handler.<span class="me1">post</span><span class="br0">&#40;</span><span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+runnable"><span class="kw3">Runnable</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        @Override
+        <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+          <span class="co1">// access the graphical user interface here</span>
+        <span class="br0">&#125;</span>
+      <span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  separateThread.<span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+ Clasa <code>Handler</code> pune la dispoziție și metode pentru a executa anumite metode la un moment dat de timp:
+</p>
+</div>
+</li>
+</ol>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/os/Handler.html#postDelayed(java.lang.Runnable,%20long)" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html#postDelayed(java.lang.Runnable,%20long)"  rel="nofollow">postDelayed()</a> - realizează o modificare la nivelul interfeței grafice cu o întârziere specificată ca parametru (exprimat în milisecunde);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/os/Handler.html#postAtTime(java.lang.Runnable,%20long)" class="urlextern" title="http://developer.android.com/reference/android/os/Handler.html#postAtTime(java.lang.Runnable,%20long)"  rel="nofollow">postAtTime()</a> - realizează o modificare la nivelul interfeței grafice la un moment de timp specificat ca parametru (exprimat ca număr de milisecunde ce au trecut de la 1 ianuarie 1970.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT6 SECTION "Categorii de Procesări" [40878-53940] -->
+<h3 class="sectionedit7" id="realizarea_de_procesari_prin_intermediul_alarmelor">Realizarea de Procesări prin Intermediul Alarmelor</h3>
+<div class="level3">
+
+<p>
+O alarmă reprezintă un mecanism de transmitere a unor intenții la momente predefinite de timp sau periodic, după trecerea unui anumit interval. Acestea există în afara domeniului de existență a unei aplicații Android, astfel încât acestea pot fi utilizate pentru a realiza anumite acțiuni chiar și în situația în care acestea nu mai există. Din acest motiv, alarmele reprezintă o metodă foarte utilă pentru a difuza intenții, pentru a porni servicii sau lansa în execuție activități, fără a fi necesar ca aplicația să se afle în execuție. Se asigură astfel și optimizarea cerințelor legate de resursele utilizate de aplicație.
+</p>
+
+<p>
+Cele mai frecvente utilizări ale alarmelor sunt legate de planificarea unor actualizări bazate pe căutări în rețea, programarea unor operații (consumatoare de resurse) la momente de timp în care solicitările sunt mai reduse, organizarea unor noi încercări pentru operații care nu au putut fi realizate anterior.
+</p>
+
+<p>
+<p><div class="notetip">Evenimentele care pot fi produse doar pe parcursul ciclului de viață al unei aplicații Android trebuie tratate prin fire de execuție separate implementate de utilizator și sincronizate (manual) cu interfața grafică. Utilizarea de alarme trebuie limitată doar la evenimente programate în afara ferestrei temporale în care se desfășoară aplicația.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">În Android, alarmele rămân active chiar și atunci când dispozitivul mobil se găsește într-o stare de latență (<em>eng.</em> sleep mode), putând fi utilizate pentru a-l scoate din aceasta. Totuși, ele devin inactive în momentul în care dispozitivul mobil este repornit.
+</div></p>
+</p>
+
+<p>
+Operațiile cu alarme sunt realizate prin intermediul serviciului de sistem <a href="http://developer.android.com/reference/android/app/AlarmManager.html" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html"  rel="nofollow">AlarmManager</a> care poate fi accesat prin intermediul metodei <a href="http://developer.android.com/reference/android/content/Context.html#getSystemService%28java.lang.String%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#getSystemService%28java.lang.String%29"  rel="nofollow">Context.getSystemService()</a> care primește ca parametru argumentul <a href="http://developer.android.com/reference/android/content/Context.html#ALARM_SERVICE" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#ALARM_SERVICE"  rel="nofollow">Context.ALARM_SERVICE</a>.
+</p>
+
+<p>
+Există mai multe tipuri de alarme:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#RTC_WAKEUP" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#RTC_WAKEUP"  rel="nofollow">RTC_WAKEUP</a> - scoate dispozitivul mobil din starea de latență prin transmiterea unei intenții în așteptare, la un anumit moment de timp specificat;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#RTC" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#RTC"  rel="nofollow">RTC</a> - transmite o intenție în așteptare, la un anumit moment de timp specificat, fără a scoate dispozitivul mobil din starea de latență;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#ELAPSED_REALTIME" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#ELAPSED_REALTIME"  rel="nofollow">ELAPSED_REALTIME</a> - transmite o intenție în așteptare, la un anumit interval de timp scurs de la momentul în care dispozitivul mobil a fost pornit, fără a-l scoate din starea de latență;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#ELAPSED_REALTIME_WAKEUP" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#ELAPSED_REALTIME_WAKEUP"  rel="nofollow">ELAPSED_REALTIME_WAKEUP</a> - scoate dispozitivul mobil din starea de latență prin transmiterea unei intenții în așteptare, la un anumit interval de timp scurs de la momentul în care acesta a fost pornit.</div>
+</li>
+</ul>
+
+<p>
+În funcție de aceste valori, parametrul furnizat metodei <a href="http://developer.android.com/reference/android/app/AlarmManager.html#set(int,%20long,%20android.app.PendingIntent)" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#set(int,%20long,%20android.app.PendingIntent)"  rel="nofollow">set()</a> a obiectului de tip <code>AlarmManager</code> reprezintă un moment de timp sau un interval.
+</p>
+
+<p>
+În momentul în care se declanșează, obiectul de tip <code>PendingIntent</code> este distribuit la nivelul tuturor componentelor sistemului de operare.
+</p>
+
+<p>
+<p><div class="notetip">Specificarea unei alte alarme folosind același obiect de tip <code>PendingIntent</code> o înlocuiește pe cea existentă.
+</div></p>
+</p>
+<pre class="code java">AlarmManager alarmManager <span class="sy0">=</span> <span class="br0">&#40;</span>AlarmManager<span class="br0">&#41;</span>getSystemService<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a>.<span class="me1">ALARM_SERVICE</span><span class="br0">&#41;</span><span class="sy0">;</span>
+alarmManager.<span class="me1">set</span><span class="br0">&#40;</span>AlarmManager.<span class="me1">ELAPSED_REALTIME_WAKEUP</span>, <span class="nu0">1000</span>, PendingIntent.<span class="me1">getBroadcast</span><span class="br0">&#40;</span><span class="kw1">this</span>, <span class="nu0">0</span>, <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="st0">&quot;ALARM_ACTION&quot;</span><span class="br0">&#41;</span>, <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Anularea unei alarme se face prin intermediul metodei <a href="http://developer.android.com/reference/android/app/AlarmManager.html#cancel(android.app.PendingIntent)" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#cancel(android.app.PendingIntent)"  rel="nofollow">cancel()</a> a obiectului de tip <code>AlarmManager</code> care primește ca parametru intenția în așteptare care nu mai trebuie transmisă.
+</p>
+<pre class="code java">alarmManager.<span class="me1">cancel</span><span class="br0">&#40;</span>PendingIntent.<span class="me1">getBroadcast</span><span class="br0">&#40;</span><span class="kw1">this</span>, <span class="nu0">0</span>, <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="st0">&quot;ALARM_ACTION&quot;</span><span class="br0">&#41;</span>, <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Utilizatorul are și posibilitatea de a indica anumite intervale de timp la care alarma este repetată, prin intermediul unor metode definite în clasa <code>AlarmManager</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#setRepeating(int,%20long,%20long,%20android.app.PendingIntent)" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#setRepeating(int,%20long,%20long,%20android.app.PendingIntent)"  rel="nofollow">setRepeating()</a> - utilizată când se dorește un control foarte exact asupra intervalului de timp la care alarma este repetată, exprimat la nivel de milisecunde;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#setInexactRepeating(int,%20long,%20long,%20android.app.PendingIntent)" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#setInexactRepeating(int,%20long,%20long,%20android.app.PendingIntent)"  rel="nofollow">setInexactRepeating()</a> - folosit pentru a economisi consumul de baterie realizat la scoaterea dispozitivului mobil din starea de latență de fiecare dată când este necesară realizarea unor sarcini planificate (care nu se suprapun); astfel, sistemul de operare Android va sincroniza mai multe alarme cu modul de repetare inexact, declanșându-le simultan; metoda primește ca parametru una dintre constantele:</div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_FIFTEEN_MINUTES" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_FIFTEEN_MINUTES"  rel="nofollow">INTERVAL_FIFTEEN_MINUTES</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_HALF_DAY" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_HALF_DAY"  rel="nofollow">INTERVAL_HALF_HOUR</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_HALF_HOUR" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_HALF_HOUR"  rel="nofollow">INTERVAL_HOUR</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_HALF_DAY" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_HALF_DAY"  rel="nofollow">INTERVAL_HALF_DAY</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_DAY" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#INTERVAL_DAY"  rel="nofollow">INTERVAL_DAY</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Ambele metode primesc ca parametrii tipul de alarmă, un moment de timp la care alarma va fi declanșată inițial și o intenție în așteptare care va fi transmisă.
+</p>
+<pre class="code java">AlarmManager alarmManager <span class="sy0">=</span> <span class="br0">&#40;</span>AlarmManager<span class="br0">&#41;</span>getSystemService<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a>.<span class="me1">ALARM_SERVICE</span><span class="br0">&#41;</span><span class="sy0">;</span>
+alarmManager.<span class="me1">setInexactRepeating</span><span class="br0">&#40;</span>AlarmManager.<span class="me1">ELAPSED_REALTIME_WAKEUP</span>, AlarmManager.<span class="me1">INTERVAL_FIFTEEN_MINUTES</span>, AlarmManager.<span class="me1">INTERVAL_DAY</span>, PendingIntent.<span class="me1">getBroadcast</span><span class="br0">&#40;</span><span class="kw1">this</span>, <span class="nu0">0</span>, <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="st0">&quot;ALARM_ACTION&quot;</span><span class="br0">&#41;</span>, <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<p><div class="noteimportant">Impactul pe care alarmele recurente îl au asupra consumului de baterie poate fi semnificativ. De aceea, este recomandat ca frecvența de repetare a alarmei să fie cât mai mică, scoțând dispozitivul mobil din starea de latență numai atunci când este necesar și utilizând tipul de repetare inexact, dacă este posibil.
+</div></p>
+</p>
+
+<p>
+Anularea unei alarme recurente se face tot prin intermediul metodei <a href="http://developer.android.com/reference/android/app/AlarmManager.html#cancel(android.app.PendingIntent)" class="urlextern" title="http://developer.android.com/reference/android/app/AlarmManager.html#cancel(android.app.PendingIntent)"  rel="nofollow">cancel()</a> a obiectului de tip <code>AlarmManager</code> care primește ca parametru intenția în așteptare care nu mai trebuie transmisă.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Realizarea de Procesări prin Intermediul Alarmelor" [53941-61190] -->
+<h2 class="sectionedit8" id="activitate_de_laborator">Activitate de Laborator</h2>
+<div class="level2">
+
+<p>
+<strong>1.</strong> În contul Github personal, să se creeze un depozit denumit &#039;Laborator05&#039;. Inițial, acesta trebuie să fie gol (nu trebuie să bifați nici adăugarea unui fișier README.md, nici a fișierului .gitignore sau a a fișierului LICENSE).
+</p>
+
+<p>
+<strong>2.</strong> Să se cloneze în directorul de pe discul local conținutul depozitului la distanță de la <a href="https://www.github.com/eim2016/Laborator05" class="urlextern" title="https://www.github.com/eim2016/Laborator05"  rel="nofollow">https://www.github.com/eim2016/Laborator05</a>. În urma acestei operații, directorul Laborator05 va trebui să se conțină un director <code>labtasks</code> ce va deține proiectele AndroidStudio respectiv Eclipse, fișierul README.md și un fișier .gitignore care indică tipurile de fișiere (extensiile) ignorate.
+</p>
+<pre class="code">student@eim2016:~$ git clone https://www.github.com/eim2016/Laborator05.git</pre>
+
+<p>
+<strong>3.</strong> Să se încarce conținutul descărcat în cadrul depozitului &#039;Laborator05&#039; de pe contul Github personal.
+</p>
+<pre class="code">student@eim2016:~$ cd Laborator05
+student@eim2016:~/Laborator05$ git remote add Laborator05_perfectstudent https://github.com/perfectstudent/Laborator05
+student@eim2016:~/Laborator05$ git push Laborator05_perfectstudent master</pre>
+
+<p>
+<strong>4.</strong> Să se încarce în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectele <em>StartedService</em> respectiv <em>StartedServiceActivity</em> din directorul <code>labtasks/&lt;IDE&gt;/StartedService</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"> Proiectul <em>StartedService</em> conține codul sursă pentru un serviciu de tip started care transmite mai multe valori, de diferite tipuri (șir de caractere, întreg, vector), temporizate la un anumit interval (dată de valoarea <code>SLEEP_TIME</code> din interfața <code>Constants</code>). Aceste valori sunt transmise prin intermediul unor intenții cu difuzare (<em>eng.</em> broadcast intents), la nivelul întregului sistem de operare Android.</div>
+</li>
+<li class="level1"><div class="li"> Proiectul <em>StartedServiceActivity</em> conține codul sursă pentru o aplicație Android care utilizează un ascultător pentru intenții cu difuzare (<em>eng.</em> BroadcastReceiver), pentru tipurile de mesaje propagate la nivelul sistemului de operare de către serviciu, pe care le afișează în interfața grafică, prin intermediul unui câmp text.</div>
+</li>
+</ul>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator05/activitate_de_laborator01.png%3Fw=400&amp;tok=51e357" class="mediacenter" alt="" width="400" />
+</p>
+
+<p>
+<strong>5.</strong> În proiectul <em>StartedService</em>, în clasa <code>StartedService</code> din pachetul <code>ro.pub.cs.systems.eim.lab05.startedservice.service</code>, să se completeze metoda <code>onStartCommand()</code> astfel încât aceasta să pornească un fir de execuție în cadrul căruia să fie propagate 3 intenții cu difuzare la nivelul sistemului de operare Android. 
+</p>
+
+<p>
+Pentru fiecare intenție, se vor specifica:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>acțiunea</strong>, care va avea valorile definite în interfața <code>Constants</code> (<code>Constants.ACTION_STRING</code>, <code>Constants.ACTION_INTEGER</code>, <code>Constants.ACTION_ARRAY_LIST</code>); se va utiliza metoda <a href="http://developer.android.com/reference/android/content/Intent.html#setAction%28java.lang.String%29" class="urlextern" title="http://developer.android.com/reference/android/content/Intent.html#setAction%28java.lang.String%29"  rel="nofollow">setAction()</a>;</div>
+</li>
+<li class="level1"><div class="li"> <strong>informațiile transmise</strong>, plasate în câmpul <code>extra</code> (având cheia <code>Constants.DATA</code> și valoarea dată de <code>Constants.STRING_DATA</code>, <code>Constants.INTEGER_DATA</code>, <code>Constants.ARRAY_LIST_DATA</code>); se va utiliza metoda <a href="http://developer.android.com/reference/android/content/Intent.html#putExtra%28java.lang.String,%20android.os.Bundle%29" class="urlextern" title="http://developer.android.com/reference/android/content/Intent.html#putExtra%28java.lang.String,%20android.os.Bundle%29"  rel="nofollow">putExtra()</a> care primește ca argumente cheia și valoarea.</div>
+</li>
+</ul>
+
+<p>
+Transmiterea propriu-zisă a intenției se face prin intermediul metodei <a href="http://developer.android.com/reference/android/content/Context.html#sendBroadcast%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#sendBroadcast%28android.content.Intent%29"  rel="nofollow">sendBroadcast()</a>.
+</p>
+
+<p>
+Cele trei mesaje vor fi temporizate la intervalul indicat de valoarea <code>Constants.SLEEP_TIME</code> (propagarea mesajelor va fi intercalată de apeluri <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#sleep-long-" class="urlextern" title="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#sleep-long-"  rel="nofollow">Thread.sleep()</a>.
+</p>
+
+<p>
+<strong>a)</strong> De ce este necesar ca serviciul să realizeze operațiile pe un fir de execuție dedicat?
+</p>
+
+<p>
+<strong>b)</strong> Ce alternativă s-ar fi putut folosi pentru a se evita o astfel de abordare? Ce avantaj și ce dezavantaj prezintă această alternativă?
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Se implementează o clasă derivată din <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html" class="urlextern" title="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html"  rel="nofollow">Thread</a> pentru care se va suprascrie metoda <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#run--" class="urlextern" title="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#run--"  rel="nofollow">run()</a>. Pe firul de execuție dedicat, se vor propaga intențiile cu difuzare la nivelul sistemului de operare Android, după care acesta își va încheia activitatea.
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=23" title="Download Snippet" class="mediafile mf_java">ProcessingThread.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">package</span> <span class="co2">ro.pub.cs.systems.eim.lab05.startedservice.service</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">android.content.Context</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.content.Intent</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">ro.pub.cs.systems.eim.lab05.startedservice.general.Constants</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> ProcessingThread <span class="kw1">extends</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a> <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a> context<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> ProcessingThread<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a> context<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">this</span>.<span class="me1">context</span> <span class="sy0">=</span> context<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> run<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">while</span><span class="br0">&#40;</span><span class="kw2">true</span><span class="br0">&#41;</span><span class="br0">&#123;</span> 
+      sendMessage<span class="br0">&#40;</span>Constants.<span class="me1">MESSAGE_STRING</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      sleep<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="co1">// ...</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw4">void</span> sleep<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">try</span> <span class="br0">&#123;</span>
+      <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+thread"><span class="kw3">Thread</span></a>.<span class="me1">sleep</span><span class="br0">&#40;</span>Constants.<span class="me1">SLEEP_TIME</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span> <span class="kw1">catch</span> <span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+interruptedexception"><span class="kw3">InterruptedException</span></a> interruptedException<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      interruptedException.<span class="me1">printStackTrace</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">private</span> <span class="kw4">void</span> sendMessage<span class="br0">&#40;</span><span class="kw4">int</span> messageType<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">switch</span><span class="br0">&#40;</span>messageType<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">case</span> Constants.<span class="me1">MESSAGE_STRING</span><span class="sy0">:</span>
+         intent.<span class="me1">setAction</span><span class="br0">&#40;</span>Constants.<span class="me1">ACTION_STRING</span><span class="br0">&#41;</span><span class="sy0">;</span>
+         intent.<span class="me1">putExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">DATA</span>, Constants.<span class="me1">STRING_DATA</span><span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw1">break</span><span class="sy0">;</span>
+      <span class="co1">// ...</span>
+    <span class="br0">&#125;</span>
+    context.<span class="me1">sendBroadcast</span><span class="br0">&#40;</span>intent<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+</div></div>
+<p>
+Monitorizați ciclurile din Thread.run() in logcat:
+</p>
+<pre class="code">Log.d(Constants.TAG, &quot;Thread.run() was invoked, PID:&quot; + android.os.Process.myPid() + &quot; TID:&quot; + android.os.Process.myTid());</pre>
+
+<p>
+<strong>6.</strong> În proiectul <em>StartedServiceActivity</em>, să se pornească serviciul, printr-un apel al metodei <a href="http://developer.android.com/reference/android/content/Context.html#startService%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#startService%28android.content.Intent%29"  rel="nofollow">startService()</a>; intenția care va fi transmisă ca argument metodei <code>startService()</code> trebuie să refere <strong>explicit</strong> serviciul care urmează a fi pornit, din motive de securitate (se folosește metoda <a href="http://developer.android.com/reference/android/content/Intent.html#setComponent%28android.content.ComponentName%29" class="urlextern" title="http://developer.android.com/reference/android/content/Intent.html#setComponent%28android.content.ComponentName%29"  rel="nofollow">setComponent()</a>, care indică atât pachetul corespunzător aplicației Android care conține serviciul, cât și clasa corespunzătoare acestuia - calificată complet).
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code java">Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+intent.<span class="me1">setComponent</span><span class="br0">&#40;</span><span class="kw1">new</span> ComponentName<span class="br0">&#40;</span><span class="st0">&quot;ro.pub.cs.systems.eim.lab05.startedservice&quot;</span>, <span class="st0">&quot;ro.pub.cs.systems.eim.lab05.startedservice.service.StartedService&quot;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+startService<span class="br0">&#40;</span>intent<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div></div>
+<p>
+<strong>a)</strong> Să se ruleze aplicațiile. Se va rula aplicația <em>StartedService</em> care instalează serviciul pe dispozitivul mobil. Ulterior se va rula aplicația <em>StartedServiceActivity</em>. Verificați faptul că serviciul a fost pornit și oprit corespunzător prin mesajele afișate în consolă.
+</p>
+
+<p>
+<strong>b)</strong> Monitorizați în DDMS procesele asociate activității și serviciului. Ce se întâmplă dacă activitatea este eliminată (onDestroy)?
+</p>
+
+<p>
+<strong>c)</strong>Explicați ce se întâmplă dacă restartăm activitatea(Monitorizați în DDMS si logcat). 
+</p>
+
+<p>
+<strong>7.</strong> În proiectul <em>StartedServiceActivity</em>, să se implementeze un ascultător pentru intenții cu difuzare, în clasa <code>StartedServiceBroadcastReceiver</code> din pachetul <code>ro.pub.cs.systems.eim.lab05.startedserviceactivity.view</code>. Acesta extinde clasa <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html" class="urlextern" title="http://developer.android.com/reference/android/content/BroadcastReceiver.html"  rel="nofollow">BroadcastReceiver</a> și implementează metoda <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html#onReceive%28android.content.Context,%20android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/content/BroadcastReceiver.html#onReceive%28android.content.Context,%20android.content.Intent%29"  rel="nofollow">onReceive()</a>, având ca argumente <strong>contextul</strong> din care a fost invocată și <strong>intenția</strong> prin intermediul căreia a fost transmis mesajul respectiv. Astfel, datele extrase din intenție (având cheia indicată de <code>Constants.DATA</code>) vor fi afișate într-un câmp text (<code>messageTextView</code>) din cadrul interfeței grafice.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+În cadrul metodei <code>onReceive(Context, Intent)</code> din clasa <code>StartedServiceBroadcastReceiver</code>, se verifică:
+</p>
+<ul>
+<li class="level1"><div class="li"> acțiunea corespunzătoare intenției, folosind metoda <a href="http://developer.android.com/reference/android/content/Intent.html#getAction%28%29" class="urlextern" title="http://developer.android.com/reference/android/content/Intent.html#getAction%28%29"  rel="nofollow">getAction()</a>;</div>
+</li>
+<li class="level1"><div class="li"> informațiile transmise conținute în câmpul <code>extra</code>, folosind metodele corespunzătoare tipului de date identificat pe baza intenției (<a href="http://developer.android.com/reference/android/content/Intent.html#getStringExtra%28java.lang.String%29" class="urlextern" title="http://developer.android.com/reference/android/content/Intent.html#getStringExtra%28java.lang.String%29"  rel="nofollow">getStringExtra()</a>, <a href="http://developer.android.com/reference/android/content/Intent.html#getIntExtra%28java.lang.String,%20int%29" class="urlextern" title="http://developer.android.com/reference/android/content/Intent.html#getIntExtra%28java.lang.String,%20int%29"  rel="nofollow">getIntExtra()</a>, <a href="http://developer.android.com/reference/android/content/Intent.html#getStringArrayListExtra%28java.lang.String%29" class="urlextern" title="http://developer.android.com/reference/android/content/Intent.html#getStringArrayListExtra%28java.lang.String%29"  rel="nofollow">getStringArrayListExtra()</a>).</div>
+</li>
+</ul>
+
+<p>
+Acestea vor fi afișate în cadrul câmpului text din cadrul interfeței grafice (<code>messageTextView</code>), transmis ca argument la instanțierea ascultătorului pentru intenții cu difuzare.
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=26" title="Download Snippet" class="mediafile mf_java">StartedServiceBroadcastReceiver.java</a></dt>
+<dd><pre class="code file java"><span class="kw1">package</span> <span class="co2">ro.pub.cs.systems.eim.lab05.startedserviceclient.view</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">android.content.BroadcastReceiver</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.content.Context</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.content.Intent</span><span class="sy0">;</span>
+<span class="kw1">import</span> <span class="co2">android.widget.TextView</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">import</span> <span class="co2">ro.pub.cs.systems.eim.lab05.startedserviceclient.general.Constants</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">public</span> <span class="kw1">class</span> StartedServiceBroadcastReceiver <span class="kw1">extends</span> BroadcastReceiver <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">private</span> TextView messageTextView<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> StartedServiceBroadcastReceiver<span class="br0">&#40;</span>TextView messageTextView<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">this</span>.<span class="me1">messageTextView</span> <span class="sy0">=</span> messageTextView<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onReceive<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a> context, Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> action <span class="sy0">=</span> intent.<span class="me1">getAction</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> data <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">ACTION_STRING</span>.<span class="me1">equals</span><span class="br0">&#40;</span>action<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      data <span class="sy0">=</span> intent.<span class="me1">getStringExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">DATA</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co1">// ...</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>messageTextView <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      messageTextView.<span class="me1">setText</span><span class="br0">&#40;</span>messageTextView.<span class="me1">getText</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot;<span class="es0">\n</span>&quot;</span> <span class="sy0">+</span> data<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+</div></div>
+<p>
+<strong>8.</strong> În proiectul <em>StartedServiceActivity</em>, în cadrul metodei <code>onCreate()</code> a activității <code>StartedServiceActivity</code> (din pachetul <code>ro.pub.cs.systems.eim.lab05.startedserviceactivity</code>), să se realizeze următoarele operații:
+</p>
+
+<p>
+<strong>a)</strong> să se creeze o instanță a ascultătorului pentru intenții cu difuzare;
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code java">startedServiceBroadcastReceiver <span class="sy0">=</span> <span class="kw1">new</span> StartedServiceBroadcastReceiver<span class="br0">&#40;</span>messageTextView<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div></div>
+<p>
+<strong>b)</strong> să se creeze o instanță a unui obiect de tipul <a href="http://developer.android.com/reference/android/content/IntentFilter.html" class="urlextern" title="http://developer.android.com/reference/android/content/IntentFilter.html"  rel="nofollow">IntentFilter</a>, la care să se adauge toate acțiunile corespunzătoare intențiilor cu difuzare propagate de serviciu; se va folosi metoda <a href="http://developer.android.com/reference/android/content/IntentFilter.html#addAction%28java.lang.String%29" class="urlextern" title="http://developer.android.com/reference/android/content/IntentFilter.html#addAction%28java.lang.String%29"  rel="nofollow">addAction()</a>;
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code java">startedServiceIntentFilter <span class="sy0">=</span> <span class="kw1">new</span> IntentFilter<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+startedServiceIntentFilter.<span class="me1">addAction</span><span class="br0">&#40;</span>Constants.<span class="me1">ACTION_STRING</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">// ...</span></pre>
+</div></div>
+<p>
+<strong>c)</strong> să se atașeze, respectiv să se detașeze ascultătorul de intenții cu difuzare, astfel încât acesta să proceseze mesajele primite de la serviciu doar în situația în care activitatea este vizibilă pe suprafața de afișare; în acest sens, vor fi utilizate metodele <a href="http://developer.android.com/reference/android/content/Context.html#registerReceiver%28android.content.BroadcastReceiver,%20android.content.IntentFilter%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#registerReceiver%28android.content.BroadcastReceiver,%20android.content.IntentFilter%29"  rel="nofollow">registerReceiver()</a>, respectiv <a href="http://developer.android.com/reference/android/content/Context.html#unregisterReceiver%28android.content.BroadcastReceiver%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#unregisterReceiver%28android.content.BroadcastReceiver%29"  rel="nofollow">unregisterReceiver()</a>, apelate pe metodele de callback ale activității corespunzătoare stării în care aceasta este vizibilă pe suprafața de afișare (<code>onResume()</code>, respectiv <code>onPause()</code>).
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Este necesar ca activarea ascultătorului să se realizeze pe metoda de callback <code>onResume()</code>, iar dezactivarea sa să fie realizată pe metoda de callback <code>onPause()</code>. 
+</p>
+<pre class="code java">@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onResume<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onResume</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  registerReceiver<span class="br0">&#40;</span>startedServiceBroadcastReceiver, startedServiceIntentFilter<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onPause<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  unregisterReceiver<span class="br0">&#40;</span>startedServiceBroadcastReceiver<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">super</span>.<span class="me1">onPause</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</div></div>
+<p>
+<strong>d)</strong>
+Să se oprească serviciul printr-un apel al metodei <a href="http://developer.android.com/reference/android/content/Context.html#stopService%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#stopService%28android.content.Intent%29"  rel="nofollow">stopService()</a>. Unde ar putea fi plasată aceasta? Care sunt avantajele și dezavantajele unei astfel de abordări?
+</p>
+
+<p>
+<strong>9.</strong> Rulați din nou aplicația, întrerupând temporar activitatea (printr-o apăsare a tastei <em>Home</em>) în timp ce sunt procesate intențiile cu difuzare transmise de serviciu. Ce observați la revenirea în activitate?
+</p>
+
+<p>
+Modificați modul de implementare al ascultătorului de intenții cu difuzare astfel încât în momentul în care se primește un mesaj, să repornească activitatea (dacă este cazul), asigurându-se astfel faptul că nu se mai pierde nici o informație transmisă de serviciu dacă aceasta nu este vizibilă pe suprafața de afișare.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Pentru ca ascultătorul de intenții cu difuzare să poată procesa mesaje chiar și în situația în care activitatea nu este vizibilă pe suprafața de afișare, el trebuie declarat, împreună cu filtrul de intenții, în fișierul <code>AndroidManifest.xml</code>:
+</p>
+<dl class="file">
+<dt><a href="../../../code/eim/laboratoare/laborator05%3Fcodeblock=30" title="Download Snippet" class="mediafile mf_xml">AndroidManifest.xml</a></dt>
+<dd><pre class="code file xml"><span class="sc3"><span class="re1">&lt;?xml</span> <span class="re0">version</span>=<span class="st0">&quot;1.0&quot;</span> <span class="re0">encoding</span>=<span class="st0">&quot;utf-8&quot;</span><span class="re2">?&gt;</span></span>
+<span class="sc3"><span class="re1">&lt;manifest</span> ...<span class="re2">&gt;</span></span>
+  <span class="sc3"><span class="re1">&lt;application</span> ...<span class="re2">&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;receiver</span></span>
+<span class="sc3">      <span class="re0">android:name</span>=<span class="st0">&quot;.view.StartedServiceBroadcastReceiver&quot;</span><span class="re2">&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;intent-filter<span class="re2">&gt;</span></span></span>
+        <span class="sc3"><span class="re1">&lt;action</span> <span class="re0">android:name</span>=<span class="st0">&quot;ro.pub.cs.systems.eim.lab05.startedservice.string&quot;</span> <span class="re2">/&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;/intent-filter<span class="re2">&gt;</span></span></span>
+      <span class="sc-1">&lt;!-- other intent filters for other activities --&gt;</span>
+    <span class="sc3"><span class="re1">&lt;/receiver<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;/application<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/manifest<span class="re2">&gt;</span></span></span></pre>
+</dd></dl>
+
+<p>
+În acest scop, va trebui declarat și un constructor implicit care va fi folosit pentru instanțierea filtrului de intenții. Astfel, nu se va mai putea obține o referință către câmpul text în care să se realizeze afișarea informațiilor obținute în urma procesării intenției cu difuzare. Aceasta va fi realizată de către activitate, care va fi invocată de ascultătorul de mesaje cu difuzare, în cadrul metodei <code>onReceive()</code>, prin intermediul unei intenții (datele fiind plasate în câmpul <code>extra</code>):
+</p>
+<pre class="code java">@Override
+<span class="kw1">public</span> <span class="kw4">void</span> onReceive<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a> context, Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> action <span class="sy0">=</span> intent.<span class="me1">getAction</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> data <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>Constants.<span class="me1">ACTION_STRING</span>.<span class="me1">equals</span><span class="br0">&#40;</span>action<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    data <span class="sy0">=</span> intent.<span class="me1">getStringExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">DATA</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <span class="co1">// ...</span>
+  Intent startedServiceActivityIntent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span>context, StartedServiceActivity.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  startedServiceActivityIntent.<span class="me1">putExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">MESSAGE</span>, data<span class="br0">&#41;</span><span class="sy0">;</span>
+  startedServiceActivityIntent.<span class="me1">addFlags</span><span class="br0">&#40;</span>Intent.<span class="me1">FLAG_ACTIVITY_NEW_TASK</span><span class="sy0">|</span>Intent.<span class="me1">FLAG_ACTIVITY_SINGLE_TOP</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  context.<span class="me1">startActivity</span><span class="br0">&#40;</span>startedServiceActivityIntent<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Astfel, activitatea va fi invocată prin intermediul intenției, în condițiile în care aceasta este activă (se găsește în memorie, fiind plasată pe stiva de activități, fără a fi vizibilă). De aceea, aceasta va invoca metoda de callback <a href="http://developer.android.com/reference/android/app/Activity.html#onNewIntent%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/app/Activity.html#onNewIntent%28android.content.Intent%29"  rel="nofollow">onNewIntent()</a> pe care trebuie realizată afișarea informațiilor transmise în câmpul <code>extra</code> al intenției.
+</p>
+<pre class="code java">@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onNewIntent<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onNewIntent</span><span class="br0">&#40;</span>intent<span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+string"><span class="kw3">String</span></a> message <span class="sy0">=</span> intent.<span class="me1">getStringExtra</span><span class="br0">&#40;</span>Constants.<span class="me1">MESSAGE</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>message <span class="sy0">!=</span> <span class="kw2">null</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    messageTextView.<span class="me1">setText</span><span class="br0">&#40;</span>messageTextView.<span class="me1">getText</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot;<span class="es0">\n</span>&quot;</span> <span class="sy0">+</span> message<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</div></div>
+<p>
+<strong>10.</strong> Să se încarce în mediul integrat de dezvoltare preferat (Android Studio sau Eclipse) proiectul <em>BoundedServiceActivity</em> din directorul <code>labtasks/&lt;IDE&gt;/BoundedService</code>. Se dorește să se implementeze un serviciu de tip bounded care poate interacționa cu o activitate prin intermediul unei metode care furnizează un șir de caractere ales aleator dintr-o listă de valori.
+</p>
+
+<p>
+<strong>a)</strong> În clasa <code>BoundedService</code> din pachetul <code>ro.pub.cs.systems.eim.lab05.boundedserviceactivity.service</code>, să se implementeze o clasă internă <strong>publică</strong>, derivată din interfața <a href="http://developer.android.com/reference/android/os/IBinder.html" class="urlextern" title="http://developer.android.com/reference/android/os/IBinder.html"  rel="nofollow">IBinder</a>, care oferă o referință către serviciu prin intermediul metodei <strong>publice</strong> <code>getService()</code>. Instanța acestei clase interne va fi furnizată ca rezultat al metodei <a href="http://developer.android.com/reference/android/app/Service.html#onBind%28android.content.Intent%29" class="urlextern" title="http://developer.android.com/reference/android/app/Service.html#onBind%28android.content.Intent%29"  rel="nofollow">onBind()</a>.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code java"><span class="kw1">public</span> <span class="kw1">class</span> BoundedService <span class="kw1">extends</span> Service <span class="br0">&#123;</span>
+&nbsp;
+  <span class="kw1">final</span> <span class="kw1">private</span> IBinder boundedServiceBinder <span class="sy0">=</span> <span class="kw1">new</span> BoundedServiceBinder<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">public</span> <span class="kw1">class</span> BoundedServiceBinder <span class="kw1">extends</span> Binder <span class="br0">&#123;</span>
+    <span class="kw1">public</span> BoundedService getService<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">return</span> BoundedService.<span class="kw1">this</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> IBinder onBind<span class="br0">&#40;</span>Intent intent<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">return</span> boundedServiceBinder<span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</div></div>
+<p>
+<strong>b)</strong> În clasa <code>BoundedService</code> din pachetul <code>ro.pub.cs.systems.eim.lab05.boundedserviceactivity.service</code>, să se implementeze o metodă care întoarce o valoare aleatoare din tabloul de constante <code>Constants.MESSAGES</code>. Aceasta va avea identificatorul de acces <code>public</code>, astfel încât să poată fi accesată din cadrul activității.
+</p>
+
+<p>
+<strong>c)</strong> În clasa <code>BoundedServiceActivity</code> din pachetul <code>ro.pub.cs.systems.eim.lab05.boundedserviceactivity.view</code>, să se instanțieze un obiect de tipul <a href="http://developer.android.com/reference/android/content/ServiceConnection.html" class="urlextern" title="http://developer.android.com/reference/android/content/ServiceConnection.html"  rel="nofollow">ServiceConnection</a>, care va fi utilizat pentru asocierea serviciului la activitate.
+</p>
+
+<p>
+Vor fi suprascrise metodele:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/content/ServiceConnection.html#onServiceConnected%28android.content.ComponentName,%20android.os.IBinder%29" class="urlextern" title="http://developer.android.com/reference/android/content/ServiceConnection.html#onServiceConnected%28android.content.ComponentName,%20android.os.IBinder%29"  rel="nofollow">onServiceConnected()</a> - se creează referința la serviciu prin intermediul argumentului de tipul <code>IBinder</code> (prin intermediul metodei <code>getService()</code>) și se actualizează variabila care reține starea legăturii dintre serviciu și activitate;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://developer.android.com/reference/android/content/ServiceConnection.html#onServiceDisconnected%28android.content.ComponentName%29" class="urlextern" title="http://developer.android.com/reference/android/content/ServiceConnection.html#onServiceDisconnected%28android.content.ComponentName%29"  rel="nofollow">onServiceDisconnected()</a> - se distruge referința la serviciu și se actualizează variabila care reține starea legăturii dintre serviciu și activitate.</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code java"><span class="kw1">private</span> ServiceConnection serviceConnection <span class="sy0">=</span> <span class="kw1">new</span> ServiceConnection<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onServiceConnected<span class="br0">&#40;</span>ComponentName className, IBinder service<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    BoundedService.<span class="me1">BoundedServiceBinder</span> binder <span class="sy0">=</span> <span class="br0">&#40;</span>BoundedService.<span class="me1">BoundedServiceBinder</span><span class="br0">&#41;</span>service<span class="sy0">;</span>
+    boundedService <span class="sy0">=</span> binder.<span class="me1">getService</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    boundedServiceStatus <span class="sy0">=</span> Constants.<span class="me1">SERVICE_STATUS_BOUND</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onServiceDisconnected<span class="br0">&#40;</span>ComponentName className<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    boundedService <span class="sy0">=</span> <span class="kw2">null</span><span class="sy0">;</span>
+    boundedServiceStatus <span class="sy0">=</span> Constants.<span class="me1">SERVICE_STATUS_UNBOUND</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+</div></div>
+<p>
+<strong>d)</strong> Să se atașeze, respectiv să se detașeze activitatea la / de serviciu, în cadrul metodelor de callback corespunzătoare stării în care aceasta poate interacționa cu utilizatorul.
+</p>
+<ul>
+<li class="level1"><div class="li"> pe metoda <code>onStart()</code> se apelează metoda <a href="http://developer.android.com/reference/android/content/Context.html#bindService%28android.content.Intent,%20android.content.ServiceConnection,%20int%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#bindService%28android.content.Intent,%20android.content.ServiceConnection,%20int%29"  rel="nofollow">bindService()</a>, utilizându-se un obiect de tip <code>Intent</code> explicit (care primește ca argument clasa care urmează să fie invocată);</div>
+</li>
+<li class="level1"><div class="li"> pe metoda <code>onStop()</code> se apelează metoda <a href="http://developer.android.com/reference/android/content/Context.html#unbindService%28android.content.ServiceConnection%29" class="urlextern" title="http://developer.android.com/reference/android/content/Context.html#unbindService%28android.content.ServiceConnection%29"  rel="nofollow">unbindService()</a>; se actualizează variabila care reține starea legăturii dintre serviciu și activitate.</div>
+</li>
+</ul>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code java">@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onStart<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onStart</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  Intent intent <span class="sy0">=</span> <span class="kw1">new</span> Intent<span class="br0">&#40;</span><span class="kw1">this</span>, BoundedService.<span class="kw1">class</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  bindService<span class="br0">&#40;</span>intent, serviceConnection, <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+context"><span class="kw3">Context</span></a>.<span class="me1">BIND_AUTO_CREATE</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+@Override
+<span class="kw1">protected</span> <span class="kw4">void</span> onStop<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw1">super</span>.<span class="me1">onStop</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>boundedServiceStatus <span class="sy0">==</span> Constants.<span class="me1">SERVICE_STATUS_BOUND</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    unbindService<span class="br0">&#40;</span>serviceConnection<span class="br0">&#41;</span><span class="sy0">;</span>
+    boundedServiceStatus <span class="sy0">=</span> Constants.<span class="me1">SERVICE_STATUS_UNBOUND</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</div></div>
+<p>
+<strong>e)</strong> Să se implementeze o clasă ascultător pentru evenimentul de tip apăsare corespunzător controlului grafic de tip buton. În cadrul metodei de tratare a evenimentului, să se apeleze metoda din cadrul serviciului care furnizează un mesaj aleator și să se afișeze acest mesaj în cadrul câmpului text, împreună cu data și ora la care a fost furnizat.
+</p>
+
+<p>
+<img src="../../../../_media/eim/laboratoare/laborator05/activitate_de_laborator02.png%3Fw=400&amp;tok=1e3dc1" class="mediacenter" alt="" width="400" />
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Indicații de Rezolvare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Indicații de Rezolvare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code java"><span class="kw1">private</span> <span class="kw1">class</span> GetMessageFromServiceButtonListener <span class="kw1">implements</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+view"><span class="kw3">View</span></a>.<span class="me1">OnClickListener</span> <span class="br0">&#123;</span>
+  @Override
+  <span class="kw1">public</span> <span class="kw4">void</span> onClick<span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+view"><span class="kw3">View</span></a> view<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>boundedService <span class="sy0">!=</span> <span class="kw2">null</span> <span class="sy0">&amp;&amp;</span> boundedServiceStatus <span class="sy0">==</span> Constants.<span class="me1">SERVICE_STATUS_BOUND</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      messageFromServiceTextView.<span class="me1">setText</span><span class="br0">&#40;</span><span class="st0">&quot;[&quot;</span> <span class="sy0">+</span> <span class="kw1">new</span> <a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+timestamp"><span class="kw3">Timestamp</span></a><span class="br0">&#40;</span><a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Adocs.oracle.com+javase+docs+api+system"><span class="kw3">System</span></a>.<span class="me1">currentTimeMillis</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot;] &quot;</span> <span class="sy0">+</span> boundedService.<span class="me1">getMessage</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">+</span> <span class="st0">&quot;<span class="es0">\n</span>&quot;</span> <span class="sy0">+</span> messageFromServiceTextView.<span class="me1">getText</span><span class="br0">&#40;</span><span class="br0">&#41;</span>.<span class="me1">toString</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</div></div>
+<p>
+<strong>f)</strong> Să se afișeze mesaje sugestive pe metodele de callback ale activității și ale serviciului și să se observe care este momentul în care acesta este creat, respectiv este distrus. Ce se întâmplă în momentul în care se apasă tasta <em>Home</em>?
+</p>
+
+<p>
+<strong>11.</strong>  Să se încarce modificările realizate în cadrul depozitului &#039;Laborator05&#039; de pe contul Github personal, folosind un mesaj sugestiv.
+</p>
+<pre class="code">student@eim2016:~/Laborator05$ git add labtasks/*
+student@eim2016:~/Laborator05$ git commit -m &quot;implemented taks for laboratory 05&quot;
+student@eim2016:~/Laborator05$ git push Laborator05_perfectstudent master</pre>
+
+</div>
+<!-- EDIT8 SECTION "Activitate de Laborator" [61191-83269] -->
+<h2 class="sectionedit9" id="resurse_utile">Resurse Utile</h2>
+<div class="level2">
+
+<p>
+<a href="http://developer.android.com/guide/components/services.html" class="urlextern" title="http://developer.android.com/guide/components/services.html"  rel="nofollow">Services</a><br/>
+
+<a href="http://developer.android.com/guide/components/bound-services.html" class="urlextern" title="http://developer.android.com/guide/components/bound-services.html"  rel="nofollow">Bound Services</a><br/>
+
+<a href="http://www.truiton.com/2014/09/android-service-broadcastreceiver-example/" class="urlextern" title="http://www.truiton.com/2014/09/android-service-broadcastreceiver-example/"  rel="nofollow">Android Service and Broadcast Receiver Example</a><br/>
+
+<a href="http://www.vogella.com/tutorials/AndroidServices/article.html" class="urlextern" title="http://www.vogella.com/tutorials/AndroidServices/article.html"  rel="nofollow">Android Services - Tutorial</a><br/>
+
+<a href="http://www.apress.com/9781430246800" class="urlextern" title="http://www.apress.com/9781430246800"  rel="nofollow">Dave MacLEAN, Satya KOMATINENI, Grant ALLEN, Pro Android 5</a> - capitolele 16 (<em>BroadcastReceivers and Long-Running Services</em>) și 17 (<em>Exploring the Alarm Manager</em>)<br/>
+
+<a href="https://www.google.ro/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=4&amp;ved=0ahUKEwi0s9rqzdDLAhXJE5oKHU3fAuMQFggtMAM&amp;url=http%3A%2F%2Fwww.finebook.ir%2Fdownload%2Fbook%2F93%2F14466%2Flearning-android-2nd-edition.pdf&amp;usg=AFQjCNGIRprt7ZbFjuYCQZ7NwaO5B8W2kQ&amp;sig2=IZ4xFOFiHl7gnHZpNrLy7A&amp;cad=rja" class="urlextern" title="https://www.google.ro/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=4&amp;ved=0ahUKEwi0s9rqzdDLAhXJE5oKHU3fAuMQFggtMAM&amp;url=http%3A%2F%2Fwww.finebook.ir%2Fdownload%2Fbook%2F93%2F14466%2Flearning-android-2nd-edition.pdf&amp;usg=AFQjCNGIRprt7ZbFjuYCQZ7NwaO5B8W2kQ&amp;sig2=IZ4xFOFiHl7gnHZpNrLy7A&amp;cad=rja"  rel="nofollow">Marko GARGENTA, Masumi NAKAMURA, Learning Android, 2nd Edition</a> - capitolele 10 (<em>Services</em>) și 13 (<em>Broadcast Receivers</em>)<br/>
+
+<a href="http://yuliana.lecturer.pens.ac.id/Android/Buku/professional_android_4_application_development.pdf" class="urlextern" title="http://yuliana.lecturer.pens.ac.id/Android/Buku/professional_android_4_application_development.pdf"  rel="nofollow">Reto MEIER, Android 4 Application Development</a>, capitolul 5 (<em>Intents and Broadcast Receivers</em>)<br/>
+
+<a href="http://ptgmedia.pearsoncmg.com/images/9780321940261/samplepages/0321940261.pdf" class="urlextern" title="http://ptgmedia.pearsoncmg.com/images/9780321940261/samplepages/0321940261.pdf"  rel="nofollow">Joseph ANNUZZI, Jr, Lauren DARCEY, Shane CONDER, Introduction to Android Application Development - Developer&#039;s Library, 4th Edition, Addison-Wesley, 2013</a> - capitolul 4, subcapitolele <em>Working with Services</em>, <em>Receiving and Broadcasting Intents</em><br/>
+
+<a href="http://www.bignerdranch.com/we-write/android-programming/" class="urlextern" title="http://www.bignerdranch.com/we-write/android-programming/"  rel="nofollow">Bill PHILLIPS, Brian HARDY, Android Programming. The Big Nerd Ranch Guide, Pearson Technology Group, 2013</a> - capitolele 29 (<em>Background Services</em>), 30 (<em>Broadcast Intents</em>)<br/>
+
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Resurse Utile" [83270-] --></div>
+</body>
+</html>

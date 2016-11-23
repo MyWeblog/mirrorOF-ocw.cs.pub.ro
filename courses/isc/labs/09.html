@@ -1,0 +1,327 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 09 - Forensics    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-08-04T16:43:20+0300"/>
+<meta name="keywords" content="isc,labs,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=isc:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/isc/labs/09.html"/>
+<link rel="canonical" href="09.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='isc:labs';var JSINFO = {"id":"isc:labs:09","namespace":"isc:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="09%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="09%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="lab_09_-_forensics">Lab 09 - Forensics</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://downloads.volatilityfoundation.org/releases/2.4/CheatSheet_v2.4.pdf" class="urlextern" title="http://downloads.volatilityfoundation.org/releases/2.4/CheatSheet_v2.4.pdf"  rel="nofollow">Volatility Cheatsheet</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="overview">Overview</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">You are a forensic detective hired to investigate the recent attack on our database server. Fortunately, the security team detected the intrusion in time and the hacker had to run quickly, leaving his laptop in the server room. Using a cold boot attack, we managed to obtain a dump of his ram. Your job is to gather as much intel as you can. </div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic">
+Volatility usage:
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f &lt;dump&gt; imageinfo; Look at the suggested profile
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f &lt;dump&gt; –profile=&lt;profile&gt; kdbgscan; Look at the Offset (V)
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f &lt;dump&gt; –profile=&lt;profile&gt; –kdbg=&lt;offset&gt; COMMAND
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">You should look for processes, commands, files, history, connections and network traffic.
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="solution">Solution:</h3>
+<div class="level3">
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp imageinfo
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 kdbgscan
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 –kdbg=0x82b73c78 pslist &gt; ps.txt
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 –kdbg=0x82b73c78 cmdline
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 –kdbg=0x82b73c78 consoles
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 –kdbg=0x82b73c78 dumpfiles -D file &gt; dump.txt
+</p>
+
+<p>
+file: file.3640.0x86a44318
+</p>
+
+<p>
+find: “search”
+</p>
+
+<p>
+<a href="http://www.bing.com/search?q=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME%2Fedit%3Fusp%3Dsharing&amp;qs=n&amp;form=QBLH&amp;pq=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1kahxjgit_8ex0ga5ngzsz0a-pzcvbzixm1nktqclvme%2Fedit%3Fusp%3Dsharing&amp;sc=0-96&amp;sp=-1&amp;sk=&amp;cvid=32A3046F740B479DA10E524ABD27DB70" class="urlextern" title="http://www.bing.com/search?q=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME%2Fedit%3Fusp%3Dsharing&amp;qs=n&amp;form=QBLH&amp;pq=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1kahxjgit_8ex0ga5ngzsz0a-pzcvbzixm1nktqclvme%2Fedit%3Fusp%3Dsharing&amp;sc=0-96&amp;sp=-1&amp;sk=&amp;cvid=32A3046F740B479DA10E524ABD27DB70"  rel="nofollow">http://www.bing.com/search?q=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME%2Fedit%3Fusp%3Dsharing&amp;qs=n&amp;form=QBLH&amp;pq=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1kahxjgit_8ex0ga5ngzsz0a-pzcvbzixm1nktqclvme%2Fedit%3Fusp%3Dsharing&amp;sc=0-96&amp;sp=-1&amp;sk=&amp;cvid=32A3046F740B479DA10E524ABD27DB70</a>
+</p>
+
+<p>
+<a href="https://docs.google.com/document/d/1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME/edit" class="urlextern" title="https://docs.google.com/document/d/1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME/edit"  rel="nofollow">https://docs.google.com/document/d/1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME/edit</a>
+</p>
+
+<p>
+user besthacker
+</p>
+
+<p>
+WW91ciBwYXNzd2QgaXM6IENGVFVJQkRMRlM= BASE64decode
+</p>
+
+<p>
+Your passwd is: CFTUIBDLFS
+</p>
+
+<p>
+ssh besthacker@….. 
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_105661559058355a9d6fba3" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../lectures/01.html" class="wikilink1" title="isc:lectures:01">Lecture 01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/02.html" class="wikilink1" title="isc:lectures:02">Lecture 02 - Access control</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/03.html" class="wikilink1" title="isc:lectures:03">Lecture 03 - Hardware Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/04.html" class="wikilink1" title="isc:lectures:04">Lecture 04 - Cryptography</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/05.html" class="wikilink1" title="isc:lectures:05">Lecture 05 - Operating System Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/06.html" class="wikilink1" title="isc:lectures:06">Lecture 06 - Application Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/07.html" class="wikilink1" title="isc:lectures:07">Lecture 07 - Network Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/08.html" class="wikilink1" title="isc:lectures:08">Lecture 08 - Web Security</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/09.html" class="wikilink1" title="isc:lectures:09">Lecture 09 - Forensics</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/10.html" class="wikilink1" title="isc:lectures:10">Lecture 10 - Usable Security</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Lectures" [1-52] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_42425340458355a9d71ae0" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="isc:labs:01">Lab 01  - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="isc:labs:02">Lab 02 - Access control</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="isc:labs:03">Lab 03 - Hardware Security</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="isc:labs:04">Lab 04 - Cryptography</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="isc:labs:05">Lab 05 - Operating System Security</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="isc:labs:06">Lab 06 - Application Security</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="isc:labs:07">Lab 07 - Network Security</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="isc:labs:08">Lab 08 - Web Security</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="09.html" class="wikilink1" title="isc:labs:09">Lab 09 - Forensics</a></span></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="isc:labs:10">Lab 10 - Usable Security</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [53-96] -->
+<h1 class="sectionedit3" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_64565259958355a9d73a1f" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/1.html" class="wikilink1" title="isc:assignments:1">Homework 1</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/2.html" class="wikilink1" title="isc:assignments:2">Homework 2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Assignments" [97-156] -->
+<h1 class="sectionedit4" id="support">Support</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_110034680758355a9d75961" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/resources.html" class="wikilink1" title="isc:info:resources">Useful resources</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Support" [157-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="09.html#lab_09_-_forensics">Lab 09 - Forensics</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="09.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#overview">Overview</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="09.html#solution">Solution:</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          isc/labs/09.txt · Last modified: 2016/08/04 16:43 by filip.munteanu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="09%3Fdo=media&amp;ns=isc%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="09.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=isc%253Alabs%253A09&amp;1479891613" width="2" height="1" alt="" /></div>
+</body>
+</html>

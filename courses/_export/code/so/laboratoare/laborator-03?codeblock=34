@@ -1,0 +1,51 @@
+    
+    
+
+#include <windows.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "utils.h"
+
+void CloseProcess(LPPROCESS_INFORMATION lppi) {
+    CloseHandle(lppi->hThread);
+    CloseHandle(lppi->hProcess);
+}
+
+int main(void)
+{
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    DWORD dwRes;
+    BOOL bRes;
+    CHAR cmdLine[] = "mspaint";
+
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    ZeroMemory(&pi, sizeof(pi));
+	
+    /* Start child process */
+    bRes =  CreateProcess( 
+                NULL,           /* No module name (use command line) */
+		cmdLine,        /* Command line */
+		NULL,           /* Process handle not inheritable */
+		NULL,           /* Thread handle not inheritable */
+		FALSE,          /* Set handle inheritance to FALSE */
+		0,              /* No creation flags */
+		NULL,           /* Use parent's environment block */
+		NULL,           /* Use parent's starting directory */ 
+		&si,            /* Pointer to STARTUPINFO structure */
+		&pi             /* Pointer to PROCESS_INFORMATION structure */
+	); 
+    DIE(bRes == FALSE, "CreateProcess");
+
+    /* Wait for the child to finish */
+    dwRes = WaitForSingleObject(pi.hProcess, INFINITE);
+    DIE(dwRes == WAIT_FAILED, "WaitForSingleObject");
+ 
+    bRes = GetExitCodeProcess(pi.hProcess, &dwRes);
+    DIE(bRes == FALSE, "GetExitCode");
+
+    return 0;
+}

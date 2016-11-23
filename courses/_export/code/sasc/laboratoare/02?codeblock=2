@@ -1,0 +1,38 @@
+    
+    
+
+import sys
+import random
+import string
+import operator
+
+def strxor(a, b): # xor two strings (trims the longer input)
+  return "".join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a, b)])
+
+def hexxor(a, b): # xor two hex strings (trims the longer input)
+  ha = a.decode('hex')
+  hb = b.decode('hex')
+  return "".join([chr(ord(x) ^ ord(y)).encode('hex') for (x, y) in zip(ha, hb)])
+
+def main():
+
+  #Plaintexts
+  s1 = 'floare'
+  s2 = 'albina'
+  G = '' #To find
+
+  #Obtain crc of s1
+  #See this site:
+  #http://www.lammertbies.nl/comm/info/crc-calculation.html
+  x1 = s1.encode('hex')
+  x2 = s2.encode('hex')
+  print "x1: " + x1
+  crc1 = '8E31' #CRC-16 of x1
+
+  #Compute delta (xor) of x1 and x2:
+  xd = hexxor(x1, x2)
+  print "xd: " + xd
+
+
+if __name__ == "__main__":
+  main()

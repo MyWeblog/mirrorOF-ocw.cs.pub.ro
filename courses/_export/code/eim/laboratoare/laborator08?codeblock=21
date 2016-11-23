@@ -1,0 +1,51 @@
+    
+    
+
+public class ChatServer extends Thread {
+
+  private NetworkServiceDiscoveryOperations networkServiceDiscoveryOperations = null;
+  
+  private ServerSocket serverSocket = null;
+  
+  public ChatServer(NetworkServiceDiscoveryOperations networkServiceDiscoveryOperations, int port) {
+    this.networkServiceDiscoveryOperations = networkServiceDiscoveryOperations;
+    try {
+      serverSocket = new ServerSocket(port);
+    } catch (IOException ioException) {
+      Log.e(Constants.TAG, "An error has occurred during server run: " + ioException.getMessage());
+      if (Constants.DEBUG) {
+        ioException.printStackTrace();
+      }
+    }
+  }
+  
+  public void run() {
+    try {
+      while (!Thread.currentThread().isInterrupted()) {
+        Socket socket = serverSocket.accept();
+        List<ChatClient> communicationFromClients = networkServiceDiscoveryOperations.getCommunicationFromClients();
+        communicationFromClients.add(new ChatClient(null, socket));
+        networkServiceDiscoveryOperations.setCommunicationFromClients(communicationFromClients);
+      }
+    } catch (IOException ioException) {
+      Log.e(Constants.TAG, "An error has occurred during server run: " + ioException.getMessage());
+      if (Constants.DEBUG) {
+        ioException.printStackTrace();
+      }
+    }
+  }
+  
+  public void stopThread() {
+    interrupt();
+    try {
+      if (serverSocket != null) {
+        serverSocket.close();
+      }
+    } catch (IOException ioException) {
+      Log.e(Constants.TAG, "An error has occurred while closing server socket: " + ioException.getMessage());
+      if (Constants.DEBUG) {
+        ioException.printStackTrace();
+      }
+    }
+  }
+}

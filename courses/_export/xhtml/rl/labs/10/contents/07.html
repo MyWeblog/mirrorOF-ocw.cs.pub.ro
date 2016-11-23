@@ -1,0 +1,106 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:10:contents:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-12-09T17:10:20+0200"/>
+<meta name="keywords" content="rl,labs,10,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:10:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/10/contents/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:10:contents';var JSINFO = {"id":"rl:labs:10:contents:07","namespace":"rl:labs:10:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_download_ftp_folosind_curl_fara_autentificare">07. [5p] Download FTP folosind curl (fără autentificare)</h3>
+<div class="level3">
+
+<p>
+Utilitarele <code>curl</code> și <code>wget</code> sunt folosite atât pentru transfer HTTP cât și pentru transfer <abbr title="File Transfer Protocol">FTP</abbr> sau alte protocoale. Avantajul folosirii acestor utilitare în fața altora este că sunt neinteractive și pot fi adăugate în scripturi.
+</p>
+
+<p>
+Vom folosi <code>curl</code> pentru a descărca un fișier prin <abbr title="File Transfer Protocol">FTP</abbr>. Pe stația <code>red</code> rulează un server <abbr title="File Transfer Protocol">FTP</abbr> și pe stația <code>host</code> vom folosi comanda <code>curl</code> pentru a descărca fișierul localizat la <code>/download/file-10M.dat</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>curl ftp:<span class="sy0">//</span>red<span class="sy0">/</span>download<span class="sy0">/</span>file-10M.dat
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Observăm că apar multe caractere ciudate pe ecran. Anulați folosind combinația de taste <code>Ctrl+c</code>.
+</p>
+
+<p>
+Pentru a salva într-un fișier conținutul de la distanță folosim opțiunea <code>-o</code> a comenzii <code>curl</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>curl ftp:<span class="sy0">//</span>red<span class="sy0">/</span>download<span class="sy0">/</span>file-10M.dat <span class="re5">-o</span> file-10M.dat
+  <span class="sy0">%</span> Total    <span class="sy0">%</span> Received <span class="sy0">%</span> Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<span class="nu0">100</span> 10.0M  <span class="nu0">100</span> 10.0M    <span class="nu0">0</span>     <span class="nu0">0</span>  86.8M      <span class="nu0">0</span> --:--:-- --:--:-- --:--:-- 91.7M
+<span class="co4">root@host:~# </span><span class="kw2">ls</span> <span class="re5">-l</span>  file-10M.dat 
+<span class="re5">-rw-r--r--</span> <span class="nu0">1</span> root root <span class="nu0">10485760</span> Nov <span class="nu0">26</span> <span class="nu0">19</span>:<span class="nu0">54</span> file-10M.dat</pre>
+
+<p>
+Mai sus utilitarul <code>curl</code> a afișat un sumar al transferului și apoi am validat, folosind comanda <code>ls -l</code> lungimea fișierului descărcat. <abbr title="Uniform Resource Locator">URL</abbr>-ul folosit începe cu <code>ftp://</code> pentru a semnaliza folosirea protocolului <abbr title="File Transfer Protocol">FTP</abbr> pentru transfer.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Același efect ca mai sus poate fi obținut prin rularea comenzii <code>wget</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">wget</span> ftp:<span class="sy0">//</span>red<span class="sy0">/</span>download<span class="sy0">/</span>file-10M.dat
+<span class="re5">--2013-11-26</span> <span class="nu0">19</span>:<span class="nu0">55</span>:<span class="nu0">49</span>--  ftp:<span class="sy0">//</span>red<span class="sy0">/</span>download<span class="sy0">/</span>file-10M.dat
+           =<span class="sy0">&gt;</span> <span class="sy0">`</span>file-10M.dat<span class="st_h">'
+Resolving red (red)... 192.168.1.2
+Connecting to red (red)|192.168.1.2|:21... connected.
+Logging in as anonymous ... Logged in!
+==&gt; SYST ... done.    ==&gt; PWD ... done.
+==&gt; TYPE I ... done.  ==&gt; CWD (1) /download ... done.
+==&gt; SIZE file-10M.dat ... 10485760
+==&gt; PASV ... done.    ==&gt; RETR file-10M.dat ... done.
+Length: 10485760 (10M) (unauthoritative)
+&nbsp;
+100%[======================================&gt;] 10,485,760  --.-K/s   in 0.07s   
+&nbsp;
+2013-11-26 19:55:49 (138 MB/s) - `file-10M.dat'</span> saved <span class="br0">&#91;</span><span class="nu0">10485760</span><span class="br0">&#93;</span></pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

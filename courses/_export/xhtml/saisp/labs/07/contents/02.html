@@ -1,0 +1,132 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:07:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-04-14T11:41:48+0300"/>
+<meta name="keywords" content="saisp,labs,07,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:07:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/07/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:07:contents';var JSINFO = {"id":"saisp:labs:07:contents:02","namespace":"saisp:labs:07:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_interactiunea_cu_containerele">02. [20p] Interactiunea cu containerele</h3>
+<div class="level3">
+
+<p>
+Masina virtuala <strong>saisp-vm-1</strong> contine un container deja creat, cu numele <code>ct1</code>.
+</p>
+
+<p>
+Folosind comanda <code>lxc-start</code>, vom porni containerul:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-start <span class="re5">-n</span> ct1
+&nbsp;
+INIT: version <span class="nu0">2.88</span> booting
+Using makefile-style concurrent boot <span class="kw1">in</span> runlevel S.
+Cleaning up ifupdown....
+Setting up networking....
+Activating lvm and md swap...done.
+Checking <span class="kw2">file</span> systems...fsck from util-linux-ng 2.17.2
+done.
+Mounting <span class="kw3">local</span> filesystems...done.
+Activating swapfile swap...done.
+Cleaning up temporary files....
+Setting kernel variables ...done.
+...
+Cleaning up temporary files....
+INIT: Entering runlevel: <span class="nu0">3</span>
+Using makefile-style concurrent boot <span class="kw1">in</span> runlevel <span class="nu0">3</span>.
+Starting OpenBSD Secure Shell server: sshd.
+&nbsp;
+Debian GNU<span class="sy0">/</span>Linux <span class="nu0">6.0</span> ct1 console
+&nbsp;
+ct1 login: </pre>
+
+<p>
+Observam ca terminalul este atasat la container, acesta fiind pornit in <strong>foreground</strong>.
+</p>
+
+<p>
+Pentru a va loga in container, folositi credentialele <strong>root</strong> / <strong>root</strong>.
+</p>
+
+<p>
+Vom opri containerul din interiorul acestuia, ca pe orice statie Linux, folosind <code>halt</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ct1:~# </span>halt     
+&nbsp;
+Broadcast message from root<span class="sy0">@</span>ct1 <span class="br0">&#40;</span>console<span class="br0">&#41;</span> <span class="br0">&#40;</span>Sun Apr <span class="nu0">13</span> <span class="nu0">18</span>:<span class="nu0">22</span>:<span class="nu0">16</span> <span class="nu0">2014</span><span class="br0">&#41;</span>:
+&nbsp;
+The system is going down <span class="kw1">for</span> system halt NOW<span class="sy0">!</span>
+INIT: Switching to runlevel: <span class="nu0">0</span>
+INIT: Sending processes the TERM signal
+<span class="co4">root@ct1:~# </span>Using makefile-style concurrent boot <span class="kw1">in</span> runlevel <span class="nu0">0</span>.
+mount: <span class="sy0">/</span> is busy
+<span class="co4">root@saisp-vm-1:~#</span></pre>
+
+<p>
+O varianta mai comoda este pornirea containerului in <strong>background</strong>. Vom adauga parametrul <code>-d</code> la comanda <code>lxc-start</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-start <span class="re5">-n</span> ct1 <span class="re5">-d</span></pre>
+
+<p>
+Verificam starea containerului folosind <code>lxc-info</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-info <span class="re5">-n</span> ct1
+state:   RUNNING
+pid:      <span class="nu0">8269</span></pre>
+
+<p>
+Pentru a putea interactiona cu un container pornit in background, trebuie sa ne conectam la consola acestuia. Folosim comanda <code>lxc-console</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-console <span class="re5">-n</span> ct1
+&nbsp;
+Type <span class="sy0">&lt;</span>Ctrl+a q<span class="sy0">&gt;</span> to <span class="kw3">exit</span> the console, <span class="sy0">&lt;</span>Ctrl+a Ctrl+a<span class="sy0">&gt;</span> to enter Ctrl+a itself
+&nbsp;
+Debian GNU<span class="sy0">/</span>Linux <span class="nu0">6.0</span> ct1 tty1
+&nbsp;
+ct1 login: </pre>
+
+<p>
+Apoi, ne putem deconecta, fara a opri containerul, folosind combinatie de taste <strong>CTRL+A, Q</strong>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,311 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    05. [20p] Baze de date Round Robin (RRD)    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-04-05T12:08:09+0300"/>
+<meta name="keywords" content="saisp,labs,03,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:03:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/saisp/labs/03/contents/05.html"/>
+<link rel="canonical" href="05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:03:contents';var JSINFO = {"id":"saisp:labs:03:contents:05","namespace":"saisp:labs:03:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="05%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="05%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_baze_de_date_round_robin_rrd">05. [20p] Baze de date Round Robin (RRD)</h3>
+<div class="level3">
+
+<p>
+Procesul de monitorizare presupune colectarea continuă de date la intervale regulate de timp. În timp, volumul de date crește foarte mult, iar spațiul ocupat de acestea devine o problemă. Luând în calcul și faptul că granularitatea datelor colectate la un moment dat în timp poate să scadă o dată cu trecerea timpului (ex.: nu ne interesează traficul pe o interfață de acum un an la o granularitate de un minut, ci la o oră este rezonabil) a fost proiectat un nou tip de bază de date: <strong>Round Robin Database (RRD)</strong>.
+</p>
+
+<p>
+Dimensiunea acesteia este cunoscuta de la momentul creării, în funcție de numărul de tipuri de date colectate și de granularitatea acestora. După cum îi spune și numele, aceasta stochează datele într-un spațiu finit, iar când acel spațiu alocat este epuizat, datele inițiale se vor suprascrie. Înainte de suprascriere se face o <code>arhivare</code> a datelor suprascrise (de cele mai multe ori se folosește media aritmetică pe intervalul de timp respectiv).
+</p>
+
+<p>
+Utilitarul cu ajutorul căruia vom crea și popula bazele de date se numește <code>rrdtool</code>. Acesta permite 3 operații:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>create</code> (creare bază de date)</div>
+</li>
+<li class="level1"><div class="li"> <code>update</code> (inserare valori bază de date)</div>
+</li>
+<li class="level1"><div class="li"> <code>graph</code> (generează un grafic funcție de timp pe baza valorilor introduse)</div>
+</li>
+</ul>
+
+<p>
+Pe stația monitor instalăm utilitarul <code>rrdtool</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">apt-get install</span> rrdtool</pre>
+
+<p>
+Pentru a crea o bază de date, comanda <code>rrdtool create</code> primește următorii parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> timpul de început/referință</div>
+</li>
+<li class="level1"><div class="li"> pasul cu care datele vor fi introduse în baza de date (la nivel de secundă)</div>
+</li>
+<li class="level1"><div class="li"> variabilele ce vor reține datele efective</div>
+</li>
+<li class="level1"><div class="li"> tipul de arhivare folosit și momentul la care să se facă arhivarea</div>
+</li>
+</ul>
+
+<p>
+Vom crea o bază de date ce are ca timp de început/referință ora curentă a stației <code>monitor</code>. <code>rrdtool</code> are nevoie de această valoare în numărul de secunde trecut de la 1 Ianuarie 1970. Acesta poate fi obținut cu comanda <code>date</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">date</span> +<span class="sy0">%</span>s
+<span class="nu0">1394405025</span></pre>
+
+<p>
+Pasul folosit va fi de 5 secunde (în practică se folosește pasul de 300 de secunde, dar acum dorim să colectăm mai multe date într-un interval scurt de timp pentru a putea genera un grafic relevant):
+</p>
+<pre class="code">root@monitor:~#   rrdtool create target.rrd \
+         --start 1394405025 \
+         --step 5 \
+         DS:speedIn:COUNTER:10:U:U \
+         DS:speedOut:COUNTER:10:U:U \
+         RRA:AVERAGE:0.5:2:60 \
+         RRA:AVERAGE:0.5:60:12</pre>
+
+<p>
+După cum se observă am creat 2 variabile de tipul <code>COUNTER</code> care se numesc <code>speedIn</code> și <code>speedOut</code> (pentru alte tipuri de variabile vezi <a href="../../../courses/03.html" class="wikilink1" title="saisp:courses:03">Curs 03 - Monitorizarea rețelei</a>). Valoarea lor maximă este nespecficată (<code>U</code> - undefined). Valoarea <code>10</code> reprezintă numărul de secunde cât așteaptă după date noi, iar dacă este depășit se inserează o valoarea specială <code>UNKNOWN</code> pentru a nu afecta mediile calculate.
+Tipul de arhivare configurat este <code>AVERAGE</code> și o dată la 2 valori, realizează media acestora după care vechile valori vor fi suprascrise. Sunt păstrate 60 astfel de medii, în final aceste 60 medii fiind suprascrise și ele. Timpul acoperit de această arhivare este de 10 minute (5 secunde x 2 x 60).
+</p>
+
+<p>
+O altă arhivare configurată este dată media a 60 de valori (deci 300 de secunde), fiind ținute 12 de astfel de medii. Această arhivare acoperă <code>300 secunde x 12 = 60 minute</code>. Deci baza noastră de date ne poate oferi statistici ale traficului pe o interfață de rețea la diferite nivele de granularitate (în ultimele 10 minute este calculată media la nivel de 10 secunde, iar în ultima oră este calculată media la 1 minut).
+</p>
+
+<p>
+Copiați și completați scriptul de mai jos pentru a obține valorile pentru variabilele <code>octetsIn</code> și <code>octetsOut</code>. Acestea reprezintă  numărul de octeți (trimiși și primiți) de pe interfața <code>eth0</code> a stației <code>gateway</code> (<strong>Hint</strong>: <code>snmpwalk</code>, <code>IF-MIB::ifInOctets</code> urmat de numărul instanței). Scriptul colectează numărul de octeți din 5 în 5 secunde și îl introduce în baza de date <code>target.rrd</code> (<code>rrdtool update target.rrd $(date +%s):inOctets:outOctets</code>):
+</p>
+<dl class="file">
+<dt><a href="../../../../_export/code/saisp/labs/03/contents/05%3Fcodeblock=3" title="Download Snippet" class="mediafile mf_">in-out-octets</a></dt>
+<dd><pre class="code file bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="kw2">rm</span> <span class="re5">-rf</span> target.rrd
+&nbsp;
+<span class="co0"># Init timestamp.</span>
+<span class="re2">timestamp</span>=$<span class="br0">&#40;</span><span class="kw2">date</span> +<span class="sy0">%</span>s<span class="br0">&#41;</span>
+&nbsp;
+<span class="co0"># Align timestamp to multiple of 5 seconds.</span>
+<span class="re2">timestamp</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="re1">$timestamp</span><span class="sy0">/</span><span class="nu0">5</span><span class="sy0">*</span><span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+<span class="re2">init_timestamp</span>=<span class="re1">$timestamp</span>
+&nbsp;
+rrdtool create target.rrd \
+         <span class="re5">--start</span> <span class="re1">$timestamp</span> \
+         <span class="re5">--step</span> <span class="nu0">5</span> \
+         DS:speedIn:COUNTER:<span class="nu0">10</span>:U:U \
+         DS:speedOut:COUNTER:<span class="nu0">10</span>:U:U \
+         RRA:AVERAGE:<span class="nu0">0.5</span>:<span class="nu0">2</span>:<span class="nu0">60</span> \
+         RRA:AVERAGE:<span class="nu0">0.5</span>:<span class="nu0">60</span>:<span class="nu0">12</span>
+&nbsp;
+<span class="kw1">for</span> i <span class="kw1">in</span> $<span class="br0">&#40;</span><span class="kw2">seq</span> <span class="nu0">1</span> <span class="nu0">24</span><span class="br0">&#41;</span>; <span class="kw1">do</span>
+   <span class="kw2">sleep</span> <span class="nu0">5</span>
+   <span class="re2">timestamp</span>=$<span class="br0">&#40;</span><span class="br0">&#40;</span><span class="re1">$timestamp</span> + <span class="nu0">5</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+   <span class="re2">outOctets</span>=$<span class="br0">&#40;</span>...<span class="br0">&#41;</span>
+   <span class="re2">inOctets</span>=$<span class="br0">&#40;</span>...<span class="br0">&#41;</span>
+&nbsp;
+   rrdtool update target.rrd  <span class="re1">$timestamp</span>:<span class="re1">$inOctets</span>:<span class="re1">$outOctets</span>
+<span class="kw1">done</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="re5">--start</span> <span class="re1">$init_timestamp</span> <span class="re5">--end</span> <span class="re1">$timestamp</span></pre>
+</dd></dl>
+
+<p>
+Comanda <code>rrdtool update</code> primește timestamp-ul ($data) la care se inserează datele urmat de valorile de introdus pentru fiecare variabilă declarată la creare, în ordinea specificată la acel moment (<code>speedIn</code> și pe urmă <code>speedOut</code>).
+</p>
+
+<p>
+Înainte de a executa scriptul porniți descărcarea unei imagini CD pe stația <code>gateway</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">wget</span> http:<span class="sy0">//</span>cdimage.debian.org<span class="sy0">/</span>debian-cd<span class="sy0">/</span>7.4.0<span class="sy0">/</span>amd64<span class="sy0">/</span>iso-cd<span class="sy0">/</span>debian-7.4.0-amd64-CD-<span class="nu0">1</span>.iso</pre>
+
+<p>
+Pe stația monitor porniți scriptul de colectare de statistici și actualizare a bazei de date RRD. Acesta va rula timp de 2 minute și va avea următorul output indicând timestamp-ul de început și final al bazei de date:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span>.<span class="sy0">/</span>updateRRD
+<span class="re5">--start</span> <span class="nu0">1394411440</span> <span class="re5">--end</span> <span class="nu0">1394411560</span></pre>
+
+<p>
+Pentru a afișa conținutul bazei de date putem folosi comanda <code>rrdtool fetch</code> (<code>start</code> și <code>end</code> le preluați din scriptul de mai sus):
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span> rrdtool fetch target.rrd AVERAGE  <span class="re5">--start</span> <span class="nu0">1394411440</span> <span class="re5">--end</span> <span class="nu0">1394411560</span>
+                        speedIn            speedOut
+&nbsp;
+<span class="nu0">1394411445</span>: <span class="re5">-nan</span> <span class="re5">-nan</span>
+<span class="nu0">1394411450</span>: 2.4706470000e+06 4.8070000000e+04
+<span class="nu0">1394411455</span>: 1.4958000000e+06 2.7601200000e+04
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+În final vom genera un grafic folosind comanda <code>rrdtool graph</code> (<code>start</code> și <code>end</code> le preluați din scriptul de mai sus):
+</p>
+<pre class="code">root@monitor:~# rrdtool graph speed.png \
+      --start 1394411440 --end 1394411560 \
+      DEF:myspeedIn=target.rrd:speedIn:AVERAGE \
+      DEF:myspeedOut=target.rrd:speedOut:AVERAGE \
+      LINE2:myspeedIn#FF0000 \
+      LINE3:myspeedOut#00FF00</pre>
+
+<p>
+Va rezulta fișierul <code>speed.png</code> în care vom avea trasat cu roșu (<code>#FF0000</code>) traficul de download și cu verde traficul de upload (<code>#00FF00</code>). Se observă că traficul de download (<code>speedIn</code>) este mult mai mare întrucât descărcăm acea imagine de CD. Pentru a vizualiza fișierul copiați-l pe mașina locală folosind comanda <code>scp</code>:
+</p>
+<pre class="code">student@mjolnir~$ scp root@192.168.1.4:speed.png .</pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../03.html" class="wikilink1" title="saisp:labs:03">Laboratorul 3</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:03:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_115685817258356790298fa" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="saisp:labs:03:contents:01">01. [10p] Sincronizare ceasuri echipamente monitorizate</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="saisp:labs:03:contents:02">02. [10p] Remote logging</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="saisp:labs:03:contents:03">03. [15p] Configurare server SNMP pe echipamente CISCO</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="saisp:labs:03:contents:04">04. [15p] SNMP server pe Linux</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="05.html" class="wikilink1" title="saisp:labs:03:contents:05">05. [20p] Baze de date Round Robin (RRD)</a></span></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="saisp:labs:03:contents:06">06. [15p] Nagios</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="saisp:labs:03:contents:07">07. [15p] NRPE (Nagios Remote Plugin Executor)</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="saisp:labs:03:contents:08">08. [BONUS - 20p] CACTI</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:03:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/03/contents/05.txt · Last modified: 2014/04/05 12:08 by mihai.carabas          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="05%3Fdo=media&amp;ns=saisp%253Alabs%253A03%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="05.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A03%253Acontents%253A05&amp;1479894928" width="2" height="1" alt="" /></div>
+</body>
+</html>

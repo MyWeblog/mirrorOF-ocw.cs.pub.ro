@@ -1,0 +1,116 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:09:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-11-28T08:44:55+0200"/>
+<meta name="keywords" content="rl,labs,09,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/09/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:09:contents';var JSINFO = {"id":"rl:labs:09:contents:04","namespace":"rl:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_incorecta_a_translatarii">04. [10p] Configurare incorectă a translatării</h3>
+<div class="level3">
+
+<p>
+Comanda folosită mai sus pentru translatare, la <a href="../../../../../../rl/labs/09/contents/01.html" class="wikilink1" title="rl:labs:09:contents:01">01. [10p] Configurare translatare de adrese (MASQUERADE)</a>, are neajunsuri pe care le vom identifica mai jos.
+</p>
+
+<p>
+Pe stația <code>green</code> capturăm traficul pe interfața <code>eth0</code> folosind comanda <code>tcpdump</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span>tcpdump <span class="re5">-i</span> eth0
+tcpdump: verbose output suppressed, use <span class="re5">-v</span> or <span class="re5">-vv</span> <span class="kw1">for</span> full protocol decode
+listening on eth0, link-type EN10MB <span class="br0">&#40;</span>Ethernet<span class="br0">&#41;</span>, capture <span class="kw2">size</span> <span class="nu0">65535</span> bytes</pre>
+
+<p>
+Pe stația <code>red</code> executăm comanda <code>ping</code> către stația <code>green</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> green
+PING green <span class="br0">&#40;</span>192.168.2.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from green <span class="br0">&#40;</span>192.168.2.2<span class="br0">&#41;</span>: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">63</span> <span class="re2">time</span>=<span class="nu0">0.155</span> ms
+<span class="nu0">64</span> bytes from green <span class="br0">&#40;</span>192.168.2.2<span class="br0">&#41;</span>: <span class="re2">icmp_req</span>=<span class="nu0">2</span> <span class="re2">ttl</span>=<span class="nu0">63</span> <span class="re2">time</span>=<span class="nu0">0.086</span> ms
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+În acest moment, pe stația <code>green</code> avem captura pachetelor în output-ul comenzii <code>tcpdump</code>:
+</p>
+<pre class="code">11:18:54.535064 IP host &gt; green: ICMP echo request, id 633, seq 17, length 64
+11:18:54.535092 IP green &gt; host: ICMP echo reply, id 633, seq 17, length 64</pre>
+
+<p>
+Observăm că adresa sursă a pachetelor de tip <code>ICMP echo request</code> este stația <code>host</code>, nu stația <code>red</code>. Acest lucru se întâmplă din cauză că atunci când am activat NAT nu am specificat pentru ce tip de trafic să aplice politica de translatare. Astfel stația <code>host</code> aplică politica de NAT pentru tot traficul care o tranzitează. Dorim să aplicăm politica doar pentru pachetele ce <strong>ies</strong> în Internet, adică cele ale căror <strong>interfață de ieșire</strong> este interfața <code>eth0</code>. Vom șterge vechea regulă de NAT și vom adăuga o regulă corectă.
+</p>
+
+<p>
+Pentru ștergerea vechii reguli de NAT rulăm pe stația <code>host</code> comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-D</span> POSTROUTING <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+Verificăm faptul că nu mai există comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">1</span> packets, <span class="nu0">328</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination</pre>
+
+<p>
+Adăugăm din nou regula de NAT, dar de data aceasta vom specifica să aplice politica de NAT pachetelor ce ies prin interfața <code>eth0</code> a stației <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-o</span> eth0 <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+Verificați că regula a fost inserată:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination
+    <span class="nu0">0</span>     <span class="nu0">0</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      eth0    0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span></pre>
+
+<p>
+Observăm prezența interfaței <code>eth0</code> în coloana <code>out</code>. Înainte apărea caracterul <code>*</code>, adică orice interfață.
+</p>
+
+<p>
+Repetați testul de la începutul exercițiului și arătați că pachetele trimise de la <code>red</code> către <code>green</code> au adresele IP sursă/destinație nemodificate (nu mai fac trecerea prin NAT), în vreme ce pachetele ce ies în Internet sunt translatate.
+</p>
+
+</div>
+</div>
+</body>
+</html>

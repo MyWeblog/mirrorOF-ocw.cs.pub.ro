@@ -1,0 +1,186 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:10:contents:03</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-11T14:10:14+0300"/>
+<meta name="keywords" content="saisp,labs,10,contents,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:10:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="03.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/10/contents/03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:10:contents';var JSINFO = {"id":"saisp:labs:10:contents:03","namespace":"saisp:labs:10:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="03.html#p_dependente_intre_resurse">03. [20p] Dependente intre resurse</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="03.html#beforerequire">Before / Require</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#notifysubscribe">Notify / Subscribe</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#sintaxa_echivalenta">Sintaxa echivalenta</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="p_dependente_intre_resurse">03. [20p] Dependente intre resurse</h3>
+<div class="level3">
+
+<p>
+Un manifest Puppet poate contine declarari pentru mai multe resurse, insa ordinea in care sunt aplicate nu este bine definita.
+</p>
+
+<p>
+Sunt cazuri in care trebuie sa ne asiguram ca o resursa este aplicata inaintea alteia (de exemplu, un pachet este instalat inaintea pornirii serviciului).
+</p>
+
+<p>
+In aceste situatii, trebuie sa definim dependente intre resurse.
+</p>
+
+</div>
+
+<h4 id="beforerequire">Before / Require</h4>
+<div class="level4">
+
+<p>
+Modificam manifestul creat anterior astfel:
+</p>
+<pre class="code">file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; &quot;File created using Puppet.&quot;,
+}
+
+notify {&#039;my_notify&#039;:
+  message =&gt; &quot;File /tmp/my_file has been synced&quot;,
+  require =&gt; File[&#039;my_file&#039;],
+}</pre>
+<ul>
+<li class="level1"><div class="li"> Resursa de tip <code>notify</code> defineste un mesaj ce va fi afisat in momentul cand declaratia sa este evaluata;</div>
+</li>
+<li class="level1"><div class="li"> Dependenta intre resurse este definita prin atributul <code>require</code>. In cazul de fata, resursa <strong>my_file</strong> este evaluata inaintea resursei <strong>my_notify</strong>.</div>
+</li>
+</ul>
+
+<p>
+Modificati fisierul <strong>/tmp/my_file</strong>, apoi aplicati manifestul de mai sus. Observati ordinea in care resursele sunt evaluate.
+</p>
+
+<p>
+O sintaxa echivalenta ar fi folosirea parametrului <code>before</code> in resursa <strong>my_file</strong>:
+</p>
+<pre class="code">file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; &quot;File created using Puppet.&quot;,
+  before  =&gt; Notify[&#039;my_notify&#039;],
+}
+
+notify {&#039;my_notify&#039;:
+  message =&gt; &quot;File /tmp/my_file has been synced&quot;,
+}</pre>
+
+</div>
+
+<h4 id="notifysubscribe">Notify / Subscribe</h4>
+<div class="level4">
+
+<p>
+Pentru unele resurse are sens actiunea de “refresh” (de exemplu, un serviciu care trebuie repornit).
+</p>
+
+<p>
+Daca dorim ca, in plus fata de dependenta intre resurse, sa facem “refresh” pentru a doua resursa, cand prima resursa este modificata, trebuie:
+</p>
+<ul>
+<li class="level1"><div class="li"> sa folosim <strong>notify</strong> in loc de <strong>before</strong>, sau</div>
+</li>
+<li class="level1"><div class="li"> sa folosim <strong>subscribe</strong> in loc de <strong>require</strong>.</div>
+</li>
+</ul>
+
+<p>
+Un exemplu ar fi repornirea serviciului SSH atunci cand fisierul sau de configurare este modificat:
+</p>
+<pre class="code">file { &#039;/etc/ssh/sshd_config&#039;:
+  ensure =&gt; file,
+  mode   =&gt; 600,
+  source =&gt; &#039;/root/examples/sshd_config&#039;,
+}
+service { &#039;sshd&#039;:
+  ensure    =&gt; running,
+  enable    =&gt; true,
+  subscribe =&gt; File[&#039;/etc/ssh/sshd_config&#039;],
+}</pre>
+
+<p>
+Creati un manifest cu codul de mai sus, apoi modificati fisierul <strong>/etc/ssh/sshd_config</strong> si aplicati manifestul.
+</p>
+
+</div>
+
+<h4 id="sintaxa_echivalenta">Sintaxa echivalenta</h4>
+<div class="level4">
+
+<p>
+In locul atributelor <strong>before / require</strong> sau <strong>notify / subscribe</strong> putem folosi operatorul <code>→</code>, respectiv <code>~&gt;</code>.
+</p>
+
+<p>
+Exemplu:
+</p>
+<pre class="code">file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; &quot;File created using Puppet.&quot;,
+}
+-&gt;
+notify {&#039;my_notify&#039;:
+  message =&gt; &quot;File /tmp/my_file has been synced&quot;,
+}</pre>
+
+</div>
+</div>
+</body>
+</html>

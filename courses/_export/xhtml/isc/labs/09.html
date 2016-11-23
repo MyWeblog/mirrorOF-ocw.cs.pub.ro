@@ -1,0 +1,174 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>isc:labs:09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-08-04T16:43:20+0300"/>
+<meta name="keywords" content="isc,labs,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=isc:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="09.html"/>
+<link rel="canonical" href="../../../../isc/labs/09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='isc:labs';var JSINFO = {"id":"isc:labs:09","namespace":"isc:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="09.html#lab_09_-_forensics">Lab 09 - Forensics</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="09.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#overview">Overview</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="09.html#solution">Solution:</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="lab_09_-_forensics">Lab 09 - Forensics</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Lab 09 - Forensics" [1-227] -->
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://downloads.volatilityfoundation.org/releases/2.4/CheatSheet_v2.4.pdf" class="urlextern" title="http://downloads.volatilityfoundation.org/releases/2.4/CheatSheet_v2.4.pdf"  rel="nofollow">Volatility Cheatsheet</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Resources" [228-357] -->
+<h2 class="sectionedit3" id="overview">Overview</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">You are a forensic detective hired to investigate the recent attack on our database server. Fortunately, the security team detected the intrusion in time and the hacker had to run quickly, leaving his laptop in the server room. Using a cold boot attack, we managed to obtain a dump of his ram. Your job is to gather as much intel as you can. </div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic">
+Volatility usage:
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f &lt;dump&gt; imageinfo; Look at the suggested profile
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f &lt;dump&gt; –profile=&lt;profile&gt; kdbgscan; Look at the Offset (V)
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f &lt;dump&gt; –profile=&lt;profile&gt; –kdbg=&lt;offset&gt; COMMAND
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">You should look for processes, commands, files, history, connections and network traffic.
+</div></p>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Overview" [358-1138] -->
+<h3 class="sectionedit4" id="solution">Solution:</h3>
+<div class="level3">
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp imageinfo
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 kdbgscan
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 –kdbg=0x82b73c78 pslist &gt; ps.txt
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 –kdbg=0x82b73c78 cmdline
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 –kdbg=0x82b73c78 consoles
+</p>
+
+<p>
+volatility-2.5.standalone.exe -f memory.dmp –profile=Win7SP1x86 –kdbg=0x82b73c78 dumpfiles -D file &gt; dump.txt
+</p>
+
+<p>
+file: file.3640.0x86a44318
+</p>
+
+<p>
+find: “search”
+</p>
+
+<p>
+<a href="http://www.bing.com/search?q=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME%2Fedit%3Fusp%3Dsharing&amp;qs=n&amp;form=QBLH&amp;pq=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1kahxjgit_8ex0ga5ngzsz0a-pzcvbzixm1nktqclvme%2Fedit%3Fusp%3Dsharing&amp;sc=0-96&amp;sp=-1&amp;sk=&amp;cvid=32A3046F740B479DA10E524ABD27DB70" class="urlextern" title="http://www.bing.com/search?q=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME%2Fedit%3Fusp%3Dsharing&amp;qs=n&amp;form=QBLH&amp;pq=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1kahxjgit_8ex0ga5ngzsz0a-pzcvbzixm1nktqclvme%2Fedit%3Fusp%3Dsharing&amp;sc=0-96&amp;sp=-1&amp;sk=&amp;cvid=32A3046F740B479DA10E524ABD27DB70"  rel="nofollow">http://www.bing.com/search?q=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME%2Fedit%3Fusp%3Dsharing&amp;qs=n&amp;form=QBLH&amp;pq=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F1kahxjgit_8ex0ga5ngzsz0a-pzcvbzixm1nktqclvme%2Fedit%3Fusp%3Dsharing&amp;sc=0-96&amp;sp=-1&amp;sk=&amp;cvid=32A3046F740B479DA10E524ABD27DB70</a>
+</p>
+
+<p>
+<a href="https://docs.google.com/document/d/1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME/edit" class="urlextern" title="https://docs.google.com/document/d/1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME/edit"  rel="nofollow">https://docs.google.com/document/d/1KAHXjGIT_8EX0gA5NGZSZ0A-PzcVbzIxm1NKtQClvME/edit</a>
+</p>
+
+<p>
+user besthacker
+</p>
+
+<p>
+WW91ciBwYXNzd2QgaXM6IENGVFVJQkRMRlM= BASE64decode
+</p>
+
+<p>
+Your passwd is: CFTUIBDLFS
+</p>
+
+<p>
+ssh besthacker@….. 
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Solution:" [1139-] --></div>
+</body>
+</html>

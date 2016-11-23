@@ -1,0 +1,390 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so:cursuri:curs-09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-22T11:57:41+0300"/>
+<meta name="keywords" content="so,cursuri,curs-09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=so:cursuri"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="curs-09.html"/>
+<link rel="canonical" href="../../../../so/cursuri/curs-09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so:cursuri';var JSINFO = {"id":"so:cursuri:curs-09","namespace":"so:cursuri","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="curs-09.html#curs_09_-_sincronizare">Curs 09 - Sincronizare</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="curs-09.html#demo-uri">Demo-uri</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="curs-09.html#nevoie_de_acces_exclusiv">Nevoie de acces exclusiv</a></div></li>
+<li class="level3"><div class="li"><a href="curs-09.html#consum_de_timp_mutex_si_spinlock">Consum de timp mutex și spinlock</a></div></li>
+<li class="level3"><div class="li"><a href="curs-09.html#race_condition_tocttou">Race condition (TOCTTOU)</a></div></li>
+<li class="level3"><div class="li"><a href="curs-09.html#deadlock">Deadlock</a></div></li>
+<li class="level3"><div class="li"><a href="curs-09.html#asteptare_nedefinita">Așteptare nedefinită</a></div></li>
+<li class="level3"><div class="li"><a href="curs-09.html#granularitate_regiune_critica">Granularitate regiune critică</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="curs_09_-_sincronizare">Curs 09 - Sincronizare</h1>
+<div class="level1">
+
+<p>
+
+    <iframe src="http://docs.google.com/viewer?url=http://elf.cs.pub.ro/so/res/cursuri/SO_Curs-09.pdf&embedded=true" width="600" height="480" style="border: none;">
+    </iframe>
+
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so/res/cursuri/SO_Curs-09.pdf" class="urlextern" title="http://elf.cs.pub.ro/so/res/cursuri/SO_Curs-09.pdf"  rel="nofollow"> Curs 09 - Sincronizare (PDF)</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Suport curs</div>
+<ul>
+<li class="level2"><div class="li"> Operating Systems Concepts Essentials</div>
+<ul>
+<li class="level3"><div class="li"> Capitolul 6 - Process Synchronization</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Modern Operating Systems</div>
+<ul>
+<li class="level3"><div class="li"> Capitolul 2 - Processes and Threads</div>
+<ul>
+<li class="level4"><div class="li"> Secțiunea 2.3 - Interprocess Communication</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> <a href="http://greenteapress.com/semaphores/" class="urlextern" title="http://greenteapress.com/semaphores/"  rel="nofollow">Allen B. Downey - The Little Book of Semaphores</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://deadlockempire.github.io/" class="urlextern" title="https://deadlockempire.github.io/"  rel="nofollow">The Deadlock Empire: Slay dragons, master concurency!</a></div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Curs 09 - Sincronizare" [1-753] -->
+<h2 class="sectionedit2" id="demo-uri">Demo-uri</h2>
+<div class="level2">
+
+<p>
+Pentru parcurgerea demo-urilor, folosim <a href="http://elf.cs.pub.ro/so/res/cursuri/curs-09-demo.zip" class="urlextern" title="http://elf.cs.pub.ro/so/res/cursuri/curs-09-demo.zip"  rel="nofollow">arhiva aferentă</a>. Demo-urile rulează pe Linux. Descărcăm arhiva folosind comanda
+</p>
+<pre class="code bash"><span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>so<span class="sy0">/</span>res<span class="sy0">/</span>cursuri<span class="sy0">/</span>curs-09-demo.zip</pre>
+
+<p>
+ și apoi decomprimăm arhiva
+</p>
+<pre class="code bash"><span class="kw2">unzip</span> curs-09-demo.zip</pre>
+
+<p>
+ și accesăm directorul rezultat în urma decomprimării
+</p>
+<pre class="code bash"><span class="kw3">cd</span> curs-09-demo<span class="sy0">/</span></pre>
+
+<p>
+Acum putem parcurge secțiunile cu demo-uri de mai jos.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Demo-uri" [754-1255] -->
+<h3 class="sectionedit3" id="nevoie_de_acces_exclusiv">Nevoie de acces exclusiv</h3>
+<div class="level3">
+
+<p>
+Dorim să urmărim ce se întâmplă în cazul în care avem date partajate într-un mediu multithread. Pentru aceasta accesăm subdirectorul <code>list-excl/</code>; urmărim conținutul fișierelor <code>thread-list-app.c</code> și <code>list.c</code>. Este vorba de o aplicație care lucrează cu liste înlănțuite într-un mediu multithreaded. Vom observa că există riscul ca datele să fie corupte, fiind necesară sincronizare.
+</p>
+
+<p>
+Compilăm fișierele folosind <code>make</code>. Rezultă două fișiere în format executabil: <code>thread-list-app</code> și <code>thread-list-app-mutex</code>.
+</p>
+
+<p>
+Programul <code>thread-list-app-mutex</code> folosește intern un mutex pentru sincronizare. Pentru aceasta folosim macro-ul <code>USE_MUTEX</code> pe care îl definim în fișierul <code>Makefile</code>.
+</p>
+
+<p>
+Ca să urmărim ce se întâmplă cu o aplicație multithreaded cu date partajate, rulăm de mai multe ori programul <code>thread-list-app</code>, până la obținerea unei erori:
+</p>
+<pre class="code bash">.<span class="sy0">/</span>thread-list-app</pre>
+
+<p>
+<p><div class="notetip">
+Dacă nu dă eroare, putem actualiza în fișierul <code>thread-list-app.c</code> macro-urile <code>NUM_THREADS</code> și <code>NUM_ROUNDS</code> la alte valori (probabil mai mari). Apoi recompilăm folosind <code>make</code> și rulăm din nou programul <code>thread-list-app</code>.
+
+</div></p>
+</p>
+
+<p>
+Eroarea este cauzată de coruperea pointerilor din lista înlănțuită a programului. Datele sunt accesate concurent, iar în absența sincronizării, vor fi corupte.
+</p>
+
+<p>
+Soluția este să folosim un mutex pentru protejarea accesului la listă, lucru realizat în programul <code>thread-list-app-mutex</code>. Dacă vom rula de mai multe ori programul <code>thread-list-app-mutex</code>, nu vom obține niciodată eroare:
+</p>
+<pre class="code bash">.<span class="sy0">/</span>thread-list-app-mutex</pre>
+
+<p>
+Avem acces exclusiv la datele partajate deci am rezolvat problema coruperii datelor din cauza accesului concurent neprotejat.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Nevoie de acces exclusiv" [1256-3065] -->
+<h3 class="sectionedit4" id="consum_de_timp_mutex_si_spinlock">Consum de timp mutex și spinlock</h3>
+<div class="level3">
+
+<p>
+Dorim să investigăm overheadul produs când folosim spinlock-uri și mutex-uri pentru acces exclusiv. Pentru aceasta accesăm subdirectorul <code>spinlock-mutex/</code>; urmărim conținutul fișierului <code>spinlock-mutex.c</code>. Acest fișier are implementare didactică în care folosește spinlock-uri sau mutex-uri pentru asigurarea accesului exclusiv.
+</p>
+
+<p>
+Compilăm cele două programe folosind <code>make</code>. Rezultă două fișiere în format executabil: <code>spinlock</code> și <code>mutex</code>.
+</p>
+
+<p>
+Cele două fișiere au fost generate din același cod sursă (<code>spinlock-mutex.c</code>), după cum a fost definit sau nu macro-ul <code>USE_SPINLOCK</code>. Macro-ul îl definim în fișierul <code>Makefile</code>.
+</p>
+
+<p>
+Pentru a contabiliza timpul de rulare rulăm cele două executabile prin comanda <code>time</code>:
+</p>
+<pre class="code bash"><span class="sy0">/</span>usr<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw1">time</span> .<span class="sy0">/</span>spinlock
+<span class="sy0">/</span>usr<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw1">time</span> .<span class="sy0">/</span>mutex</pre>
+
+<p>
+Observăm că folosirea spinlock-urilor pentru accesul exclusiv la resurse rezultă într-un timp de rulare mai mic decât folosirea mutex-urilor. Aceasta se întâmplă pentru că avem regiune critică mică iar overhead-ul cauzat de operații pe mutex-uri este semnificativ mai mare decât cel cauzat de operații pe spinlock-uri.
+</p>
+
+<p>
+Observăm din output-ul comenzii <code>time</code> că folosirea mutex-urilor înseamnă semnificativ mai multe schimbări de context: o operație de tip lock pe mutex are șanse mari să blocheze thread-ul curent și să invoce planificatorul pentru schimbarea contextului. De asemenea, observăm că programul ce folosește spinlock-uri petrece mai mult timp în user space (<em>User time</em>) și mai puțin în kernel space (<em>System time</em>). Aceasta se întâmplă pentru că implementarea de spinlock-uri este realizată în user space și toate acțiunile (inclusiv partea de busy waiting aferentă spinlock-urilor) au loc în user space.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Consum de timp mutex și spinlock" [3066-4901] -->
+<h3 class="sectionedit5" id="race_condition_tocttou">Race condition (TOCTTOU)</h3>
+<div class="level3">
+
+<p>
+Dorim să urmărim cum se manifestă o condiție de cursă de tipul <a href="https://cwe.mitre.org/data/definitions/367.html" class="urlextern" title="https://cwe.mitre.org/data/definitions/367.html"  rel="nofollow">TOCTTOU</a> (<em>time of check to time of use</em>). Pentru aceasta accesăm subdirectorul <code>tocttou/</code>; urmărim conținutul fișierului <code>tocttou.c</code>. Fișierul simulează o problemă producător consumator în care producătorul produce câte <code>NUM_ITEMS_PRODUCER</code> elemente, iar consumatorul consumă câte <code>NUM_ITEMS_CONSUMER</code> elemente; dacă un consumator nu poate consuma elemente, își încheie execuția.
+</p>
+
+<p>
+Compilăm programul folosind <code>make</code>. Rezultă fișierul <code>tocttou</code> în format executabil.
+</p>
+
+<p>
+În cadrul programului <code>tocttou</code> nu folosim sincronizare și deci este posibil să avem condiții de cursă. Pentru a observa acest lucru rulăm de mai multe ori programul până când obținem o valoare negativă pentru numărul de elemente, lucru imposibil la o rulare obișnuită a programului:
+</p>
+<pre class="code bash">.<span class="sy0">/</span>tocttou 
+Created <span class="nu0">50</span> producers.
+Each producer creates one item.
+Created <span class="nu0">10</span> consumers.
+Each producer removes one item.
+Num items at the end: <span class="re5">-2</span></pre>
+
+<p>
+Aceasta are loc întrucât avem o perioadă între timpul de verificare, adică linia
+</p>
+<pre class="code c">	<span class="kw1">if</span> <span class="br0">&#40;</span>num_items <span class="sy0">&gt;=</span> NUM_ITEMS_CONSUMER<span class="br0">&#41;</span> <span class="br0">&#123;</span></pre>
+
+<p>
+și timpul de utilizare, adică linia
+</p>
+<pre class="code c">		num_items <span class="sy0">-=</span> NUM_ITEMS_CONSUMER<span class="sy0">;</span>	<span class="coMULTI">/* Consume. */</span></pre>
+
+<p>
+adică o condiție de cursă de tipul TOCTTOU, în care se poate “infiltra” alt thread. Practic este posibil ca două thread-uri să scadă valoarea variabilei <code>num_items</code> deși condiția ar fi trebuit să se întâmple doar pentru unul. Dacă avem o valoare inițială <code>NUM_ITEMS_CONSUMER + 2</code>, atunci există riscul ca mai multe thread-uri să vadă îndeplinită condiția și apoi toate să scadă valoarea variabilei <code>num_items</code> rezultând într-o valoare negativă.
+</p>
+
+<p>
+O astfel de situație poate duce la un comportament nedeterminst al programului, la coruperea datelor, chiar la încheierea cu eroare a programului. Mai mult o astfel de situație poate fi exploatată de un atacator.
+</p>
+
+<p>
+Pentru a preveni apariția condițiilor de cursă, trebuie implementată corespunzător sincronizarea accesului. Din păcate, condițiile de cursă pot apărea foarte greu (adică programul să fie greșit dar să meargă <strong>aproape</strong> tot timpul); acest lucru face nedeterminist comportamentul programului și dificilă investigarea problemei.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Race condition (TOCTTOU)" [4902-7310] -->
+<h3 class="sectionedit6" id="deadlock">Deadlock</h3>
+<div class="level3">
+
+<p>
+Dorim să urmărim cum se manifestă un deadlock. Pentru aceasta accesăm subdirectorul <code>deadlock/</code>; urmărim conținutul fișierului <code>deadlock.c</code>. Fișierul are o implementare didactică pentru două tipuri de thread-uri care obțin în ordine diferită două mutex-uri.
+</p>
+
+<p>
+Compilăm programul folosind <code>make</code>. Rezultă fișierul <code>deadlock</code> în format executabil.
+</p>
+
+<p>
+La rularea programului se va genera deadlock:
+</p>
+<pre class="code bash">.<span class="sy0">/</span>deadlock</pre>
+
+<p>
+Dacă nu se întâmplă acest lucru rulăm programul de mai multe ori.
+</p>
+
+<p>
+Deadlock-ul are loc pentru că cele două mutex-uri folosite în program (<code>xmutex</code> și <code>ymutex</code>) nu sunt achiziționate în aceeași ordine. Unele thread-uri (cele care execută funcția <code>xfirst</code>) achiziționează mutex-urile în ordinea <code>xmutex</code>, <code>ymutex</code>; celelalte thread-uri (cele care execută funcția <code>yfirst</code>) achiziționează mutex-urile în ordinea <code>ymutex</code>, <code>xmutex</code>. În acest fel, la un moment dat un thread va achiziționa mutex-ul <code>xfirst</code> și imediat după un altul va achiziționa <code>ymutex</code>. În continuare ambele thread-uri vor aștepta după un mutex deținut de alt thread.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pentru a evita apariția deadlock-urilor în momentul în care folosim lock-uri/mutex-uri, o condiție importantă este ca lock-urile să fie achiziționate în aceeași ordine.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Deadlock" [7311-8667] -->
+<h3 class="sectionedit7" id="asteptare_nedefinita">Așteptare nedefinită</h3>
+<div class="level3">
+
+<p>
+Dorim să urmărim cum se manifestă o problemă de așteptare nedefinită (<em>indefinite wait</em>). Pentru aceasta accesăm subdirectorul <code>indefinite-wait/</code>; urmărim conținutul fișierului <code>indefinite-wait.c</code>. Fișierul are o implementare nefucțională pentru problema producători-consumatori, lucru care conduce la așteptare nedefinită.
+</p>
+
+<p>
+Compilăm programul folosind <code>make</code>. Rezultă fișierul <code>indefinite-wait</code> în format executabil.
+</p>
+
+<p>
+Pentru a observa comportamentul programului îl rulăm:
+</p>
+<pre class="code bash">.<span class="sy0">/</span>indefinite-wait</pre>
+
+<p>
+Observăm că programul se blochează, deci fie avem deadlock fie unele thread-uri așteaptă fără a fi trezite/notificate. Având un singur mutex folosit corezpunzător, problema nu poate fi deadlock deci este vorba de o așteptare nedefinită.
+</p>
+
+<p>
+La o investigație atentă observăm că atât thread-urile producător cât și cele consumator vor aștepta la variabilele condiție aferente (<code>buffer_empty_cond</code> și <code>buffer_full_cond</code>) fără a fi trezite. Nu există apeluri ale funcției <a href="http://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread_cond_signal.html" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread_cond_signal.html"  rel="nofollow">pthread_cond_signal</a> necesare pentru trezirea thread-urilor.
+</p>
+
+<p>
+Rezolvăm această problemă prin adăugarea apelurilor necesare în cadrul funcțiilor <code>produce</code> și <code>consume</code> rezultând forma actualizată:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">void</span> <span class="sy0">*</span>produce<span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span>arg<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">size_t</span> idx <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">size_t</span><span class="br0">&#41;</span> arg<span class="sy0">;</span>
+&nbsp;
+	pthread_mutex_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>pc_mutex<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>pc_buffer.<span class="me1">size</span> <span class="sy0">&gt;=</span> MAX_ITEMS<span class="br0">&#41;</span>
+		pthread_cond_wait<span class="br0">&#40;</span><span class="sy0">&amp;</span>buffer_full_cond<span class="sy0">,</span> <span class="sy0">&amp;</span>pc_mutex<span class="br0">&#41;</span><span class="sy0">;</span>
+	pc_buffer.<span class="me1">storage</span><span class="br0">&#91;</span>pc_buffer.<span class="me1">size</span><span class="br0">&#93;</span> <span class="sy0">=</span> ITEM<span class="sy0">;</span>
+	pc_buffer.<span class="me1">size</span><span class="sy0">++;</span>
+	pthread_cond_signal<span class="br0">&#40;</span><span class="sy0">&amp;</span>buffer_empty_cond<span class="br0">&#41;</span><span class="sy0">;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Producer %zu created item.<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> idx<span class="br0">&#41;</span><span class="sy0">;</span>
+	pthread_mutex_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>pc_mutex<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">return</span> NULL<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> <span class="sy0">*</span>consume<span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span>arg<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">size_t</span> idx <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">size_t</span><span class="br0">&#41;</span> arg<span class="sy0">;</span>
+&nbsp;
+	pthread_mutex_lock<span class="br0">&#40;</span><span class="sy0">&amp;</span>pc_mutex<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>pc_buffer.<span class="me1">size</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+		pthread_cond_wait<span class="br0">&#40;</span><span class="sy0">&amp;</span>buffer_empty_cond<span class="sy0">,</span> <span class="sy0">&amp;</span>pc_mutex<span class="br0">&#41;</span><span class="sy0">;</span>
+	pc_buffer.<span class="me1">storage</span><span class="br0">&#91;</span>pc_buffer.<span class="me1">size</span><span class="br0">&#93;</span> <span class="sy0">=</span> NO_ITEM<span class="sy0">;</span>
+	pc_buffer.<span class="me1">size</span><span class="sy0">--;</span>
+	pthread_cond_signal<span class="br0">&#40;</span><span class="sy0">&amp;</span>buffer_full_cond<span class="br0">&#41;</span><span class="sy0">;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Consumer %zu removed item.<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> idx<span class="br0">&#41;</span><span class="sy0">;</span>
+	pthread_mutex_unlock<span class="br0">&#40;</span><span class="sy0">&amp;</span>pc_mutex<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">return</span> NULL<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În cele de mai sus, înainte de operația de unlock pe mutex am apelat funcția <a href="http://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread_cond_signal.html" class="urlextern" title="http://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread_cond_signal.html"  rel="nofollow">pthread_cond_signal</a>. Cu ajutorul acestei funcții, thread-ul producător ce tocmai a produs un element trezește un thread consumator care acum are ce consuma; în mod similar thread-ul consumator care a consumat un element trezește un thread producător care acum are loc unde să producă un element.
+</p>
+
+<p>
+După actualizarea programului, recompilăm folosind <code>make</code> și apoi îl rulăm. Acum programul va funcționa corespunzător fără problema așteptării nedefinite.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Așteptare nedefinită" [8668-11431] -->
+<h3 class="sectionedit8" id="granularitate_regiune_critica">Granularitate regiune critică</h3>
+<div class="level3">
+
+<p>
+Dorim să urmărim cum se comportă un program atunci când diferă dimensiunea regiunii critice folosită pentru acces exclusiv. Pentru aceasta accesăm subdirectorul <code>granularity/</code>; urmărim conținutul fișierului <code>granularity.c</code>. Fișierul are o implementare didactică în care mai multe thread-uri accesează o regiune critică.
+</p>
+
+<p>
+Compilăm programul folosind <code>make</code>. Rezultă două fișiere în format executabil: <code>granuarity-fine</code> și <code>granularity-coarse</code>. Fișierului executabil <code>granularity-fine</code> îi corespunde o regiune critică de mică dimensiune, dar accesată des; fișierului executabil <code>granularity-coarse</code> îi corespunde o regiune critică de dimensiune mai mare, dar accesată rar. 
+</p>
+
+<p>
+În cadrul codului, folosirea unei granularități fine sau nu este indicată de macro-ul <code>GRANULARITY_TYPE</code> inițializat în Makefile.
+</p>
+
+<p>
+Pentru a vedea impactul tipului de granularitate, rulăm cele două fișiere în format executabil și măsurăm timpul de rulare:
+</p>
+<pre class="code bash"><span class="sy0">/</span>usr<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw1">time</span> .<span class="sy0">/</span>granularity-fine
+<span class="sy0">/</span>usr<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw1">time</span> .<span class="sy0">/</span>granularity-coarse</pre>
+
+<p>
+Observăm că dureaza semnificativ mai mult rularea executabilului cu granularitate fină. Acest lucru se întâmplă pentru că regiunea critică pe care acesta o protejează este mică, iar cea mai mare parte din timp o va consuma în operațiile cu mutex-ul (<em>lock contention</em>). Observăm acest lucru și din numărul mare de schimbări de context (voluntare sau nevoluntare).
+</p>
+
+<p>
+<p><div class="noteclassic">
+În general preferăm granularitate fină pentru regiunile critice (adică regiuni critice de mică dimensiune); dar granularitatea fină poate înseamna operații foarte dese pe mutex (<em>lock contention</em>). De aceea este recomandat ca folosirea granularității fine să fie echilibrată de un număr redus de thread-uri care să dorească să acceseze la un moment dat regiunea critică, pentru a genera cât mai puțină încărcare (<em>contention</em>) pe mutex.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Granularitate regiune critică" [11432-] --></div>
+</body>
+</html>

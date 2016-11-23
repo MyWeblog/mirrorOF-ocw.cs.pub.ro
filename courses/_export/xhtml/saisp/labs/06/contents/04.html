@@ -1,0 +1,317 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:06:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-11T21:01:44+0300"/>
+<meta name="keywords" content="saisp,labs,06,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:06:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/06/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:06:contents';var JSINFO = {"id":"saisp:labs:06:contents:04","namespace":"saisp:labs:06:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurarea_unei_sesiuni_iscsi_client-server">04. [15p] Configurarea unei sesiuni iSCSI client-server</h3>
+<div class="level3">
+
+<p>
+Într-un sistem de tipul Cluster/Grid, deseori este necesară accesarea unui block-device de distanță, iar operațiile suportate să fie aceleași ca și cazul în care respectivul block-device (disc) este conectat local, direct la placa de bază a stației respective. Acest lucru este posibil prin protocolul <code>iSCSI</code> care împachetează toate comenzile protocolului de comunicație cu discuri <code>SCSI</code> în pachete IP. Astfel este posibilă accesarea la distanță a oricărui disc, ba chiar partajarea acestuia între mai multe entități, nivelul de granularitate fiind blocul de date (nu mai există sistem de fișiere ca în cazul protocolului NFS).
+</p>
+
+<p>
+În nomenclatura iSCSI, serverul ce pune la dispoziția clientului diferite block-device-uri poartă numele de <code>target</code>. Pe Linux, target-ul iSCSI implicit inclus în nucleu se numește <code>Linux IO</code>. Vom instala serverul de iSCSI pe stația <code>storage1</code> (pachetul poartă numele de <code>targetcli</code> cu opțiunea <code>–no-install-recommends</code> pentru a nu instala pachete recomandate, întrucât dimensiunea acestora este foarte mare).:
+</p>
+
+<p>
+<p><div class="notewarning">
+Inainte de a instala <code>targetcli</code>, modificati, in <code>/etc/apt/sources.list</code>, toate aparitiile lui <code>jessie</code> in <code>wheezy</code>, apoi efectuati <code>apt-get update</code>.
+
+</div></p>
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span><span class="kw2">apt-get install</span> <span class="re5">--no-install-recommends</span> targetcli</pre>
+
+<p>
+<code>targetcli</code> este un <code>command line interface</code> creat pentru management-ul serverului de iSCSI (<code>target</code>) pe Linux. Target-ul LIO de pe Linux este capabil să exporte discuri ce au mediu de stocare discuri fizice sau fișiere. Vom deschide <code>targetcli</code> pe stația <code>storage1</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>targetcli
+Warning: Could not load preferences <span class="kw2">file</span> <span class="sy0">/</span>root<span class="sy0">/</span>.targetcli<span class="sy0">/</span>prefs.bin.
+targetcli GIT_VERSION <span class="br0">&#40;</span>rtslib GIT_VERSION<span class="br0">&#41;</span>
+Copyright <span class="br0">&#40;</span>c<span class="br0">&#41;</span> <span class="nu0">2011</span>-<span class="nu0">2013</span> by Datera, Inc.
+All rights reserved.
+Loaded iscsi_target_mod kernel module.
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="sy0">/&gt;</span> <span class="kw2">ls</span>
+o- <span class="sy0">/</span> ............................................... <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+  o- backstores .................................... <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- fileio ......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- iblock ......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- pscsi .......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- rd_dr .......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- rd_mcp ......................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  o- ib_srpt ................................. <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- iscsi ................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- loopback ................................ <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- qla2xxx ................................. <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- tcm_fc .................................. <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span></pre>
+
+<p>
+Cu ajutorul comenzii <code>ls</code> vedem toate configurațiile de la un moment dat. Acestea sunt organizate ca o ierarhie de fișiere. Observați toate tipurile de <code>backstores</code> care pot fi exportate. Noi vom lucra cu tipul <code>fileio</code> (fișiere) și <code>iblock</code> (discuri fizice).
+Dorim să creăm un <code>backstore</code> de tipul <code>fileio</code>:
+</p>
+<pre class="code bash"><span class="sy0">/&gt;</span> <span class="kw3">cd</span> backstores
+<span class="sy0">/</span>backstores<span class="sy0">&gt;</span> <span class="kw3">cd</span> fileio
+<span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> <span class="kw3">help</span> create
+SYNTAX
+  create name file_or_dev <span class="br0">&#91;</span><span class="kw2">size</span><span class="br0">&#93;</span> <span class="br0">&#91;</span>generate_wwn<span class="br0">&#93;</span> <span class="br0">&#91;</span>buffered<span class="br0">&#93;</span></pre>
+
+<p>
+Observați că putem să explorăm ierarhia de configurații folosind comanda <code>cd</code>. Am folosit comanda <code>help create</code> pentru a vedea ce opțiuni avem pentru crearea unui <code>backstore</code>. Vom crea un backstore de dimensiunea 100M ce are ca suport fișierul <code>/disk1.img</code>:
+</p>
+<pre class="code bash"><span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> create disk1 <span class="sy0">/</span>disk1.img 100MB
+Generating a wwn serial.
+Not using buffered mode.
+Created fileio disk1.</pre>
+
+<p>
+Următorul pas va fi să creăm un <code>IQN</code> (iSCSI Qualified Name) pentru target-ul nostru în subierarhia de configurare <code>iscsi</code>:
+</p>
+<pre class="code bash"><span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> <span class="kw3">cd</span> <span class="sy0">/</span>iscsi
+<span class="sy0">/</span>iscsi<span class="sy0">&gt;</span> <span class="kw3">help</span> create
+SYNTAX
+  create <span class="br0">&#91;</span>wwn<span class="br0">&#93;</span>
+<span class="sy0">/</span>iscsi<span class="sy0">&gt;</span> create
+Created target iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d.
+Selected TPG Tag <span class="nu0">1</span>.
+Successfully created TPG <span class="nu0">1</span>.</pre>
+
+<p>
+În continuare vom dezactiva autentificarea asociată cu acest <code>IQN</code>. Vom folosi comanda <code>cd</code> urmată de valoarea <code>IQN</code> generată pentru a intra în modul de configurare ale acesteia (puteți folosi <code>auto-complete</code>):
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">&gt;</span> <span class="kw3">cd</span> iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d<span class="sy0">/</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20....25e09e86bb4d<span class="sy0">&gt;</span> <span class="kw2">ls</span>
+o- iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d .......... <span class="br0">&#91;</span><span class="nu0">1</span> TPG<span class="br0">&#93;</span>
+  o- tpgt1 ........................................................... <span class="br0">&#91;</span>enabled<span class="br0">&#93;</span>
+    o- acls ........................................................... <span class="br0">&#91;</span><span class="nu0">0</span> ACLs<span class="br0">&#93;</span>
+    o- luns ........................................................... <span class="br0">&#91;</span><span class="nu0">0</span> LUNs<span class="br0">&#93;</span>
+    o- portals ..................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Portals<span class="br0">&#93;</span></pre>
+
+<p>
+Observați că trebuie să mergem pe intrarea <code>tpgt1</code> (este un tag intern asociat IQN-ului). Aici vom configura parametrii de autentificare:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20....25e09e86bb4d<span class="sy0">&gt;</span> <span class="kw3">cd</span> tpgt1<span class="sy0">/</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw1">set</span> parameter <span class="re2">AuthMethod</span>=None
+Parameter AuthMethod is now <span class="st_h">'None'</span>.
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw1">set</span> attribute <span class="re2">authentication</span>=<span class="nu0">0</span>
+Parameter authentication is now <span class="st_h">'0'</span>.</pre>
+
+<p>
+<p><div class="noteclassic">In cazul in care nu puteti configura <code>AuthMethod</code>, este suficient sa configurati doar <code>authentication</code>.
+</div></p>
+</p>
+
+<p>
+Observați alte 3 sub-categorii de configurații:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>acls</code> - filtrarea accesului </div>
+</li>
+<li class="level1"><div class="li"> <code>luns</code> (Logical Unit Number) - dispozitiv logic adresat de client</div>
+</li>
+<li class="level1"><div class="li"> <code>portals</code> - nivelul rețea prin care se va face legătura la target</div>
+</li>
+</ul>
+
+<p>
+În concluzie trebuie să creăm cel puțin un <code>portal</code> pentru accesul la IQN prin rețea:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw3">cd</span> portals
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...tpgt1<span class="sy0">/</span>portals<span class="sy0">&gt;</span> create
+Using default IP port <span class="nu0">3260</span>
+Automatically selected IP address 192.168.1.1.
+Successfully created network portal 192.168.1.1:<span class="nu0">3260</span>.
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...tpgt1<span class="sy0">/</span>portals<span class="sy0">&gt;</span> <span class="kw3">cd</span> ..</pre>
+
+<p>
+Observați că automat a selectat adresa IP a interfeței <code>eth0</code> și portul <code>3260</code>. Vom crea un dispozitiv logic cu ajutorul căruia vom referenția backstore-ul:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw3">cd</span> luns
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">&gt;</span> create <span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">/</span>disk1
+Selected LUN <span class="nu0">0</span>.
+Successfully created LUN <span class="nu0">0</span>.</pre>
+
+<p>
+În submeniul <code>acls</code> va trebuie să înregistrăm clienții iSCSI folosind <code>IQN</code>-ul acestora. Deocamdată nu știm <code>IQN-ul</code> clienților, îl vom configura după ce instalăm clienții de iSCSI. Să vizualizăm configurația actuală:
+</p>
+<pre class="code bash"><span class="sy0">/&gt;</span> <span class="kw2">ls</span>
+o- <span class="sy0">/</span> .................................................................................... <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+  o- backstores ......................................................................... <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- fileio .............................................................. <span class="br0">&#91;</span><span class="nu0">1</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> <span class="sy0">|</span> o- disk1 ......................................................... <span class="br0">&#91;</span><span class="sy0">/</span>disk1.img activated<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- iblock .............................................................. <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- pscsi ............................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- rd_dr ............................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- rd_mcp .............................................................. <span class="br0">&#91;</span><span class="nu0">0</span> Storage Object<span class="br0">&#93;</span>
+  o- ib_srpt ...................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- iscsi ......................................................................... <span class="br0">&#91;</span><span class="nu0">1</span> Target<span class="br0">&#93;</span>
+  <span class="sy0">|</span> o- iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d ..................... <span class="br0">&#91;</span><span class="nu0">1</span> TPG<span class="br0">&#93;</span>
+  <span class="sy0">|</span>   o- tpgt1 ...................................................................... <span class="br0">&#91;</span>enabled<span class="br0">&#93;</span>
+  <span class="sy0">|</span>     o- acls ...................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> ACLs<span class="br0">&#93;</span>
+  <span class="sy0">|</span>     o- luns ....................................................................... <span class="br0">&#91;</span><span class="nu0">1</span> LUN<span class="br0">&#93;</span>
+  <span class="sy0">|</span>     <span class="sy0">|</span> o- lun0 ................................................. <span class="br0">&#91;</span>fileio<span class="sy0">/</span>disk1 <span class="br0">&#40;</span><span class="sy0">/</span>disk1.img<span class="br0">&#41;</span><span class="br0">&#93;</span>
+  <span class="sy0">|</span>     o- portals ................................................................. <span class="br0">&#91;</span><span class="nu0">1</span> Portal<span class="br0">&#93;</span>
+  <span class="sy0">|</span>       o- 192.168.1.1:<span class="nu0">3260</span> ............................................. <span class="br0">&#91;</span>OK, iser disabled<span class="br0">&#93;</span>
+  o- loopback ..................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- qla2xxx ...................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span>
+  o- tcm_fc ....................................................................... <span class="br0">&#91;</span><span class="nu0">0</span> Targets<span class="br0">&#93;</span></pre>
+
+<p>
+Înainte să realizăm configurația clientului de iSCSI, vom salva configurația target-ului pentru a se păstra în cazul unui restart al serverului:
+</p>
+<pre class="code bash"><span class="sy0">/&gt;</span> saveconfig
+WARNING: Saving storage1 current configuration to disk will overwrite your boot settings.
+The current target configuration will become the default boot config.
+Are you sure? Type <span class="st_h">'yes'</span>: <span class="kw2">yes</span></pre>
+
+<p>
+Pe sistemele Linux, clienții iSCSI trebuie să instaleze pachetul <code>open-iscsi</code> care conține comanda <code>iscsiadm</code>. Vom instala acest pachet pe stația <code>storage2</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">apt-get install</span> open-iscsi</pre>
+
+<p>
+Vom genera un <code>IQN</code> pentru stația <code>storage2</code> folosind comanda <code>iscsi-iname</code> și vom pune numele în fișierul <code>/etc/iscsi/initiatorname.iscsi</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span>iscsi-iname
+<span class="co4">root@storage2:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>iscsi<span class="sy0">/</span>initiatorname.iscsi
+<span class="re2">InitiatorName</span>=iqn.2005-03.org.open-iscsi:fc35d7d3fc24</pre>
+
+<p>
+Apoi, reporniti serviciul <code>open-iscsi</code>:
+</p>
+<pre class="code">root@storage2:~# service open-iscsi restart</pre>
+
+<p>
+Înainte de a termina configurarea clientului, trebuie să adăugăm IQN-ul clientului <code>storage2</code> în <abbr title="Access Control List">ACL</abbr>-ul target-ului. Pe stația <code>storage1</code>. Nu uitați să salvați configurația:
+</p>
+<pre class="code bash"><span class="co4">root@storage1:~# </span>targetcli
+<span class="sy0">/&gt;</span> <span class="kw3">cd</span> <span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">&gt;</span> <span class="kw3">cd</span> acls
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>acls<span class="sy0">&gt;</span> <span class="kw3">help</span> create
+SYNTAX
+  create wwn <span class="br0">&#91;</span>add_mapped_luns<span class="br0">&#93;</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>acls<span class="sy0">&gt;</span> create iqn.2005-03.org.open-iscsi:fc35d7d3fc24
+Successfully created Node ACL <span class="kw1">for</span> iqn.2005-03.org.open-iscsi:fc35d7d3fc24
+Created mapped LUN <span class="nu0">0</span>.
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>acls<span class="sy0">&gt;</span> <span class="kw3">cd</span> <span class="sy0">/</span>
+<span class="sy0">/&gt;</span> saveconfig
+<span class="sy0">/&gt;</span> saveconfig
+WARNING: Saving storage1 current configuration to disk will overwrite your boot settings.
+The current target configuration will become the default boot config.
+Are you sure? Type <span class="st_h">'yes'</span>: <span class="kw2">yes</span></pre>
+
+<p>
+Ne întoarcem la configurația clientului <code>storage2</code>. În primul rând clientul trebuie să verifice dacă există vreun target la adresa IP/hostname-ul serverului:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span>iscsiadm <span class="re5">--mode</span> discovery <span class="re5">--type</span> st <span class="re5">--portal</span> 192.168.1.1
+192.168.1.1:<span class="nu0">3260</span>,<span class="nu0">1</span> iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d</pre>
+
+<p>
+Observați noțiunea de <code>portal</code> folosită și la client (la server am creat portal-ul <code>192.168.1.1</code>). <code>–type</code> se referă la tipul pachetului folosit pentru <code>discovery</code> (<code>st=send target</code>).
+</p>
+
+<p>
+Comanda <code>iscsiadm -m node -L all</code> va face încerca să se autentifice automat la toate target-ul descoperite folosind modul <code>discovery</code> al comenzii <code>iscsiadm</code> (<code>–mode discovery</code>):
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span>iscsiadm <span class="re5">-m</span> node <span class="re5">-L</span> all
+Logging <span class="kw1">in</span> to <span class="br0">&#91;</span>iface: default, target: iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d, portal: 192.168.1.1,<span class="nu0">3260</span><span class="br0">&#93;</span> <span class="br0">&#40;</span>multiple<span class="br0">&#41;</span>
+Login to <span class="br0">&#91;</span>iface: default, target: iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d, portal: 192.168.1.1,<span class="nu0">3260</span><span class="br0">&#93;</span> successful.</pre>
+
+<p>
+Pentru a inspecta sesiunile active vom folosi modul <code>session</code> al utilitarului <code>iscsi</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span> iscsiadm <span class="re5">-m</span> session
+tcp: <span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> 192.168.1.1:<span class="nu0">3260</span>,<span class="nu0">1</span> iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d <span class="br0">&#40;</span>non-flash<span class="br0">&#41;</span></pre>
+
+<p>
+Pentru a vedea informații detaliate despre o sesiuni vom folosi parametrul <code>-P</code> al comenzii urmat de nivelul de verbozitate (<code>1</code>, <code>2</code> sau <code>3</code>):
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span> iscsiadm <span class="re5">-m</span> session <span class="re5">-P</span> <span class="nu0">1</span>
+Target: iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d <span class="br0">&#40;</span>non-flash<span class="br0">&#41;</span>
+        Current Portal: 192.168.1.1:<span class="nu0">3260</span>,<span class="nu0">1</span>
+        Persistent Portal: 192.168.1.1:<span class="nu0">3260</span>,<span class="nu0">1</span>
+                <span class="sy0">**********</span>
+                Interface:
+                <span class="sy0">**********</span>
+                Iface Name: default
+                Iface Transport: tcp
+                Iface Initiatorname: iqn.2005-03.org.open-iscsi:fc35d7d3fc24
+                Iface IPaddress: 192.168.1.2
+                Iface HWaddress: <span class="sy0">&lt;</span>empty<span class="sy0">&gt;</span>
+                Iface Netdev: <span class="sy0">&lt;</span>empty<span class="sy0">&gt;</span>
+                SID: <span class="nu0">1</span>
+                iSCSI Connection State: LOGGED IN
+                iSCSI Session State: LOGGED_IN
+                Internal iscsid Session State: NO CHANGE</pre>
+
+<p>
+În acest moment utilitarul <code>iscsiadm</code> a mai adăugat un disc pe client <code>/dev/sdd</code>:
+</p>
+<pre class="code bash"><span class="co4">root@storage2:~# </span><span class="kw2">dmesg</span><span class="sy0">|</span><span class="kw2">tail</span> <span class="re5">-10</span>
+<span class="br0">&#91;</span><span class="nu0">10654.656653</span><span class="br0">&#93;</span> scsi2 : iSCSI Initiator over TCP<span class="sy0">/</span>IP
+<span class="br0">&#91;</span><span class="nu0">10654.914445</span><span class="br0">&#93;</span> scsi <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: Direct-Access     LIO-ORG  FILEIO           <span class="nu0">4.0</span>  PQ: <span class="nu0">0</span> ANSI: <span class="nu0">5</span>
+<span class="br0">&#91;</span><span class="nu0">10654.915060</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: Attached scsi generic sg3 <span class="kw3">type</span> <span class="nu0">0</span>
+<span class="br0">&#91;</span><span class="nu0">10654.918771</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: <span class="br0">&#91;</span>sdd<span class="br0">&#93;</span> <span class="nu0">204800</span> <span class="nu0">512</span>-byte logical blocks: <span class="br0">&#40;</span><span class="nu0">104</span> MB<span class="sy0">/</span><span class="nu0">100</span> MiB<span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="nu0">10654.921415</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: <span class="br0">&#91;</span>sdd<span class="br0">&#93;</span> Write Protect is off
+<span class="br0">&#91;</span><span class="nu0">10654.921418</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: <span class="br0">&#91;</span>sdd<span class="br0">&#93;</span> Mode Sense: <span class="nu0">43</span> 00 00 08
+<span class="br0">&#91;</span><span class="nu0">10654.922477</span><span class="br0">&#93;</span> sd <span class="nu0">2</span>:<span class="nu0">0</span>:<span class="nu0">0</span>:<span class="nu0">0</span>: <span class="br0">&#91;</span>sdd<span class="br0">&#93;</span> Write cache: disabled, <span class="kw2">read</span> cache: enabled, doesn<span class="st_h">'t support DPO or FUA
+[10654.931024]  sdd: unknown partition table
+[10654.936476] sd 2:0:0:0: [sdd] Attached SCSI disk</span></pre>
+
+<p>
+Observați că discul e adăugat ca și un disc normal, conectat direct la stația respectivă.
+</p>
+
+<p>
+Creați o tabelă de partiții și formatați discul cu un sistem de fișiere. Montați sistemul de fișiere creat și realizați operații de citire/scriere.
+</p>
+
+<p>
+Același LUN nu se poate monta pe 2 clienți diferiți decât dacă se folosește un sistem de fișiere <code>shared</code> (ex.: VMFS de la VMware - vezi <a href="../../../../../../saisp/courses/06.html" class="wikilink1" title="saisp:courses:06">Curs 06 - Sisteme de fișiere în rețea</a>).
+</p>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1114 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 11. Controlul traficului    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-23T19:47:18+0300"/>
+<meta name="keywords" content="saisp,labs,11"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=saisp:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/saisp/labs/11.html"/>
+<link rel="canonical" href="11.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs';var JSINFO = {"id":"saisp:labs:11","namespace":"saisp:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="11%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="11%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+
+
+<h1 class="sectionedit1" id="laborator_11_controlul_traficului">Laborator 11. Controlul traficului</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Generare trafic de diferite tipuri în scopul evaluării parametrilor QoS ai rețelei</div>
+</li>
+<li class="level1"><div class="li"> Strategii de QoS în mediul Linux</div>
+</li>
+<li class="level1"><div class="li"> Folosirea comenzii <code>tc</code> pentru aplicarea strategiilor de QoS</div>
+</li>
+<li class="level1"><div class="li"> Colectarea de statistici folosind comanda <code>tc</code></div>
+</li>
+<li class="level1"><div class="li"> Prezentarea unor wrappere peste comanda <code>tc</code> ce simplifică aplicarea politicilor de QoS (<code>HTB-Tools</code>, <code>tcng</code>)</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+În cadrul acestui laborator vom folosi următoarea topologie formată din trei mașini virtuale (<code>gateway</code>, <code>client1</code> și <code>client2</code>). Acestea sunt conectate conform schemei de mai jos:<a href="../../_detail/saisp/labs/11/saisp_lab11.png%3Fid=saisp%253Alabs%253A11.html" class="media" title="saisp:labs:11:saisp_lab11.png"><img src="../../_media/saisp/labs/11/saisp_lab11.png%3Fw=700&amp;tok=1b2dad" class="media" alt="" width="700" /></a>
+</p>
+
+<p>
+Pentru a pregăti configurația de laborator va trebui să descărcați pe mașina fizică (<code>mjolnir</code>), în directorul <code>saisp/</code>, arhiva laboratorului:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">wget</span> <span class="re5">--user</span>=user-curs <span class="re5">--ask-password</span> http:<span class="sy0">//</span>repository.grid.pub.ro<span class="sy0">/</span>cs<span class="sy0">/</span>saisp<span class="sy0">/</span>laboratoare<span class="sy0">/</span>lab-<span class="nu0">11</span>.zip
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">unzip</span> lab-<span class="nu0">11</span>.zip</pre>
+
+<p>
+În urma dezarhivării rezultă trei fișiere imagine KVM (format <code>qcow2</code>, <code>gateway.qcow2</code>, <code>client1.qcow2</code> și <code>client2.qcow2</code>) și un script de pornire a topologiei (<code>lab11-start</code>). Imaginea de bază <code>base.qcow2</code> este deja în directorul <code>saisp/</code> și este baza pentru celelalte trei fișiere: <code>gateway.qcow2</code>, <code>client1.qcow2</code> și <code>client2.qcow2</code>.
+</p>
+
+<p>
+Puteți urma pașii de mai sus pentru a descărca infrastructura KVM pentru laborator pentru lucru acasă.
+</p>
+
+<p>
+Pentru pornirea topologiei de mai sus, rulați scriptul <code>lab11-start</code>:
+</p>
+<pre class="code">student@mjolnir:~/saisp$ ./lab11-start</pre>
+
+<p>
+Pentru accesarea celor trei mașini (<code>gateway</code>, <code>client1</code> și <code>client2</code>) folosiți SSH către adresele IP aferente fiecăreia. Pentru conectarea la mașina virtuală pentru <code>gateway</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.1.3</pre>
+
+<p>
+pentru conectarea la <code>client1</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.1.1</pre>
+
+<p>
+iar pentru conectarea la <code>client2</code> folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.1.2</pre>
+
+<p>
+Parola pentru cele trei mașini virtuale este <code>student</code> atât pentru utilizatorul <code>root</code> cât și pentru utilizatorul <code>student</code>.
+</p>
+
+<p>
+<p><div class="notewarning">
+Pentru a avea acces la Internet din masina virtuala, rulati pe <strong>masina fizica</strong> comanda:
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-o</span> eno1 <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="11.html" class="wikilink1" title="saisp:labs:11">Laboratorul 11</a></span></strong>
+</p>
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_115226330658355baa7af56" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="11/contents/00.html" class="wikilink1" title="saisp:labs:11:contents:00">00. [10p] Completare formular de feedback</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/01.html" class="wikilink1" title="saisp:labs:11:contents:01">01. [10p] iperf (generator de trafic)</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/02.html" class="wikilink1" title="saisp:labs:11:contents:02">02. [10p] Generarea traficului pe baza unor caracteristici și constrângeri din lumea reală</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/03.html" class="wikilink1" title="saisp:labs:11:contents:03">03. [10p] Clasificarea folosind ToS</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/04.html" class="wikilink1" title="saisp:labs:11:contents:04">04. [5p] Traffic shaping în Linux</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/05.html" class="wikilink1" title="saisp:labs:11:contents:05">05. [10p] Traffic shaping classful</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/06.html" class="wikilink1" title="saisp:labs:11:contents:06">06. [15p] Politici de limitare per client</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/07.html" class="wikilink1" title="saisp:labs:11:contents:07">07. [10p] HTB - observarea consumului de resurse</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/08.html" class="wikilink1" title="saisp:labs:11:contents:08">08. [20p] HTB - u32 hashing tables</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/09.html" class="wikilink1" title="saisp:labs:11:contents:09">09. [BONUS - 10p] tcng (traffic control next generation)</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/10.html" class="wikilink1" title="saisp:labs:11:contents:10">10. [BONUS - 10p] Colectare statistici folosind tc</a></div></li>
+</ul>
+</div></div>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+
+<h2 class="sectionedit7" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:00">
+
+<h3 class="sectionedit10" id="p_completare_formular_de_feedback">00. [10p] Completare formular de feedback</h3>
+<div class="level3">
+
+<p>
+Vă invităm să evaluați activitatea echipei de SAISP și să precizați punctele tari și punctele slabe și sugestiile voastre de îmbunătățire a materiei. Feedback-ul vostru este foarte important pentru noi să creștem calitatea materiei în anii următori și să îmbunătățim materiile pe care le veți face în continuare.
+</p>
+
+<p>
+Găsiți formularul de feedback în partea dreaptă a paginii principale de SAISP de pe cs.curs.pub.ro într-un frame numit “FEEDBACK”.
+</p>
+
+<p>
+Vă mulțumim!
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:01">
+
+<h3 class="sectionedit13" id="p_iperf_generator_de_trafic">01. [10p] iperf (generator de trafic)</h3>
+<div class="level3">
+
+<p>
+Pentru a fi capabili să evaluăm politicile de QoS setate în rețeaua administrată de noi, avem nevoie de un utilitar care să genereze diferite tipuri de pachete, de diferite dimensiuni (UDP, TCP) și să măsoare viteza cu care acestea au fost transmise. Cel mai folosit utilitar pentru acest lucru este <code>iperf</code>. Acesta creează pachete direct în memorie și le trimite pe rețea, eliminând overhead-ul altor dispozitive I/O (exemplu: dacă testam cu un transfer <abbr title="File Transfer Protocol">FTP</abbr> se adăuga overhead-ul citirii/scrierii pe disc a fișierului transferat).
+</p>
+
+<p>
+Utilitarul <strong>iperf</strong> poate rula în 2 moduri:
+</p>
+<ul>
+<li class="level1"><div class="li"> client: cel care <strong>generează</strong> traficul</div>
+</li>
+<li class="level1"><div class="li"> server: cel care <strong>primește</strong> traficul</div>
+</li>
+</ul>
+
+<p>
+În cadrul acestui laborator dorim să limităm traficul de <code>download</code>, astfel clientul <code>iperf</code> va rula pe <code>gateway</code>, iar server-ul <code>iperf</code>, cel care primește traficul, va rula pe mașinile virtuale <code>client1</code> și <code>client2</code>.
+</p>
+
+<p>
+Instalați <code>iperf</code> pe toate cele 3 stații:
+</p>
+<pre class="code bash"><span class="co4">root@client1:~# </span><span class="kw2">apt-get update</span>
+<span class="co4">root@client1:~# </span><span class="kw2">apt-get install</span> iperf
+&nbsp;
+<span class="co4">root@client2:~# </span><span class="kw2">apt-get update</span>
+<span class="co4">root@client2:~# </span><span class="kw2">apt-get install</span> iperf
+&nbsp;
+<span class="co4">root@gateway:~# </span><span class="kw2">apt-get update</span>
+<span class="co4">root@gateway:~# </span><span class="kw2">apt-get install</span> iperf</pre>
+
+<p>
+Pe stația <code>client1</code>, porniți <code>iperf</code> în modul server:
+</p>
+<pre class="code bash">iperf <span class="re5">-s</span></pre>
+
+<p>
+Pe stația <code>gateway</code>, porniti <code>iperf</code> în modul client:
+</p>
+<pre class="code bash">iperf <span class="re5">-c</span> 192.168.1.1</pre>
+
+<p>
+După 10 secunde, atât server-ul (<code>client1</code>) cât și clientul (<code>gateway</code>) vor afișa statistici legate de traficul schimbat:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>iperf <span class="re5">-c</span> 192.168.1.1
+<span class="re5">------------------------------------------------------------</span>
+Client connecting to 192.168.1.1, TCP port <span class="nu0">5001</span>
+TCP window size: <span class="nu0">22.9</span> KByte <span class="br0">&#40;</span>default<span class="br0">&#41;</span>
+<span class="re5">------------------------------------------------------------</span>
+<span class="br0">&#91;</span>  <span class="nu0">3</span><span class="br0">&#93;</span> <span class="kw3">local</span> 192.168.1.3 port <span class="nu0">57685</span> connected with 192.168.1.1 port <span class="nu0">5001</span>
+<span class="br0">&#91;</span> ID<span class="br0">&#93;</span> Interval       Transfer     Bandwidth
+<span class="br0">&#91;</span>  <span class="nu0">3</span><span class="br0">&#93;</span>  <span class="nu0">0.0</span>-<span class="nu0">10.0</span> sec   <span class="nu0">190</span> MBytes   <span class="nu0">159</span> Mbits<span class="sy0">/</span>sec
+&nbsp;
+<span class="co4">root@client1:~# </span>iperf <span class="re5">-s</span>
+<span class="re5">------------------------------------------------------------</span>
+Server listening on TCP port <span class="nu0">5001</span>
+TCP window size: <span class="nu0">85.3</span> KByte <span class="br0">&#40;</span>default<span class="br0">&#41;</span>
+<span class="re5">------------------------------------------------------------</span>
+<span class="br0">&#91;</span>  <span class="nu0">4</span><span class="br0">&#93;</span> <span class="kw3">local</span> 192.168.1.1 port <span class="nu0">5001</span> connected with 192.168.1.3 port <span class="nu0">57685</span>
+<span class="br0">&#91;</span> ID<span class="br0">&#93;</span> Interval       Transfer     Bandwidth
+<span class="br0">&#91;</span>  <span class="nu0">4</span><span class="br0">&#93;</span>  <span class="nu0">0.0</span>-<span class="nu0">10.0</span> sec   <span class="nu0">190</span> MBytes   <span class="nu0">159</span> Mbits<span class="sy0">/</span>sec</pre>
+
+<p>
+Generați trafic de tip <code>UDP</code> între stația <code>gateway</code> și stația <code>client2</code> în care lungimea pachetelor să fie de 256 de octeți (Hint: <code>--len</code>).
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:02">
+
+<h3 class="sectionedit16" id="p_generarea_traficului_pe_baza_unor_caracteristici_si_constrangeri_din_lumea_reala">02. [10p] Generarea traficului pe baza unor caracteristici și constrângeri din lumea reală</h3>
+<div class="level3">
+
+<p>
+În cadrul laboratorului, vom explora principalele strategii de QoS din Linux. Pentru a observa comportamentul strategiilor implementate, vom folosi un model de trafic, compus din:
+</p>
+<ul>
+<li class="level1"><div class="li"> trafic de <strong>voce</strong> (UDP, port 8000)</div>
+</li>
+<li class="level1"><div class="li"> trafic <strong>video</strong> (UDP, port 6000)</div>
+</li>
+<li class="level1"><div class="li"> trafic <strong><abbr title="File Transfer Protocol">FTP</abbr></strong> (TCP, port 21)</div>
+</li>
+<li class="level1"><div class="li"> trafic <strong>HTTP</strong> (TCP, port 80)</div>
+</li>
+</ul>
+
+<p>
+Traficul <strong>nu</strong> va fi real ci îl vom <strong>simula</strong> cu ajutorul lui <code>iperf</code> prezentat anterior.
+</p>
+
+<p>
+Fiecare tip de trafic din cele considerate mai sus are anumite caracteristici și constrângeri. Pentru o funcționare optimă, trebuie să ținem seama de acestea:
+</p>
+<ul>
+<li class="level1"><div class="li"> trafic de <strong>voce</strong></div>
+<ul>
+<li class="level2"><div class="li"> sensibil la: delay, jitter, packet loss</div>
+</li>
+<li class="level2"><div class="li"> consum de banda: mic, constant</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> trafic <strong>video</strong></div>
+<ul>
+<li class="level2"><div class="li"> sensibil la: delay, jitter, packet loss</div>
+</li>
+<li class="level2"><div class="li"> consum de banda: mare, constant</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> trafic <strong><abbr title="File Transfer Protocol">FTP</abbr></strong> si <strong>HTTP</strong></div>
+<ul>
+<li class="level2"><div class="li"> sensibil la: nimic</div>
+</li>
+<li class="level2"><div class="li"> consum de banda: mare, variabil, greedy (tinde sa “umple” intreaga latime de banda a legaturii)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Dupa cum ați observat la exercițiul anterior, o conexiune <code>iperf</code> client-server generează un singur tip de trafic (implicit, trafic TCP pe portul 5001). Noi dorim să generăm mai multe tipuri de trafic, concomitent, pentru a vedea cum se afectează între ele. Deci va trebui să instanțiem mai multe astfel de perechi, în background.
+</p>
+
+<p>
+Vom crea un script cu numele <code>iperf-client1.sh</code> care va porni 4 servere <code>iperf</code> pe stația <code>client1</code> (urmăriți comentariile):
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/saisp/labs/11%3Fcodeblock=11" title="Download Snippet" class="mediafile mf_sh">iperf-client1.sh</a></dt>
+<dd><pre class="code file bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="co0"># Asculta trafic UDP, pe port-ul 8000 - fluxul de voce</span>
+iperf <span class="re5">--server</span> <span class="re5">--udp</span> <span class="re5">--port</span> <span class="nu0">8000</span> <span class="sy0">&amp;&gt;</span> out1.txt  <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Asculta trafic UDP, pe port-ul 6000 - fluxul video</span>
+iperf <span class="re5">--server</span> <span class="re5">--udp</span> <span class="re5">--port</span> <span class="nu0">6000</span> <span class="sy0">&amp;&gt;</span> out2.txt <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Asculta trafic TCP, pe port-ul 21 - fluxul FTP</span>
+<span class="co0"># Daca nu se specifica --udp, implicit este TCP</span>
+iperf <span class="re5">--server</span> <span class="re5">--port</span> <span class="nu0">21</span> <span class="sy0">&amp;&gt;</span> out3.txt <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Asculta trafic TCP, pe port-ul 80 - fluxul HTTP</span>
+<span class="co0"># Daca nu se specifica --udp, implicit este TCP.</span>
+iperf <span class="re5">--server</span> <span class="re5">--port</span> <span class="nu0">80</span> <span class="sy0">&amp;&gt;</span> out4.txt <span class="sy0">&amp;</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;iperf servers started. Now run the script on the gateway.&quot;</span></pre>
+</dd></dl>
+
+<p>
+Vom crea pe stația <code>gateway</code> un script cu numele <code>iperf-gateway.sh</code> care se va conecta la cele 4 servere pornite pe stația <code>client1</code>, generând cele 4 tipuri de trafic prezentate anterior. Simulăm tipurile de trafic prin generare de pachete ce au caracteristici asemănătoare cu cele din cazurile reale. Urmăriți comentariile din fișier:
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/saisp/labs/11%3Fcodeblock=12" title="Download Snippet" class="mediafile mf_sh">iperf-gateway.sh</a></dt>
+<dd><pre class="code file bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="re2">IP_VM</span>=<span class="st0">&quot;192.168.1.1&quot;</span>
+<span class="re2">TIME</span>=<span class="nu0">60</span> <span class="co0"># Durata unui test</span>
+&nbsp;
+<span class="co0"># Initiaza un flux UDP catre server, pe portul 8000</span>
+<span class="co0"># Fiecare datagrama are dimensiunea de 128 octeti (tipic pentru pachetele de voce)</span>
+<span class="co0"># Se trimite la o rata de 640Kbps (dorim sa simulam 10 conversatii VoIP, a cate 64Kbps)</span>
+iperf <span class="re5">-x</span> SC <span class="re5">--client</span> <span class="re1">$IP_VM</span> <span class="re5">--port</span> <span class="nu0">8000</span> <span class="re5">--udp</span> <span class="re5">--len</span> <span class="nu0">128</span> <span class="re5">--bandwidth</span> 640K <span class="re5">--time</span> <span class="re1">$TIME</span> <span class="sy0">&gt;</span> out3.txt <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Initiaza un flux UDP catre server, pe portul 6000</span>
+<span class="co0"># Fiecare datagrama are dimensiunea maxima (pentru ca nu o specificam explicit)</span>
+<span class="co0"># Se trimite la o rata de 30Mbps</span>
+iperf <span class="re5">-x</span> SC <span class="re5">--client</span> <span class="re1">$IP_VM</span> <span class="re5">--port</span> <span class="nu0">6000</span> <span class="re5">--udp</span> <span class="re5">--bandwidth</span> 30M <span class="re5">--time</span> <span class="re1">$TIME</span> <span class="sy0">&gt;</span> out4.txt <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Initiaza un flux TCP catre server, pe portul 80 (HTTP)</span>
+<span class="co0"># Limitam dimensiunea unui segment la 512 octeti</span>
+iperf <span class="re5">-x</span> SC <span class="re5">--client</span> <span class="re1">$IP_VM</span> <span class="re5">--port</span> <span class="nu0">80</span> <span class="re5">--mss</span> <span class="nu0">512</span> <span class="re5">--time</span> <span class="re1">$TIME</span> <span class="sy0">&gt;</span> out1.txt <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Initiaza un flux TCP catre server, pe portul 21 (FTP)</span>
+<span class="co0"># Dimensiunea unui segment va fi de 1400 octeti (dorim ca fluxul FTP sa fie mai agresiv)</span>
+<span class="co0"># Dimensiunea ferestrei TCP va fi de 256K (dorim ca fluxul FTP sa fie mai agresiv)</span>
+iperf <span class="re5">-x</span> SC <span class="re5">--client</span> <span class="re1">$IP_VM</span> <span class="re5">--port</span> <span class="nu0">21</span> <span class="re5">--window</span> 256K <span class="re5">--mss</span> <span class="nu0">1400</span> <span class="re5">--time</span> <span class="re1">$TIME</span> <span class="sy0">&gt;</span> out2.txt <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&amp;</span>
+&nbsp;
+<span class="kw3">wait</span>
+<span class="kw1">for</span> i <span class="kw1">in</span> out<span class="sy0">*</span>; <span class="kw1">do</span> <span class="kw3">echo</span>; <span class="kw2">cat</span> <span class="re1">$i</span>; <span class="kw1">done</span>
+<span class="kw2">rm</span> out<span class="sy0">*</span>.txt</pre>
+</dd></dl>
+
+<p>
+Rulați script-urile create anterior (<code>iperf-client1.sh</code> pe stația <code>client1</code> și <code>iperf-gateway.sh</code> pe stația <code>gateway</code>). Așteptați 60 de secunde și inspectați output-ul de pe stația <code>gateway</code>. Ce observați?
+</p>
+
+<p>
+Observăm că fluxurile UDP au suferit <strong>packet loss</strong>, ele neavând nici un mecanism pentru retransmitere sau reglare a vitezei în funcție e starea legăturii. Pentru fluxul video, o pierdere de pachete de câteva procente este inacceptabilă. În continuare vom studia mecanismele implicite de QoS din Linux și cum putem preveni aceste pierderi de pachete.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:03">
+
+<h3 class="sectionedit19" id="p_clasificarea_folosind_tos">03. [10p] Clasificarea folosind ToS</h3>
+<div class="level3">
+
+<p>
+În Linux, strategiile de QoS se inspectează și configurează folosind comanda <code>tc</code>. Termenul folosit pentru strategiile de QoS este <code>qdisc</code> (de la <code>queueing discipline</code>).
+</p>
+
+<p>
+Afisați detalii despre qdisc-ul implicit, asociat interfeței <code>eth0</code> de pe stația <code>gateway</code>:
+</p>
+<pre class="code"># tc qdisc show dev eth0
+qdisc pfifo_fast 0: root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1</pre>
+
+<p>
+Observați că qdisc-ul implicit este <code>pfifo_fast</code> (strategia implicită de QoS):
+</p>
+<ul>
+<li class="level1"><div class="li"> Numele vine de la <code>priority FIFO</code>.</div>
+</li>
+<li class="level1"><div class="li"> Este un qdisc <strong>classless</strong> (nu putem clasifica traficul și limita traficul, îl putem doar prioritiza)</div>
+</li>
+<li class="level1"><div class="li"> Nu este o simpla coada FIFO, ci conține 3 (sub)cozi, numite 0, 1 si 2 (fiecare din ele fiind FIFO). Cât timp coada coada <code>0</code> conține pachete, cozile 1 si 2 NU vor fi servite.</div>
+</li>
+</ul>
+
+<p>
+Ce reprezintă <code>priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1</code>? În Linux, kernel-ul asociază fiecărui pachet o prioritate, în functie de campul TOS (Type of Service) din header-ul IP. Prioritatea ne selectează una din cele 3 (sub)cozi din pfifo_fast: coada 0, 1 sau 2. Asocierile se fac după următorul tabel:
+</p>
+<pre class="code">TOS     Means                    Linux Priority    Band
+-------------------------------------------------------
+0x0     Normal-Service           0 Best Effort     1
+0x2     Minimize-Monetary Cost   1 Filler          2
+0x4     Maximize-Reliability     0 Best Effort     1
+0x6     mmc+mr                   0 Best Effort     1
+0x8     Maximize-Throughput      2 Bulk            2
+0xa     mmc+mt                   2 Bulk            2
+0xc     mr+mt                    2 Bulk            2
+0xe     mmc+mr+mt                2 Bulk            2
+0x10    Minimize-Delay           6 Interactive     0
+0x12    mmc+md                   6 Interactive     0
+0x14    mr+md                    6 Interactive     0
+0x16    mmc+mr+md                6 Interactive     0
+0x18    mt+md                    4 Int. Bulk       1
+0x1a    mmc+mt+md                4 Int. Bulk       1
+0x1c    mr+mt+md                 4 Int. Bulk       1
+0x1e    mmc+mr+mt+md             4 Int. Bulk       1</pre>
+
+<p>
+Observăm că pachetele normale (cu TOS 0x00) sunt introduse în (sub)coada 1. La punctul anterior, fluxul UDP avea o pierdere semnificativă de pachete. O primă soluție ar fi marcarea pachetelor de voce și video cu un ToS favorabil (de exemplu, <code>0x10</code>), pentru a avea prioritate mai mare față de pachetele. Marcarea se realizează folosind lanțul <code>mangle</code> al comenzii <code>iptables</code>:
+</p>
+<pre class="code">root@gateway:~#  iptables -t mangle -A OUTPUT -p udp --dport 6000:8000 -j TOS --set-tos Minimize-Delay</pre>
+
+<p>
+Comanda anterioară marchează toate pachetele UDP cu porturile în intervalul 6000 și 8000 cu tag-ul <code>Minimize-Delay</code>. Se observă că se poate folosi numele tag-ului în loc de valoare (<code>0x10</code>).
+</p>
+
+<p>
+Rulați din nou scriptul <code>iperf-gateway.sh</code> pe stația <code>gateway</code> și observați că procentele pierdute s-au diminuat foarte puțin. Nu e suficientă doar o prioritizare a pachetelor.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:04">
+
+<h3 class="sectionedit22" id="p_traffic_shaping_in_linux">04. [5p] Traffic shaping în Linux</h3>
+<div class="level3">
+
+<p>
+Am observat faptul că policing-ul pe baza ToS-ului nu este suficient pentru a asigura echitatea între servicii. Soluția ce se apoate aplica este dată de limitarea serviciilor <abbr title="File Transfer Protocol">FTP</abbr> și HTTP.
+</p>
+
+<p>
+<code>tbf</code> este cea mai simplă metodă de a face traffic shaping în Linux.  Este, de asemenea, un qdisc <strong>classless</strong> (ca și <code>pfifo_fast</code>).
+</p>
+
+<p>
+Dorim să limităm viteza pentru fluxurile <abbr title="File Transfer Protocol">FTP</abbr> și HTTP (însumate) la aproximativ 9Mbps. Deoarece fluxul de voce are 640kbps, iar cel video are 30Mbps, rezulta ca o valoare acceptabila pentru viteza totală ar fi 40Mbps. Pe stația <code>gateway</code> ne dorim următoarele setări:
+</p>
+<ul>
+<li class="level1"><div class="li"> Viteza maximă de transfer să fie 50Mbps (40Mbps pentru datele propriu zise și o marjă de 20% pentru încapsulare - headere IP, TCP/UDP, Ethernet)</div>
+</li>
+<li class="level1"><div class="li"> În caz de congestie, acceptăm un surplus de 128Kbps, pentru 50ms.</div>
+</li>
+</ul>
+
+<p>
+Vom seta qdisc-ul <code>tbf</code>, pe interfața <code>eth0</code> astfel:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>tc qdisc add dev eth0 root tbf rate 50mbit burst 128kbit latency 50ms</pre>
+
+<p>
+Rulați din nou script-ul <code>iperf-gateway.sh</code> de pe stația <code>gateway</code>. Asteptați 60 de secunde și inspectați output-ul afișat. Ce observați? Pierderile de pachete pentru conexiunea UDP au dispărut, qdisc-ul <code>tbf</code> asigurând echitate între conexiuni.
+</p>
+
+<p>
+Cu toate că suma vitezelor fluxurilor este de aproximativ 50Mbps, ea nu este distribuită așa cum ne-am fi asteptat. Fluxurile <abbr title="File Transfer Protocol">FTP</abbr> și HTTP ocupa mai mult decât 9Mbps. Motivul este că limitarea a fost facută printr-o metoda <strong>classless</strong>, ce limitează întreg traficul de pe o interfață, fără a avea posibilitatea de a selecta și clasifica diferite tipuri de trafic. Soluția este dată de aplicarea unui qdisc <strong>classful</strong>, ce trateaza in mod separat diferitele clase de trafic.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:05">
+
+<h3 class="sectionedit25" id="p_traffic_shaping_classful">05. [10p] Traffic shaping classful</h3>
+<div class="level3">
+
+<p>
+<code>htb</code> este un qdisc <strong>classful</strong> (tratează traficul în mod diferențiat, în funcție de clasa din care face parte). Este varianta <strong>classful</strong> a <code>tbf</code> (împarte traficul pe clase, apoi aplica <code>tbf</code> pe fiecare în parte).
+</p>
+
+<p>
+Clasele sunt organizate într-o structura de arbore. Cu cât o clasa este mai jos în ierarhie, cu atât este mai specifică. Fiecare clasă are asociată o strategie de QoS (qdisc). În mod implicit, qdisc-ul este pfifo_fast, iar acesta poate fi modificat.
+</p>
+
+<p>
+Exemplu de ierarhie: 
+</p>
+<pre class="code">               1:           root qdisc (always present)
+               |
+              1:1           child class (with default qdisc)
+             /   \
+            /     \
+          1:3     1:4       leaf classes (with user-defined qdiscs)
+           |       |
+          30:     40:       qdiscs
+         (sfq)   (sfq)</pre>
+
+<p>
+Observații:
+</p>
+<ul>
+<li class="level1"><div class="li"> Fiecare clasa este identificată printr-un <strong>major</strong> și un <strong>minor</strong>, sub forma “major:minor”. Toate clasele dintr-o ierarhie trebuie să aiba același major.</div>
+</li>
+<li class="level1"><div class="li"> Fiecare qdisc este identificat doar printr-un <strong>major</strong>. Minorul este întotdeauna zero. O scriere de forma <code>major:</code> este echivalentă cu <code>major:0</code>.</div>
+</li>
+<li class="level1"><div class="li"> Deși nu este reprezentat, clasa <code>1:1</code> are un qdisc asociat (cel implicit).</div>
+</li>
+<li class="level1"><div class="li"> Claselor <code>1:3</code> și <code>1:4</code> le-a fost schimbat qdisc-ul implicit (în loc de <code>pfifo_fast</code>, avem <code>sfq</code>, un qdisc ce funcționează după modelul Round Robin)</div>
+</li>
+</ul>
+
+<p>
+Tratarea pachetelor:
+</p>
+<ul>
+<li class="level1"><div class="li"> Dacă un pachet se potrivește cu clasa <code>1:1</code>, dar NU se potrivește cu clasa <code>1:3</code> sau <code>1:4</code>, va fi tratat conform qdisc-ului implicit al clasei <code>1:1</code>, adica <code>pfifo_fast</code>.</div>
+</li>
+<li class="level1"><div class="li"> Dacă un pachet se potrivește cu clasa <code>1:1</code> ȘI cu clasa <code>1:3</code>, va fi tratat conform qdisc-ului clasei <code>1:3</code>, adica <code>sfq</code>.</div>
+</li>
+<li class="level1"><div class="li"> Analog pentru clasa <code>1:4</code>.</div>
+</li>
+</ul>
+
+<p>
+Clasificarea pachetelor:
+</p>
+<ul>
+<li class="level1"><div class="li"> Pentru a decide din ce clasă face parte un pachet, trebuie definite <strong>filtre</strong>.</div>
+</li>
+<li class="level1"><div class="li"> Un filtru specifică condițiile de <code>match</code> și clasa în care trebuie inclus pachetul.</div>
+</li>
+<li class="level1"><div class="li"> De obicei, filtrele se atașează rădăcinii.</div>
+</li>
+</ul>
+
+<p>
+Ne propunem sa alocam cate o clasa fiecarui tip de trafic din cele definite în scenariu. Fiecare clasă de trafic va fi limitată la o lățime de bandă bine definită, astfel:
+</p>
+<ul>
+<li class="level1"><div class="li"> voce: 1Mbps</div>
+</li>
+<li class="level1"><div class="li"> video: 40Mbps</div>
+</li>
+<li class="level1"><div class="li"> <abbr title="File Transfer Protocol">FTP</abbr>: 5Mbps</div>
+</li>
+<li class="level1"><div class="li"> HTTP: 3Mbps</div>
+</li>
+</ul>
+
+<p>
+Toate configurațiile vor fi făcute pe interfața <code>eth0</code> a stației <code>gateway</code> (politifice de traffic shaping pot fi aplicate doar pentru traficul care iese pe o interfață). Mai întâi, trebuie să ștergem orice alt qdisc de pe interfața <code>eth0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>tc qdisc del dev eth0 root</pre>
+
+<p>
+Adăugam qdisc-ul <code>htb</code>, cu majorul <code>1:</code> (sau <code>1:0</code>):
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>tc qdisc add dev eth0 root handle <span class="nu0">1</span>: htb</pre>
+
+<p>
+Definim prima clasa, cea pentru traficul de voce. Trebuie să specificăm:
+</p>
+<ul>
+<li class="level1"><div class="li"> părintele, care este <code>1:</code></div>
+</li>
+<li class="level1"><div class="li"> id-ul, fie acesta <code>1:1</code> (majorul trebuie sa fie același cu al părintelui, minorul poate fi orice)</div>
+</li>
+<li class="level1"><div class="li"> parametrii htb: viteza și depășirea (burst-ul) acceptată</div>
+</li>
+</ul>
+<pre class="code">root@gateway:~# tc class add dev eth0 parent 1: classid 1:1 htb rate 1mbit burst 128k</pre>
+
+<p>
+Procedăm analog și pentru restul claselor:
+</p>
+<pre class="code">tc class add dev eth0 parent 1: classid 1:2 htb rate 40mbit burst 128k
+tc class add dev eth0 parent 1: classid 1:3 htb rate 5mbit burst 128k
+tc class add dev eth0 parent 1: classid 1:4 htb rate 3mbit burst 128k</pre>
+
+<p>
+Verificăm qdisc-ul asociat interfeței <code>eth0</code> și ierarhia de clase adăugată:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>tc qdisc show dev eth0
+qdisc htb <span class="nu0">1</span>: root refcnt <span class="nu0">2</span> r2q <span class="nu0">10</span> default <span class="nu0">0</span> direct_packets_stat <span class="nu0">82</span> direct_qlen <span class="nu0">1000</span>
+&nbsp;
+<span class="co4">root@gateway:~# </span>tc class show dev eth0
+class htb <span class="nu0">1</span>:<span class="nu0">1</span> root prio <span class="nu0">0</span> rate 1000Kbit ceil 1000Kbit burst 128Kb cburst 1600b
+class htb <span class="nu0">1</span>:<span class="nu0">2</span> root prio <span class="nu0">0</span> rate 40000Kbit ceil 40000Kbit burst 128Kb cburst 1600b
+class htb <span class="nu0">1</span>:<span class="nu0">3</span> root prio <span class="nu0">0</span> rate 5000Kbit ceil 5000Kbit burst 128Kb cburst 1600b
+class htb <span class="nu0">1</span>:<span class="nu0">4</span> root prio <span class="nu0">0</span> rate 3000Kbit ceil 3000Kbit burst 128Kb cburst 1599b</pre>
+
+<p>
+Cu toate că am definit ierarhia de clase, nu am definit cum selectăm traficul pentru aceste clase. Vom folosi noțiunea de filtre oferită de utilitarul <code>tc</code>. Definim primul filtru, ce selectează trafic cu portul destinație <code>8000</code>. Trebuie să specificam:
+</p>
+<ul>
+<li class="level1"><div class="li"> protocolul de nivel 3: IP</div>
+</li>
+<li class="level1"><div class="li"> parintele: <code>1:</code> - vom atasa toate filtrele în nodul rădăcina</div>
+</li>
+<li class="level1"><div class="li"> prioritatea: <code>1</code> - toate filtrele vor avea aceeași prioritate</div>
+</li>
+<li class="level1"><div class="li"> tipul de filtru: <code>u32</code>, ce poate face match pe header-ul IP</div>
+</li>
+<li class="level1"><div class="li"> condiția de match: portul destinație (8000), și masca (0xffff - dorim să facem match pe toți cei 16 biți asociați câmpului destinație)</div>
+</li>
+<li class="level1"><div class="li"> clasa în care va fi încadrat traficul (flowid): <code>1:1</code>:<pre class="code bash"><span class="co4">root@gateway:~# </span>tc filter add dev eth0 protocol <span class="kw2">ip</span> parent <span class="nu0">1</span>: prio <span class="nu0">1</span> u32 match <span class="kw2">ip</span> dport <span class="nu0">8000</span> 0xffff flowid <span class="nu0">1</span>:<span class="nu0">1</span></pre>
+</div>
+</li>
+</ul>
+
+<p>
+Procedăm analog și cu celelalte filtre:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>tc filter add dev eth0 protocol <span class="kw2">ip</span> parent <span class="nu0">1</span>: prio <span class="nu0">1</span> u32 match <span class="kw2">ip</span> dport <span class="nu0">6000</span> 0xffff flowid <span class="nu0">1</span>:<span class="nu0">2</span>
+<span class="co4">root@gateway:~# </span>tc filter add dev eth0 protocol <span class="kw2">ip</span> parent <span class="nu0">1</span>: prio <span class="nu0">1</span> u32 match <span class="kw2">ip</span> dport <span class="nu0">21</span> 0xffff flowid <span class="nu0">1</span>:<span class="nu0">3</span>
+<span class="co4">root@gateway:~# </span>tc filter add dev eth0 protocol <span class="kw2">ip</span> parent <span class="nu0">1</span>: prio <span class="nu0">1</span> u32 match <span class="kw2">ip</span> dport <span class="nu0">80</span> 0xffff flowid <span class="nu0">1</span>:<span class="nu0">4</span></pre>
+
+<p>
+Verificăm filtrele create:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>tc filter show dev eth0
+filter parent <span class="nu0">1</span>: protocol <span class="kw2">ip</span> pref <span class="nu0">1</span> u32
+filter parent <span class="nu0">1</span>: protocol <span class="kw2">ip</span> pref <span class="nu0">1</span> u32 fh <span class="nu0">800</span>: ht divisor <span class="nu0">1</span>
+filter parent <span class="nu0">1</span>: protocol <span class="kw2">ip</span> pref <span class="nu0">1</span> u32 fh <span class="nu0">800</span>::<span class="nu0">800</span> order <span class="nu0">2048</span> key ht <span class="nu0">800</span> bkt <span class="nu0">0</span> flowid <span class="nu0">1</span>:<span class="nu0">1</span>
+  match 00001f40<span class="sy0">/</span>0000ffff at <span class="nu0">20</span>
+filter parent <span class="nu0">1</span>: protocol <span class="kw2">ip</span> pref <span class="nu0">1</span> u32 fh <span class="nu0">800</span>::<span class="nu0">801</span> order <span class="nu0">2049</span> key ht <span class="nu0">800</span> bkt <span class="nu0">0</span> flowid <span class="nu0">1</span>:<span class="nu0">2</span>
+  match 00001770<span class="sy0">/</span>0000ffff at <span class="nu0">20</span>
+filter parent <span class="nu0">1</span>: protocol <span class="kw2">ip</span> pref <span class="nu0">1</span> u32 fh <span class="nu0">800</span>::<span class="nu0">802</span> order <span class="nu0">2050</span> key ht <span class="nu0">800</span> bkt <span class="nu0">0</span> flowid <span class="nu0">1</span>:<span class="nu0">3</span>
+  match 00000015<span class="sy0">/</span>0000ffff at <span class="nu0">20</span>
+filter parent <span class="nu0">1</span>: protocol <span class="kw2">ip</span> pref <span class="nu0">1</span> u32 fh <span class="nu0">800</span>::<span class="nu0">803</span> order <span class="nu0">2051</span> key ht <span class="nu0">800</span> bkt <span class="nu0">0</span> flowid <span class="nu0">1</span>:<span class="nu0">4</span>
+  match 00000050<span class="sy0">/</span>0000ffff at <span class="nu0">20</span></pre>
+
+<p>
+Pe stația gateway, rulați din nou script-ul <code>iperf-gateway.sh</code>. Asteptați 60 de secunde și inspectați output-ul afișat. Ce observați?
+</p>
+<ul>
+<li class="level1"><div class="li"> Fiecare flux de trafic nu a depasit banda alocata.</div>
+</li>
+<li class="level1"><div class="li"> Packet-loss-ul este în continuare apropiat de 0% (ca la <code>tbf</code>) pentru flow-urile UDP.</div>
+</li>
+</ul>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:06">
+
+<h3 class="sectionedit28" id="p_politici_de_limitare_per_client">06. [15p] Politici de limitare per client</h3>
+<div class="level3">
+
+<p>
+Ștergeți qdisc-ul root adăugat anterior.
+</p>
+
+<p>
+Realizați configurațiile necesare astfel încât să limitați stația <code>client1</code> la 5 mbps, iar stația <code>client2</code> la 3mbps. În plus dorim ca cei 3mbps ai stației <code>client2</code> să fie împărțiți după cum urmează:
+</p>
+<ul>
+<li class="level1"><div class="li"> 1mbps pentru traficul ce ajunge pe portul 1111 (Hint: folosiți 2 reguli de <code>match</code> ale clasificatorului <code>u32</code>)</div>
+</li>
+<li class="level1"><div class="li"> 2mbps pentru traficul de pe restul porturilor</div>
+</li>
+</ul>
+
+<p>
+Testați folosind <code>iperf</code>.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:07">
+
+<h3 class="sectionedit31" id="p_htb_-_observarea_consumului_de_resurse">07. [10p] HTB - observarea consumului de resurse</h3>
+<div class="level3">
+
+<p>
+Ștergeți qdisc-ul root adăugat anterior.
+</p>
+
+<p>
+Creați un script ce adaugă o limită de 1mbps pentru toate adresele IP din clasa 10.0.0.0/21 (trebuie să creați câte o clasă și câte un filtru pentru fiecare adresă IP). La finalul scriptului adăugați limita de 1mbps și pentru adresele IP asociate stațiilor <code>client1</code> și <code>client2</code>.
+</p>
+
+<p>
+Realizați un transfer între stația <code>client2</code> și stația <code>gateway</code> folosind <code>iperf</code>. Utilizați 5 thread-uri pe partea de client a <code>iperf</code> (Hint: <code>-P</code>). În timpul transferului observați încărcarea stației <code>gateway</code> (în mod special thread-urile kernel <code>ksoftirq</code>). Acest lucru se datorează faptului că fiecare pachet trebuie să parcurgă toate filtrele adăugate secvențial. Clasificatoul <code>u32</code> a venit cu o soluție pentru acest lucru: folosirea unor tabele de hash, stocând filtrele sub forma unui arbore. Cheia hash-ului este dată de un octet al adresei IP destinație (mai multe detalii în curs și la exercițiul de la BONUS).
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:08">
+
+<h3 class="sectionedit34" id="p_htb_-_u32_hashing_tables">08. [20p] HTB - u32 hashing tables</h3>
+<div class="level3">
+
+<p>
+Generarea de mână a filtrelor folosind <code>hash tables</code> este anevoioasă și NU se recomandă. Vom folosi un program C, disponibil <a href="http://vcalinus.gemenii.ro/prefixtree.c" class="urlextern" title="http://vcalinus.gemenii.ro/prefixtree.c"  rel="nofollow">|aici</a>.
+</p>
+
+<p>
+Descărcați și compilați programul <code>prefixtree</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">wget</span> http:<span class="sy0">//</span>vcalinus.gemenii.ro<span class="sy0">/</span>prefixtree.c
+<span class="co4">root@gateway:~# </span><span class="kw2">make</span> prefixtree
+<span class="kw2">cc</span>     prefixtree.c   <span class="re5">-o</span> prefixtree
+<span class="co4">root@gateway:~# </span>.<span class="sy0">/</span>prefixtree
+IPv4 u32 <span class="kw3">hash</span> filter generator - <span class="br0">&#40;</span>C<span class="br0">&#41;</span> <span class="nu0">2006</span> Calin Velea
+&nbsp;
+Syntax: prefixtree <span class="br0">&#123;</span>prefix.in<span class="br0">&#125;</span> <span class="br0">&#123;</span>u32filters.out<span class="br0">&#125;</span> <span class="br0">&#123;</span>interface<span class="br0">&#125;</span> <span class="br0">&#123;</span>src<span class="sy0">/</span>dst<span class="br0">&#125;</span> <span class="br0">&#91;</span>batch<span class="br0">&#93;</span></pre>
+
+<p>
+Vom scrie fișierul <code>prefix.in</code> care trebuie să conțină pe câte o linie adresa IP pentru care vrem să ne genereze filtrele și <code>classid</code>-ul asociat.
+</p>
+
+<p>
+Modificați scriptul de la exercițiul <a href="11/contents/07.html" class="wikilink1" title="saisp:labs:11:contents:07">07. [10p] HTB - observarea consumului de resurse</a> astfel încât să introducă perechea <code>adresaIP classid</code> în fișierul <code>prefix.in</code> în loc să adauge filtrul asociat. Adăugați și masca adresei IP (<code>/32</code>).
+</p>
+
+<p>
+Rulăm comanda <code>prefixtree</code> pe fișierul generat:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>.<span class="sy0">/</span>prefixtree prefix.in filters.out eth0 dst
+lines parsed: <span class="nu0">4066</span>
+total hashtables: <span class="nu0">4</span></pre>
+
+<p>
+Observați conținutul fișierului <code>filters.out</code>. Aplicăm filtrele generate:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">chmod</span> +x filters.out
+<span class="co4">root@gateway:~# </span>.<span class="sy0">/</span>filters.out</pre>
+
+<p>
+Testați din nou folosind <code>iperf</code>. Obervați faptul că stația <code>gateway</code>, cea care face limitările, nu mai intră în load (thread-urile kernel <code>ksoftirqd</code> au CPU usage foarte mic).
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:09">
+
+<h3 class="sectionedit37" id="bonus_-_10p_tcng_traffic_control_next_generation">09. [BONUS - 10p] tcng (traffic control next generation)</h3>
+<div class="level3">
+
+<p>
+Utilitarul <code>tc</code> oferă un control foarte bun asupra parametrilor QoS. Dar, din păcate, sintaxa este foarte complexă, greu de reținut și puțin lizibilă. <code>tcng</code> este un utilitar cu o sintaxă mult mai expresivă, asemănătoare limbajului C. Folosind aceasta sintaxă, el poate genera comenzile <code>tc</code> echivalente.
+</p>
+
+<p>
+Pe stația <code>gateway</code> descărcați și instalați utilitarul <code>tcng</code>:
+</p>
+<pre class="code">root@gateway:~# wget http://archive.debian.org/debian/pool/main/t/tcng/tcng_10b-3_amd64.deb
+root@gateway:~# dpkg -i tcng_10b-3_amd64.deb</pre>
+
+<p>
+Un fișier <code>tcng</code> are următoarea sintaxă simplificată:
+</p>
+<pre class="code bash">dev INTERFATA
+<span class="br0">&#123;</span>
+     QDISC <span class="br0">&#40;</span><span class="br0">&#41;</span>
+     <span class="br0">&#123;</span>
+          class <span class="br0">&#40;</span> ACTIUNE <span class="br0">&#41;</span> FILTRU ;
+          class <span class="br0">&#40;</span> ACTIUNE <span class="br0">&#41;</span> FILTRU ;
+          ...
+          class <span class="br0">&#40;</span> ACTIUNE <span class="br0">&#41;</span> FILTRU ;
+      <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Ne propunem să creăm un fișier <code>tcng</code>, echivalent configurațiilor HTB de la <a href="11/contents/05.html" class="wikilink1" title="saisp:labs:11:contents:05">05. [10p] Traffic shaping classful</a>:
+</p>
+<ul>
+<li class="level1"><div class="li"> Creati un fisier numit <code>eth0_htb.tc</code>.</div>
+</li>
+<li class="level1"><div class="li"> Specificați interfața <code>eth0</code> în câmpul <code>dev</code>.</div>
+</li>
+<li class="level1"><div class="li"> Specificați <code>QDISC</code>-ul <code>htb</code>.</div>
+</li>
+<li class="level1"><div class="li"> Pentru fiecare clasă, specificați acțiunea <code>rate xMbps</code>, unde <code>x</code> este lățimea de bandă corespunzătoare.</div>
+</li>
+<li class="level1"><div class="li"> Pentru fiecare clasă, specificați filtrul în formatul <code>udp_port == ABCD</code>, respectiv <code>tcp_port == ABCD</code>, unde <code>ABCD</code> este portul corespunzător.</div>
+</li>
+</ul>
+<pre class="code">dev eth0
+{
+	htb ()
+	{
+		class ( rate 1Mbps ) if udp_dport == 8000 ; 
+		class ( rate 40Mbps ) if udp_dport == 6000 ;
+		class ( rate 5Mbps ) if tcp_dport == 21 ;
+		class ( rate 3Mbps ) if tcp_dport == 80 ; 
+	}
+}</pre>
+
+<p>
+Rulați <code>tcng</code> pentru a obține comenzile echivalente <code>tc</code>:
+</p>
+<pre class="code bash">tcng eth0_htb.tc</pre>
+
+<p>
+Inspectați comenzile <code>tc</code> generate și observați asemănările cu comenzile introduse manual.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:10">
+
+<h3 class="sectionedit40" id="bonus_-_10p_colectare_statistici_folosind_tc">10. [BONUS - 10p] Colectare statistici folosind tc</h3>
+<div class="level3">
+
+<p>
+Pe lângă controlul traficului, utilitarul <code>tc</code> ne furnizează și statistici despre traficul transferat de fiecare clasă:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>tc <span class="re5">-s</span> class show dev eth0</pre>
+
+<p>
+Scrieți un script care extrage numărul de octeți trimiși pentru una din clase. Utilizați acest script să generați un grafic folosind informațiile prezentate în <a href="03/contents/05.html" class="wikilink1" title="saisp:labs:03:contents:05">05. [20p] Baze de date Round Robin (RRD)</a>.
+</p>
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:contents:sidebar">
+
+<h3 class="sectionedit43" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="11.html" class="wikilink1" title="saisp:labs:11">Laboratorul 11</a></span></strong>
+</p>
+
+</div>
+<div class="plugin_include_content plugin_include__saisp:labs:11:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_115226330658355baa7af56" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="11/contents/00.html" class="wikilink1" title="saisp:labs:11:contents:00">00. [10p] Completare formular de feedback</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/01.html" class="wikilink1" title="saisp:labs:11:contents:01">01. [10p] iperf (generator de trafic)</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/02.html" class="wikilink1" title="saisp:labs:11:contents:02">02. [10p] Generarea traficului pe baza unor caracteristici și constrângeri din lumea reală</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/03.html" class="wikilink1" title="saisp:labs:11:contents:03">03. [10p] Clasificarea folosind ToS</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/04.html" class="wikilink1" title="saisp:labs:11:contents:04">04. [5p] Traffic shaping în Linux</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/05.html" class="wikilink1" title="saisp:labs:11:contents:05">05. [10p] Traffic shaping classful</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/06.html" class="wikilink1" title="saisp:labs:11:contents:06">06. [15p] Politici de limitare per client</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/07.html" class="wikilink1" title="saisp:labs:11:contents:07">07. [10p] HTB - observarea consumului de resurse</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/08.html" class="wikilink1" title="saisp:labs:11:contents:08">08. [20p] HTB - u32 hashing tables</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/09.html" class="wikilink1" title="saisp:labs:11:contents:09">09. [BONUS - 10p] tcng (traffic control next generation)</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/10.html" class="wikilink1" title="saisp:labs:11:contents:10">10. [BONUS - 10p] Colectare statistici folosind tc</a></div></li>
+</ul>
+</div></div>
+
+</div>
+</div>
+<div class="level4">
+
+</div>
+</div>
+<div class="level2">
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="laborator">Laborator</h1>
+<div class="level1">
+
+<p>
+<strong><span class="curid"><a href="11.html" class="wikilink1" title="saisp:labs:11">Laboratorul 11</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:11:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:11:meta:nav">
+<div class="level1">
+
+<div><div id="nojs_indexmenu_115226330658355baa7af56" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="11/contents/00.html" class="wikilink1" title="saisp:labs:11:contents:00">00. [10p] Completare formular de feedback</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/01.html" class="wikilink1" title="saisp:labs:11:contents:01">01. [10p] iperf (generator de trafic)</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/02.html" class="wikilink1" title="saisp:labs:11:contents:02">02. [10p] Generarea traficului pe baza unor caracteristici și constrângeri din lumea reală</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/03.html" class="wikilink1" title="saisp:labs:11:contents:03">03. [10p] Clasificarea folosind ToS</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/04.html" class="wikilink1" title="saisp:labs:11:contents:04">04. [5p] Traffic shaping în Linux</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/05.html" class="wikilink1" title="saisp:labs:11:contents:05">05. [10p] Traffic shaping classful</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/06.html" class="wikilink1" title="saisp:labs:11:contents:06">06. [15p] Politici de limitare per client</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/07.html" class="wikilink1" title="saisp:labs:11:contents:07">07. [10p] HTB - observarea consumului de resurse</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/08.html" class="wikilink1" title="saisp:labs:11:contents:08">08. [20p] HTB - u32 hashing tables</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/09.html" class="wikilink1" title="saisp:labs:11:contents:09">09. [BONUS - 10p] tcng (traffic control next generation)</a></div></li>
+<li class="level1"><div class="li"><a href="11/contents/10.html" class="wikilink1" title="saisp:labs:11:contents:10">10. [BONUS - 10p] Colectare statistici folosind tc</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:11:meta:nav" [0-] --></div>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator" [1-119] -->
+<h1 class="sectionedit4" id="curs">Curs</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "saisp:sidebar" [0-] --><div class="plugin_include_content plugin_include__saisp:sidebar">
+
+<h2 class="sectionedit7" id="informatii_generale_saisp">Informații generale SAISP</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Informații generale SAISP" [1-156] -->
+<h2 class="sectionedit8" id="resurse">Resurse</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_85864632858355bac529d4" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/cs-curs-pub.ro.html" class="wikilink1" title="saisp:res:cs-curs-pub.ro">cs.curs.pub.ro</a></div></li>
+<li class="level1"><div class="li"><a href="../res/feed.html" class="wikilink1" title="saisp:res:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../res/sala-laborator.html" class="wikilink1" title="saisp:res:sala-laborator">Sală de laborator</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT8 SECTION "Resurse" [157-204] -->
+<h2 class="sectionedit9" id="informatii_saisp_2015-2016">Informații SAISP 2015-2016</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_200955502258355bac544b6" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../2015-2016/calendar.html" class="wikilink1" title="saisp:2015-2016:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/catalog.html" class="wikilink1" title="saisp:2015-2016:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/echipa.html" class="wikilink1" title="saisp:2015-2016:echipa">Echipă</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/impartire-semigrupe.html" class="wikilink1" title="saisp:2015-2016:impartire-semigrupe">Împărțire pe semigrupe</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/orar.html" class="wikilink1" title="saisp:2015-2016:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../2015-2016/regulament.html" class="wikilink1" title="saisp:2015-2016:regulament">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT9 SECTION "Informații SAISP 2015-2016" [205-278] -->
+<h2 class="sectionedit10" id="cursuri">Cursuri</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_11704512258355bac55456" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="saisp:courses:01">Curs 01 - Serviciul LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="saisp:courses:02">Curs 02 - Administrarea LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="saisp:courses:03">Curs 03 - Monitorizarea rețelei</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="saisp:courses:04">Curs 04 - Gestiunea scalabilă a dispozitivelor de stocare</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="saisp:courses:05">Curs 05 - Redundanță și load balancing</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="saisp:courses:06">Curs 06 - Sisteme de fișiere în rețea</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/07.html" class="wikilink1" title="saisp:courses:07">Curs 07 - Virtualizarea bazată pe containere</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/08.html" class="wikilink1" title="saisp:courses:08">Curs 08 - Virtualizare nativă</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/09.html" class="wikilink1" title="saisp:courses:09">Curs 09 - Accelerarea accesului web</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/10.html" class="wikilink1" title="saisp:courses:10">Curs 10 - Automatizarea scalabilă a sistemelor</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/11.html" class="wikilink1" title="saisp:courses:11">Curs 11 - Controlul traficului</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/12.html" class="wikilink1" title="saisp:courses:12">2015 - Curs 12 - Surpriză</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT10 SECTION "Cursuri" [279-330] -->
+<h2 class="sectionedit11" id="laboratoare">Laboratoare</h2>
+<div class="level2">
+
+<div><div id="nojs_indexmenu_175596851858355bac563f5" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="01.html" class="indexmenu_idx_head">Laborator 1. Serviciul LDAP</a></div></li>
+<li class="closed"><div class="li"><a href="02.html" class="indexmenu_idx_head">Laborator 2. Administrarea LDAP</a></div></li>
+<li class="closed"><div class="li"><a href="03.html" class="indexmenu_idx_head">Laborator 3. Monitorizarea rețelei</a></div></li>
+<li class="closed"><div class="li"><a href="04.html" class="indexmenu_idx_head">Laborator 4. Gestiunea scalabilă a dispozitivelor de stocare</a></div></li>
+<li class="closed"><div class="li"><a href="05.html" class="indexmenu_idx_head">Laborator 5. Redundanță și load balancing</a></div></li>
+<li class="closed"><div class="li"><a href="06.html" class="indexmenu_idx_head">Laborator 6. Sisteme de fișiere în rețea</a></div></li>
+<li class="closed"><div class="li"><a href="07.html" class="indexmenu_idx_head">Laborator 7. Virtualizarea bazată pe containere</a></div></li>
+<li class="closed"><div class="li"><a href="08.html" class="indexmenu_idx_head">Laborator 8. Virtualizare nativă</a></div></li>
+<li class="closed"><div class="li"><a href="09.html" class="indexmenu_idx_head">Laborator 9. Accelerarea accesului web</a></div></li>
+<li class="closed"><div class="li"><a href="10.html" class="indexmenu_idx_head">Laboratorul 10. Automatizarea scalabila a sistemelor</a></div></li>
+<li class="closed"><div class="li"><span class="curid"><a href="11.html" class="indexmenu_idx_head">Laborator 11. Controlul traficului</a></span></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT11 SECTION "Laboratoare" [331-] --><!-- EDIT6 PLUGIN_INCLUDE_END "saisp:sidebar" [0-] --></div>
+<div class="level1">
+
+</div>
+<!-- EDIT4 SECTION "Curs" [120-] -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/11.txt · Last modified: 2016/05/23 19:47 by alexandru.carp          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="11%3Fdo=media&amp;ns=saisp%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="11.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A11&amp;1479891884" width="2" height="1" alt="" /></div>
+</body>
+</html>

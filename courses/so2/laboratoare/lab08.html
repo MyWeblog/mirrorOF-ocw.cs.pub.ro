@@ -1,0 +1,1022 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-11T17:14:48+0300"/>
+<meta name="keywords" content="so2,laboratoare,lab08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/laboratoare/lab08.html"/>
+<link rel="canonical" href="lab08.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab08","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab08%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab08%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_8_-_drivere_de_sisteme_de_fisiere_linux_partea_1">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Dobândirea de cunoștințe legate de VFS și înțelegerea conceptelor de &#039;inode&#039;, &#039;dentry&#039;, &#039;file&#039;, superbloc și block de date.</div>
+</li>
+<li class="level1"><div class="li"> Înțelegerea procesului de montare a unui sistem de fișiere în cadrul VFS.</div>
+</li>
+<li class="level1"><div class="li"> Cunoștințe legate de diversele suporturi posibile pentru sisteme de fișiere și înțelegerea diferențelor dntre driverele pentru sisteme de fișiere cu suport fizic (pe disc) și sisteme de fișiere fără suport fizic.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> VFS</div>
+</li>
+<li class="level1"><div class="li"> superbloc</div>
+</li>
+<li class="level1"><div class="li"> inode</div>
+</li>
+<li class="level1"><div class="li"> dentry</div>
+</li>
+<li class="level1"><div class="li"> file</div>
+</li>
+<li class="level1"><div class="li"> mount/kill_sb/sb</div>
+</li>
+<li class="level1"><div class="li"> buffer_head</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab09-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab09-slides.pdf"  rel="nofollow"> Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow"> SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="virtual_filesystem">Virtual Filesystem</h2>
+<div class="level2">
+
+<p>
+<strong>Virtual Filesystem</strong> (conscut și sub prescurtarea <strong>VFS</strong>) este o componentă a nucleului care se ocupă de tratarea tuturor apelurilor de sistem legate de fișiere și sisteme de fișiere. VFS este o interfață generică între utilizator și un sistem de fișiere particular. Acest lucru simplifică implementarea sistemelor de fișiere și oferă o integrare facilă a mai multor sisteme de fișiere. În acest fel, implementarea unui sistem de fișiere este realizată prin folosirea <abbr title="Application Programming Interface">API</abbr>-ului pus la dispoziție de VFS iar părțile generice de comunicație cu dispozitivul hardware și subsistemul de I/O sunt rezolvate de VFS.
+</p>
+
+<p>
+Din punct de vedere funcțional sistemele de fișiere pot fi grupate în:
+</p>
+<ul>
+<li class="level1"><div class="li"> sisteme de fișiere pentru disc (ext3, ext4, xfs, fat, ntfs, etc.)</div>
+</li>
+<li class="level1"><div class="li"> sisteme de fișiere pentru rețea (nfs, smbfs/cifs, ncp, etc.)</div>
+</li>
+<li class="level1"><div class="li"> sisteme de fișiere virtuale (procfs, sysfs, sockfs, pipefs, etc.)</div>
+</li>
+</ul>
+
+<p>
+O instanță de nucleu Linux va folosi VFS pentru ierarhia (de tip arbore) de directoare și fișiere. Un nou sistem de fișiere va fi adăugat ca un subarbore a VFS prin operațiunea de montare.  Fiecare sistem de fișiere este de obicei montat de pe mediul pentru care a fost construit (de pe un dispozitiv de tip bloc, de pe rețea etc.). În particular însă, VFS-ul poate folosi drept dispozitiv de tip bloc virtual un fișier normal, deci se pot monta sisteme de fișiere pentru disc peste fișiere normale. Astfel, se pot crea stive de sisteme de fișiere.
+</p>
+
+<p>
+Ideea de bază a VFS-ului este de a oferi un singur model de fișier, care să poată reprezenta fișierele din orice sistem de fișiere. Driver-ul de sistem de fișiere este responsabil pentru aducerea la numitorul comun. Astfel se poate crea o singură structură de directoare care conține întreg sistemul. Va exista un sistem de fișiere care va fi rădăcina, restul fiind montate în diverse directoare ale acestuia.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="modelul_general_al_sistemului_de_fisiere">Modelul general al sistemului de fișiere</h2>
+<div class="level2">
+
+<p>
+Modelul general al sistemului de fișiere, la care trebuie să se reducă orice sistem de fișiere implementat, este format din mai multe entități cu rol bine definit: superbloc, inode, file și dentry. Aceste entități sunt metadatele sistemului de fișiere (conțin informații despre date sau despre alte metadate).
+</p>
+
+<p>
+Entitățile modelului interacționează cu ajutorul unor subsisteme ale VFS sau ale nucleului: cache-ul de dentry-uri, cache-ul de inode-uri, buffer cache-ul. Fiecare entitate este tratată ca un obiect: are o structură de date asociată și un pointer la o tabelă de metode. Inducerea unui comportament particular al fiecărei componente este făcut prin înlocuirea metodelor asociate.
+</p>
+
+</div>
+
+<h3 class="sectionedit7" id="superbloc">superbloc</h3>
+<div class="level3">
+
+<p>
+<strong>Superblocul</strong> stochează informațiile necesare unui sistem de fișiere montat:
+</p>
+<ul>
+<li class="level1"><div class="li"> zonele de inode-uri, de blocuri</div>
+</li>
+<li class="level1"><div class="li"> dimensiunea blocului sistemului de fișiere</div>
+</li>
+<li class="level1"><div class="li"> lungimea maximă a numelor fișierelor</div>
+</li>
+<li class="level1"><div class="li"> dimensiunea maximă a fișierelor</div>
+</li>
+<li class="level1"><div class="li"> locația inode-ului rădăcină</div>
+</li>
+</ul>
+
+<p>
+Localizare:
+</p>
+<ul>
+<li class="level1"><div class="li"> În cazul sistemelor de fișiere pentru discuri, superblocul are un corespondent în primul bloc al acestora (Filesystem Control Block).</div>
+</li>
+<li class="level1"><div class="li"> În <strong>VFS</strong>, toate superbloc-urile sistemelor de fișiere sunt reținute într-o listă de structuri <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234"  rel="nofollow"> struct super_block</a> și metodele în <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1590" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1590"  rel="nofollow"> struct super_operations </a></div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit8" id="inode">inode</h3>
+<div class="level3">
+
+<p>
+<strong>Inode</strong>-ul (<strong>index node</strong>) menține informații despre un fișier în sensul general (abstractizare): fișier obișnuit (regular file), director, fișier special (pipe, fifo), dispozitiv de tip bloc, dispozitiv de tip caracter, link, sau orice poate fi abstractizat ca fișier.
+</p>
+
+<p>
+Un inode menține informații precum:
+</p>
+<ul>
+<li class="level1"><div class="li"> tipul fișierului;</div>
+</li>
+<li class="level1"><div class="li"> dimensiunea fișierului;</div>
+</li>
+<li class="level1"><div class="li"> drepturile de acces;</div>
+</li>
+<li class="level1"><div class="li"> timpul de acces sau modificare;</div>
+</li>
+<li class="level1"><div class="li"> poziționarea datelor pe disc (pointeri către blocurile de pe disc ce conțin date).</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic">
+În general, inode-ul nu deține numele fișierului. Numele este reținut de entitatea <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=3.8#L103" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=3.8#L103"  rel="nofollow"> dentry</a>. Astfel, un inode poate avea mai multe nume (hardlink-uri).
+
+</div></p>
+</p>
+
+<p>
+Localizare:
+</p>
+<ul>
+<li class="level1"><div class="li"> La fel ca și superblocul, inode-ul are un corespondent pe disc. inode-urile de pe disc sunt, în general, grupate într-o zonă specializată (zonă de inode-uri), separată de zona de blocuri de date; în unele sisteme de fișiere, structurile echivalente inode-urilor sunt răspândite în structura sistemului de fișiere (<a href="http://lxr.free-electrons.com/source/fs/fat/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/fat/?v=3.8"  rel="nofollow"> FAT</a>);</div>
+</li>
+<li class="level1"><div class="li"> ca entitate <strong>VFS</strong>, inode-ul este reprezentat de structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L521" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L521"  rel="nofollow"> struct inode</a> și de operațiile cu aceasta definite în structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1546" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1546"  rel="nofollow"> struct inode_operations</a>.</div>
+</li>
+</ul>
+
+<p>
+Fiecare inode este în general identificat de un număr. Pe Linux, argumentul <code>-i</code> la comanda <code>ls</code> precizează numărului inode-ului asociat fișierului:
+</p>
+<pre class="code bash">razvan<span class="sy0">@</span>valhalla:~<span class="sy0">/</span>school<span class="sy0">/</span><span class="nu0">2008</span>-<span class="nu0">2009</span><span class="sy0">/</span>so2<span class="sy0">/</span>wiki$ <span class="kw2">ls</span> <span class="re5">-i</span>
+<span class="nu0">1277956</span> lab10.wiki  <span class="nu0">1277962</span> lab9.wikibak  <span class="nu0">1277964</span> replace_lxr.sh
+<span class="nu0">1277954</span> lab9.wiki   <span class="nu0">1277958</span> link.txt      <span class="nu0">1277955</span> tema4.wiki</pre>
+
+</div>
+
+<h3 class="sectionedit9" id="file">file</h3>
+<div class="level3">
+
+<p>
+<strong>File</strong> este componenta din modelul general al sistemului de fișiere care se apropie cel mai mult de utilizator. Structura există doar ca entitate VFS în memorie și nu are corespondent fizic pe disc.
+</p>
+
+<p>
+În vreme ce inode-ul abstractizează un fișier situat pe disc, file-ul abtractizează un fișier deschis. Din punctul de vedere al procesului, entitatea file abstractizează fișierul. Din punctul de vedere al implementării sistemului de fișiere, însă, inode-ul este entitatea care abstractizează fișierul.
+</p>
+
+<p>
+Structura file menține informații precum:
+</p>
+<ul>
+<li class="level1"><div class="li"> poziția cursorului de fișier (file pointer);</div>
+</li>
+<li class="level2"><div class="li"> drepturile de deschidere ale fișierului;</div>
+</li>
+<li class="level2"><div class="li"> pointer către inode-ul asociat (eventual indexul acestuia).</div>
+</li>
+</ul>
+
+<p>
+Localizare:
+</p>
+<ul>
+<li class="level1"><div class="li"> Structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L761" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L761"  rel="nofollow"> struct file</a> reprezintă entitatea VFS asociată, iar structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1515" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1515"  rel="nofollow"> struct file_operations</a> operațiile cu aceasta.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit10" id="dentry">dentry</h3>
+<div class="level3">
+
+<p>
+<strong>Dentry</strong> (directory entry) realizează asocierea între un inode și numele fișierului.
+</p>
+
+<p>
+În general o structură dentry conține două câmpuri:
+</p>
+<ul>
+<li class="level1"><div class="li"> un întreg care identifică inode-ul;</div>
+</li>
+<li class="level2"><div class="li"> un șir de caractere reprezentând numele acestuia.</div>
+</li>
+</ul>
+
+<p>
+dentry reprezintă o componentă specifică dintr-o cale, care poate fi un director sau un fișier. Spre exemplu, pentru calea /bin/vi, vor fi create obiecte dentry pentru /, bin și vi (un total de 3 obiecte dentry).
+</p>
+<ul>
+<li class="level1"><div class="li"> dentry are un corespondent pe disc, dar corespondența nu este directă deoarece fiecare sistem de fișiere păstrează dentry-urile într-un mod specific</div>
+</li>
+<li class="level1"><div class="li"> în VFS, entitatea dentry este reprezentată de structura <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=3.8#L103" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=3.8#L103"  rel="nofollow"> struct dentry</a> și de operațiile cu aceasta definite în structura <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=3.8#L146" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=3.8#L146"  rel="nofollow"> struct dentry_operations</a>.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit11" id="inregistrarea_si_deinregistrarea_sistemelor_de_fisiere">Înregistrarea și deînregistrarea sistemelor de fișiere</h2>
+<div class="level2">
+
+<p>
+În versiunea actuală, kernel-ul Linux are suport pentru un număr în jur de 50 de sisteme de fișiere, dintre care:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/ext2/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ext2/?v=3.8"  rel="nofollow"> ext2</a>/<a href="http://lxr.free-electrons.com/source/fs/ext3/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ext3/?v=3.8"  rel="nofollow"> ext3</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/reiserfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/reiserfs/?v=3.8"  rel="nofollow"> reiserfs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/xfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/xfs/?v=3.8"  rel="nofollow"> xfs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/fat/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/fat/?v=3.8"  rel="nofollow"> fat</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/ntfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ntfs/?v=3.8"  rel="nofollow"> ntfs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/isofs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/isofs/?v=3.8"  rel="nofollow"> iso9660</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/udf/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/udf/?v=3.8"  rel="nofollow"> udf</a> pentru cd-uri și dvd-uri</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/hpfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/hpfs/?v=3.8"  rel="nofollow"> hpfs</a></div>
+</li>
+</ul>
+
+<p>
+Pe un singur sistem, însă, este puțin probabil să existe mai mult de 5-6 sisteme de fișiere. Din acest motiv, sistemele de fișiere (sau, mai corect, tipurile de sisteme de fișiere) sunt implementate ca module și pot fi încărcate sau descărcate oricând.
+</p>
+
+<p>
+Pentru a putea încărca / descărca în mod dinamic un modul de sistem de fișiere este necesar un <abbr title="Application Programming Interface">API</abbr> de înregistrare / deînregistrare a tipului sistemului de fișiere în / din sistem. Structura care descrie un anumit sistem de fișiere este <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1802" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1802"  rel="nofollow"> struct file_system_type</a>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+&nbsp;
+<span class="kw4">struct</span> file_system_type <span class="br0">&#123;</span>
+         <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span>name<span class="sy0">;</span>
+         <span class="kw4">int</span> fs_flags<span class="sy0">;</span>
+         <span class="kw4">struct</span> dentry <span class="sy0">*</span><span class="br0">&#40;</span><span class="sy0">*</span>mount<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> file_system_type <span class="sy0">*,</span> <span class="kw4">int</span><span class="sy0">,</span>
+                                   <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*,</span> <span class="kw4">void</span> <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span>kill_sb<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> super_block <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw4">struct</span> module <span class="sy0">*</span>owner<span class="sy0">;</span>
+         <span class="kw4">struct</span> file_system_type <span class="sy0">*</span> next<span class="sy0">;</span>
+         <span class="kw4">struct</span> list_head fs_supers<span class="sy0">;</span>
+         <span class="kw4">struct</span> lock_class_key s_lock_key<span class="sy0">;</span>
+         <span class="kw4">struct</span> lock_class_key s_umount_key<span class="sy0">;</span>
+         <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+<ul>
+<li class="level1"><div class="li"> <code>name</code> este șirul de caractere prin care numele va identifica un sistem de fișiere (argumentul dat la <code>mount -t</code>).</div>
+</li>
+<li class="level1"><div class="li"> <code>owner</code> este <code>THIS_MODULE</code> pentru sisteme de fișiere implementate în module, și <code>NULL</code> dacă sunt scrise direct în kernel.</div>
+</li>
+<li class="level1"><div class="li"> Funcția <code>mount</code> citește superblocul de pe disc în memorie la încărcarea sistemului de fișiere. Funcția este proprie fiecărui sistem de fișiere. Pentru mai multe detalii, citiți Secțiunea <a href="lab08.html#functiile_mount_kill_sb" title="so2:laboratoare:lab08 ↵" class="wikilink1"> Funcțiile mount kill_sb </a>.</div>
+</li>
+<li class="level1"><div class="li"> Funcția <code>kill_sb</code> eliberează superblocul din memorie, citiți Secțiunea <a href="lab08.html#functiile_mount_kill_sb" title="so2:laboratoare:lab08 ↵" class="wikilink1"> Funcțiile mount kill_sb </a>.</div>
+</li>
+<li class="level1"><div class="li"> <code>fs_flags</code> precizează flag-urile cu care trebuie montat sistemul de fișiere. Un exemplu de flag este <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1805" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1805"  rel="nofollow"> FS_REQUIRES_DEV</a> care precizează VFS-ului că sistemul de fișiere are nevoie de un disc (nu este un sistem de fișiere virtual).</div>
+</li>
+<li class="level1"><div class="li"> <code>fs_supers</code> este o listă ce conține toate superblocurile asociate acestui sistem de fișiere. Dat fiind că același tip de sistem de fișiere poate fi montat de mai multe ori, pentru fiecare mount va exista un superbloc separat.</div>
+</li>
+</ul>
+
+<p>
+<strong>Înregistrarea unui sistem de fișiere</strong> în sistem se realizează, în general, în funcția de inițializare a modulului. Pentru înregistrare, programatorul va trebui să
+</p>
+<ol>
+<li class="level1"><div class="li"> inițializeze o structură de tipul <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1802" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1802"  rel="nofollow"> struct file_system_type</a> cu numele, flag-urile, funcția care implementează operația de citire a superblocului și referința la structura ce identifică modulul curent</div>
+</li>
+<li class="level1"><div class="li"> apeleze funcția <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1865" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1865"  rel="nofollow"> register_filesystem</a>.</div>
+</li>
+</ol>
+
+<p>
+La <strong>descărcarea modulului</strong> trebuie să se deînregistreze sistemul de fișiere prin apelarea funcției <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1866" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1866"  rel="nofollow"> unregister_filesystem</a>.
+</p>
+
+<p>
+Un <a href="http://lxr.free-electrons.com/source/fs/ramfs/inode.c?v=3.8#L259" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/inode.c?v=3.8#L259"  rel="nofollow"> exemplu de înregistrare / deînregistrare</a> a unui sistem de fișiere virtual se găsește în codul pentru <a href="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8"  rel="nofollow"> ramfs</a>:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">struct</span> file_system_type ramfs_fs_type <span class="sy0">=</span> <span class="br0">&#123;</span>
+        .<span class="me1">name</span>           <span class="sy0">=</span> <span class="st0">&quot;ramfs&quot;</span><span class="sy0">,</span>
+        .<span class="me1">mount</span>         <span class="sy0">=</span> ramfs_mount<span class="sy0">,</span>
+        .<span class="me1">kill_sb</span>        <span class="sy0">=</span> kill_litter_super<span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> __init init_ramfs_fs<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw1">return</span> register_filesystem<span class="br0">&#40;</span><span class="sy0">&amp;</span>ramfs_fs_type<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> __exit exit_ramfs_fs<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        unregister_filesystem<span class="br0">&#40;</span><span class="sy0">&amp;</span>ramfs_fs_type<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit12" id="functiile_mount_kill_sb">Funcțiile mount, kill_sb</h3>
+<div class="level3">
+
+<p>
+La montarea sistemului de fișiere, nucleul apelează funcția <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1812" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1812"  rel="nofollow"> mount</a> definită în cadrul structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1802" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1802"  rel="nofollow"> struct file_system_type</a>. Funcția face un set de inițializări și returnează un dentry (structura <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L89" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L89"  rel="nofollow"> struct dentry</a>) ce reprezinta directorul punctului de mount. De obicei, <code>mount</code> este o funcție simplă care apelează una din funcțiile:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L952" class="urlextern" title="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L952"  rel="nofollow"> mount_bdev</a>, care montează un sistem de fișiere aflat pe un device de tip bloc</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L1069" class="urlextern" title="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L1069"  rel="nofollow"> mount_single</a>, care montează un sistem de fișiere care partajează o instanță între toate operațiile de montare</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L1044" class="urlextern" title="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L1044"  rel="nofollow"> mount_nodev</a>, care montează un sistem de fișiere ce nu se afla pe un device fizic</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/libfs.c?v=3.8#L221" class="urlextern" title="http://lxr.free-electrons.com/source/fs/libfs.c?v=3.8#L221"  rel="nofollow"> mount_pseudo</a>, o funcție ajutătoare pentru pseudo-sistemele de fișiere (<code>sockfs</code>, <code>pipefs</code>, în general sisteme de fișiere care nu pot fi montate)</div>
+</li>
+</ul>
+
+<p>
+Aceste funcții primesc ca parametru un pointer spre o funcție <a href="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L1008" class="urlextern" title="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L1008"  rel="nofollow"> fill_super</a> care va fi apelată după inițializarea superblocului pentru terminarea inițializării acestuia de către driver. Un exemplu de o astfel de funcție găsiți în <a href="lab08.html#functia_fill_super" title="so2:laboratoare:lab08 ↵" class="wikilink1">secțiunea fill_super</a>.
+</p>
+
+<p>
+La demontare nucleul apelează <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1814" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1814"  rel="nofollow"> kill_sb</a>, care face operații de tip cleanup și apelează una din funcțiile:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L1029" class="urlextern" title="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L1029"  rel="nofollow"> kill_block_super</a>, care demontează un sistem de fișiere aflat pe un device de tip bloc</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L879" class="urlextern" title="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L879"  rel="nofollow"> kill_anon_super</a>, care demontează un sistem de fișiere virtual (informația este generată în momentul în care este cerută)</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L888" class="urlextern" title="http://lxr.free-electrons.com/source/fs/super.c?v=3.8#L888"  rel="nofollow"> kill_litter_super</a>, care demontează un sistem de fișiere ce nu se afla pe un device fizic (menține informația în memorie)</div>
+</li>
+</ul>
+
+<p>
+Un <strong>exemplu pentru un sistem de fișiere fără suport pe disc</strong> este funcția <a href="http://lxr.free-electrons.com/source/fs/ramfs/inode.c?v=3.8#L241" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/inode.c?v=3.8#L241"  rel="nofollow"> ramfs_mount</a> din sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8"  rel="nofollow"> ramfs</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> dentry <span class="sy0">*</span>ramfs_mount<span class="br0">&#40;</span><span class="kw4">struct</span> file_system_type <span class="sy0">*</span>fs_type<span class="sy0">,</span>
+        <span class="kw4">int</span> flags<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span>dev_name<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>data<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw1">return</span> mount_nodev<span class="br0">&#40;</span>fs_type<span class="sy0">,</span> flags<span class="sy0">,</span> data<span class="sy0">,</span> ramfs_fill_super<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Un <strong>exemplu pentru un sistem de fișiere pentru disc</strong> este funcția <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=3.8#L650" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=3.8#L650"  rel="nofollow"> minix_mount</a> din sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/minix/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=3.8"  rel="nofollow"> minix</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> dentry <span class="sy0">*</span>minix_mount<span class="br0">&#40;</span><span class="kw4">struct</span> file_system_type <span class="sy0">*</span>fs_type<span class="sy0">,</span>
+        <span class="kw4">int</span> flags<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span>dev_name<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>data<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+         <span class="kw1">return</span> mount_bdev<span class="br0">&#40;</span>fs_type<span class="sy0">,</span> flags<span class="sy0">,</span> dev_name<span class="sy0">,</span> data<span class="sy0">,</span> minix_fill_super<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h2 class="sectionedit13" id="superblocul_in_vfs">Superblocul în VFS</h2>
+<div class="level2">
+
+<p>
+Superblocul există atât ca entitate fizică (entitate pe disc) cât și ca entitate VFS (în cadrul structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234"  rel="nofollow"> struct super_block</a>). Superblocul conține numai metainformație și este folosit pentru scrierea și citirea de metainformații de pe disc (inode-uri, directory entries). Un superbloc (și implicit structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234"  rel="nofollow"> struct super_block</a>) va conține informații despre dispozitivul utilizat, lista de inode-uri, pointer-ul la inode-ul rădăcină al sistemului de fișiere și un pointer la operațiile de superbloc.
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="structura_struct_super_block">Structura struct super_block</h3>
+<div class="level3">
+
+<p>
+O parte din definiția structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234"  rel="nofollow"> struct super_block</a> este prezentată mai jos:
+</p>
+<pre class="code c"><span class="kw4">struct</span> super_block <span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        dev_t                   s_dev<span class="sy0">;</span>              <span class="coMULTI">/* identifier */</span>
+        <span class="kw4">unsigned</span> <span class="kw4">long</span>           s_blocksize<span class="sy0">;</span>        <span class="coMULTI">/* block size in bytes */</span>
+        <span class="kw4">unsigned</span> <span class="kw4">char</span>           s_blocksize_bits<span class="sy0">;</span>   <span class="coMULTI">/* block size in bits */</span>
+        <span class="kw4">unsigned</span> <span class="kw4">char</span>           s_dirt<span class="sy0">;</span>             <span class="coMULTI">/* dirty flag */</span>
+        <span class="kw4">unsigned</span> <span class="kw4">long</span> <span class="kw4">long</span>      s_maxbytes<span class="sy0">;</span>         <span class="coMULTI">/* max file size */</span>
+        <span class="kw4">struct</span> file_system_type <span class="sy0">*</span>s_type<span class="sy0">;</span>            <span class="coMULTI">/* filesystem type */</span>
+        <span class="kw4">struct</span> super_operations <span class="sy0">*</span>s_op<span class="sy0">;</span>              <span class="coMULTI">/* superblock methods */</span>
+        <span class="co1">//...</span>
+        <span class="kw4">unsigned</span> <span class="kw4">long</span>           s_flags<span class="sy0">;</span>            <span class="coMULTI">/* mount flags */</span>
+        <span class="kw4">unsigned</span> <span class="kw4">long</span>           s_magic<span class="sy0">;</span>            <span class="coMULTI">/* filesystem’s magic number */</span>
+        <span class="kw4">struct</span> dentry           <span class="sy0">*</span>s_root<span class="sy0">;</span>            <span class="coMULTI">/* directory mount point */</span>
+        <span class="co1">//...</span>
+        <span class="kw4">char</span>                    s_id<span class="br0">&#91;</span><span class="nu0">32</span><span class="br0">&#93;</span><span class="sy0">;</span>           <span class="coMULTI">/* informational name */</span>
+        <span class="kw4">void</span>                    <span class="sy0">*</span>s_fs_info<span class="sy0">;</span>         <span class="coMULTI">/* filesystem private info */</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Superblocul memorează informația globală pentru o instanță a unui sistem de fișiere:
+</p>
+<ul>
+<li class="level1"><div class="li"> dispozitivul fizic pe care rezidă</div>
+</li>
+<li class="level1"><div class="li"> dimensiunea blocului</div>
+</li>
+<li class="level1"><div class="li"> dimensiunea maximă a unui fișier</div>
+</li>
+<li class="level1"><div class="li"> tipul sistemului de fișiere</div>
+</li>
+<li class="level1"><div class="li"> operațiile pe care le suportă</div>
+</li>
+<li class="level1"><div class="li"> numărul magic (identifică sistemul de fișiere)</div>
+</li>
+<li class="level1"><div class="li"> <code>dentry</code>-ul directorului rădăcină</div>
+</li>
+</ul>
+
+<p>
+În plus, un pointer generic (<code>void *</code>) memorează date private sistemului de fișiere. Superblocul poate fi privit ca un obiect abstract căruia îi sunt adăugate date proprii în momentul în care există o implementare concretă.
+</p>
+
+</div>
+
+<h3 class="sectionedit15" id="operatiile_pe_superbloc">Operațiile pe superbloc</h3>
+<div class="level3">
+
+<p>
+Operațiile pe superbloc sunt descrise de structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1590" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1590"  rel="nofollow"> struct super_operations</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> super_operations <span class="br0">&#123;</span>
+       <span class="co1">//...</span>
+       <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>write_inode<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> inode <span class="sy0">*,</span> <span class="kw4">struct</span> writeback_control <span class="sy0">*</span>wbc<span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="kw4">struct</span> inode <span class="sy0">*</span><span class="br0">&#40;</span><span class="sy0">*</span>alloc_inode<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> super_block <span class="sy0">*</span>sb<span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span>destroy_inode<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> inode <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+       <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span>put_super<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> super_block <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>statfs<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> dentry <span class="sy0">*,</span> <span class="kw4">struct</span> kstatfs <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>remount_fs<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> super_block <span class="sy0">*</span>sb<span class="sy0">,</span> <span class="kw4">int</span> <span class="sy0">*</span>flags<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">*</span>data<span class="br0">&#41;</span><span class="sy0">;</span>
+       <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Câmpurile structurii sunt pointeri de funcții cu următoarele semnificații:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>write_inode, alloc_inode, destroy_inode</code> scrie, alocă, respectiv eliberează resurse asociate unui inode și sunt descrise în <a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09"> Laboratorul 09</a>;</div>
+</li>
+<li class="level1"><div class="li"> <code>put_super</code> este apelată în momentul eliberării superblocului, la <code>umount</code>; în cadrul acestei funcții trebuie eliberate orice resurse (în general memorie) din datele private ale sistemului de fișiere, dacă există memorie alocată;</div>
+</li>
+<li class="level1"><div class="li"> <code>remount_fs</code> este apelată atunci când nucleul a detectat că se încearcă o remontare (flag-ul de montare <code>MS_REMOUNTM</code>); cel mai adesea aici trebuie să se detecteze dacă se încearcă o trecere read-only → read-write sau viceversa; acest lucru se poate face simplu pentru că se pot accesa flag-urile vechi (în <code>sb→s_flags</code>) cât și cele noi (în <code>flags</code>); <code>data</code> e un pointer către datele trimise de <code>mount</code> ce reprezintă opțiuni specifice sistemului de fișiere;</div>
+</li>
+<li class="level1"><div class="li"> <code>statfs</code> se apelează atunci când se face un apel de sistem <code>statfs</code> (încercați <code>stat –f</code> sau <code>df</code>); în cazul acestui apel trebuie completate câmpurile structurii <a href="http://lxr.free-electrons.com/source/include/linux/statfs.h?v=3.8#L7" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/statfs.h?v=3.8#L7"  rel="nofollow"> struct kstatfs</a>, aşa cum se face, de exemplu, în funcţia <a href="http://lxr.free-electrons.com/source/fs/ext4/super.c?v=3.13#L4969" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ext4/super.c?v=3.13#L4969"  rel="nofollow"> ext4_statfs</a>.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit16" id="functia_fill_super">Funcția fill_super</h2>
+<div class="level2">
+
+<p>
+După cum s-a specificat, funcția <code>fill_super</code> este apelată pentru terminarea inițializării superblocului. Această inițializare presupune completarea câmpurilor structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L1234"  rel="nofollow"> struct super_block</a> și inițializarea inode-ului rădăcină.
+</p>
+
+<p>
+Un exemplu de implementare este funcția <a href="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8"  rel="nofollow"> ramfs</a> apelată pentru inițializarea câmpurile din superbloc care au mai rămas de inițializat:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/pagemap.h&gt;</span>
+&nbsp;
+<span class="co2">#define RAMFS_MAGIC     0x858458f6</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">const</span> <span class="kw4">struct</span> super_operations ramfs_ops <span class="sy0">=</span> <span class="br0">&#123;</span>
+        .<span class="me1">statfs</span>         <span class="sy0">=</span> simple_statfs<span class="sy0">,</span>
+        .<span class="me1">drop_inode</span>     <span class="sy0">=</span> generic_drop_inode<span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> ramfs_fill_super<span class="br0">&#40;</span><span class="kw4">struct</span> super_block <span class="sy0">*</span>sb<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>data<span class="sy0">,</span> <span class="kw4">int</span> silent<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">struct</span> inode <span class="sy0">*</span>inode<span class="sy0">;</span>
+        <span class="kw4">struct</span> dentry <span class="sy0">*</span>root<span class="sy0">;</span>
+&nbsp;
+        sb<span class="sy0">-&gt;</span>s_maxbytes <span class="sy0">=</span> MAX_LFS_FILESIZE<span class="sy0">;</span>
+        sb<span class="sy0">-&gt;</span>s_blocksize <span class="sy0">=</span> PAGE_CACHE_SIZE<span class="sy0">;</span>
+        sb<span class="sy0">-&gt;</span>s_blocksize_bits <span class="sy0">=</span> PAGE_CACHE_SHIFT<span class="sy0">;</span>
+        sb<span class="sy0">-&gt;</span>s_magic <span class="sy0">=</span> RAMFS_MAGIC<span class="sy0">;</span>
+        sb<span class="sy0">-&gt;</span>s_op <span class="sy0">=</span> <span class="sy0">&amp;</span>ramfs_ops<span class="sy0">;</span>
+        sb<span class="sy0">-&gt;</span>s_time_gran <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+        inode <span class="sy0">=</span> ramfs_get_inode<span class="br0">&#40;</span>sb<span class="sy0">,</span> S_IFDIR <span class="sy0">|</span> <span class="nu8">0755</span><span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span>inode<span class="br0">&#41;</span>
+                <span class="kw1">return</span> <span class="sy0">-</span>ENOMEM<span class="sy0">;</span>
+&nbsp;
+        root <span class="sy0">=</span> d_make_root<span class="br0">&#40;</span>inode<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span>root<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                iput<span class="br0">&#40;</span>inode<span class="br0">&#41;</span><span class="sy0">;</span>
+                <span class="kw1">return</span> <span class="sy0">-</span>ENOMEM<span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+        sb<span class="sy0">-&gt;</span>s_root <span class="sy0">=</span> root<span class="sy0">;</span>
+        <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În kernel sunt disponibile funcții generice pentru implementarea operațiilor cu structurile sistemelor de fișiere. Funcțiile <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L2300" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.8#L2300"  rel="nofollow"> generic_drop_inode</a> și <a href="http://lxr.free-electrons.com/source/fs/libfs.c?v=3.8#L35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/libfs.c?v=3.8#L35"  rel="nofollow"> simple_statfs</a>, folosite în codul de mai sus, sunt astfel de funcții și pot fi folosite în implementarea driverelor, daca funcționalitatea acestora este suficientă.
+</p>
+
+<p>
+În mare, funcția <a href="http://lxr.free-electrons.com/source/fs/ramfs/inode.c?v=3.8#L209" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/inode.c?v=3.8#L209"  rel="nofollow"> ramfs_fill_super</a> din codul de mai sus setează câteva câmpuri din superbloc, apoi citește inode-ul rădăcină și alocă dentry-ul rădăcină. Citirea inode-ului radăcină se face în funcția <a href="http://lxr.free-electrons.com/source/fs/ramfs/inode.c?v=3.8#L54" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/inode.c?v=3.8#L54"  rel="nofollow"> ramfs_get_inode</a>, și constă din alocarea unui nou inode folosind <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=3.8#L931" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=3.8#L931"  rel="nofollow"> new_inode</a> și inițializarea acestuia. Pentru eliberarea inode-ului se folosește <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=3.8#L1437" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=3.8#L1437"  rel="nofollow"> iput</a>, iar pentru alocarea dentry-ului rădăcină <a href="http://lxr.free-electrons.com/source/fs/dcache.c?v=3.8#L1496" class="urlextern" title="http://lxr.free-electrons.com/source/fs/dcache.c?v=3.8#L1496"  rel="nofollow"> d_make_root</a>.
+</p>
+
+<p>
+Un exemplu de implementare pentru un sistem de fișiere pentru disc este funcția <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=3.8#L157" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=3.8#L157"  rel="nofollow"> minix_fill_super</a> din sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/minix/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=3.8"  rel="nofollow"> minix</a>.
+Funcționalitatea pentru sistemul de fișiere pentru disc este similară cu cea a sistemului de fișiere virtual, cu deosebirea folosirii buffer cache-ului. De asemenea, sistemul de fișiere <code>minix</code> păstrează date private de forma <a href="http://lxr.free-electrons.com/source/fs/minix/minix.h?v=3.8#L27" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/minix.h?v=3.8#L27"  rel="nofollow"> struct minix_sb_info</a>. Mare parte a acestei funcții se ocupa cu inițializarea acestor date private (care nu sunt incluse în extrasul de cod de mai sus, pentru claritate). Datele private sunt alocate folosind funcția <a href="http://lxr.free-electrons.com/source/include/linux/slab.h?v=3.8#L422" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/slab.h?v=3.8#L422"  rel="nofollow"> kzalloc</a> și sunt păstrate în câmpul <code>s_fs_info</code> al superblocului.
+</p>
+
+<p>
+Funcțiile VFS-ului primesc de obicei ca parametru superblocul, un inode sau/și un dentry, care conțin un pointer către superbloc, astfel încât aceste date private pot fi accesate ușor.
+</p>
+
+</div>
+
+<h2 class="sectionedit17" id="buffer_cache-ul">Buffer cache-ul</h2>
+<div class="level2">
+
+<p>
+Buffer cache-ul este un subsistem în kernel care se ocupă cu citirea și scrierea blocurilor de pe dispozitivele de tip bloc. Entitatea de bază cu care lucrează buffer cache-ul este <a href="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=3.8#L59" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=3.8#L59"  rel="nofollow"> struct buffer_head</a>. Câmpurile mai importante din această structură sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>b_data</code>, pointer către o zonă din memorie de unde au fost citite sau unde trebuie scrise date</div>
+</li>
+<li class="level1"><div class="li"> <code>b_size</code>, dimensiunea buffer-ului</div>
+</li>
+<li class="level1"><div class="li"> <code>b_bdev</code>, device-ul cu care se lucrează</div>
+</li>
+<li class="level1"><div class="li"> <code>b_blocknr</code>, numărul blocului de pe device care a fost încărcat sau trebuie să fie salvat pe disc</div>
+</li>
+<li class="level1"><div class="li"> <code>b_state</code>, starea buffer-ului</div>
+</li>
+</ul>
+
+<p>
+Există câteva funcții importante ce lucrează cu astfel de structuri:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/buffer.c?v=3.8#L1368" class="urlextern" title="http://lxr.free-electrons.com/source/fs/buffer.c?v=3.8#L1368"  rel="nofollow"> __bread</a>: citește un bloc cu numărul dat și de dimensiune dată într-o structură <code>buffer_head</code>; în caz de succes întoarce un pointer către <code>buffer_head</code>, altfel întoarce <code>NULL</code>;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=3.8#L287" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=3.8#L287"  rel="nofollow"> sb_bread</a>: face același lucru ca și funcția precedentă, dimensiunea blocului de citit fiind luată din superbloc, la fel și dispozitivul de pe care se face citirea;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/buffer.c?v=3.8#L1112" class="urlextern" title="http://lxr.free-electrons.com/source/fs/buffer.c?v=3.8#L1112"  rel="nofollow"> mark_buffer_dirty</a>: marchează buffer-ul dirty (setează bitul <code>BH_Dirty</code>); buffer-ul va fi scris pe disc la un moment ulterior de timp (din când în când kernel thread-ul <code>bdflush</code> se trezește și scrie buffere pe disc);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=3.8#L274" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=3.8#L274"  rel="nofollow"> brelse</a>:  eliberează memoria folosită de buffer, după ce în prealabil a scris buffer-ul pe disc daca era nevoie;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=3.8#L311" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=3.8#L311"  rel="nofollow"> map_bh</a>: asociază buffer-head-ul cu sectorul corespunzător.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit18" id="functii_si_macro-uri_folositoare">Funcții și macro-uri folositoare</h2>
+<div class="level2">
+
+<p>
+Superblocul conține de obicei o hartă a blocurilor ocupate (de inode-uri, dentry, date) sub forma unui bitmap (vector de biți). Pentru lucrul cu aceste hărți se recomandă folosirea următoarelor funcții:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/lib/find_next_bit.c?v=3.8#L142" class="urlextern" title="http://lxr.free-electrons.com/source/lib/find_next_bit.c?v=3.8#L142"  rel="nofollow"> find_first_zero_bit</a>, pentru găsirea primului bit zero dintr-o zonă de memorie. Parametrul size semnifică numărul de biți al zonei în care se face căutarea;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/atomic.h?v=3.8#L127" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/atomic.h?v=3.8#L127"  rel="nofollow"> test_and_set_bit</a>, pentru setarea unui bit și obținerea vechii valori;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/atomic.h?v=3.8#L151" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/atomic.h?v=3.8#L151"  rel="nofollow"> test_and_clear_bit</a>, pentru ștergerea unui bit și obținerea vechii valori;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/atomic.h?v=3.8#L174" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/atomic.h?v=3.8#L174"  rel="nofollow"> test_and_change_bit</a>, pentru inversarea valorii unui bit și obținerea vechii valori.</div>
+</li>
+</ul>
+
+<p>
+Pentru verificarea tipului unui inode se pot folosi următoarele macrodefiniții:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/linux/stat.h?v=2.6.32#L26" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/stat.h?v=2.6.32#L26"  rel="nofollow"> S_ISDIR</a><code>(inode→i_mode)</code>, pentru a verifica dacă inode-ul este un director;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/linux/stat.h?v=2.6.32#L25" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/stat.h?v=2.6.32#L25"  rel="nofollow"> S_ISREG</a><code>(inode→i_mode)</code>, pentru a verifica dacă inode-ul este un fișier clasic (nu de tip link sau device).</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit19" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Robert Love – Linux Kernel Development, Second Edition – Chapter 12. The Virtual Filesystem</div>
+</li>
+<li class="level1"><div class="li"> Understanding the Linux Kernel, 3rd edition - Chapter 12. The Virtual Filesystem</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.coda.cs.cmu.edu/doc/talks/linuxvfs/" class="urlextern" title="http://www.coda.cs.cmu.edu/doc/talks/linuxvfs/"  rel="nofollow">Linux Virtual File System (presentation)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.cyberciti.biz/tips/understanding-unixlinux-file-system-part-i.html" class="urlextern" title="http://www.cyberciti.biz/tips/understanding-unixlinux-file-system-part-i.html"  rel="nofollow">Understanding Unix/Linux Filesystem</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/57369/" class="urlextern" title="http://lwn.net/Articles/57369/"  rel="nofollow">Creating Linux virtual filesystems</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.tldp.org/LDP/tlk/fs/filesystem.html" class="urlextern" title="http://www.tldp.org/LDP/tlk/fs/filesystem.html"  rel="nofollow">The Linux Documentation Project - VFS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linux.it/~rubini/docs/vfs/vfs.html" class="urlextern" title="http://www.linux.it/~rubini/docs/vfs/vfs.html"  rel="nofollow">The &quot;Virtual File System&quot; in Linux</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://inglorion.net/documents/tutorials/tutorfs/" class="urlextern" title="http://inglorion.net/documents/tutorials/tutorfs/"  rel="nofollow">A Linux Filesystem Tutorial</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.win.tue.nl/~aeb/linux/lk/lk-8.html" class="urlextern" title="http://www.win.tue.nl/~aeb/linux/lk/lk-8.html"  rel="nofollow">The Linux Virtual File System</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.nondot.org/sabre/os/articles/FileSystems/" class="urlextern" title="http://www.nondot.org/sabre/os/articles/FileSystems/"  rel="nofollow">File Systems</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/vfs.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/vfs.txt"  rel="nofollow">Documentation/filesystems/vfs.txt</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/" class="urlextern" title="http://lxr.free-electrons.com/source/fs/"  rel="nofollow">Sursele sistemelor de fișiere</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/proc/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/proc/?v=3.8"  rel="nofollow"> procfs</a> (<em>Process File System</em>) - <a href="http://lxr.free-electrons.com/source/fs/proc/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/proc/?v=3.8"  rel="nofollow">sursele sistemului de fișiere procfs</a> și <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/proc.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/proc.txt"  rel="nofollow">documentația</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8"  rel="nofollow"> ramfs</a> (<em>Random Access Memory Filing System</em>) - <a href="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/?v=3.8"  rel="nofollow">sursele sistemului de fișiere ramfs</a> și <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/ramfs-rootfs-initramfs.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/ramfs-rootfs-initramfs.txt"  rel="nofollow">documentația</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://en.wikipedia.org/wiki/Romfs" class="urlextern" title="http://en.wikipedia.org/wiki/Romfs"  rel="nofollow">romfs</a> (<em>Read-Only Memory File System</em>) - <a href="http://lxr.free-electrons.com/source/fs/romfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/romfs/?v=3.8"  rel="nofollow">sursele sistemului de fișiere romfs</a> și <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/romfs.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/romfs.txt"  rel="nofollow">documentația</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/minix/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=3.8"  rel="nofollow"> minix</a> - <a href="http://lxr.free-electrons.com/source/fs/minix/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=3.8"  rel="nofollow">sursele sistemului de fișiere minix</a> și informații: <a href="http://www.minix3.org/index.html" class="urlextern" title="http://www.minix3.org/index.html"  rel="nofollow">Minix Homepage</a>, Operating Systems Design and Implementation, Third Edition - Chapter 5. File Systems</div>
+</li>
+<li class="level2"><div class="li"> <a href="http://en.wikipedia.org/wiki/Boot_File_System" class="urlextern" title="http://en.wikipedia.org/wiki/Boot_File_System"  rel="nofollow">bfs</a> (<em>UnixWare Boot FileSystem</em>)- <a href="http://lxr.free-electrons.com/source/fs/bfs/?v=3.8" class="urlextern" title="http://lxr.free-electrons.com/source/fs/bfs/?v=3.8"  rel="nofollow">sursele sistemului de fișiere bfs</a>, <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/bfs.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/bfs.txt"  rel="nofollow">documentația</a> și informații: <a href="http://www.nondot.org/sabre/os/files/FileSystems/bfs-structure.html" class="urlextern" title="http://www.nondot.org/sabre/os/files/FileSystems/bfs-structure.html"  rel="nofollow">The BFS filesystem structure</a>, <a href="http://tldp.org/LDP/lki/lki-3.html#ss3.7" class="urlextern" title="http://tldp.org/LDP/lki/lki-3.html#ss3.7"  rel="nofollow">Linux Kernel 2.4 Internals - 3.7. Example Disk Filesystem: BFS</a></div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_57191046058355b5a0987e" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_31687595358355b5a0c755" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></span></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_48631347658355b5a0f632" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab08.html#laborator_8_-_drivere_de_sisteme_de_fisiere_linux_partea_1">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab08.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#virtual_filesystem">Virtual Filesystem</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#modelul_general_al_sistemului_de_fisiere">Modelul general al sistemului de fișiere</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab08.html#superbloc">superbloc</a></div></li>
+<li class="level3"><div class="li"><a href="lab08.html#inode">inode</a></div></li>
+<li class="level3"><div class="li"><a href="lab08.html#file">file</a></div></li>
+<li class="level3"><div class="li"><a href="lab08.html#dentry">dentry</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab08.html#inregistrarea_si_deinregistrarea_sistemelor_de_fisiere">Înregistrarea și deînregistrarea sistemelor de fișiere</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab08.html#functiile_mount_kill_sb">Funcțiile mount, kill_sb</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab08.html#superblocul_in_vfs">Superblocul în VFS</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab08.html#structura_struct_super_block">Structura struct super_block</a></div></li>
+<li class="level3"><div class="li"><a href="lab08.html#operatiile_pe_superbloc">Operațiile pe superbloc</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab08.html#functia_fill_super">Funcția fill_super</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#buffer_cache-ul">Buffer cache-ul</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#functii_si_macro-uri_folositoare">Funcții și macro-uri folositoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab08.html#resurse_utile">Resurse utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/laboratoare/lab08.txt · Last modified: 2016/04/11 17:14 by victor.ciurel          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab08%3Fdo=media&amp;ns=so2%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab08.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Alaboratoare%253Alab08&amp;1479891802" width="2" height="1" alt="" /></div>
+</body>
+</html>

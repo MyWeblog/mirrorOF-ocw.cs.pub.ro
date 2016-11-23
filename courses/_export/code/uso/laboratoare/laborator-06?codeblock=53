@@ -1,0 +1,14 @@
+    
+    
+
+#!/bin/bash
+
+NUM_CHARS=$2
+USERNAME=$1
+
+useradd $USERNAME -d /home/$USERNAME -s /bin/bash && mkdir /home/$USERNAME
+
+PASSWORD=$(cat /dev/urandom | tr -d -c 'A-Za-z0-9' | head -c $NUM_CHARS)
+
+echo "$USERNAME:$PASSWORD"
+echo "$USERNAME:$PASSWORD" | chpasswd

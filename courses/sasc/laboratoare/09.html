@@ -1,0 +1,305 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 09 - OpenSSL MACs and Hashes    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-10T17:03:08+0300"/>
+<meta name="keywords" content="sasc,laboratoare,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=sasc:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/sasc/laboratoare/09.html"/>
+<link rel="canonical" href="09.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sasc:laboratoare';var JSINFO = {"id":"sasc:laboratoare:09","namespace":"sasc:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="09%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="09%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="lab_09_-_openssl_macs_and_hashes">Lab 09 - OpenSSL MACs and Hashes</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit2" id="exercise_1">Exercise 1</h3>
+<div class="level3">
+
+<p>
+In this first exercise we&#039;ll see how to compute hashes using the OpenSSL command line interface.
+</p>
+
+<p>
+You can interact with the OpenSSL utilities in two ways:
+</p>
+<ul>
+<li class="level1"><div class="li"> directly from bash, by using the <code>openssl</code> command followed by the desired command and parameters</div>
+</li>
+<li class="level1"><div class="li"> from the OpenSSL console, by using the <code>openssl</code> command without additional arguments. You can close the console by calling <code>quit</code> or <code>exit</code>.</div>
+</li>
+</ul>
+
+<p>
+If the manual pages are correctly installed, you can consult the documentation via <code>man &lt;command_name&gt;</code> (e.g. <code>man md5</code>).
+</p>
+
+<p>
+Hashes are often used to check the integrity of downloaded files. We will now use OpenSSL to compute the MD5 and SHA-1 hashes of this page.
+</p>
+
+<p>
+Download this page by running:
+</p>
+<pre class="code">linux$ wget http://ocw.cs.pub.ro/courses/sasc/laboratoare/09 -O sasc.html</pre>
+
+<p>
+Use OpenSSL to compute the MD5 and SHA-1 hashes of the newly downloaded file; print the output in hexadecimal.
+</p>
+
+<p>
+To check your results, you can use <code>md5sum</code> or <code>sha1sum</code> as an alternative way of computing the same hashes.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="exercise_2">Exercise 2</h3>
+<div class="level3">
+
+<p>
+In this second exercise we&#039;ll use the command line to compute an HMAC, with SHA-1 as the hashing algorithm.
+</p>
+
+<p>
+Recall from the lecture that for HMAC to be secure, we need to sample a random key $k \gets \mathcal{K}$.
+</p>
+
+<p>
+We can generate random bytes using <code>openssl rand</code>. To compute HMACs, check the documentation for <code>openssl dgst</code>.
+</p>
+
+<p>
+For this exercise, use OpenSSL commands to:
+</p>
+<ol>
+<li class="level1"><div class="li"> generate a 16 byte random key</div>
+</li>
+<li class="level1"><div class="li"> use the key to compute the SHA-1 HMAC of the page downloaded in the previous exercise</div>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit4" id="exercise_3">Exercise 3</h3>
+<div class="level3">
+
+<p>
+In this exercise you will implement the Birthday attack on SHA-1 from the previous lab using OpenSSL. The goal is to obtain a collision in the first four bytes of the hash.
+</p>
+
+<p>
+In contrast to previous labs, this time we&#039;ll use C. You can implement the attack from scratch, or start from our <a href="../../_media/sasc/laboratoare/birthday.tar.gz" class="media mediafile mf_gz" title="sasc:laboratoare:birthday.tar.gz (779 B)">archive here</a>.
+</p>
+
+<p>
+To compute a digest, you might find the code below useful:
+</p>
+<pre class="code C">    SHA_CTX context<span class="sy0">;</span>
+    SHA1_Init<span class="br0">&#40;</span><span class="sy0">&amp;</span>context<span class="br0">&#41;</span><span class="sy0">;</span>
+    SHA1_Update<span class="br0">&#40;</span><span class="sy0">&amp;</span>context<span class="sy0">,</span> buffer<span class="sy0">,</span> length<span class="br0">&#41;</span><span class="sy0">;</span>
+    SHA1_Final<span class="br0">&#40;</span>md<span class="sy0">,</span> <span class="sy0">&amp;</span>context<span class="br0">&#41;</span><span class="sy0">;</span> <span class="coMULTI">/* md must point to at least 20 bytes of valid memory */</span></pre>
+
+<p>
+<p><div class="noteimportant">
+To compile using OpenSSL you will need to install the development version of the library which includes the header files.
+</p>
+
+<p>
+Download the library from <a href="https://www.openssl.org/source/old/1.0.1/openssl-1.0.1f.tar.gz" class="urlextern" title="https://www.openssl.org/source/old/1.0.1/openssl-1.0.1f.tar.gz"  rel="nofollow">https://www.openssl.org/source/old/1.0.1/openssl-1.0.1f.tar.gz</a>, and unpack it.
+</p>
+
+<p>
+Open the unpacked folder from bash, and run the following commands:
+</p>
+<pre class="code bash"><span class="co4">linux$ </span>.<span class="sy0">/</span>config <span class="re5">--prefix</span>=<span class="sy0">/</span>home<span class="sy0">/</span>student<span class="sy0">/</span><span class="kw3">local</span> <span class="re5">--openssldir</span>=<span class="sy0">/</span>home<span class="sy0">/</span>student<span class="sy0">/</span>local<span class="sy0">/</span>openssl
+<span class="co4">linux$ </span><span class="kw2">make</span>
+<span class="co4">linux$ </span><span class="kw2">make</span> install_sw</pre>
+
+<p>
+To fix the makefile using the new paths, change the variables at the start with the ones below:
+</p>
+<pre class="code makefile">LDFLAGS=-L/home/student/local/lib -lcrypto
+CFLAGS=-Wall -g -I/home/student/local/include</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_9888185458355bb1cb0c7" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="sasc:laboratoare:01">Lab 01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="sasc:laboratoare:02">Lab 02 - OTP and Stream Ciphers</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="sasc:laboratoare:03">Lab 03 - PRGs</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="sasc:laboratoare:04">Lab 04 - PRFs and PRPs</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="sasc:laboratoare:05">Lab 05 - DES</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="sasc:laboratoare:06">Lab 06 - CBC Padding Attack</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="sasc:laboratoare:07">Lab 07 - Correlation Power Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="sasc:laboratoare:08">Lab 08 - MACs</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="09.html" class="wikilink1" title="sasc:laboratoare:09">Lab 09 - OpenSSL MACs and Hashes</a></span></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="sasc:laboratoare:10">Lab 10 - OpenSSL AEAD</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Laboratoare" [1-61] -->
+<h1 class="sectionedit2" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_114457865858355bb1cd00b" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/stuff.html" class="wikilink1" title="sasc:res:stuff">Diverse exercitii</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tema1.html" class="wikilink1" title="sasc:res:tema1">Homework 1</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tema2.html" class="wikilink1" title="sasc:res:tema2">Homework 2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Resurse" [62-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="09.html#lab_09_-_openssl_macs_and_hashes">Lab 09 - OpenSSL MACs and Hashes</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="09.html#exercise_1">Exercise 1</a></div></li>
+<li class="level3"><div class="li"><a href="09.html#exercise_2">Exercise 2</a></div></li>
+<li class="level3"><div class="li"><a href="09.html#exercise_3">Exercise 3</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          sasc/laboratoare/09.txt · Last modified: 2016/05/10 17:03 by sergiu.costea          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="09%3Fdo=media&amp;ns=sasc%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="09.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=sasc%253Alaboratoare%253A09&amp;1479891889" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,709 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Thread-uri - Extra    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-05-18T20:00:37+0300"/>
+<meta name="keywords" content="so,laboratoare,resurse,threaduri_extra"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=so:laboratoare:resurse"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../_export/xhtml/so/laboratoare/resurse/threaduri_extra.html"/>
+<link rel="canonical" href="threaduri_extra.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so:laboratoare:resurse';var JSINFO = {"id":"so:laboratoare:resurse:threaduri_extra","namespace":"so:laboratoare:resurse","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so/"><img height="70" src="../../../res/sigla_so.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../systems/index.html"/><img height="70" src="../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="threaduri_extra%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="threaduri_extra%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="thread-uri_-_extra">Thread-uri - Extra</h1>
+<div class="level1">
+
+</div>
+
+<h1 class="sectionedit2" id="linux">Linux</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit3" id="terminarea_thread-urilor">Terminarea thread-urilor</h2>
+<div class="level2">
+
+<p>
+Există și posibilitatea ca un fir de execuţie să termine un alt fir, folosind mecanismul de “<em class="u">thread cancellation</em>”. Pentru a face acest lucru se folosește funcţia <code>pthread_cancel</code> care primește ca parametru id-ul firului de execuţie ce urmează să fie terminat :
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_cancel<span class="br0">&#40;</span>pthread_t thread<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Un thread unificabil care a fost terminat în acest mod trebuie așteptat folosind <code>pthread_join</code> pentru ca resursele folosite de el să fie eliberate. Un fir terminat cu <code>pthread_cancel</code> va întoarce valoarea PTHREAD_CANCELED.
+Totuși trebuie avut grijă la folosirea acestui mecanism, întrucât un thread este posibil să fie terminat înainte de a avea posibilitatea să elibereze anumite resurse folosite. Din aceasta cauză un thread poate să controleze dacă și când poate fi terminat de către un alt thread.
+Din punctul de vedere al posibilităţii terminării folosind <code>pthread_cancel</code> un thread poate fi :
+</p>
+<ul>
+<li class="level1"><div class="li">cancelabil asincron - un astfel de fir poate fi terminat de către un alt fir în orice punct al execuţiei.</div>
+</li>
+<li class="level1"><div class="li">cancelabil sincron - un astfel de fir NU poate fi terminat în orice punct al execuţiei sale, ci numai în anumite puncte specifice.</div>
+</li>
+<li class="level1"><div class="li">necancelabil - un astfel de fir nu poate fi terminat folosind <code>pthread_cancel</code>.</div>
+</li>
+</ul>
+
+<p>
+Stabilirea tipului unui fir de execuţie din acest punct de vedere se face folosind funcţiile :
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_setcancelstate<span class="br0">&#40;</span><span class="kw4">int</span> state<span class="sy0">,</span> <span class="kw4">int</span> <span class="sy0">*</span>oldstate<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> pthread_setcanceltype<span class="br0">&#40;</span><span class="kw4">int</span> type<span class="sy0">,</span> <span class="kw4">int</span> <span class="sy0">*</span>oldtype<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Funcţia <code>pthread_setcancelstate</code> poate fi folosită pentru a activa/dezactiva posibilitatea terminării unui fir folosind <code>pthread_cancel</code>. Argumentul <code>state</code> reprezintă noua lui stare care poate fi <code>PTHREAD_CANCEL_ENABLE</code> (pentru activare) sau <code>PTHREAD_CANCEL_DISABLE</code> (pentru dezactivare). În <code>oldstate</code>, dacă nu este NULL, se poate obţine vechea stare.
+</p>
+
+<p>
+Folosind <code>pthread_setcancelstate</code> pot fi implementate regiuni critice, în sensul că tot codul dintr-o astfel de regiune trebuie executat în întregime sau deloc, practic firul să nu poată fi terminat de către un alt fir în timp ce se găsește într-o astfel de regiune.
+</p>
+
+<p>
+Funcţia <code>pthread_setcanceltype</code> poate fi folosită pentru a schimba tipul de răspuns la o cerere de terminare : asincron sau sincron. Argumentul <code>type</code> indică noul tip și poate fi <code>PTHREAD_CANCEL_ASYNCHRONOUS</code> (pentru ca firul să poată fi terminat asincron, deci oricând) sau <code>PTHREAD_CANCEL_DEFERRED</code> (pentru ca o cerere de terminare sa fie amânată până când se ajunge într-un punct în care este posibilă terminarea firului). La fel, în <code>oldtype</code>, dacă nu este NULL se poate obţine starea anterioară.
+</p>
+
+<p>
+În mod implicit la crearea unui fir folosind <code>pthread_create</code> starea lui este caracterizată de <code>PTHREAD_CANCEL_ENABLE</code> și <code>PTHREAD_CANCEL_DEFERRED</code>.
+</p>
+
+<p>
+Funcţiile <code>pthread_create</code>, <code>pthread_setcancelstate</code> și <code>pthread_setcanceltype</code> întorc 0 în caz de succes și un cod de eroare nenul în caz de eșec.
+</p>
+
+<p>
+În cazul în care un fir este cancelabil sincron, așa cum a fost precizat, terminarea lui se poate face numai în anumite puncte ale execuţiei sale. Practic cererile de terminare sunt amânate până se ajunge într-un astfel de punct, numit și <code>cancellation point</code>. Când se ajunge într-un astfel de punct se testează dacă există cereri de terminare, și dacă da, firul este terminat. Cel mai direct mod de a crea un astfel de punct este apelând funcţia :
+</p>
+<pre class="code c"><span class="kw4">void</span> pthread_testcancel<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Dacă într-un program se folosește acest mecanism de terminare a firelor folosind <code>pthread_cancel</code>, această funcţie ar trebui apelată periodic în cadrul unei funcţii asociate unui thread în care se fac multe procesări, în punctele în care firul poate fi terminat fără a rămâne resurse neeliberate și fără a produce alte efecte nedorite.
+</p>
+
+<p>
+Pe lângă <code>pthread_testcancel</code> mai există o serie de alte funcţii al căror apel reprezintă un punct de cancelare. Aceste funcţii sunt următoarele :
+</p>
+<ul>
+<li class="level1"><div class="li"><code>pthread_join</code></div>
+</li>
+<li class="level1"><div class="li"><code>pthread_cond_wait</code></div>
+</li>
+<li class="level1"><div class="li"><code>pthread_cond_timedwait</code></div>
+</li>
+<li class="level1"><div class="li"><code>sem_wait</code></div>
+</li>
+<li class="level1"><div class="li"><code>sigwait</code></div>
+</li>
+</ul>
+
+<p>
+De asemenea, orice funcţie care apelează una din aceste funcţii este și ea un astfel de punct de terminare.
+</p>
+
+<p>
+În general nu este o idee foarte bună folosirea funcţiei <code>pthread_cancel</code> pentru a termina un thread, decât în cazuri excepţionale. În cazuri normale o strategie mai bună este de a indica firului că trebuie să se termine și apoi să se aștepte terminarea lui.
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="lucrul_cu_atributele_unui_thread">Lucrul cu atributele unui thread</h2>
+<div class="level2">
+
+<p>
+Atributele unui fir de execuţie (cu o excepţie) sunt specificate la crearea firului de execuţie și <em class="u">nu pot fi schimbate</em> pe perioada în care firul de execuţie este folosit.
+</p>
+
+<p>
+Pentru <em class="u">iniţializarea</em> și respectiv <em class="u">distrugerea</em> unui obiect ce reprezintă atributele unui fir de execuţie avem la dispoziţie funcţiile :
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_attr_init<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> pthread_attr_destroy<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Pentru a stabili anumite atribute specifice ale unui fir, trebuie urmaţi câţiva pași :
+</p>
+
+<p>
+# se creează un obiect de tipul <code>pthread_attr_t</code>, de exemplu declarând o variabilă de acest tip.
+# se apelează funcţia <code>pthread_attr_init</code> căreia i se dă ca parametru un pointer la acest obiect. Această funcţie iniţializează atributele cu valorile lor implicite.
+# se modifică obiectul ce contine atributele folosind una din funcţiile prezentate mai jos, pentru ca să se obţină atributele dorite.
+# se transmite un pointer la aceste atribute funcţiei <code>pthread_create</code>.
+# se apelează funcţia <code>pthread_attr_destroy</code> pentru a elibera obiectul ce reprezintă atributele (variabila de tip <code>pthread_attr_t</code> nu este însă dezalocată, ea poate fi refolosită utilizând <code>pthread_attr_init</code>).
+</p>
+
+<p>
+Un același obiect de tip <code>pthread_attr_t</code> poate fi folosit pentru crearea mai multor fire de execuţie distincte și nu este necesar să fie păstrat după crearea acestora.
+</p>
+
+<p>
+În continuare sunt prezentate funcţiile ce modifică atributele cele mai uzuale ale unui fir de execuţie.
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="modificarea_atributului_detasabilunificabil">Modificarea atributului detașabil/unificabil</h3>
+<div class="level3">
+
+<p>
+Pentru a seta/verifica tipul unui fir de execuţie din punct de vedere detașabil/unificabil se pot utiliza următoarele funcţii :
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_attr_setdetachstate<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="sy0">,</span> <span class="kw4">int</span> detachstate<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> pthread_attr_getdetachstate<span class="br0">&#40;</span><span class="kw4">const</span> pthread_attr_t <span class="sy0">*</span>tattr<span class="sy0">,</span> <span class="kw4">int</span> <span class="sy0">*</span>detachstate<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Primul parametru este un pointer la obiectul reprezentând atributele, iar al doilea parametru reprezintă starea dorită - unificabil/detașabil. Deoarece implicit sunt create fire unificabile (valoarea <code>PTHREAD_CREATE_JOINABLE</code>), această funcţie trebuie apelată doar dacă se creează fire detașabile și în acest caz al doilea parametru trebuie să aibă valoarea <code>PTHREAD_CREATE_DETACHED</code>.
+</p>
+
+<p>
+Chiar dacă un fir de execuţie este creat unificabil, el poate fi transformat ulterior într-un fir detașabil apelând funcţia <code>pthread_detach</code>. Însă o data detașat, nu mai poate fi făcut unificabil la loc.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="modificarea_politicii_de_alocare_a_procesorului">Modificarea politicii de alocare a procesorului</h3>
+<div class="level3">
+
+<p>
+Standardul POSIX definește 3 politici de alocare a procesorului :
+</p>
+<ul>
+<li class="level1"><div class="li">SCHED_RR - round robin</div>
+</li>
+<li class="level1"><div class="li">SCHED_FIFO - first in first out</div>
+</li>
+<li class="level1"><div class="li">SCHED_OTHER - implementare dependentă de sistem</div>
+</li>
+</ul>
+
+<p>
+Politicile SCHED_RR și SCHED_FIFO sunt opţionale și sunt suportate DOAR de firele de execuţie real time.
+</p>
+
+<p>
+Funcţia care este folosită pentru a schimba politica de execuţie a firelor este :
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_attr_setschedpolicy<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="sy0">,</span> <span class="kw4">int</span> policy<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Pentru a afla politica curentă se poate folosi funcţia <code>pthread_attr_getschedpolicy</code> care în momentul de faţă întoarce doar SCHED_OTHER.
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_attr_getschedpolicy<span class="br0">&#40;</span><span class="kw4">const</span> pthread_attr_t <span class="sy0">*</span>attr<span class="sy0">,</span> <span class="kw4">int</span> <span class="sy0">*</span>policy<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h3 class="sectionedit7" id="modificarea_prioritatii">Modificarea priorităţii</h3>
+<div class="level3">
+
+<p>
+Pentru a schimba/verifica prioritatea firelor de execuţie dispunem de următoarele funcţii :
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_attr_setschedparam<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">struct</span> sched_param <span class="sy0">*</span>param<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> pthread_attr_getschedparam<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="sy0">,</span> <span class="kw4">struct</span> sched_param <span class="sy0">*</span>param<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Prioritatea este semnificativă doar dacă politica folosită este SCHED_RR sau SCHED_FIFO.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="modificarea_dimensiunii_si_adresei_de_start_a_stivei">Modificarea dimensiunii și adresei de start a stivei</h3>
+<div class="level3">
+
+<p>
+De obicei stivele firelor de execuţie încep la limita unei pagini de memorie, iar orice dimensiune a lor este rotunjită până la limita următoarei pagini. La capătul stivei este adăugată de obicei o pagină pentru care nu avem drepturi de acces și astfel cele mai multe depășiri de stivă (stack overflows) vor genera semnalul SIGSEGV (deci un segmentation fault).
+</p>
+
+<p>
+Dacă firul a fost creat unificabil stiva nu poate fi eliberată până nu se va termina un apel &lt;tt&gt;pthread_join&lt;/tt&gt; pentru respectivul fir.
+</p>
+
+<p>
+De obicei biblioteca de fire de execuţie alocă 2M de memorie virtuală pentru fiecare stivă de fir de execuţie.
+</p>
+
+<p>
+Limita minimă pentru dimensiunea unei stive a unui fir de execuţie este PTHREAD_STACK_MIN.
+</p>
+
+<p>
+Pentru a seta/afla dimensiunea stivei unui fir de execuţie se pot utiliza funcţiile :
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_attr_setstacksize<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="sy0">,</span> <span class="kw4">int</span> stacksize<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> pthread_attr_getstacksize<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="sy0">,</span> <span class="kw4">size_t</span> <span class="sy0">*</span>size<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Pentru a specifica adresa de început a unei stive se poate utiliza funcţia :
+</p>
+<pre class="code c"><span class="kw4">int</span> pthread_attr_setstackaddr<span class="br0">&#40;</span>pthread_attr_t <span class="sy0">*</span>tattr<span class="sy0">,</span> <span class="kw4">void</span> <span class="sy0">*</span>stackaddr<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h1 class="sectionedit9" id="windows">Windows</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit10" id="fibre_de_executie">Fibre de execuţie</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit11" id="introducere">Introducere</h3>
+<div class="level3">
+
+<p>
+Comutarea între firele de execuţie în Windows este costisitoare pentru că presupune trecerea prin kernel-mode. De aceea au fost introduse <em class="u">fibrele</em> (fibers), care sunt planificate în user space de către programele care le-au creat.
+</p>
+
+<p>
+Fiecare fir de execuţie poate avea mai multe fibre, așa cum un proces poate avea mai multe fire de execuţie. O fibră se execută în contextul firului de execuţie care o planifică.
+</p>
+
+<p>
+Sistemul de operare nu este conștient de existenţa fibrelor, el vede doar firul de execuţie în cadrul căruia fibrele există (o fibră împrumută identitatea firului de care aparţine). De exemplu dacă o fibră execută <code>ExitThread</code>, firul care a lansat fibra respectivă se va termina.
+</p>
+
+<p>
+O fibră nu are asociate aceleași informaţii de stare ca și firul de execuţie, ci are asociate doar următoarele informaţii de stare :
+</p>
+<ul>
+<li class="level1"><div class="li">stiva</div>
+</li>
+<li class="level1"><div class="li">un subset al regiștrilor firului de execuţie</div>
+</li>
+<li class="level1"><div class="li">datele fibrei furnizate la crearea fibrei</div>
+</li>
+</ul>
+
+<p>
+Cum se face planificarea?
+</p>
+
+<p>
+Fibrele nu sunt planificate preemptiv (sunt lăsate să ruleze până cedează de buna voie procesorul), cu observaţia că dacă firul din care fac parte este preemptat, automat fibra în execuţie este preemptată. O fibră este planificată printr-o comutare către ea dintr-o altă fibră. Kernelul planifică fire de execuţie, nu fibre.
+</p>
+
+</div>
+
+<h3 class="sectionedit12" id="convertthreadtofiber">ConvertThreadToFiber</h3>
+<div class="level3">
+
+<p>
+Înainte de a planifica prima fibră trebuie apelată funcţia <code>ConvertThreadToFiber</code> pentru a se crea o zonă în care să se salveze informaţii despre starea fibrei. După executarea acestei funcţii, firul apelant devine fibra activă (fibra în curs de execuţie). Informaţia de stare pentru această primă fibră include datele pasate ca argument funcţiei <code>ConvertThreadToFiber</code>.
+</p>
+<pre class="code c">LPVOID ConvertThreadToFiber <span class="br0">&#40;</span>LPVOID lpParameter<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+<ul>
+<li class="level1"><div class="li"><code>lpParameter</code> - [in] Pointer la o variabilă pasată fibrei. Fibra va putea obţine aceste date folosind macroul <code>GetFiberData</code>.</div>
+</li>
+</ul>
+
+<p>
+În caz de succes este returnată adresa fibrei. Altfel, rezultatul este NULL și tipul erorii se poate afla folosind <code>GetLastError</code>.
+</p>
+
+<p>
+Există și funcţia cu efect contrar, <code>ConvertFiberToThread</code> :
+</p>
+<pre class="code c">BOOL ConvertFiberToThread<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h3 class="sectionedit13" id="crearea_unei_fibre">Crearea unei fibre</h3>
+<div class="level3">
+
+<p>
+Funcţia <code>CreateFiber</code> este folosită pentru a crea o nouă fibră dintr-una deja existentă (deci DUPĂ apelul <code>ConvertThreadToFiber</code>).
+</p>
+
+<p>
+Aceasta funcţie creează un obiect de tip fibră, îi alocă o stivă și setează execuţia fibrei să înceapă la adresa de start specificată (funcţia fibrei). Această funcţie NU planifică fibra.
+</p>
+<pre class="code c">LPVOID CreateFiber <span class="br0">&#40;</span>
+	SIZE_T dwStackSize<span class="sy0">,</span>
+	LPFIBER_START_ROUTINE lpStartAddress<span class="sy0">,</span>
+	LPVOID lpParameter
+<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+<ul>
+<li class="level1"><div class="li"><code>dwStackSize</code> - dimensiunea, în bytes, a stivei.</div>
+</li>
+<li class="level1"><div class="li"><code>lpStartAddress</code> - pointer la funcţia ce trebuie executată de către fibră. </div>
+</li>
+</ul>
+
+<p>
+<strong>Atentie!</strong> Aceasta nu va fi executată decât după un apel <code>SwitchToFiber</code> către fibră.
+Această funcţie arata așa :
+</p>
+<pre class="code c">VOID CALLBACK FiberProc<span class="br0">&#40;</span>PVOID lpParameter<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+unde <code>FiberProc</code> ţine locul numelui funcţiei, iar <code>lpParameter</code> este un pointer la datele fibrei, este același cu <code>lpParameter</code> transmis funcţiei <code>CreateFiber</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"><code>lpParameter</code> - pointer la o variabilă pasată fibrei. Fibra va putea obţine aceste date folosind macroul <code>GetFiberData</code>.</div>
+</li>
+</ul>
+
+<p>
+Numărul de fibre ce poate fi creat de către un fir de execuţie este limitat de către memoria virtuală disponibilă. Implicit, fiecare fibră are 1M rezervat pentru stivă, deci se pot crea cel mult 2028 fibre.
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="planificarea_unei_fibre">Planificarea unei fibre</h3>
+<div class="level3">
+
+<p>
+Pentru a executa o fibra creată cu <code>CreateFiber</code> se folosește funcţia <code>SwitchToFiber</code>. Aceasta va salva starea fibrei curente și va restaura starea fibrei specificate. Se poate apela <code>SwitchToFiber</code> cu adresa unei fibre create de către un fir de execuţie diferit, pentru aceasta însă trebuie cunoscută adresa returnată celuilalt fir de execuţie de către funcţia <code>CreateFiber</code> și trebuie folosită o sincronizare adecvată.
+</p>
+<pre class="code c">VOID SwitchToFiber<span class="br0">&#40;</span>LPVOID lpFiber<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<code>lpFiber</code> reprezintă adresa fibrei ce este planificată.
+</p>
+
+<p>
+<strong>Atentie!</strong> Apelul :
+</p>
+<pre class="code c">SwitchToFiber<span class="br0">&#40;</span>GetCurrentFiber<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+poate provoca probleme neprevăzute.
+</p>
+
+</div>
+
+<h3 class="sectionedit15" id="alte_functii_utile">Alte funcţii utile</h3>
+<div class="level3">
+
+<p>
+<code>GetFiberData</code> poate fi folosită pentru a obţine datele asociate unei fibre (valoarea parametrului <code>lpParameter</code> din apelul uneia din funcţiile <code>CreateFiber</code> sau <code>ConvertThreadToFiber</code>). Aceeași valoare este primită ca parametru de către funcţia asociată fibrei.
+</p>
+<pre class="code c">PVOID GetFiberData<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<code>GetCurrentFiber</code> poate fi utilizată pentru a obţine adresa fibrei, care este chiar rezultatul întors de <code>CreateFiber</code> sau <code>ConvertThreadToFiber</code>.
+</p>
+<pre class="code c">PVOID GetCurrentFiber<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h3 class="sectionedit16" id="fiber_local_storage">Fiber Local Storage</h3>
+<div class="level3">
+
+<p>
+Se poate folosi <code>Fiber Local Storage</code> (FLS) pentru a crea o copie unică a unei variabile pentru fiecare fibră. Daca nu apare nici o comutare între fibre FLS se comportă exact ca și TLS. Funcţiile FLS (<code>FlsAlloc</code>, <code>FlsFree</code>, <code>FlsGetValue</code> și <code>FlsSetValue</code>) manipulează FLS-ul asociat fibrei curente. Dacă firul execută o fibră, și fibra se schimbă (prin comutare), atunci și FLS-ul va fi schimbat.
+</p>
+
+<p>
+Funcţiile folosite pentru crearea, accesarea și distrugerea FLS-ului sunt similare cu cele pentru TLS.
+</p>
+
+</div>
+
+<h3 class="sectionedit17" id="stergerea_unei_fibre">Ştergerea unei fibre</h3>
+<div class="level3">
+
+<p>
+Pentru a șterge datele asociate unei fibre se folosește funcţia <code>DeleteFiber</code>. Aceste date includ stiva, un subset al regiștrilor și datele fibrei. Dacă o fibră în execuţie apelează <code>DeleteFiber</code>, firul asociat ei va apela <code>ExitThread</code> și se va termina. Totuși, dacă o fibra activă este ștearsă de către o altă fibră, firul care rulează fibra se va termina anormal, pentru că stiva fibrei (care este și a firului de execuţie) a fost eliberată.
+</p>
+<pre class="code c"><span class="kw4">void</span> DeleteFiber<span class="br0">&#40;</span>LPVOID lpFiber<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<code>lpFiber</code> specifică adresa fibrei ce va fi ștearsă.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_so">Informații generale SO</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_166739161358355acf42095" data-jsajax="%26skipfile%3D%253D/so%253Ainfo%253Astart/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../info/documentatie.html" class="wikilink1" title="so:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/feed.html" class="wikilink1" title="so:info:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/hall.html" class="wikilink1" title="so:info:hall">Hall of SO</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/lista-discutii.html" class="wikilink1" title="so:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/mv.html" class="wikilink1" title="so:info:mv">Mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/trimitere-teme.html" class="wikilink1" title="so:info:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale SO" [12-194] -->
+<h1 class="sectionedit2" id="informatii_so_2015-2016">Informații SO 2015-2016</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_102888772258355acf44f72" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../../meta/examen.html" class="indexmenu_idx_head">Examen CA/CC</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../meta/examen/2012-2013.html" class="wikilink1" title="so:meta:examen:2012-2013">Examen CA/CC 2012-2013</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/examen/2013-2014.html" class="wikilink1" title="so:meta:examen:2013-2014">Examen CA/CC 2013-2014</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/examen/2014-2015.html" class="wikilink1" title="so:meta:examen:2014-2015">Examen CA/CC 2014-2015</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../meta/notare/reguli-notare-ca-cc.html" class="wikilink1" title="so:meta:notare:reguli-notare-ca-cc">Notare CA/CC</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/notare/reguli-notare-cb.html" class="wikilink1" title="so:meta:notare:reguli-notare-cb">Notare CB</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../../meta/anunturi.html" class="wikilink1" title="so:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/calendar.html" class="wikilink1" title="so:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/catalog.html" class="wikilink1" title="so:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/echivalari.html" class="wikilink1" title="so:meta:echivalari">Echivalări teme</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/karma.html" class="wikilink1" title="so:meta:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/need-to-know.html" class="wikilink1" title="so:meta:need-to-know">SO Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/orar.html" class="wikilink1" title="so:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații SO 2015-2016" [195-261] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_111807301258355acf45f16" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../resurse.html" class="indexmenu_idx_head">Resurse</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="c_tips.html" class="wikilink1" title="so:laboratoare:resurse:c_tips">C/SO Tips</a></div></li>
+<li class="level2"><div class="li"><a href="die.html" class="wikilink1" title="so:laboratoare:resurse:die">Macro-ul DIE</a></div></li>
+<li class="level2"><div class="li"><a href="gdb.html" class="wikilink1" title="so:laboratoare:resurse:gdb">GDB</a></div></li>
+<li class="level2"><div class="li"><a href="home.html" class="wikilink1" title="so:laboratoare:resurse:home">Resurse</a></div></li>
+<li class="level2"><div class="li"><a href="injections.html" class="wikilink1" title="so:laboratoare:resurse:injections">Function Hooking and Windows Dll Injection</a></div></li>
+<li class="level2"><div class="li"><a href="oprofile.html" class="wikilink1" title="so:laboratoare:resurse:oprofile">Oprofile</a></div></li>
+<li class="level2"><div class="li"><a href="recapitulare.html" class="wikilink1" title="so:laboratoare:resurse:recapitulare">Recapitulare</a></div></li>
+<li class="level2"><div class="li"><span class="curid"><a href="threaduri_extra.html" class="wikilink1" title="so:laboratoare:resurse:threaduri_extra">Thread-uri - Extra</a></span></div></li>
+<li class="level2"><div class="li"><a href="vs_tips.html" class="wikilink1" title="so:laboratoare:resurse:vs_tips">Visual Studio Tips and Tricks</a></div></li>
+<li class="level2"><div class="li"><a href="windows-video.html" class="wikilink1" title="so:laboratoare:resurse:windows-video">windows-video</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../laborator-01.html" class="wikilink1" title="so:laboratoare:laborator-01">Laborator 01 - Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-02.html" class="wikilink1" title="so:laboratoare:laborator-02">Laborator 02 - Operații I/O simple</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-03.html" class="wikilink1" title="so:laboratoare:laborator-03">Laborator 03 - Procese</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-04.html" class="wikilink1" title="so:laboratoare:laborator-04">Laborator 04 - Semnale</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-05.html" class="wikilink1" title="so:laboratoare:laborator-05">Laborator 05 - Gestiunea memoriei</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-06.html" class="wikilink1" title="so:laboratoare:laborator-06">Laborator 06 - Memoria virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-07.html" class="wikilink1" title="so:laboratoare:laborator-07">Laborator 07 - Profiling &amp; Debugging</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-08.html" class="wikilink1" title="so:laboratoare:laborator-08">Laborator 08 - Thread-uri Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-09.html" class="wikilink1" title="so:laboratoare:laborator-09">Laborator 09 - Thread-uri Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-10.html" class="wikilink1" title="so:laboratoare:laborator-10">Laborator 10 - Operații IO avansate - Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-11.html" class="wikilink1" title="so:laboratoare:laborator-11">Laborator 11 - Operații IO avansate - Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-12.html" class="wikilink1" title="so:laboratoare:laborator-12">Laborator 12 - Implementarea sistemelor de fișiere</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [262-322] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_82166327658355acf46eb7" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../../cursuri/curs-01.html" class="indexmenu_idx_head">Curs 01 - Introducere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-02.html" class="indexmenu_idx_head">Curs 02 - Sistemul de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-03.html" class="indexmenu_idx_head">Curs 03 - Procese</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-04.html" class="indexmenu_idx_head">Curs 04 - Planificarea execuției. IPC</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-05.html" class="indexmenu_idx_head">Curs 05 - Gestiunea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-06.html" class="indexmenu_idx_head">Curs 06 - Memoria virtuală</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-07.html" class="indexmenu_idx_head">Curs 07 - Securitatea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-08.html" class="indexmenu_idx_head">Curs 08 - Fire de execuție</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-09.html" class="indexmenu_idx_head">Curs 09 - Sincronizare</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-10.html" class="indexmenu_idx_head">Curs 10 - Dispozitive de intrare/ieșire</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-11.html" class="indexmenu_idx_head">Curs 11 - Networking în sistemul de operare</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-12.html" class="indexmenu_idx_head">Curs 12 - Implementarea sistemelor de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-13.html" class="indexmenu_idx_head">Curs 13 - Securitatea sistemului</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/quiz/start.html" class="indexmenu_idx_head">Quizz-uri curs</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra-2.html" class="wikilink1" title="so:cursuri:curs-extra-2">Curs extra - Android</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra-3.html" class="wikilink1" title="so:cursuri:curs-extra-3">Curs extra - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra.html" class="wikilink1" title="so:cursuri:curs-extra">Curs extra - Sincronizarea proceselor</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/note.html" class="wikilink1" title="so:cursuri:note">Note de curs</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [323-374] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_19544055558355acf47e56" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../../teme/tema-asist.html" class="indexmenu_idx_head">Tema Asistenți - Guardian process</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/contestatii.html" class="wikilink1" title="so:teme:contestatii">Contestații</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/folosire-gitlab.html" class="wikilink1" title="so:teme:folosire-gitlab">Git. Indicații folosire GitLab</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/general.html" class="wikilink1" title="so:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-1.html" class="wikilink1" title="so:teme:tema-1">Tema 1 Multi-platform Development</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-2.html" class="wikilink1" title="so:teme:tema-2">Tema 2 Mini-shell</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-3.html" class="wikilink1" title="so:teme:tema-3">Tema 3 Memorie virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-4.html" class="wikilink1" title="so:teme:tema-4">Tema 4 Planificator de threaduri</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-5.html" class="wikilink1" title="so:teme:tema-5">Tema 5 Server web asincron</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [375-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="threaduri_extra.html#thread-uri_-_extra">Thread-uri - Extra</a></div></li>
+<li class="level1"><div class="li"><a href="threaduri_extra.html#linux">Linux</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="threaduri_extra.html#terminarea_thread-urilor">Terminarea thread-urilor</a></div></li>
+<li class="level2"><div class="li"><a href="threaduri_extra.html#lucrul_cu_atributele_unui_thread">Lucrul cu atributele unui thread</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="threaduri_extra.html#modificarea_atributului_detasabilunificabil">Modificarea atributului detașabil/unificabil</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#modificarea_politicii_de_alocare_a_procesorului">Modificarea politicii de alocare a procesorului</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#modificarea_prioritatii">Modificarea priorităţii</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#modificarea_dimensiunii_si_adresei_de_start_a_stivei">Modificarea dimensiunii și adresei de start a stivei</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="threaduri_extra.html#windows">Windows</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="threaduri_extra.html#fibre_de_executie">Fibre de execuţie</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="threaduri_extra.html#introducere">Introducere</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#convertthreadtofiber">ConvertThreadToFiber</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#crearea_unei_fibre">Crearea unei fibre</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#planificarea_unei_fibre">Planificarea unei fibre</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#alte_functii_utile">Alte funcţii utile</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#fiber_local_storage">Fiber Local Storage</a></div></li>
+<li class="level3"><div class="li"><a href="threaduri_extra.html#stergerea_unei_fibre">Ştergerea unei fibre</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so/laboratoare/resurse/threaduri_extra.txt · Last modified: 2015/05/18 20:00 by adrian.stanciu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="threaduri_extra%3Fdo=media&amp;ns=so%253Alaboratoare%253Aresurse.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="threaduri_extra.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../feed.php" title="Recent changes RSS feed"><img src="../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../lib/exe/indexer.php%3Fid=so%253Alaboratoare%253Aresurse%253Athreaduri_extra&amp;1479891663" width="2" height="1" alt="" /></div>
+</body>
+</html>

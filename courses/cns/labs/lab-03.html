@@ -1,0 +1,1235 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 03 - Executables. Static Analysis    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-18T16:05:30+0300"/>
+<meta name="keywords" content="cns,labs,lab-03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cns/labs/lab-03.html"/>
+<link rel="canonical" href="lab-03.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-03","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/cns/"><img height="70" src="../../res/sigla_cns.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab-03%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab-03%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="lab_03_-_executables_static_analysis">Lab 03 - Executables. Static Analysis</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Executable_and_Linkable_Format" class="urlextern" title="http://en.wikipedia.org/wiki/Executable_and_Linkable_Format"  rel="nofollow">Executable and Linkable Format</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://linux.die.net/man/5/elf" class="urlextern" title="http://linux.die.net/man/5/elf"  rel="nofollow">elf - format of Executable and Linking Format (ELF) files</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Portable_Executable" class="urlextern" title="http://en.wikipedia.org/wiki/Portable_Executable"  rel="nofollow"> PE - portable executable file format</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Comparison_of_executable_file_formats" class="urlextern" title="http://en.wikipedia.org/wiki/Comparison_of_executable_file_formats"  rel="nofollow">Comparison between different file formats</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://wiki.osdev.org/ELF" class="urlextern" title="http://wiki.osdev.org/ELF"  rel="nofollow">A short description of the loading process of the ELF file</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0474j/pge1362065899168.html" class="urlextern" title="http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0474j/pge1362065899168.html"  rel="nofollow"> Relationship between segment and sections</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://github.com/eliben/pyelftools" class="urlextern" title="https://github.com/eliben/pyelftools"  rel="nofollow">PyElfTools</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.eresi-project.org/" class="urlextern" title="http://www.eresi-project.org/"  rel="nofollow">elfsh (outdated)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://phrack.org/issues/61/8.html" class="urlextern" title="http://phrack.org/issues/61/8.html"  rel="nofollow"> ELF backdooring</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://github.com/blubtxt/elfcrypter" class="urlextern" title="https://github.com/blubtxt/elfcrypter"  rel="nofollow"> ELFcrypter</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://upx.sourceforge.net/" class="urlextern" title="http://upx.sourceforge.net/"  rel="nofollow"> UPX</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.bitlackeys.org/" class="urlextern" title="http://www.bitlackeys.org/"  rel="nofollow">Learning Linux Binary Analysis</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://refspecs.linuxfoundation.org/LSB_3.0.0/LSB-Core-generic/LSB-Core-generic/specialsections.html" class="urlextern" title="https://refspecs.linuxfoundation.org/LSB_3.0.0/LSB-Core-generic/LSB-Core-generic/specialsections.html"  rel="nofollow"> Section names</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html" class="urlextern" title="http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html"  rel="nofollow"> Smallest elf file</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://code.google.com/p/corkami/wiki/ELF101" class="urlextern" title="https://code.google.com/p/corkami/wiki/ELF101"  rel="nofollow"> Elf Header exploded view</a>, <a href="http://i.imgur.com/i6wlE5h.png" class="urlextern" title="http://i.imgur.com/i6wlE5h.png"  rel="nofollow"> direct link (ARM)</a>, <a href="http://i.imgur.com/m6kL4Lv.png" class="urlextern" title="http://i.imgur.com/m6kL4Lv.png"  rel="nofollow"> direct link i386</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="supporting_files">Supporting files</h2>
+<div class="level2">
+
+<p>
+<a href="http://elf.cs.pub.ro/oss/res/labs/lab-03.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-03.tar.gz"  rel="nofollow">Lab archive</a>
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="overviewmotivation">Overview/Motivation</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit5" id="why_do_we_need_a_file_format_for_a_binary_file">Why do we need a file format for a binary file?</h3>
+<div class="level3">
+
+<p>
+Operating systems introduce two fundamental abstractions: files and processes. <em>Binary (executable) files</em> can be viewed as a <strong>static</strong> abstraction of resources while processes, can be viewed as a <strong>dynamic</strong> representation of resources. The process of transforming the static entity (<em>binary executable files</em>) in a dynamic entity (<em>process</em>) is called loading. The <strong>loader</strong>, which is a piece of code that is part of the operating system, has to read the <em>binary executable file</em>, allocate resources (e.g. memory), create <abbr title="Operating System">OS</abbr> data structures that represent a live proces, and, ultimatelly set the instruction pointer to the very first instruction of the program.
+</p>
+
+<p>
+For this, the <strong>loader</strong> requires information such as the process&#039; memory layout and the adddress of the first instruction. All this (meta-)information resides in the executable format, that the loader has to understand somehow – hence, each loadable exeutable binary has a specific format.
+</p>
+
+<p>
+During this lab we will focus on the <strong>static view</strong>: executable files and basic methods for analyzing them without being required to run the program.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="history_of_binary_formats">History of binary formats</h3>
+<div class="level3">
+
+<p>
+Sun Microsystems&#039; SunOS came up with the concept of dynamic shared libraries and introduced it to UNIX in the late 1980s. UNIX System V Release 4, which Sun co-developed, introduced the ELF object format adaptation from the Sun scheme. Later it was developed and published as part of the ABI (Application binary interface) as an improvement over COFF,  the previous object format and by the late 1990s it had become the standard for UNIX and UNIX-like systems including Linux and BSD derivatives. Depending on processor architectures several specifications have emerged with minor changes, but for this lab we will be focusing on the  <a href="http://www.skyfree.org/linux/references/ELF_Format.pdf" class="urlextern" title="http://www.skyfree.org/linux/references/ELF_Format.pdf"  rel="nofollow">ELF-32</a> format.
+</p>
+
+<p>
+<p><div class="noteclassic">Other (non-UNIX) operating systems implement similar executable formats. For example Windows and BeOS load(ed) programs compiled and linked using the <a href="http://en.wikipedia.org/wiki/Portable_Executable" class="urlextern" title="http://en.wikipedia.org/wiki/Portable_Executable"  rel="nofollow">Portable Executable</a> format. For a detailed comparison, see <a href="http://en.wikipedia.org/wiki/Comparison_of_executable_file_formats" class="urlextern" title="http://en.wikipedia.org/wiki/Comparison_of_executable_file_formats"  rel="nofollow">Comparison between executable file formats</a>. 
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+<strong>Useful references:</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://elinux.org/Executable_and_Linkable_Format_(ELF)" class="urlextern" title="http://elinux.org/Executable_and_Linkable_Format_(ELF)"  rel="nofollow">list</a> of all ELF specification formats</div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.uclibc.org/docs/elf-64-gen.pdf" class="urlextern" title="https://www.uclibc.org/docs/elf-64-gen.pdf"  rel="nofollow">ELF-64</a> specification</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044e/IHI0044E_aaelf.pdf" class="urlextern" title="http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044e/IHI0044E_aaelf.pdf"  rel="nofollow">ARM</a> specification</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="anatomy_of_an_executable_file">Anatomy of an executable file</h2>
+<div class="level2">
+
+<p>
+As discussed above, executable files contain (in addition to the actual executable code) <em>metadata</em> that the loader needs in order to start a given program. Linux commonly uses the ELF format to hold at least the following program metadata:
+</p>
+<ul>
+<li class="level1"><div class="li"> The <strong>entry point</strong> (<em>where does the program start?</em>)</div>
+</li>
+<li class="level1"><div class="li"> <strong>Section</strong> and <strong>segment</strong> information (<em>how is the program organized in memory?</em>)</div>
+</li>
+<li class="level1"><div class="li"> Symbol information for dynamically linked executables (to be discussed in the next lab)</div>
+</li>
+</ul>
+
+<p>
+The figure below shows how ELF sections and segments are organized: the <em>section header table</em> contains linking information for (static) <strong>sections</strong>, while the <em>program header</em> describes the run-time memory layout to the loader using <strong>segments</strong>. For example here the <code>.text</code> and <code>.rodata</code> sections are both part of the same (read-only) program segment.
+</p>
+
+<p>
+<img src="../../_media/cns/labs/elf_merging.png%3Fw=300&amp;tok=3a601c" class="mediacenter" alt="" width="300" />
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="walk-throughinspecting_elf_files">Walk-through: inspecting ELF files</h3>
+<div class="level3">
+
+<p>
+Let&#039;s suppose we want to find out information about the 32-bit <code>hello</code> program included in the <a href="http://elf.cs.pub.ro/oss/res/labs/lab-03.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-03.tar.gz"  rel="nofollow">lab archive</a>. A first step would be to look at the <strong>header</strong>:
+</p>
+<pre class="code text">$ readelf -h hello 
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 03 00 00 00 00 00 00 00 00
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - GNU
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           Intel 80386
+  Version:                           0x1
+  Entry point address:               0x804887f
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          726696 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         6
+  Size of section headers:           40 (bytes)
+  Number of section headers:         31
+  Section header string table index: 28</pre>
+
+<p>
+We observe the following:
+</p>
+<ul>
+<li class="level1"><div class="li"> The program&#039;s entry point is at address <code>0x804887f</code>. Note that this assumes that the address will contain code <em>after the program is loaded</em>.</div>
+</li>
+<li class="level1"><div class="li"> The program headers are at offset <code>52</code> in the file.</div>
+</li>
+<li class="level1"><div class="li"> The section headers are at offset <code>726696</code> in the file.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="elf_sections">ELF sections</h4>
+<div class="level4">
+
+<p>
+Looking at the program <strong>sections</strong>:
+</p>
+<pre class="code text">$ readelf -S hello
+There are 31 section headers, starting at offset 0xb16a8:
+&nbsp;
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .note.ABI-tag     NOTE            080480f4 0000f4 000020 00   A  0   0  4
+  [ 2] .note.gnu.build-i NOTE            08048114 000114 000024 00   A  0   0  4
+...
+  [ 6] .text             PROGBITS        080482d0 0002d0 0733ac 00  AX  0   0 16
+...
+  [10] .rodata           PROGBITS        080bc1c0 0741c0 01a44c 00   A  0   0 32
+...
+  [24] .data             PROGBITS        080eb060 0a2060 000f20 00  WA  0   0 32
+  [25] .bss              NOBITS          080ebf80 0a2f80 000e0c 00  WA  0   0 32
+...
+Key to Flags:
+  W (write), A (alloc), X (execute) ...</pre>
+
+<p>
+we see that <code>.text</code>, <code>.rodata</code>, <code>.data</code> and <code>.bss</code> are all to be loaded into the program, and that <code>.text</code> contains executable code, while <code>.data</code> and <code>.bss</code> contain writable data. The actual permissions are however determined by looking at the <strong>segments</strong>.
+</p>
+
+</div>
+
+<h4 id="elf_segments">ELF segments</h4>
+<div class="level4">
+<pre class="code text">$ readelf -l hello
+&nbsp;
+Elf file type is EXEC (Executable file)
+Entry point 0x804887f
+There are 6 program headers, starting at offset 52
+&nbsp;
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  LOAD           0x000000 0x08048000 0x08048000 0xa168b 0xa168b R E 0x1000
+  LOAD           0x0a1f5c 0x080eaf5c 0x080eaf5c 0x01024 0x01e48 RW  0x1000
+  NOTE           0x0000f4 0x080480f4 0x080480f4 0x00044 0x00044 R   0x4
+  TLS            0x0a1f5c 0x080eaf5c 0x080eaf5c 0x00010 0x00028 R   0x4
+  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10
+  GNU_RELRO      0x0a1f5c 0x080eaf5c 0x080eaf5c 0x000a4 0x000a4 R   0x1
+&nbsp;
+ Section to Segment mapping:
+  Segment Sections...
+   00     .note.ABI-tag .note.gnu.build-id .rel.plt .init .plt .text __libc_freeres_fn __libc_thread_freeres_fn .fini .rodata __libc_subfreeres __libc_IO_vtables __libc_atexit __libc_thread_subfreeres .eh_frame .gcc_except_table
+   01     .tdata .init_array .fini_array .jcr .data.rel.ro .got.plt .data .bss __libc_freeres_ptrs
+   02     .note.ABI-tag .note.gnu.build-id
+   03     .tdata .tbss
+   04
+   05     .tdata .init_array .fini_array .jcr .data.rel.ro</pre>
+
+<p>
+Our <code>hello</code> executable contains six segments, the first of which aggregates read-only data and program code, while the second contains writable sections, etc.
+</p>
+
+<p>
+<p><div class="noteclassic">From the examples above we notice that sections contain offsets <em>within the binary</em>, while segments contain offsets <em>within the live process&#039; memory</em>.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">Note that <code>.rodata</code> and <code>.text</code> are both mapped as read-only <strong>and</strong> executable. This <a href="https://sourceware.org/ml/binutils/2014-05/msg00111.html" class="urlextern" title="https://sourceware.org/ml/binutils/2014-05/msg00111.html"  rel="nofollow">is interesting from a security perspective</a>.
+</div></p>
+</p>
+
+</div>
+
+<h4 id="symbol_table">Symbol table</h4>
+<div class="level4">
+
+<p>
+Finally, we can inspect all the <strong>symbols</strong> in the binary:
+</p>
+<pre class="code text">$ readelf -s hello | less
+Symbol table '.symtab' contains 1984 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+...
+  1544: 08054690    87 FUNC    GLOBAL DEFAULT    6 _IO_default_uflow
+  1545: 0805cf60    43 IFUNC   GLOBAL DEFAULT    6 memset
+  1546: 0806d290    10 FUNC    GLOBAL DEFAULT    6 __wmempcpy
+  1547: 0807c330    30 FUNC    WEAK   DEFAULT    6 __strtol_l
+  1548: 080489cc    46 FUNC    GLOBAL DEFAULT    6 main
+  1549: 080a2830  1957 FUNC    GLOBAL DEFAULT    6 _dl_start_profile
+  1550: 080ecc98     4 OBJECT  GLOBAL DEFAULT   25 _dl_origin_path
+...</pre>
+
+<p>
+The <strong>symbol table</strong> contains process information such as the symbol&#039;s address, as well as the symbol&#039;s type (e.g. a function, a data object) and binding information.
+</p>
+
+<p>
+<p><div class="notetip">Binding/linkage information is used both by the <em>linker</em> and the <em>loader</em>, depending on the attribute. Read on <a href="https://en.wikipedia.org/wiki/Weak_symbol" class="urlextern" title="https://en.wikipedia.org/wiki/Weak_symbol"  rel="nofollow">weak symbols</a> and <a href="https://gcc.gnu.org/wiki/Visibility" class="urlextern" title="https://gcc.gnu.org/wiki/Visibility"  rel="nofollow">visibility</a> for more info.
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit9" id="the_compiler_view">The compiler view</h2>
+<div class="level2">
+
+<p>
+We remember that compilation goes through the following phases:
+</p>
+<ul>
+<li class="level1"><div class="li"> The <em>source code</em> of a compilation unit (e.g. <code>.c</code> file) written in a high-level language (C, in our case) is <strong>preprocessed</strong> and <strong>compiled</strong> into an <em>assembly</em> source file;</div>
+</li>
+<li class="level1"><div class="li"> The assembly file is then <strong>assembled</strong> into <em>object code</em> (also called <em>machine code</em>);</div>
+</li>
+<li class="level1"><div class="li"> Finally, multiple object files are <strong>linked</strong> into a final <em>executable</em> file or a <em>library</em>.</div>
+</li>
+</ul>
+
+<p>
+Each binary file in the compilation process has an executable format attached to it. Particularly in the case of ELF, we have the following types of files:
+</p>
+<ul>
+<li class="level1"><div class="li"> Relocatable object files</div>
+</li>
+<li class="level1"><div class="li"> Executable files</div>
+</li>
+<li class="level1"><div class="li"> Shared objects</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic">For more info on shared objects, see <a href="https://www.ibm.com/developerworks/library/l-shobj/" class="urlextern" title="https://www.ibm.com/developerworks/library/l-shobj/"  rel="nofollow">Shared objects for the object disoriented</a>. We will discuss dynamic linking and loading and <a href="https://wiki.gentoo.org/wiki/Hardened/Introduction_to_Position_Independent_Code" class="urlextern" title="https://wiki.gentoo.org/wiki/Hardened/Introduction_to_Position_Independent_Code"  rel="nofollow">Position Independent Code</a> in more detail in the next lab.
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="static_and_dynamic_linking">Static and dynamic linking</h3>
+<div class="level3">
+
+<p>
+Most types of executable files are obtained from multiple object files, either through static linking or dynamic linking. <strong>Static</strong> linking involves interpreting each piece of code from each file and then merging all the information inside a single binary that would contain all the machine code necessary for the program. This way of doing things, still in use today, involves loading  all of the code and data into memory regardless of use case.
+</p>
+
+<p>
+<img src="../../_media/cns/labs/elf_static_linking.png%3Fw=500&amp;tok=fef17e" class="mediacenter" alt="" width="500" />
+</p>
+
+<p>
+The ELF format also allows executable files to be <strong>dynamically</strong> linked. Instead of linking all the source files that contain subroutines into the final binaries, separate binaries are organized in libraries that can be loaded per use case, on demand. Essentially, the libraries are loaded only once into memory and when a program instance requires a subroutine from a specific library. In this case, it inquires a special <abbr title="Operating System">OS</abbr> component about it and new resources are allocated only for the volatile parts of the library image (<code>.bss</code> and <code>.data</code>).
+</p>
+
+<p>
+<img src="../../_media/cns/labs/elf_dynamic_linking.png%3Fw=500&amp;tok=61ee2f" class="mediacenter" alt="" width="500" />
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="walk-throughobject_files">Walk-through: object files</h3>
+<div class="level3">
+
+<p>
+Let&#039;s look through <code>hello.o</code> similarly to how we previously looked through <code>hello</code>. What is different?
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>ELF header</em> (<code>readelf -h</code>): the file doesn&#039;t have an entry point and the ELF type is specified as “Relocatable file”.</div>
+</li>
+<li class="level1"><div class="li"> <em>ELF sections</em> (<code>readelf -S</code>): they look very similar to the one we inspected previously? What is missing? Any idea why?</div>
+</li>
+<li class="level1"><div class="li"> The <em>ELF segments</em> are missing, as they are built during linking.</div>
+</li>
+<li class="level1"><div class="li"> What symbols are there in the <em>symbol table</em>?</div>
+</li>
+</ul>
+
+<p>
+Additionally, object files have a <strong>relocation table</strong>, i.e. a list of all the symbols that are external to the file. Let&#039;s look at <code>hello.o</code>:
+</p>
+<pre class="code text">$ readelf -r hello.o
+&nbsp;
+Relocation section '.rel.text' at offset 0x19c contains 2 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+00000015  00000501 R_386_32          00000000   .rodata
+0000001a  00000a02 R_386_PC32        00000000   puts
+...</pre>
+
+<p>
+We notice that one of the external symbols is <code>puts</code>. Since that is part of the C library, the linker must resolve its location and replace all occurences with the symbol&#039;s address.
+</p>
+
+<p>
+<p><div class="noteclassic">This is where the difference between static and dynamic linking shows. During <em>static linking</em>, the <strong>actual</strong> symbol address is filled in; while <em>dynamic linking</em> uses dynamic relocation tables (the <a href="http://grantcurell.com/2015/09/21/what-is-the-symbol-table-and-what-is-the-global-offset-table/" class="urlextern" title="http://grantcurell.com/2015/09/21/what-is-the-symbol-table-and-what-is-the-global-offset-table/"  rel="nofollow">Global Offset Table and the Procedure Linkage Table</a>) whose values are resolved by the loader. More details on this in the next lab.
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="walk-throughbinary_disassembly">Walk-through: binary disassembly</h2>
+<div class="level2">
+
+<p>
+As discussed in previous labs, we can disassemble ELF executable files on almost any Linux system using <code>objdump</code> with the <code>-d</code> or the <code>-D</code> flag:
+</p>
+<pre class="code text">$ objdump -D -M intel hello
+hello:     file format elf32-i386
+&nbsp;
+...
+Disassembly of section .init:
+&nbsp;
+080482a8 &lt;_init&gt;:
+ 80482a8:       53                      push   ebx
+ 80482a9:       83 ec 08                sub    esp,0x8
+ 80482ac:       e8 8f 00 00 00          call   8048340 &lt;__x86.get_pc_thunk.bx&gt;
+ 80482b1:       81 c3 4f 1d 00 00       add    ebx,0x1d4f
+ 80482b7:       8b 83 fc ff ff ff       mov    eax,DWORD PTR [ebx-0x4]
+ 80482bd:       85 c0                   test   eax,eax
+ 80482bf:       74 05                   je     80482c6 &lt;_init+0x1e&gt;
+ 80482c1:       e8 3a 00 00 00          call   8048300 &lt;__libc_start_main@plt+0x10&gt;
+ 80482c6:       83 c4 08                add    esp,0x8
+ 80482c9:       5b                      pop    ebx
+ 80482ca:       c3                      ret</pre>
+
+<p>
+<p><div class="noteclassic">What is the difference between <code>-d</code> and <code>-D</code>? What does <code>-M</code> do? In general we encourage you to check out the manpages to find out.
+</div></p>
+</p>
+
+<p>
+Sometimes however it is possible that the code we are dealing with doesn&#039;t have any useful metadata associated with it, e.g. it comes in a raw (flat) binary form, the executable format is not recognized or the ELF header is corrupted. Let&#039;s take for example the <code>hello2</code> binary generated from <code>hello2.S</code> in the <a href="http://elf.cs.pub.ro/oss/res/labs/lab-03.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-03.tar.gz"  rel="nofollow">lab archive</a>:
+</p>
+<pre class="code text">$ objdump -D hello2
+objdump: hello2: File format not recognized
+$ file hello2
+hello2: data</pre>
+
+<p>
+We can force <code>objdump</code> to attempt disassembling raw files by passing the <code>-b</code> flag. In this case however, <code>objdump</code> does not assume any target architecture, so we must pass it explicitly using <code>-m</code>. For example:
+</p>
+<pre class="code text">$ objdump -D -b binary -m i386 -M intel hello2
+hello2:     file format binary
+&nbsp;
+&nbsp;
+Disassembly of section .data:
+&nbsp;
+00000000 &lt;.data&gt;:
+   0:   66 ba 0e 00             mov    dx,0xe
+   4:   00 00                   add    BYTE PTR [eax],al
+   6:   66 b9 24 00             mov    cx,0x24
+   a:   00 00                   add    BYTE PTR [eax],al
+   c:   66 bb 01 00             mov    bx,0x1
+  10:   00 00                   add    BYTE PTR [eax],al
+  12:   66 b8 04 00             mov    ax,0x4
+  16:   00 00                   add    BYTE PTR [eax],al
+  18:   cd 80                   int    0x80
+  1a:   66 b8 01 00             mov    ax,0x1
+  1e:   00 00                   add    BYTE PTR [eax],al
+  20:   cd 80                   int    0x80
+  22:   00 00                   add    BYTE PTR [eax],al
+  24:   48                      dec    eax
+  25:   65 6c                   gs ins BYTE PTR es:[edi],dx
+  27:   6c                      ins    BYTE PTR es:[edi],dx
+  28:   6f                      outs   dx,DWORD PTR ds:[esi]
+  29:   2c 20                   sub    al,0x20
+  2b:   77 6f                   ja     0x9c
+  2d:   72 6c                   jb     0x9b
+  2f:   64 21 0a                and    DWORD PTR fs:[edx],ecx</pre>
+
+<p>
+Looking back at the <code>hello2.S</code> source file, we notice that the disassembled code maps almost directly. The last part of the binary does not contain any meaningful code, because here <code>objdump</code> attempts to also disassemble data.
+</p>
+
+<p>
+<p><div class="noteimportant"><em>Code is also data!</em> The only remarkable difference is that it is interpretable and executable by the machine, but otherwise the CPU will attempt to execute anything marked “executable” by the operating system. This has interesting security implications, as we will see throughout the course.
+</div></p>
+</p>
+
+<p>
+To obtain raw data we can just dump the binary using <code>hexdump</code> or <code>xxd</code>:
+</p>
+<pre class="code text">$ xxd hello2
+00000000: 66ba 0e00 0000 66b9 2400 0000 66bb 0100  f.....f.$...f...
+00000010: 0000 66b8 0400 0000 cd80 66b8 0100 0000  ..f.......f.....
+00000020: cd80 0000 4865 6c6c 6f2c 2077 6f72 6c64  ....Hello, world
+00000030: 210a                                     !.</pre>
+
+</div>
+
+<h2 class="sectionedit13" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit14" id="warm-upshellcode_2p">1. Warm-up: Shellcode [2p]</h3>
+<div class="level3">
+
+<p>
+The purpose of this task is to get you acquainted with some tools that can be used to manipulate ELF files.
+</p>
+
+</div>
+
+<h4 id="inspect_the_source_code_of_shellcodec">Inspect the source code of shellcode.c</h4>
+<div class="level4">
+
+<p>
+<code>shellcode.c</code> contains a buffer SC, that has raw instructions
+</p>
+<ol>
+<li class="level1"><div class="li"> What happens when you try to execute the program?</div>
+<ul>
+<li class="level3"><div class="li"> SIGSEGV</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> What is the address of the code that this program tries to execute?</div>
+<ul>
+<li class="level3"><div class="li"> <pre class="code">readelf -s ./shellcode | grep SC</pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Why is it happening? in which section is the SC var? with what flags is this segment loaded?<pre class="code">
+$ readelf -S ./shellcode
+[24] .data             PROGBITS         0000000000601020  
+      0000000000000058  0000000000000000  WA       0     0     32</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Try to change the flags of the <strong>.data</strong> section</div>
+<ul>
+<li class="level2"><div class="li"> <pre class="code">objcopy --set-section-flags .data=alloc,code,load ./shellcode</pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Is it working now? If not why?</div>
+<ul>
+<li class="level2"><div class="li"> NO. remember the two views of a file! the segment is still loaded RW, the loader only knows about segments <pre class="code"> Section to Segment mapping:
+  Segment Sections...
+   00     
+   01     .interp 
+   02     .interp .note.ABI-tag .note.gnu.build-id .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rela.dyn .rela.plt .init .plt .text .fini .rodata .eh_frame_hdr .eh_frame 
+   03     .ctors .dtors .jcr .dynamic .got .got.plt .data .bss </pre>
+</div>
+</li>
+<li class="level2"><div class="li"> and segment 03 is: <pre class="code">LOAD           0x0000000000000e28 0x0000000000600e28 0x0000000000600e28
+                 0x0000000000000250 0x0000000000000260  RW     200000 </pre>
+</div>
+</li>
+<li class="level2"><div class="li"> a trick that might work is making the stack executable (<code>execstack -s ./shellcode</code>), but this works because the stack is <em>near</em> to the data, due to alignment [citation needed].</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+<h4 id="compile_run_and_save_the_generated_shellcode">Compile run and save the generated shellcode</h4>
+<div class="level4">
+<ol>
+<li class="level1"><div class="li"> Compile</div>
+<ul>
+<li class="level2"><div class="li"> <code>gcc -O0 -o shellcode shellcode.c</code></div>
+</li>
+<li class="level2"><div class="li"> <code>./shellcode generate &gt; mycode.bin</code></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> What is the type of the file mycode.bin?</div>
+<ul>
+<li class="level2"><div class="li"> <pre class="code">$ file ./mycode.bin
+./mycode.bin: data </pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> How is <code>file</code> working? Is it a false positive?</div>
+<ul>
+<li class="level2"><div class="li"> File is reading some magic bytes, this is misleading</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Try to execute ./mycode.bin!</div>
+<ul>
+<li class="level2"><div class="li"> <code>chmod +x ./mycode.bin &amp;&amp; ./mycode.bin</code></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Who is throwing the error?</div>
+<ul>
+<li class="level2"><div class="li"> The loader, which resides in the operating system</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+<h4 id="how_to_actually_run_the_generated_shellcode">How to actually run the generated shellcode.</h4>
+<div class="level4">
+
+<p>
+The problem so far is that the shellcode (SC) ends in a segment that does not have the executable bit set. One solution to this is, at runtime, remap the segment (page) with the exec flag – this solution requires writing some code. We can focus on another solution: use tools and .ELF&#039;s capability:
+</p>
+<ol>
+<li class="level1"><div class="li"> Generate an .ELF object file from the raw binary</div>
+<ul>
+<li class="level3"><div class="li"> <code>objcopy -I binary -O elf64-x86-64 ./mycode.bin ./mycode.bin.o</code></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Check the flags of the .data section! Where are the segments?</div>
+<ul>
+<li class="level3"><div class="li"> It should be WA! The segments are linktime info, we didn&#039;t link yet</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Adjust the .data section of this elf as text</div>
+<ul>
+<li class="level3"><div class="li"> <code>objcopy -I elf64-x86-64 --set-section-flags .data=alloc,code,load ./mycode.bin.o</code> [q]</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Set machine (artifact of objcopy)</div>
+<ul>
+<li class="level3"><div class="li"> <code>elfedit --output-mach x86-64 ./mycode.bin.o</code></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Check the flags of the <code>.data</code> section!</div>
+<ul>
+<li class="level3"><div class="li"> It should be WAX!</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> How do we actually use the data from this .o file? What symbols are exported?</div>
+<ul>
+<li class="level2"><div class="li"> <pre class="code">$ readelf -s ./mycode.bin.o
+0000000000000035 D _binary___mycode_bin_end
+0000000000000035 A _binary___mycode_bin_size
+0000000000000000 D _binary___mycode_bin_start</pre>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+<h4 id="link_againstmycodebino">Link against ./mycode.bin.o</h4>
+<div class="level4">
+<ol>
+<li class="level1"><div class="li"> Inspect use-my-code.c! What does it do?</div>
+<ul>
+<li class="level3"><div class="li"> It uses the variables previously listed to call the code.</div>
+</li>
+<li class="level3"><div class="li"> Quick recap:</div>
+<ol>
+<li class="level4"><div class="li"> starting from a binary blob we generated a object file (.ELF)</div>
+</li>
+<li class="level4"><div class="li"> the contents of the .data section are the bytes from the binary blob</div>
+</li>
+<li class="level4"><div class="li"> the data section is marked WAX (executable)</div>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Compile and link!</div>
+<ul>
+<li class="level3"><div class="li"> <code>gcc -O0  use-my-code.c ./mycode.bin.o -o my</code></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> The stack is still executable, remove this flag!</div>
+<ul>
+<li class="level2"><div class="li"> <code>execstack -c ./my</code></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Why does <code>execstat -c ./*.o</code> throw an error?</div>
+<ul>
+<li class="level2"><div class="li"> <code>execstack</code> has to have information about the segments, information which is only available after the linking process</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Even if the stack is not executable, you should be able to run the shellcode, the data section is executable, please check it!</div>
+<ul>
+<li class="level2"><div class="li"> <code>readelf -e | grep .data</code>, check for segment 03 (which maps the <code>.data</code> section)</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit15" id="warm-upstripped_2p">2. Warm-up: stripped [2p]</h3>
+<div class="level3">
+
+<p>
+Someone has given us a stripped binary called <code>stripped</code>. Let&#039;s run it and give it a brief view:
+</p>
+<pre class="code text">$ ./stripped 
+Hello, there!
+I am looping, looping, looping, looping, looping,
+$ file ./stripped
+./stripped: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), statically linked, stripped</pre>
+
+<p>
+The executable file is stripped, so we can&#039;t rely on any symbol information to look at it. However, it&#039;s small enough, so we can try to reverse engineer it by hand. To do that, answer the following questions:
+</p>
+<ul>
+<li class="level1"><div class="li"> What is the file&#039;s entry point?</div>
+</li>
+<li class="level1"><div class="li"> What instructions get executed started from that entry point?</div>
+</li>
+<li class="level1"><div class="li"> What operands does the <code>call</code> instruction receive during execution?</div>
+</li>
+<li class="level1"><div class="li"> Where are <code>ret</code> instructions placed relative to the <code>call</code> operands?</div>
+</li>
+<li class="level1"><div class="li"> What other control-flow altering instructions are executed besides <code>call</code> and <code>ret</code>?</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">Normally we use tools such as IDA or Radare2 to reverse engineer binaries. In this case however, we challenge you to use only your brain, a pen and a piece of paper. It&#039;s a bit tedious, but the end result should be fun.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">You can dump data from within <code>objdump</code> using the <code>-s</code> flag. Use this to figure out what pointers to contents from <code>.data</code> are put into registers.
+</div></p>
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click to display ⇲
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click to hide ⇱
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+We get the entry point using <code>readelf -h</code>:
+</p>
+<pre class="code text">$ readelf -h stripped
+...
+Entry point address:               0x80480c9
+...</pre>
+
+<p>
+Dumping the code, we can see that <code>stripped</code> calls a bunch of functions starting with <code>0x80480c9</code>:
+</p>
+<pre class="code text">$ objdump -D stripped -M intel
+...
+ 80480c9:       ba 0e 00 00 00          mov    edx,0xe
+ 80480ce:       b9 0c 91 04 08          mov    ecx,0x804910c
+ 80480d3:       e8 19 00 00 00          call   0x80480f1
+ 80480d8:       e8 dc ff ff ff          call   0x80480b9
+ 80480dd:       b9 05 00 00 00          mov    ecx,0x5
+ 80480e2:       e8 aa ff ff ff          call   0x80k48091
+ 80480e7:       e8 95 ff ff ff          call   0x8048081
+ 80480ec:       e8 0d 00 00 00          call   0x80480fe
+ 80480f1:       bb 01 00 00 00          mov    ebx,0x1
+ 80480f6:       b8 04 00 00 00          mov    eax,0x4
+ 80480fb:       cd 80                   int    0x80
+ 80480fd:       c3                      ret
+...</pre>
+
+<p>
+<p><div class="noteclassic">We stopped at the first encountered <code>ret</code>, assuming that this is where we exit from the function. We&#039;ll see this is not quite true!
+</div></p>
+</p>
+
+<p>
+Let&#039;s note the functions that are called starting from the entry point:
+</p>
+<ul>
+<li class="level1"><div class="li"> f1: <code>0x80480f1</code>, with <code>edx = 0xe</code> and <code>ecx = 0x804910c</code> (we may assume these are passed as arguments)</div>
+</li>
+<li class="level1"><div class="li"> f2: <code>0x80480b9</code>, with no register modifications</div>
+</li>
+<li class="level1"><div class="li"> f3: <code>0x80k48091</code>, with <code>ecx = 0x5</code> (btw, did you notice how “looping,” is printed 5 times?)</div>
+</li>
+<li class="level1"><div class="li"> and so on.</div>
+</li>
+</ul>
+
+<p>
+Let&#039;s look at f1, to see what it does:
+</p>
+<pre class="code text"> 80480f1:       bb 01 00 00 00          mov    ebx,0x1
+ 80480f6:       b8 04 00 00 00          mov    eax,0x4
+ 80480fb:       cd 80                   int    0x80
+ 80480fd:       c3                      ret</pre>
+
+<p>
+We initially assumed that this is part of the main function, but notice that it is a separate function! If we look carefully, we see that it sets <code>eax</code> to <code>0x4</code>, which is the system call code for <code>write</code>, while <code>ebx</code> (the argument for the file descriptor) is set to <code>0x1</code> (stdout). Now setting <code>ecx</code> and <code>edx</code> before this function makes sense, as they are set to the buffer and size arguments of <code>write</code>. So this function is a sort of <code>puts</code>!
+</p>
+
+<p>
+<p><div class="noteclassic">This also means that we can look to see whether <code>0x80480fe</code>, the final <code>call</code> from the main function, is code that calls the <code>exit</code> syscall. Notice that there are no standard C library functions in the executable, so it must manually call <code>exit</code>.
+</div></p>
+</p>
+
+<p>
+Let&#039;s also look at the first 14 (<code>0xe</code>) bytes starting with <code>0x804910c</code>, the value in <code>ecx</code>:
+</p>
+<pre class="code text">$ objdump -s stripped
+...
+Contents of section .data:
+ 804910c 48656c6c 6f2c2074 68657265 210a4920  Hello, there!.I
+ 804911c 616d206c 6f6f7069 6e672c20 0a416c6c  am looping, .All
+ 804912c 20646f6e 65210a                       done!.</pre>
+
+<p>
+We see that this is the string <code>&quot;Hello, there!\n&quot;</code>.
+</p>
+</div></div>
+</div>
+
+<h3 class="sectionedit16" id="stripped_re-loaded_3p">3. stripped, re-loaded [3p]</h3>
+<div class="level3">
+
+<p>
+Looking more carefully at our <code>stripped</code> binary, we notice that there is one string that it never prints out:
+</p>
+<pre class="code text">strings -t x stripped
+    10c Hello, there!
+    11a I am looping,
+    129 All done!
+    134 .shstrtab
+    13e .text
+    144 .data</pre>
+
+<p>
+The string <code>All done!</code> is at offset <code>0x129</code> in the binary, that is equivalent to <code>0x8049129</code> in the loaded program.
+</p>
+<pre class="code text">$ objdump -D stripped -M intel | grep -A 2 -B 2 8049129
+ 8048080:       c3                      ret
+ 8048081:       ba 0a 00 00 00          mov    edx,0xa
+ 8048086:       b9 29 91 04 08          mov    ecx,0x8049129
+ 804808b:       e8 61 00 00 00          call   0x80480f1
+ 8048090:       c3                      ret</pre>
+
+<p>
+This means that the function that does the print (<code>0x8048081</code>) is never reached! Why? The reason is that the program exits before doing that.
+</p>
+
+<p>
+Find the call to the exit function that occurs at run-time exactly before this print and manually replace it with NOP instructions using the hex editor of your choice. At the end the program should display the following:
+</p>
+<pre class="code text">./stripped
+Hello, there!
+I am looping, looping, looping, looping, looping,
+All done!</pre>
+
+<p>
+Note that the program should still exit cleanly!
+</p>
+
+<p>
+<p><div class="notetip"><strong>Hint</strong>: the NOP instruction has opcode <code>0x90</code>, so just replace all the bytes of the offending <code>call</code> instruction with that.
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit17" id="memory_dump_analysis_3p">4. Memory Dump Analysis [3p]</h3>
+<div class="level3">
+
+<p>
+Using your newfound voodoo skills you are now able to tackle the following task. In the middle of two programs I added the following lines:
+</p>
+<pre class="code c">	<span class="br0">&#123;</span>
+		<span class="kw4">int</span> i<span class="sy0">;</span>
+		<span class="kw4">int</span> <span class="sy0">*</span>a<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="sy0">;</span>
+		<span class="kw1">for</span><span class="br0">&#40;</span> i <span class="sy0">=</span> <span class="nu0">0</span> <span class="sy0">;</span> i <span class="sy0">&lt;</span> <span class="nu0">20</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>
+			<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%p<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span></pre>
+
+<p>
+The results were the following. respectively:
+</p>
+<pre class="code">0x804853b
+0x1
+0x8048530
+(nil)
+(nil)
+0xf7e0ace5
+0x1
+0xffffce64
+0xffffce6c
+0xf7ffcfc0
+0x1c
+(nil)
+0xf7fda4c8
+0x2
+0xffffce60
+0xf7f94e54
+(nil)
+(nil)
+(nil)
+0xd545cf8d</pre>
+
+<p>
+and
+</p>
+<pre class="code">0xbfffe7d0
+0xd696910
+0x80484a9
+0xb7fffbe8
+0x3
+0xb7ffefc0
+0xb7df6a84
+0x1
+0xb7fdc780
+0xb7fe75fc
+0x804c008
+0xb7e59195
+0x804c008
+0xb7fdb000
+0xb7fdc000
+0x1
+0xffffffff
+0x3
+(nil)
+0xf3b9a5b</pre>
+
+<p>
+Answer these questions:
+</p>
+<ul>
+<li class="level1"><div class="li"> Which of the programs is running on a native 32 bit system? <strong>Note</strong>: This isn&#039;t covered in the lab, you&#039;ll have to do a bit of research.</div>
+</li>
+<li class="level1"><div class="li"> Which values from the stack traces are from the .text region?</div>
+</li>
+<li class="level1"><div class="li"> Which of the values do not point to valid memory addresses?</div>
+</li>
+<li class="level1"><div class="li"> Which of the values point to the stack?</div>
+</li>
+<li class="level1"><div class="li"> Which of the values point to the library/mmap zone?</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit18" id="extrafixme_3p">5. Extra: FixME [3p]</h3>
+<div class="level3">
+
+<p>
+The <code>change-header</code> directory contains a file named <code>main.bad</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"> What is the type of <code>main.bad</code> as reported by <code>file</code> command?</div>
+</li>
+<li class="level1"><div class="li"> Using the skeleton from <code>unscramble.py</code> please fix the elf header!</div>
+<ul>
+<li class="level2"><div class="li"> The first 6 bytes were modified from the elf header.</div>
+</li>
+<li class="level2"><div class="li"> What fields correspond to the first bytes?</div>
+</li>
+<li class="level2"><div class="li"> Can you fix them? Hint: the file is 64 bit executable</div>
+</li>
+<li class="level2"><div class="li"> After fixing the fields, <code>readelf -h ./main.ok</code> should not complain at all. </div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Using the file <code>symbol.map</code> and further extending <code>unscramble.py</code>, try to directly call the <code>main</code> and <code>call_me</code> function.</div>
+<ul>
+<li class="level2"><div class="li"> What happens when you try to run the executable that calls the <code>main</code> function <strong>directly</strong>? Why?</div>
+</li>
+<li class="level2"><div class="li"> What happens when you try to run the executable that calls the <code>call_me</code> function <strong>directly</strong>? Why?</div>
+</li>
+<li class="level2"><div class="li"> What is, in genereral, the very first symbol that is executed inside a process?</div>
+</li>
+<li class="level2"><div class="li"> Does the loader knows about the existence of this symbol?</div>
+</li>
+<li class="level2"><div class="li"> Modify the binary entry point such that it will call this symbol!</div>
+</li>
+<li class="level2"><div class="li"> The output of this exercise should be three binaries: <code>main.ok.main</code>, <code>main.ok.call_me</code>, <code>main.ok.real_main</code>. <code>readelf -h main.ok*</code> should not complain.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_136781907958355b7789842" data-jsajax="%26skipfile%3D%252B/cns%253A%2528sidebar%257Cindex%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="cns:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../class-register.html" class="wikilink1" title="cns:class-register">Class Register</a></div></li>
+<li class="level1"><div class="li"><a href="../lab-split.html" class="wikilink1" title="cns:lab-split">Lab Split</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="cns:need-to-know">CNS Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../news.html" class="wikilink1" title="cns:news">News</a></div></li>
+<li class="level1"><div class="li"><a href="../rules-and-grading.html" class="wikilink1" title="cns:rules-and-grading">Rules and Grading</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="resources">Resources</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_20659754458355b778c719" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resources/direct.html" class="wikilink1" title="cns:resources:direct">Direct Access</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/documentation.html" class="wikilink1" title="cns:resources:documentation">Documentation</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/feed.html" class="wikilink1" title="cns:resources:feed">RSS Feed</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/mailing-list.html" class="wikilink1" title="cns:resources:mailing-list">Mailing List</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/vm.html" class="wikilink1" title="cns:resources:vm">Virtual Machine</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resources" [104-160] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_68585658058355b778e656" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="lab-01.html" class="wikilink1" title="cns:labs:lab-01">Lab 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="lab-02.html" class="wikilink1" title="cns:labs:lab-02">Lab 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="lab-03.html" class="wikilink1" title="cns:labs:lab-03">Lab 03 - Executables. Static Analysis</a></span></div></li>
+<li class="level1"><div class="li"><a href="lab-04.html" class="wikilink1" title="cns:labs:lab-04">Lab 04 - Processes. Dynamic Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="lab-05.html" class="wikilink1" title="cns:labs:lab-05">Lab 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="lab-06.html" class="wikilink1" title="cns:labs:lab-06">Lab 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="lab-07.html" class="wikilink1" title="cns:labs:lab-07">Lab 07 - Exploiting. Shellcodes (Part 2)</a></div></li>
+<li class="level1"><div class="li"><a href="lab-08.html" class="wikilink1" title="cns:labs:lab-08">Lab 08 - Exploit Protection Mechanisms</a></div></li>
+<li class="level1"><div class="li"><a href="lab-09.html" class="wikilink1" title="cns:labs:lab-09">Lab 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="lab-10.html" class="wikilink1" title="cns:labs:lab-10">Lab 10 - Password Breaking</a></div></li>
+<li class="level1"><div class="li"><a href="lab-11.html" class="wikilink1" title="cns:labs:lab-11">Lab 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="lab-12.html" class="wikilink1" title="cns:labs:lab-12">Lab 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [161-207] -->
+<h1 class="sectionedit3" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_86171292358355b7790597" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../lectures/lecture-01.html" class="wikilink1" title="cns:lectures:lecture-01">Lecture 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-02.html" class="wikilink1" title="cns:lectures:lecture-02">Lecture 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-03.html" class="wikilink1" title="cns:lectures:lecture-03">Lecture 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-04.html" class="wikilink1" title="cns:lectures:lecture-04">Lecture 04 - Processes. Dynamic Analysis. GDB</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-05.html" class="wikilink1" title="cns:lectures:lecture-05">Lecture 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-06.html" class="wikilink1" title="cns:lectures:lecture-06">Lecture 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-07.html" class="wikilink1" title="cns:lectures:lecture-07">Lecture 07 - Strings</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-08.html" class="wikilink1" title="cns:lectures:lecture-08">Lecture 08 - Integers</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-09.html" class="wikilink1" title="cns:lectures:lecture-09">Lecture 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-10.html" class="wikilink1" title="cns:lectures:lecture-10">Lecture 10 - Password Cracking</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-11.html" class="wikilink1" title="cns:lectures:lecture-11">Lecture 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-12.html" class="wikilink1" title="cns:lectures:lecture-12">Lecture 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Lectures" [208-262] -->
+<h1 class="sectionedit4" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_158364717958355b77924d4" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/assignment-1.html" class="wikilink1" title="cns:assignments:assignment-1">Assignment 1</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-2.html" class="wikilink1" title="cns:assignments:assignment-2">Assignment 2</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-3.html" class="wikilink1" title="cns:assignments:assignment-3">Assignment 3</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Assignments" [263-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-03.html#lab_03_-_executables_static_analysis">Lab 03 - Executables. Static Analysis</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-03.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="lab-03.html#supporting_files">Supporting files</a></div></li>
+<li class="level2"><div class="li"><a href="lab-03.html#overviewmotivation">Overview/Motivation</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-03.html#why_do_we_need_a_file_format_for_a_binary_file">Why do we need a file format for a binary file?</a></div></li>
+<li class="level3"><div class="li"><a href="lab-03.html#history_of_binary_formats">History of binary formats</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-03.html#anatomy_of_an_executable_file">Anatomy of an executable file</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-03.html#walk-throughinspecting_elf_files">Walk-through: inspecting ELF files</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab-03.html#elf_sections">ELF sections</a></div></li>
+<li class="level4"><div class="li"><a href="lab-03.html#elf_segments">ELF segments</a></div></li>
+<li class="level4"><div class="li"><a href="lab-03.html#symbol_table">Symbol table</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-03.html#the_compiler_view">The compiler view</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-03.html#static_and_dynamic_linking">Static and dynamic linking</a></div></li>
+<li class="level3"><div class="li"><a href="lab-03.html#walk-throughobject_files">Walk-through: object files</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-03.html#walk-throughbinary_disassembly">Walk-through: binary disassembly</a></div></li>
+<li class="level2"><div class="li"><a href="lab-03.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-03.html#warm-upshellcode_2p">1. Warm-up: Shellcode [2p]</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab-03.html#inspect_the_source_code_of_shellcodec">Inspect the source code of shellcode.c</a></div></li>
+<li class="level4"><div class="li"><a href="lab-03.html#compile_run_and_save_the_generated_shellcode">Compile run and save the generated shellcode</a></div></li>
+<li class="level4"><div class="li"><a href="lab-03.html#how_to_actually_run_the_generated_shellcode">How to actually run the generated shellcode.</a></div></li>
+<li class="level4"><div class="li"><a href="lab-03.html#link_againstmycodebino">Link against ./mycode.bin.o</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="lab-03.html#warm-upstripped_2p">2. Warm-up: stripped [2p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-03.html#stripped_re-loaded_3p">3. stripped, re-loaded [3p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-03.html#memory_dump_analysis_3p">4. Memory Dump Analysis [3p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-03.html#extrafixme_3p">5. Extra: FixME [3p]</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cns/labs/lab-03.txt · Last modified: 2016/10/18 16:05 by dan.gioga          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab-03%3Fdo=media&amp;ns=cns%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab-03.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cns%253Alabs%253Alab-03&amp;1479891831" width="2" height="1" alt="" /></div>
+</body>
+</html>

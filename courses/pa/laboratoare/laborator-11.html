@@ -1,0 +1,679 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 11 : Algoritmi euristici de explorare a grafurilor. A*    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-16T13:48:47+0300"/>
+<meta name="keywords" content="pa,laboratoare,laborator-11"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=pa:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/pa/laboratoare/laborator-11.html"/>
+<link rel="canonical" href="laborator-11.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='pa:laboratoare';var JSINFO = {"id":"pa:laboratoare:laborator-11","namespace":"pa:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="laborator-11%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="laborator-11%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_11algoritmi_euristici_de_explorare_a_grafurilor_a">Laborator 11 : Algoritmi euristici de explorare a grafurilor. A*</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiective_laborator">Obiective laborator</h2>
+<div class="level2">
+
+<p>
+In cadrul acestui laborator se va discuta despre modelarea problemelor sub forma grafurilor de stari si despre algoritmi specializati in gasirea solutiilor pentru acest tip de grafuri. De asemenea, se vor discuta modalitatile care pot fi folosite in analiza complexitatii si pe baza acestor metode se vor prezenta avantajele si limitarile acestei clase de algoritmi.
+</p>
+
+</div>
+
+<h2 class="sectionedit3" id="importanta_aplicatii_practice">Importanţă – aplicaţii practice</h2>
+<div class="level2">
+
+<p>
+Algoritmii de cautare euristica sunt folositi in cazurile care implica gasirea unor solutii pentru probleme pentru care fie nu exista un model matematic de rezolvare directa, fie acest model este prea complicat pentru a fi implementat. In acest caz e necesara o explorare a spatiului starilor problemei pentru gasirea unui raspuns. Intrucat o mare parte dintre problemele din viata reala pornesc de la aceste premise, gama de aplicatii a algoritmilor euristici este destul de larga. Proiectarea agentilor inteligenti [1], probleme de planificare, proiectare circuitelor VLSI [3], robotica, cautare web, algoritmi de aproximare pentru probleme NP-Complete [10], teoria jocurilor  sunt doar cateva dintre domeniile in care cautarea informata este utilizata.
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="descrierea_problemei_si_a_rezolvarilor">Descrierea problemei şi a rezolvărilor</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit5" id="prezentare_generala_a_problemei">Prezentare generală a problemei</h3>
+<div class="level3">
+
+<p>
+Primul pas in rezolvarea unei probleme folosind algoritmi euristici de explorare este definirea exacta a problemei, prin tuplul (Si, O, Sf) – stare initiala, operatori, stari finale. Incercam sa cunoastem urmatorii parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"><strong>Starea initiala a problemei</strong> – reprezinta configuratia de plecare.</div>
+</li>
+<li class="level1"><div class="li"><strong>Functie de expandare a nodurilor</strong> – in cazul general este o lista de perechi (actiune, stare_rezultat). Astfel, pentru fiecare stare se enumera toate actiunile posibile precum si starea care va rezulta in urma aplicarii respectivei actiuni. </div>
+</li>
+<li class="level1"><div class="li"><strong>Predicat pentru starea finala</strong> – functie care intoarce adevarat daca o stare este stare scop si fals altfel</div>
+</li>
+<li class="level1"><div class="li"><strong>Functie de cost</strong> – atribuie o valoare numerica fiecarei cai generate in procesul de explorare. De obicei se foloseste o functie de cost pentru fiecare actiune/tranzitie, atribuind, astfel, o valoare fiecarui arc din graful starilor.</div>
+</li>
+</ul>
+
+<p>
+In functie de reprezentarea problemei, sarcina algoritmilor de cautare este de a gasi o cale din starea initiala intr-o stare scop. Daca algoritmul gaseste o solutie atunci cand multimea solutiilor este nevida spunem ca algoritmul este complet. Daca algoritmul gaseste si calea de cost minim catre starea finala spunem ca algoritmul este optim.
+</p>
+
+<p>
+In principiu, orice algoritm pe grafuri discutat in laboratoarele si cursurile anterioare poate fi utilizat pentru gasirea solutiei unei probleme astfel definite. In practica, insa, multi dintre acesti algoritmi nu sunt utilizati in acest context, fie pentru ca exploreaza mult prea multe noduri, fie pentru ca nu garanteaza o solutie pentru grafuri definite implicit (prin stare initiala si functie de expandare).
+</p>
+
+<p>
+Algoritmii euristici de cautare sunt algoritmi care lucreaza pe grafuri definite ca mai sus si care folosesc o informatie suplimentara, necontinuta in definirea problemei, prin care se accelereaza procesul de gasirea a unei solutii.
+In cadrul explorarii starilor fiecare algoritm genereaza un arbore, care in radacina va contine starea initiala. Fiecare nod al arborelui va contine urmatorele informatii:
+</p>
+<ol>
+<li class="level1"><div class="li"> <strong>Starea continuta</strong> - stare(nod)</div>
+</li>
+<li class="level1"><div class="li"> <strong>Parintele nodului</strong> – π(nod)</div>
+</li>
+<li class="level1"><div class="li"> <strong>Cost cale</strong> – costul drumului de la starea initiala pana la nod – g(nod)</div>
+</li>
+</ol>
+
+<p>
+De asemenea, pentru fiecare nod definim si o functie de evaluare <strong>f</strong> care indica cat de promitator este un nod in perspectiva gasirii unui drum catre solutie. (De obicei, cu cat <strong>f</strong> este mai mic, cu atat nodul este mai promitator).
+Am mentionat mai sus ca algoritmii de cautare euristica utilizeaza o informatie suplimentara referitoare la gasirea solutiei problemei. Aceasta informatie este reprezentata de o functie <strong>h</strong>, unde h(nod) reprezinta drumul estimat de la nod la cea mai apropiata stare solutie. Functia h poate fi definita in orice mod, existand o singura constrangere:
+</p>
+<pre class="code">h(n)=0 pt ∀n,solutie(n)=adevarat </pre>
+
+</div>
+
+<h3 class="sectionedit6" id="algoritmi_de_cautare_informata">Algoritmi de cautare informata</h3>
+<div class="level3">
+
+<p>
+Intrucat functioneaza prin alegerea, la fiecare pas, a nodului pentru care f(nod) este minim, algoritmii prezentati mai jos fac parte din clasa algoritmilor de cautare informata (nodul cel mai promitator este explorat mereu primul). Best-First tine cont doar de istoric (informatii sigure), pe cand A* estimeaza costul pana la gasirea unei solutii.
+De notat ca BFS si DFS sunt particularizari ale Best-First: 
+</p>
+<ul>
+<li class="level1"><div class="li">pentru BFS: f = adancime (S)</div>
+</li>
+<li class="level1"><div class="li">pentru DFS: f = - adancime (S)</div>
+</li>
+</ul>
+
+<p>
+Vom prezenta in continuare cativa dintre cei mai importanti algoritmi de cautare euristica. Vom folosi pentru exemplificare, urmatoarea problema: data fiind o harta rutiera a Romaniei, sa se gaseasca o cale (de preferinta de cost minim) intre Arad si Bucuresti. 
+</p>
+
+<p>
+Pentru aceasta problema starea initiala indica faptul ca ne aflam in orasul Arad, starea finala este data de predicatul Oras_curent == Bucuresti, functia de expandare intoarce toate orasele in care putem ajunge dintr-un oras dat, iar functia de cost indica numarul de km al fiecarui drum intre doua orase, presupunand ca viteza de deplasare este constanta. Ca euristica vom utiliza pentru fiecare oras distanta geometrica(in linie dreapta) pana la Bucuresti.
+</p>
+
+<p>
+<a href="../../_detail/pa/laboratoare/111.png%3Fid=pa%253Alaboratoare%253Alaborator-11.html" class="media" title="pa:laboratoare:111.png"><img src="../../_media/pa/laboratoare/111.png%3Fw=400&amp;tok=71780d" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit7" id="greedy_best-first">Greedy Best-First</h3>
+<div class="level3">
+
+<p>
+In cazul acestui algoritm se considera ca nodul care merita sa fie expandat in pasul urmator este cel mai apropiat de solutie. Deci, in acest caz, avem:
+</p>
+
+<p>
+	f(n) = h(n), pt. oricare n
+</p>
+<pre class="code">Pseudocodul acestui algoritm:</pre>
+<pre class="code cpp">Greedy Best<span class="sy2">-</span>First<span class="br0">&#40;</span>sinitial , expand, h, solution<span class="br0">&#41;</span>
+    closed ← <span class="br0">&#123;</span><span class="br0">&#125;</span>
+    n ← new<span class="sy2">-</span>node<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    state<span class="br0">&#40;</span>n<span class="br0">&#41;</span> ← sinitial
+    π<span class="br0">&#40;</span>n<span class="br0">&#41;</span> ← nil
+    open ← <span class="br0">&#123;</span> n <span class="br0">&#125;</span>
+    <span class="co1">// Bucla principala</span>
+    repeat
+        <span class="kw1">if</span> open <span class="sy1">=</span> Ø then <span class="kw1">return</span> failure
+        n ← get_best<span class="br0">&#40;</span>open<span class="br0">&#41;</span> with f<span class="br0">&#40;</span>n<span class="br0">&#41;</span> <span class="sy1">=</span> h<span class="br0">&#40;</span>n<span class="br0">&#41;</span> <span class="sy1">=</span> min
+        open ← open <span class="sy2">-</span> <span class="br0">&#123;</span>n<span class="br0">&#125;</span>
+        <span class="kw1">if</span> solution<span class="br0">&#40;</span>state<span class="br0">&#40;</span>n<span class="br0">&#41;</span><span class="br0">&#41;</span> then <span class="kw1">return</span> build<span class="sy2">-</span>path<span class="br0">&#40;</span>n<span class="br0">&#41;</span>
+        <span class="kw1">else</span> <span class="kw1">if</span> n not in closed then
+            closed ← closed U <span class="br0">&#123;</span>n<span class="br0">&#125;</span>
+            <span class="kw1">for</span> each s in expand<span class="br0">&#40;</span>n<span class="br0">&#41;</span>
+                n<span class="st0">' ← new-node()
+                state(n'</span><span class="br0">&#41;</span> ← s
+                π<span class="br0">&#40;</span>n<span class="st0">') ← n
+                open ← open U {n'</span><span class="br0">&#125;</span>
+            end<span class="sy2">-</span><span class="kw1">for</span>
+    end<span class="sy2">-</span>repeat</pre>
+
+<p>
+In cadrul algoritmului se folosesc doua multimi: closed – indica nodurile deja explorate si expandate si open – nodurile descoperite dar neexpandate. Open este intializata cu nodul corespunzator starii intiale. La fiecare pas al algoritmului este ales din open nodul cu valoarea    f(n) = h(n) cea mai mica (din acest motiv e de preferat ca open  sa fie implementata ca o coada cu prioritati). Daca nodul se dovedeste a fi o solutie a problemei atunci este intoarsa ca rezultat calea de la starea initiala pana la nod (mergand recursiv din parinte in parinte). Daca nodul nu a fost deja explorat atunci se expandeaza iar nodurile corespunzatoare starilor rezultate sunt introduse in multimea open. Daca multimea open ramane fara elemente atunci nu exista niciun drum catre solutie si algoritmul intoarce esec.
+</p>
+
+<p>
+Greedy Best-First urmareste mereu solutia care pare cea mai aproape de sursa. Din acest motiv nu se vor analiza stari care desi par mai departate de solutie produc o cale catre solutie mai scurta (vezi exemplul de rulare). De asemenea, intrucat nodurile din closed nu sunt niciodata reexplorate se va gasi calea cea mai scurta catre scop doar daca se intampla ca aceasta cale sa fie analizata inaintea altor cai catre aceiasi stare scop. Din acest motiv, algoritmul nu este optim. De asemenea, pentru grafuri infinite e posibil ca algoritmul sa ruleze la infinit chiar daca exista o solutie. Rezulta ca algoritmul nu indeplineste nici conditia de completitudine.
+</p>
+
+<p>
+In figura de mai jos se prezinta rularea algoritmului Greedy Best-First pe exemplul dat mai sus. In primul pas algoritmul expandeaza nodul Arad, iar ca nod urmator de explorat se alege Sibiu, intrucat are valoarea h(n) minima. Se alege in contiuare Fagaras dupa care urmeaza Bucuresti, care este un nod final. Se observa insa ca acest drum nu este minimal. Desi Fagaras este mai aproape ca distanta geometrica de Bucuresti, in momentul in care starea curenta este Sibiu alegerea optimala este Ramnicu-Valcea. In continuare ar fi urmat Pitesti si apoi Bucuresti obtinandu-se un drum cu 32 km mai scurt.
+</p>
+
+<p>
+ <a href="../../_detail/pa/laboratoare/112.png%3Fid=pa%253Alaboratoare%253Alaborator-11.html" class="media" title="pa:laboratoare:112.png"><img src="../../_media/pa/laboratoare/112.png%3Fw=400&amp;tok=a3f519" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="a_a_star">A* (A star)</h3>
+<div class="level3">
+
+<p>
+A* reprezinta cel mai cunoscut algoritm de cautare euristica. El foloseste, de asemenea o politica Best-First, insa nu sufera de aceleasi defecte pe care le are Greedy Best-First definit mai sus. Acest lucru este realizat prin definirea functiei de evaluare astfel:
+</p>
+<pre class="code">f(n) = g(n) + h(n) , pt. oricare n ∈ Noduri</pre>
+
+<p>
+A* evalueaza nodurile combinand distanta deja parcursa pana la nod cu distanta estimata pana la cea mai apropiata stare scop. Cu alte cuvinte, pentru un nod n oarecare, <strong>f(n) reprezinta costul estimat al celei mai bune solutii care trece prin n</strong>. Aceasta strategie se dovedeste a fi completa si optimala daca euristica h(n) este admisibila:
+</p>
+<pre class="code">0 ≤ h(n) ≤ h*(n) , pt. oricare n ∈ Noduri</pre>
+
+<p>
+unde h*(n) este distanta exacta de la nodul n la cea mai apropiata solutie. Cu alte cuvinte A* intoarce mereu solutia optima daca o solutie exista atat timp cat ramanem optimisti si nu supraestimam distanta pana la solutie. Daca h(n) nu este admisibila o solutie va fi in continuare gasita, dar nu se garanteaza optimalitatea. De asemenea, pentru a ne asigura ca vom gasi drumul optim catre o solutie chiar daca acest drum nu este analizat primul, A* permite scoaterea nodurilor din closed si reintroducerea lor in open daca o cale mai buna pentru un nod din closed (g(n) mai mic) a fost gasita.
+</p>
+
+<p>
+Algoritmul evolueaza in felul urmator: initial se introduce in multimea open (organizata ca o coada de prioritati dupa f(n)) nodul corespunzator starii initiale. <strong>La fiecare pas se extrage din open nodul cu f(n) minim</strong>. Daca se dovedeste ca nodul n contine chiar o stare scop atunci se intoarce calea de la starea initiala pana la nodul n. Altfel, daca nodul nu a fost explorat deja se expandeaza. Pentru fiecare stare rezultata, daca nu a fost generata de alt nod inca (nu este nici in open nici in closed) atunci se introduce in open. Daca exista un nod corespunzator starii generate in open sau closed se verifica daca nu cumva nodul curent produce o cale mai scurta catre s. Daca acest lucru se intampla se seteaza nodul curent ca parinte al nodului starii s si <strong>se corecteaza distanta g</strong>. Aceasta corectare implica reevaluarea tuturor cailor care trec prin nodul lui s, deci acest nod va trebui reintrodus in open in cazul in care era inclus in closed. 
+</p>
+
+<p>
+Pseudocodul pentru A* este prezentat in continuare:
+</p>
+<pre class="code cpp">A<span class="sy2">-</span>Star<span class="br0">&#40;</span>s initial , expand, h, solution<span class="br0">&#41;</span>
+	<span class="co1">//initializari</span>
+    closed ← <span class="br0">&#123;</span><span class="br0">&#125;</span>
+    n ← new<span class="sy2">-</span>node<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    state<span class="br0">&#40;</span>n<span class="br0">&#41;</span> ← s initial
+    g<span class="br0">&#40;</span>n<span class="br0">&#41;</span> ← <span class="nu0">0</span>
+    π<span class="br0">&#40;</span>n<span class="br0">&#41;</span> ← nil
+    open ← <span class="br0">&#123;</span> n <span class="br0">&#125;</span>
+&nbsp;
+    <span class="co1">//Bucla principala</span>
+    repeat
+        <span class="kw1">if</span> open <span class="sy1">=</span> Ø then <span class="kw1">return</span> failure
+        n ← get_best<span class="br0">&#40;</span>open<span class="br0">&#41;</span> with f<span class="br0">&#40;</span>n<span class="br0">&#41;</span> <span class="sy1">=</span> g<span class="br0">&#40;</span>n<span class="br0">&#41;</span><span class="sy2">+</span>h<span class="br0">&#40;</span>n<span class="br0">&#41;</span> <span class="sy1">=</span> min
+        open ← open <span class="sy2">-</span> <span class="br0">&#123;</span>n<span class="br0">&#125;</span>
+        <span class="kw1">if</span> solution<span class="br0">&#40;</span>state<span class="br0">&#40;</span>n<span class="br0">&#41;</span><span class="br0">&#41;</span> then <span class="kw1">return</span> build<span class="sy2">-</span>path<span class="br0">&#40;</span>n<span class="br0">&#41;</span>
+        <span class="kw1">else</span> <span class="kw1">if</span> n not in closed then
+            closed ← closed U <span class="br0">&#123;</span>n<span class="br0">&#125;</span>
+            <span class="kw1">for</span> each s in expand<span class="br0">&#40;</span>n<span class="br0">&#41;</span>
+                cost_from_n ← g<span class="br0">&#40;</span>n<span class="br0">&#41;</span> <span class="sy2">+</span> cost<span class="br0">&#40;</span>state<span class="br0">&#40;</span>n<span class="br0">&#41;</span>, s<span class="br0">&#41;</span>
+                <span class="kw1">if</span> not <span class="br0">&#40;</span>s in closed U open<span class="br0">&#41;</span> then
+                    n<span class="st0">' ← new-node()
+                    state(n'</span><span class="br0">&#41;</span> ← s
+                    π<span class="br0">&#40;</span>n<span class="st0">') ← n
+                    g(n'</span><span class="br0">&#41;</span> ← cost_from_n
+                    open ← open U <span class="br0">&#123;</span> n<span class="st0">'}
+                else
+                    n'</span> ← get<span class="br0">&#40;</span>closed U open, s<span class="br0">&#41;</span>
+                    <span class="kw1">if</span> cost_from_n <span class="sy1">&lt;</span> g<span class="br0">&#40;</span>n<span class="st0">') then
+                        π(n'</span><span class="br0">&#41;</span> ← n
+                        g<span class="br0">&#40;</span>n<span class="st0">') ← cost_from_n
+                        if n'</span> in closed then
+                            closed ← closed – <span class="br0">&#123;</span> n<span class="st0">'}
+                            open ← open U { n'</span><span class="br0">&#125;</span>
+	    end<span class="sy2">-</span><span class="kw1">for</span>
+    end<span class="sy2">-</span>repeat</pre>
+
+<p>
+Algoritmul prezentat mai sus va intoarce calea optima catre solutie, daca o solutie exista. Singurul incovenient fata de Greedy Best-First este ca sunt necesare reevaluarile nodurilor din closed. Si aceasta problema poate fi rezolvata daca impunem o conditie mai tare asupra euristicii h, si anume ca euristica sa fie <strong>consistenta</strong> (sau <strong>monotona</strong>):
+</p>
+<pre class="code">h(n) ≤ h(n&#039;) + cost(n,n&#039;) , pt. oricare n&#039; ∈ expand(n)</pre>
+
+<p>
+Daca o functie este consistenta atunci ea este si admisibila. Daca euristica h indeplineste si aceasta conditie atunci algoritmul A* este asemanator cu Greedy Best-First cu modificarea ca functia de evaluare este f = g + h, in loc de f = h.
+In imaginea de mai jos se prezinta rularea algoritmului pe exemplul laboratorului. Se observa ca euristica aleasa (distanta in linie dreapta) este consistenta si deci admisibila. Se observa ca in pasul (e), dupa expandarea nodului Fagaras desi exista o solutie in multimea open aceasta nu este aleasa pentru explorare. Se va alege Pitesti, intrucat f(nod(Bucuresti)) = 450 &gt; f(nod(Pitesti)) = 417, semnificatia acestei  inegalitati fiindca e posibil sa existe prin Pitesti un drum mai bun catre Bucuresti decat cel descoperit pana acum.
+</p>
+
+<p>
+<a href="../../_detail/pa/laboratoare/113.png%3Fid=pa%253Alaboratoare%253Alaborator-11.html" class="media" title="pa:laboratoare:113.png"><img src="../../_media/pa/laboratoare/113.png%3Fw=400&amp;tok=9ca4fd" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="complexitate_algoritmului_a">Complexitate algoritmului A*</h3>
+<div class="level3">
+
+<p>
+Pe langa proprietatile de completitudine si optimalitate A* mai are o calitate care il face atragator: pentru o euristica data orice algoritm de cautare complet si optim va explora cel putin la fel de multe noduri ca A*, ceea ce inseamna ca A* este optimal din punctul de vedere al eficientei. In practica, insa, A* poate fi de multe ori imposibil de rulat datorita dimensiunii prea mari a spatiului de cautare. Singura modalitate prin care spatiul de cautare poate fi redus este prin gasirea unei euristici foarte bune – cu cat euristica este mai apropiata de distanta reala fata de stare solutie cu atat spatiul de cautare este mai strans (vezi figura de mai jos). S-a demonstrat ca spatiul de cautare incepe sa creasca exponential daca eroarea euristicii fata de distanta reala pana la solutie nu are o crestere subexponentiala:
+</p>
+<pre class="code">|h(n) - h*(n)| ≤ O(logh*(n))</pre>
+
+<p>
+Din pacate, in majoritatea cazurilor, eroarea creste liniar cu distanta pana la solutie ceea ce face ca A* sa devina un algoritm mare consumator de timp, dar mai ales de memorie. Intrucat in procesul de cautare se retin toate nodurile deja explorate (multimea closed), in cazul unei dimensiuni mari a spatiului de cautare cantitatea de memorie alocata cautarii este in cele din urma epuizata. Pentru acest incovenient au fost gasite mai multe solutii. Una dintre acestea este utilizarea unor euristici care sunt mai stranse de distanta reala pana la starea scop, desi nu sunt admisibile. Se obtin solutii mai rapid, dar nu se mai garanteaza optimalitatea acestora. Folosim aceasta metoda cand ne intereseaza mai mult sa gasim o solutie repede, indiferent de optimalitatea ei. 
+</p>
+
+<p>
+<a href="../../_detail/pa/laboratoare/114.png%3Fid=pa%253Alaboratoare%253Alaborator-11.html" class="media" title="pa:laboratoare:114.png"><img src="../../_media/pa/laboratoare/114.png%3Fw=400&amp;tok=2ad6c5" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+<p>
+Volumul spatiului de cautare in functie de euristica aleasa
+</p>
+
+<p>
+Alte abordari presupun sacrificarea timpului de executie pentru a margini spatiul de memorie utilizat [3]. Aceste alternative sunt prezentate in continuare.
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="ida_rbfs_ma">IDA*, RBFS, MA*</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="ida">IDA*</h4>
+<div class="level4">
+
+<p>
+Iterative deepening A* [5] utilizeaza conceptul de adancire iterativa[1][8] in procesul de explorare a nodurilor – la un anumit pas se vor explora doar noduri pentru care functia de evaluare are o valoare mai mica decat o limita data, limita care este incrementata treptat pana se gaseste o solutie. IDA* nu mai necesita utilizarea unor multimi pentru retinerea nodurilor explorate si se comporta bine in cazul in care toate actiunile au acelasi cost. Din pacate, devine ineficient in momentul in care costurile sunt variabile.
+</p>
+
+</div>
+
+<h4 id="rbfs">RBFS</h4>
+<div class="level4">
+
+<p>
+Recursive Best-First Search [6] functioneaza intr-un mod asemanator cu DFS, explorand la fiecare pas nodul cel mai promitator fara a retine informatii despre nodurile deja explorate. Spre deosebire de DFS, <strong>se retine in orice moment cea mai buna alternativa sub forma unui pointer catre un nod neexplorat</strong>. Daca valoarea functiei de evaluare (f = g + h) pentru nodul curent devine mai mare decat valoarea caii alternative, drumul curent este abandonat si se incepe explorarea nodului retinut ca alternativa. RBFS are avantajul ca spatiul de memorie creste doar liniar in raport cu lungimea caii analizate. Marele dezavantaj este ca se ajunge de cele mai multe ori la reexpandari si reexplorari repetate ale acelorasi noduri, lucru care poate fi dezavantajos mai ales daca exista multe cai prin care se ajunge la aceiasi stare sau functia expand este costisitoare computational (vezi problema deplasarii unui robot intr-un mediu real). RBFS este optimal daca euristica folosita este admisibila.
+</p>
+
+</div>
+
+<h4 id="ma">MA*</h4>
+<div class="level4">
+
+<p>
+Memory-bounded A* este o varianta a A* in care se limiteaza cantitatea de memorie folosita pentru retinerea nodurilor. Exista doua versiuni – MA* [7]si SMA* [4] (Simple Memory-Bounded A*), ambele bazandu-se pe acelasi principiu. SMA* ruleaza similar cu A* pana in momentul in care cantitatea de memorie devine insuficienta. In acest moment spatiul de memorie necesar adaugarii unui nod nou este obtinut prin stergerea celui mai putin promitator nod deja explorat. In cazul in care exista o egalitate in privinta valorii functiei de evaluare se sterge nodul cel mai vechi. Pentru a evita posibilitatea in care nodul sters este totusi un nod care conduce la o cale optimala catre solutie valoarea f a nodului sters este retinuta la nodul parinte intr-un mod asemanator felului in care in RBFS se retine cea mai buna alternativa la nodul curent. Si in acest caz vor exista reexplorari de noduri, dar acest lucru se va intampla doar cand toate caile mai promitatoare vor esua. Desi exista probleme in care aceste regenerari de noduri au o frecventa care face ca algoritmul sa devina intractabil, MA* si SMA* asigura un compromis bun intre timpul de executie si limitarile de memorie.
+</p>
+
+</div>
+
+<h2 class="sectionedit11" id="concluzii_si_observatii">Concluzii și observații</h2>
+<div class="level2">
+
+<p>
+Deseori singura modalitate de rezolvare a problemelor dificile este de e explora graful starilor acelei probleme. Algoritmii clasici pe grafuri nu sunt intotdeauna potriviti pentru cautarea in aceste grafuri fie pentru ca nu garanteaza un rezultat fie pentru ca sunt ineficienti. 
+Algoritmii euristici sunt algoritmi care exploreaza astfel de grafuri folosindu-se de o informatie suplimentara despre modul in care se poate ajunge la o stare scop mai rapid. A* este, teoretic, cel mai eficient algoritm de explorare euristica. In practica, insa, pentru probleme foarte dificile, A* implica un consum prea mare de memorie. In acest caz se folosesc variante de algoritmi care incearca sa minimizeze consumul de memorie in defavoarea timpului de executie. 
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="referinte">Referinte</h2>
+<div class="level2">
+
+<p>
+[1] S. Russel, P. Norvig - Artificial Intelligence: A Modern Approach - Prentice Hall, 2nd Edition – cap. 4
+</p>
+
+<p>
+[2] C.A Giumale – Introducere in Analiza Algoritmilor, cap. 7
+</p>
+
+<p>
+[3] <a href="http://www.cs.cmu.edu/afs/cs/project/pscico-guyb/294/class-notes/all/18.ps" class="urlextern" title="http://www.cs.cmu.edu/afs/cs/project/pscico-guyb/294/class-notes/all/18.ps"  rel="nofollow">Mehul Shah - Algorithms in the real world (Course Notes) -  Introduction to VLSI routing</a>
+</p>
+
+<p>
+[4] <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.54.6489&amp;rep=rep1&amp;type=pdf" class="urlextern" title="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.54.6489&amp;rep=rep1&amp;type=pdf"  rel="nofollow">S. Russel - Efficient memory-bounded search methods</a>
+</p>
+
+<p>
+[5] R. Korf - Depth-first iterative-deepening: an optimal admissible tree search
+</p>
+
+<p>
+[6] <a href="http://www.ailab.si/gregorl/Students/mui/Recursive%20Best-First%20Search.ppt" class="urlextern" title="http://www.ailab.si/gregorl/Students/mui/Recursive%20Best-First%20Search.ppt"  rel="nofollow">Recursive Best-First Search - Prezentare</a>
+</p>
+
+<p>
+[7] P. Chakrabati, S. Ghosh, A. Acharya, S. DeSarkar – Heuristic search in restricted memory
+</p>
+
+<p>
+[8] <a href="http://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search" class="urlextern" title="http://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search"  rel="nofollow">Wikipedia - Iterative deepening</a>
+</p>
+
+<p>
+[9] <a href="http://dli.iiit.ac.in/ijcai/IJCAI-91-VOL2/PDF/017.pdf" class="urlextern" title="http://dli.iiit.ac.in/ijcai/IJCAI-91-VOL2/PDF/017.pdf"  rel="nofollow">A. E. Prieditis - Machine Discovery of Effective Admissible Heuristics</a>
+</p>
+
+<p>
+[10] <a href="http://en.wikipedia.org/wiki/Travelling_salesman_problem#Heuristic_and_approximation_algorithms" class="urlextern" title="http://en.wikipedia.org/wiki/Travelling_salesman_problem#Heuristic_and_approximation_algorithms"  rel="nofollow">Wikipedia - Travelling salesman problem - Heuristic and approximation algorithms</a>
+</p>
+
+<p>
+[11] <a href="http://en.wikipedia.org/wiki/A*_search_algorithm" class="urlextern" title="http://en.wikipedia.org/wiki/A*_search_algorithm"  rel="nofollow">Wikipedia – A*</a>
+</p>
+
+<p>
+[12] <a href="http://www.policyalmanac.org/games/aStarTutorial.htm" class="urlextern" title="http://www.policyalmanac.org/games/aStarTutorial.htm"  rel="nofollow">Tutorial A*</a>
+</p>
+
+<p>
+[13] <a href="http://aaaipress.org/Papers/AAAI/1994/AAAI94-209.pdf" class="urlextern" title="http://aaaipress.org/Papers/AAAI/1994/AAAI94-209.pdf"  rel="nofollow">H. Kaindl, A. Khorsand - Memory Bounded Bidirectional Search, AAAI-94 Proceedings</a>
+</p>
+
+</div>
+
+<h2 class="sectionedit13" id="probleme">Probleme</h2>
+<div class="level2">
+
+<p>
+<p><div class="notewarning">
+După rezolvarea problemelor, toți studenții trebuie să încarce o arhivă cu sursele rezolvării pe Moodle (click <a href="http://cs.curs.pub.ro/2015/mod/assign/view.php?id=5943" class="urlextern" title="http://cs.curs.pub.ro/2015/mod/assign/view.php?id=5943"  rel="nofollow">aici</a>) pentru a li se puncta laboratorul.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="labirint">Labirint</h3>
+<div class="level3">
+
+<p>
+Fie un labirint dat sub forma unei matrici în care 0 înseamnă obstacol şi 1 înseamnă liber. Se cere să se determine un drum între două poziţii din labirint folosind algoritmi de căutare informată. Să se implementeze algoritmul A* pentru rezolvarea problemei folosind o euristică admisibilă. [4 pct]
+</p>
+
+</div>
+
+<h3 class="sectionedit15" id="problema_misionarilor_si_a_canibalilor">Problema misionarilor şi a canibalilor</h3>
+<div class="level3">
+
+<p>
+Trei misionari şi trei canibali ajung la malul estic al unui râu. Aici se află o barcă cu două locuri cu care se poate traversa râul (râul nu se poate traversa înot). Dacă pe unul dintre maluri numărul de canibali este mai mare decât numărul de misionari, atunci misionarii de pe acel mal vor fi mâncaţi de canibali. Se cere sa determinaţi cum pot trece toţi râul fără ca misionarii să fie mâncaţi de canibali.
+</p>
+
+<p>
+Să se rezolve această problemă folosind algoritmul A* cu:
+</p>
+
+<p>
+a) O euristica care nu este admisibilă [2 pct]
+</p>
+
+<p>
+b) Doua euristici admisibile [3 pct]
+</p>
+
+<p>
+Comparati numarul de pasi necesar pentru a ajunge la solutie in functie de euristica [1 pct]
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="diverse">Diverse</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../echipa-pa-2006-2012.html" class="wikilink1" title="pa:echipa-pa-2006-2012">Hall of PA</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../regulamente.html" class="wikilink1" title="pa:regulamente">Regulamente PA 2016</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../proiect.html" class="wikilink1" title="pa:proiect">Proiect</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../catalog.html" class="wikilink1" title="pa:catalog">Catalog</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../test_practic.html" class="wikilink1" title="pa:test_practic">Test practic</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Diverse" [1-254] -->
+<h2 class="sectionedit2" id="schelet_cod">Schelet Cod</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../../_media/pa/lab00.zip" class="media mediafile mf_zip" title="pa:lab00.zip (8.4 KB)">Laborator 0: Introducere și Relaxare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2015/lab01.zip" class="media mediafile mf_zip" title="pa:schelete:2015:lab01.zip (35.5 KB)">Laborator 1: Divide et Impera</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab02-skel.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab02-skel.zip (53.5 KB)">Laborator 2: Greedy</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab03.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab03.zip (6.3 KB)">Laborator 3: Programare Dinamică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2014/lab04.zip" class="media mediafile mf_zip" title="pa:schelete:2014:lab04.zip (23.2 KB)">Laborator 4: Backtracking și optimizări</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/lab05.zip" class="media mediafile mf_zip" title="pa:schelete:lab05.zip (10.8 KB)">Laborator 5: Minimax</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab06.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab06.zip (37.7 KB)">Laborator 6: Parcurgerea Grafurilor. Sortare Topologică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab07.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab07.zip (14.2 KB)"> Laborator 7: Aplicații DFS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab08.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab08.zip (20.7 KB)">Laborator 8: Drumuri minime</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab09.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab09.zip (6.4 KB)">Laborator 9: Arbori minimi de acoperire</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2014/lab10.zip" class="media mediafile mf_zip" title="pa:schelete:2014:lab10.zip (29.4 KB)">Laborator 10: Flux Maxim</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2014/lab11.zip" class="media mediafile mf_zip" title="pa:schelete:2014:lab11.zip (38.1 KB)">Laborator 11: A*</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/lab12.zip" class="media mediafile mf_zip" title="pa:lab12.zip (10.9 KB)">Laborator 12: Algoritmi Aleatori</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="https://github.com/laurentiustamate94/laboratoare-pa-c-sharp" class="urlextern" title="https://github.com/laurentiustamate94/laboratoare-pa-c-sharp"  rel="nofollow">Schelete de cod in C# pentru 2014-2015</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Schelet Cod" [255-1244] -->
+<h2 class="sectionedit3" id="laboratoare">Laboratoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="laborator-00.html" class="wikilink1" title="pa:laboratoare:laborator-00">Laborator 0: Introducere și Relaxare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-01.html" class="wikilink1" title="pa:laboratoare:laborator-01">Laborator 1: Divide et Impera</a> </div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-02.html" class="wikilink1" title="pa:laboratoare:laborator-02">Laborator 2 &amp; 3: Greedy și Programare Dinamică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-04.html" class="wikilink1" title="pa:laboratoare:laborator-04">Laborator 4: Backtracking și optimizări</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-05.html" class="wikilink1" title="pa:laboratoare:laborator-05">Laborator 5: Minimax</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-06.html" class="wikilink1" title="pa:laboratoare:laborator-06">Laborator 6: Parcurgerea Grafurilor. Sortare Topologică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-07.html" class="wikilink1" title="pa:laboratoare:laborator-07">Laborator 7: Aplicații DFS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-08.html" class="wikilink1" title="pa:laboratoare:laborator-08">Laborator 8: Drumuri minime</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-09.html" class="wikilink1" title="pa:laboratoare:laborator-09">Laborator 9: Arbori minimi de acoperire</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-10.html" class="wikilink1" title="pa:laboratoare:laborator-10">Laborator 10: Flux Maxim</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="laborator-11.html" class="wikilink1" title="pa:laboratoare:laborator-11">Laborator 11: A*</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-12.html" class="wikilink1" title="pa:laboratoare:laborator-12">Laborator 12: Algoritmi Aleatori</a> </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [1245-2123] -->
+<h2 class="sectionedit4" id="materiale_suplimentare_test_practic">Materiale Suplimentare Test Practic</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../materiale_test_practic/articole.html" class="wikilink1" title="pa:materiale_test_practic:articole">Articole</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../materiale_test_practic/probleme.html" class="wikilink1" title="pa:materiale_test_practic:probleme">Probleme</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Materiale Suplimentare Test Practic" [2124-2278] -->
+<h2 class="sectionedit5" id="crash-course_optional">Crash-course Opțional</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../curs-optional/sd-si-debugging.html" class="wikilink1" title="pa:curs-optional:sd-si-debugging">Debugging și Structuri de Date</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/workshop.zip" class="media mediafile mf_zip" title="pa:workshop.zip (36.9 KB)">Schelet: Debugging și Structuri de Date</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Crash-course Opțional" [2279-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-11.html#laborator_11algoritmi_euristici_de_explorare_a_grafurilor_a">Laborator 11 : Algoritmi euristici de explorare a grafurilor. A*</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-11.html#obiective_laborator">Obiective laborator</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-11.html#importanta_aplicatii_practice">Importanţă – aplicaţii practice</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-11.html#descrierea_problemei_si_a_rezolvarilor">Descrierea problemei şi a rezolvărilor</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-11.html#prezentare_generala_a_problemei">Prezentare generală a problemei</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#algoritmi_de_cautare_informata">Algoritmi de cautare informata</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#greedy_best-first">Greedy Best-First</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#a_a_star">A* (A star)</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#complexitate_algoritmului_a">Complexitate algoritmului A*</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#ida_rbfs_ma">IDA*, RBFS, MA*</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="laborator-11.html#ida">IDA*</a></div></li>
+<li class="level4"><div class="li"><a href="laborator-11.html#rbfs">RBFS</a></div></li>
+<li class="level4"><div class="li"><a href="laborator-11.html#ma">MA*</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-11.html#concluzii_si_observatii">Concluzii și observații</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-11.html#referinte">Referinte</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-11.html#probleme">Probleme</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-11.html#labirint">Labirint</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#problema_misionarilor_si_a_canibalilor">Problema misionarilor şi a canibalilor</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          pa/laboratoare/laborator-11.txt · Last modified: 2016/05/16 13:48 by andrei_mario.dinu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="laborator-11%3Fdo=media&amp;ns=pa%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="laborator-11.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=pa%253Alaboratoare%253Alaborator-11&amp;1479891583" width="2" height="1" alt="" /></div>
+</body>
+</html>

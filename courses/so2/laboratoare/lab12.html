@@ -1,0 +1,1445 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 12 - Linux Device Model. Plug and Play    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-18T15:28:54+0300"/>
+<meta name="keywords" content="so2,laboratoare,lab12"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/laboratoare/lab12.html"/>
+<link rel="canonical" href="lab12.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab12","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab12%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab12%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_12_-_linux_device_model_plug_and_play">Laborator 12 - Linux Device Model. Plug and Play</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Dobândirea de cunoștințe legate de <code>Linux Device Model</code> și principalele componente ale acestuia: dispozitive, drivere, clase și magistrale.</div>
+</li>
+<li class="level1"><div class="li"> Cunoștințe legate de modul de funcționare al mecanismelor <code>Hotplug</code> / <code>Plug and Play</code>.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Magistrala</div>
+</li>
+<li class="level1"><div class="li"> Device</div>
+</li>
+<li class="level1"><div class="li"> Driver</div>
+</li>
+<li class="level1"><div class="li"> Kobject</div>
+</li>
+<li class="level1"><div class="li"> Hotplug</div>
+</li>
+<li class="level1"><div class="li"> Plug and Play</div>
+</li>
+<li class="level1"><div class="li"> Udev</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab12-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab12-slides.pdf"  rel="nofollow"> Slide-uri de suport pentru laborator</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="notiuni_teoretice">Noțiuni teoretice</h2>
+<div class="level2">
+
+<p>
+<strong>Plug and Play</strong> este o tehnologie care oferă suport pentru adăugarea și eliminarea automată a dispozitivelor în sistem. În acest mod se reduc conflictele legate de resursele folosite de acestea prin configurare automată la pornirea sistemului. Pentru a îndeplini aceste scopuri, sunt necesare următoarele caracteristici:
+</p>
+<ul>
+<li class="level1"><div class="li"> Detectarea automată a adaugării și eliminării dispozitivelor din sistem (dispozitivul și magistrala acestuia trebuie sa anunțe driver-ul corespunzător că a apărut o modificare în configurație).</div>
+</li>
+<li class="level1"><div class="li"> Managementul resurselor (adrese, linii irq, canale DMA, zone de memorie), ce include alocarea resurselor către dispozitive și rezolvarea conflictelor ce pot apărea.</div>
+</li>
+<li class="level1"><div class="li"> Dispozitivele trebuie să permită configurarea software (resursele dispozitivului – porturi, întreruperi, resurse DMA – trebuie să permită atribuirea din partea driver-ului).</div>
+</li>
+<li class="level1"><div class="li"> Driver-ele necesare pentru dispozitive noi trebuie să fie încarcate automat de sistemul de operare atunci când este nevoie.</div>
+</li>
+<li class="level1"><div class="li"> Atunci când dispozitivul și magistrala acestuia permit, sistemul ar trebui să poată adăuga sau elimina dispozitivul din sistem în timp ce acesta rulează, fără a fi necesară repornirea sistemului (<code>hotplug</code>).</div>
+</li>
+</ul>
+
+<p>
+Pentru ca un sistem să suporte plug and play trebuie ca <code>BIOS</code>-ul, sistemul de operare și dispozitivul să suporte această tehnologie. Dispozitivul trebuie să dețină un <code>ID</code> pe care să îl ofere driver-ului pentru identificare, iar sistemul de operare trebuie să poată să identifice aceste modificări în configurație pe măsură ce ele apar.
+</p>
+
+<p>
+Dispozitive care suportă plug and play sunt: dispozitivele <code>PCI</code> (plăci de rețea), <code>USB</code> (tastatură, mouse, imprimantă), etc.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="linux_device_model">Linux Device Model</h2>
+<div class="level2">
+
+<p>
+Înainte de versiunea 2.6, kernel-ul nu dispunea de un model unificat prin care să se obțină informații despre acesta. Din acest motiv s-a realizat un model pentru dispozitivele din Linux, <code>Linux Device Model</code>.
+</p>
+
+<p>
+Scopul principal al acestui model este de a menține structuri de date interne care să reflecte starea și structura sistemului. Astfel de infomații includ ce dispozitive există în sistem, în ce stare se află din punct de vedere al managementului consumului (power management), la ce magistrală sunt atașate, ce drivere au asociate, alături de structura magistralelor, dispozitivelor, driverelor din sistem.
+</p>
+
+<p>
+Pentru a menține aceste informații, kernel-ul folosește următoarele entități:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>dispozitiv</strong> - un dispozitiv fizic care este atașat unei magistrale</div>
+</li>
+<li class="level1"><div class="li"> <strong>driver</strong> – o entitate software care poate fi asociată unui dispozitiv și execută operații cu acesta</div>
+</li>
+<li class="level1"><div class="li"> <strong>magistrală (bus)</strong> – un dispozitiv la care se pot atașa alte dispozitive</div>
+</li>
+<li class="level1"><div class="li"> <strong>clasă</strong> – un tip de dispozitive care au o comportare similară; există o clasă pentru discuri, partiții, porturi seriale, etc.</div>
+</li>
+<li class="level1"><div class="li"> <strong>subsistem</strong> – o vedere asupra structurii sistemului; subsistemele din kernel includ dispozitive (devices - o vedere ierarhică asupra tuturor dispozitivelor din sistem), magistrale (bus - o vedere a dispozitivelor în funcție de cum sunt atașate la magistrale), clase, etc.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit7" id="sysfs">sysfs</h3>
+<div class="level3">
+
+<p>
+Kernel-ul oferă o reprezentare a modelului său în userspace prin intermediul sistemului virtual de fișiere sysfs. Acesta este de obicei montat în directorul <code>/sys</code> și conține următoarele subdirectoare:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>block</strong> - toate dispozitivele de tip bloc disponibile în sistem (discuri, partiții)</div>
+</li>
+<li class="level1"><div class="li"> <strong>bus</strong> - tipuri de magistrale la care se conectează dispozitivele fizice (pci, ide, usb)</div>
+</li>
+<li class="level1"><div class="li"> <strong>class</strong> - clase de drivere care sunt disponibile în sistem (net, sound, usb)</div>
+</li>
+<li class="level1"><div class="li"> <strong>devices</strong> - structura ierarhica a dispozitivelor conectate în sistem</div>
+</li>
+<li class="level1"><div class="li"> <strong>firmware</strong> - informații obținute de la firmware-ul sistemului (ACPI)</div>
+</li>
+<li class="level1"><div class="li"> <strong>fs</strong> - informații legate de sistemele de fișiere montate</div>
+</li>
+<li class="level1"><div class="li"> <strong>kernel</strong> - informații legate de starea kernel-ului (utilizatorii logați, hotplug)</div>
+</li>
+<li class="level1"><div class="li"> <strong>module</strong> - lista modulelor încarcate la momentul curent</div>
+</li>
+<li class="level1"><div class="li"> <strong>power</strong> - informații legate de subsistemul de power management</div>
+</li>
+</ul>
+
+<p>
+După cum se poate observa, există o corespondență între structurile de date din kernel în cadrul modelului descris și subdirectoarele din sistemul virtual de fișiere <code>sysfs</code>. Deși această asemănare poate duce la confundarea celor două concepte, ele sunt diferite. Modelul pentru dispozitive în kernel poate funcționa și fără sistemul de fișiere <code>sysfs</code>, dar reciproca nu este adevărată.
+</p>
+
+<p>
+Informația din <code>sysfs</code> se găsește în fișiere ce conțin câte un atribut. Câteva atribute standard (reprezentate de fișiere sau directoare cu același nume) sunt următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>dev</strong> - identificatorul major și minor al dispozitivului; acesta poate fi folosit pentru a crea automat intrările în directorul <code>/dev</code></div>
+</li>
+<li class="level1"><div class="li"> <strong>device</strong> - o legătură simbolică spre directorul ce conține dispozitive; acesta poate fi folosit pentru a descoperi dispozitivele hardware care oferă un anumit serviciu (spre exemplu dispozitivul PCI al plăcii de rețea eth0)</div>
+</li>
+<li class="level1"><div class="li"> <strong>driver</strong> - o legătură simbolică spre directorul ce conține drivere (care se află în <code>/sys/bus/*/drivers</code>)</div>
+</li>
+</ul>
+
+<p>
+Sunt disponibile și alte atribute, în funcție de magistrala și driverul folosit.
+</p>
+
+<p>
+<a href="../../_detail/so2/laboratoare/laboratoare-plug_and_play-sysfs.png%3Fid=so2%253Alaboratoare%253Alab12.html" class="media" title="so2:laboratoare:laboratoare-plug_and_play-sysfs.png"><img src="../../_media/so2/laboratoare/laboratoare-plug_and_play-sysfs.png" class="mediacenter" alt="" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="structuri_de_baza_in_dispozitivele_linux">Structuri de bază în dispozitivele Linux</h3>
+<div class="level3">
+
+<p>
+<code>Linux Device Model</code> oferă o serie de structuri care să asigure interacțiunea între un dispozitiv hardware și un device driver. Întreg modelul are la bază structuri <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> struct kobject</a>. Cu ajutorul acestei structuri sunt construite ierarhii și sunt implementate următoarele structuri: <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102"  rel="nofollow"> struct bus_type</a>, <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689"  rel="nofollow"> struct device</a> și <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L225" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L225"  rel="nofollow"> struct device_driver</a>.
+</p>
+
+<p>
+<a href="../../_detail/so2/laboratoare/laboratoare-plug_and_play-linux_device_model_structures.png%3Fid=so2%253Alaboratoare%253Alab12.html" class="media" title="so2:laboratoare:laboratoare-plug_and_play-linux_device_model_structures.png"><img src="../../_media/so2/laboratoare/laboratoare-plug_and_play-linux_device_model_structures.png" class="mediacenter" alt="" /></a>
+</p>
+
+</div>
+
+<h4 id="structura_kobject">Structura kobject</h4>
+<div class="level4">
+
+<p>
+O structură <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> kobject</a> nu îndeplinește o funcție de una singură. O astfel de structură este de obicei integrată într-o structură mai mare. O structură <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> kobject</a> incorporează de fapt un set de facilități care vor fi oferite unui obiect de nivel de abstracție mai înalt în ierarhia <code>Linux Device Model</code>.
+</p>
+
+<p>
+Spre exemplu, structura <a href="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.11#L12" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.11#L12"  rel="nofollow"> cdev</a> are următoarea definiție:
+</p>
+<pre class="code c"><span class="kw4">struct</span> cdev <span class="br0">&#123;</span>
+        <span class="kw4">struct</span> kobject kobj<span class="sy0">;</span>
+        <span class="kw4">struct</span> module <span class="sy0">*</span>owner<span class="sy0">;</span>
+        <span class="kw4">const</span> <span class="kw4">struct</span> file_operations <span class="sy0">*</span>ops<span class="sy0">;</span>
+        <span class="kw4">struct</span> list_head list<span class="sy0">;</span>
+        dev_t dev<span class="sy0">;</span>
+        <span class="kw4">unsigned</span> <span class="kw4">int</span> count<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Se observă că această structură include un câmp de tipul <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> struct kobject</a>.
+</p>
+
+<p>
+O structură <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> struct kobject</a> este definită astfel:
+</p>
+<pre class="code c"><span class="kw4">struct</span> kobject <span class="br0">&#123;</span>
+        <span class="kw4">const</span> <span class="kw4">char</span>              <span class="sy0">*</span>name<span class="sy0">;</span>
+        <span class="kw4">struct</span> list_head        entry<span class="sy0">;</span>
+        <span class="kw4">struct</span> kobject          <span class="sy0">*</span>parent<span class="sy0">;</span>
+        <span class="kw4">struct</span> kset             <span class="sy0">*</span>kset<span class="sy0">;</span>
+        <span class="kw4">struct</span> kobj_type        <span class="sy0">*</span>ktype<span class="sy0">;</span>
+        <span class="kw4">struct</span> sysfs_dirent     <span class="sy0">*</span>sd<span class="sy0">;</span>
+        <span class="kw4">struct</span> kref             kref<span class="sy0">;</span>
+        <span class="kw4">unsigned</span> <span class="kw4">int</span> state_initialized<span class="sy0">:</span><span class="nu0">1</span><span class="sy0">;</span>
+        <span class="kw4">unsigned</span> <span class="kw4">int</span> state_in_sysfs<span class="sy0">:</span><span class="nu0">1</span><span class="sy0">;</span>
+        <span class="kw4">unsigned</span> <span class="kw4">int</span> state_add_uevent_sent<span class="sy0">:</span><span class="nu0">1</span><span class="sy0">;</span>
+        <span class="kw4">unsigned</span> <span class="kw4">int</span> state_remove_uevent_sent<span class="sy0">:</span><span class="nu0">1</span><span class="sy0">;</span>
+        <span class="kw4">unsigned</span> <span class="kw4">int</span> uevent_suppress<span class="sy0">:</span><span class="nu0">1</span><span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+După cum se observă, structurile <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> kobject</a> sunt într-o ierarhie: un obiect are un părinte și deține un membru kset, care cuprinde obiecte de pe același nivel.
+</p>
+
+<p>
+Lucrul cu structura presupune inițializarea ei, cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/lib/kobject.c?v=3.11#L268" class="urlextern" title="http://lxr.free-electrons.com/source/lib/kobject.c?v=3.11#L268"  rel="nofollow"> kobject_init</a>. Tot în procesul de inițializare este necesară stabilirea numelui structurii <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> kobject</a>, care va apărea în sysfs, cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/lib/kobject.c?v=3.11#L243" class="urlextern" title="http://lxr.free-electrons.com/source/lib/kobject.c?v=3.11#L243"  rel="nofollow"> kobject_set_name</a>.
+</p>
+
+<p>
+Orice operație asupra unui <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> kobject</a> se realizează prin incrementarea contorului intern al acestuia cu <a href="http://lxr.free-electrons.com/source/lib/kobject.c?v=3.11#L525" class="urlextern" title="http://lxr.free-electrons.com/source/lib/kobject.c?v=3.11#L525"  rel="nofollow"> kobject_get</a>, sau decrementarea în cazul în care nu se mai folosește cu <a href="http://lxr.free-electrons.com/source/lib/kobject.c?v=3.11#L594" class="urlextern" title="http://lxr.free-electrons.com/source/lib/kobject.c?v=3.11#L594"  rel="nofollow"> kobject_put</a>. Astfel, un obiect de tip <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> kobject</a> nu va fi eliberat decât în momentul în care contorul intern al acestuia ajunge la valoarea 0. Este nevoie de o metodă de notificare a acestui lucru, pentru ca, apoi, să fie eliberate resursele asociate structurii de dispozitiv care includea <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> struct kobject</a> (spre exemplu <a href="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.11#L12" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.11#L12"  rel="nofollow"> cdev</a>). Metoda se numește release și este asociată obiectului prin intermediul câmpului ktype (de tip <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L108" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L108"  rel="nofollow"> struct kobj_type</a>).
+</p>
+
+<p>
+Structura <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> struct kobject</a> este structura de bază din Linux Device Model. Structurile din nivelurile mai înalte ale modelului sunt <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102"  rel="nofollow"> struct bus_type</a>, <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689"  rel="nofollow"> struct device</a> și <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L225" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L225"  rel="nofollow"> struct device_driver</a>.
+</p>
+
+</div>
+
+<h4 id="magistrale">Magistrale</h4>
+<div class="level4">
+
+<p>
+O magistrală este un canal de comunicație între procesor și un dispozitiv de intrare/ieșire. Pentru asigurarea genericității modelului, toate dispozitivele de intrare/ieșire sunt conectate la procesor prin intermediul unei astfel de magistrale (chiar dacă aceasta poate fi una virtuală fără un corespondent fizic hardware).
+</p>
+
+<p>
+La adăugarea unei magistrale în sistem, aceasta va apărea în sistemul de fișiere <code>sysfs</code>, în <code>/sys/bus</code>. Ca și la structurile <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> kobjects</a>, magistralele pot fi organizate în ierarhii și vor fi reprezentate astfel și în <code>sysfs</code>.
+</p>
+
+<p>
+În Linux Device Model, o magistrală este reprezentată de structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102"  rel="nofollow"> struct bus_type</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> bus_type <span class="br0">&#123;</span>
+        <span class="kw4">const</span> <span class="kw4">char</span>              <span class="sy0">*</span>name<span class="sy0">;</span>
+        <span class="kw4">const</span> <span class="kw4">char</span>              <span class="sy0">*</span>dev_name<span class="sy0">;</span>
+        <span class="kw4">struct</span> device           <span class="sy0">*</span>dev_root<span class="sy0">;</span>
+        <span class="kw4">struct</span> bus_attribute    <span class="sy0">*</span>bus_attrs<span class="sy0">;</span>
+        <span class="kw4">struct</span> device_attribute <span class="sy0">*</span>dev_attrs<span class="sy0">;</span>
+        <span class="kw4">struct</span> driver_attribute <span class="sy0">*</span>drv_attrs<span class="sy0">;</span>
+        <span class="kw4">struct</span> subsys_private <span class="sy0">*</span>p<span class="sy0">;</span>
+&nbsp;
+        <span class="kw4">int</span>             <span class="br0">&#40;</span><span class="sy0">*</span>match<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="sy0">,</span> <span class="kw4">struct</span> device_driver <span class="sy0">*</span> drv<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span>             <span class="br0">&#40;</span><span class="sy0">*</span>uevent<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span>dev<span class="sy0">,</span> <span class="kw4">struct</span> kobj_uevent_env <span class="sy0">*</span>env<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span>             <span class="br0">&#40;</span><span class="sy0">*</span>probe<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw4">int</span>             <span class="br0">&#40;</span><span class="sy0">*</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/remove.html"><span class="kw3">remove</span></a><span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Se observă că unei magistrale îi este asociat un nume, liste de atribute default, o serie de funcții specifice și datele private ale driverului. Funcția <code>uevent</code> (fostă <code>hotplug</code>), este folosită în cazul dispozitivelor <code>hotplug</code>.
+</p>
+
+<p>
+Operațiile cu magistrala sunt operații de înregistrare, implementarea operațiilor descrise în structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102"  rel="nofollow"> struct bus_type</a> și operații de parcurgere și inspecție a dispozitivelor conectate la magistrală.
+</p>
+
+<p>
+Înregistrarea unei magistrale se realizează folosind <a href="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L908" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L908"  rel="nofollow"> bus_register</a>, iar deînregistrarea folosind <a href="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L987" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L987"  rel="nofollow"> bus_unregister</a>:
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Afișați exemplu implementare
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ascundeți exemplu implementare
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code c"><span class="co2">#include &lt;linux/device.h&gt;</span>
+<span class="coMULTI">/* mybus.c */</span>
+&nbsp;
+<span class="co1">//bus type</span>
+<span class="kw4">struct</span> bus_type my_bus_type <span class="sy0">=</span> <span class="br0">&#123;</span>
+	.<span class="me1">name</span>	<span class="sy0">=</span> <span class="st0">&quot;mybus&quot;</span><span class="sy0">,</span>
+	.<span class="me1">match</span>	<span class="sy0">=</span> my_match<span class="sy0">,</span>
+	.<span class="me1">uevent</span>	<span class="sy0">=</span> my_uevent<span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> __init my_bus_init <span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> err<span class="sy0">;</span>
+&nbsp;
+	<span class="co1">//...</span>
+	err <span class="sy0">=</span> bus_register <span class="br0">&#40;</span><span class="sy0">&amp;</span>my_bus_type<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+		<span class="kw1">return</span> err<span class="sy0">;</span>
+	<span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> __exit my_bus_exit <span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="co1">//...</span>
+	bus_unregister <span class="br0">&#40;</span><span class="sy0">&amp;</span>my_bus_type<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+</div></div>
+<p>
+<br/>
+
+</p>
+
+<p>
+Funcțiile care vor fi inițializate uzual în cadrul unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102"  rel="nofollow"> struct bus_type</a> sunt <code>match</code> și <code>uevent</code>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/device.h&gt;</span>
+<span class="co2">#include &lt;linux/string.h&gt;</span>
+<span class="coMULTI">/* mybus.c */</span>
+&nbsp;
+<span class="co1">// match devices to drivers; just do a simple name test </span>
+<span class="kw4">static</span> <span class="kw4">int</span> my_match <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span>dev<span class="sy0">,</span> <span class="kw4">struct</span> device_driver <span class="sy0">*</span>driver<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw1">return</span> <span class="sy0">!</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/strncmp.html"><span class="kw3">strncmp</span></a> <span class="br0">&#40;</span>dev_name<span class="br0">&#40;</span>dev<span class="br0">&#41;</span><span class="sy0">,</span> driver<span class="sy0">-&gt;</span>name<span class="sy0">,</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/strlen.html"><span class="kw3">strlen</span></a> <span class="br0">&#40;</span>driver<span class="sy0">-&gt;</span>name<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">// respond to hotplug user events; add environment variable DEV_NAME</span>
+ <span class="kw4">static</span> <span class="kw4">int</span> my_uevent <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span>dev<span class="sy0">,</span> <span class="kw4">struct</span> kobj_uevent_env <span class="sy0">*</span>env<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	add_uevent_var<span class="br0">&#40;</span>env<span class="sy0">,</span> <span class="st0">&quot;DEV_NAME=%s&quot;</span><span class="sy0">,</span> dev_name<span class="br0">&#40;</span>dev<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Funcția <code>match</code> este utilizată în momentul în care se adaugă la magistrală un nou dispozitiv sau un nou driver. Rolul ei este de a realiza comparația între identificatorul dispozitivului și cel al driverului. Funcția <code>uevent</code> este apelată înainte de generarea unui eveniment de tip <code>hotplug</code> în user-space și are drept rol adăugarea de variabile de mediu.
+</p>
+
+<p>
+Alte operații posibile în cazul unei magistrale sunt parcurgerea driverelor sau dispozitivelor atașate acesteia. Deși nu le putem accesa în mod direct (listele cu driverele și dispozitive fiind stocate în datele private ale driverului, câmpul <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L126" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L126"  rel="nofollow"> struct subsys_private *p</a>), acestea pot fi parcurse cu ajutorul macrodefinițiilor <a href="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L286" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L286"  rel="nofollow"> bus_for_each_dev</a> și <a href="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L418" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L418"  rel="nofollow"> bus_for_each_drv</a>.
+</p>
+
+<p>
+Interfața <code>Linux Device Model</code> permite crearea de atribute pentru obiectele asociate. Aceste atribute vor avea drept corespondent un fișier în subdirectorul magistralei din <code>sysfs</code>. Atributele asociate unei magistrale sunt descrise de structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L43" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L43"  rel="nofollow"> bus_attribute</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> bus_attribute <span class="br0">&#123;</span>
+         <span class="kw4">struct</span> attribute        attr<span class="sy0">;</span>
+         ssize_t <span class="br0">&#40;</span><span class="sy0">*</span>show<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> bus_type <span class="sy0">*,</span> <span class="kw4">char</span> <span class="sy0">*</span> buf<span class="br0">&#41;</span><span class="sy0">;</span>
+         ssize_t <span class="br0">&#40;</span><span class="sy0">*</span>store<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> bus_type <span class="sy0">*,</span> <span class="kw4">const</span> <span class="kw4">char</span> <span class="sy0">*</span> buf<span class="sy0">,</span> <span class="kw4">size_t</span> count<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+De obicei, un atribut se definește cu ajutorul macrodefiniției <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L49" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L49"  rel="nofollow"> BUS_ATTR</a>. Pentru adăugarea/ștergerea unui atribut din cadrul structurii de magistrală se folosesc funcțiile <a href="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L127" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L127"  rel="nofollow"> bus_create_file</a> și <a href="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L139" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/bus.c?v=3.11#L139"  rel="nofollow"> bus_remove_file</a>.
+</p>
+
+<p>
+Un exemplu de definire a unui atribut pentru magistrala <code>my_bus</code> este prezentat în continuare:
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Afișați exemplu de definire a unui atribut
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ascundeți exemplu de definire a unui atribut
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code c"><span class="coMULTI">/* mybus.c */</span>
+&nbsp;
+<span class="co2">#define MY_BUS_DESCR     &quot;SO2 rules forever&quot;</span>
+&nbsp;
+<span class="co1">// export a simple bus attribute</span>
+<span class="kw4">static</span> ssize_t my_show_bus_descr <span class="br0">&#40;</span><span class="kw4">struct</span> bus_type <span class="sy0">*</span>bus<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">*</span>buf<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw1">return</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/snprintf.html"><span class="kw3">snprintf</span></a> <span class="br0">&#40;</span>buf<span class="sy0">,</span> PAGE_SIZE<span class="sy0">,</span> <span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> MY_BUS_DESCR<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="coMULTI">/*
+ * define attribute - attribute name is descr;
+ * full name is bus_attr_descr;
+ * sysfs entry should be /sys/bus/mybus/descr
+ */</span>
+BUS_ATTR <span class="br0">&#40;</span>descr<span class="sy0">,</span> <span class="nu8">0444</span><span class="sy0">,</span> my_show_bus_descr <span class="sy0">,</span> NULL<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">// specify attribute - in module init function</span>
+<span class="kw4">static</span> <span class="kw4">int</span> __init my_bus_init <span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">int</span> err<span class="sy0">;</span>
+        <span class="co1">//...</span>
+        err <span class="sy0">=</span> bus_create_file <span class="br0">&#40;</span><span class="sy0">&amp;</span>my_bus_type<span class="sy0">,</span> <span class="sy0">&amp;</span>bus_attr_descr<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span><span class="br0">&#40;</span>err<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                <span class="coMULTI">/* handle error */</span>
+        <span class="br0">&#125;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> __exit my_bus_exit <span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        bus_remove_file <span class="br0">&#40;</span><span class="sy0">&amp;</span>my_bus_type<span class="sy0">,</span> <span class="sy0">&amp;</span>bus_attr_descr<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+</div></div>
+<p>
+<br/>
+
+</p>
+
+<p>
+Magistrala este reprezentată atât de un obiect <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102"  rel="nofollow"> bus_type</a>, cât și de un obiect <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689"  rel="nofollow"> device</a>, așa cum vom vedea în continuare (magistrala este și ea un dispozitiv).
+</p>
+
+</div>
+
+<h4 id="dispozitive">Dispozitive</h4>
+<div class="level4">
+
+<p>
+Orice dispozitiv din sistem are asociată o structură <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689"  rel="nofollow"> struct device</a>. Dispozitivele sunt descoperite prin diferite metode de kernel (hotplug, de către device drivere, la inițializarea sistemului) și sunt înregistrate în sistem. Toate dispozitivele prezente în kernel au câte o intrare în <code>/sys/devices</code>.
+</p>
+
+<p>
+La cel mai jos nivel, un dispozitiv în <code>Linux Device Model</code> este reprezentat de o structură <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689"  rel="nofollow"> struct device</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> device <span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        <span class="kw4">struct</span> device           <span class="sy0">*</span>parent<span class="sy0">;</span>
+        <span class="kw4">struct</span> device_private   <span class="sy0">*</span>p<span class="sy0">;</span>
+        <span class="kw4">struct</span> kobject          kobj<span class="sy0">;</span>
+&nbsp;
+        <span class="kw4">const</span> <span class="kw4">char</span>              <span class="sy0">*</span>init_name<span class="sy0">;</span> <span class="coMULTI">/* initial name of the device */</span>
+        <span class="co1">//...</span>
+        <span class="kw4">struct</span> bus_type         <span class="sy0">*</span>bus<span class="sy0">;</span>       <span class="coMULTI">/* type of bus device is on */</span>
+        <span class="kw4">struct</span> device_driver    <span class="sy0">*</span>driver<span class="sy0">;</span>    <span class="coMULTI">/* which driver has allocated this
+                                             device */</span>
+        <span class="co1">//...</span>
+        <span class="kw4">void</span>    <span class="br0">&#40;</span><span class="sy0">*</span>release<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Printre câmpurile structurii se numără dispozitivul părinte care este de obicei un controller, obiectul <a href="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kobject.h?v=3.11#L60"  rel="nofollow"> kobject</a> asociat, magistrala pe care se găsește, driverul care se ocupă de dispozitiv și o funcție apelată în momentul în care contorul dispozitivului ajunge la 0.
+</p>
+
+<p>
+Ca de obicei, avem funcții de înregistrare/deînregistrare <a href="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L1209" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L1209"  rel="nofollow"> device_register</a> și <a href="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L1302" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L1302"  rel="nofollow"> device_unregister</a>.
+</p>
+
+<p>
+Pentru lucrul cu atributele avem structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L499" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L499"  rel="nofollow"> struct device_attribute</a>, macrodefiniția <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L525" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L525"  rel="nofollow"> DEVICE_ATTR</a> pentru definire și funcțiile <a href="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L612" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L612"  rel="nofollow"> device_create_file</a> și <a href="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L635" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L635"  rel="nofollow"> device_remove_file</a> pentru adăugarea atributului la dispozitiv.
+</p>
+
+<p>
+Un lucru important de notat este faptul că, de obicei, nu se lucrează direct cu o structură de tip <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L689"  rel="nofollow"> struct device</a>, ci cu o structură care o conține pe aceasta, de forma:
+</p>
+<pre class="code c"><span class="co1">// my device type</span>
+<span class="kw4">struct</span> my_device <span class="br0">&#123;</span>
+	<span class="kw4">char</span> <span class="sy0">*</span>name<span class="sy0">;</span>
+	<span class="kw4">struct</span> my_driver <span class="sy0">*</span>driver<span class="sy0">;</span>
+	<span class="kw4">struct</span> device dev<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+De obicei, un modul va exporta funcții de înregistrare/deînregistrare ale unui astfel de dispozitiv, după modelul prezentat mai jos:
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Afișați cod
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ascundeți cod
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code c"><span class="coMULTI">/* mybus.c */</span>
+&nbsp;
+<span class="coMULTI">/* BUS DEVICE (parent) */</span>
+&nbsp;
+<span class="co1">// parent device release</span>
+<span class="kw4">static</span> <span class="kw4">void</span> my_bus_device_release <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">// parent device</span>
+<span class="kw4">static</span> <span class="kw4">struct</span> device my_bus_device <span class="sy0">=</span> <span class="br0">&#123;</span>
+	.<span class="me1">init_name</span>   <span class="sy0">=</span> <span class="st0">&quot;mybus0&quot;</span><span class="sy0">,</span>
+	.<span class="me1">release</span>  <span class="sy0">=</span> my_bus_device_release
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* DEVICE */</span>
+&nbsp;
+<span class="coMULTI">/*
+ * as we are not using the reference count, we use a no-op
+ * release function
+ */</span>
+<span class="kw4">static</span> <span class="kw4">void</span> my_dev_release <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span>dev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> my_register_device <span class="br0">&#40;</span><span class="kw4">struct</span> my_device <span class="sy0">*</span>mydev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	mydev<span class="sy0">-&gt;</span>dev.<span class="me1">bus</span> <span class="sy0">=</span> <span class="sy0">&amp;</span>my_bus_type<span class="sy0">;</span>
+	mydev<span class="sy0">-&gt;</span>dev.<span class="me1">parent</span> <span class="sy0">=</span> <span class="sy0">&amp;</span>my_bus_device<span class="sy0">;</span>
+	mydev<span class="sy0">-&gt;</span>dev.<span class="me1">release</span> <span class="sy0">=</span> my_dev_release<span class="sy0">;</span>
+	dev_set_name<span class="br0">&#40;</span><span class="sy0">&amp;</span>mydev<span class="sy0">-&gt;</span>dev<span class="sy0">,</span> mydev<span class="sy0">-&gt;</span>name<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">return</span> device_register <span class="br0">&#40;</span><span class="sy0">&amp;</span>mydev<span class="sy0">-&gt;</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> my_unregister_device <span class="br0">&#40;</span><span class="kw4">struct</span> my_device <span class="sy0">*</span> mydev<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	device_unregister <span class="br0">&#40;</span><span class="sy0">&amp;</span>mydev<span class="sy0">-&gt;</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="coMULTI">/* export register/unregister device functions */</span>
+EXPORT_SYMBOL <span class="br0">&#40;</span>my_register_device<span class="br0">&#41;</span><span class="sy0">;</span>
+EXPORT_SYMBOL <span class="br0">&#40;</span>my_unregister_device<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div></div>
+<p>
+<br/>
+
+</p>
+
+<p>
+După cum se poate observa, funcțiile <code>my_register_device</code> și <code>my_unregister_device</code> de adăugare, respectiv scoatere a unui device de pe o magistrală sunt definite în fișierul în care este definită magistrala. Nu se inițializează obiecte de tip dispozitiv; acestea se vor ințializa în momentul în care vor fi descoperite în sistem (prin hotplug sau înregistrare directă din driver) și se va apela funcția <code>my_register_device</code> pentru adăugarea la magistrală.
+</p>
+
+<p>
+Pentru utilizare (în implementarea driver-ului), trebuie declarată o structură de tipul celei exportate, inițializată și înregistrată cu metoda exportata de magistrală:
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Afișați exemplu înregistrare device
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ascundeți exemplu înregistrare device
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code c"><span class="coMULTI">/* mydriver.c */</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> my_device mydev<span class="sy0">;</span>
+<span class="kw4">char</span> devname<span class="br0">&#91;</span>NAME_SIZE<span class="br0">&#93;</span><span class="sy0">;</span>
+<span class="co1">//...</span>
+&nbsp;
+<span class="co1">//register</span>
+<span class="kw4">int</span> err<span class="sy0">;</span>
+&nbsp;
+<a href="http://www.opengroup.org/onlinepubs/009695399/functions/sprintf.html"><span class="kw3">sprintf</span></a><span class="br0">&#40;</span>devname<span class="sy0">,</span> <span class="st0">&quot;mydev0&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+mydev.<span class="me1">name</span> <span class="sy0">=</span> devname<span class="sy0">;</span>
+mydev.<span class="me1">driver</span> <span class="sy0">=</span> <span class="sy0">&amp;</span>mydriver<span class="sy0">;</span>
+dev_set_drvdata<span class="br0">&#40;</span><span class="sy0">&amp;</span>mydev.<span class="me1">dev</span><span class="sy0">,</span> <span class="sy0">&amp;</span>mydev<span class="br0">&#41;</span><span class="sy0">;</span>
+err <span class="sy0">=</span> my_register_device<span class="br0">&#40;</span><span class="sy0">&amp;</span>mydev<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>err <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="coMULTI">/*handle error */</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="co1">//..</span>
+&nbsp;
+<span class="co1">//unregister</span>
+my_unregister_device<span class="br0">&#40;</span><span class="sy0">&amp;</span>mydev<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div></div>
+<p>
+<br/>
+
+</p>
+
+</div>
+
+<h4 id="drivere">Drivere</h4>
+<div class="level4">
+
+<p>
+<code>Linux Device Model</code> este folosit pentru a permite asocierea foarte ușoară între dispozitivele sistemului și drivere. Driverele pot exporta informații independente de dispozitivul fizic din spate.
+</p>
+
+<p>
+În <code>sysfs</code> informațiile despre drivere nu au asociate un singur subdirector; ele se pot găsi în structura de directoare, în diferite locuri: în <code>/sys/module</code> se găsește modulul încărcat, în <code>devices</code> se poate găsi driverul asociat fiecărui device, în <code>classes</code> driverele care aparțin unei clase, în <code>/sys/bus</code> driverele asociate fiecărei magistrale.
+</p>
+
+<p>
+Un device driver este identificat prin structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L194" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L194"  rel="nofollow"> struct device_driver</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> device_driver <span class="br0">&#123;</span>
+         <span class="kw4">const</span> <span class="kw4">char</span>              <span class="sy0">*</span>name<span class="sy0">;</span>
+         <span class="kw4">struct</span> bus_type         <span class="sy0">*</span>bus<span class="sy0">;</span>
+&nbsp;
+         <span class="kw4">struct</span> driver_private   <span class="sy0">*</span>p<span class="sy0">;</span>
+&nbsp;
+         <span class="kw4">struct</span> module           <span class="sy0">*</span>owner<span class="sy0">;</span>
+         <span class="kw4">const</span> <span class="kw4">char</span>              <span class="sy0">*</span>mod_name<span class="sy0">;</span>     <span class="coMULTI">/* used for built-in modules */</span>
+&nbsp;
+         <span class="kw4">int</span>     <span class="br0">&#40;</span><span class="sy0">*</span>probe<span class="br0">&#41;</span>        <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw4">int</span>     <span class="br0">&#40;</span><span class="sy0">*</span><a href="http://www.opengroup.org/onlinepubs/009695399/functions/remove.html"><span class="kw3">remove</span></a><span class="br0">&#41;</span>       <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw4">void</span>    <span class="br0">&#40;</span><span class="sy0">*</span>shutdown<span class="br0">&#41;</span>     <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw4">int</span>     <span class="br0">&#40;</span><span class="sy0">*</span>suspend<span class="br0">&#41;</span>      <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="sy0">,</span> pm_message_t state<span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw4">int</span>     <span class="br0">&#40;</span><span class="sy0">*</span>resume<span class="br0">&#41;</span>       <span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span> dev<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Printre câmpurile structurii regăsim numele driver-ului (apare în <code>sysfs</code>), magistrala cu care driverul lucrează și funcții apelate în diverse momente din funcționarea unui dispozitiv.
+</p>
+
+<p>
+Ca și până acum, avem funcțiile de înregistrare/deînregistrare <a href="http://lxr.free-electrons.com/source/drivers/base/driver.c?v=3.11#L157" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/driver.c?v=3.11#L157"  rel="nofollow"> driver_register</a> și <a href="http://lxr.free-electrons.com/source/drivers/base/driver.c?v=3.11#L199" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/driver.c?v=3.11#L199"  rel="nofollow"> driver_unregister</a>.
+</p>
+
+<p>
+Pentru lucrul cu atributele avem structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h#L264" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h#L264"  rel="nofollow"> struct driver_attribute</a>, macrodefiniția <a href="http://lxr.free-electrons.com/source/include/linux/device.h#L271" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h#L271"  rel="nofollow"> DRIVER_ATTR</a> pentru definire și funcțiile <a href="http://lxr.free-electrons.com/source/drivers/base/driver.c?v=3.11#L101" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/driver.c?v=3.11#L101"  rel="nofollow"> driver_create_file</a> și <a href="http://lxr.free-electrons.com/source/drivers/base/driver.c?v=3.11#L118" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/driver.c?v=3.11#L118"  rel="nofollow"> driver_remove_file</a> pentru adăugarea atributului la dispozitiv.
+</p>
+
+<p>
+Ca și în cazul dispozitivelor, structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L194" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L194"  rel="nofollow"> struct device_driver</a> este, de obicei, incorporată în cadrul unei alte structuri specifice unei anumite magistrale (<code>PCI</code>, <code>USB</code>, etc.):
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Afișați cod
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ascundeți cod
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code c"><span class="coMULTI">/* mybus.c */</span>
+&nbsp;
+<span class="co1">// my driver type</span>
+ <span class="kw4">struct</span> my_driver <span class="br0">&#123;</span>
+	<span class="kw4">struct</span> module <span class="sy0">*</span>module<span class="sy0">;</span>
+	<span class="kw4">struct</span> device_driver driver<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co2">#define to_my_driver(drv) container_of(drv, struct my_driver, driver);</span>
+&nbsp;
+<span class="kw4">int</span> my_register_driver <span class="br0">&#40;</span><span class="kw4">struct</span> my_driver <span class="sy0">*</span>driver<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> err<span class="sy0">;</span>
+&nbsp;
+	driver<span class="sy0">-&gt;</span>driver.<span class="me1">bus</span> <span class="sy0">=</span> <span class="sy0">&amp;</span>my_bus_type<span class="sy0">;</span>
+	err<span class="sy0">=</span> driver_register <span class="br0">&#40;</span><span class="sy0">&amp;</span>driver<span class="sy0">-&gt;</span>driver<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>err<span class="br0">&#41;</span>
+		<span class="kw1">return</span> err<span class="sy0">;</span>
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> my_unregister_driver <span class="br0">&#40;</span><span class="kw4">struct</span> my_driver <span class="sy0">*</span>driver<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	driver_unregister <span class="br0">&#40;</span><span class="sy0">&amp;</span>driver<span class="sy0">-&gt;</span>driver<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="coMULTI">/* export register/unregister driver functions */</span>
+EXPORT_SYMBOL <span class="br0">&#40;</span>my_register_driver<span class="br0">&#41;</span><span class="sy0">;</span>
+EXPORT_SYMBOL <span class="br0">&#40;</span>my_unregister_driver<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div></div>
+<p>
+<br/>
+
+</p>
+
+<p>
+Se observă că se exportă operațiile de înregistrare/deînregistrare de driver pentru folosire în cadrul altor module.
+</p>
+
+<p>
+Ca și în cazul dispozitivelor, și operațiile cu drivere sunt definite la inițializarea magistralei, și sunt exportate pentru a putea fi folosite de drivere. În momentul în care se implementează un driver ce lucrează cu dispozitive atașate la această magistrală, acesta va apela funcțiile <code>my_register_driver</code> și <code>my_unregister_driver</code> pentru a se asocia cu aceasta.
+</p>
+
+<p>
+Pentru utilizare (în implementarea driver-ului), trebuie declarată o structură de tipul celei exportate, inițializată și înregistrată cu metoda exportata de magistrală:
+</p>
+<pre class="code c"><span class="coMULTI">/* mydriver.c */</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> my_driver mydriver <span class="sy0">=</span> <span class="br0">&#123;</span>
+	.<span class="me1">module</span> <span class="sy0">=</span> THIS_MODULE<span class="sy0">,</span>
+	.<span class="me1">driver</span> <span class="sy0">=</span> <span class="br0">&#123;</span>
+		.<span class="me1">name</span> <span class="sy0">=</span> <span class="st0">&quot;mydriver&quot;</span><span class="sy0">,</span>
+	<span class="br0">&#125;</span><span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+<span class="co1">//...</span>
+&nbsp;
+<span class="co1">//register</span>
+<span class="kw4">int</span> err<span class="sy0">;</span>
+err <span class="sy0">=</span> my_register_driver<span class="br0">&#40;</span><span class="sy0">&amp;</span>mydriver<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>err <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+	<span class="coMULTI">/*handle error */</span>
+<span class="br0">&#125;</span>
+<span class="co1">//..</span>
+&nbsp;
+<span class="co1">//unregister</span>
+my_unregister_driver<span class="br0">&#40;</span><span class="sy0">&amp;</span>mydriver<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h4 id="clase">Clase</h4>
+<div class="level4">
+
+<p>
+O clasă este o vedere de nivel înalt asupra <code>Linux Device Model</code>, care abstractizează detaliile de implementare. Spre exemplu, există drivere pentru discurile <code>SCSI</code> și drivere pentru discurile <code>ATA</code>, dar toate aparțin clasei discuri. Clasele asigură o grupare a dispozitivelor bazată pe funcționalitate, nu pe modul în care sunt conectate sau cum funcționează. Clasele au corespondent în <code>/sys/classes</code>.
+</p>
+
+<p>
+Există doua structuri principale care descriu clasele: <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319"  rel="nofollow"> struct class</a> și <a href="http://lxr.free-electrons.com/source/include/linux/device.h#L722" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h#L722"  rel="nofollow"> struct device</a>. Structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319"  rel="nofollow"> class</a> descrie o clasa generică, în timp ce structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h#L722" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h#L722"  rel="nofollow"> struct device</a> descrie o clasă asociată unui dispozitiv. Există funcții pentru inițializare/deinițializare și adăugare de atribute pentru fiecare dintre acestea, descrise în <code>include/linux/device.h</code>.
+</p>
+
+<p>
+Avantajul folosirii claselor este că programul udev din userspace, despre care vom discuta în continuare, permite crearea automată a dispozitivelor în directorul <code>/dev</code> pe baza informațiilor clasei.
+</p>
+
+<p>
+Din acest motiv, vom prezenta în continuare un set restrâns de funcții care lucrează cu clasele pentru a simplifica folosirea mecanismului de plug and play.
+</p>
+
+<p>
+O clasă generică este descrisă de structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319"  rel="nofollow"> struct class</a>:
+</p>
+<pre class="code c"><span class="kw4">struct</span> class <span class="br0">&#123;</span>
+         <span class="kw4">const</span> <span class="kw4">char</span>              <span class="sy0">*</span>name<span class="sy0">;</span>
+         <span class="kw4">struct</span> module           <span class="sy0">*</span>owner<span class="sy0">;</span>
+         <span class="kw4">struct</span> kobject          <span class="sy0">*</span>dev_kobj<span class="sy0">;</span>
+&nbsp;
+         <span class="kw4">struct</span> subsys_private   <span class="sy0">*</span>p<span class="sy0">;</span>
+&nbsp;
+         <span class="kw4">struct</span> class_attribute          <span class="sy0">*</span>class_attrs<span class="sy0">;</span>
+         <span class="kw4">struct</span> class_device_attribute   <span class="sy0">*</span>class_dev_attrs<span class="sy0">;</span>
+         <span class="kw4">struct</span> device_attribute         <span class="sy0">*</span>dev_attrs<span class="sy0">;</span>
+&nbsp;
+         <span class="kw4">int</span>     <span class="br0">&#40;</span><span class="sy0">*</span>dev_uevent<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span>dev<span class="sy0">,</span> <span class="kw4">struct</span> kobj_uevent_env <span class="sy0">*</span>env<span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw4">void</span>    <span class="br0">&#40;</span><span class="sy0">*</span>class_release<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> class <span class="sy0">*</span>class<span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="kw4">void</span>    <span class="br0">&#40;</span><span class="sy0">*</span>dev_release<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="kw4">struct</span> device <span class="sy0">*</span>dev<span class="br0">&#41;</span><span class="sy0">;</span>
+         <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Pentru inițializare/deinițializare există funcțiile <a href="http://lxr.free-electrons.com/source/include/linux/device.h#L389" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h#L389"  rel="nofollow"> class_register</a> și <a href="http://lxr.free-electrons.com/source/drivers/base/class.c#L211" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/class.c#L211"  rel="nofollow"> class_unregister</a>:
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Afișați cod
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Ascundeți cod
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody"><pre class="code c"><span class="kw4">static</span> <span class="kw4">struct</span> class my_class <span class="sy0">=</span> <span class="br0">&#123;</span>
+        .<span class="me1">name</span> <span class="sy0">=</span> <span class="st0">&quot;myclass&quot;</span><span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> __init my_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        <span class="kw4">int</span> err<span class="sy0">;</span>
+        <span class="co1">//...</span>
+        err <span class="sy0">=</span> class_register<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_class<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>err <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                <span class="coMULTI">/* handle error */</span>
+        <span class="br0">&#125;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> __exit my_cleanup <span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span> 
+<span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        class_unregister<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_class<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+</div></div>
+<p>
+<br/>
+
+</p>
+
+<p>
+O clasă asociată unui dispozitiv este descrisă de structura <a href="http://lxr.free-electrons.com/source/include/linux/device.h#L722" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h#L722"  rel="nofollow"> device</a>. Pentru inițializare/deinițializare există funcțiile <a href="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.13#L1662" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.13#L1662"  rel="nofollow"> device_create</a> și <a href="http://lxr.free-electrons.com/source/drivers/base/core.c#L1754" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/core.c#L1754"  rel="nofollow"> device destroy</a>. Funcția <a href="http://lxr.free-electrons.com/source/drivers/base/core.c#L1689" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/core.c#L1689"  rel="nofollow"> device_create</a> inițializează stuctura <a href="http://lxr.free-electrons.com/source/include/linux/device.h#L722" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h#L722"  rel="nofollow"> device</a>, îi asociază structura generică <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319"  rel="nofollow"> class</a> și dispozitivul primit ca parametru; în plus, va crea un atribut al clasei, <code>dev</code>, care conține minorul și majorul dispozitivului (<code>minor:major</code>). Astfel, utilitarul <code>udev</code> din usermode poate citi datele necesare din acest fișier atribut pentru a crea un nod în directorul <code>/dev</code> apelând <code>makenod</code>.
+</p>
+
+<p>
+Un exemplu de inițializare:
+</p>
+<pre class="code c"><span class="kw4">struct</span> device<span class="sy0">*</span> my_classdev<span class="sy0">;</span>
+<span class="kw4">struct</span> cdev cdev<span class="sy0">;</span>
+<span class="kw4">struct</span> device dev<span class="sy0">;</span>
+&nbsp;
+<span class="co1">//init class for device cdev.dev</span>
+my_classdev <span class="sy0">=</span> device_create<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_class<span class="sy0">,</span> NULL<span class="sy0">,</span> cdev.<span class="me1">dev</span><span class="sy0">,</span> <span class="sy0">&amp;</span>dev<span class="sy0">,</span> <span class="st0">&quot;myclass0&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="co1">//destroy class for device cdev.dev</span>
+device_destroy<span class="br0">&#40;</span><span class="sy0">&amp;</span>my_class<span class="sy0">,</span> cdev.<span class="me1">dev</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+În momentul în care un nou dispozitiv va fi descoperit, i se va asocia o clasă și un nod în directorul <code>/dev</code>. Pentru exemplul de mai sus, se va genera un nod <code>/dev/myclass0</code>.
+</p>
+
+</div>
+
+<h2 class="sectionedit9" id="hotplug">Hotplug</h2>
+<div class="level2">
+
+<p>
+<code>Hotplug</code> descrie mecanismul de adăugare sau eliminare a unui dispozitiv din sistem în timp ce acesta rulează, fără a fi necesară repornirea sistemului.
+</p>
+
+<p>
+Un eveniment <code>hotplug</code> este o notificare din partea kernel-ului către user-space atunci când se modifică ceva în configurația sistemului. Aceste evenimente sunt generate la crearea sau eliminarea unui obiect kobject din kernel. Întrucât aceste obiecte stau la baza <code>Linux Device Model</code>, fiind incluse în toate structurile (<a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L61" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L61"  rel="nofollow"> struct bus_type</a>, <a href="http://lxr.free-electrons.com/source/include/linux/device.h#L722" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h#L722"  rel="nofollow"> struct device</a>, <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L194" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L194"  rel="nofollow"> struct device_driver</a>, <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L319"  rel="nofollow"> struct class</a>, etc.), se va genera un eveniment <code>hotplug</code> la crearea sau eliminarea oricăreia dintre aceste structuri (<code>uevent</code>).
+În momentul în care un dispozitiv este descoperit în sistem, se generează un eveniment. În funcție de punctul în care se află în <code>Linux Device Model</code>, se vor apela funcțiile corespunzătoare apariției unui eveniment (de obicei, este cazul funcției <code>uevent</code> a magistralei sau clasei). Driverul are posibilitatea, prin intermediul acestor funcții, să seteze variabile de sistem pentru user-space. Evenimentul generat ajunge în user-space apoi. Aici există utilitarul <code>udev</code>, care capturează aceste evenimente. În directorul <code>/etc/udev/</code> există fișierele de configurare pentru acest utilitar. Se pot specifica diferite reguli pentru a captura numai anumite evenimente și a executa anumite acțiuni, în funcție de variabilele de sistem setate din kernel sau în funcțiile <code>uevent</code>.
+</p>
+
+<p>
+O consecință importantă este că în acest mod se poate realiza mecanismul <code>plug and play</code>; cu ajutorul lui <code>udev</code> si a claselor, descrise anterior, se pot crea automat intrările în directorul <code>/dev</code> pentru dispozitive, iar cu ajutorul <code>udev</code> se pot încărca automat driverele necesare pentru un dispozitiv. În acest fel, întreg procesul este automatizat.
+</p>
+
+<p>
+Regulile pentru <code>udev</code> sunt localizate în <code>/etc/udev/rules.d</code>. Orice fișier de aici care se termină cu .conf va fi parsat la apariția unui eveniment. Pentru mai multe detalii despre cum se scriu regulile în aceste fișiere consultați <a href="http://www.reactivated.net/writing_udev_rules.html" class="urlextern" title="http://www.reactivated.net/writing_udev_rules.html"  rel="nofollow"> Writing udev rules</a>. Pentru testare, există utilitarele <code>udevmonitor</code>, <code>udevinfo</code> și <code>udevtest</code>.
+</p>
+
+<p>
+Pentru un scurt exemplu, sa consideram situația în care dorim sa încarcăm automat un driver pentru un dispozitiv în momentul apariției unui eveniment. Putem crea un nou fișier <code>/etc/udev/rules.d/myrules.rules</code>, în care vom avea următoarea linie:
+</p>
+<pre class="code bash"><span class="re2">SUBSYSTEM</span>==<span class="st0">&quot;pnp&quot;</span>, ATTRS<span class="br0">&#123;</span><span class="kw2">id</span><span class="br0">&#125;</span>==<span class="st0">&quot;PNP0400&quot;</span>, RUN+=<span class="st0">&quot;/sbin/insmod /root/mydriver.ko&quot;</span></pre>
+
+<p>
+Astfel, se vor alege dintre evenimentele generate doar cele care aparțin subsistemului <code>pnp</code> (sunt conectate la magistrala PNP) și au un atribut id cu valoarea <code>PNP0400</code>. În momentul în care se va găsi această regulă, se va executa comanda ce inserează driverul corespunzător în kernel.
+</p>
+
+</div>
+
+<h2 class="sectionedit10" id="plug_and_play">Plug and Play</h2>
+<div class="level2">
+
+<p>
+După cum s-a specificat mai sus, în <code>Linux Device Model</code> toate dispozitivele sunt conectate printr-o magistrală, chiar dacă are corespondent fizic hardware sau este virtuală.
+</p>
+
+<p>
+În kernel, există deja implementate majoritatea magistralelor prin definirea unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L102"  rel="nofollow"> bus_type</a> și a funcțiilor de înregistrare/deînregistrare a driverelor și dispozitivelor asociate. Pentru implementarea unui driver trebuie determinată magistrala la care se atașează dispozitivele suportate și trebuie folosite funcțiile și structurile acesteia. Principalele magistrale sunt <a href="http://lxr.free-electrons.com/source/drivers/pci/pci-driver.c?v=3.11" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/pci/pci-driver.c?v=3.11"  rel="nofollow"> PCI</a>, <a href="http://lxr.free-electrons.com/source/drivers/usb/core/driver.c?v=3.11" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/usb/core/driver.c?v=3.11"  rel="nofollow"> USB</a>, <a href="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11"  rel="nofollow"> PNP</a>, <a href="http://lxr.free-electrons.com/source/drivers/ide/ide.c?v=3.11" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/ide/ide.c?v=3.11"  rel="nofollow"> IDE</a>, <a href="http://lxr.free-electrons.com/source/drivers/scsi/scsi_sysfs.c?v=3.11" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/scsi/scsi_sysfs.c?v=3.11"  rel="nofollow"> SCSI</a>, <a href="http://lxr.free-electrons.com/source/drivers/base/platform.c?v=3.11" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/platform.c?v=3.11"  rel="nofollow"> platform</a>, <a href="http://lxr.free-electrons.com/source/drivers/acpi/scan.c?v=3.11" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/acpi/scan.c?v=3.11"  rel="nofollow"> ACPI</a>, etc.
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="magistrala_pnp">Magistrala PNP</h3>
+<div class="level3">
+
+<p>
+Mecanismul plug and play oferă un mijloc de detectarea și setare a resurselor pentru drivere legacy sau care nu pot fi configurate în alt mod. Toate driverele plug and play, protocoalele, serviciile au la bază nivelul <code>Plug and Play</code>. Acesta este responsabil cu schimbul de informație între drivere și protocoale. Următoarele protocoale sunt disponibile:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>PNPBIOS</strong> - folosite pentru sisteme cum ar fi porturile seriale și paralele</div>
+</li>
+<li class="level1"><div class="li"> <strong>ISAPNP</strong> - oferă suport pentru magistrala ISA</div>
+</li>
+<li class="level1"><div class="li"> <strong>ACPI</strong> - care oferă, printre altele, informații despre dispozitivele la nivel de sistem</div>
+</li>
+</ul>
+
+<p>
+În kernel există o magistrala <code>pnp_bus</code>, care este folosită pentru conectare de multe drivere. Implementarea și modul de lucru cu această magistrală respectă modelul <code>Linux Device Model</code> și este foarte asemănatoare cu ce s-a prezentat până acum.
+</p>
+
+<p>
+Principalele funcții și structuri exportate de această magistrală, și care pot fi folosite de către drivere sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370"  rel="nofollow"> pnp_driver</a>, tipul de driver asociat magistralei</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11#L224" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11#L224"  rel="nofollow"> pnp_register_driver</a>, pentru a înregistra un driver pnp în sistem</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11#L232" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11#L232"  rel="nofollow"> pnp_unregister_driver</a>, pentru a deînregistra un driver pnp din sistem</div>
+</li>
+</ul>
+
+<p>
+După cum am observat în secțiunile anterioare, magistrala are o funcție <code>match</code> cu ajutorul căreia asociaza dispozitive cu driverele corespunzătoare. Spre exemplu, în cazul descoperirii unui dispozitiv, se va căuta driver-ul care îndeplinește condiția dată de această funcție relativă la dispozitiv. De obicei, această condiție reprezintă o comparație de id-uri ale driverului și dispozitivului. Un mecanism răspândit este folosirea unei tabele statice în fiecare driver, ce conține informații despre dispozitivele suportate de driver și vor fi folosite de magistrală la comparație. Spre exemplu, pentru un driver de port paralel vom avea tabela <code>parport_pc_pnp_tbl</code>:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">const</span> <span class="kw4">struct</span> pnp_device_id parport_pc_pnp_tbl<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span>
+         <span class="coMULTI">/* Standard LPT Printer Port */</span>
+         <span class="br0">&#123;</span>.<span class="me1">id</span> <span class="sy0">=</span> <span class="st0">&quot;PNP0400&quot;</span><span class="sy0">,</span> .<span class="me1">driver_data</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">,</span>
+         <span class="coMULTI">/* ECP Printer Port */</span>
+         <span class="br0">&#123;</span>.<span class="me1">id</span> <span class="sy0">=</span> <span class="st0">&quot;PNP0401&quot;</span><span class="sy0">,</span> .<span class="me1">driver_data</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+MODULE_DEVICE_TABLE<span class="br0">&#40;</span>pnp<span class="sy0">,</span>parport_pc_pnp_tbl<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Se declară și inițializează o structură <a href="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370"  rel="nofollow"> pnp_driver</a>, cum ar fi <code>parport_pc_pnp_driver</code>:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">int</span> parport_pc_pnp_probe <span class="br0">&#40;</span><span class="kw4">struct</span> pnp_dev <span class="sy0">*</span> dev<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">struct</span> pnp_id <span class="sy0">*</span>card_id<span class="sy0">,</span> 
+                                                      <span class="kw4">const</span> <span class="kw4">struct</span> pnp_id <span class="sy0">*</span>dev_id<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">static</span> <span class="kw4">void</span> parport_pc_pnp_remove<span class="br0">&#40;</span><span class="kw4">struct</span> pnp_dev <span class="sy0">*</span> dev<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> pnp_driver parport_pc_pnp_driver <span class="sy0">=</span> <span class="br0">&#123;</span>
+         .<span class="me1">name</span>           <span class="sy0">=</span> <span class="st0">&quot;parport_pc&quot;</span><span class="sy0">,</span>
+         .<span class="me1">id_table</span>       <span class="sy0">=</span> parport_pc_pnp_tbl<span class="sy0">,</span>
+         .<span class="me1">probe</span>          <span class="sy0">=</span> parport_pc_pnp_probe<span class="sy0">,</span>
+         .<a href="http://www.opengroup.org/onlinepubs/009695399/functions/remove.html"><span class="kw3">remove</span></a>         <span class="sy0">=</span> parport_pc_pnp_remove<span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+După cum se poate observa, structura are ca parametri un pointer către tabela declarată mai sus două funcții care se apelează la detectarea unui dispozitiv, respectiv la eliminarea lui din sistem. La fel ca toate structurile prezentate, driver-ul trebuie înregistrat în sistem:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">int</span> __init parport_pc_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        err <span class="sy0">=</span> pnp_register_driver <span class="br0">&#40;</span><span class="sy0">&amp;</span>parport_pc_pnp_driver<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>err <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                <span class="coMULTI">/* handle error */</span>
+        <span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> __exit parport_pc_exit<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        pnp_unregister_driver <span class="br0">&#40;</span><span class="sy0">&amp;</span>parport_pc_pnp_driver<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit12" id="operatii_pnp">Operații PNP</h3>
+<div class="level3">
+
+<p>
+Până acum am discutat despre modelul <code>Linux Device Model</code> și <abbr title="Application Programming Interface">API</abbr>-ul folosit. Pentru a implementa un driver plug and play, trebuie respectat modelul <code>Linux Device Model</code>.
+</p>
+
+<p>
+De cele mai multe ori, adăugarea unei magistrale în kernel nu este necesară (bus), întrucât deja sunt implementate majoritatea magistralelor (<code>PCI</code>, <code>USB</code>, etc.). Astfel, mai întâi trebuie identificată magistrala la care se atașează dispozitivul. În exemplele de mai jos, vom considera că această magistrală este magistrala <code>PNP</code>. Astfel, se vor folosi structurile și funcțiile prezentate mai sus.
+</p>
+
+<p>
+<a href="../../_detail/so2/laboratoare/laboratoare-plug_and_play-linux_device_model_operations.png%3Fid=so2%253Alaboratoare%253Alab12.html" class="media" title="so2:laboratoare:laboratoare-plug_and_play-linux_device_model_operations.png"><img src="../../_media/so2/laboratoare/laboratoare-plug_and_play-linux_device_model_operations.png" class="mediacenter" alt="" /></a>
+</p>
+
+</div>
+
+<h4 id="adaugare_driver">Adăugare driver</h4>
+<div class="level4">
+
+<p>
+Pe lângă operațiile uzuale, un driver trebuie să respecte modelul <code>Linux Device Model</code>. Astfel, se va înregistra în sistem folosind funcțiile puse la dispoziție de magistrală în acest scop. De obicei, magistrala pune la dispoziție o structură particulară de driver, ce conține o structură <a href="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L225" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/device.h?v=3.11#L225"  rel="nofollow"> device_driver</a>, pe care driverul trebuie să o inițializeze și să o înregistreze cu o funcție <code>*_register_driver</code>. Spre exemplu, pentru magistrala <code>PNP</code>, driverul trebuie să declare și să inițializeze o structură de tipul <a href="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370"  rel="nofollow"> pnp_driver</a>, pe care să o înregistreze cu <a href="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11#L224" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11#L224"  rel="nofollow"> pnp_register_driver</a>:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">struct</span> pnp_driver my_pnp_driver <span class="sy0">=</span> <span class="br0">&#123;</span>
+         .<span class="me1">name</span>           <span class="sy0">=</span> <span class="st0">&quot;mydriver&quot;</span><span class="sy0">,</span>
+         .<span class="me1">id_table</span>       <span class="sy0">=</span> my_pnp_tbl<span class="sy0">,</span>
+         .<span class="me1">probe</span>          <span class="sy0">=</span> my_pnp_probe<span class="sy0">,</span>
+         .<a href="http://www.opengroup.org/onlinepubs/009695399/functions/remove.html"><span class="kw3">remove</span></a>         <span class="sy0">=</span> my_pnp_remove<span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> __init my_init<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        err <span class="sy0">=</span> pnp_register_driver <span class="br0">&#40;</span><span class="sy0">&amp;</span>my_pnp_driver<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Spre deosebire de driverele legacy, driverele plug and play nu înregistrează dispozitivele la inițializare, în funcția <code>my_init</code> (<code>register_device</code>).
+După cum s-a descris mai sus, fiecare magistrală are o funcție <code>match</code> care se apelează la detectarea unui dispozitv pentru a determina driverul asociat acestuia. Prin urmare, trebuie să existe o modalitate ca fiecare driver să exporte informații despre ce dispozitive suportă, pentru a putea trece de această comparație și pentru a fi apelate funcțiile sale. În exemplele prezentate în laborator, se face o simplă comparație între numele dispozitivului și numele driver-ului. Cele mai multe drivere folosesc o tabelă cu informații despre dispozitiv, pentru care au un pointer în structura driver-ului. Spre exemplu, un driver asociat cu o magistrală <code>PNP</code>, declară o tabelă de tipul <a href="http://lxr.free-electrons.com/source/include/linux/mod_devicetable.h?v=3.11#L197" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/mod_devicetable.h?v=3.11#L197"  rel="nofollow"> pnp_device_id</a>, și inițializează câmpul <code>id_table</code> din structura <a href="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370"  rel="nofollow"> pnp_driver</a> cu un pointer către aceasta:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">const</span> <span class="kw4">struct</span> pnp_device_id my_pnp_tbl<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span>
+         <span class="coMULTI">/* Standard LPT Printer Port */</span>
+         <span class="br0">&#123;</span>.<span class="me1">id</span> <span class="sy0">=</span> <span class="st0">&quot;PNP0400&quot;</span><span class="sy0">,</span> .<span class="me1">driver_data</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">,</span>
+         <span class="coMULTI">/* ECP Printer Port */</span>
+         <span class="br0">&#123;</span>.<span class="me1">id</span> <span class="sy0">=</span> <span class="st0">&quot;PNP0401&quot;</span><span class="sy0">,</span> .<span class="me1">driver_data</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">,</span>
+         <span class="br0">&#123;</span> <span class="br0">&#125;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+MODULE_DEVICE_TABLE<span class="br0">&#40;</span>pnp<span class="sy0">,</span>my_pnp_tbl<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> pnp_driver my_pnp_driver <span class="sy0">=</span> <span class="br0">&#123;</span>
+         <span class="co1">//...</span>
+         .<span class="me1">id_table</span>       <span class="sy0">=</span> my_pnp_tbl<span class="sy0">,</span>
+         <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+În exemplul de mai sus driver-ul suportă operații pentru portul paralel. Aceaste informații sunt folosite de magistrală, în funcția <code>match_device</code>. La adăugarea unui driver, se va asocia driverul magistralei și se vor crea intrări în <code>sysfs</code> bazate pe numele driver-ului. Apoi se va apela funcția <code>match</code> a magistralei pentru toate dispozitivele asociate, pentru a asocia driver-ul cu orice dispozitiv conectat pe care îl suportă.
+</p>
+
+</div>
+
+<h4 id="eliminare_driver">Eliminare driver</h4>
+<div class="level4">
+
+<p>
+Pentru a elimina un driver din kernel, pe lângă operațiile necesare unui driver legacy, trebuie deînregistrată structura device_driver. În cazul unui driver pentru un dispozitiv asociat magistralei <code>PNP</code>, trebuie deînregistrată structura <a href="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370"  rel="nofollow"> pnp_driver</a> cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11#L232" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/pnp/driver.c?v=3.11#L232"  rel="nofollow"> pnp_unregister_driver</a>:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">struct</span> pnp_driver my_pnp_driver<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> __exit my_exit<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+        pnp_unregister_driver <span class="br0">&#40;</span><span class="sy0">&amp;</span>my_pnp_driver<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Spre deosebire de driverele legacy, driverele plug and play nu deînregistrează dispozitivele la deînregistrarea driver-ului, în funcția <code>my_exit</code> (unregister_device). La eliminarea unui driver, se vor elimina toate referințele către el pentru toate dispozitivele pe care le suportă și se vor șterge intrările din <code>sysfs</code>.
+</p>
+
+</div>
+
+<h4 id="adaugare_dispozitiv">Adăugare dispozitiv</h4>
+<div class="level4">
+
+<p>
+Dupa cum am văzut mai sus, driverele plug and play nu înregistrează dispozitivele la inițializare. Această operație se va realiza în funcția <code>probe</code>, care se va apela la detectarea unui dispozitiv. În cazul unui driver pentru un dispozitiv atașat la magistrala <code>PNP</code>, adăugarea se va realiza în funcția <code>probe</code> din structura <a href="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370"  rel="nofollow"> pnp_driver</a>:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">int</span> my_pnp_probe <span class="br0">&#40;</span><span class="kw4">struct</span> pnp_dev <span class="sy0">*</span> dev<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">struct</span> pnp_id <span class="sy0">*</span>card_id<span class="sy0">,</span> 
+                                                      <span class="kw4">const</span> <span class="kw4">struct</span> pnp_id <span class="sy0">*</span>dev_id<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw4">int</span> err<span class="sy0">,</span> iobase<span class="sy0">,</span> nr_ports<span class="sy0">,</span> irq<span class="sy0">;</span>	
+&nbsp;
+        <span class="co1">//get irq &amp; ports</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>pnp_irq_valid<span class="br0">&#40;</span>dev<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span>    
+                irq <span class="sy0">=</span> pnp_irq<span class="br0">&#40;</span>dev<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>pnp_port_valid<span class="br0">&#40;</span>dev<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                iobase <span class="sy0">=</span> pnp_port_start<span class="br0">&#40;</span>dev<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span> <span class="kw1">else</span>
+                <span class="kw1">return</span> <span class="sy0">-</span>ENODEV<span class="sy0">;</span>
+        nr_ports <span class="sy0">=</span> pnp_port_len<span class="br0">&#40;</span>dev<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="coMULTI">/* register device dev */</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> pnp_driver my_pnp_driver <span class="sy0">=</span> <span class="br0">&#123;</span>
+         <span class="co1">//...</span>
+         .<span class="me1">probe</span>          <span class="sy0">=</span> my_pnp_probe<span class="sy0">,</span>
+         <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+La detectarea unui dispozitiv în kernel (în procesul de boot sau la adăugarea dispozitivului prin <code>hotplug</code>), se transmite o întrerupere în sistem care ajunge la magistrală. Dispozitivul este înregistrat cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L1209" class="urlextern" title="http://lxr.free-electrons.com/source/drivers/base/core.c?v=3.11#L1209"  rel="nofollow"> device_register</a> și este atașat magistralei (și se va genera un apel în userspace, care poate fi detectat de <code>udev</code>). Apoi se va parcurge lista de drivere a magistralei și se va apela funcția <code>match</code> pentru fiecare dintre ele. Funcția <code>match</code> încearcă să asocieze un driver cu un dispozitiv. După ce a fost determinat driverul asociat dispozitivului, se va apela funcția <code>probe</code> a driver-ului. Dacă funcția se termină cu succes, dispozitivul este adăugat în lista de dispozitive a driver-ului și se creează intrările corespunzătoare în <code>sysfs</code> bazate pe numele dispozitivului.
+</p>
+
+</div>
+
+<h4 id="eliminare_dispozitiv">Eliminare dispozitiv</h4>
+<div class="level4">
+
+<p>
+Dupa cum am văzut mai sus, driverele plug and play nu deînregistrează dispozitivele la deînregistrarea driver-ului. Această operație se va realiza în funcția <code>remove</code>, care se va apela la detectarea eliminării unui dispozitiv din kernel. În cazul unui driver pentru un dispozitiv atașat la magistrala <code>PNP</code>, adăugarea se va realiza în funcția <code>remove</code> din structura <a href="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/pnp.h?v=3.11#L370"  rel="nofollow"> pnp_driver</a>:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">void</span> my_pnp_remove<span class="br0">&#40;</span><span class="kw4">struct</span> pnp_dev <span class="sy0">*</span> dev<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+         <span class="coMULTI">/* unregister device dev */</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">struct</span> pnp_driver my_pnp_driver <span class="sy0">=</span> <span class="br0">&#123;</span>
+         <span class="co1">//...</span>
+         .<a href="http://www.opengroup.org/onlinepubs/009695399/functions/remove.html"><span class="kw3">remove</span></a>         <span class="sy0">=</span> my_pnp_remove<span class="sy0">,</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+După cum se poate observa, la detectarea eliminării unui dispozitiv din sistem, se va apela funcția remove a driver-ului, se va genera un apel în user-space, ce poate fi detectat de <code>udev</code> și se vor elimina intrările din <code>sysfs</code>.
+</p>
+
+</div>
+
+<h2 class="sectionedit13" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Linux Device Drivers, 3rd edition – <a href="http://lwn.net/images/pdf/LDD3/ch14.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch14.pdf"  rel="nofollow"> Chapter 14. – The Linux Device Model</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.tldp.org/HOWTO/Plug-and-Play-HOWTO-2.html" class="urlextern" title="http://www.tldp.org/HOWTO/Plug-and-Play-HOWTO-2.html"  rel="nofollow"> Plug and Play HOWTO</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.reactivated.net/writing_udev_rules.html" class="urlextern" title="http://www.reactivated.net/writing_udev_rules.html"  rel="nofollow"> Writing udev rules</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.kernel.org/doc/Documentation/" class="urlextern" title="https://www.kernel.org/doc/Documentation/"  rel="nofollow"> Linux Kernel Documentation</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="https://www.kernel.org/doc/Documentation/driver-model/" class="urlextern" title="https://www.kernel.org/doc/Documentation/driver-model/"  rel="nofollow"> Driver model</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.kernel.org/doc/Documentation/kobject.txt" class="urlextern" title="https://www.kernel.org/doc/Documentation/kobject.txt"  rel="nofollow"> Kobject</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.kernel.org/doc/Documentation/pnp.txt" class="urlextern" title="https://www.kernel.org/doc/Documentation/pnp.txt"  rel="nofollow"> Plug and Play</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.kernel.org/doc/Documentation/usb/hotplug.txt" class="urlextern" title="https://www.kernel.org/doc/Documentation/usb/hotplug.txt"  rel="nofollow"> USB Hotplug</a></div>
+</li>
+<li class="level2"><div class="li"> <a href="https://www.kernel.org/doc/Documentation/filesystems/sysfs.txt" class="urlextern" title="https://www.kernel.org/doc/Documentation/filesystems/sysfs.txt"  rel="nofollow"> Sysfs</a></div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_15546996258355b5feddf2" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_137265658158355b5ff0ccf" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></span></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_5652917558355b5ff3bac" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab12.html#laborator_12_-_linux_device_model_plug_and_play">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab12.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab12.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab12.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab12.html#notiuni_teoretice">Noțiuni teoretice</a></div></li>
+<li class="level2"><div class="li"><a href="lab12.html#linux_device_model">Linux Device Model</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab12.html#sysfs">sysfs</a></div></li>
+<li class="level3"><div class="li"><a href="lab12.html#structuri_de_baza_in_dispozitivele_linux">Structuri de bază în dispozitivele Linux</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab12.html#structura_kobject">Structura kobject</a></div></li>
+<li class="level4"><div class="li"><a href="lab12.html#magistrale">Magistrale</a></div></li>
+<li class="level4"><div class="li"><a href="lab12.html#dispozitive">Dispozitive</a></div></li>
+<li class="level4"><div class="li"><a href="lab12.html#drivere">Drivere</a></div></li>
+<li class="level4"><div class="li"><a href="lab12.html#clase">Clase</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab12.html#hotplug">Hotplug</a></div></li>
+<li class="level2"><div class="li"><a href="lab12.html#plug_and_play">Plug and Play</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab12.html#magistrala_pnp">Magistrala PNP</a></div></li>
+<li class="level3"><div class="li"><a href="lab12.html#operatii_pnp">Operații PNP</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab12.html#adaugare_driver">Adăugare driver</a></div></li>
+<li class="level4"><div class="li"><a href="lab12.html#eliminare_driver">Eliminare driver</a></div></li>
+<li class="level4"><div class="li"><a href="lab12.html#adaugare_dispozitiv">Adăugare dispozitiv</a></div></li>
+<li class="level4"><div class="li"><a href="lab12.html#eliminare_dispozitiv">Eliminare dispozitiv</a></div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab12.html#resurse_utile">Resurse utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/laboratoare/lab12.txt · Last modified: 2016/05/18 15:28 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab12%3Fdo=media&amp;ns=so2%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab12.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Alaboratoare%253Alab12&amp;1479891808" width="2" height="1" alt="" /></div>
+</body>
+</html>

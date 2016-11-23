@@ -1,0 +1,165 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:05:contents:08</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-08T15:49:05+0200"/>
+<meta name="keywords" content="rl,labs,05,contents,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:05:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="08.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/05/contents/08.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:05:contents';var JSINFO = {"id":"rl:labs:05:contents:08","namespace":"rl:labs:05:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_depanare_probleme_de_configurare_a_rutarii">08. [10p] Depanare probleme de configurare a rutării</h3>
+<div class="level3">
+
+<p>
+În topologia de la <a href="../../../../../../_media/rl/labs/05/contents/rl_lab-05_depanare.pkt" class="media mediafile mf_pkt" title="rl:labs:05:contents:rl_lab-05_depanare.pkt (9.2 KB)">această adresă</a> se află două rețele interconectate prin trei rutere cascadate. Există câteva probleme în cadrul toplogiei pe care ne propunem să le rezolvăm.
+</p>
+
+<p>
+Pentru început, aflați adresele stațiilor și a interfețelor ruterelor glisând mouse-ul (<em>hover</em>) peste fiecare dispozitiv. Din tab-ul <code>Desktop</code> și opțiunea <code>Command prompt</code> (pe stații) sau din consolă (pe rutere) folosiți <code>ping</code> pentru a verifica unde există conectivitate.
+</p>
+
+<p>
+De pe stația <code>PC0</code> verificați conectivitatea la stația <code>PC2</code>, adică adresa IP <code>15.15.15.2</code>. Comanda <code>ping</code> oferă răspunsul <code>Destination host unreachable.</code> deci există o problemă pe parcurs.
+</p>
+
+<p>
+De pe stația <code>PC0</code> verificați conectivitatea la ruterul <code>Router2</code>, adică adresa IP <code>30.30.30.38</code>. Comanda <code>ping</code> nu reușește. Înseamnă că există o problemă la un ruter pe parcurs.
+</p>
+
+<p>
+Afișați tabela de rutare a ruterului <code>Router0</code>, folosind comanda <code>show ip route</code>:
+</p>
+<pre class="code">Router0#show ip route
+[...]
+     14.0.0.0/24 is subnetted, 1 subnets
+C       14.14.14.0 is directly connected, FastEthernet0/0
+     30.0.0.0/30 is subnetted, 2 subnets
+C       30.30.30.32 is directly connected, FastEthernet1/0
+S       30.30.30.36 [1/0] via 30.30.30.34</pre>
+
+<p>
+Observați că ruterul <code>Router0</code> nu are rută către rețeaua <code>15.15.15.0/24</code>, rețea care conține stațiile <code>PC2</code> și <code>PC3</code>. Adăugați ruta corespunzătoare din meniul de configurare:
+</p>
+<pre class="code">Router0#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router0(config)#ip route 15.15.15.0 255.255.255.0 30.30.30.34</pre>
+
+<p>
+Pe stația <code>PC0</code> folosiți <code>ping</code> pentru a verifica acum conectivitatea la stația <code>PC2</code> (adresa IP <code>15.15.15.2</code>) și la stația <code>PC3</code> (<code>15.15.15.254</code>). Există conectivitate deci această problemă este rezolvată.
+</p>
+
+<p>
+Să verificăm și că ruterele au, de asemenea, conectivitate la toate celelalte rutere și la stații. De pe ruterul <code>Router0</code> verificăm conectivitatea la stația <code>PC2</code> (adresa IP <code>15.15.15.2</code>):
+</p>
+<pre class="code">Router0#ping 15.15.15.2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 15.15.15.2, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)</pre>
+
+<p>
+Observați că nu există conectivitate. Pare ciudat, pentru că stația <code>PC0</code> are conectivitate la stația <code>PC2</code> dar ruterul <code>Router0</code> nu are. În continuare, verificăm conectivitatea la ruterul <code>Router2</code> (adresele <code>15.15.15.1</code> și <code>30.30.30.38</code>) și la ruterul <code>Router1</code> (adresele <code>30.30.30.37</code> și <code>30.30.30.34</code>):
+</p>
+<pre class="code">Router0#ping 15.15.15.1 
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 15.15.15.1, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+
+Router0#ping 30.30.30.38
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 30.30.30.38, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+
+Router0#ping 30.30.30.37
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 30.30.30.37, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/4/7 ms
+
+Router0#ping 30.30.30.34
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 30.30.30.34, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 3/4/6 ms</pre>
+
+<p>
+Observați că avem conectivitate între ruterul <code>Router0</code> și ruterul <code>Router1</code> dar nu între ruterul <code>Router0</code> și ruterul <code>Router2</code>. Investigăm tabela de rutare a ruterului <code>Router1</code> și a ruterului <code>Router2</code>:
+</p>
+<pre class="code">Router1#sh ip route
+[...]
+     14.0.0.0/24 is subnetted, 1 subnets
+S       14.14.14.0 [1/0] via 30.30.30.33
+     15.0.0.0/24 is subnetted, 1 subnets
+S       15.15.15.0 [1/0] via 30.30.30.38
+     30.0.0.0/30 is subnetted, 2 subnets
+C       30.30.30.32 is directly connected, FastEthernet1/0
+C       30.30.30.36 is directly connected, FastEthernet0/0
+
+Router2#sh ip route
+[...]
+     14.0.0.0/24 is subnetted, 1 subnets
+S       14.14.14.0 [1/0] via 30.30.30.37
+     15.0.0.0/24 is subnetted, 1 subnets
+C       15.15.15.0 is directly connected, FastEthernet1/0
+     30.0.0.0/30 is subnetted, 1 subnets
+C       30.30.30.36 is directly connected, FastEthernet0/0</pre>
+
+<p>
+Observați că ruterul <code>Router2</code> nu are rută către rețeaua <code>30.30.30.32/30</code>, rețeaua dintre ruterele <code>Router0</code> și <code>Router1</code>. Adăugați ruta corespunzătoare din meniul de configurare:
+</p>
+<pre class="code">Router2#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router2(config)#ip route 30.30.30.32 255.255.255.252 30.30.30.37</pre>
+
+<p>
+În acest moment există conectivitate între toate dispozitivele (stații și rutere) din topologie. Puteți verifica folosind comanda <code>ping</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

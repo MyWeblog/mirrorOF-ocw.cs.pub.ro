@@ -1,0 +1,589 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Tema 4 - Driver de sistem de fișiere    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-13T08:35:35+0300"/>
+<meta name="keywords" content="so2,teme,tema4"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:teme"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/teme/tema4.html"/>
+<link rel="canonical" href="tema4.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:teme';var JSINFO = {"id":"so2:teme:tema4","namespace":"so2:teme","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="tema4%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="tema4%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+
+
+<h1 class="sectionedit1" id="tema_4_-_driver_de_sistem_de_fisiere">Tema 4 - Driver de sistem de fișiere</h1>
+<div class="level1">
+
+<p>
+Termen de predare: <strong>duminică, 15 Mai 2016, ora 23:00 </strong>
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="enunt">Enunț</h2>
+<div class="level2">
+
+<p>
+Să se scrie un modul de kernel care să implementeze sistemul de fișiere <code>PITIX</code>. Acest sistem de fișiere va oferi suport doar pentru fișiere și directoare. Nu se vor implementa operațiile de suport pentru link-uri hard sau simbolice. De asemenea, nu se vor implementa operațiile de suport pentru fișiere speciale (pipe-uri, dispozitive caracter sau bloc). Practic va trebui să implementați următoarele operații:
+</p>
+<ul>
+<li class="level1"><div class="li"> pentru directoare: <code>lookup</code>, <code>unlink</code>, <code>mkdir</code>, <code>rmdir</code>, <code>iterate</code></div>
+</li>
+<li class="level1"><div class="li"> pentru fișiere: <code>create</code>, <code>truncate</code>, funcția de bitmap (vezi <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=3.13#L374" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=3.13#L374"  rel="nofollow"> minix_get_block</a>)</div>
+</li>
+</ul>
+
+<p>
+Restul funcțiilor fie au implementări generice în kernel, fie nu trebuie să le implementați. 
+</p>
+
+<p>
+Structura pe disk a sistemului de fișiere este prezentată mai jos: 
+</p>
+
+<p>
+<a href="../../lib/exe/fetch.php%3Fhash=51aabd&amp;media=http%253A%252F%252Felf.cs.pub.ro%252Fso2%252Fres%252Fteme%252Fpitix-layout.png" class="media" title="http://elf.cs.pub.ro/so2/res/teme/pitix-layout.png"><img src="../../lib/exe/fetch.php%3Fhash=51aabd&amp;media=http%253A%252F%252Felf.cs.pub.ro%252Fso2%252Fres%252Fteme%252Fpitix-layout.png" class="mediacenter" alt="" /></a>
+</p>
+
+<p>
+unde:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>Superblock</code> conține superblocul (4096 octeți)</div>
+</li>
+<li class="level1"><div class="li"> <code>Imap</code> conține harta de biți (bitmap) a blocurilor ocupate de inode-uri (1 bloc)</div>
+</li>
+<li class="level1"><div class="li"> <code>Dmap</code> conține harta de biți (bitmap) a blocurilor ocupate de date (1 bloc)</div>
+</li>
+<li class="level1"><div class="li"> <code>Izone</code> conține inode-urile (32 blocuri)</div>
+</li>
+<li class="level1"><div class="li"> <code>Dzone</code> conține datele (conținutul efectiv al fișierelor) (8*block_size blocuri)</div>
+</li>
+</ul>
+
+<p>
+Structura superblocului (<strong>pe disc</strong>) este descrisă de următoarea structură: 
+</p>
+<pre class="code cpp"><span class="kw4">struct</span> pitix_super_block <span class="br0">&#123;</span>
+        <span class="kw4">unsigned</span> <span class="kw4">long</span> magic<span class="sy4">;</span>
+        __u8 version<span class="sy4">;</span>
+        __u8 inode_data_blocks<span class="sy4">;</span>
+        __u8 block_size_bits<span class="sy4">;</span>
+        __u8 imap_block<span class="sy4">;</span>
+        __u8 dmap_block<span class="sy4">;</span>
+        __u8 izone_block<span class="sy4">;</span>
+        __u8 dzone_block<span class="sy4">;</span>
+        __u16 bfree<span class="sy4">;</span>
+        __u16 ffree<span class="sy4">;</span>
+<span class="co1">//...</span>
+<span class="br0">&#125;</span>                                                   </pre>
+
+<p>
+unde
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>magic</code> trebuie să fie inițializat cu <code>PITIX_MAGIC</code> </div>
+</li>
+<li class="level1"><div class="li"> <code>version</code> trebuie să fie inițializat cu 1 </div>
+</li>
+<li class="level1"><div class="li"> <code>inode_data_blocks</code> este numărul de blocuri de date din inode (vezi mai jos la descrierea inode-ului) </div>
+</li>
+<li class="level1"><div class="li"> <code>block_size_bits</code> este dimensiunea blocului în puteri ale lui doi; dimensiunea blocului trebuie să fie 512, 1024, 2048, sau 4096. </div>
+</li>
+<li class="level1"><div class="li"> <code>imap_block</code> este numărul blocului (relativ la dispozitiv) pentru vectorul de biți folosit pentru alocarea/eliberarea inode-urilor </div>
+</li>
+<li class="level1"><div class="li"> <code>dmap_block</code> este numărul blocului (relativ la dispozitiv) pentru vectorul de biți folosit pentru alocarea/eliberarea blocurilor de date </div>
+</li>
+<li class="level1"><div class="li"> <code>izone_block</code> este numărul primului bloc (relativ la dispozitiv) al zonei de inode-uri </div>
+</li>
+<li class="level1"><div class="li"> <code>dzone_block</code> este numărul primului bloc (relativ la dispozitiv) al zonei de date </div>
+</li>
+<li class="level1"><div class="li"> <code>bfree</code> este numărul de blocuri libere (nealocate) </div>
+</li>
+<li class="level1"><div class="li"> <code>ffree</code> este numărul de inode-uri libere (nealocate) </div>
+</li>
+</ul>
+
+<p>
+Inode-urile vor fi stocate în zona de inode-uri și sunt descrise de următoarea structură: 
+</p>
+<pre class="code cpp"><span class="kw4">struct</span> pitix_inode <span class="br0">&#123;</span>
+        __u32 mode<span class="sy4">;</span>
+        __u32 uid<span class="sy4">;</span>
+        __u32 gid<span class="sy4">;</span>
+        __u32 size<span class="sy4">;</span>
+        __u32 <span class="kw3">time</span><span class="sy4">;</span>
+        __u16 data_blocks<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span><span class="sy4">;</span></pre>
+
+<p>
+unde 
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>mode</code> reprezintă drepturile de acces și tipul inode-ului (fișier sau director) așa cum sunt reprezentate în kernel</div>
+</li>
+<li class="level1"><div class="li"> <code>uid</code> reprezintă UID-ul așa cum este el reprezentat în kernel</div>
+</li>
+<li class="level1"><div class="li"> <code>gid</code> reprezintă GID-ul așa cum este el reprezentat în kernel</div>
+</li>
+<li class="level1"><div class="li"> <code>size</code> reprezintă dimensiunea fișierului/directorului</div>
+</li>
+<li class="level1"><div class="li"> <code>time</code> reprezintă timpul de modificare așa cum este el reprezentat în kernel</div>
+</li>
+<li class="level1"><div class="li"> <code>data_blocks</code> este un vector (cu dimensiunea precizată in superbloc) care indică numerele blocurilor de date relativ la zona de date; intrările nefolosite trebuie setate pe 0 (adică dacă avem un fișier cu dimensiune 2050 și dimensiunea blocului de 1024 atunci vom avea primele trei valori din vector strict pozitive și restul 0)</div>
+<ul>
+<li class="level2"><div class="li"> Primul bloc, cel cu index 0, este tot timpul alocat când se face formatarea. Acest bloc nu va putea fi folosit și, în consecință, valoarea 0 într-un element din vectorul <code>data_blocks</code> înseamnă bloc liber.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Directoarele au asociate un singur bloc de date în care vor fi stocate intrările de director. Acestea sunt descrise de următoarea structură: 
+</p>
+<pre class="code cpp"><span class="kw4">struct</span> pitix_dir_entry <span class="br0">&#123;</span>
+        __u32 ino<span class="sy4">;</span>
+        <span class="kw4">char</span> name<span class="br0">&#91;</span>PITIX_NAME_LEN<span class="br0">&#93;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span><span class="sy4">;</span></pre>
+
+<p>
+unde 
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>ino</code> reprezintă numărul inode-ului fișierului sau directorului; acest număr este un index în zona de inode-uri </div>
+</li>
+<li class="level1"><div class="li"> <code>name</code> reprezintă numele fișierului sau al directorului; lungimea maximă a numelui este 16 octeți (<code>PITIX_NAME_LEN</code>); dacă lungimea numelui e mai mică decât 16 octeți, atunci numele va fi terminat cu caracterul <abbr title="American Standard Code for Information Interchange">ASCII</abbr> ce are codul 0 (la fel ca la șirurile de caractere) </div>
+</li>
+</ul>
+
+<p>
+Toate valorile numerice sunt stocate pe disc în CPU byte-order.
+</p>
+
+<p>
+Directorul rădăcină va avea alocat inode-ul 0 și blocul de date 0.
+</p>
+
+<p>
+Pentru simplificare, la <code>mkdir</code> nu este necesară crearea intrărilor <code>.</code> (dot)  și <code>..</code> (dot dot) în noul director; tester-ul se folosește de această presupunere.
+</p>
+
+</div>
+
+<h2 class="sectionedit3" id="precizari_linux">Precizări Linux</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Un exemplu de <a href="http://elf.cs.pub.ro/so2/res/teme/pitix.loop.gz" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/pitix.loop.gz"  rel="nofollow">imagine</a>, ce conține aceste <a href="http://elf.cs.pub.ro/so2/res/teme/pitix.files.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/pitix.files.tar.gz"  rel="nofollow">fișiere</a>.</div>
+</li>
+<li class="level1"><div class="li"> Structurile descrise le puteți găsi și în <a href="http://elf.cs.pub.ro/so2/res/teme/pitix.h" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/pitix.h"  rel="nofollow">acest fișier header</a>.</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/minix/" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/"  rel="nofollow">Sursele sistemului de fișiere minix</a> sunt un punct de plecare bun.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="testare">Testare</h2>
+<div class="level2">
+
+<p>
+Pentru simplificarea procesului de corectare al temelor, dar și pentru a reduce greșelile temelor trimise, corectarea temelor se va face automat cu ajutorul unor <a href="http://elf.cs.pub.ro/so2/res/teme/pitix-checker.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/teme/pitix-checker.zip"  rel="nofollow">teste publice</a>. Testele presupun că numele modulului de kernel este <code>pitix</code>.
+</p>
+
+<p>
+Pentru evaluarea temei, submiteți arhiva folosind interfața <a href="https://vmchecker.cs.pub.ro/ui/#SO2" class="urlextern" title="https://vmchecker.cs.pub.ro/ui/#SO2"  rel="nofollow">vmchecker</a> urmărind indicațiil de <a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">aici</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="depunctari">Depunctări</h3>
+<div class="level3">
+
+<p>
+În corectarea temei se va ține cont de următoarele criterii de depunctare:
+</p>
+<ul>
+<li class="level1"><div class="li"> -1.0 implementare incorectă a cerințelor temei</div>
+</li>
+<li class="level1"><div class="li"> -0.2 omiterea eliberării resurselor</div>
+</li>
+<li class="level1"><div class="li"> -0.0 observații</div>
+</li>
+</ul>
+
+<p>
+În cazuri excepționale (tema trece testele prin nerespectarea cerințelor) și în cazul în care tema nu trece toate testele se poate scădea mai mult decât este menționat mai sus.
+</p>
+
+<p>
+De asemenea, consultați <a href="http://elf.cs.pub.ro/so2/wiki/teme/general" class="urlextern" title="http://elf.cs.pub.ro/so2/wiki/teme/general"  rel="nofollow">sfaturile și depunctările generale</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="notare">Notare</h2>
+<div class="level2">
+
+<p>
+Datorită nivelului de dificultate mai ridicat, tema valorează 2 de puncte.
+</p>
+
+<p>
+Depunctările au loc din nota temei (maxim 10) nu din punctajul acesteia (maxim 2 puncte). Adică pentru o întârziere de 4 zile, veți primi o depunctare de <code>4 * 0,25 = 1 punct</code> din notă, adică nota maximă 9, adică punctajul maxim 1.8 puncte.
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laboratorul 8. Drivere sisteme de fișiere (partea 1)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laboratorul 9. Drivere sisteme de fișiere (partea a 2-a)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/minix/?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=3.13"  rel="nofollow">Sursele sistemului de fișiere Minix</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit8" id="intrebari">Întrebări</h2>
+<div class="level2">
+
+<p>
+Pentru întrebări legate de temă puteți consulta <a href="http://news.gmane.org/gmane.education.region.romania.operating-systems-design" class="urlextern" title="http://news.gmane.org/gmane.education.region.romania.operating-systems-design"  rel="nofollow">arhivele</a> listei de discuții sau puteți trimite un <a href="mailto:&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x73;&#x6f;&#x32;&#x40;&#x63;&#x75;&#x72;&#x73;&#x75;&#x72;&#x69;&#x2e;&#x63;&#x73;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;">e-mail</a> (trebuie să fiți <a href="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2" class="urlextern" title="http://cursuri.cs.pub.ro/cgi-bin/mailman/listinfo/so2"  rel="nofollow">înregistrați</a>).
+</p>
+
+<p>
+Înainte să puneți o întrebare verificați că:
+</p>
+<ul>
+<li class="level1"><div class="li"> ați citit bine enunțul temei;</div>
+</li>
+<li class="level1"><div class="li"> răspunsul nu se află în <a href="http://cursuri.cs.pub.ro/lurker/list/pso.en.html" class="urlextern" title="http://cursuri.cs.pub.ro/lurker/list/pso.en.html"  rel="nofollow">arhivele</a> listei de discuții.</div>
+</li>
+</ul>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_199570681858355b6c8e605" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_185141045058355b6c914df" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="../laboratoare/lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../laboratoare/lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_20571301558355b6c943c1" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/teme/tema4.txt · Last modified: 2016/05/13 08:35 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="tema4%3Fdo=media&amp;ns=so2%253Ateme.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="tema4.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Ateme%253Atema4&amp;1479891820" width="2" height="1" alt="" /></div>
+</body>
+</html>

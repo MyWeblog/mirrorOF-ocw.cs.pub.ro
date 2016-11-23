@@ -1,0 +1,1128 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 4 - Device drivere în Linux    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-21T14:03:02+0200"/>
+<meta name="keywords" content="so2,laboratoare,lab04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/laboratoare/lab04.html"/>
+<link rel="canonical" href="lab04.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab04","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab04%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab04%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_4_-_device_drivere_in_linux">Laborator 4 - Device drivere în Linux</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> familiarizarea cu conceptul de driver al unui dispozitiv de tip caracter</div>
+</li>
+<li class="level1"><div class="li"> înțelegerea diferitelor operații ce pot fi efectuate asupra dispozitivelor de tip caracter</div>
+</li>
+<li class="level1"><div class="li"> lucrul cu cozi de așteptare (waitqueues)</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> device node</div>
+</li>
+<li class="level1"><div class="li"> major</div>
+</li>
+<li class="level1"><div class="li"> minor</div>
+</li>
+<li class="level1"><div class="li"> file operations</div>
+</li>
+<li class="level1"><div class="li"> file</div>
+</li>
+<li class="level1"><div class="li"> inode</div>
+</li>
+<li class="level1"><div class="li"> open/release</div>
+</li>
+<li class="level1"><div class="li"> read/write</div>
+</li>
+<li class="level1"><div class="li"> put/get user</div>
+</li>
+<li class="level1"><div class="li"> copy from/to user</div>
+</li>
+<li class="level1"><div class="li"> wait queue</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab04-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab04-slides.pdf"  rel="nofollow">Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow">SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="concepte_generale">Concepte generale</h2>
+<div class="level2">
+
+<p>
+În UNIX, dispozitivele hardware sunt accesate de utilizator prin intermediul fișierelor speciale <a href="http://en.wikipedia.org/wiki/Device_file_system" class="urlextern" title="http://en.wikipedia.org/wiki/Device_file_system"  rel="nofollow">  de tip dispozitiv</a> (device). Aceste fișiere sunt grupate în directorul <code>/dev</code>, iar apelurile de sistem <code>open</code>, <code>read</code>, <code>write</code>, <code>close</code>, <code>lseek</code>, <code>mmap</code> etc. sunt redirecționate de sistemul de operare către device driverul asociat cu dispozitivul fizic. <a href="http://en.wikipedia.org/wiki/Device_driver" class="urlextern" title="http://en.wikipedia.org/wiki/Device_driver"  rel="nofollow">  Device driverul</a> este o componentă a nucleului (de obicei un modul) care interacționează cu un dispozitiv hardware.
+</p>
+
+<p>
+În lumea UNIX există două categorii de fișiere dispozitiv și, implicit, device drivere: de tip <strong>caracter</strong> și de tip <strong>bloc</strong>. Această împărțire este făcută după viteza, volumul și modul de organizare a datelor ce trebuie transferate de la dispozitiv către sistem și invers. În prima categorie intră dispozitivele lente, care gestionează un volum mic de date, iar accesul la date nu necesită operații de căutare (seek) frecvente. Exemple sunt dispozitive cum ar fi tastatura, mouse-ul, porturile seriale, placa de sunet, joystick-ul. În general operațiile cu aceste dispozitive (citire, scriere) se realizează secvențial, octet cu octet. Cea de-a doua categorie cuprinde dispozitive la care volumul de date este mare, datele sunt organizate pe blocuri și operațiile de căutare (seek) sunt frecvente. Exemple de dispozitive ce intră în această categorie sunt hard disk-urile, cdrom-urile, ram discurile, unitățile de bandă magnetică. În cazul acestor dispozitive, citirea și scrierea se realizează la nivel de <strong>bloc</strong> de date.
+</p>
+
+<p>
+Pentru cele două tipuri de device drivere, nucleul Linux oferă <abbr title="Application Programming Interface">API</abbr>-uri diferite. Dacă pentru dispozitivele de tip caracter apelurile de sistem ajung <strong>direct</strong> la device drivere, în cazul dispozitivelor de tip bloc device driverele <strong>nu lucrează direct</strong> cu apelurile de sistem. În cazul dispozitivelor de tip bloc, comunicația între user-space și device driverul de tip bloc este intermediată de subsistemul de gestiune a fișierelor și de <a href="http://lwn.net/images/pdf/LDD3/ch16.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch16.pdf"  rel="nofollow">  subsistemul de block device</a>. Rolul acestor subsisteme este de a pregăti device driverului resursele necesare (buffere), de a menține în buffer cache datele recent citite și de a reordona operațiile de citire și scriere din rațiuni de performanță.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="identificator_major_si_minor">Identificator major și minor</h2>
+<div class="level2">
+
+<p>
+În UNIX, în mod tradițional, dispozitivele aveau asociate un identificator unic, fixat. Această tradiție se păstrează și în Linux, deși este posibil ca identificatorii să se aloce dinamic (din motive de compatibilitate însă, majoritatea driverelor folosesc încă identificatori statici). Identificatorul este format din <a href="http://www.linux-tutorial.info/modules.php?name=MContent&amp;pageid=94" class="urlextern" title="http://www.linux-tutorial.info/modules.php?name=MContent&amp;pageid=94"  rel="nofollow">  două părți</a>: <strong>major</strong> și <strong>minor</strong>. Prima parte (major) identifică tipul dispozitivului (disc IDE, disc SCSI, port serial etc.), iar cel de-al doilea identifică dispozitivul (primul disc, al doilea port serial etc.). De cele mai multe ori, majorul identifică driverul, în timp ce minorul identifică fiecare dispozitiv fizic deservit de driver. În general, un driver va avea asociat un major și va fi responsabil de toți minorii asociați cu acel major.
+</p>
+<pre class="code bash"><span class="co0"># ls -la /dev/hda? /dev/ttyS?</span>
+brw-rw----  <span class="nu0">1</span> root disk    <span class="nu0">3</span>,  <span class="nu0">1</span> <span class="nu0">2004</span>-09-<span class="nu0">18</span> <span class="nu0">14</span>:<span class="nu0">51</span> <span class="sy0">/</span>dev<span class="sy0">/</span>hda1
+brw-rw----  <span class="nu0">1</span> root disk    <span class="nu0">3</span>,  <span class="nu0">2</span> <span class="nu0">2004</span>-09-<span class="nu0">18</span> <span class="nu0">14</span>:<span class="nu0">51</span> <span class="sy0">/</span>dev<span class="sy0">/</span>hda2
+crw-rw----  <span class="nu0">1</span> root dialout <span class="nu0">4</span>, <span class="nu0">64</span> <span class="nu0">2004</span>-09-<span class="nu0">18</span> <span class="nu0">14</span>:<span class="nu0">52</span> <span class="sy0">/</span>dev<span class="sy0">/</span>ttyS0
+crw-rw----  <span class="nu0">1</span> root dialout <span class="nu0">4</span>, <span class="nu0">65</span> <span class="nu0">2004</span>-09-<span class="nu0">18</span> <span class="nu0">14</span>:<span class="nu0">52</span> <span class="sy0">/</span>dev<span class="sy0">/</span>ttyS1</pre>
+
+<p>
+După cum se observă din exemplul de mai sus, informații pentru fișiere de tip device se pot afla folosind comanda <code>ls</code>. Fișierele speciale de tip caracter sunt identificate prin caracterul <strong>c</strong> în prima coloană a ieșirii comenzii, iar cele de tip bloc prin caracterul <strong>b</strong>. În coloanele 5 și 6 ale rezultatului comenzii se pot observa majorul, respectiv minorul pentru fiecare dispozitiv. 
+</p>
+
+<p>
+Anumiți identificatori major sunt atribuiți în mod static dispozitivelor (în fișierul <a href="http://lxr.free-electrons.com/source/Documentation/devices.txt?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/devices.txt?v=3.13"  rel="nofollow">  Documentation/devices.txt</a> din sursele kernel-ului). La alegerea identificatorului pentru un nou dispozitiv se pot folosi două metode: static (se alege un număr care pare să nu fie folosit deja) sau dinamic. În <code>/proc/devices</code> se găsesc dispozitivele încărcate, împreună cu identificatorul major. 
+</p>
+
+<p>
+Pentru a crea un fișier de tip dispozitiv, se folosește comanda <a href="http://linuxcommand.org/man_pages/mknod1.html" class="urlextern" title="http://linuxcommand.org/man_pages/mknod1.html"  rel="nofollow">  mknod</a>; comanda primește ca argumente tipul (bloc sau caracter), majorul și minorul dispozitivului (<code>mknod name type major minor</code>). Astfel, dacă se dorește crearea dispozitivului de tip caracter cu numele <code>mycdev</code> cu majorul <code>42</code> și minorul <code>0</code> se folosește comanda:
+</p>
+<pre class="code bash"><span class="co4"># </span><span class="kw2">mknod</span> <span class="sy0">/</span>dev<span class="sy0">/</span>mycdev c <span class="nu0">42</span> <span class="nu0">0</span></pre>
+
+<p>
+Pentru a crea dispozitivului de tip block cu numele <code>mybdev</code> cu majorul <code>240</code> și minorul <code>0</code> comanda folosită va fi:
+</p>
+<pre class="code bash"><span class="co4"># </span><span class="kw2">mknod</span> <span class="sy0">/</span>dev<span class="sy0">/</span>mybdev b <span class="nu0">240</span> <span class="nu0">0</span></pre>
+
+<p>
+În continuare, ne vom referi la drivere pentru dispozitive de tip caracter.
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="structuri_de_date_importante_pentru_un_dispozitiv_de_tip_caracter">Structuri de date importante pentru un dispozitiv de tip caracter</h2>
+<div class="level2">
+
+<p>
+În kernel, un dispozitiv de tip caracter este reprezentat de structura <a href="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.13#L12" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.13#L12"  rel="nofollow">  cdev</a>, structură folosită la înregistrarea acestuia în sistem.
+</p>
+
+<p>
+Majoritatea operațiilor cu drivere folosesc trei structuri importante: <a href="lab04.html#structura_file_operations" title="so2:laboratoare:lab04 ↵" class="wikilink1">struct file_operations</a>, <a href="lab04.html#structurile_inode_si_file" title="so2:laboratoare:lab04 ↵" class="wikilink1">struct file</a> și <a href="lab04.html#structurile_inode_si_file" title="so2:laboratoare:lab04 ↵" class="wikilink1">struct inode</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="structura_file_operations">Structura file_operations</h3>
+<div class="level3">
+
+<p>
+După cum s-a precizat, device driverele de tip caracter primesc nealterate apelurile de sistem efectuate de utilizatori asupra fișierelor de tip dispozitiv. În consecință, pentru implementarea unui device driver vor trebui implementate apelurile de sistem de lucru cu fișiere: <code>open</code>, <code>close</code>, <code>read</code>, <code>write</code>, <code>lseek</code>, <code>mmap</code> etc. Aceste operații sunt descrise în câmpuri ale structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521"  rel="nofollow">file_operations</a>
+<sup><a href="lab04.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+&nbsp;
+<span class="kw4">struct</span> file_operations <span class="br0">&#123;</span>
+    <span class="kw4">struct</span> module <span class="sy0">*</span>owner<span class="sy0">;</span>
+    loff_t <span class="br0">&#40;</span><span class="sy0">*</span>llseek<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*,</span> loff_t<span class="sy0">,</span> <span class="kw4">int</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    ssize_t <span class="br0">&#40;</span><span class="sy0">*</span>read<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*,</span> <span class="kw4">char</span> __user <span class="sy0">*,</span> <span class="kw4">size_t</span><span class="sy0">,</span> loff_t <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    ssize_t <span class="br0">&#40;</span><span class="sy0">*</span>write<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*,</span> <span class="kw4">const</span> <span class="kw4">char</span> __user <span class="sy0">*,</span> <span class="kw4">size_t</span><span class="sy0">,</span> loff_t <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+    <span class="kw4">long</span> <span class="br0">&#40;</span><span class="sy0">*</span>unlocked_ioctl<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*,</span> <span class="kw4">unsigned</span> <span class="kw4">int</span><span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+    <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>open<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> inode <span class="sy0">*,</span> <span class="kw4">struct</span> file <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>flush<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*,</span> fl_owner_t id<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw4">int</span> <span class="br0">&#40;</span><span class="sy0">*</span>release<span class="br0">&#41;</span> <span class="br0">&#40;</span><span class="kw4">struct</span> inode <span class="sy0">*,</span> <span class="kw4">struct</span> file <span class="sy0">*</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span></pre>
+
+<p>
+Se poate observa că semnătura funcției diferă de apelul de sistem pe care îl folosește utilizatorul. Sistemul de operare se interpune între utilizator și device driver, pentru a simplifica implementarea în device driver.
+</p>
+
+<p>
+<code>open</code> nu primește ca parametru calea sau diverșii parametri care controlează modul de deschidere a fișierului. În mod similar, <code>read</code>, <code>write</code>, <code>release</code>, <code>ioctl</code>, <code>lseek</code> nu primesc ca parametru un descriptor de fișier. În schimb, aceste rutine primesc ca parametri două structuri: <code>file</code> și <code>inode</code>. Ambele structuri reprezintă un fișier, dar din perspective diferite.
+</p>
+
+<p>
+Majoritatea parametrilor pentru <a href="lab04.html#structura_file_operations" title="so2:laboratoare:lab04 ↵" class="wikilink1">operațiile prezentate</a> au semnificație directă:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>file</code> și <code>inode</code> identifică fișierul de tip dispozitiv;</div>
+</li>
+<li class="level1"><div class="li"><code>size</code> reprezintă numărul de octeți ce trebuie citiți sau scriși;</div>
+</li>
+<li class="level1"><div class="li"><code>offset</code> reprezintă deplasamentul de unde trebuie citit sau scris (trebuie actualizat corespunzător);</div>
+</li>
+<li class="level1"><div class="li"><code>user_buffer</code> reprezintă bufferul utilizatorului<sup><a href="lab04.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup> din care se citește/în care se scrie;</div>
+</li>
+<li class="level1"><div class="li"><code>whence</code> reprezintă modalitatea de <code>seek</code>(poziția de unde începe operația <code>seek</code>);</div>
+</li>
+<li class="level1"><div class="li"><code>cmd</code> și <code>arg</code> sunt parametrii trimiși de utilizatori la apelul <code>ioctl</code> (IO control).</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit9" id="structurile_inode_si_file">Structurile &#039;&#039;inode&#039;&#039; și &#039;&#039;file&#039;&#039;</h3>
+<div class="level3">
+
+<p>
+Un inode reprezintă un fișier din punctul de vedere al sistemului de fișiere. Atribute ale unui inode sunt dimensiunea, drepturile, timpii asociați fișierului. Un inode identifică în mod unic un fișier într-un sistem de fișiere<sup><a href="lab04.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup>. 
+</p>
+
+<p>
+<a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772"  rel="nofollow">  Structura file</a> reprezintă tot un fișier, dar mai aproape de punctul de vedere al utilizatorului. Dintre atributele <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772"  rel="nofollow">  structurii file</a> enumerăm: inode-ul, numele fișierului, atributele de deschidere ale fișierului, poziția în fișier. Toate fișierele deschise la un moment dat au asociate o structură <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772"  rel="nofollow">  file</a>.
+</p>
+
+<p>
+Pentru a înțelege diferențele dintre <code>inode</code> și <code>file</code>, vom folosi o analogie din programarea orientată pe obiecte: dacă vom considera un inode o clasă, atunci file-urile sunt obiecte, adică instanțe ale clasei inode. Inode-ul reprezintă imaginea statică a fișierului (<strong>inode-ul nu are stare</strong>), pe când <strong>file reprezintă imaginea dinamică</strong> a fișierului (file-ul are stare).
+</p>
+
+<p>
+Revenind la device drivere, cele două entități au aproape întotdeauna modalități standard de folosire: inode-ul se folosește pentru a determina majorul și minorul device-ului asupra căruia se face operația, iar file-ul se folosește pentru a determina flag-urile cu care a fost deschis fișierul, dar și pentru a memora și accesa (mai târziu) date private.
+</p>
+
+<p>
+<a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772"  rel="nofollow">  Structura file</a> conține, printre multe câmpuri, și:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>f_mode</code>, care specifică permisiunile pentru citire (<code>FMODE_READ</code>) sau scriere (<code>FMODE_WRITE</code>);</div>
+</li>
+<li class="level1"><div class="li"><code>f_flags</code>, care specifică <a href="http://lxr.free-electrons.com/source/include/uapi/asm-generic/fcntl.h?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/include/uapi/asm-generic/fcntl.h?v=3.13"  rel="nofollow">  flag-urile de deschidere</a> a fișierului (<code>O_RDONLY</code>, <code>O_NONBLOCK</code>, <code>O_SYNC</code>, <code>O_APPEND</code>, <code>O_TRUNC</code> etc.);</div>
+</li>
+<li class="level1"><div class="li"><code>f_op</code>, care specifica operațiile asociate fișierului (pointer către structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L1521"  rel="nofollow">  file_operations</a>);</div>
+</li>
+<li class="level1"><div class="li"><code>private_data</code>, un pointer care poate fi folosit de programator pentru a păstra date specifice dispozitivului; pointerul va fi inițializat la adresa unei zone de memorie alocate de programator.</div>
+</li>
+<li class="level1"><div class="li"><code>f_pos</code>, offsetul în cadrul fișierului</div>
+</li>
+</ul>
+
+<p>
+<a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L524" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L524"  rel="nofollow">  Structura inode</a> conține, printre multe informații, un câmp <code>i_cdev</code>, care este un pointer către <a href="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.13#L12" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.13#L12"  rel="nofollow">  structura care definește dispozitivul</a> de tip caracter (atunci când inode-ul corespunde unui dispozitiv de tip caracter).
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="implementarea_operatiilor">Implementarea operațiilor</h3>
+<div class="level3">
+
+<p>
+Pentru implementarea unui device driver, se recomandă crearea unei structuri care să conțină informații despre dispozitivul dat, informații utilizate în cadrul modulului. În cazul unui driver pentru un dispozitiv de tip caracter, structura va conține un câmp de tipul <a href="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.13#L12" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.13#L12"  rel="nofollow">  struct cdev</a> pentru a referi dispozitivul. Exemplul de mai jos folosește în acest sens structura <code>struct my_device_data</code>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+<span class="co2">#include &lt;linux/cdev.h&gt;</span>
+&nbsp;
+<span class="kw4">struct</span> my_device_data <span class="br0">&#123;</span>
+    <span class="kw4">struct</span> cdev cdev<span class="sy0">;</span>
+    <span class="coMULTI">/* my data starts here */</span>
+    <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_open<span class="br0">&#40;</span><span class="kw4">struct</span> inode <span class="sy0">*</span>inode<span class="sy0">,</span> <span class="kw4">struct</span> file <span class="sy0">*</span>file<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data <span class="sy0">=</span>
+            container_of<span class="br0">&#40;</span>inode<span class="sy0">-&gt;</span>i_cdev<span class="sy0">,</span> <span class="kw4">struct</span> my_device_data<span class="sy0">,</span> cdev<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    file<span class="sy0">-&gt;</span>private_data <span class="sy0">=</span> my_data<span class="sy0">;</span>
+    <span class="co1">//...</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> my_read<span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*</span>file<span class="sy0">,</span> <span class="kw4">char</span> __user <span class="sy0">*</span>user_buffer<span class="sy0">,</span> <span class="kw4">size_t</span> size<span class="sy0">,</span> loff_t <span class="sy0">*</span>offset<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data <span class="sy0">=</span>
+             <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> file<span class="sy0">-&gt;</span>private_data<span class="sy0">;</span>
+    <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+O structură de tipul <code>my_device_data</code> va conține datele asociate unui dispozitiv. Câmpul <code>cdev</code> (de tipul <a href="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.13#L12" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/cdev.h?v=3.13#L12"  rel="nofollow">  struct cdev</a>) reprezintă un dispozitiv de tip caracter și este folosit la înregistrarea acestuia în sistem și identificarea dispozitivului. Pointer-ul către membrul <code>cdev</code> se poate afla cu ajutorul câmpului <code>i_cdev</code> al <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L524" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L524"  rel="nofollow">  structurii inode</a> (cu ajutorul macro-ului <a href="http://lxr.free-electrons.com/source/include/linux/kernel.h?v=3.13#L791" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kernel.h?v=3.13#L791"  rel="nofollow">  container_of</a>). În câmpul <code>private_data</code> al <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L772"  rel="nofollow">  structurii file</a> se pot memora informații la <code>open</code> care apoi sunt disponibile în rutinele <code>read</code>, <code>write</code>, <code>release</code> etc.
+</p>
+
+</div>
+
+<h2 class="sectionedit11" id="inregistrarea_si_deinregistrarea_dispozitivelor_de_tip_caracter">Înregistrarea și deînregistrarea dispozitivelor de tip caracter</h2>
+<div class="level2">
+
+<p>
+Înregistrarea/deînregistrarea unui dispozitiv se realizează prin specificarea majorului și minorului acestuia. Tipul <code><a href="http://lxr.free-electrons.com/source/include/linux/types.h?v=3.13#L15" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/types.h?v=3.13#L15"  rel="nofollow">dev_t</a></code> este folosit pentru a păstra identificatorii unui dispozitiv (atât majorul, cât și minorul) și se poate obține cu ajutorul macro-ului <a href="http://lxr.free-electrons.com/source/include/linux/kdev_t.h?v=3.13#L11" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kdev_t.h?v=3.13#L11"  rel="nofollow">MKDEV</a>.
+</p>
+
+<p>
+Pentru alocarea și dezalocarea statică a identificatorilor unui dispozitiv, se folosesc funcțiile <a href="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L196" class="urlextern" title="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L196"  rel="nofollow">register_chrdev_region</a>, respectiv <a href="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L167" class="urlextern" title="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L167"  rel="nofollow">unregister_chrdev_region</a>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> register_chrdev_region<span class="br0">&#40;</span>dev_t first<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">int</span> count<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">*</span>name<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> unregister_chrdev_region<span class="br0">&#40;</span>dev_t first<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">int</span> count<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Este recomandat ca identificatorii de dispozitiv să fie alocați dinamic cu funcția <a href="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L222" class="urlextern" title="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L222"  rel="nofollow">alloc_chrdev_region</a>.
+</p>
+
+<p>
+Secvența de mai jos rezervă <code>my_minor_count</code> dispozitive, începând de la dispozitivul cu majorul <code>my_major</code> și minorul <code>my_first_minor</code> (dacă se depășește valoare maximă pentru minor, se trece la următorul major):
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+&nbsp;
+    <span class="co1">//...</span>
+    <span class="kw4">int</span> err<span class="sy0">;</span>
+    err <span class="sy0">=</span> register_chrdev_region<span class="br0">&#40;</span>MKDEV<span class="br0">&#40;</span>my_major<span class="sy0">,</span> my_first_minor<span class="br0">&#41;</span><span class="sy0">,</span> my_minor_count<span class="sy0">,</span>
+                                  <span class="st0">&quot;my_device_driver&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* report error */</span>
+        <span class="kw1">return</span> err<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <span class="co1">//...</span></pre>
+
+<p>
+<sup><a href="lab04.html#fn__4" id="fnt__4" class="fn_top">4)</a></sup>
+</p>
+
+<p>
+După atribuirea identificatorilor, dispozitivul de tip caracter va trebui inițializat (<a href="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L553" class="urlextern" title="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L553"  rel="nofollow">cdev_init</a>) și va trebui informat nucleul de existența lui (<a href="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L465" class="urlextern" title="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L465"  rel="nofollow">cdev_add</a>). Funcția <a href="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L465" class="urlextern" title="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L465"  rel="nofollow">cdev_add</a> trebuie apelată doar după ce dispozitivul este pregătit sa primească apeluri. Eliminarea unui dispozitiv se realizează folosind funcția <a href="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L497" class="urlextern" title="http://lxr.free-electrons.com/source/fs/char_dev.c?v=3.13#L497"  rel="nofollow">cdev_del</a>.
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/cdev.h&gt;</span>
+&nbsp;
+<span class="kw4">void</span> cdev_init<span class="br0">&#40;</span><span class="kw4">struct</span> cdev <span class="sy0">*</span>cdev<span class="sy0">,</span> <span class="kw4">struct</span> file_operations <span class="sy0">*</span>fops<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> cdev_add<span class="br0">&#40;</span><span class="kw4">struct</span> cdev <span class="sy0">*</span>dev<span class="sy0">,</span> dev_t num<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">int</span> count<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">void</span> cdev_del<span class="br0">&#40;</span><span class="kw4">struct</span> cdev <span class="sy0">*</span>dev<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Următoarea secvență înregistrează și inițializează <code>MY_MAX_MINORS</code> dispozitive:
+</p>
+<dl class="file">
+<dt><a href="../../_export/code/so2/laboratoare/lab04%3Fcodeblock=8" title="Download Snippet" class="mediafile mf_c">register.c</a></dt>
+<dd><pre class="code file c"><span class="co2">#include &lt;linux/fs.h&gt;</span>
+<span class="co2">#include &lt;linux/cdev.h&gt;</span>
+&nbsp;
+<span class="co2">#define MY_MAJOR       42</span>
+<span class="co2">#define MY_MAX_MINORS  5</span>
+&nbsp;
+<span class="kw4">struct</span> my_device_data <span class="br0">&#123;</span>
+    <span class="kw4">struct</span> cdev cdev<span class="sy0">;</span>
+    <span class="coMULTI">/* my data starts here */</span>
+    <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> my_device_data devs<span class="br0">&#91;</span>MY_MAX_MINORS<span class="br0">&#93;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">const</span> <span class="kw4">struct</span> file_operations my_fops <span class="sy0">=</span> <span class="br0">&#123;</span>
+    .<span class="me1">owner</span> <span class="sy0">=</span> THIS_MODULE<span class="sy0">,</span>
+    .<span class="me1">open</span> <span class="sy0">=</span> my_open<span class="sy0">,</span>
+    .<span class="me1">read</span> <span class="sy0">=</span> my_read<span class="sy0">,</span>
+    .<span class="me1">write</span> <span class="sy0">=</span> my_write<span class="sy0">,</span>
+    .<span class="me1">release</span> <span class="sy0">=</span> my_release<span class="sy0">,</span>
+    .<span class="me1">unlocked_ioctl</span> <span class="sy0">=</span> my_ioctl
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> init_module<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">int</span> i<span class="sy0">,</span> err<span class="sy0">;</span>
+&nbsp;
+    err <span class="sy0">=</span> register_chrdev_region<span class="br0">&#40;</span>MKDEV<span class="br0">&#40;</span>MY_MAJOR<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">,</span> MY_MAX_MINORS<span class="sy0">,</span>
+                                      <span class="st0">&quot;my_device_driver&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>err <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* report error */</span>
+        <span class="kw1">return</span> err<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">for</span><span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> MY_MAX_MINORS<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* initialize devs[i] fields */</span>
+        cdev_init<span class="br0">&#40;</span><span class="sy0">&amp;</span>devs<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">cdev</span><span class="sy0">,</span> <span class="sy0">&amp;</span>my_fops<span class="br0">&#41;</span><span class="sy0">;</span>
+        cdev_add<span class="br0">&#40;</span><span class="sy0">&amp;</span>devs<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">cdev</span><span class="sy0">,</span> MKDEV<span class="br0">&#40;</span>MY_MAJOR<span class="sy0">,</span> i<span class="br0">&#41;</span><span class="sy0">,</span> <span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+în vreme ce următoarea secvență le șterge și deînregistrează:
+</p>
+<pre class="code c"><span class="kw4">void</span> cleanup_module<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">int</span> i<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">for</span><span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> MY_MAX_MINORS<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* release devs[i] fields */</span>
+        cdev_del<span class="br0">&#40;</span><span class="sy0">&amp;</span>devs<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">cdev</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    unregister_chrdev_region<span class="br0">&#40;</span>MKDEV<span class="br0">&#40;</span>MY_MAJOR<span class="sy0">,</span> <span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">,</span> MY_MAX_MINORS<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Observație: la inițializarea structurii <code>my_fops</code> s-a folosit inițializarea membrilor după nume, definită în standardul C99 (vezi <a href="http://david.tribble.com/text/cdiffs.htm#C99-desig-init" class="urlextern" title="http://david.tribble.com/text/cdiffs.htm#C99-desig-init"  rel="nofollow">designated initializers</a> și <a href="http://www.faqs.org/docs/kernel/x571.html" class="urlextern" title="http://www.faqs.org/docs/kernel/x571.html"  rel="nofollow">The file_operations Structure</a>). Membrii structurii care nu apar explicit într-o astfel de inițializare vor fi setați la valoarea implicită pentru tipul lor. De exemplu, după inițializarea de mai sus, <code>my_fops.mmap</code> va fi NULL.
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="accesul_la_spatiul_de_adresa_al_procesului">Accesul la spațiul de adresă al procesului</h2>
+<div class="level2">
+
+<p>
+Un driver pentru un dispozitiv este interfața de comunicație între o aplicație și hardware. Drept urmare, deseori va trebui să accesăm în cadrul unui device driver date din user-space. Accesarea spațiului de adresă al proceselor nu se poate face, însă, direct (prin dereferențierea unui pointer din user-space). Accesarea directă a unui pointer din user-space poate duce la un comportament incorect (în funcție de arhitectură, un pointer din user-space poate să nu fie valid sau mapat în kernel-space), un kernel oops (pointerul din user-mode poate referi o zonă de memorie care nu este rezidentă) sau probleme de securitate. Accesarea corectă a datelor din user-space se realizează prin apelarea macro-urilor/funcțiilor de mai jos:
+</p>
+<pre class="code c"><span class="co2">#include &lt;asm/uaccess.h&gt;</span>
+&nbsp;
+put_user<span class="br0">&#40;</span>type val<span class="sy0">,</span> type <span class="sy0">*</span>address<span class="br0">&#41;</span><span class="sy0">;</span>
+get_user<span class="br0">&#40;</span>type val<span class="sy0">,</span> type <span class="sy0">*</span>address<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">unsigned</span> <span class="kw4">long</span> copy_to_user<span class="br0">&#40;</span><span class="kw4">void</span> __user <span class="sy0">*</span>to<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">void</span> <span class="sy0">*</span>from<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> n<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">unsigned</span> <span class="kw4">long</span> copy_from_user<span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span>to<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">void</span> __user <span class="sy0">*</span>from<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> n<span class="br0">&#41;</span></pre>
+
+<p>
+Toate macro-urile/funcțiile întorc 0 în caz de succes și altă valoare în caz de eroare și au următoarele roluri:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L164" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L164"  rel="nofollow">  put_user</a> pune în user-space la adresa <code>address</code> valoarea <code>val</code>; tipul poate fi unul pe 8, 16, 32, 64 de biți (tipul maxim suportat depinde de platforma hardware);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L186" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L186"  rel="nofollow">  get_user</a> analog cu funcția precedentă, numai că <code>val</code> va fi setată la o valoare identică cu valoarea de la adresa user-space dată prin <code>address</code>;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L265" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L265"  rel="nofollow">  copy_to_user</a> copiază din kernel-space de la adresa referită de <code>from</code> în user-space la adresa referită de <code>to</code>, <code>size</code> octeți;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L255" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L255"  rel="nofollow">  copy_from_user</a> copiază din user-space de la adresa referită de <code>from</code> în kernel-space la adresa referită de <code>to</code>, size octeți.</div>
+</li>
+</ul>
+
+<p>
+O secțiune uzuală de cod care lucrează cu aceste funcții este:
+</p>
+<pre class="code c"><span class="co2">#include &lt;asm/uaccess.h&gt;</span>
+&nbsp;
+<span class="coMULTI">/*
+ * Copy at most size bytes to user space.
+ * Return ''0'' on success and some other value on error.
+ */</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>copy_to_user<span class="br0">&#40;</span>user_buffer<span class="sy0">,</span> kernel_buffer<span class="sy0">,</span> size<span class="br0">&#41;</span><span class="br0">&#41;</span>
+    <span class="kw1">return</span> <span class="sy0">-</span>EFAULT<span class="sy0">;</span>
+<span class="kw1">else</span>
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h2 class="sectionedit13" id="operatii_implementate_de_device_drivere_de_tip_caracter">Operații implementate de device drivere de tip caracter</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit14" id="open_si_release">open și release</h3>
+<div class="level3">
+
+<p>
+În funcția <code>open</code> se realizează operațiile de inițializare a unui dispozitiv <sup><a href="lab04.html#fn__5" id="fnt__5" class="fn_top">5)</a></sup>. În majoritatea cazurilor, aceste operații se referă la inițializarea dispozitivului și completarea datelor specifice (în cazul în care este primul apel <code>open</code>). Funcția <code>release</code> se ocupă de eliberarea resurselor specifice dispozitivului: se dezalocă datele specifice și se închide dispozitivul daca este ultimul apel <code>close</code>.
+</p>
+
+<p>
+În cele mai multe cazuri, funcția <code>open</code> va avea următoarea structură:
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">int</span> my_open<span class="br0">&#40;</span><span class="kw4">struct</span> inode <span class="sy0">*</span>inode<span class="sy0">,</span> <span class="kw4">struct</span> file <span class="sy0">*</span>file<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data <span class="sy0">=</span>
+            container_of<span class="br0">&#40;</span>inode<span class="sy0">-&gt;</span>i_cdev<span class="sy0">,</span> <span class="kw4">struct</span> my_device_data<span class="sy0">,</span> cdev<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* validate access to device */</span>
+    file<span class="sy0">-&gt;</span>private_data <span class="sy0">=</span> my_data<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* initialize device */</span>
+	<span class="co1">//..</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+O problemă care apare la implementarea funcției <code>open</code> este controlul accesului. Uneori este necesar ca un dispozitiv să fie deschis o singură dată la un moment dat; mai exact, nu se permite al doilea <code>open</code> înainte de <code>release</code>. Pentru a implementa această restricție se alege o modalitate de tratare a unui apel <code>open</code> pentru un dispozitiv deja deschis: se poate întoarce o  eroare (<code>-EBUSY</code>), se pot bloca apelurile <code>open</code> până la o operație de <code>release</code> sau se poate închide dispozitivul înainte de a realiza operația de <code>open</code>.
+</p>
+
+<p>
+La apelul din user-space al funcțiilor <code>open</code> și <code>close</code> asupra dispozitivului, se vor apela operațiile <code>my_open</code> și <code>my_release</code> din driver. Un exemplu de apel din user-space:
+</p>
+<pre class="code c">    <span class="kw4">int</span> fd <span class="sy0">=</span> open<span class="br0">&#40;</span><span class="st0">&quot;/dev/my_device&quot;</span><span class="sy0">,</span> O_RDONLY<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>fd <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* handle error */</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="coMULTI">/* do work */</span>
+    <span class="co1">//..</span>
+&nbsp;
+    close<span class="br0">&#40;</span>fd<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h3 class="sectionedit15" id="read_si_write">read și write</h3>
+<div class="level3">
+
+<p>
+Funcțiile <code>read</code> și <code>write</code> transferă date între dispozitiv și user-space: funcția <code>read</code> citește datele de la dispozitiv și le transferă în user-space, în timp ce <code>write</code> citește datele din user-space și le scrie pe dispozitiv. Buffer-ul primit ca parametru reprezintă un pointer în user-space, motiv pentru care este necesară folosirea funcțiilor <a href="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L255" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L255"  rel="nofollow">  copy_to_user</a> sau <a href="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L265" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L265"  rel="nofollow">  copy_from_user</a>. 
+</p>
+
+<p>
+Valoarea întoarsă de <code>read</code> sau <code>write</code> poate fi:
+</p>
+<ul>
+<li class="level1"><div class="li"> numărul de bytes transferați; dacă valoarea întoarsă este mai mică decât parametrul <code>size</code> (numărul de octeți ceruți), atunci înseamnă că s-a realizat un transfer parțial. De cele mai multe ori, aplicația din user-space apelează din nou funcția corespunzătoare apelului de sistem (read sau write) până când se transferă numărul de date cerut.</div>
+</li>
+<li class="level1"><div class="li"> <code>0</code> pentru marcarea sfârșitului fișierului în cazul lui <code>read</code>; dacă <code>write</code> întoarce valoarea <code>0</code> atunci înseamnă că nici un byte nu a fost scris și că nu s-a produs nici o eroare; în acest caz, aplicația din user-space reîncearcă de cele mai multe ori scrierea.</div>
+</li>
+<li class="level1"><div class="li"> o valoare negativă care indică un cod de eroare,</div>
+</li>
+</ul>
+
+<p>
+Pentru a realiza un transfer de date format din mai multe transferuri parțiale, vor trebui realizate următoarele operații:
+</p>
+<ul>
+<li class="level1"><div class="li">se transferă numărul maxim de octeți posibil între buffer-ul primit ca parametru și dispozitiv (scrierea pe dispozitiv/citirea de pe dispozitiv se va face începând de la offset-ul primit ca parametru);</div>
+</li>
+<li class="level1"><div class="li">se actualizează offset-ul primit ca parametru la poziția de la care va începe următoarea citire / scriere a datelor;</div>
+</li>
+<li class="level1"><div class="li">se întoarce numărul de octeți transferați.</div>
+</li>
+</ul>
+
+<p>
+Secvența de mai jos prezintă un exemplu de apel simplu al funcției <code>read</code>. Apelul nu actualizează câmpul <code>offset</code> astfel că tot timpul va întoarce mesajul de la începutul buffer-ului. O implementare corectă trebuie să țină cont de parametrul <code>offset</code> și să-l actualizeze după citire.
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">int</span> my_read<span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*</span>file<span class="sy0">,</span> <span class="kw4">char</span> __user <span class="sy0">*</span>user_buffer<span class="sy0">,</span> 
+                                <span class="kw4">size_t</span> size<span class="sy0">,</span> loff_t <span class="sy0">*</span>offset<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data <span class="sy0">=</span>
+             <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> file<span class="sy0">-&gt;</span>private_data<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* read data from device in my_data-&gt;buffer */</span>
+    <span class="kw1">if</span><span class="br0">&#40;</span>copy_to_user<span class="br0">&#40;</span>user_buffer<span class="sy0">,</span> my_data<span class="sy0">-&gt;</span>buffer<span class="sy0">,</span> my_data<span class="sy0">-&gt;</span>size<span class="br0">&#41;</span><span class="br0">&#41;</span>
+        <span class="kw1">return</span> <span class="sy0">-</span>EFAULT<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> my_data<span class="sy0">-&gt;</span>size<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Structura funcției <code>write</code> este similară: citește date din user-space folosind funcția <a href="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L255" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/uaccess.h?v=3.13#L255"  rel="nofollow">  copy_from_user</a> și le scrie pe dispozitiv.
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">int</span> my_write<span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*</span>file<span class="sy0">,</span> <span class="kw4">const</span> <span class="kw4">char</span> __user <span class="sy0">*</span>user_buffer<span class="sy0">,</span> 
+                                             <span class="kw4">size_t</span> size<span class="sy0">,</span> loff_t <span class="sy0">*</span> offset<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="co1">// write data from user buffer into kernel buffer</span>
+    <span class="co1">// update file offset in userspace</span>
+    <span class="co1">// ..</span>
+&nbsp;
+<span class="br0">&#125;</span></pre>
+
+<p>
+La apelul funcțiilor <code>read</code> și <code>write</code> din user-space (folosind descriptorul de fișier obținut în urma unui apel <code>open</code>), se vor apela operațiile <code>my_read</code> și <code>my_write</code> din driver. Un exemplu de cod pentru user-space:
+</p>
+<pre class="code c">    <span class="kw1">if</span> <span class="br0">&#40;</span>read<span class="br0">&#40;</span>fd<span class="sy0">,</span> buffer<span class="sy0">,</span> size<span class="br0">&#41;</span> <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* handle error */</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">if</span> <span class="br0">&#40;</span>write<span class="br0">&#40;</span>fd<span class="sy0">,</span> buffer<span class="sy0">,</span> size<span class="br0">&#41;</span> <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* handle error */</span>
+    <span class="br0">&#125;</span></pre>
+
+<p>
+Imaginile de mai jos ilustrează operațiile de <code>read</code> și <code>write</code> și cum sunt transferate datele între userspace și driver.
+În primele două imagini putem observa două situații pentru operația <code>read</code>:
+</p>
+<ol>
+<li class="level1"><div class="li"> când driverul are suficiente date disponibile (începând cu poziția dată de OFFSET) pentru a transfera exact dimensiunea cerută (SIZE) de user.</div>
+</li>
+<li class="level1"><div class="li"> când se transferă o cantitate mai mică decât cea cerută.</div>
+</li>
+</ol>
+
+<p>
+Putem privi operația de <code>read</code> implementată de driver ca pe un răspuns la o cerere de <code>read</code> din userspace. În acest caz, driverul având responsabilitatea să avanseze offsetul în funcție de cât s-a citit și să returneze dimensiunea citită (care poate fi mai mică decât cea cerută).
+</p>
+
+<p>
+În paralel, operația de <code>write</code> va răspunde unei cereri de <code>write</code> din userspace (ultimele două imagini). În acest caz, în funcție de capacitatea maximă a driverului (MAXSIZ), se poate scrie mai mult sau mai puțin decât dimensiunea cerută.
+</p>
+
+<p>
+<a href="../../_detail/so2/laboratoare/lab04/read.png%3Fid=so2%253Alaboratoare%253Alab04.html" class="media" title="so2:laboratoare:lab04:read.png"><img src="../../_media/so2/laboratoare/lab04/read.png%3Fw=300&amp;tok=e0180c" class="media" title="read" alt="read" width="300" /></a> <a href="../../_detail/so2/laboratoare/lab04/read2.png%3Fid=so2%253Alaboratoare%253Alab04.html" class="media" title="so2:laboratoare:lab04:read2.png"><img src="../../_media/so2/laboratoare/lab04/read2.png%3Fw=300&amp;tok=2891c3" class="mediaright" title="read less" alt="read less" width="300" /></a>
+</p>
+
+<p>
+<a href="../../_detail/so2/laboratoare/lab04/write.png%3Fid=so2%253Alaboratoare%253Alab04.html" class="media" title="so2:laboratoare:lab04:write.png"><img src="../../_media/so2/laboratoare/lab04/write.png%3Fw=300&amp;tok=906289" class="media" title="write" alt="write" width="300" /></a> <a href="../../_detail/so2/laboratoare/lab04/write2.png%3Fid=so2%253Alaboratoare%253Alab04.html" class="media" title="so2:laboratoare:lab04:write2.png"><img src="../../_media/so2/laboratoare/lab04/write2.png%3Fw=300&amp;tok=3270bc" class="mediaright" title="write less" alt="write less" width="300" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit16" id="ioctl">ioctl</h3>
+<div class="level3">
+
+<p>
+Pe lângă operațiile de <code>read</code> și <code>write</code>, un driver are nevoie de posibilitatea de a realiza anumite operații de control asupra dispozitivului fizic. Aceste operații se realizează prin implementarea unei funcții de tip <code>ioctl</code>. Inițial, apelul de sistem <code>ioctl</code> folosea Big Kernel Lock. De aceea, apelul a fost înlocuit treptat cu versiunea sa fără lock-uri, numită <code>unlocked_ioctl</code>. Puteți citi mai multe pe LWN: <a href="http://lwn.net/Articles/119652/" class="urlextern" title="http://lwn.net/Articles/119652/"  rel="nofollow">http://lwn.net/Articles/119652/</a>
+</p>
+<pre class="code c"><span class="kw4">static</span> <span class="kw4">long</span> my_ioctl <span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*</span>file<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">int</span> cmd<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> arg<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+<code>cmd</code> reprezintă comanda transmisă din user-space. Dacă la apelul din user-space se transmite un întreg, acesta poate fi accesat direct. Dacă se trasmite un buffer, valoarea <code>arg</code> va fi un pointer către acesta și trebuie accesat prin intermediul funcțiilor <code>copy_to_user</code> sau <code>copy_from_user</code>. 
+</p>
+
+<p>
+Înainte de a implementa funcția <code>ioctl</code>, vor trebui alese numerele ce corespund comenzilor. O metodă este de a alege numere consecutive începând de la 0, dar se recomandă folosirea macrodefiniției <code>_IOC(dir, type, nr, size)</code><sup><a href="lab04.html#fn__6" id="fnt__6" class="fn_top">6)</a></sup> pentru generarea codurilor ioctl. Parametrii macrodefiniției sunt după cum urmează:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>dir</code> reprezintă direcția de transfer a datelor (<code>_IOC_NONE</code>, <code>_IOC_READ</code>, <code>_IOC_WRITE</code>)<sup><a href="lab04.html#fn__7" id="fnt__7" class="fn_top">7)</a></sup>;</div>
+</li>
+<li class="level1"><div class="li"><code>type</code> reprezintă numărul magic (<a href="http://lxr.free-electrons.com/source/Documentation/ioctl/ioctl-number.txt?v=3.13" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/ioctl/ioctl-number.txt?v=3.13"  rel="nofollow">  Documentation/ioctl-number.txt</a>);</div>
+</li>
+<li class="level1"><div class="li"><code>nr</code> este numărul codului <code>ioctl</code> specific dispozitivului;</div>
+</li>
+<li class="level1"><div class="li"><code>size</code> este dimensiunea datelor transferate.</div>
+</li>
+</ul>
+
+<p>
+În exemplul de mai jos este prezentată o implementare pentru o funcție <code>ioctl</code>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;asm/ioctl.h&gt;</span>
+&nbsp;
+<span class="co2">#define MY_IOCTL_IN _IOC(_IOC_WRITE, 'k', 1, sizeof(my_ioctl_data))</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">long</span> my_ioctl <span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy0">*</span>file<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">int</span> cmd<span class="sy0">,</span> <span class="kw4">unsigned</span> <span class="kw4">long</span> arg<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data <span class="sy0">=</span>
+         <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data<span class="sy0">*</span><span class="br0">&#41;</span> file<span class="sy0">-&gt;</span>private_data<span class="sy0">;</span>
+    my_ioctl_data mid<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">switch</span><span class="br0">&#40;</span>cmd<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">case</span> MY_IOCTL_IN<span class="sy0">:</span>
+        <span class="kw1">if</span><span class="br0">&#40;</span> copy_from_user<span class="br0">&#40;</span><span class="sy0">&amp;</span>mid<span class="sy0">,</span> <span class="br0">&#40;</span>my_ioctl_data <span class="sy0">*</span><span class="br0">&#41;</span> arg<span class="sy0">,</span> 
+                           <span class="kw4">sizeof</span><span class="br0">&#40;</span>my_ioctl_data<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#41;</span>
+            <span class="kw1">return</span> <span class="sy0">-</span>EFAULT<span class="sy0">;</span>
+&nbsp;
+        <span class="coMULTI">/* process data and execute command */</span>
+&nbsp;
+        <span class="kw2">break</span><span class="sy0">;</span>
+    <span class="kw1">default</span><span class="sy0">:</span>
+        <span class="kw1">return</span> <span class="sy0">-</span>ENOTTY<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+<sup><a href="lab04.html#fn__8" id="fnt__8" class="fn_top">8)</a></sup>
+</p>
+
+<p>
+La apelul din user-space pentru funcția <code>ioctl</code>, se va apela funcția <code>my_ioctl</code> a driver-ului. Un exemplu de astfel de apel în user-space:
+</p>
+<pre class="code c">    <span class="kw1">if</span> <span class="br0">&#40;</span>ioctl<span class="br0">&#40;</span>fd<span class="sy0">,</span> MY_IOCTL_IN<span class="sy0">,</span> buffer<span class="br0">&#41;</span> <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* handle error */</span>
+    <span class="br0">&#125;</span></pre>
+
+<p>
+<sup><a href="lab04.html#fn__9" id="fnt__9" class="fn_top">9)</a></sup>
+</p>
+
+</div>
+
+<h2 class="sectionedit17" id="sincronizare_-_cozi_de_asteptare">Sincronizare - cozi de așteptare</h2>
+<div class="level2">
+
+<p>
+Cozile de așteptare sunt mecanisme utile în probleme de sincronizare. De multe ori este necesar ca un thread să aștepte terminarea unei operații, dar este de dorit ca această așteptare să nu fie busy-waiting. Folosind cozi de așteptare și funcții care schimbă starea thread-ului din planificabil în neplanificabil și invers se pot rezolva astfel de probleme. În Linux, o coadă de așteptare este o listă în care sunt trecute procesele care așteaptă un anumit eveniment. O coadă de așteptare este definită cu tipul <a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L35" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L35"  rel="nofollow">  wait_queue_head_t</a> și poate fi folosită de funcțiile/macro-urile:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/wait.h&gt;</span>
+&nbsp;
+DECLARE_WAIT_QUEUE_HEAD<span class="br0">&#40;</span>wq_name<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> init_waitqueue_head<span class="br0">&#40;</span>wait_queue_head_t <span class="sy0">*</span>q<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> wait_event<span class="br0">&#40;</span>wait_queue_head_t q<span class="sy0">,</span> <span class="kw4">int</span> condition<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> wait_event_interruptible<span class="br0">&#40;</span>wait_queue_head_t q<span class="sy0">,</span> <span class="kw4">int</span> condition<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> wait_event_timeout<span class="br0">&#40;</span>wait_queue_head_t q<span class="sy0">,</span> <span class="kw4">int</span> condition<span class="sy0">,</span> <span class="kw4">int</span> timeout<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> wait_event_interruptible_timeout<span class="br0">&#40;</span>wait_queue_head_t q<span class="sy0">,</span> <span class="kw4">int</span> condition<span class="sy0">,</span> <span class="kw4">int</span> timeout<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> wake_up<span class="br0">&#40;</span>wait_queue_head_t <span class="sy0">*</span>q<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">void</span> wake_up_interruptible<span class="br0">&#40;</span>wait_queue_head_t <span class="sy0">*</span>q<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Rolurile macro-urilor/funcțiilor de mai sus sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L70" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L70"  rel="nofollow">  init_waitqueue_head</a> inițializează coada de așteptare; dacă se dorește inițializarea cozii la compilare, se poate folosi macroul <a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L59" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L59"  rel="nofollow">  DECLARE_WAIT_QUEUE_HEAD</a>;</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L233" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L233"  rel="nofollow">  wait_event</a> și <a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L311" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L311"  rel="nofollow">  wait_event_interruptible</a> adaugă thread-ul curent la coada de așteptare cât timp condiția este falsă, îi setează starea la <code>TASK_UNINTERRUPTIBLE</code> sau <code>TASK_INTERRUPTIBLE</code> și apelează scheduler-ul pentru planificarea unui nou thread; așteptarea va fi întreruptă atunci când un alt thread va apela funcția <a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L159" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L159"  rel="nofollow">  wake_up</a>;</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L257" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L257"  rel="nofollow">  wait_event_timeout</a> și <a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L339" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L339"  rel="nofollow">  wait_event_interruptible_timeout</a> au același efect ca funcțiile de mai sus, doar că așteptarea poate fi întreruptă la încheierea timeout-ului primit ca parametru;</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L159" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L159"  rel="nofollow">  wake_up</a> pune toate thread-urile oprite din starea <code>TASK_INTERRUPTIBLE</code> și <code>TASK_UNINTERRUPTIBLE</code> în starea <code>TASK_RUNNING</code>; scoate aceste thread-uri din coada de așteptare;</div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L165" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/wait.h?v=3.13#L165"  rel="nofollow">  wake_up_interruptible</a> aceeași acțiune, însă se folosesc doar thread-urile cu starea <code>TASK_INTERRUPTIBLE</code>.</div>
+</li>
+</ul>
+
+<p>
+Un exemplu simplu este cel al unui thread care așteaptă modificarea valorii unui flag. Inițializările se realizează prin secvența:
+</p>
+<pre class="code c"><span class="co2">#include &lt;linux/sched.h&gt;</span>
+&nbsp;
+    wait_queue_head_t wq<span class="sy0">;</span>
+    <span class="kw4">int</span> flag <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+&nbsp;
+    init_waitqueue_head<span class="br0">&#40;</span><span class="sy0">&amp;</span>wq<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Un thread va aștepta ca flag-ul sa fie modificat la o valoare diferită de zero:
+</p>
+<pre class="code c">    wait_event_interruptible<span class="br0">&#40;</span>wq<span class="sy0">,</span> flag <span class="sy0">!=</span><span class="nu0">0</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    flag <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></pre>
+
+<p>
+în timp ce un alt thread va modifica valoarea flag-ului și va trezi thread-urile care așteaptă:
+</p>
+<pre class="code c">    flag <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+    wake_up_interruptible<span class="br0">&#40;</span><span class="sy0">&amp;</span>wq<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h2 class="sectionedit18" id="quiz">Quiz</h2>
+<div class="level2">
+
+<p>
+Pentru auto-evaluare înainte de laborator răspundeți la întrebările din <a href="http://elf.cs.pub.ro/so2/wiki/laboratoare/lab04/quiz" class="urlextern" title="http://elf.cs.pub.ro/so2/wiki/laboratoare/lab04/quiz"  rel="nofollow"> quiz</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit19" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/lab-04/chardriverlin.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/lab-04/chardriverlin.zip"  rel="nofollow">Un model de device driver de tip caracter</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/lab-04/controllin.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/lab-04/controllin.zip"  rel="nofollow">Un model de program în user-space pentru a apela device driver-ul de mai sus</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/lab-04/exmodullincase.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/lab-04/exmodullincase.zip"  rel="nofollow">Un exemplu de character device driver</a></div>
+</li>
+<li class="level1"><div class="li"> Linux Device Drivers, 3rd edition – <a href="http://lwn.net/images/pdf/LDD3/ch03.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch03.pdf"  rel="nofollow">  Chapter 3. Char Drivers</a>, <a href="http://lwn.net/images/pdf/LDD3/ch06.pdf" class="urlextern" title="http://lwn.net/images/pdf/LDD3/ch06.pdf"  rel="nofollow">  Chapter 6. Advanced Char Driver Operations</a></div>
+</li>
+<li class="level1"><div class="li"> Essential Linux Device Drivers - Chapter 5. Character Drivers</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://tldp.org/LDP/lkmpg/2.6/html/x569.html" class="urlextern" title="http://tldp.org/LDP/lkmpg/2.6/html/x569.html"  rel="nofollow">  Character Device Drivers</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://tldp.org/LDP/lkmpg/2.6/html/x892.html" class="urlextern" title="http://tldp.org/LDP/lkmpg/2.6/html/x892.html"  rel="nofollow">  Talking to Device Files (writes and IOCTLs)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://janitor.kernelnewbies.org/docs/driver-howto.html" class="urlextern" title="http://janitor.kernelnewbies.org/docs/driver-howto.html"  rel="nofollow">  Linux Device Driver Dos and Don&#039;ts</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/119652/" class="urlextern" title="http://lwn.net/Articles/119652/"  rel="nofollow"> The new way of ioctl()</a></div>
+</li>
+</ul>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="lab04.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+struct file_operations - aici am prezentat doar o parte din operațiile din structură, cele care se implementează în mod uzual de către device drivere</div>
+<div class="fn"><sup><a href="lab04.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+user_buffer - acest buffer trebuie accesat cu funcții speciale (pe care le vom discuta imediat) și nu direct, pentru că este un pointer în spațiul de adresă al procesului ce a invocat apelul de sistem</div>
+<div class="fn"><sup><a href="lab04.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+nume fisier - după cum ați observat, la atributele inode-ului nu am enumerat și numele. Aceasta pentru că în UNIX un fișier poate avea mai multe nume, datorită link-urilor soft sau hard</div>
+<div class="fn"><sup><a href="lab04.html#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+my_device_driver - “my_device_driver” este numele device-ului asociat cu intervalul de identificatori și care va apărea în <code>/proc/devices</code></div>
+<div class="fn"><sup><a href="lab04.html#fnt__5" id="fn__5" class="fn_bot">5)</a></sup> 
+driver/device - după cum s-a specificat, un driver poate gestiona mai multe device-uri; funcția init_module realizează inițializările specifice driver-ului, pe când funcția open pe cele specifice device-ului pentru care se apelează funcția</div>
+<div class="fn"><sup><a href="lab04.html#fnt__6" id="fn__6" class="fn_bot">6)</a></sup> 
+IOC -  alternativ, se pot folosi macrodefinițiile _IO (pentru o comandă fără parametri), _IOR (pentru o comandă de citire), _<abbr title="In other words">IOW</abbr> (pentru o comandă de scriere) sau _IOWR (pentru o comandă de transfer bidirecțional) </div>
+<div class="fn"><sup><a href="lab04.html#fnt__7" id="fn__7" class="fn_bot">7)</a></sup> 
+dir - direcția este precizată din punct de vedere al aplicației: _IOC_READ când se citește de pe device, iar _IOC_WRITE când se scrie pe device</div>
+<div class="fn"><sup><a href="lab04.html#fnt__8" id="fn__8" class="fn_bot">8)</a></sup> 
+my_ioctl_data - <code>my_ioctl_data</code> poate fi un tip de date (<code>int</code>, <code>char</code>, etc.) sau o structura definita anterior</div>
+<div class="fn"><sup><a href="lab04.html#fnt__9" id="fn__9" class="fn_bot">9)</a></sup> 
+buffer - dacă nu se transferă date între user-space și kernel-space, parametrul <code>buffer</code> poate lipsi</div>
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_2846161458355b541e066" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_50550478758355b5420f48" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></span></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_139165054258355b5423e23" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab04.html#laborator_4_-_device_drivere_in_linux">Laborator 4 - Device drivere în Linux</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab04.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#concepte_generale">Concepte generale</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#identificator_major_si_minor">Identificator major și minor</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#structuri_de_date_importante_pentru_un_dispozitiv_de_tip_caracter">Structuri de date importante pentru un dispozitiv de tip caracter</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab04.html#structura_file_operations">Structura file_operations</a></div></li>
+<li class="level3"><div class="li"><a href="lab04.html#structurile_inode_si_file">Structurile &#039;&#039;inode&#039;&#039; și &#039;&#039;file&#039;&#039;</a></div></li>
+<li class="level3"><div class="li"><a href="lab04.html#implementarea_operatiilor">Implementarea operațiilor</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab04.html#inregistrarea_si_deinregistrarea_dispozitivelor_de_tip_caracter">Înregistrarea și deînregistrarea dispozitivelor de tip caracter</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#accesul_la_spatiul_de_adresa_al_procesului">Accesul la spațiul de adresă al procesului</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#operatii_implementate_de_device_drivere_de_tip_caracter">Operații implementate de device drivere de tip caracter</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab04.html#open_si_release">open și release</a></div></li>
+<li class="level3"><div class="li"><a href="lab04.html#read_si_write">read și write</a></div></li>
+<li class="level3"><div class="li"><a href="lab04.html#ioctl">ioctl</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab04.html#sincronizare_-_cozi_de_asteptare">Sincronizare - cozi de așteptare</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#quiz">Quiz</a></div></li>
+<li class="level2"><div class="li"><a href="lab04.html#resurse_utile">Resurse utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/laboratoare/lab04.txt · Last modified: 2016/03/21 14:03 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab04%3Fdo=media&amp;ns=so2%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab04.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Alaboratoare%253Alab04&amp;1479891796" width="2" height="1" alt="" /></div>
+</body>
+</html>

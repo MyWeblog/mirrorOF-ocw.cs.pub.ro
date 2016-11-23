@@ -1,0 +1,30 @@
+    
+    
+
+void *alocare_buffer(int size)
+{
+	return malloc(size);
+}
+
+void dealocare_buffer(void *buffer)
+{
+	free(buffer);
+}
+
+/* functia apelata de un fir de execuție */
+
+void functie()
+{
+	void *buffer = alocare_buffer(512);
+
+	/* inregistrarea functiei de cleanup */
+	pthread_cleanup_push(dealocare_buffer, buffer);
+
+	/* aici au loc prelucrari, si se poate apela pthread_exit
+        sau firul poate fi terminat de un alt fir */
+
+	/* deinregistrarea functiei de cleanup si executia ei 
+        (parametrul dat este nenul) */
+	
+        pthread_cleanup_pop(1);
+}

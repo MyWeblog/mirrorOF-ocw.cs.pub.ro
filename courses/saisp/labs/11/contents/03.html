@@ -1,0 +1,228 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    03. [10p] Clasificarea folosind ToS    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-18T14:29:08+0300"/>
+<meta name="keywords" content="saisp,labs,11,contents,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:11:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/saisp/labs/11/contents/03.html"/>
+<link rel="canonical" href="03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:11:contents';var JSINFO = {"id":"saisp:labs:11:contents:03","namespace":"saisp:labs:11:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="03%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="03%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_clasificarea_folosind_tos">03. [10p] Clasificarea folosind ToS</h3>
+<div class="level3">
+
+<p>
+În Linux, strategiile de QoS se inspectează și configurează folosind comanda <code>tc</code>. Termenul folosit pentru strategiile de QoS este <code>qdisc</code> (de la <code>queueing discipline</code>).
+</p>
+
+<p>
+Afisați detalii despre qdisc-ul implicit, asociat interfeței <code>eth0</code> de pe stația <code>gateway</code>:
+</p>
+<pre class="code"># tc qdisc show dev eth0
+qdisc pfifo_fast 0: root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1</pre>
+
+<p>
+Observați că qdisc-ul implicit este <code>pfifo_fast</code> (strategia implicită de QoS):
+</p>
+<ul>
+<li class="level1"><div class="li"> Numele vine de la <code>priority FIFO</code>.</div>
+</li>
+<li class="level1"><div class="li"> Este un qdisc <strong>classless</strong> (nu putem clasifica traficul și limita traficul, îl putem doar prioritiza)</div>
+</li>
+<li class="level1"><div class="li"> Nu este o simpla coada FIFO, ci conține 3 (sub)cozi, numite 0, 1 si 2 (fiecare din ele fiind FIFO). Cât timp coada coada <code>0</code> conține pachete, cozile 1 si 2 NU vor fi servite.</div>
+</li>
+</ul>
+
+<p>
+Ce reprezintă <code>priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1</code>? În Linux, kernel-ul asociază fiecărui pachet o prioritate, în functie de campul TOS (Type of Service) din header-ul IP. Prioritatea ne selectează una din cele 3 (sub)cozi din pfifo_fast: coada 0, 1 sau 2. Asocierile se fac după următorul tabel:
+</p>
+<pre class="code">TOS     Means                    Linux Priority    Band
+-------------------------------------------------------
+0x0     Normal-Service           0 Best Effort     1
+0x2     Minimize-Monetary Cost   1 Filler          2
+0x4     Maximize-Reliability     0 Best Effort     1
+0x6     mmc+mr                   0 Best Effort     1
+0x8     Maximize-Throughput      2 Bulk            2
+0xa     mmc+mt                   2 Bulk            2
+0xc     mr+mt                    2 Bulk            2
+0xe     mmc+mr+mt                2 Bulk            2
+0x10    Minimize-Delay           6 Interactive     0
+0x12    mmc+md                   6 Interactive     0
+0x14    mr+md                    6 Interactive     0
+0x16    mmc+mr+md                6 Interactive     0
+0x18    mt+md                    4 Int. Bulk       1
+0x1a    mmc+mt+md                4 Int. Bulk       1
+0x1c    mr+mt+md                 4 Int. Bulk       1
+0x1e    mmc+mr+mt+md             4 Int. Bulk       1</pre>
+
+<p>
+Observăm că pachetele normale (cu TOS 0x00) sunt introduse în (sub)coada 1. La punctul anterior, fluxul UDP avea o pierdere semnificativă de pachete. O primă soluție ar fi marcarea pachetelor de voce și video cu un ToS favorabil (de exemplu, <code>0x10</code>), pentru a avea prioritate mai mare față de pachetele. Marcarea se realizează folosind lanțul <code>mangle</code> al comenzii <code>iptables</code>:
+</p>
+<pre class="code">root@gateway:~#  iptables -t mangle -A OUTPUT -p udp --dport 6000:8000 -j TOS --set-tos Minimize-Delay</pre>
+
+<p>
+Comanda anterioară marchează toate pachetele UDP cu porturile în intervalul 6000 și 8000 cu tag-ul <code>Minimize-Delay</code>. Se observă că se poate folosi numele tag-ului în loc de valoare (<code>0x10</code>).
+</p>
+
+<p>
+Rulați din nou scriptul <code>iperf-gateway.sh</code> pe stația <code>gateway</code> și observați că procentele pierdute s-au diminuat foarte puțin. Nu e suficientă doar o prioritizare a pachetelor.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../11.html" class="wikilink1" title="saisp:labs:11">Laboratorul 11</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:11:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:11:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_1519188564583567d1e23eb" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="00.html" class="wikilink1" title="saisp:labs:11:contents:00">00. [10p] Completare formular de feedback</a></div></li>
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="saisp:labs:11:contents:01">01. [10p] iperf (generator de trafic)</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="saisp:labs:11:contents:02">02. [10p] Generarea traficului pe baza unor caracteristici și constrângeri din lumea reală</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="03.html" class="wikilink1" title="saisp:labs:11:contents:03">03. [10p] Clasificarea folosind ToS</a></span></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="saisp:labs:11:contents:04">04. [5p] Traffic shaping în Linux</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="saisp:labs:11:contents:05">05. [10p] Traffic shaping classful</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="saisp:labs:11:contents:06">06. [15p] Politici de limitare per client</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="saisp:labs:11:contents:07">07. [10p] HTB - observarea consumului de resurse</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="saisp:labs:11:contents:08">08. [20p] HTB - u32 hashing tables</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="saisp:labs:11:contents:09">09. [BONUS - 10p] tcng (traffic control next generation)</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="saisp:labs:11:contents:10">10. [BONUS - 10p] Colectare statistici folosind tc</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:11:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/11/contents/03.txt · Last modified: 2014/05/18 14:29 by mihai.carabas          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="03%3Fdo=media&amp;ns=saisp%253Alabs%253A11%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="03.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A11%253Acontents%253A03&amp;1479894993" width="2" height="1" alt="" /></div>
+</body>
+</html>

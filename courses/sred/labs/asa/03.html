@@ -1,0 +1,851 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    A03 - NAT    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-03-29T10:50:16+0300"/>
+<meta name="keywords" content="sred,labs,asa,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=sred:labs:asa"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../_export/xhtml/sred/labs/asa/03.html"/>
+<link rel="canonical" href="03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sred:labs:asa';var JSINFO = {"id":"sred:labs:asa:03","namespace":"sred:labs:asa","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../../index.html"><img height="70" src="../../../res/sigla_sred.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../systems/index.html"/><img height="70" src="../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="03%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="03%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="a03_-_nat">A03 - NAT</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="topology">Topology</h2>
+<div class="level2">
+
+<p>
+<a href="../../../_detail/sred/labs/asa/asa_topology_01.png%3Fid=sred%253Alabs%253Aasa%253A03.html" class="media" title="sred:labs:asa:asa_topology_01.png"><img src="../../../_media/sred/labs/asa/asa_topology_01.png" class="mediacenter" title=" " alt=" " /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit3" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit4" id="basic_setup">1. Basic setup</h3>
+<div class="level3">
+
+<p>
+In this task you will establish connectivity between the firewall and the hosts (routers).
+</p>
+
+</div>
+
+<h4 id="a_host_-_firewall_connectivity">A. Host - Firewall connectivity</h4>
+<div class="level4">
+
+<p>
+Configure the inside network (the ASA interface and directly connected router) with IP addresses from the 192.168.1.0/24 pool.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code bash">Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># interface gigabit 2</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># no shutdown</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># ip address 192.168.1.1 255.255.255.0</span></pre>
+
+
+<pre class="code bash">R3<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#int fastethernet 0/0</span>
+R3<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0">#ip address 192.168.1.100 255.255.255.0</span>
+R3<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0">#no shutdown</span></pre>
+
+
+</div></div>
+
+<p>
+Configure the dmz network (the ASA interface and directly connected router) with IP addresses from the 10.10.10.0/24 pool.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code bash">Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># interface gigabit 1</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># no shutdown</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># ip address 10.10.10.1 255.255.255.0</span></pre>
+
+
+<pre class="code bash">R2<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#interface fastethernet 0/0</span>
+R2<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0">#ip address 10.10.10.100 255.255.255.0</span>
+R2<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0">#no shutdown</span></pre>
+
+
+</div></div>
+
+<p>
+Configure the outside network (the ASA interface and directly connected router) with IP addresses from the 141.85.99.0/24 pool.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code bash">Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># interface gigabit 0</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># ip address 141.85.99.1 255.255.255.0</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># no shutdown</span></pre>
+
+
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#interface fastethernet 0/0</span>
+R1<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0">#ip address 141.85.99.100 255.255.255.0</span>
+R1<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0">#no shutdown</span></pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="b_routing">B. Routing</h4>
+<div class="level4">
+
+<p>
+Configure default routes on the routers.
+<p><div class="notetip"> Remember to use next-hop addresses on multi-access networks. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#ip route 0.0.0.0 0.0.0.0 141.85.99.1</span></pre>
+
+
+<pre class="code bash">R2<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#ip route 0.0.0.0 0.0.0.0 10.10.10.1</span></pre>
+
+
+<pre class="code bash">R3<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#ip route 0.0.0.0 0.0.0.0 192.168.1.1</span></pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="c_end-to-end_connectivity">C. End-to-end connectivity</h4>
+<div class="level4">
+
+<p>
+Configure the ASA device s.t. the following are achieved:
+</p>
+<ul>
+<li class="level1"><div class="li"> ICMP and TELNET traffic from the <em>inside</em> to the <em>dmz</em> or <em>outside</em> should be allowed</div>
+</li>
+<li class="level3"><div class="li"> ICMP and TELNET traffic from the <em>dmz</em> to the <em>outside</em> should be allowed</div>
+</li>
+<li class="level3"><div class="li"> ICMP and TELNET traffic from the <em>dmz</em> to the <em>inside</em> should <strong>NOT</strong> be allowed</div>
+</li>
+<li class="level3"><div class="li"> ICMP and TELNET traffic from the <em>outside</em> to the <em>inside</em> or <em>dmz</em> should <strong>NOT</strong> be allowed</div>
+</li>
+<li class="level3"><div class="li"> Return traffic should always be allowed</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip"> Create a <code>class-map</code> that selects ICMP traffic and a <code>policy-map</code> that inspects ICMP traffic belonging to the class. 
+</div></p>
+<p><div class="noteimportant"> TCP traffic flowing from a high security-level to a low security-level is inspected by default. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code bash">Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># interface gigabit 0</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># nameif outside</span>
+INFO: Security level <span class="kw1">for</span> <span class="st0">&quot;outside&quot;</span> <span class="kw1">set</span> to <span class="nu0">0</span> by default.
+Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># interface gigabit 1</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># nameif dmz</span>
+INFO: Security level <span class="kw1">for</span> <span class="st0">&quot;dmz&quot;</span> <span class="kw1">set</span> to <span class="nu0">0</span> by default.
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># security-level 50</span>
+Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># interface gigabit 2</span>
+Atlas<span class="br0">&#40;</span>config-if<span class="br0">&#41;</span><span class="co0"># nameif inside</span>
+INFO: Security level <span class="kw1">for</span> <span class="st0">&quot;inside&quot;</span> <span class="kw1">set</span> to <span class="nu0">100</span> by default.
+&nbsp;
+Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># access-list SELECT-ICMP extended permit icmp any any</span>
+&nbsp;
+Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># class-map CLASS-ICMP</span>
+Atlas<span class="br0">&#40;</span>config-cmap<span class="br0">&#41;</span><span class="co0"># match access-list SELECT-ICMP</span>
+&nbsp;
+Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># policy-map POLICY-ICMP</span>
+Atlas<span class="br0">&#40;</span>config-pmap<span class="br0">&#41;</span><span class="co0"># class CLASS-ICMP</span>
+Atlas<span class="br0">&#40;</span>config-pmap-c<span class="br0">&#41;</span><span class="co0"># inspect icmp</span>
+Atlas<span class="br0">&#40;</span>config-pmap<span class="br0">&#41;</span><span class="co0"># class class-default</span>
+&nbsp;
+Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># service-policy POLICY-ICMP global</span></pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="d_filter_private_addresses">D. Filter private addresses</h4>
+<div class="level4">
+
+<p>
+Filter (i.e. block) all packets containing private IP addresses that enter or exit the outside interface. 
+</p>
+
+<p>
+<p><div class="notetip">  Private addresses are defined in <a href="http://tools.ietf.org/html/rfc1918" class="urlextern" title="http://tools.ietf.org/html/rfc1918"  rel="nofollow"> RFC1918</a> 
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip"> Use an access list 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# access-list FILTER-PRIVATE extended deny ip any 10.0.0.0 255.0.0.0
+Atlas(config)# access-list FILTER-PRIVATE extended deny ip any 172.16.0.0 255.240.0.0
+Atlas(config)# access-list FILTER-PRIVATE extended deny ip any 192.168.0.0 255.255.0.0
+Atlas(config)# access-list FILTER-PRIVATE extended deny ip 10.0.0.0 255.0.0.0 any
+Atlas(config)# access-list FILTER-PRIVATE extended deny ip 172.16.0.0 255.240.0.0 any
+Atlas(config)# access-list FILTER-PRIVATE extended deny ip 192.168.0.0 255.255.0.0 any
+Atlas(config)# access-list FILTER-PRIVATE extended permit ip any any
+Atlas(config)# access-group FILTER-PRIVATE out interface outside</pre>
+</div></div>
+
+</div>
+
+<h3 class="sectionedit5" id="basic_nat">2. Basic NAT</h3>
+<div class="level3">
+
+<p>
+In this task you will learn how to configure NAT using an ASA device.
+</p>
+
+</div>
+
+<h4 id="a_pat">A. PAT</h4>
+<div class="level4">
+
+<p>
+<p><div class="noteimportant"> The lab ASA version is 8.4. <code>nat-control</code> is no longer used and is marked as deprecated. For information about NAT in ASA8.3+ click on the spoiler tags that may be found throughout the lab. 
+</div></p>
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click for details about NAT in ASA8.3+
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click for details about NAT in ASA8.3+
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+<p><div class="noteimportant"> This is an example and is not part of the actual lab solution. 
+</div></p>
+The ASA 8.3+ approach to NAT is object oriented. First you need to create objects that match the addresses that you wish to translate, and then use these objects in the translation rules. For example, if you wish to translate addresses from the <code>172.16.100.0/24</code> network to the IP address of the outside interface, you would configure:
+</p>
+<pre class="code bash">Atlas<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># object network MYNETWORK</span>
+ASA<span class="br0">&#40;</span>config-obj<span class="br0">&#41;</span><span class="co0"># subnet 172.16.0.0 255.255.255.0</span>
+ASA<span class="br0">&#40;</span>config-obj<span class="br0">&#41;</span><span class="co0"># exit</span>
+ASA<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0"># nat (inside,outside) source dynamic MYNETWORK interface</span></pre>
+</div></div>
+<p>
+Configure the network so that <code>inside</code> can Telnet to <code>outside</code>. The entire <code>inside</code> network must be seen as a single IP address on the outside (the IP address of the <code>outside</code> interface).
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# object network INSIDE
+Atlas(config-network-object)# subnet 192.168.1.0 255.255.255.0
+Atlas(config-network-object)# exit
+Atlas(config)# nat (inside,outside) source dynamic INSIDE interface</pre>
+</div></div>
+
+<p>
+Test the configuration using Telnet. Why doesn&#039;t it work? (If it works, then something&#039;s wrong :P)
+</p>
+
+<p>
+<p><div class="notetip">
+To help you debug the issue, here are some hints:
+</p>
+<ul>
+<li class="level1"><div class="li"> use the <code>show access-list</code> command to monitor the access-list hit counts</div>
+</li>
+<li class="level1"><div class="li"> use the <code>show xlate</code> command to monitor the address translation</div>
+</li>
+<li class="level1"><div class="li"> check slide 14 of the <a href="../../courses/course-03.html" class="wikilink1" title="sred:courses:course-03">course</a></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">R3#telnet 141.85.99.100
+Trying 141.85.99.100 ... 
+% Connection refused by remote host</pre>
+<pre class="code">Atlas# show xlate
+1 in use, 1 most used
+Flags: D - DNS, i - dynamic, r - portmap, s - static, I - identity, T - twice
+TCP PAT from inside:192.168.1.100/18063 to outside:141.85.99.1/45343 flags ri idle 0:00:03 timeout 0:00:30</pre>
+<pre class="code">Atlas# show access-list FILTER-PRIVATE
+[... output omitted ...]
+access-list FILTER-PRIVATE line 4 extended deny ip 192.168.0.0 255.255.0.0 any (hitcnt=6) 0xcce81a64 
+[... output omitted ...]
+</pre>
+</div></div>
+
+<p>
+Fix the problem. Do not change the NAT rules or IP addresses.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# no access-group FILTER-PRIVATE out interface outside</pre>
+</div></div>
+
+<p>
+Test the configuration using Telnet. What is the source port after translation?
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">R3#telnet 141.85.99.100
+Trying 141.85.99.100 ... Open
+
+
+User Access Verification
+
+Password:</pre>
+<pre class="code">R1#show tcp vty 0
+
+tty130, virtual tty from host 141.85.99.1
+Connection state is ESTAB, I/O status: 1, unread input bytes: 0            
+Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 255
+Local host: 141.85.99.100, Local port: 23
+Foreign host: 141.85.99.1, Foreign port: 15659</pre>
+</div></div>
+
+</div>
+
+<h4 id="b_dynamic_nat">B. Dynamic NAT</h4>
+<div class="level4">
+
+<p>
+Configure the firewall so that the <code>dmz</code> network can ping the <code>outside</code> router. Addresses belonging to the <code>10.10.10.10-10.10.10.100</code> and <code>10.10.10.150-10.10.10.200</code> address ranges must be translated, in adddition to the IP address configured on the <code>dmz</code> router. Use the <code>99.85.77.0/24</code> address pool for public addressing.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click for details about creating complex sets of addresses
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click for details about creating complex sets of addresses
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+<p><div class="noteimportant"> This is an example and is not part of the actual lab solution. 
+</div></p>
+The advantage of having an object oriented approach is that complex sets of networks can be easily configured and changed. For example, consider the following set of addresses:
+</p>
+<ul>
+<li class="level1"><div class="li"> 172.16.0.1 - 172.16.0.10</div>
+</li>
+<li class="level1"><div class="li"> 172.16.0.101 - 172.16.0.110</div>
+</li>
+<li class="level1"><div class="li"> 172.16.0.254</div>
+</li>
+</ul>
+
+<p>
+In ASA8.4 we can create an <code>object-group</code> that contains all these addresses. Later, we can use it to specify real addresses or mapped addresses (i.e. the addresses that we translated to).
+</p>
+
+<p>
+There are multiple solutions here. For example:
+</p>
+
+<p>
+Create an object for <code>172.16.0.1</code> - <code>172.16.0.10</code>:
+</p>
+<pre class="code">Atlas(config)# object network MYNET1 
+Atlas(config-network-object)# range 172.16.0.1 172.16.0.10
+Atlas(config-network-object)# exit</pre>
+
+<p>
+Create an object for <code>172.16.0.101</code> - <code>172.16.0.110</code>
+</p>
+<pre class="code">Atlas(config)# object network MYNET2
+Atlas(config-network-object)# range 172.16.0.101 172.16.0.110
+Atlas(config-network-object)# exit</pre>
+
+<p>
+Create an object group that includes the objects configured above:
+</p>
+<pre class="code">Atlas(config)# object-group network MYGROUP
+Atlas(config-network-object-group)# network-object object MYNET1
+Atlas(config-network-object-group)# network-object object MYNET2
+Atlas(config-network-object-group)# network-object host 172.16.0.254
+Atlas(config-network-object-group)# exit</pre>
+</div></div><div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Click for details on how to configure dynamic NAT
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Click for details on how to configure dynamic NAT
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+<p><div class="noteimportant"> This is an example and is not part of the actual lab solution. 
+</div></p>
+When configuring dynamic NAT, we have to specify:
+</p>
+<ul>
+<li class="level1"><div class="li"> the real addresses (i.e. the addresses that will be translated)</div>
+</li>
+<li class="level1"><div class="li"> the mapped addresses (i.e. the new addresses after translation)</div>
+</li>
+</ul>
+
+<p>
+We&#039;ll use two previously configured sets of addresses:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>MYGROUP</code> (contains <code>172.16.0.1</code> - <code>172.16.0.10</code>, <code>172.16.0.101</code> - <code>172.16.0.110</code>, <code>172.16.0.254</code>)</div>
+</li>
+<li class="level1"><div class="li"> <code>PUBLIC</code> (contains <code>200.0.0.1</code> - <code>200.0.0.254</code>)</div>
+</li>
+</ul>
+
+<p>
+If we want to translate addresses from <code>MYGROUP</code> to <code>PUBLIC</code>:
+</p>
+<pre class="code">Atlas(config)# nat (inside,outside) source dynamic MYGROUP PUBLIC</pre>
+
+<p>
+<p><div class="notewarning"> Mapped addresses cannot be specified using the <code>subnet</code> command. Use <code>range</code> instead. In other words:
+</p>
+<pre class="code">This won&#039;t work:
+Atlas(config)# object network PUBLIC
+Atlas(config-network-object)# subnet 200.0.0.0 255.255.255.0</pre>
+<pre class="code">This will work:
+Atlas(config)# object network PUBLIC
+Atlas(config-network-object)# range 200.0.0.1 200.0.0.254</pre>
+
+<p>
+
+</div></p>
+</p>
+</div></div><div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# object network DMZ-1
+Atlas(config-network-object)# range 10.10.10.10 10.10.10.100
+Atlas(config-network-object)# exit
+Atlas(config)# object network DMZ-2
+Atlas(config-network-object)# range 10.10.10.150 10.10.10.200
+Atlas(config-network-object)# exit
+Atlas(config)# object-group network DMZ
+Atlas(config-network-object-group)# network-object object DMZ-1
+Atlas(config-network-object-group)# network-object object DMZ-2
+Atlas(config-network-object-group)# exit
+
+Atlas(config)# object network DMZ-OUTSIDE
+Atlas(config-network-object)# range 99.85.77.1 99.85.77.254
+Atlas(config-network-object)# exit
+
+Atlas(config)# nat (dmz,outside) source dynamic DMZ DMZ-OUTSIDE</pre>
+</div></div>
+
+<p>
+Start ICMP packet debugging on the <code>outside</code> router using the <code>debug ip icmp</code> command.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">R1#debug ip icmp
+ICMP packet debugging is on</pre>
+</div></div>
+
+<p>
+Ping <code>outside</code> from the <code>dmz</code>. Write down the source IP address of the received packet.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">R2#ping 141.85.99.100
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 141.85.99.100, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 4/18/48 ms</pre>
+<pre class="code">R1#
+*Mar  1 03:12:53.683: ICMP: echo reply sent, src 141.85.99.100, dst 99.85.77.168
+*Mar  1 03:12:53.727: ICMP: echo reply sent, src 141.85.99.100, dst 99.85.77.168
+*Mar  1 03:12:53.755: ICMP: echo reply sent, src 141.85.99.100, dst 99.85.77.168
+*Mar  1 03:12:53.755: ICMP: echo reply sent, src 141.85.99.100, dst 99.85.77.168
+*Mar  1 03:12:53.771: ICMP: echo reply sent, src 141.85.99.100, dst 99.85.77.168</pre>
+</div></div>
+
+<p>
+View the translation table on the ASA using <code>show xlate</code>. Write down the original port and mapped port (Hint: it&#039;s a trap).
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas# show xlate
+1 in use, 3 most used
+Flags: D - DNS, i - dynamic, r - portmap, s - static, I - identity, T - twice
+NAT from dmz:10.10.10.100 to outside:99.85.77.168 flags i idle 0:00:07 timeout 3:00:00</pre>
+</div></div>
+
+<p>
+Change the IP address of the <code>dmz</code> router to something not included in the list of addresses to be translated (for example, you can use the <code>10.10.10.203</code> address).
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">R2(config)#interface fastethernet 0/0
+R2(config-if)#ip address 10.10.10.203 255.255.255.0</pre>
+</div></div>
+
+<p>
+Attempt to ping <code>outside</code> from the <code>dmz</code> again. Write down the source IP address of the received packet. What do you notice?
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">*Mar  1 03:15:30.471: ICMP: echo reply sent, src 141.85.99.100, dst 10.10.10.203
+*Mar  1 03:15:30.475: ICMP: echo reply sent, src 141.85.99.100, dst 10.10.10.203
+*Mar  1 03:15:30.479: ICMP: echo reply sent, src 141.85.99.100, dst 10.10.10.203
+*Mar  1 03:15:30.487: ICMP: echo reply sent, src 141.85.99.100, dst 10.10.10.203
+*Mar  1 03:15:30.495: ICMP: echo reply sent, src 141.85.99.100, dst 10.10.10.203</pre>
+</div></div>
+
+</div>
+
+<h4 id="c_nat_issues">C. NAT issues</h4>
+<div class="level4">
+
+<p>
+Run an HTTP server on the <code>dmz</code> router. Attempt to connect to the server from the <code>inside</code> router. Why does it work?
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">R2(config)#ip http server</pre>
+</div></div>
+
+</div>
+
+<h4 id="d_static_nat">D. Static NAT</h4>
+<div class="level4">
+
+<p>
+<p><div class="notewarning"> Delete the dynamic NAT rule you created earlier. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# no nat (dmz,outside) source dynamic DMZ DMZ-OUTSIDE</pre>
+</div></div>
+
+<p>
+Make the necessary changes to allow the <code>outside</code> network to use the HTTP services configured in the <code>dmz</code> using <strong>the public address</strong> <code>99.99.99.1</code>. Use static NAT.
+</p>
+
+<p>
+<p><div class="notetip"> Use the cisco.com <a href="http://www.cisco.com/en/US/docs/security/asa/asa84/configuration/guide/nat_objects.html#wp1106144" class="urlextern" title="http://www.cisco.com/en/US/docs/security/asa/asa84/configuration/guide/nat_objects.html#wp1106144"  rel="nofollow"> Configuration Guide</a> for details on how to configure static NAT. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# object network DMZ-SERVER
+Atlas(config-network-object)# host 10.10.10.203
+Atlas(config-network-object)# exit
+
+Atlas(config)# object network DMZ-SERVER-OUTSIDE
+Atlas(config-network-object)# host 99.99.99.1
+Atlas(config-network-object)# exit
+
+Atlas(config)# nat (dmz,outside) source static DMZ-SERVER DMZ-SERVER-OUTSIDE</pre>
+</div></div>
+
+<p>
+View the translation table. Notice that the static NAT rule is already active even before traffic is generated.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# show xlate 
+1 in use, 3 most used
+Flags: D - DNS, i - dynamic, r - portmap, s - static, I - identity, T - twice
+NAT from dmz:10.10.10.203 to outside:99.99.99.1
+    flags s idle 0:00:08 timeout 0:00:00</pre>
+</div></div>
+
+<p>
+Try to connect from the <code>outside</code> router to the <code>dmz</code> server. Why doesn&#039;t it work?
+</p>
+
+<p>
+<p><div class="notetip"> Think about the previous lab. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">R1&gt;telnet 99.99.99.1 80
+Trying 99.99.99.1, 80 ... 
+
+; Traffic coming from security level 0 is blocked from going to security level 50</pre>
+</div></div>
+
+<p>
+Configure an access-list that permits traffic to the web server. Specify a single IP address as destination.
+</p>
+
+<p>
+<p><div class="notewarning"> Remember that recent versions of ASA use Real IP! Take extra care when specifying the destination address in the access list. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# access-list ALLOW-HTTP permit tcp any host 10.10.10.203 eq www
+Atlas(config)# access-group ALLOW-HTTP in interface outside</pre>
+<pre class="code">R1#telnet 99.99.99.1 80
+Trying 99.99.99.1, 80 ... Open</pre>
+</div></div>
+
+</div>
+
+<h3 class="sectionedit6" id="bonus_twice_nat">Bonus. Twice NAT</h3>
+<div class="level3">
+
+<p>
+Read about twice NAT <a href="http://www.cisco.com/en/US/docs/security/asa/asa84/configuration/guide/nat_rules.html" class="urlextern" title="http://www.cisco.com/en/US/docs/security/asa/asa84/configuration/guide/nat_rules.html"  rel="nofollow"> here</a>.
+</p>
+
+<p>
+Configure two loopback interfaces on the <code>outside</code> router:
+</p>
+<ul>
+<li class="level1"><div class="li"> Loopback 0: 1.1.1.1/32</div>
+</li>
+<li class="level1"><div class="li"> Loopback 1: 2.2.2.2/32</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">R1(config)#interface loopback 0
+R1(config-if)#ip address 1.1.1.1 255.255.255.255 
+R1(config-if)#interface loopback 1
+R1(config-if)#ip address 2.2.2.2 255.255.255.255
+R1(config-if)#exit</pre>
+</div></div>
+
+<p>
+Configure twice NAT when accessing the <code>outside</code> server from the <code>dmz</code> network s.t.:
+</p>
+<ul>
+<li class="level1"><div class="li"> the source is port overloaded on 11.11.11.11 when communicating with 1.1.1.1</div>
+</li>
+<li class="level1"><div class="li"> the source is port overloaded on 22.22.22.22 when communicating with 2.2.2.2</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"><pre class="code">Atlas(config)# no nat (dmz,outsidE) source static DMZ-SERVER DMZ-SERVER-OUTSIDE
+
+Atlas(config)# object network LOOPBACK-1
+Atlas(config-network-object)# host 1.1.1.1
+Atlas(config-network-object)# exit
+Atlas(config)# object network LOOPBACK-2
+Atlas(config-network-object)# host 2.2.2.2
+Atlas(config-network-object)# exit
+Atlas(config)# object network OUTSIDE-LO-11
+Atlas(config-network-object)# host 11.11.11.11
+Atlas(config-network-object)# exit
+Atlas(config)# object network OUTSIDE-LO-22
+Atlas(config-network-object)# host 22.22.22.22
+Atlas(config-network-object)# exit
+
+Atlas(config)# nat (dmz,outside) source dynamic any OUTSIDE-LO-11 destination static LOOPBACK-1 LOOPBACK-1
+Atlas(config)# nat (dmz,outside) source dynamic any OUTSIDE-LO-22 destination static LOOPBACK-2 LOOPBACK-2
+
+Atlas(config)# route outside 0.0.0.0 0.0.0.0 141.85.99.100</pre>
+<pre class="code">R2#ping 1.1.1.1
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 1.1.1.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 4/15/40 ms</pre>
+<pre class="code">R1#
+*Mar  1 03:41:50.119: ICMP: echo reply sent, src 1.1.1.1, dst 11.11.11.11
+*Mar  1 03:41:50.135: ICMP: echo reply sent, src 1.1.1.1, dst 11.11.11.11
+*Mar  1 03:41:50.143: ICMP: echo reply sent, src 1.1.1.1, dst 11.11.11.11
+*Mar  1 03:41:50.147: ICMP: echo reply sent, src 1.1.1.1, dst 11.11.11.11
+*Mar  1 03:41:50.151: ICMP: echo reply sent, src 1.1.1.1, dst 11.11.11.11</pre>
+<pre class="code">R2#ping 2.2.2.2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2.2.2.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 4/16/44 ms</pre>
+<pre class="code">R1#
+*Mar  1 03:42:23.311: ICMP: echo reply sent, src 2.2.2.2, dst 22.22.22.22
+*Mar  1 03:42:23.343: ICMP: echo reply sent, src 2.2.2.2, dst 22.22.22.22
+*Mar  1 03:42:23.347: ICMP: echo reply sent, src 2.2.2.2, dst 22.22.22.22
+*Mar  1 03:42:23.355: ICMP: echo reply sent, src 2.2.2.2, dst 22.22.22.22
+*Mar  1 03:42:23.395: ICMP: echo reply sent, src 2.2.2.2, dst 22.22.22.22</pre>
+</div></div>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="fortigate_activities">FortiGate Activities</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_55160685058355bbad7c37" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../fortigate/01.html" class="wikilink1" title="sred:labs:fortigate:01">F01 - Basic Setup</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/02.html" class="wikilink1" title="sred:labs:fortigate:02">F02 - Basic Policies</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/04.html" class="wikilink1" title="sred:labs:fortigate:04">F04 - Advanced Policies</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/05.html" class="wikilink1" title="sred:labs:fortigate:05">F05 - Routing</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/07.html" class="wikilink1" title="sred:labs:fortigate:07">F07 - IPSec site-to-site</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/08.html" class="wikilink1" title="sred:labs:fortigate:08">F08 - SSL VPN</a></div></li>
+<li class="level1"><div class="li"><a href="../fortigate/10.html" class="wikilink1" title="sred:labs:fortigate:10">F10 - Practice Exam</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "FortiGate Activities" [1-72] -->
+<h1 class="sectionedit2" id="asa_activities">ASA Activities</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_73986356158355bbad9b69" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="sred:labs:asa:01">A01 - Basic Setup</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="sred:labs:asa:02">A02 - Basic Policies</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="03.html" class="wikilink1" title="sred:labs:asa:03">A03 - NAT</a></span></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="sred:labs:asa:04">A04 - Advanced Policies</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="sred:labs:asa:05">A05 - VLANs and Routing</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="sred:labs:asa:06">A06 - Security Contexts</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="sred:labs:asa:07">A07 - IPSec site-to-site</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="sred:labs:asa:08">A08 - IPSec Remote Access</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="sred:labs:asa:09">A09 - High Availability</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="sred:labs:asa:10">A10 - Practice exam</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "ASA Activities" [73-134] -->
+<h1 class="sectionedit3" id="courses">Courses</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_108385744458355bbadbaa5" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../courses/course-01.html" class="wikilink1" title="sred:courses:course-01">C01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-02.html" class="wikilink1" title="sred:courses:course-02">C02 - Basic Firewalling</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-03.html" class="wikilink1" title="sred:courses:course-03">C03 - NAT</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-04.html" class="wikilink1" title="sred:courses:course-04">C04 - Advanced Firewalling</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-05.html" class="wikilink1" title="sred:courses:course-05">C05 - Routing and Switching</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-06.html" class="wikilink1" title="sred:courses:course-06">C06 - Virtual Firewalling</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-07.html" class="wikilink1" title="sred:courses:course-07">C07 - Basic VPNs</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-08.html" class="wikilink1" title="sred:courses:course-08">C08 - Advanced VPNs</a></div></li>
+<li class="level1"><div class="li"><a href="../../courses/course-09.html" class="wikilink1" title="sred:courses:course-09">C09 - High Availability</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Courses" [135-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="03.html#a03_-_nat">A03 - NAT</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="03.html#topology">Topology</a></div></li>
+<li class="level2"><div class="li"><a href="03.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="03.html#basic_setup">1. Basic setup</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="03.html#a_host_-_firewall_connectivity">A. Host - Firewall connectivity</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#b_routing">B. Routing</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#c_end-to-end_connectivity">C. End-to-end connectivity</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#d_filter_private_addresses">D. Filter private addresses</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="03.html#basic_nat">2. Basic NAT</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="03.html#a_pat">A. PAT</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#b_dynamic_nat">B. Dynamic NAT</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#c_nat_issues">C. NAT issues</a></div></li>
+<li class="level4"><div class="li"><a href="03.html#d_static_nat">D. Static NAT</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="03.html#bonus_twice_nat">Bonus. Twice NAT</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          sred/labs/asa/03.txt · Last modified: 2015/03/29 10:50 by mihai.bucicoiu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="03%3Fdo=media&amp;ns=sred%253Alabs%253Aasa.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="03.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../feed.php" title="Recent changes RSS feed"><img src="../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../lib/exe/indexer.php%3Fid=sred%253Alabs%253Aasa%253A03&amp;1479891898" width="2" height="1" alt="" /></div>
+</body>
+</html>

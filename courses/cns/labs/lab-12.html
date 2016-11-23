@@ -1,0 +1,649 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 12 - Web Application Security (part 2)    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-01-19T20:59:44+0200"/>
+<meta name="keywords" content="cns,labs,lab-12"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cns/labs/lab-12.html"/>
+<link rel="canonical" href="lab-12.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-12","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/cns/"><img height="70" src="../../res/sigla_cns.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab-12%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab-12%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="lab_12_-_web_application_security_part_2">Lab 12 - Web Application Security (part 2)</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="https://www.owasp.org/index.php/OWASP_Testing_Guide_v4_Table_of_Contents" class="urlextern" title="https://www.owasp.org/index.php/OWASP_Testing_Guide_v4_Table_of_Contents"  rel="nofollow">OWASP Testing Guide v4</a>, <a href="https://www.owasp.org/index.php/Testing_for_Input_Validation" class="urlextern" title="https://www.owasp.org/index.php/Testing_for_Input_Validation"  rel="nofollow">Section 4.8 Input validation testing</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.owasp.org/index.php/Testing_for_Command_Injection_(OTG-INPVAL-013)" class="urlextern" title="https://www.owasp.org/index.php/Testing_for_Command_Injection_(OTG-INPVAL-013)"  rel="nofollow">Command injection</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.owasp.org/index.php/Testing_for_SQL_Injection_(OTG-INPVAL-005)" class="urlextern" title="https://www.owasp.org/index.php/Testing_for_SQL_Injection_(OTG-INPVAL-005)"  rel="nofollow">SQL injection</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://ferruh.mavituna.com/sql-injection-cheatsheet-oku/" class="urlextern" title="http://ferruh.mavituna.com/sql-injection-cheatsheet-oku/"  rel="nofollow">SQL Injection Cheat Sheet</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.owasp.org/index.php/Testing_for_Reflected_Cross_site_scripting_(OTG-INPVAL-001)" class="urlextern" title="https://www.owasp.org/index.php/Testing_for_Reflected_Cross_site_scripting_(OTG-INPVAL-001)"  rel="nofollow">Reflected XSS</a> versus <a href="https://www.owasp.org/index.php/Testing_for_Stored_Cross_site_scripting_(OTG-INPVAL-002)" class="urlextern" title="https://www.owasp.org/index.php/Testing_for_Stored_Cross_site_scripting_(OTG-INPVAL-002)"  rel="nofollow">Stored XSS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.owasp.org/index.php/Testing_for_DOM-based_Cross_site_scripting_(OTG-CLIENT-001)" class="urlextern" title="https://www.owasp.org/index.php/Testing_for_DOM-based_Cross_site_scripting_(OTG-CLIENT-001)"  rel="nofollow">DOM-based XSS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://en.wikipedia.org/wiki/Same-origin_policy" class="urlextern" title="http://en.wikipedia.org/wiki/Same-origin_policy"  rel="nofollow">Same-origin policy</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="supporting_files">Supporting files</h2>
+<div class="level2">
+
+<p>
+We will use the same vulnerable virtual machine as the <a href="lab-11.html" class="wikilink1" title="cns:labs:lab-11">previous lab</a>. If not already downloaded in <code>/mnt/sda5/cns/</code>, <a href="http://elf.cs.pub.ro/oss/res/labs/cnsweb.ova" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/cnsweb.ova"  rel="nofollow">download it from elf</a> (the file has about 250MB) and import it into VirtualBox by selecting <code>File</code> → <code>Import Appliance</code> and selecting <code>cnsweb.ova</code>.
+Add a new network adapter (<code>Adapter 2</code>) of the type <code>Host-only Adapter</code>). This will be adapter you will use for connecting uring Burp. After booting up the virtual machine, you can find its IP by logging in directly from VirtualBox as <code>student</code> (password <code>student</code>); you will be shown a window with the IP address to use; you can not do anything more than that; you are just going to use the IP address to connect to the virtual machine using Burp.
+</p>
+
+<p>
+<p><div class="notetip">
+You can get out of the VirtualBox virtual machine console by using the right <code>Ctrl</code> key.
+
+</div></p>
+</p>
+
+<p>
+You can then test that the web server is working by issuing
+</p>
+<pre class="code">$ sudo apt-get update &amp;&amp; sudo apt-get install curl
+$ curl $SERVER_IP</pre>
+
+<p>
+where <code>$SERVER_IP</code> is the Virtual Machine&#039;s IP address.
+</p>
+
+<p>
+<p><div class="notewarning">
+As mentioned in the <a href="lab-11.html" class="wikilink1" title="cns:labs:lab-11">previous lab</a>, do not attempt to attack the machine during the lab by any means other than exploiting the web applications on it. We encourage you to try this at home, though (possibly after you&#039;ve successfully managed to complete some of the web exploits).
+
+</div></p>
+</p>
+
+<p>
+Also download the <a href="http://portswigger.net/burp/" class="urlextern" title="http://portswigger.net/burp/"  rel="nofollow">the free version of Burp</a> in your home directory and run it using:
+</p>
+<pre class="code">$ java -jar ~/burpsuite_free_v1.6.jar</pre>
+
+<p>
+and configure Firefox to use the Burp proxy as mentioned in the <a href="lab-11.html#p_2_burp_tutorial" class="wikilink1" title="cns:labs:lab-11">Burp tutorial</a>. Remember that the Proxy is very useful for us in order to intercept both HTTP requests and responses and modify them to our liking. We assume that you are using it, but you may also use other tools (e.g. the Firefox Web Console) to obtain a particular behaviour.
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="introduction">Introduction</h2>
+<div class="level2">
+
+<p>
+In the <a href="lab-11.html" class="wikilink1" title="cns:labs:lab-11">previous lab</a> we went through a brief overview of the basics of web application security. We saw that web applications receive inputs from a variety of sources (URLs, message body, cookies, etc.) and that, like all applications, they must <strong>handle inputs carefully</strong> in order to avoid providing an attack vector for potentially malicious entities. Ultimately, bugs and/or misconfigurations in web applications cause damage not only to company owners or employees, but also to the users, either by revealing personal data, as seen for example in the <a href="http://en.wikipedia.org/wiki/PlayStation_Network_outage" class="urlextern" title="http://en.wikipedia.org/wiki/PlayStation_Network_outage"  rel="nofollow">Sony PSN hack</a>, or by directly damaging the users&#039; systems.
+</p>
+
+<p>
+In this lab we will deal mostly with <strong>injection attacks</strong>. Injecting malicious payloads into web applications is conceptually identical to injecting shellcodes or ROP chains into binaries, as seen in <a href="lab-04.html" class="wikilink1" title="cns:labs:lab-04">earlier labs</a>. However, modern web applications consist of complex software stacks, comprising general-purpose programmable runtimes (i.e. shells/scripting languages), database management systems and system administration utilities, which could <em>possibly</em> be used in undesirable ways by an attacker. Additionally, users/clients also normally run modern browsers capable of modifying web content dynamically through JavaScript; thus any popular site has the potential to impact thousands to millions of users by being buggy or just downright malicious.
+</p>
+
+<p>
+<p><div class="notewarning">All the DVWA tasks allow you to view the page&#039;s PHP source to get additional info about the back-end script. However, unless the lab text explicitly states otherwise, we assume that you <strong>can&#039;t access the sources</strong>, so please use this functionality only after you have finished the task. Make sure to <strong>ask the lab assistant</strong> for hints when you&#039;re stuck.
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit5" id="p_warm-up_taskcookie_hijacking">1. [1p] Warm-up task: cookie hijacking</h2>
+<div class="level2">
+
+<p>
+First prepare the setup from the <a href="lab-11.html#p_2_burp_tutorial" class="wikilink1" title="cns:labs:lab-11">Burp tutorial</a>, firing up Burp and setting up the proxy settings in Firefox. In Burp, go to <strong>Proxy</strong> / <strong>Intercept</strong> and make sure that “Intercept” is off for the moment. Next, login to Damn Vulnerable Web App (DVWA) at <code>$SERVER_IP/~dvwa</code> using the following credentials:
+</p>
+<ul>
+<li class="level1"><div class="li"> User: <code>admin</code></div>
+</li>
+<li class="level1"><div class="li"> Password: <code>password</code></div>
+</li>
+</ul>
+
+<p>
+By looking into the lower-left corner of the DVWA interface, we notice that the application&#039;s <strong>Security Level</strong> setting is set to “high”. In principle, the “high” security setting of DVWA was made so that <em>it&#039;s not exploitable</em>, so we&#039;ll have to turn down the knob a bit in order to perform the following tasks.
+</p>
+
+<p>
+Fortunately for us, this setting is held in a cookie that we got from the application and that – that&#039;s right, you guessed – is stored in the browser.
+</p>
+
+<p>
+<strong>[1p]</strong> Inspect the requests generated by the browser to access DVWA and find the cookie that sets the security setting for the app. After finding the (obvious) cuplrit, turn on “Intercept” in <strong>Proxy</strong>, refresh the page in Firefox and alter the request in Burp so that the browser will respond with the security set to “low”. Check the DVWA web page to make sure that the app has modified the setting.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Note that altering the cookie in Burp will not make the setting permanent, as the browser still stores the cookie with the “high” setting.
+</p>
+
+<p>
+To make the setting permanent (for the current session at least), find the <strong>DVWA Security</strong> option in the DVWA menu at the left of the page. There you can set the security to the level required by the particular task you&#039;ll be solving.
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="p_command_injection">2. [3p] Command injection</h2>
+<div class="level2">
+
+<p>
+Simply put, <em>command injection</em> refers to vulnerabilities that allow attackers to inject shell commands into the application&#039;s input and execute them on the remote host. We will see that improperly sanitized input fields allow us to execute virtually any command and that we are limited by how well the web server is hardened against such attacks.
+</p>
+
+<p>
+In DVWA, go to the <strong>Command Execution</strong> screen. Notice that the vulnerable web application is a Ping service. Try it out on a valid IP address (e.g. <code>8.8.8.8</code>) and examine the output. First, try answering the following questions:
+</p>
+<ul>
+<li class="level1"><div class="li"> Can you figure out what happens behind the scenes?</div>
+</li>
+<li class="level1"><div class="li"> Can you use this information to execute commands on the virtual machine?</div>
+</li>
+</ul>
+
+<p>
+Discuss with your lab assistant.
+</p>
+
+</div>
+
+<h5 id="a_low_security">a. Low security</h5>
+<div class="level5">
+
+<p>
+<strong>[1p]</strong> Print the contents of <code>/etc/passwd</code> and <code>/proc/meminfo</code> using the <strong>low</strong> security setting on DVWA. As what user are the commands being executed? Can you also print the contents of <code>/etc/shadow</code>?
+</p>
+
+</div>
+
+<h5 id="b_medium_security">b. Medium security</h5>
+<div class="level5">
+
+<p>
+<strong>[2p]</strong> Same as previous, only now change DVWA&#039;s security to the <strong>medium</strong> setting.
+</p>
+
+<p>
+<p><div class="notetip">You may have noticed that (unless you&#039;re really lucky or crafty) the previous exploit doesn&#039;t work here and the vulnerable application doesn&#039;t offer any hints as to why that happens. Still, remember that the main attack surface comes from the fact that the application executes a <em>shell</em> command, and your average shell implements various tricks that result in command execution. What operators (other than the semicolon) can you use to chain commands?
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="p_sql_injection">3. [3p] SQL injection</h2>
+<div class="level2">
+
+<p>
+Before solving the SQL injection task, let&#039;s use our newfound command execution feature to attempt getting more information about the victim. We know that the application&#039;s base <abbr title="Uniform Resource Locator">URL</abbr> is <code>$SERVER_IP/~dvwa</code>, which means that there&#039;s a high chance that the server is an Apache running <a href="http://httpd.apache.org/docs/2.4/mod/mod_userdir.html" class="urlextern" title="http://httpd.apache.org/docs/2.4/mod/mod_userdir.html"  rel="nofollow">mod_userdir</a> and that the application is stored in <code>~dvwa</code> (<code>dvwa</code>&#039;s home directory). We can run <code>ls</code> on that:
+</p>
+<pre class="code">$ ls ~dvwa
+public_html
+$ ls -F ~dvwa/public_html
+CHANGELOG.md
+COPYING.txt
+README.md
+about.php
+config/
+docs/
+dvwa/
+[..]
+vulnerabilities/</pre>
+
+<p>
+We can try to leak the config information off the server:
+</p>
+<pre class="code">$ ls ~dvwa/public_html/config
+config.inc.php
+$ cat ~dvwa/public_html/config/config.inc.php</pre>
+
+<p>
+That didn&#039;t work, unfortunately! This means we might not have the rights to access <code>config.inc.php</code>. But that&#039;s not it! (use <code>ls -l</code> for that). It has to with the content of the script (PHP content being interpreted).
+</p>
+
+<p>
+In order to get the content of the <code>config.inc.php</code> you have to ditch the first line (with the <code>&lt;?php</code> content) or you can use a command to encode the output differently resulting in the PHP script not being interpreted.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Make sure to have DVWA&#039;s security setting set to <strong>low</strong> when attempting to solve this task.
+
+</div></p>
+</p>
+
+<p>
+To attempt the actual SQL injection, let&#039;s go to the <strong>SQL Injection</strong> page in the menu to the left. We notice that the vulnerable application asks for an user ID, which we assume represents the vulnerable unsanitized field. Let&#039;s give it some input to see if that&#039;s the case. If we give it <code>id=3</code>, we get the following output:
+</p>
+<pre class="code">ID: 3
+First name: Hack
+Surname: Me</pre>
+
+<p>
+Now let&#039;s try the classical <code>or 1=1</code>, i.e. set the ID to <code>3 or 1=1</code>:
+</p>
+<pre class="code">ID: 3 or 1=1
+First name: Hack
+Surname: Me</pre>
+
+<p>
+Nothing happens; the application acts just like before, meaning that SQL (presumably MySQL) doesn&#039;t interpret the injected code. Now there&#039;s a big chance that the ID variable is quoted (using either single or double-quotes), so we&#039;ll add a single quote to obtain <code>3&#039; or 1=1</code>. We get the following MySQL error:
+</p>
+<pre class="code">You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#039;&#039;&#039; at line 1.</pre>
+
+<p>
+This means we got lucky and the ID variable is indeed quoted. However, there&#039;s a single-quote that&#039;s now unterminated, which is why we&#039;re getting this notice.
+</p>
+
+<p>
+<p><div class="noteclassic">This is actually another information leak on the vulnerable application&#039;s part. If you&#039;re feeling adventurous, you can try the <strong>SQL Injection (Blind)</strong> application, which acts like this one, only it hides the extra MySQL errors.
+</div></p>
+</p>
+
+<p>
+A smart way to finish this quote would be using the <code>&#039;a&#039;=&#039;a</code> trick; or we can just add a comment marker (<code>-- </code> or <code>#</code>) to the end of the line. This way we can make sure that we avoid executing any extra SQL code that comes after the injected code. By entering <code>3&#039; or 1=1 #</code> into the input field, we obtain:
+</p>
+<pre class="code">ID: 3&#039; or 1=1 #
+First name: admin
+Surname: admin
+
+ID: 3&#039; or 1=1 #
+First name: Gordon
+Surname: Brown
+
+ID: 3&#039; or 1=1 #
+First name: Hack
+Surname: Me
+
+ID: 3&#039; or 1=1 #
+First name: Pablo
+Surname: Picasso
+
+ID: 3&#039; or 1=1 #
+First name: Bob
+Surname: Smith</pre>
+
+<p>
+We managed to get a list of all the users in the database queried by the application! Here&#039;s some additional info we can gather from this output:
+</p>
+<ul>
+<li class="level1"><div class="li"> One of the users is <code>admin</code>, i.e. the user we&#039;re using to log in to DVWA. This means the other users also have stored passwords.</div>
+</li>
+<li class="level1"><div class="li"> The MySQL query most probably selects two columns (might be three, but that&#039;s improbable since the script displays the ID we entered as input) from a table in the database – the first name and the surname – and displays all the matching rows.</div>
+</li>
+</ul>
+
+<p>
+A third hint that&#039;s very important is that MySQL (or rather the application&#039;s <abbr title="Application Programming Interface">API</abbr>) doesn&#039;t allow us to issue more than one <code>select</code> query per call. For example, let&#039;s try inputting <code>3&#039; or 1=1; show databases #</code>. We get the following MySQL error:
+</p>
+<pre class="code">You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#039;show databases #&#039;&#039; at line 1</pre>
+
+<p>
+This aspect is <em>very</em> limiting, because it doesn&#039;t allow us performing arbitrary queries on the MySQL database. However, we can use the <code>UNION</code> operator to add additional <code>SELECT</code> queries to our data, e.g. <code>3&#039; or 1=1 union all select col1,col2 from some_table #</code>.
+</p>
+
+<p>
+<p><div class="noteimportant">Given that the application most probably does a <code>SELECT</code> on exactly two columns, we can&#039;t include more than two columns in our <code>SELECT</code> statements, otherwise the <code>UNION</code> would fail.
+</div></p>
+</p>
+
+<p>
+<strong>[3p]</strong> Do the following:
+</p>
+<ol>
+<li class="level1"><div class="li"> Use the <code>UNION</code> trick to list all the tables stored in the database. Query the <code>information_schema.tables</code> table; see the <a href="http://dev.mysql.com/doc/refman/5.0/en/information-schema.html" class="urlextern" title="http://dev.mysql.com/doc/refman/5.0/en/information-schema.html"  rel="nofollow">INFORMATION_SCHEMA documentation</a> for more details.</div>
+</li>
+<li class="level1"><div class="li"> Inspect the output and find the name of the table that stores the users queried above. Use the same <code>UNION</code> trick to dump all the table&#039;s columns by querying <code>information_schema.columns</code>; see the <a href="http://dev.mysql.com/doc/refman/5.0/en/information-schema.html" class="urlextern" title="http://dev.mysql.com/doc/refman/5.0/en/information-schema.html"  rel="nofollow">INFORMATION_SCHEMA documentation</a> for more details.</div>
+</li>
+<li class="level1"><div class="li"> Finally, use this info to dump all the user names and their passwords stored in the databases.</div>
+</li>
+</ol>
+
+<p>
+<strong>[0.5p bonus]</strong> Feed the obtained hashes to a rainbow table service such as <a href="https://crackstation.net/" class="urlextern" title="https://crackstation.net/"  rel="nofollow">CrackStation</a> or <a href="https://hashkiller.co.uk/default.aspx" class="urlextern" title="https://hashkiller.co.uk/default.aspx"  rel="nofollow">HashKiller</a> to reverse them.
+</p>
+
+</div>
+
+<h2 class="sectionedit8" id="p_cross-site_scripting_xss">4. [3p] Cross-site scripting (XSS)</h2>
+<div class="level2">
+
+<p>
+Cross-site scripting (XSS) is basically an attack which allows malicious entities to inject JavaScript code into a web application. Its most dangerous aspect is the attacker&#039;s ability to include and execute <em>remote</em> scripts, hence the <em>cross</em>-site scripting nomenclature, although directly injecting code is possible. Currently there are two main types of XSS known:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Reflected XSS</strong>: Reflected XSS attacks are achieved by crafting malicious GET or POST requests, either directly encoded in an <abbr title="Uniform Resource Locator">URL</abbr> or in a malicious web page, and the vulnerable application sending the a malicious response back to the user. A typical example is the scenario in which an user clicks on a crafted <abbr title="Uniform Resource Locator">URL</abbr>, resulting in code being executed in the victim&#039;s browser, e.g. which sends its cookie to a third-party.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Stored XSS</strong>: The difference between reflected and stored XSS is that the latter is persistent, i.e. the web application stores malicious input from the attacker so that the payload will be executed at a later time, when the data is reloaded, possibly by a large number of victims. For example, imagine that a famous Twitter user could inject a malicious script into their name; then millions of people could end up executing that script!</div>
+</li>
+</ul>
+
+<p>
+More details on reflected versus stored XSS can be found on the <a href="https://www.owasp.org/index.php/XSS#Stored_and_Reflected_XSS_Attacks" class="urlextern" title="https://www.owasp.org/index.php/XSS#Stored_and_Reflected_XSS_Attacks"  rel="nofollow">OWASP wiki</a>.
+</p>
+
+<p>
+<p><div class="noteclassic">Although XSS vulnerabilities may be present in a given web application, they are very often exploited by a second (malicious) application, e.g. a site trying to steal your credentials for a social networking web application. This is ultimately what makes XSS attacks <strong>very</strong> dangerous.
+</div></p>
+</p>
+
+<p>
+Assuming that our DVWA security is set to the “low” setting for the time being, let&#039;s attempt doing a reflected XSS attack. First, select <strong>XSS reflected</strong> from the menu on the left. Now, enter the following input in the text box:
+</p>
+<pre class="code">&lt;script&gt;alert(&quot;I pwn j00!&quot;)&lt;/script&gt;</pre>
+
+<p>
+Notice how this generates a dialog window with the text entered in the input. Of course, a real attacker would do more than that by modifying the page&#039;s DOM tree or performing a HTTP request which sends personal data stored in your browser to a third party. Basically anyone capable to do XSS has the full power of JavaScript at their fingertips.
+</p>
+
+<p>
+<p><div class="noteimportant">Make sure to have DVWA&#039;s security setting set to <strong>medium</strong> when attempting to solve the following tasks. For these particular tasks you may assume that the vulnerable application&#039;s page source <strong>is known</strong> (see the <strong>View Source</strong> button in the bottom right of the DVWA interface).
+</div></p>
+</p>
+
+</div>
+
+<h5 id="a_reflected_xss">a. Reflected XSS</h5>
+<div class="level5">
+
+<p>
+<strong>[1p]</strong> Go to the <strong>XSS reflected</strong> screen in DVWA. Craft a script that displays a dialog box containing your session cookie. Remember that the security level must be set to “medium”, so you can&#039;t repeat the exact pattern explained above. If you&#039;re having any trouble, look at the page source and discuss with the lab assistant.
+</p>
+
+</div>
+
+<h5 id="b_stored_xss">b. Stored XSS</h5>
+<div class="level5">
+
+<p>
+<strong>[2p]</strong> Go to the <strong>XSS stored</strong> screen in DVWA. Craft a script that displays the session cookie&#039;s value in the page.
+</p>
+
+<p>
+<p><div class="notetip">Use the <code>document.write()</code> method.
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+On the <strong>medium</strong> security setting of DVWA only the “Name” field can be exploited. Notice that you can only type a limited number of characters in the field; however, that&#039;s an artificial (client-side) limitation which you can easily overcome by removing the input field&#039;s <code>maxlength</code> attribute in Burp or in the Firefox Web Developer toolbar (<code>F12</code>). If things go south with the guestbook, you can always reset the application by accessing <code>$SERVER_IP/~dvwa/setup.php</code> and clicking <strong>Create/Reset Database</strong>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">You can easily find the hard character number limit on the database fields where the payload is stored. Any ideas how you can do that? <em>Hint</em>: you can&#039;t do a buffer overflow in MySQL.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+For the bonus task set DVWA&#039;s security setting to <strong>low</strong> in order to be able to store the payload in the “Message” field. Note that this is a rather difficult task and we recommend doing it at home
+
+</div></p>
+</p>
+
+<p>
+<strong>[4p bonus]</strong> Go to the <strong>XSS stored</strong> screen in DVWA. Craft a script that posts the session cookie&#039;s value in the guestbook by sending a HTTP POST request to the guestbook page. Note that the form submission will result in two POST requests being done: one which submits the malicious script and one which stores the cookie into the guestbook.
+</p>
+
+<p>
+<p><div class="notetip">
+See the <a href="http://www.w3schools.com/ajax/ajax_xmlhttprequest_send.asp" class="urlextern" title="http://www.w3schools.com/ajax/ajax_xmlhttprequest_send.asp"  rel="nofollow">AJAX - Send a Request To a Server</a> tutorial on w3schools to get an example of how to make POST requests in JavaScript. Also, make sure:
+</p>
+<ul>
+<li class="level1"><div class="li"> To initialize the <code>XMLHttpRequest</code> object.</div>
+</li>
+<li class="level1"><div class="li"> That your script fits into the “Message” value posted in the database.</div>
+</li>
+<li class="level1"><div class="li"> To also set the <code>Cookie</code> field of the HTTP header.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_110386606758355b7d31a1a" data-jsajax="%26skipfile%3D%252B/cns%253A%2528sidebar%257Cindex%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="cns:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../class-register.html" class="wikilink1" title="cns:class-register">Class Register</a></div></li>
+<li class="level1"><div class="li"><a href="../lab-split.html" class="wikilink1" title="cns:lab-split">Lab Split</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="cns:need-to-know">CNS Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../news.html" class="wikilink1" title="cns:news">News</a></div></li>
+<li class="level1"><div class="li"><a href="../rules-and-grading.html" class="wikilink1" title="cns:rules-and-grading">Rules and Grading</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="resources">Resources</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_72789603158355b7d348f8" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resources/direct.html" class="wikilink1" title="cns:resources:direct">Direct Access</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/documentation.html" class="wikilink1" title="cns:resources:documentation">Documentation</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/feed.html" class="wikilink1" title="cns:resources:feed">RSS Feed</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/mailing-list.html" class="wikilink1" title="cns:resources:mailing-list">Mailing List</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/vm.html" class="wikilink1" title="cns:resources:vm">Virtual Machine</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resources" [104-160] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_137517933458355b7d36835" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="lab-01.html" class="wikilink1" title="cns:labs:lab-01">Lab 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="lab-02.html" class="wikilink1" title="cns:labs:lab-02">Lab 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="lab-03.html" class="wikilink1" title="cns:labs:lab-03">Lab 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="lab-04.html" class="wikilink1" title="cns:labs:lab-04">Lab 04 - Processes. Dynamic Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="lab-05.html" class="wikilink1" title="cns:labs:lab-05">Lab 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="lab-06.html" class="wikilink1" title="cns:labs:lab-06">Lab 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="lab-07.html" class="wikilink1" title="cns:labs:lab-07">Lab 07 - Exploiting. Shellcodes (Part 2)</a></div></li>
+<li class="level1"><div class="li"><a href="lab-08.html" class="wikilink1" title="cns:labs:lab-08">Lab 08 - Exploit Protection Mechanisms</a></div></li>
+<li class="level1"><div class="li"><a href="lab-09.html" class="wikilink1" title="cns:labs:lab-09">Lab 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="lab-10.html" class="wikilink1" title="cns:labs:lab-10">Lab 10 - Password Breaking</a></div></li>
+<li class="level1"><div class="li"><a href="lab-11.html" class="wikilink1" title="cns:labs:lab-11">Lab 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="lab-12.html" class="wikilink1" title="cns:labs:lab-12">Lab 12 - Web Application Security (part 2)</a></span></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [161-207] -->
+<h1 class="sectionedit3" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_90359641858355b7d3877c" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../lectures/lecture-01.html" class="wikilink1" title="cns:lectures:lecture-01">Lecture 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-02.html" class="wikilink1" title="cns:lectures:lecture-02">Lecture 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-03.html" class="wikilink1" title="cns:lectures:lecture-03">Lecture 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-04.html" class="wikilink1" title="cns:lectures:lecture-04">Lecture 04 - Processes. Dynamic Analysis. GDB</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-05.html" class="wikilink1" title="cns:lectures:lecture-05">Lecture 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-06.html" class="wikilink1" title="cns:lectures:lecture-06">Lecture 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-07.html" class="wikilink1" title="cns:lectures:lecture-07">Lecture 07 - Strings</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-08.html" class="wikilink1" title="cns:lectures:lecture-08">Lecture 08 - Integers</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-09.html" class="wikilink1" title="cns:lectures:lecture-09">Lecture 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-10.html" class="wikilink1" title="cns:lectures:lecture-10">Lecture 10 - Password Cracking</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-11.html" class="wikilink1" title="cns:lectures:lecture-11">Lecture 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-12.html" class="wikilink1" title="cns:lectures:lecture-12">Lecture 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Lectures" [208-262] -->
+<h1 class="sectionedit4" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_109547515758355b7d3a6b9" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/assignment-1.html" class="wikilink1" title="cns:assignments:assignment-1">Assignment 1</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-2.html" class="wikilink1" title="cns:assignments:assignment-2">Assignment 2</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-3.html" class="wikilink1" title="cns:assignments:assignment-3">Assignment 3</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Assignments" [263-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-12.html#lab_12_-_web_application_security_part_2">Lab 12 - Web Application Security (part 2)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-12.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="lab-12.html#supporting_files">Supporting files</a></div></li>
+<li class="level2"><div class="li"><a href="lab-12.html#introduction">Introduction</a></div></li>
+<li class="level2"><div class="li"><a href="lab-12.html#p_warm-up_taskcookie_hijacking">1. [1p] Warm-up task: cookie hijacking</a></div></li>
+<li class="level2"><div class="li"><a href="lab-12.html#p_command_injection">2. [3p] Command injection</a></div></li>
+<li class="level2"><div class="li"><a href="lab-12.html#p_sql_injection">3. [3p] SQL injection</a></div></li>
+<li class="level2"><div class="li"><a href="lab-12.html#p_cross-site_scripting_xss">4. [3p] Cross-site scripting (XSS)</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cns/labs/lab-12.txt · Last modified: 2016/01/19 20:59 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab-12%3Fdo=media&amp;ns=cns%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab-12.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cns%253Alabs%253Alab-12&amp;1479891837" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:09:contents:10</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-12-05T17:15:54+0200"/>
+<meta name="keywords" content="rl,labs,09,contents,10"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="10.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/09/contents/10.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:09:contents';var JSINFO = {"id":"rl:labs:09:contents:10","namespace":"rl:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_tunel_ssh_invers">10. [10p] Tunel SSH invers</h3>
+<div class="level3">
+
+<p>
+Sunt situații în care dorim ca o stație să fie accesibilă din exterior, dar este dificil să obținem un port în gateway (pentru <em>port forwarding</em>): fie din rațiuni administrative, fie din motive de securitate. Pentru a permite totuși o conexiune din exterior, se poate crea un tunel SSH invers. Tunel SSH invers înseamnă următorii pași:
+</p>
+<ul>
+<li class="level1"><div class="li"> se creează o conexiune SSH de la o stație cu adresă IP privată la un server extern cu adresă IP publică,</div>
+</li>
+<li class="level1"><div class="li"> se deschide un port pe serverul cu adresă IP publică</div>
+</li>
+<li class="level1"><div class="li"> traficul către acel port este tunelat prin conexiunea SSH către stația cu adresă IP privată</div>
+</li>
+</ul>
+
+<p>
+Dorim să permitem conectarea la stația <code>red</code> din Internet pe SSH. Vom crea o conexiune SSH “directă” de la stația <code>red</code> la contul vostru de pe <code>fep.grid.pub.ro</code>. Prin această conexiune veți tunela invers traficul SSH către <code>red</code> permițând conexiunea din exterior.
+</p>
+
+<p>
+Pentru început, de pe stația <code>red</code> creăm o conexiune SSH directă către contul de pe <code>fep.grid.pub.ro</code> (identic cu cel de pe <code>cs.curs.pub.ro</code>):
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ssh</span> <span class="re5">-l</span> <span class="re1">$USERNAME</span> fep.grid.pub.ro <span class="re5">-R</span> 100XY:localhost:<span class="nu0">22</span>   
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="re1">$USERNAME</span><span class="sy0">@</span>fep.grid.pub.ro<span class="st_h">'s password: 
+Last login: Mon Sep  9 09:55:37 2013 from 141.85.225.214
+[$USERNAME@fep-62-2 ~]$ netstat -tln | grep 100XY
+tcp        0      0 127.0.0.1:100XY             0.0.0.0:*                   LISTEN      
+tcp        0      0 ::1:100XY                   :::*                        LISTEN</span></pre>
+
+<p>
+ unde <code>$USERNAME</code> este numele contului de pe <code>fep.grid.pub.ro</code>/<code>cs.curs.pub.ro</code>, iar <code>XY</code> este un identificator numeric unic al stației din laborator (dacă nu aveți pe monitorul stației din laborator un identificator discutați cu asistentul). Introduceți parola corespunzătoare contului vostru de pe <code>fep.grid.pub.ro</code>/<code>cs.curs.pub.ro</code>.
+</p>
+
+<p>
+Observăm că se deschide portul <code>100XY</code> pe <code>fep.grid.pub.ro</code>. Acest port va fi folosit pentru tunelul invers care ne va duce pe stația <code>red</code>.
+</p>
+
+<p>
+Argumentul <code>-R 100XY:localhost:22</code> transmis comenzii <code>ssh</code> are următoarea semnificație:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>100XY</code> - portul de pe server pe care se vor asculta conexiuni care vor fi tunelate invers;</div>
+</li>
+<li class="level1"><div class="li"> <code>localhost</code> - stația către care vor fi trimise pachetele primite prin tunel (chiar stația locală);</div>
+</li>
+<li class="level1"><div class="li"> <code>22</code> - portul către care vor fi trimise pachetele primite prin tunel (adică portul SSH local).</div>
+</li>
+</ul>
+
+<p>
+După ce alți colegi rulează comenzile similare vă veți putea conecta pe stația <code>red</code> a acestora folosind portul deschis de ei; discutați cu alți colegi ca să vă spună ce port au deschis. Pentru aceasta, veți folosi stația fizică și vă veți conecta conecta pe contul de pe <code>fep.grid.pub.ro</code>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pe <code>fep.grid.pub.ro</code> rulează un load balancer pentru SSH. Din acest motiv este posibil să intrați pe “celălalt” sistem. Verificați că numele de host din prompt corespunde cu cel pe care l-ați folosit inițial la crearea tunelului: adică ambele să fie <code>fep-62-2</code> sau <code>fep-62-1</code>. Pentru siguranță folosim și comanda <code>netstat</code>:
+</p>
+<pre class="code bash"><span class="br0">&#91;</span><span class="re1">$USERNAME_COLEG</span><span class="sy0">@</span>fep-<span class="nu0">62</span>-<span class="nu0">2</span> ~<span class="br0">&#93;</span>$ <span class="kw2">netstat</span> <span class="re5">-tln</span> <span class="sy0">|</span> <span class="kw2">grep</span> 100ZT
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 127.0.0.1:100ZT             0.0.0.0:<span class="sy0">*</span>                   LISTEN
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> ::<span class="nu0">1</span>:100ZT                   :::<span class="sy0">*</span>                        LISTEN</pre>
+
+<p>
+În output-ul comenzii de mai sus <code>100ZT</code> este portul deschis de coleg.
+
+</div></p>
+</p>
+
+<p>
+După conectarea colegului la <code>fep</code>, realizăm o conexiune prin tunelul SSH pe portul <code>100ZT</code> deschis de coleg:
+</p>
+<pre class="code bash"><span class="br0">&#91;</span><span class="re1">$USERNAME_COLEG</span><span class="sy0">@</span>fep-<span class="nu0">62</span>-<span class="nu0">2</span> ~<span class="br0">&#93;</span>$ <span class="kw2">ssh</span> <span class="re5">-l</span> root localhost <span class="re5">-p</span> 100ZT
+Warning: Permanently added <span class="st_h">'[localhost]:100ZT'</span> <span class="br0">&#40;</span>RSA<span class="br0">&#41;</span> to the list of known hosts.
+root<span class="sy0">@</span>localhost<span class="st_h">'s password: 
+[...]
+root@red:~#</span></pre>
+
+<p>
+În cadrul conexiunii ni se cere parola utilizatorului <code>root</code> de pe stația <code>red</code> (adică parola <code>student</code>).
+</p>
+
+<p>
+În final ați accesat stația <code>red</code> a colegului, o stația cu adresă IP privată inaccesibilă din exterior. Pentru aceasta ați folosit o altă stație (care ar putea fi din altă rețea) pentru a se conecta la <code>fep.grid.pub.ro</code> și de acolo la <code>red</code> prin intermediul tunelului invers creat inițial.
+</p>
+
+<p>
+Creați un fișier pe stația <code>red</code> proaspăt accesată, iar colegul poate verifica faptul că, într-adevăr, ați accesat container-ul său prin tunelul SSH invers pe care l-a creat anterior.
+</p>
+
+</div>
+</div>
+</body>
+</html>

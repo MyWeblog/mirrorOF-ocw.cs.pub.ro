@@ -1,0 +1,30 @@
+    
+    
+
+#!/bin/bash
+
+IP_VM="192.168.1.1"
+TIME=60 # Durata unui test
+
+# Initiaza un flux UDP catre server, pe portul 8000
+# Fiecare datagrama are dimensiunea de 128 octeti (tipic pentru pachetele de voce)
+# Se trimite la o rata de 640Kbps (dorim sa simulam 10 conversatii VoIP, a cate 64Kbps)
+iperf -x SC --client $IP_VM --port 8000 --udp --len 128 --bandwidth 640K --time $TIME > out3.txt 2> /dev/null &
+
+# Initiaza un flux UDP catre server, pe portul 6000
+# Fiecare datagrama are dimensiunea maxima (pentru ca nu o specificam explicit)
+# Se trimite la o rata de 30Mbps
+iperf -x SC --client $IP_VM --port 6000 --udp --bandwidth 30M --time $TIME > out4.txt 2> /dev/null &
+
+# Initiaza un flux TCP catre server, pe portul 80 (HTTP)
+# Limitam dimensiunea unui segment la 512 octeti
+iperf -x SC --client $IP_VM --port 80 --mss 512 --time $TIME > out1.txt 2> /dev/null &
+
+# Initiaza un flux TCP catre server, pe portul 21 (FTP)
+# Dimensiunea unui segment va fi de 1400 octeti (dorim ca fluxul FTP sa fie mai agresiv)
+# Dimensiunea ferestrei TCP va fi de 256K (dorim ca fluxul FTP sa fie mai agresiv)
+iperf -x SC --client $IP_VM --port 21 --window 256K --mss 1400 --time $TIME > out2.txt 2> /dev/null &
+
+wait
+for i in out*; do echo; cat $i; done
+rm out*.txt

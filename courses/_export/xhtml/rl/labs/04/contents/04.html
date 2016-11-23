@@ -1,0 +1,122 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:04:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-10-30T18:52:58+0200"/>
+<meta name="keywords" content="rl,labs,04,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:04:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/04/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:04:contents';var JSINFO = {"id":"rl:labs:04:contents:04","namespace":"rl:labs:04:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_legatura_de_tip_trunchi_trunk">04. [10p] Legătură de tip trunchi (trunk)</h3>
+<div class="level3">
+
+<p>
+Pe topologia de la exercițiul <a href="../../../../../../rl/labs/04/contents/03.html" class="wikilink1" title="rl:labs:04:contents:03">03. [15p] Subnetare și VLAN-uri</a>, realizați o legătură de fibră între switch-urile <code>Switch0</code> și <code>Switch1</code> pe portul <code>Fa4/1</code> al fiecărui switch. Testați conectivitatea între stații din același VLAN, dar switch-uri diferite. Observați că nu există conectivitate din cauză că nu există nici un mecanism activat prin care VLAN-urile de pe switch-uri diferite să comunice între ele.
+</p>
+
+<p>
+Pentru a permite conectivitatea între stații aflate în același VLAN dar conectate switchuri diferite, trebuie să configurăm legătura dintre switch-uri în mod trunchi (<em>trunk</em>); această legătură permite încapsularea pachetelor cu VLAN-uri diferite. Identificați numărul portului de interconectare pe fiecare din switch-uri. Pe fiecare switch, intrați pe interfața aferentă și setați legătura în mod trunchi.
+</p>
+
+<p>
+Pe switch-ul <code>Switch0</code> configurați interfața <code>Fa4/1</code>:
+</p>
+<pre class="code">Switch0&gt;enable
+Password: 
+Switch0#configure terminal
+Switch0(config)#int fastEthernet 4/1
+Switch0(config-if)#switchport mode trunk 
+Switch0(config-if)#switchport trunk allowed vlan all 
+Switch0(config-if)#</pre>
+
+<p>
+Pe switch-ul <code>Switch1</code> configurați interfața <code>Fa4/1</code>:
+</p>
+<pre class="code">Switch1&gt;enable
+Password: 
+Switch1#configure terminal
+Switch1(config)#int fastEthernet 4/1
+Switch1(config-if)#switchport mode trunk 
+Switch1(config-if)#switchport trunk allowed vlan all 
+Switch1(config-if)#</pre>
+
+<p>
+Investigați configurația de tip trunk prin rularea comenzii <code>show interfaces trunk</code> pe ambele switch-uri:
+</p>
+<pre class="code">Switch0#show interfaces trunk
+Port        Mode         Encapsulation  Status        Native vlan
+Fa4/1       on           802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Fa4/1       1-1005
+
+Port        Vlans allowed and active in management domain
+Fa4/1       1,10,20,100
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa4/1       1,10,20,100
+Switch0#
+
+Switch1#show interfaces trunk 
+Port        Mode         Encapsulation  Status        Native vlan
+Fa4/1       on           802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Fa4/1       1-1005
+
+Port        Vlans allowed and active in management domain
+Fa4/1       1,10,20
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Fa4/1       1,10,20
+Switch1#</pre>
+
+<p>
+Se observă că interfața <code>Fa4/1</code> este o interfață de tip trunk care transportă VLAN-urile 1 (cel implicit), 10 și 20. În cazul switch-ului <code>Switch0</code> transferă și VLAN-ul de management (<code>100</code>). Aceasta se întâmplă întrucât ultimul argument al comenzii <code>switchport trunk …</code> a fost <code>all</code>, reprezentând toate VLAN-urile.
+</p>
+
+<p>
+Verificați că stațiile din același VLAN pot comunica între ele indiferent de switch-ul la care sunt interconectate.
+</p>
+
+</div>
+</div>
+</body>
+</html>

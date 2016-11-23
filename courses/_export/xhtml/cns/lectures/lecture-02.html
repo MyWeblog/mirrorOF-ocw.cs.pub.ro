@@ -1,0 +1,373 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cns:lectures:lecture-02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-10-13T13:11:27+0300"/>
+<meta name="keywords" content="cns,lectures,lecture-02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cns:lectures"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="lecture-02.html"/>
+<link rel="canonical" href="../../../../cns/lectures/lecture-02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:lectures';var JSINFO = {"id":"cns:lectures:lecture-02","namespace":"cns:lectures","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lecture-02.html#lecture_02_-_assembly_language">Lecture 02 - Assembly Language</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lecture-02.html#demos">Demos</a></div></li>
+<li class="level2"><div class="li"><a href="lecture-02.html#demo_1calling_convention">Demo 1: calling convention</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lecture-02.html#x86">x86</a></div></li>
+<li class="level3"><div class="li"><a href="lecture-02.html#x86_64">x86_64</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lecture-02.html#demo_2syscalls">Demo 2: syscalls</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lecture-02.html#x861">x86</a></div></li>
+<li class="level3"><div class="li"><a href="lecture-02.html#x86_641">x86_64</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="lecture_02_-_assembly_language">Lecture 02 - Assembly Language</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/cns/res/lectures/lecture-02.pdf" class="urlextern" title="http://elf.cs.pub.ro/cns/res/lectures/lecture-02.pdf"  rel="nofollow"> Slides</a></div>
+</li>
+<li class="level1"><div class="li"> <strong>Keywords</strong>: assembly, mnemonics, instructions, architecture, ISA, registers, addressing modes, CISC and RISC, memory-to-memory, load-store, assembling, linking, control flow, arithmetic/logical, data transfer, function calls, system calls, disassembling, objdump, NOP</div>
+</li>
+</ul>
+
+<p>
+
+<iframe src="http://docs.google.com/viewer?url=http://elf.cs.pub.ro/cns/res/lectures/lecture-02.pdf&embedded=true" width="600" height="470" style="border: none;"></iframe>
+
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Lecture 02 - Assembly Language" [1-579] -->
+<h2 class="sectionedit2" id="demos">Demos</h2>
+<div class="level2">
+
+<p>
+Before going to through the demos, we will use the <a href="http://elf.cs.pub.ro/cns/res/lectures/lecture-02-demo.zip" class="urlextern" title="http://elf.cs.pub.ro/cns/res/lectures/lecture-02-demo.zip"  rel="nofollow">demo archive</a>.
+Demos are to be run on a Linux system. We will download the archive using
+</p>
+<pre class="code bash"><span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>cns<span class="sy0">/</span>res<span class="sy0">/</span>lectures<span class="sy0">/</span>lecture-02-demo.zip</pre>
+
+<p>
+ and then unpack it
+</p>
+<pre class="code bash"><span class="kw2">unzip</span> lecture-02-demo.zip</pre>
+
+<p>
+ and access the unpacked folder
+</p>
+<pre class="code bash"><span class="kw3">cd</span> lecture-02-demo<span class="sy0">/</span></pre>
+
+<p>
+We can now go through the demos.
+Assuming we don&#039;t know anything about calling conventions and syscall conventions for x86/x86_64 we want to document how they are carried out on linux ELF executables. We&#039;ll only deal with 4 arguments initially
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Demos" [580-1261] -->
+<h2 class="sectionedit3" id="demo_1calling_convention">Demo 1: calling convention</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "Demo 1: calling convention" [1262-1301] -->
+<h3 class="sectionedit4" id="x86">x86</h3>
+<div class="level3">
+
+<p>
+Let&#039;s compile and disassemble the relevant parts:
+</p>
+<pre class="code bash">$ <span class="kw2">gcc</span> <span class="re5">-Wall</span>  demo1.c  <span class="re5">-m32</span> <span class="re5">-o</span> demo1_32
+$ objdump <span class="re5">-d</span> demo1_32  <span class="re5">-Mintel</span> <span class="re5">-w</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+08048423 <span class="sy0">&lt;</span>main<span class="sy0">&gt;</span>:
+ <span class="nu0">8048423</span>:	<span class="nu0">55</span>                   	push   ebp
+ <span class="nu0">8048424</span>:	<span class="nu0">89</span> e5                	mov    ebp,esp
+ <span class="nu0">8048426</span>:	<span class="nu0">83</span> ec <span class="nu0">10</span>             	sub    esp,0x10
+ <span class="nu0">8048429</span>:	c7 <span class="nu0">44</span> <span class="nu0">24</span> 0c 03 00 00 00 	mov    DWORD PTR <span class="br0">&#91;</span>esp+0xc<span class="br0">&#93;</span>,0x3
+ <span class="nu0">8048431</span>:	c7 <span class="nu0">44</span> <span class="nu0">24</span> 08 02 00 00 00 	mov    DWORD PTR <span class="br0">&#91;</span>esp+0x8<span class="br0">&#93;</span>,0x2
+ <span class="nu0">8048439</span>:	c7 <span class="nu0">44</span> <span class="nu0">24</span> 04 01 00 00 00 	mov    DWORD PTR <span class="br0">&#91;</span>esp+0x4<span class="br0">&#93;</span>,0x1
+ <span class="nu0">8048441</span>:	c7 04 <span class="nu0">24</span> 00 00 00 00 	mov    DWORD PTR <span class="br0">&#91;</span>esp<span class="br0">&#93;</span>,0x0
+ <span class="nu0">8048448</span>:	e8 bf ff ff ff       	call   804840c <span class="sy0">&lt;</span>testfunc<span class="sy0">&gt;</span>
+ 804844d:	c9                   	leave  
+ 804844e:	c3                   	ret    
+ 804844f:	<span class="nu0">90</span>                   	<span class="kw2">nop</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+So when <code>testfunc</code> is called the stack will look as follows:
+</p>
+<pre class="code">[esp+0x00] ret addr    (pushed because of &#039;call&#039;)
+[esp+0x04] 0
+[esp+0x08] 1
+[esp+0x0c] 2
+[esp+0x10] 3</pre>
+
+<p>
+Another important aspect in calling conventions is the return value:
+</p>
+<pre class="code">[...]
+0804840c &lt;testfunc&gt;:
+ 804840c:	55                   	push   ebp
+ 804840d:	89 e5                	mov    ebp,esp
+ 804840f:	8b 45 0c             	mov    eax,DWORD PTR [ebp+0xc]
+ 8048412:	8b 55 08             	mov    edx,DWORD PTR [ebp+0x8]
+ 8048415:	01 c2                	add    edx,eax
+ 8048417:	8b 45 10             	mov    eax,DWORD PTR [ebp+0x10]
+ 804841a:	01 c2                	add    edx,eax
+ 804841c:	8b 45 14             	mov    eax,DWORD PTR [ebp+0x14]
+ 804841f:	01 d0                	add    eax,edx
+ 8048421:	5d                   	pop    ebp
+ 8048422:	c3                   	ret    
+[...]</pre>
+
+<p>
+As we can see, all the values are added into <code>eax</code>. We conclude that <code>eax</code> holds return values
+</p>
+
+</div>
+<!-- EDIT4 SECTION "x86" [1302-3024] -->
+<h3 class="sectionedit5" id="x86_64">x86_64</h3>
+<div class="level3">
+<pre class="code bash">$ <span class="kw2">gcc</span> <span class="re5">-Wall</span>  demo1.c  <span class="re5">-m64</span> <span class="re5">-o</span> demo1_64
+$ objdump <span class="re5">-d</span> demo1_64 <span class="re5">-Mintel</span> <span class="re5">-w</span>
+&nbsp;
+0000000000400540 <span class="sy0">&lt;</span>main<span class="sy0">&gt;</span>:
+  <span class="nu0">400540</span>:	<span class="nu0">55</span>                   	push   rbp
+  <span class="nu0">400541</span>:	<span class="nu0">48</span> <span class="nu0">89</span> e5             	mov    rbp,rsp
+  <span class="nu0">400544</span>:	b9 03 00 00 00       	mov    ecx,0x3
+  <span class="nu0">400549</span>:	ba 02 00 00 00       	mov    edx,0x2
+  40054e:	be 01 00 00 00       	mov    esi,0x1
+  <span class="nu0">400553</span>:	bf 00 00 00 00       	mov    edi,0x0
+  <span class="nu0">400558</span>:	e8 bf ff ff ff       	call   40051c <span class="sy0">&lt;</span>testfunc<span class="sy0">&gt;</span>
+  40055d:	5d                   	pop    rbp
+  40055e:	c3                   	ret    
+  40055f:	<span class="nu0">90</span>                   	<span class="kw2">nop</span></pre>
+
+<p>
+The arguments are passed, respectively, using <code>rdi</code>, <code>rsi</code>, <code>rdx</code>, <code>rcx</code>
+</p>
+<pre class="code">000000000040051c &lt;testfunc&gt;:
+  40051c:	55                   	push   rbp
+  40051d:	48 89 e5             	mov    rbp,rsp
+  400520:	89 7d fc             	mov    DWORD PTR [rbp-0x4],edi
+  400523:	89 75 f8             	mov    DWORD PTR [rbp-0x8],esi
+  400526:	89 55 f4             	mov    DWORD PTR [rbp-0xc],edx
+  400529:	89 4d f0             	mov    DWORD PTR [rbp-0x10],ecx
+  40052c:	8b 45 f8             	mov    eax,DWORD PTR [rbp-0x8]
+  40052f:	8b 55 fc             	mov    edx,DWORD PTR [rbp-0x4]
+  400532:	01 c2                	add    edx,eax
+  400534:	8b 45 f4             	mov    eax,DWORD PTR [rbp-0xc]
+  400537:	01 c2                	add    edx,eax
+  400539:	8b 45 f0             	mov    eax,DWORD PTR [rbp-0x10]
+  40053c:	01 d0                	add    eax,edx
+  40053e:	5d                   	pop    rbp
+  40053f:	c3                   	ret    </pre>
+
+<p>
+The return value is as before in <code>rax</code>
+</p>
+
+<p>
+As you can imagine, functions with more parameters will start to use the stack when the number of registers runs out. Try it yourself and find out when this happens.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "x86_64" [3025-4771] -->
+<h2 class="sectionedit6" id="demo_2syscalls">Demo 2: syscalls</h2>
+<div class="level2">
+
+<p>
+Doing the same thing for syscalls is a bit trickier.  We would like to use an architecture-independent approach. To do that we can&#039;t rely on hardcoded assembly (as it defeats our purpose anyway).
+Instead, we&#039;ll use the syscall function provided by <code>libc</code> (<code>man 2 syscall</code>):
+</p>
+
+<p>
+Our example simply writes “Hello World” to stderr.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Demo 2: syscalls" [4772-5132] -->
+<h3 class="sectionedit7" id="x861">x86</h3>
+<div class="level3">
+
+<p>
+Unfortunately, objdump on the binary doesn&#039;t help us too much:
+</p>
+<pre class="code">$  gcc -Wall  demo2.c  -m32 -o demo2_32
+$  objdump -d demo2_32  -Mintel -w
+0804843c &lt;main&gt;:
+ 804843c:       55                      push   ebp
+ 804843d:       89 e5                   mov    ebp,esp
+ 804843f:       83 e4 f0                and    esp,0xfffffff0
+ 8048442:       83 ec 10                sub    esp,0x10
+ 8048445:       c7 44 24 0c 0d 00 00    mov    DWORD PTR [esp+0xc],0xd
+ 804844c:       00 
+ 804844d:       c7 44 24 08 00 85 04    mov    DWORD PTR [esp+0x8],0x8048500
+ 8048454:       08 
+ 8048455:       c7 44 24 04 02 00 00    mov    DWORD PTR [esp+0x4],0x2
+ 804845c:       00 
+ 804845d:       c7 04 24 04 00 00 00    mov    DWORD PTR [esp],0x4
+ 8048464:       e8 c7 fe ff ff          call   8048330 &lt;syscall@plt&gt;
+ 8048469:       b8 00 00 00 00          mov    eax,0x0
+ 804846e:       c9                      leave  
+ 804846f:       c3                      ret </pre>
+
+<p>
+We only see an opaque call to syscall in libc.  But libc can also be inspected with objdump to get the source code of <code>syscall()</code>
+</p>
+<pre class="code">$  objdump -d /lib32/libc.so.6  -Mintel -w
+[...]
+000f0e50 &lt;syscall&gt;:
+   f0e50:	55                   	push   ebp
+   f0e51:	57                   	push   edi
+   f0e52:	56                   	push   esi
+   f0e53:	53                   	push   ebx
+   f0e54:	8b 6c 24 2c          	mov    ebp,DWORD PTR [esp+0x2c]
+   f0e58:	8b 7c 24 28          	mov    edi,DWORD PTR [esp+0x28]
+   f0e5c:	8b 74 24 24          	mov    esi,DWORD PTR [esp+0x24]
+   f0e60:	8b 54 24 20          	mov    edx,DWORD PTR [esp+0x20]
+   f0e64:	8b 4c 24 1c          	mov    ecx,DWORD PTR [esp+0x1c]
+   f0e68:	8b 5c 24 18          	mov    ebx,DWORD PTR [esp+0x18]
+   f0e6c:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+   f0e70:	65 ff 15 10 00 00 00 	call   DWORD PTR gs:0x10
+   f0e77:	5b                   	pop    ebx
+   f0e78:	5e                   	pop    esi
+   f0e79:	5f                   	pop    edi
+   f0e7a:	5d                   	pop    ebp
+   f0e7b:	3d 01 f0 ff ff       	cmp    eax,0xfffff001
+   f0e80:	73 01                	jae    f0e83 &lt;syscall+0x33&gt;
+   f0e82:	c3                   	ret    
+[...]</pre>
+
+<p>
+<code>call   DWORD PTR gs:0x10</code> is an optimized equivalent of <code>int 0x80</code>
+</p>
+
+<p>
+The stack at the first instruction in syscall is
+</p>
+<pre class="code">[esp+0x00] ret addr    (pushed because of &#039;call&#039;)
+[esp+0x04] 4 (__NR_write)
+[esp+0x08] 2
+[esp+0x0c]  addr of &quot;Hello World!&quot;
+[esp+0x10] 12</pre>
+
+<p>
+After 4 pushes we have
+</p>
+<pre class="code">[esp+0x00] ebx
+[esp+0x04] esi
+[esp+0x08] edi
+[esp+0x0c] ebp
+[esp+0x10] ret addr    (pushed because of &#039;call&#039;)
+[esp+0x14] 4 (__NR_write)
+[esp+0x18] 2
+[esp+0x1c]  addr of &quot;Hello World!&quot;
+[esp+0x20] 12</pre>
+
+<p>
+We can correlate this with the register set up before <code>call   DWORD PTR gs:0x10</code> to get the full picture:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>eax</code> holds the syscall number</div>
+</li>
+<li class="level1"><div class="li"> <code>ebx</code> holds argument 1</div>
+</li>
+<li class="level1"><div class="li"> <code>ecx</code> holds argument 2</div>
+</li>
+<li class="level1"><div class="li"> <code>edx</code> holds argument 3</div>
+</li>
+<li class="level1"><div class="li"> <code>esi</code> holds argument 4</div>
+</li>
+</ul>
+
+<p>
+and so on
+</p>
+
+</div>
+<!-- EDIT7 SECTION "x86" [5133-8110] -->
+<h3 class="sectionedit8" id="x86_641">x86_64</h3>
+<div class="level3">
+
+<p>
+Doing the same for  64 bits we see the following disassembly of <code>syscall()</code>
+</p>
+<pre class="code">$  gcc -Wall  demo2.c  -m64 -o demo2_64
+$  objdump -d demo2_64  -Mintel -w
+00000000000e90c0 &lt;syscall&gt;:
+   e90c0:	48 89 f8             	mov    rax,rdi
+   e90c3:	48 89 f7             	mov    rdi,rsi
+   e90c6:	48 89 d6             	mov    rsi,rdx
+   e90c9:	48 89 ca             	mov    rdx,rcx
+   e90cc:	4d 89 c2             	mov    r10,r8
+   e90cf:	4d 89 c8             	mov    r8,r9
+   e90d2:	4c 8b 4c 24 08       	mov    r9,QWORD PTR [rsp+0x8]
+   e90d7:	0f 05                	syscall 
+   e90d9:	48 3d 01 f0 ff ff    	cmp    rax,0xfffffffffffff001
+   e90df:	73 01                	jae    e90e2 &lt;syscall+0x22&gt;
+   e90e1:	c3                   	ret    </pre>
+<ul>
+<li class="level1"><div class="li"> <code>rax</code> holds the syscall number</div>
+</li>
+<li class="level1"><div class="li"> <code>rdi</code> holds argument 1</div>
+</li>
+<li class="level1"><div class="li"> <code>rsi</code> holds argument 2</div>
+</li>
+<li class="level1"><div class="li"> <code>rdx</code> holds argument 3</div>
+</li>
+<li class="level1"><div class="li"> <code>r10</code> holds argument 4</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT8 SECTION "x86_64" [8111-] --></div>
+</body>
+</html>

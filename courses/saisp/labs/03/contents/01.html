@@ -1,0 +1,238 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    01. [10p] Sincronizare ceasuri echipamente monitorizate    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-10T04:16:39+0200"/>
+<meta name="keywords" content="saisp,labs,03,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:03:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/saisp/labs/03/contents/01.html"/>
+<link rel="canonical" href="01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:03:contents';var JSINFO = {"id":"saisp:labs:03:contents:01","namespace":"saisp:labs:03:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="01%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="01%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_sincronizare_ceasuri_echipamente_monitorizate">01. [10p] Sincronizare ceasuri echipamente monitorizate</h3>
+<div class="level3">
+
+<p>
+Înainte de a implementa o soluție de monitorizare centralizată, trebuie să ne asigurăm că <strong>ceasurile</strong> tuturor sistemelor din rețea sunt sincronizate. În caz contrar, evenimentele monitorizate nu vor putea fi corelate.
+</p>
+
+<p>
+Protocolul care realizeaza acest lucru este <code>NTP</code> (Network Time Protocol). De obicei, o stație are rolul de server NTP, iar echipamentele sunt clienți NTP. În topologia prezentată anterior stația <code>monitor</code> va avea rol de server de NTP, iar ruterele <code>R1</code> și <code>R2</code> și stația <code>gateway</code> vor avea rolul de clienți.
+</p>
+
+<p>
+În sistemele Debian-base, pachetul <code>ntp</code> conține atât serverul, cât și clientul de NTP. Funcționalitatea implicită este următoarea:
+</p>
+<ul>
+<li class="level1"><div class="li"> clientul obtine ceasul de la niște servere predefinite;</div>
+</li>
+<li class="level1"><div class="li"> serverul acceptă interogari de la alți clienți pe portul <code>UDP 123</code>.</div>
+</li>
+</ul>
+
+<p>
+Pe ambele stații Linux vom instala pachetul <code>ntp</code>:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span><span class="kw2">apt-get install</span> ntp
+&nbsp;
+<span class="co4">root@gateway:~# </span><span class="kw2">apt-get install</span> ntp</pre>
+
+<p>
+Pe <code>gateway</code> configurăm serviciul NTP să foloseasca stația <code>monitor</code> ca server de NTP. În fișierul <code>/etc/ntp.conf</code> comentăm toate liniile de încep cu <code>server</code> și adăugăm linia <code>server 192.168.1.4</code>. Resetați serviciul <code>ntp</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ntp.conf <span class="sy0">|</span><span class="kw2">grep</span> <span class="nu0">192.168</span>
+server 192.168.1.4 iburst
+<span class="co4">root@gateway:~# </span><span class="sy0">/</span>etc<span class="sy0">/</span>init.d<span class="sy0">/</span>ntp restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Stopping NTP server: ntpd.
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Starting NTP server: ntpd.</pre>
+
+<p>
+Pentru a lista toate serverele NTP folosite, vom utiliza comanda <code>ntpq</code>:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>ntpq <span class="re5">-p</span>
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+<span class="sy0">*</span>192.168.1.4     89.36.18.21      <span class="nu0">3</span> u   <span class="nu0">50</span>   <span class="nu0">64</span>    <span class="nu0">1</span>    <span class="nu0">0.373</span>    <span class="nu0">5.896</span>   <span class="nu0">0.081</span></pre>
+
+<p>
+Pentru a configura ruterul <code>R1</code> să aibă rol de client NTP, vom specifica adresa serverului în modul global de configurare:
+</p>
+<pre class="code">R1&gt;enable
+Password:
+R1#conf t
+R1(config)# ntp server 192.168.1.4</pre>
+
+<p>
+Verificarea funcționării protocolului se realizează prin comenzi de tip <code>show</code>:
+</p>
+<pre class="code">R1#show clock
+.12:57:55.421 UTC Sun Mar 9 2014</pre>
+<pre class="code">R1#show ntp status
+Clock is synchronized, stratum 3, reference is 192.168.1.4
+nominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**18
+reference time is D6C6EF40.C43D8165 (13:46:40.766 UTC Sun Mar 9 2014)
+clock offset is 14.9852 msec, root delay is 20.75 msec
+root dispersion is 642.38 msec, peer dispersion is 414.18 msec</pre>
+<pre class="code">R1#show ntp associations
+      address         ref clock     st  when  poll reach  delay  offset    disp
+*~192.168.1.4      80.96.120.253     2    11   128  137    12.1   14.99   414.2
+ * master (synced), # master (unsynced), + selected, - candidate, ~ configured</pre>
+
+<p>
+Configurați pe ruterul <code>R2</code> ca server de NTP stația <code>monitor</code>.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../03.html" class="wikilink1" title="saisp:labs:03">Laboratorul 3</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:03:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:03:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_16923399475835678ec1e61" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><span class="curid"><a href="01.html" class="wikilink1" title="saisp:labs:03:contents:01">01. [10p] Sincronizare ceasuri echipamente monitorizate</a></span></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="saisp:labs:03:contents:02">02. [10p] Remote logging</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="saisp:labs:03:contents:03">03. [15p] Configurare server SNMP pe echipamente CISCO</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="saisp:labs:03:contents:04">04. [15p] SNMP server pe Linux</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="saisp:labs:03:contents:05">05. [20p] Baze de date Round Robin (RRD)</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="saisp:labs:03:contents:06">06. [15p] Nagios</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="saisp:labs:03:contents:07">07. [15p] NRPE (Nagios Remote Plugin Executor)</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="saisp:labs:03:contents:08">08. [BONUS - 20p] CACTI</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:03:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/03/contents/01.txt · Last modified: 2014/03/10 04:16 by mihai.carabas          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="01%3Fdo=media&amp;ns=saisp%253Alabs%253A03%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="01.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A03%253Acontents%253A01&amp;1479894926" width="2" height="1" alt="" /></div>
+</body>
+</html>

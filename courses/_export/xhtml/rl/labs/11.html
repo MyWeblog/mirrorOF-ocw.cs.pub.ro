@@ -1,0 +1,918 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:11</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-10-05T23:54:13+0300"/>
+<meta name="keywords" content="rl,labs,11"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=rl:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="11.html"/>
+<link rel="canonical" href="../../../../rl/labs/11.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs';var JSINFO = {"id":"rl:labs:11","namespace":"rl:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="laborator_11_virtualizare_in_networking">Laborator 11. Virtualizare în networking</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 11. Virtualizare în networking" [12-68] -->
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Folosirea containerelor LXC</div>
+</li>
+<li class="level1"><div class="li"> Lucrul cu interfețe de rețea virtualizate</div>
+</li>
+<li class="level1"><div class="li"> Gestiunea bridge-urilor în Linux</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cunoștințe și abilități ce vor fi dobândite" [69-250] -->
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+<p><div class="noteimportant">
+<strong>Înainte</strong> de a porni mașina virtuală <code>RL_lab</code>, pe sistemul fizic (<code>mjolnir</code>) rulați comanda:
+</p>
+<pre class="code bash"><span class="co4">student@mjonir:~$ </span><span class="kw2">sudo</span> <span class="kw2">chmod</span> a+rw <span class="sy0">/</span>dev<span class="sy0">/</span>vmnet8</pre>
+
+<p>
+Comanda este utilă pentru a permite plasarea interfețelor mașinilor virtuale VMware în modul <em>promiscuous</em>, necesar pentru lucrul cu bridge-uri.
+</p>
+
+<p>
+Dacă ați pornit mașina virtuală înainte de a rula comanda de mai sus, opriți mașina virtuală. Comanda trebuie rulată neapărat <strong>înainte</strong> de pornirea mașinii virtuale.
+
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> Deschideți VMware și porniți mașina virtuală <code>RL_lab</code>.</div>
+</li>
+<li class="level1"><div class="li"> Dorim să folosim terminalul sistemului fizic și să lucrăm peste SSH cu mașina virtuală VMware (denumită și <code>host</code>). În acest fel vom putea folosi copy-paste în terminal sau alte facilități. Pentru aceasta urmați pașii de mai jos:</div>
+<ul>
+<li class="level2"><div class="li"> Autentificați-vă în mașina virtuală folosind contul <code>root</code> cu parola <code>student</code>.</div>
+</li>
+<li class="level2"><div class="li"> Aflați adresa IP a mașinii virtuale de pe interfața <code>eth0</code>:<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ifconfig</span> eth0</pre>
+</div>
+</li>
+<li class="level2"><div class="li"> De pe sistemul fizic, deschideți un terminal și realizați o sesiune SSH folosind:<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span><span class="re1">$ADRESA_IP_MV</span></pre>
+
+<p>
+unde <code>$ADRESA_IP_MV</code> este adresa IP a mașinii virtuale așa cum ați obținut-o mai sus.
+</p>
+</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Pentru a pregăti configurația de laborator, pe mașina virtuală (stația <code>host</code>) folosiți comenzile următoare din contul utilizatorului <code>root</code> de pe stația <code>host</code> (puteți da copy/paste la comenzi în terminal):<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">wget</span> https:<span class="sy0">//</span>raw.github.com<span class="sy0">/</span>RL-UPB<span class="sy0">/</span>rl-lab-prepare<span class="sy0">/</span>master<span class="sy0">/</span>rl-lab-<span class="nu0">11</span>-prepare
+<span class="co4">root@host:~# </span><span class="kw2">chmod</span> +x rl-lab-<span class="nu0">11</span>-prepare
+<span class="co4">root@host:~# </span>.<span class="sy0">/</span>rl-lab-<span class="nu0">11</span>-prepare</pre>
+</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic">
+Pentru a vedea cum accesați stațiile <code>red</code>, <code>green</code> și <code>blue</code> (containere LXC configurate peste mașina virtuală VMware - stația <code>host</code>) urmăriți pașii de <a href="../../../../rl/info/resurse/vm-laborator.html#instructiuni_utilizare" class="wikilink1" title="rl:info:resurse:vm-laborator"> aici</a>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Conturile de acces la mașina virtuală (stația <code>host</code>) sunt (<code>username:parola</code>):
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>root:student</code></div>
+</li>
+<li class="level1"><div class="li"> <code>student:student</code></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Pregătire infrastructură de laborator" [251-2408] -->
+<h2 class="sectionedit4" id="topologie">Topologie</h2>
+<div class="level2">
+
+<p>
+<a href="../../../../_detail/rl/topologie.png%3Fid=rl%253Alabs%253A11.html" class="media" title="rl:topologie.png"><img src="../../../../_media/rl/topologie.png" class="mediacenter" alt="" /></a>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Topologie" [2409-2457] -->
+<h2 class="sectionedit5" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="../../../../rl/labs/11.html" class="wikilink1" title="rl:labs:11">Laboratorul 11</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT6 PLUGIN_INCLUDE_START "rl:labs:11:meta:nav" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_245736256583560b871b36" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/00.html" class="wikilink1" title="rl:labs:11:contents:00">00. [BONUS - 10p] Completare formular de feedback</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/01.html" class="wikilink1" title="rl:labs:11:contents:01">01. [15p] Conectare logică a două containere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/02.html" class="wikilink1" title="rl:labs:11:contents:02">02. [15p] Asigurare conectivitate la Internet pentru containere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/03.html" class="wikilink1" title="rl:labs:11:contents:03">03. [10p] Asigurare conectivitate la Internet pentru un nou container</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/04.html" class="wikilink1" title="rl:labs:11:contents:04">04. [15p] Conectare de containere la rețeaua publică</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/05.html" class="wikilink1" title="rl:labs:11:contents:05">05. [15p] Filtrare pe bridge</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/06.html" class="wikilink1" title="rl:labs:11:contents:06">06. [15p] Rețele distincte pentru containere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/07.html" class="wikilink1" title="rl:labs:11:contents:07">07. [15p] Filtrare de trafic între containere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/08.html" class="wikilink1" title="rl:labs:11:contents:08">08. [BONUS - 10p] Gestiune bridge-uri folosind suita iproute2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT7 PLUGIN_INCLUDE_END "rl:labs:11:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT5 SECTION "Navigare" [2458-2567] -->
+<h2 class="sectionedit8" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT9 PLUGIN_INCLUDE_START "rl:labs:11:contents:00" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:00">
+
+<h3 class="sectionedit11" id="bonus_-_10p_completare_formular_de_feedback">00. [BONUS - 10p] Completare formular de feedback</h3>
+<div class="level3">
+
+<p>
+Vă invităm să evaluați activitatea echipei de RL și să precizați punctele tari și punctele slabe și sugestiile voastre de îmbunătățire a materiei. Feedback-ul vostru este foarte important pentru noi să creștem calitatea materiei în anii următori și să îmbunătățim materiile pe care le veți face în continuare.
+</p>
+
+<p>
+Găsiți formularul de feedback în partea dreaptă a paginii principale de RL de pe cs.curs.pub.ro într-un frame numit “FEEDBACK”.
+</p>
+
+<p>
+Vă mulțumim!
+</p>
+
+</div>
+<!-- EDIT11 SECTION "00. [BONUS - 10p] Completare formular de feedback" [1-] --><!-- EDIT10 PLUGIN_INCLUDE_END "rl:labs:11:contents:00" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT12 PLUGIN_INCLUDE_START "rl:labs:11:contents:01" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:01">
+
+<h3 class="sectionedit14" id="p_conectare_logica_a_doua_containere">01. [15p] Conectare logică a două containere</h3>
+<div class="level3">
+
+<p>
+Până acum în laboratorul de Rețele Locale am simulat o topologie de rețea folosind containere LXC (Linux Containers). Pentru a vedea ce containere LXC sunt disponibile într-un sistem folosim pe stația <code>host</code> comanda <code>lxc-list</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>lxc-list
+RUNNING
+&nbsp;
+FROZEN
+&nbsp;
+STOPPED
+  blue <span class="br0">&#40;</span>auto<span class="br0">&#41;</span>
+  green <span class="br0">&#40;</span>auto<span class="br0">&#41;</span>
+  <span class="kw2">red</span> <span class="br0">&#40;</span>auto<span class="br0">&#41;</span></pre>
+
+<p>
+Pe stația <code>host</code> sunt disponibile, pe moment, două interfețe: interfața de loopback (<code>lo</code>) și intefața de rețea a stației (<code>eth0</code>). Putem observa acest lucru folosind comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> a s
+<span class="nu0">1</span>: lo: <span class="sy0">&lt;</span>LOOPBACK,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">16436</span> qdisc noqueue state UNKNOWN 
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="nu0">2</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Observăm că sunt 3 containere în sistem (<code>blue</code>, <code>green</code> și <code>red</code>), toate în starea <code>STOPPED</code> (oprite). Pentru a porni container-ul <code>blue</code> vom folosi comanda <code>lxc-start -d -n blue</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>lxc-start <span class="re5">-n</span> blue <span class="re5">-d</span>
+<span class="co4">root@host:~# </span>lxc-list
+RUNNING
+  blue <span class="br0">&#40;</span>auto<span class="br0">&#41;</span>
+&nbsp;
+FROZEN
+&nbsp;
+STOPPED
+  green <span class="br0">&#40;</span>auto<span class="br0">&#41;</span>
+  <span class="kw2">red</span> <span class="br0">&#40;</span>auto<span class="br0">&#41;</span>
+&nbsp;
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a s
+<span class="nu0">1</span>: lo: <span class="sy0">&lt;</span>LOOPBACK,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">16436</span> qdisc noqueue state UNKNOWN 
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="nu0">2</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="nu0">20</span>: veth-blue: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span></pre>
+
+<p>
+Observăm că starea container-ului <code>blue</code> este <code>RUNNING</code>. Parametrul <code>-d</code> este folosit pentru a porni containerul în mod <code>daemon</code>, iar <code>-n</code> specifică numele containerului ce se dorește a fi pornit. De asemenea, observăm apariția interfeței virtuale <code>veth-blue</code>, interfață ce face legătura stației <code>host</code> cu stația <code>blue</code> (mai precis cu interfața <code>eth0</code> internă stației <code>blue</code>).
+</p>
+
+<p>
+<p><div class="noteimportant">
+Trebuie să folosim parametrul <code>-d</code> al comenzii <code>lxc-start</code> pentru a porni containerul ca un daemon (în background). Altfel, terminalul curent va fi blocat de comenzile rulate în container și nu vom putea ieși din acesta folosind combinația de taste <code>Ctrl+a</code> și apoi <code>q</code>.
+
+</div></p>
+</p>
+
+<p>
+Porniți container-ul <code>green</code> și verificați că este în starea <code>RUNNING</code>
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>lxc-start <span class="re5">-n</span> green <span class="re5">-d</span>
+<span class="co4">root@host:~# </span>lxc-list
+RUNNING
+  blue <span class="br0">&#40;</span>auto<span class="br0">&#41;</span>
+  green <span class="br0">&#40;</span>auto<span class="br0">&#41;</span>
+&nbsp;
+FROZEN
+&nbsp;
+STOPPED
+  <span class="kw2">red</span> <span class="br0">&#40;</span>auto<span class="br0">&#41;</span>
+&nbsp;
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a s
+<span class="nu0">1</span>: lo: <span class="sy0">&lt;</span>LOOPBACK,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">16436</span> qdisc noqueue state UNKNOWN 
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="nu0">2</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="nu0">20</span>: veth-blue: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="nu0">23</span>: veth-green: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span></pre>
+
+<p>
+Observăm că acum sunt pornite containerele <code>blue</code> și <code>green</code>. Observăm că pe stația <code>host</code> există două interfețe virtuale: <code>veth-blue</code> (legătura cu stația <code>blue</code>) si <code>veth-green</code> (legătura cu stația <code>green</code>).
+</p>
+
+<p>
+Dorim să conectăm cele 2 containere (<code>blue</code> și <code>green</code>) în același switch virtual. Pe Linux putem simula un switch folosind noțiunea de <em>bridge</em>. Pentru crearea și configurarea unui bridge vom folosi comanda <code>brctl</code>.
+</p>
+
+<p>
+Pe stația <code>host</code> vom crea un bridge (denumit <code>br0</code>) executând comanda:
+</p>
+<pre class="code">root@host:~# brctl addbr br0</pre>
+
+<p>
+Pentru a verifica că bridge-ul a fost creat folosim comanda <code>brctl show</code>:
+</p>
+<pre class="code">root@host:~# brctl show
+bridge name     bridge id               STP enabled     interfaces
+br0             8000.000000000000       no</pre>
+
+<p>
+Pentru a permite conectivitatea între containere și între containere și stația <code>host</code> va trebui să legăm interfețele virtuale aferente în bridge-ul proaspăt creat. Altfel spus, dorim să conectăm la bridge-ul <code>br0</code> interfețele aferente de pe stația <code>host</code> ale lui <code>blue</code> (adică interfața <code>veth-blue</code>) și lui <code>green</code> (interfața <code>veth-green</code>). Vom folosi comanda <code>brctl addif</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>brctl addif br0 veth-blue
+<span class="co4">root@host:~# </span>brctl show
+bridge name     bridge <span class="kw2">id</span>               STP enabled     interfaces
+br0             8000.7acc4f8a0686       no              veth-blue
+<span class="co4">root@host:~# </span>brctl addif br0 veth-green
+<span class="co4">root@host:~# </span>brctl show
+bridge name     bridge <span class="kw2">id</span>               STP enabled     interfaces
+br0             8000.3a89dafa5a72       no              veth-blue
+                                                        veth-green</pre>
+
+<p>
+Pentru a valida operațiunea de adăugare folosim comanda <code>brctl show</code>.
+</p>
+
+<p>
+<strong>Exercițiu</strong>: Pentru a testa conectivitatea între containere, trebuie configurate adrese IP pe interfețele interne (<code>eth0</code>) alte containerelor. Configurați pe interfața <code>eth0</code> a stației <code>blue</code> adresa IP 192.168.1.4/24 și pe interfața <code>eth0</code> a stației <code>green</code> adresa IP 192.168.1.3/24. Pentru reamintire, puteți parcurge <a href="../../../../rl/labs/07/contents/01.html" class="wikilink1" title="rl:labs:07:contents:01">01. [10p] Configurare și ștergere adrese IP</a>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+<strong>Nu trebuie</strong> să configurați adrese IP pe interfețele de tip <code>veth</code> de pe stația <code>host</code>. Adică interfețele <code>veth-red</code>, <code>veth-blue</code> și <code>veth-green</code> nu vor avea adrese IP configurate.
+
+</div></p>
+</p>
+
+<p>
+Pentru testarea conectivității între containere folosim comanda <code>ping</code> dintr-un container sau altul:
+</p>
+<pre class="code bash"><span class="co4">root@blue:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> 192.168.1.3
+PING 192.168.1.3 <span class="br0">&#40;</span>192.168.1.3<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+From 192.168.1.4 <span class="re2">icmp_seq</span>=<span class="nu0">1</span> Destination Host Unreachable
+From 192.168.1.4 <span class="re2">icmp_seq</span>=<span class="nu0">2</span> Destination Host Unreachable
+&nbsp;
+<span class="re5">---</span> 192.168.1.3 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">0</span> received, +<span class="nu0">2</span> errors, <span class="nu0">100</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 999ms
+pipe <span class="nu0">2</span>
+<span class="co4">root@blue:~# </span><span class="kw2">ip</span> r s
+192.168.1.0<span class="sy0">/</span><span class="nu0">24</span> dev eth0  proto kernel  scope <span class="kw2">link</span>  src 192.168.1.4 
+&nbsp;
+<span class="co4">root@green:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> 192.168.1.4
+PING 192.168.1.4 <span class="br0">&#40;</span>192.168.1.4<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+From 192.168.1.3 <span class="re2">icmp_seq</span>=<span class="nu0">1</span> Destination Host Unreachable
+From 192.168.1.3 <span class="re2">icmp_seq</span>=<span class="nu0">2</span> Destination Host Unreachable
+&nbsp;
+<span class="re5">---</span> 192.168.1.4 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">0</span> received, +<span class="nu0">2</span> errors, <span class="nu0">100</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 1007ms
+pipe <span class="nu0">2</span>
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> r s   
+192.168.1.0<span class="sy0">/</span><span class="nu0">24</span> dev eth0  proto kernel  scope <span class="kw2">link</span>  src 192.168.1.3 </pre>
+
+<p>
+Observăm că nu avem conectivitate deși interfețele sunt active și adresele IP fac parte din aceeași rețea și tabela de rutare conține intrarea corespunzătoare. Problema poate fi de la bridge. Pe stația <code>host</code> verificăm legătura de nivel 2 a bridge-ului <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip link</span> show dev br0
+<span class="nu0">20</span>: br0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc noqueue state DOWN
+    link<span class="sy0">/</span>ether 3a:<span class="nu0">89</span>:da:fa:5a:<span class="nu0">72</span> brd ff:ff:ff:ff:ff:ff</pre>
+
+<p>
+Observăm că bridge-ul este inactiv (<code>state DOWN</code>). Activăm bridge-ul:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip link</span> <span class="kw1">set</span> dev br0 up
+<span class="co4">root@host:~# </span><span class="kw2">ip link</span> show dev br0
+<span class="nu0">20</span>: br0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc noqueue state UP
+    link<span class="sy0">/</span>ether 3a:<span class="nu0">89</span>:da:fa:5a:<span class="nu0">72</span> brd ff:ff:ff:ff:ff:ff</pre>
+
+<p>
+Testăm din nou conectivitatea între containerele <code>green</code> și <code>blue</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> 192.168.1.4
+PING 192.168.1.4 <span class="br0">&#40;</span>192.168.1.4<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 192.168.1.4: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.070</span> ms
+<span class="nu0">64</span> bytes from 192.168.1.4: <span class="re2">icmp_req</span>=<span class="nu0">2</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.045</span> ms
+&nbsp;
+<span class="re5">---</span> 192.168.1.4 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">2</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 999ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.045</span><span class="sy0">/</span><span class="nu0">0.057</span><span class="sy0">/</span><span class="nu0">0.070</span><span class="sy0">/</span><span class="nu0">0.014</span> ms
+&nbsp;
+<span class="co4">root@blue:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> 192.168.1.3
+PING 192.168.1.3 <span class="br0">&#40;</span>192.168.1.3<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 192.168.1.3: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.036</span> ms
+<span class="nu0">64</span> bytes from 192.168.1.3: <span class="re2">icmp_req</span>=<span class="nu0">2</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.029</span> ms
+&nbsp;
+<span class="re5">---</span> 192.168.1.3 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">2</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 999ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.029</span><span class="sy0">/</span><span class="nu0">0.032</span><span class="sy0">/</span><span class="nu0">0.036</span><span class="sy0">/</span><span class="nu0">0.006</span> ms</pre>
+
+<p>
+Acum există conectivitate între cele două containere.
+</p>
+
+</div>
+<!-- EDIT14 SECTION "01. [15p] Conectare logică a două containere" [1-] --><!-- EDIT13 PLUGIN_INCLUDE_END "rl:labs:11:contents:01" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT15 PLUGIN_INCLUDE_START "rl:labs:11:contents:02" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:02">
+
+<h3 class="sectionedit17" id="p_asigurare_conectivitate_la_internet_pentru_containere">02. [15p] Asigurare conectivitate la Internet pentru containere</h3>
+<div class="level3">
+
+<p>
+În acest moment, există conectivitate între stațiile <code>blue</code> și <code>green</code>. Dorim să le asigurăm conectivitate la Internet. Pentru aceasta trebuie să urmați pașii:
+</p>
+<ul>
+<li class="level1"><div class="li"> Configurare adresă IP pe interfața <code>br0</code>.</div>
+</li>
+<li class="level1"><div class="li"> Configurarea adresei IP de mai sus ca <em>default gateway</em> pe stațiile <code>blue</code> și <code>green</code>.</div>
+</li>
+<li class="level1"><div class="li"> Activarea rutării pentru stația <code>host</code>.</div>
+</li>
+<li class="level1"><div class="li"> Configurarea NAT (<code>MASQUERADE</code>) pe stația <code>host</code> pentru a permite accesul stațiilor <code>blue</code> și <code>green</code> în Internet.</div>
+</li>
+</ul>
+
+<p>
+Configurați, pe interfața <code>br0</code> a stației <code>host</code>, adresa <code>192.168.1.1/24</code>. Verificați conectivitatea între stația <code>host</code> și stațiile <code>green</code> și <code>blue</code>.
+</p>
+
+<p>
+Configurați adresa IP <code>192.168.1.1</code> ca default gateway pe stațiile <code>blue</code> și <code>green</code>.
+</p>
+
+<p>
+Pe stația <code>host</code> activați rutarea (vedeți <a href="../../../../rl/labs/07/contents/03.html" class="wikilink1" title="rl:labs:07:contents:03">03. [10p] Adresare IP și rutare</a>) și configurați NAT de tipul <code>MASQUERADE</code> (vedeți <a href="../../../../rl/labs/09/contents/01.html" class="wikilink1" title="rl:labs:09:contents:01">01. [10p] Configurare translatare de adrese (MASQUERADE)</a>).
+</p>
+
+<p>
+<p><div class="noteimportant">
+Aveți în vedere să folosiți opțiunea <code>-o</code> la <code>iptables</code> pentru precizarea interfeței de ieșire în momentul configurării unei reguli de tipul <code>MASQUERADE</code>.
+
+</div></p>
+</p>
+
+<p>
+După acești pași verificați conectivitatea stațiilor <code>blue</code> și <code>green</code> la Internet. Puteți folosi comanda <code>ping 8.8.8.8</code> de pe fiecare dintre cele două stații.
+</p>
+
+</div>
+<!-- EDIT17 SECTION "02. [15p] Asigurare conectivitate la Internet pentru containere" [1-] --><!-- EDIT16 PLUGIN_INCLUDE_END "rl:labs:11:contents:02" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT18 PLUGIN_INCLUDE_START "rl:labs:11:contents:03" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:03">
+
+<h3 class="sectionedit20" id="p_asigurare_conectivitate_la_internet_pentru_un_nou_container">03. [10p] Asigurare conectivitate la Internet pentru un nou container</h3>
+<div class="level3">
+
+<p>
+Afișați starea tuturor containerelor din sistem folosind comanda <code>lxc-list</code>. Observați că starea containerului <code>red</code> este <code>STOPPED</code>.
+</p>
+
+<p>
+Porniți containerul <code>red</code> <strong>în mod daemon</strong> și adăugați interfața de pe stația <code>host</code> aferentă acestuia (<code>veth-red</code>) în bridge-ul <code>br0</code> creat anterior.
+</p>
+
+<p>
+Pe interfața <code>eth0</code> a stației <code>red</code> configurați adresa IP <code>192.168.1.2/24</code> pe <code>eth0</code>. Verificați conectivitatea cu celelalte containere.
+</p>
+
+<p>
+Apoi configurați <em>default gateway</em> pe stația <code>red</code> pentru a asigura conectivitatea acesteia la Internet. Puteți testa conectivitatea la Internet prin folosirea unei comenzi de forma <code>ping 8.8.8.8</code>.
+</p>
+
+</div>
+<!-- EDIT20 SECTION "03. [10p] Asigurare conectivitate la Internet pentru un nou container" [1-] --><!-- EDIT19 PLUGIN_INCLUDE_END "rl:labs:11:contents:03" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT21 PLUGIN_INCLUDE_START "rl:labs:11:contents:04" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:04">
+
+<h3 class="sectionedit23" id="p_conectare_de_containere_la_reteaua_publica">04. [15p] Conectare de containere la rețeaua publică</h3>
+<div class="level3">
+
+<p>
+Până acum conectarea la Internet containerelor <code>red</code>, <code>green</code> și <code>blue</code> se face prin intermediul stației <code>host</code> pe post de ruter/gateway. Stația <code>host</code> preia pachetele sosite pe interfața <code>br0</code> și le transferă apoi pe interfața <code>eth0</code> legată la o rețea pe care vom denumi în continuare <em>rețea publică</em>.
+</p>
+
+<p>
+Dorim să realizăm conectarea la Internet a containerelor direct la rețeaua publică, renunțânt astfel la rutare și la NAT pe stația <code>host</code>. Pentru aceasta vom adăuga inclusiv interfața <code>eth0</code> la bridge-ul <code>br0</code>, asigurând astfel o conexiune ,prin bridge, a containerelelor la <em>rețeaua publică</em>.
+</p>
+
+<p>
+Pentru început dezactivăm NAT pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">1</span> packets, <span class="nu0">32</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+   <span class="nu0">50</span>  <span class="nu0">3166</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      eth1    0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>           
+<span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-F</span> POSTROUTING
+<span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination</pre>
+
+<p>
+<p><div class="noteimportant">
+Operațiile următoare le vom efectua direct în consola mașinii virtuale VMware, adică în fereastra VMware, întrucât vor afecta configurația rețelei și vor închide conexiunile SSH curente.
+
+</div></p>
+</p>
+
+<p>
+După cum am precizat, adăugăm interfața <code>eth0</code> în brige-ul <code>br0</code> (practic creăm o legătură între switch-ul nostru virtual <code>br0</code> și rețeaua publică):
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>brctl addif br0 eth0
+<span class="co4">root@host:~# </span>brctl show br0
+bridge name	bridge <span class="kw2">id</span>		STP enabled	interfaces
+br0		8000.080027db5278	no		eth0
+							veth-blue
+							veth-green
+							veth-red</pre>
+
+<p>
+Pentru a reveni la conectare prin SSH de pe sistemul fizic pe stația <code>host</code>, va trebui să configurăm o adresă IP pe bridge-ul <code>br0</code>. Pentru acesta vom șterge vechile adrese de pe interfețele <code>eth0</code> și <code>br0</code> și vom obține o adresă nouă pe interfața <code>br0</code> folosind comenzile:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a f dev br0
+<span class="co4">root@host:~# </span>dhclient br0
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a s br0
+<span class="nu0">25</span>: br0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc noqueue state UP 
+    link<span class="sy0">/</span>ether 08:00:<span class="nu0">27</span>:db:<span class="nu0">52</span>:<span class="nu0">78</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global br0</pre>
+
+<p>
+<p><div class="noteclassic">
+Sunt șanse ca pe interfața <code>br0</code> să fie primită, prin DHCP, aceeași adresă IP. În acest caz conexiunea SSH existentă va fi deblocată și veți putea continua lucrul la exerciții. Adică nu va mai fi nevoie să rulați comanda <code>ssh</code> indicată imediat mai jos.
+
+</div></p>
+</p>
+
+<p>
+Acum ne putem reconecta de pe sistemul fizic la stația <code>host</code> prin SSH, folosind adresa IP asociată acum interfeței <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_BR0</pre>
+
+<p>
+Acum containerele sunt conectate la <em>rețeaua publică</em>. Pentru a obține adrese din acea rețea, ștergem vechea adresă pe interfața <code>eth0</code>, rulăm pe fiecare container comanda <code>dhclient eth0</code> și observăm ce adrese IP a obținut fiecare container:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@red:~# </span>dhclient eth0
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">26</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.102<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0
+&nbsp;
+<span class="co4">root@blue:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@blue:~# </span>dhclient eth0
+<span class="co4">root@blue:~# </span><span class="kw2">ip</span> a s eth0
+<span class="nu0">19</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:<span class="nu0">32</span>:0f:ae brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.103<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0
+&nbsp;
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@green:~# </span>dhclient eth0
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">22</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.104<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0</pre>
+
+<p>
+Folosind noile adrese obținute ne putem conecta <strong>direct</strong> prin SSH de pe sistemul fizic pe containere:
+</p>
+<pre class="code bash"><span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_RED
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~#
+</span>
+<span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_GREEN
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@green:~#
+</span>
+<span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_BLUE
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@blue:~#</span></pre>
+
+</div>
+<!-- EDIT23 SECTION "04. [15p] Conectare de containere la rețeaua publică" [1-] --><!-- EDIT22 PLUGIN_INCLUDE_END "rl:labs:11:contents:04" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT24 PLUGIN_INCLUDE_START "rl:labs:11:contents:05" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:05">
+
+<h3 class="sectionedit26" id="p_filtrare_pe_bridge">05. [15p] Filtrare pe bridge</h3>
+<div class="level3">
+
+<p>
+Vrem să facem o legătură simplă directă doar între două containere (<code>red</code> și <code>green</code>) astfel încât să comunice între ele fără ca pachetele să fie prelucrate de sistemul <code>host</code>. Pentru aceasta vom scoate interfețele aferente din bridge-ul <code>br0</code> și vom crea un nou bridge.
+</p>
+
+<p>
+Pentru început scoatem interfețele aferente containerelor <code>red</code> (<code>veth-red</code>) și <code>green</code> (<code>veth-green</code>) din bridge-ul <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>brctl delif br0 veth-red
+<span class="co4">root@host:~# </span>brctl delif br0 veth-green
+<span class="co4">root@host:~# </span>brctl show br0
+bridge name	bridge <span class="kw2">id</span>		STP enabled	interfaces
+br0		8000.000c2919b1b2	no		eth0
+                                                        veth-blue</pre>
+
+<p>
+Creăm un nou bridge (<code>br1</code>) și adăugăm interfețele <code>veth-red</code> și <code>veth-green</code> în acesta:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>brctl addbr br1
+<span class="co4">root@host:~# </span>brctl addif br1 veth-red
+<span class="co4">root@host:~# </span>brctl addif br1 veth-green
+<span class="co4">root@host:~# </span>brctl show br1
+bridge name	bridge <span class="kw2">id</span>		STP enabled	interfaces
+br1		<span class="nu0">8000</span>.f67659f52916	no		veth-green
+							veth-red
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> l s dev br1 up
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a s dev br1
+<span class="nu0">13</span>: br1: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc noqueue state UP
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Configurăm adrese pe stațiile <code>red</code> și <code>green</code> și verificăm apoi conectiviatea între acestea. Configurăm adresele <code>172.16.12.1/24</code>, respectiv <code>172.16.12.2/24</code> și verificăm conectivitatea între acestea:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> a a 172.16.12.1<span class="sy0">/</span><span class="nu0">24</span> dev eth0
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">9</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 172.16.12.1<span class="sy0">/</span><span class="nu0">24</span> scope global eth0
+&nbsp;
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a a 172.16.12.2<span class="sy0">/</span><span class="nu0">24</span> dev eth0
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">6</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> brd ff:ff:ff:ff:ff:ff
+    inet 172.16.12.2<span class="sy0">/</span><span class="nu0">24</span> scope global eth0
+&nbsp;
+<span class="co4">root@red:~# </span><span class="kw2">ping</span> 172.16.12.2
+PING 172.16.12.2 <span class="br0">&#40;</span>172.16.12.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 172.16.12.2: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.319</span> ms
+^C
+<span class="re5">---</span> 172.16.12.2 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">1</span> packets transmitted, <span class="nu0">1</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 0ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.319</span><span class="sy0">/</span><span class="nu0">0.319</span><span class="sy0">/</span><span class="nu0">0.319</span><span class="sy0">/</span><span class="nu0">0.000</span> ms
+&nbsp;
+<span class="co4">root@green:~# </span><span class="kw2">ping</span> 172.16.12.1
+PING 172.16.12.1 <span class="br0">&#40;</span>172.16.12.1<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 172.16.12.1: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.191</span> ms
+^C
+<span class="re5">---</span> 172.16.12.1 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">1</span> packets transmitted, <span class="nu0">1</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 0ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.191</span><span class="sy0">/</span><span class="nu0">0.191</span><span class="sy0">/</span><span class="nu0">0.191</span><span class="sy0">/</span><span class="nu0">0.000</span> ms</pre>
+
+<p>
+Avem conectivitate completă între cele două stații (<code>red</code> și <code>green</code>) inclusiv la nivel de serviciu. Stația <code>green</code> poate accesa serviciile SSH, <abbr title="File Transfer Protocol">FTP</abbr>, telnet de pe stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span><span class="kw2">ssh</span> root<span class="sy0">@</span>172.16.12.1
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~#
+</span>
+<span class="co4">root@green:~# </span><span class="kw2">ftp</span> 172.16.12.1
+Connected to 172.16.12.1.
+<span class="nu0">220</span> <span class="br0">&#40;</span>vsFTPd 2.3.5<span class="br0">&#41;</span>
+Name <span class="br0">&#40;</span>172.16.12.1:root<span class="br0">&#41;</span>: <span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+&nbsp;
+<span class="co4">root@green:~# </span>telnet 172.16.12.1
+Trying 172.16.12.1...
+Connected to 172.16.12.1.
+Escape character is <span class="st_h">'^]'</span>.
+Ubuntu 12.04.3 LTS
+<span class="kw2">red</span> login: <span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Ne propunem să blocăm traficul nesigur (adică <abbr title="File Transfer Protocol">FTP</abbr> și telnet) de la stația <code>green</code> la stația <code>red</code>. Avem soluția configurării unui firewall pe stația <code>red</code> folosind utilitarul <code>iptables</code>. Această soluție are două neajunsuri:
+</p>
+<ul>
+<li class="level1"><div class="li"> când folosim tehnologii bazate pe containere, este problematică folosirea <code>iptables</code>;</div>
+</li>
+<li class="level1"><div class="li"> în cazul folosirii soluțiilor de virtualizare, dorim să avem controlul pe sistemul de bază (pe hypervisor)</div>
+</li>
+</ul>
+
+<p>
+De aceea dorim să filtrăm acele pachete direct de pe stația <code>host</code>. Stația <code>host</code> nu face însă prelucrarea pachetelor, acestea trec prin bridge-ul <code>br1</code> deci nu putem folosi <code>iptables</code> sau alt utilitar de prelucrare a traficului. Soluția o reprezintă însă utilitarul <a href="http://ebtables.sourceforge.net/" class="urlextern" title="http://ebtables.sourceforge.net/"  rel="nofollow">ebtables</a> care permite configurarea de firewall la nivelul bridge-ului.
+</p>
+
+<p>
+Pentru început vom instala <code>ebtables</code> pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">apt-get install</span> ebtables</pre>
+
+<p>
+Apoi configurăm <code>ebtables</code> pentru a împiedica traficul telnet și <abbr title="File Transfer Protocol">FTP</abbr> care vine de la stația <code>green</code> către stația <code>red</code>. Sintaxa este similară <code>iptables</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>ebtables <span class="re5">-A</span> FORWARD <span class="re5">-p</span> IPv4 <span class="re5">--ip-src</span> 172.16.12.2 <span class="re5">--ip-dst</span> 172.16.12.1 <span class="re5">--ip-proto</span> tcp <span class="re5">--ip-destination-port</span> <span class="nu0">21</span> <span class="re5">-j</span> DROP
+<span class="co4">root@host:~# </span>ebtables <span class="re5">-A</span> FORWARD <span class="re5">-p</span> IPv4 <span class="re5">--ip-src</span> 172.16.12.2 <span class="re5">--ip-dst</span> 172.16.12.1 <span class="re5">--ip-proto</span> tcp <span class="re5">--ip-destination-port</span> <span class="nu0">23</span> <span class="re5">-j</span> DROP
+<span class="co4">root@host:~# </span>ebtables <span class="re5">-L</span> FORWARD 
+Bridge table: filter
+&nbsp;
+Bridge chain: FORWARD, entries: <span class="nu0">2</span>, policy: ACCEPT
+<span class="re5">-p</span> IPv4 <span class="re5">--ip-src</span> 172.16.12.2 <span class="re5">--ip-dst</span> 172.16.12.1 <span class="re5">--ip-proto</span> tcp <span class="re5">--ip-dport</span> <span class="nu0">21</span> <span class="re5">-j</span> DROP 
+<span class="re5">-p</span> IPv4 <span class="re5">--ip-src</span> 172.16.12.2 <span class="re5">--ip-dst</span> 172.16.12.1 <span class="re5">--ip-proto</span> tcp <span class="re5">--ip-dport</span> <span class="nu0">23</span> <span class="re5">-j</span> DROP</pre>
+
+<p>
+Verificăm din nou, conectivitatea SSH, <abbr title="File Transfer Protocol">FTP</abbr> și telnet de la stația <code>green</code> la stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span><span class="kw2">ssh</span> root<span class="sy0">@</span>172.16.12.1
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~# </span>
+&nbsp;
+<span class="co4">root@green:~# </span>telnet 172.16.12.1
+Trying 172.16.12.1...
+^C
+<span class="co4">root@green:~# </span><span class="kw2">ftp</span> 172.16.12.1
+^C</pre>
+
+<p>
+Observăm că este în continuare funcțională doar conexiunea SSH, nu și <abbr title="File Transfer Protocol">FTP</abbr> și telnet (blocate folosind <code>ebtables</code>). Avem obiectivul îndeplinit: doar conexiunile sigure (pe porturile implicite) sunt permise între <code>green</code> și <code>red</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+<code>ebtables</code> nu are acțiune de tip <code>REJECT</code> ci doar <code>DROP</code>. Astfel, inițiatorul unei conexiuni filtrate nu va fi înștiințat de filtrarea pachetelor. Acestea vor fi filtrate iar inițiatorul va trebui să deducă faptul că există o formă de blocare a pachetelor pe drum.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT26 SECTION "05. [15p] Filtrare pe bridge" [1-] --><!-- EDIT25 PLUGIN_INCLUDE_END "rl:labs:11:contents:05" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT27 PLUGIN_INCLUDE_START "rl:labs:11:contents:06" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:06">
+
+<h3 class="sectionedit29" id="p_retele_distincte_pentru_containere">06. [15p] Rețele distincte pentru containere</h3>
+<div class="level3">
+
+<p>
+Ne propunem să realizăm o configurație în care fiecare container se găsește în fiecare rețea. Vom renunța la bridge-uri și vom face legături unu-la-unu între containere și stația <code>host</code>.
+</p>
+
+<p>
+Pentru început, extrageți (ștergeți) interfețele din bridge-uri și apoi ștergeți bridge-urile (<code>br0</code> și <code>br1</code>). Urmăriți pagina de manual a comenzii <code>brctl</code> pentru opțiunile utile.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Rulați comenzile de ștergere a bridge-urilor direct pe mașina virtuală în interfața VMware. Prin SSH veți pierde conexiunea cu stația <code>host</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pentru a putea șterge un bridge, interfața aferentă acestuia trebuie dezactivată (trebuie să fie <code>DOWN</code>). Folosiți <code>ip link</code> pentru a realiza acest lucru.
+
+</div></p>
+</p>
+
+<p>
+Apoi ștergeți vechile configurații (adrese IP, rute implicite) de pe containere.
+</p>
+
+<p>
+După aceea realizați următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> Obțineți din noua adresa IP a interfeței <code>eth0</code> a stației <code>host</code> folosind comanda<pre class="code bash"><span class="co4">root@host:~# </span>dhclient eth0</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Atribuiți adrese din rețeaua <code>10.10.10.0/24</code> pe legătura <code>host(veth-red)</code> ↔ <code>red(eth0)</code>.</div>
+</li>
+<li class="level1"><div class="li"> Atribuiți adrese din rețeaua <code>20.20.20.0/24</code> pe legătura <code>host(veth-green)</code> ↔ <code>green(eth0)</code>.</div>
+</li>
+<li class="level1"><div class="li"> Atribuiți adrese din rețeaua <code>30.30.30.0/24</code> pe legătura <code>host(veth-blue)</code> ↔ <code>blue(eth0)</code>.</div>
+</li>
+<li class="level1"><div class="li"> Configurați pe fiecare container <em>default gateway</em>-ul aferent.</div>
+</li>
+<li class="level1"><div class="li"> Activați rutarea pe stația <code>host</code>.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">
+Adică trebuie să aveți configurate adrese atât pe interfețele de tip <code>veth</code> de pe stația <code>host</code> și pe interfețele <code>eth0</code> de pe containere. De exemplu, petnru legătura <code>host(veth-red)</code> ↔ <code>red(eth0)</code> puteți configura:
+</p>
+<ul>
+<li class="level1"><div class="li"> adresa <code>10.10.10.1/24</code> pe interfața <code>veth-red</code> de pe stația <code>host</code></div>
+</li>
+<li class="level1"><div class="li"> adresa <code>10.10.10.2/24</code> pe interfața <code>eth0</code> de pe stația <code>red</code></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+Este posibil să “dispară” adrese de pe interfețele <code>eth0</code> ale containerele. Verificați acest lucru folosind comanda
+</p>
+<pre class="code"># ip a s</pre>
+
+<p>
+ și, dacă au dispărut, refaceți rapid configurația pe containerul în cauză.
+
+</div></p>
+</p>
+
+<p>
+În cazul unei configurări corecte, veți avea conectivitate între toate containerele, prin intermediul stației <code>host</code> pe post de ruter. Folosiți <code>ping</code> pentru testarea conectivității.
+</p>
+
+</div>
+<!-- EDIT29 SECTION "06. [15p] Rețele distincte pentru containere" [1-] --><!-- EDIT28 PLUGIN_INCLUDE_END "rl:labs:11:contents:06" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT30 PLUGIN_INCLUDE_START "rl:labs:11:contents:07" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:07">
+
+<h3 class="sectionedit32" id="p_filtrare_de_trafic_intre_containere">07. [15p] Filtrare de trafic între containere</h3>
+<div class="level3">
+
+<p>
+Pe configurația de la exercițiul anterior puteți configura reguli de firewall folosind utilitarul <code>iptables</code> pe stația <code>host</code>. Acum stația <code>host</code> are rol de gateway și va prelucra toate pachetele trimise între containere.
+</p>
+
+<p>
+Realizați o configurație de firewall astfel încât serviciile nesigure (telnet, <abbr title="File Transfer Protocol">FTP</abbr>, pe porturile implicite) să fie blocate pe containere. De asemenea, stația <code>green</code> nu poate fi accesată de pe stația <code>blue</code> prin SSH (dar poate fi accesată de pe stația <code>red</code> și de pe stația <code>host</code>). Pentru informații de utilizare a utilitarului <code>iptables</code> pentru filtrare, urmăriți <a href="../../../../rl/labs/08.html" class="wikilink1" title="rl:labs:08">Laborator 8. Securizarea unui server</a>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pentru regulile <code>iptables</code> aveți două opțiuni:
+</p>
+<ul>
+<li class="level1"><div class="li"> folosiți numele interfețelor de intrare ieșire (opțiunile <code>-i</code> și <code>-o</code>)</div>
+</li>
+<li class="level1"><div class="li"> folosiți adresele IP sursă și destinație</div>
+</li>
+</ul>
+
+<p>
+<strong>Nu</strong> folosiți numele stațiilor; adică nu folosiți șirurile <code>red</code>, <code>green</code> și <code>blue</code> în regulile <code>iptables</code>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT32 SECTION "07. [15p] Filtrare de trafic între containere" [1-] --><!-- EDIT31 PLUGIN_INCLUDE_END "rl:labs:11:contents:07" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT33 PLUGIN_INCLUDE_START "rl:labs:11:contents:08" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:08">
+
+<h3 class="sectionedit35" id="bonus_-_10p_gestiune_bridge-uri_folosind_suita_iproute2">08. [BONUS - 10p] Gestiune bridge-uri folosind suita iproute2</h3>
+<div class="level3">
+
+<p>
+În versiunile mai noi de nucleu Linux și distribuții aferente, gestiunea bridge-urilor poate fi realizată prin intermediul suitei <code>iproute2</code>, mai precis prin intermediul comenzii <code>ip link</code>.
+</p>
+
+<p>
+Pe stația <code>host</code> folosiți comanda <code>ip link</code> de mai sus pentru a crea 2 interfețe de tipul dummy (<code>dummy0</code> și <code>dummy1</code>), un bridge denumit <code>br0</code> și apoi a adăuga interfețele în bridge. Faceți apoi operațiile inverse: ștergerea interfețelor din bridge, a bridge-ului și a interfețelor.
+</p>
+
+<p>
+<p><div class="notetip">
+Urmăriți pagina de manual <a href="http://linux.die.net/man/8/ip" class="urlextern" title="http://linux.die.net/man/8/ip"  rel="nofollow">ip</a> și <a href="http://www.pocketnix.org/posts/Linux%20Networking:%20Dummy%20Interfaces%20and%20Virtual%20Bridges" class="urlextern" title="http://www.pocketnix.org/posts/Linux%20Networking:%20Dummy%20Interfaces%20and%20Virtual%20Bridges"  rel="nofollow">această pagină</a>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT35 SECTION "08. [BONUS - 10p] Gestiune bridge-uri folosind suita iproute2" [1-] --><!-- EDIT34 PLUGIN_INCLUDE_END "rl:labs:11:contents:08" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT36 PLUGIN_INCLUDE_START "rl:labs:11:contents:sidebar" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:contents:sidebar">
+
+<h3 class="sectionedit38" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="../../../../rl/labs/11.html" class="wikilink1" title="rl:labs:11">Laboratorul 11</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT39 PLUGIN_INCLUDE_START "rl:labs:11:meta:nav" [0-] --><div class="plugin_include_content plugin_include__rl:labs:11:meta:nav">
+<div class="level3">
+
+<div><div id="nojs_indexmenu_245736256583560b871b36" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/00.html" class="wikilink1" title="rl:labs:11:contents:00">00. [BONUS - 10p] Completare formular de feedback</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/01.html" class="wikilink1" title="rl:labs:11:contents:01">01. [15p] Conectare logică a două containere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/02.html" class="wikilink1" title="rl:labs:11:contents:02">02. [15p] Asigurare conectivitate la Internet pentru containere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/03.html" class="wikilink1" title="rl:labs:11:contents:03">03. [10p] Asigurare conectivitate la Internet pentru un nou container</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/04.html" class="wikilink1" title="rl:labs:11:contents:04">04. [15p] Conectare de containere la rețeaua publică</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/05.html" class="wikilink1" title="rl:labs:11:contents:05">05. [15p] Filtrare pe bridge</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/06.html" class="wikilink1" title="rl:labs:11:contents:06">06. [15p] Rețele distincte pentru containere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/07.html" class="wikilink1" title="rl:labs:11:contents:07">07. [15p] Filtrare de trafic între containere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../rl/labs/11/contents/08.html" class="wikilink1" title="rl:labs:11:contents:08">08. [BONUS - 10p] Gestiune bridge-uri folosind suita iproute2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT40 PLUGIN_INCLUDE_END "rl:labs:11:meta:nav" [0-] --></div>
+<div class="level3">
+
+</div>
+<!-- EDIT38 SECTION "Navigare" [1-] --><!-- EDIT37 PLUGIN_INCLUDE_END "rl:labs:11:contents:sidebar" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT8 SECTION "Exerciții" [2568-] --></div>
+</body>
+</html>

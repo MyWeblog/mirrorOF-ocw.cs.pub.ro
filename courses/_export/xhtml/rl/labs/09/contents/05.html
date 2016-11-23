@@ -1,0 +1,128 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:09:contents:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-12-11T13:45:26+0200"/>
+<meta name="keywords" content="rl,labs,09,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/09/contents/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:09:contents';var JSINFO = {"id":"rl:labs:09:contents:05","namespace":"rl:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_port_forwarding">05. [10p] Port forwarding</h3>
+<div class="level3">
+
+<p>
+La exercițiile de până acum am folosit NAT pentru a permite stațiilor cu adrese private dintr-o rețea locală să acceseze Internetul. NAT poate fi folosit și pentru a permite unei stații din rețeaua locală să fie accesată din Internet, adică să se inițieze conexiuni din Internet. Acest proces poartă numele de <em>port forwarding</em>.
+</p>
+
+<p>
+Dorim să putem accesa prin SSH, din Internet, stația <code>red</code>. Acest lucru nu este posibil în mod implicit întrucât stația <code>red</code> are adresă IP privată. Soluția este “deschiderea unui port” pe gateway (adică stația <code>host</code>) și redirectarea acestui port (<em>port forwarding</em>) către portul aferent serviciului SSH (portul TCP <code>22</code>) de pe stația <code>red</code>.
+</p>
+
+<p>
+Vom aplica pe stația <code>host</code> o regulă prin care redirectăm traficul ce vine către <code>host</code> pe portul <code>10022</code> către portul <code>22</code> (SSH) al stației <code>red</code> (adresa IP <code>192.168.1.2</code>):
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-A</span> PREROUTING <span class="re5">-p</span> tcp <span class="re5">--dport</span> <span class="nu0">10022</span> <span class="re5">-j</span> DNAT <span class="re5">--to-destination</span> 192.168.1.2:<span class="nu0">22</span></pre>
+
+<p>
+Verificăm aplicarea regulii prin consultarea lanțului <code>PREROUTING</code> din tabela NAT:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> PREROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain PREROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">1</span> packets, <span class="nu0">474</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">0</span>     <span class="nu0">0</span> DNAT       tcp  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            tcp dpt:<span class="nu0">10022</span> to:192.168.1.2:<span class="nu0">22</span></pre>
+
+<p>
+Pentru a verifica rezultatul de mai sus, de pe <code>fep.grid.pub.ro</code> deschidem un nou terminal și ne conectăm prin SSH folosind portul <code>10022</code> la stația <code>host</code>:
+</p>
+<pre class="code bash">mihai.carabas<span class="sy0">@</span>fep:~$ <span class="kw2">ssh</span> <span class="re5">-l</span> root <span class="re1">$ADRESA_IP_MV</span> <span class="re5">-p</span> <span class="nu0">10022</span> 
+root<span class="sy0">@</span>192.168.138.129<span class="st_h">'s password:
+[...]
+root@red:~#</span></pre>
+
+<p>
+ unde <code>$ADRESA_IP_MV</code> este adresa IP a masinii virtuale obținută din dashboard-ul OpenStack.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Pentru rulare masina virtuala VMware local
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Pentru rulare masina virtuala VMware local
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Daca rulați VMware local, <code>$ADRESA_IP_MV</code> este adresa interfeței <code>eth0</code> a stației <code>host</code>.
+</p>
+</div></div>
+<p>
+Observăm că în urma autentificării ne găsim pe stația <code>red</code>. <em>Port forwarding</em> a funcționat.
+</p>
+
+<p>
+Folosim comanda de conectare SSH la stația <code>host</code> de pe stația <code>green</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span><span class="kw2">ssh</span> <span class="re5">-l</span> root host <span class="re5">-p</span> <span class="nu0">10022</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~# </span></pre>
+
+<p>
+Observăm că și de pe stația <code>green</code> am accesat stația <code>red</code> prin <em>port forwarding</em>. Dorim să limităm <em>port forwarding</em> doar pentru conexiuni de la stațiile din Internet. Pentru aceasta trebuie să actualizăm regula de <em>port forwarding</em>.
+</p>
+
+<p>
+Ștergeți regula de <em>port forwarding</em> și adăugați o regulă nouă care să permită <strong>doar</strong> stațiilor din Internet să acceseze prin <em>port forwarding</em> stația <code>red</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Aplicați regula doar pentru pachetele ce <strong>sosesc</strong> pe interfața <code>eth0</code>. Adică <code>eth0</code> este interfața de <strong>intrare</strong>. Folosiți opțiunea <code>-i</code> a <code>iptables</code> pentru precizarea interfeței de <strong>intrare</strong>.
+
+</div></p>
+</p>
+
+<p>
+Realizați apoi din nou conectare SSH pe portul <code>10022</code> al stației <code>host</code> de pe <code>fep.grid.pub.ro</code> și de pe stația <code>green</code>. Dacă ați configurat corect, nu va merge conexiunea SSH de pe stația <code>green</code> dar va merge în continuare de pe <code>fep.grid.pub.ro</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

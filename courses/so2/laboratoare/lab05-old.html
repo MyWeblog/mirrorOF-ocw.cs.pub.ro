@@ -1,0 +1,1762 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 5 - Device drivere în Windows [old]    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-12T20:51:40+0200"/>
+<meta name="keywords" content="so2,laboratoare,lab05-old"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/laboratoare/lab05-old.html"/>
+<link rel="canonical" href="lab05-old.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab05-old","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab05-old%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab05-old%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_5_-_device_drivere_in_windows_old">Laborator 5 - Device drivere în Windows [old]</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> familiarizarea cu sistemul de I/O al nucleului Windows</div>
+</li>
+<li class="level1"><div class="li"> înțelegerea modului de prelucrarea a IRP-urilor și rolul îndeplinit de I/O manager</div>
+</li>
+<li class="level1"><div class="li"> dobândirea de cunoștințe de implementare a operațiilor de bază (dispatch routines) pentru un device driver</div>
+</li>
+<li class="level1"><div class="li"> lucrul cu evenimente</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> I/O manager</div>
+</li>
+<li class="level1"><div class="li"> stacked drivers</div>
+</li>
+<li class="level1"><div class="li"> IRP – I/O Request Packet</div>
+</li>
+<li class="level1"><div class="li"> <code>DRIVER_OBJECT</code></div>
+</li>
+<li class="level1"><div class="li"> <code>DEVICE_OBJECT</code></div>
+</li>
+<li class="level1"><div class="li"> <code>DeviceExtension</code></div>
+</li>
+<li class="level1"><div class="li"> înregistrarea/deînregistrarea unui dispozitiv</div>
+</li>
+<li class="level1"><div class="li"> namespace-uri pentru numele dispozitivelor</div>
+</li>
+<li class="level1"><div class="li"> link-uri simbolice pentru nume</div>
+</li>
+<li class="level1"><div class="li"> dispatch routines</div>
+</li>
+<li class="level1"><div class="li"><code>driver→MajorFunction[]</code></div>
+</li>
+<li class="level1"><div class="li"><code>device→DeviceExtension</code></div>
+</li>
+<li class="level1"><div class="li"> accesul la spațiul de adresă</div>
+<ul>
+<li class="level2"><div class="li"> BUFFERED I/O</div>
+</li>
+<li class="level2"><div class="li"> DIRECT I/O</div>
+</li>
+<li class="level2"><div class="li"> neither I/O</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> încheierea unui IRP (completion)</div>
+</li>
+<li class="level1"><div class="li"> sincronizare în Windows</div>
+</li>
+<li class="level1"><div class="li"> evenimente</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-slides.pdf"  rel="nofollow">Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow">SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="concepte_generale">Concepte generale</h2>
+<div class="level2">
+
+<p>
+<a href="../../_detail/so2/laboratoare/io-manager_driver-stack_irp-flow.png%3Fid=so2%253Alaboratoare%253Alab05-old.html" class="media" title="so2:laboratoare:io-manager_driver-stack_irp-flow.png"><img src="../../_media/so2/laboratoare/io-manager_driver-stack_irp-flow.png" class="mediacenter" title="Sistemul de apel al I/O managerului în Windows" alt="Sistemul de apel al I/O managerului în Windows" /></a>
+Windows NT a preluat <a href="http://msdn.microsoft.com/en-us/library/ff558762.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff558762.aspx"  rel="nofollow">modelul I/O</a> folosit de la sistemul de operare VMS. Acest model folosește pachete pentru a descrie operațiile de I/O, pachete ce poartă denumirea de <a href="lab05-old.html#io_request_packet_irp" title="so2:laboratoare:lab05-old ↵" class="wikilink1">I/O Request Packets (IRP)</a>. Aceste pachete încapsulează informații precum ar fi operația (citire sau scriere), numărul de octeți de citit, poziția etc. 
+</p>
+
+<p>
+I/O managerul este subsistemul care se ocupă de toate operațiile asociate cu IRP-urile: translatarea apelurilor de sistem în IRP-uri, alocarea de buffere, trimiterea IRP-urilor în stiva de device drivere, trimiterea rezultatelor proceselor după rezolvarea unui IRP etc. În Linux, un subsistem similar este block I/O layer.
+</p>
+
+<p>
+Device driverele sunt grupate în stive: un device driver apelează funcțiile expuse de device driver-ul aflat mai jos în stivă. De cele mai multe ori, un dispozitiv are asociate cel puțin două drivere:
+</p>
+<ul>
+<li class="level1"><div class="li"><em>functional driver</em> care implementează funcționalitatea driverului</div>
+</li>
+<li class="level1"><div class="li"><em>bus driver</em> care implementează conexiunea cu hardware-ul <sup><a href="lab05-old.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup></div>
+</li>
+</ul>
+
+<p>
+Primul device driver din stivă va primi pachetul IRP de la I/O manager prin intermediul <a href="lab05-old.html#rutine-de-dispatch" title="so2:laboratoare:lab05-old ↵" class="wikilink1">rutinelor de dispatch</a> (<code>open</code>, <code>read</code>, <code>write</code>, <code>close</code>, etc.). Device driverul poate să rezolve cererea imediat în rutina de dispatch, poate să marcheze operația ca fiind în așteptare și să o rezolve mai târziu, sau poate trimite pachetul următorului device driver din stivă. I/O managerul creează o stivă de zone de apel pentru fiecare IRP, în care fiecare element al stivei corespunde unui driver. Fiecare driver va accesa doar zona din IRP ce îi aparține, unde va regăsi infomații specifice operației aferente.
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="structuri_de_date_importante">Structuri de date importante</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit7" id="driver_object">Driver Object</h3>
+<div class="level3">
+
+<p>
+Pentru fiecare driver încărcat în sistem există un obiect driver (<a href="http://msdn.microsoft.com/en-us/library/ff544174.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff544174.aspx"  rel="nofollow">DRIVER_OBJECT</a>). Unui driver i se pot asocia mai multe dispozitive, descrise printr-un <a href="lab05-old.html#device_object" title="so2:laboratoare:lab05-old ↵" class="wikilink1">DEVICE_OBJECT</a> (câte unul pentru fiecare dispozitiv pe care îl controlează). 
+</p>
+
+<p>
+<a href="../../_detail/so2/laboratoare/windows-driver-object.png%3Fid=so2%253Alaboratoare%253Alab05-old.html" class="media" title="so2:laboratoare:windows-driver-object.png"><img src="../../_media/so2/laboratoare/windows-driver-object.png" class="mediacenter" title="Windows Driver Object" alt="Windows Driver Object" /></a>
+</p>
+
+<p>
+Structura <a href="http://msdn.microsoft.com/en-us/library/ff544174.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff544174.aspx"  rel="nofollow">DRIVER_OBJECT</a> conține câteva câmpuri importante:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>DeviceObject</code>, o listă înlănțuită a dispozitivelor asociate driver-ului</div>
+</li>
+<li class="level1"><div class="li"> <code>DriverUnload</code>, pointer la funcția de Unload a modulului</div>
+</li>
+<li class="level1"><div class="li"> <code>MajorFunction</code>, un vector de pointeri către <a href="lab05-old.html#rutine-de-dispatch" title="so2:laboratoare:lab05-old ↵" class="wikilink1">rutinele de dispatch</a> , indexat dupa codul operației I/O</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit8" id="device_object">Device Object</h3>
+<div class="level3">
+
+<p>
+Structura <a href="http://msdn.microsoft.com/en-us/library/ff543147.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff543147.aspx"  rel="nofollow">DEVICE_OBJECT</a> este folosită pentru a reprezenta un dispozitiv asociat unui driver; este similară structurii <a href="lab04.html#structuri-de-date-importante-pentru-un-dispozitiv-de-tip-caracter" class="wikilink1" title="so2:laboratoare:lab04"> struct cdev</a> din nucleul Linux. Aceasta conține următoarele câmpuri frecvent folosite:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>DriverObject</code>, pointer către driver-ul pentru acest dispozitiv;</div>
+</li>
+<li class="level1"><div class="li"> <code>Flags</code>, câmp ce specifica <a href="lab05-old.html#accesul_la_spatiul_de_adresa_al_procesului" title="so2:laboratoare:lab05-old ↵" class="wikilink1">strategia de transfer a datelor din spațiul de adresă al procesului</a>: <code>DO_BUFFERED_IO</code>, <code>DO_DIRECT_IO</code> sau niciunul;</div>
+</li>
+<li class="level1"><div class="li"> <code>DeviceExtension</code>, un bloc de memorie rezidentă alocată de I/O manager la înregistrarea dispozitivului; această structură poate fi  folosită de către programatorul driverului pentru a păstra informații specifice dispozitivului.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit9" id="device_extension">Device Extension</h3>
+<div class="level3">
+
+<p>
+Modalitatea recomandată de alocare și folosire a datelor asociate cu un dispozitiv este definirea unei structuri, similar cu <a href="lab04.html#implementarea-operatiilor" class="wikilink1" title="so2:laboratoare:lab04"> definirea unei structuri pe Linux</a>. Pointerul se poate salva în câmpul <code>DeviceExtension</code> al structurii <a href="http://msdn.microsoft.com/en-us/library/ff543147.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff543147.aspx"  rel="nofollow">DEVICE_OBJECT</a>, similar câmpului <code>private_data</code> al <a href="lab04.html#structurile-inode-si-file" class="wikilink1" title="so2:laboratoare:lab04"> structurii file din Linux</a>. În acest mod, dacă există mai multe dispozitive asociate unui driver, se poate identifica foarte simplu care sunt datele private asociate fiecărui dispozitiv. Se observă că în acest câmp se pot memora informații la înregistrarea dispozitivului care apoi sunt disponibile în <a href="lab05-old.html#rutine-de-dispatch" title="so2:laboratoare:lab05-old ↵" class="wikilink1">rutinele de dispatch</a>  (<code>read</code>, <code>write</code>, <code>close</code>, etc.).
+</p>
+
+<p>
+Exemplu de mai jos folosește în acest sens structura <code>struct my_device_data</code>:
+</p>
+<pre class="code c"><span class="co2">#include &lt;ntddk.h&gt;</span>
+&nbsp;
+<span class="kw4">struct</span> my_device_data <span class="br0">&#123;</span>
+    PDEVICE_OBJECT DeviceObject<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* my data starts here */</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+NTSTATUS DriverEntry<span class="br0">&#40;</span>PDRIVER_OBJECT driver<span class="sy0">,</span> PUNICODE_STRING registry<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span> my_data<span class="sy0">;</span>
+    DEVICE_OBJECT <span class="sy0">*</span>device<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* create device */</span>
+&nbsp;
+    my_data  <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> device<span class="sy0">-&gt;</span>DeviceExtension<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* init my_data fields */</span>
+<span class="br0">&#125;</span>
+&nbsp;
+NTSTATUS MyRead<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span> my_data <span class="sy0">=</span> 
+             <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> device<span class="sy0">-&gt;</span>DeviceExtension<span class="sy0">;</span>
+    <span class="coMULTI">/* read data  */</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit10" id="io_request_packet_irp">I/O Request Packet (IRP)</h3>
+<div class="level3">
+
+<p>
+<a href="../../_detail/so2/laboratoare/irp.png%3Fid=so2%253Alaboratoare%253Alab05-old.html" class="media" title="so2:laboratoare:irp.png"><img src="../../_media/so2/laboratoare/irp.png" class="mediaright" title="IO Request Packet" alt="IO Request Packet" /></a>
+</p>
+
+<p>
+Un <a href="http://msdn.microsoft.com/en-us/library/ff550694.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550694.aspx"  rel="nofollow"> IRP</a> este o structură alocată din memoria rezidentă și este format dintr-un header și din informații pentru fiecare device driver din stivă. 
+</p>
+
+<p>
+Câmpurile din header accesibile device driverelor sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>IoStatus</code>, structură ce conține câmpuri care vor trebui completate de device driver la terminarea operației:</div>
+<ul>
+<li class="level2"><div class="li"><code>Status</code>, starea operației: <code>STATUS_SUCCESS</code> dacă operația s-a terminat cu succes, sau codul de eroare în caz contrar;</div>
+</li>
+<li class="level2"><div class="li"><code>Information</code>, numărul de octeți transferați în caz de succes sau 0 în caz de eroare;</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><code>AssociatedIrp.SystemBuffer</code>,  pointer către bufferul alocat de sistem (dacă se folosește <a href="lab05-old.html#buffered-io" title="so2:laboratoare:lab05-old ↵" class="wikilink1"> BUFFERED I/O</a>);</div>
+</li>
+<li class="level1"><div class="li"><code>MdlAddress</code>, pointer ce este folosit de device driver pentru maparea bufferului din user-space în kernel-space (dacă se folosește <a href="lab05-old.html#direct-io" title="so2:laboratoare:lab05-old ↵" class="wikilink1"> DIRECT I/O</a>);</div>
+</li>
+<li class="level1"><div class="li"><code>UserBuffer</code>, pointer către bufferul din user-space (dacă nu se folosește <a href="lab05-old.html#neither-buffered-nor-direct-io" title="so2:laboratoare:lab05-old ↵" class="wikilink1"> nici BUFFERED I/O, nici DIRECT I/O</a>);</div>
+</li>
+</ul>
+
+<p>
+După header, în IRP sunt plasate informații adresate device driverelor din stivă. Pentru a afla informațiile adresate device driverului curent, trebuie apelată funcția <a href="http://msdn.microsoft.com/en-us/library/ff549174.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff549174.aspx"  rel="nofollow">IoGetCurrentIrpStackLocation</a>. Aceasta va întoarce o structură de tipul <a href="http://msdn.microsoft.com/en-us/library/ff550659.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550659.aspx"  rel="nofollow">IO_STACK_LOCATION</a>, ce conține următoarele câmpuri:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>MajorFunction</code>, care identifică tipul operației (<code>open</code>, <code>read</code>, <code>write</code>, <code>close</code> etc.)</div>
+</li>
+<li class="level1"><div class="li"><code>Parameters</code>, o uniune cu parametri pentru diversele tipuri de cereri (<code>open</code>, <code>read</code>, <code>write</code>, <code>close</code> etc.); parametrii includ numărul de octeți de citit, poziția etc.: </div>
+<ul>
+<li class="level2"><div class="li"><code>Read</code>, structură ce conține parametrii pentru o operație read:</div>
+<ul>
+<li class="level3"><div class="li"><code>ByteOffset</code>, offset-ul de la care se realizează citirea</div>
+</li>
+<li class="level3"><div class="li"><code>Length</code>, numărul de octeți citiți</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><code>Write</code>, structură ce conține parametrii pentru o operație write:</div>
+<ul>
+<li class="level3"><div class="li"><code>ByteOffset</code>, offset-ul la care se realizează scrierea</div>
+</li>
+<li class="level3"><div class="li"><code>Length</code>, numarul de octeți scriși</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"><code>DeviceIoControl</code>, structură ce conține parametrii pentru o operație ioctl:</div>
+<ul>
+<li class="level3"><div class="li"><code>IoControlCode</code>, codul de control pentru ioctl</div>
+</li>
+<li class="level3"><div class="li"><code>InputBufferLength</code>, dimensiunea buffer-ului de intrare</div>
+</li>
+<li class="level3"><div class="li"><code>OutputBufferLength</code>, dimensiunea buffer-ului de ieșire</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><code>DeviceObject</code>, obiectul ce identifică dispozitivul pe care se face operația</div>
+</li>
+<li class="level1"><div class="li"><code>FileObject</code>, obiectul ce identifică fișierul pe care se face operația</div>
+</li>
+</ul>
+
+<p>
+Spre exemplu, pentru o operație de <code>read</code>, se va accesa buffer-ul și dimensiunea în octeți pentru citire:
+</p>
+<pre class="code c">IRP<span class="sy0">*</span> irp<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">char</span> <span class="sy0">*</span>buffer <span class="sy0">=</span> irp<span class="sy0">-&gt;</span>AssociatedIrp.<span class="me1">SystemBuffer</span><span class="sy0">;</span>
+PIO_STACK_LOCATION pIrpStack <span class="sy0">=</span> IoGetCurrentIrpStackLocation<span class="br0">&#40;</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw4">int</span> size <span class="sy0">=</span> pIrpStack <span class="sy0">-&gt;</span>Parameters.<span class="me1">Read</span>.<span class="me1">Length</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* read size bytes from buffer */</span></pre>
+
+<p>
+Similar, pentru operații de <code>write</code> sau <code>ioctl</code> se vor accesa parametrii corespunzători.
+</p>
+
+<p>
+La terminarea procesării unui IRP, trebuie completată informația legată de status (<code>IoStatus</code>) și apelată funcția <a href="http://msdn.microsoft.com/en-us/library/ff548343.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff548343.aspx"  rel="nofollow">IoCompleteRequest</a>.
+</p>
+
+<p>
+În cazul în care nu se transferă date între kernel-space și user-space se va termina procesarea unui IRP astfel:
+</p>
+<pre class="code c">irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Status</span> <span class="sy0">=</span> STATUS_SUCCESS<span class="sy0">;</span>
+irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Information</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+IoCompleteRequest<span class="br0">&#40;</span>irp<span class="sy0">,</span> IO_NO_INCREMENT<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+În cazul în care se transferă date între kernel-space și user-space, este necesar să se completeze câmpul <code>IoStatus.Information</code> la numărul de octeți transferați:
+</p>
+<pre class="code c">irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Status</span> <span class="sy0">=</span> STATUS_SUCCESS<span class="sy0">;</span>
+irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Information</span> <span class="sy0">=</span> nrTransferredBytes<span class="sy0">;</span>
+IoCompleteRequest<span class="br0">&#40;</span>irp<span class="sy0">,</span> IO_NO_INCREMENT<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+În anumite situații, IRP-ul nu poate fi procesat imediat; în aceste cazuri este necesar să se specifice faptul ca IRP-ul are nevoie de prelucrări ulterioare, prin intermediul funcției <a href="http://msdn.microsoft.com/en-us/library/ff549422.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff549422.aspx"  rel="nofollow">IoMarkIrpPending</a>. În momentul în care IRP-ul va fi procesat, este necesar să se apeleze funcția <a href="http://msdn.microsoft.com/en-us/library/ff548343.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff548343.aspx"  rel="nofollow">IoCompleteRequest</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit11" id="inregistrarea_si_deinregistrarea_dispozitivelor">Înregistrarea și deînregistrarea dispozitivelor</h2>
+<div class="level2">
+
+<p>
+În rutina <code>DriverEntry</code>, în afară de inițializări, driverul va trebui să detecteze dispozitivele fizice prezente în sistem și să le anunțe acestuia cu ajutorul funcției <a href="http://msdn.microsoft.com/en-us/library/ff548397.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff548397.aspx"  rel="nofollow">IoCreateDevice</a>:
+</p>
+<pre class="code c">NTSTATUS IoCreateDevice<span class="br0">&#40;</span>PDRIVER_OBJECT DriverObject<span class="sy0">,</span> 
+                        ULONG DeviceExtensionSize<span class="sy0">,</span>
+                        PUNICODE_STRING DeviceName<span class="sy0">,</span> 
+                        DEVICE_TYPE DeviceType<span class="sy0">,</span> 
+                        LONG DeviceCharacteristics<span class="sy0">,</span> 
+                        BOOLEAN Exclusive<span class="sy0">,</span> 
+                        PDEVICE_OBJECT <span class="sy0">*</span>DeviceObject<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Numele dispozitivului (<code>DeviceName</code>) trebuie să fie de forma <code>“\Device\MyDevice”</code>. Tipul (<code>DeviceType</code>) poate fi unul din <a href="http://msdn.microsoft.com/en-us/library/ff563821.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff563821.aspx"  rel="nofollow">cele definite de Microsoft</a>, sau poate fi definit de producător. Caracteristicile dispozitivului (<code>DeviceCharacteristics</code>) sunt și ele din cele mai diverse așa că recomandăm <a href="http://msdn.microsoft.com/en-us/library/ff563818.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff563818.aspx"  rel="nofollow">consultarea DDK</a>. Flagul <code>Exclusive</code> indică modul de acces la dispozitiv: dacă este inițializat la <code>TRUE</code> atunci dispozitivul nu va putea fi deschis simultan de mai multe thread-uri. În <code>DeviceObject</code> se întoarce un pointer către noul obiect de tip device alocat. 
+</p>
+
+<p>
+Odată cu alocarea obiectului se alocă și spațiu pentru datele private, de dimensiunea specificată în <code>DeviceExtensionSize</code>. Imediat după crearea obiectului de tip device, device driverul trebuie să inițializeze câmpul <code>DeviceExtension</code> cu informațiile necesare. Ele pot fi apoi accesate din același câmp, mai târziu, în rutinele de dispatch. 
+</p>
+
+<p>
+Următoarea secvență de cod creează un device cu numele <code>“\Device\MyDevice”</code>, de un tip nedefinit (care nu se încadrează între tipurile definite de Microsoft) :
+</p>
+<pre class="code c"><span class="kw4">char</span> devName<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span><span class="st0">'D'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'v'</span><span class="sy0">,</span><span class="st0">'i'</span><span class="sy0">,</span><span class="st0">'c'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span>
+                   <span class="st0">'M'</span><span class="sy0">,</span><span class="st0">'y'</span><span class="sy0">,</span><span class="st0">'D'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'v'</span><span class="sy0">,</span> <span class="st0">'i'</span><span class="sy0">,</span> <span class="st0">'c'</span><span class="sy0">,</span> <span class="st0">'e'</span><span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">;</span>
+<span class="kw4">int</span> ret<span class="sy0">;</span>
+&nbsp;
+ret <span class="sy0">=</span> IoCreateDevice<span class="br0">&#40;</span>driver<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data<span class="br0">&#41;</span><span class="sy0">,</span> 
+                    TO_UNICODE<span class="br0">&#40;</span>devName<span class="sy0">,</span>  <span class="sy0">&amp;</span>devUnicodeName<span class="br0">&#41;</span><span class="sy0">,</span> 
+                    FILE_DEVICE_UNKNOWN<span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> FALSE<span class="sy0">,</span> <span class="sy0">&amp;</span>device<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>ret <span class="sy0">!=</span> STATUS_SUCCESS<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* error report */</span>
+    <span class="kw1">return</span> ret<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+<span class="co1">//...</span></pre>
+
+<p>
+Funcțiile folosite la înregistrarea driverului primesc ca parametru un șir de caractere unicode. Pentru a transforma un șir de caractere <abbr title="American Standard Code for Information Interchange">ASCII</abbr> în șir unicode se folosește funcția <code>TO_UNICODE</code>, a cărei implementare a fost prezentată în <a href="lab03.html#siruri-de-caractere-ascii-unicode" class="wikilink1" title="so2:laboratoare:lab03"> laboratorul 3</a>.
+</p>
+
+<p>
+Pentru a putea fi accesat din user-space, device driverul trebuie să primească un nume într-un namespace vizibil din user-space (acesta fiind <code>”??”</code>). Device driverele realizează acest lucru prin crearea unei legături simbolice (<code>“\??\MyDevice”</code>) la numele dispozitivului (<code>“\Device\MyDevice”</code>), cu ajutorul funcției <a href="http://msdn.microsoft.com/en-us/library/ff549043.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff549043.aspx"  rel="nofollow">IoCreateSymbolicLink</a>.
+</p>
+
+<p>
+Următoarea secvență de cod creează o legătură simbolică pentru driver-ul înregistrat mai sus:
+</p>
+<pre class="code c"><span class="kw4">char</span> linkName<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span><span class="st0">'?'</span><span class="sy0">,</span><span class="st0">'?'</span><span class="sy0">,</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span> <span class="st0">'M'</span><span class="sy0">,</span><span class="st0">'y'</span><span class="sy0">,</span><span class="st0">'D'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'v'</span><span class="sy0">,</span> <span class="st0">'i'</span><span class="sy0">,</span> <span class="st0">'c'</span><span class="sy0">,</span> <span class="st0">'e'</span><span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">;</span>
+<span class="kw4">int</span> ret<span class="sy0">;</span>
+&nbsp;
+ret <span class="sy0">=</span> IoCreateSymbolicLink<span class="br0">&#40;</span>TO_UNICODE<span class="br0">&#40;</span>linkName<span class="sy0">,</span> <span class="sy0">&amp;</span>linkUnicodeName<span class="br0">&#41;</span><span class="sy0">,</span>
+                                 <span class="sy0">&amp;</span>devUnicodeName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>ret <span class="sy0">!=</span> STATUS_SUCCESS<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* error report */</span>
+    <span class="kw1">return</span> ret<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Numele legăturii simbolice va fi <code>“\??\MyDevice”</code>, iar <code>devUnicodeName</code> este un șir unicode ce reprezintă numele dispozitivului (<code>“\Device\MyDevice</code>”).
+</p>
+
+<p>
+La inițializare trebuie specificat și <a href="lab05-old.html#accesul-la-spatiul-de-adresa-al-procesului" title="so2:laboratoare:lab05-old ↵" class="wikilink1"> modul în care se realizează transferul datelor între user-space și kernel-space</a>, prin setarea câmpului <code>Flags</code> al variabilei de tip <code>DEVICE_OBJECT</code> la <code>DO_BUFFERED_IO</code> sau <code>DO_DIRECT_IO</code>. Dacă nici una din aceste opțiuni nu este  configurată, I/O managerul nu transferă datele între user-space și kernel-space (acestea vor putea fi accesate direct din user-space prin câmpul <code>UserBuffer</code> al IRP-ului).
+</p>
+
+<p>
+Următoarea secvență înregistrează <code>MY_NR_DEVICES</code> dispozitive:
+</p>
+<pre class="code c"><span class="co2">#include &lt;ntddk.h&gt;</span>
+&nbsp;
+<span class="kw4">struct</span> my_device_data <span class="br0">&#123;</span>
+    PDEVICE_OBJECT DeviceObject<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* my data starts here */</span>
+    <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+NTSTATUS DriverEntry<span class="br0">&#40;</span>PDRIVER_OBJECT driver<span class="sy0">,</span> PUNICODE_STRING registry<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data<span class="sy0">;</span>
+    DEVICE_OBJECT <span class="sy0">*</span>device<span class="sy0">;</span>
+    <span class="kw4">int</span> i<span class="sy0">;</span>
+    NTSTATUS ret<span class="sy0">;</span>
+    UNICODE_STRING devUnicodeName<span class="sy0">,</span> linkUnicodeName<span class="sy0">;</span>
+&nbsp;
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/memset.html"><span class="kw3">memset</span></a><span class="br0">&#40;</span><span class="sy0">&amp;</span>devUnicodeName<span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>devUnicodeName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span> 
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/memset.html"><span class="kw3">memset</span></a><span class="br0">&#40;</span><span class="sy0">&amp;</span>linkUnicodeName<span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>linkUnicodeName<span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">for</span><span class="br0">&#40;</span>i<span class="sy0">=</span><span class="nu0">0</span><span class="sy0">;</span> i<span class="sy0">&lt;</span>MY_NR_DEVICES<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw4">char</span> devName<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy0">=</span><span class="br0">&#123;</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span><span class="st0">'D'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'v'</span><span class="sy0">,</span><span class="st0">'i'</span><span class="sy0">,</span><span class="st0">'c'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span>
+                        <span class="st0">'M'</span><span class="sy0">,</span><span class="st0">'y'</span><span class="sy0">,</span><span class="st0">'D'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'v'</span><span class="sy0">,</span><span class="st0">'i'</span><span class="sy0">,</span><span class="st0">'c'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span> <span class="st0">'0'</span><span class="sy0">+</span>i<span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">;</span>
+        <span class="kw4">char</span> linkName<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="sy0">=</span><span class="br0">&#123;</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span><span class="st0">'?'</span><span class="sy0">,</span><span class="st0">'?'</span><span class="sy0">,</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span>
+                        <span class="st0">'M'</span><span class="sy0">,</span><span class="st0">'y'</span><span class="sy0">,</span><span class="st0">'D'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'v'</span><span class="sy0">,</span><span class="st0">'i'</span><span class="sy0">,</span><span class="st0">'c'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span> <span class="st0">'0'</span><span class="sy0">+</span>i<span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">if</span> <span class="br0">&#40;</span> <span class="br0">&#40;</span>ret <span class="sy0">=</span> IoCreateDevice<span class="br0">&#40;</span>driver<span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data<span class="br0">&#41;</span><span class="sy0">,</span>    
+                            TO_UNICODE<span class="br0">&#40;</span>devName<span class="sy0">,</span>  <span class="sy0">&amp;</span>devUnicodeName<span class="br0">&#41;</span><span class="sy0">,</span> 
+                            FILE_DEVICE_UNKNOWN<span class="sy0">,</span> <span class="nu0">0</span><span class="sy0">,</span> FALSE<span class="sy0">,</span> <span class="sy0">&amp;</span>device<span class="br0">&#41;</span> <span class="br0">&#41;</span> <span class="sy0">!=</span> 
+                            STATUS_SUCCESS<span class="br0">&#41;</span>
+            <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">if</span>  <span class="br0">&#40;</span> <span class="br0">&#40;</span>ret <span class="sy0">=</span> IoCreateSymbolicLink<span class="br0">&#40;</span>TO_UNICODE<span class="br0">&#40;</span>linkName<span class="sy0">,</span> 
+                        <span class="sy0">&amp;</span>linkUnicodeName<span class="br0">&#41;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>devUnicodeName<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="sy0">!=</span> STATUS_SUCCESS<span class="br0">&#41;</span>
+            <span class="kw1">goto</span> error<span class="sy0">;</span>
+&nbsp;
+        device<span class="sy0">-&gt;</span>Flags <span class="sy0">|=</span> DO_BUFFERED_IO<span class="sy0">;</span>
+        my_data  <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> device<span class="sy0">-&gt;</span>DeviceExtension<span class="sy0">;</span>
+        <span class="coMULTI">/* initialize my_data fields */</span>
+&nbsp;
+        <span class="kw1">if</span> <span class="br0">&#40;</span>devUnicodeName.<span class="me1">Buffer</span><span class="br0">&#41;</span>
+            RtlFreeUnicodeString<span class="br0">&#40;</span><span class="sy0">&amp;</span>devUnicodeName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>linkUnicodeName.<span class="me1">Buffer</span><span class="br0">&#41;</span> 
+            RtlFreeUnicodeString<span class="br0">&#40;</span><span class="sy0">&amp;</span>linkUnicodeName<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    driver<span class="sy0">-&gt;</span>DriverUnload <span class="sy0">=</span> DriverUnload<span class="sy0">;</span>
+    <span class="coMULTI">/* initialize dispatch routines */</span>
+    <span class="kw1">return</span> STATUS_SUCCESS<span class="sy0">;</span>
+&nbsp;
+error<span class="sy0">:</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>devUnicodeName.<span class="me1">Buffer</span><span class="br0">&#41;</span>
+        RtlFreeUnicodeString<span class="br0">&#40;</span><span class="sy0">&amp;</span>devUnicodeName<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>linkUnicodeName.<span class="me1">Buffer</span><span class="br0">&#41;</span> 
+        RtlFreeUnicodeString<span class="br0">&#40;</span><span class="sy0">&amp;</span>linkUnicodeName<span class="br0">&#41;</span><span class="sy0">;</span>
+    DriverUnload<span class="br0">&#40;</span>driver<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> ret<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În caz de eroare, vor trebui eliberate toate resursele alocate în funcție pâna la apariția erorii; in exemplul dat, la apariția unei erori în funcția <code>DriverEntry</code>, se va apela <code>DriverUnload</code> pentru eliberarea acestor resurse (în acest caz trebuie avut grijă ca în funcția DriverUnload să se verifice ce resurse au fost alocate și doar acestea să fie eliberate); o alternativă este folosirea de etichete distincte pentru fiecare eroare.
+</p>
+
+<p>
+Pentru deînregistrare, trebuie mai întâi ștearsă legătura simbolică pentru fiecare dispozitiv folosind funcția <a href="http://msdn.microsoft.com/en-us/library/ff549085.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff549085.aspx"  rel="nofollow">IoDeleteSymbolicLink</a> și apoi trebuie șterse dispozitivele cu <a href="http://msdn.microsoft.com/en-us/library/ff549083.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff549083.aspx"  rel="nofollow">IoDeleteDevice</a>. 
+</p>
+
+<p>
+Următoarea secvență deînregistrează cele <code>MY_NR_DEVICES</code> dispozitive înregistrate mai sus:
+</p>
+<pre class="code c"><span class="kw4">void</span> DriverUnload<span class="br0">&#40;</span>PDRIVER_OBJECT driver<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    DEVICE_OBJECT <span class="sy0">*</span>device<span class="sy0">;</span>
+    UNICODE_STRING linkUnicodeName<span class="sy0">;</span>
+    <span class="kw4">int</span> i<span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">for</span><span class="br0">&#40;</span>i<span class="sy0">=</span><span class="nu0">0</span><span class="sy0">;</span> i<span class="sy0">&lt;</span>MY_NR_DEVICES<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw4">char</span> linkName<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span><span class="st0">'?'</span><span class="sy0">,</span><span class="st0">'?'</span><span class="sy0">,</span><span class="st0">'<span class="es1">\\</span>'</span><span class="sy0">,</span>
+                           <span class="st0">'M'</span><span class="sy0">,</span><span class="st0">'y'</span><span class="sy0">,</span><span class="st0">'D'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span><span class="st0">'v'</span><span class="sy0">,</span><span class="st0">'i'</span><span class="sy0">,</span><span class="st0">'c'</span><span class="sy0">,</span><span class="st0">'e'</span><span class="sy0">,</span> <span class="st0">'0'</span><span class="sy0">+</span>i<span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+        <span class="kw1">if</span> <span class="br0">&#40;</span>TO_UNICODE<span class="br0">&#40;</span>linkName<span class="sy0">,</span> <span class="sy0">&amp;</span>linkUnicodeName<span class="br0">&#41;</span><span class="br0">&#41;</span> 
+            IoDeleteSymbolicLink<span class="br0">&#40;</span><span class="sy0">&amp;</span>linkUnicodeName<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>linkUnicodeName.<span class="me1">Buffer</span><span class="br0">&#41;</span>
+            RtlFreeUnicodeString<span class="br0">&#40;</span><span class="sy0">&amp;</span>linkUnicodeName<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    <span class="kw1">while</span> <span class="br0">&#40;</span><span class="br0">&#40;</span>device <span class="sy0">=</span> driver<span class="sy0">-&gt;</span>DeviceObject<span class="br0">&#41;</span><span class="br0">&#41;</span>
+        IoDeleteDevice<span class="br0">&#40;</span>device<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h2 class="sectionedit12" id="accesul_la_spatiul_de_adresa_al_procesului">Accesul la spațiul de adresă al procesului</h2>
+<div class="level2">
+
+<p>
+Pentru transferul datelor între user-space și kernel-space în general se folosesc două abordări: <strong>BUFFERED I/O</strong> sau <strong>DIRECT I/O</strong>. I/O managerul este cel care realizează aceste operații și pune la dispoziția driver-ului un buffer în care se vor găsi datele transmise din spațiul de adresă al procesului. După cum s-a precizat, un <a href="lab05-old.html#io-request-packet-irp" title="so2:laboratoare:lab05-old ↵" class="wikilink1">IRP</a> are trei buffere în acest scop; în funcție de tipul de transfer, datele preluate din spațiul de adresă al procesului se vor găsi în unul dintre acestea. În afară de aceste două abordări, există și posibilitatea ca driver-ul să gestioneze singur transferul de date, fără ajutorul managerului I/O.
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="buffered_io">BUFFERED I/O</h3>
+<div class="level3">
+
+<p>
+Managerul alocă un buffer în kernel space și copiază datele din/în user space; device driverul poate accesa bufferul din kernel space.
+Pentru a folosi modul <code>BUFFERED I/O</code> <sup><a href="lab05-old.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup>, trebuie realizate următoarele operații:
+</p>
+<ul>
+<li class="level1"><div class="li">la înregistrarea dispozitivului, în funcția <code>DriverEntry</code>, se setează câmpul <code>Flags</code> al variabilei de tip <code>DEVICE_OBJECT</code>  la <code>DO_BUFFERED_IO</code>:<pre class="code c">device<span class="sy0">-&gt;</span>Flags <span class="sy0">|=</span> DO_BUFFERED_IO<span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li">la accesarea buffer-ului, în funcția <code>read</code> sau <code>write</code>, se va accesa câmpul <code>AssociatedIrp.SystemBuffer</code> din <code>IRP</code>:<pre class="code c">buffer <span class="sy0">=</span> irp<span class="sy0">-&gt;</span>AssociatedIrp.<span class="me1">SystemBuffer</span><span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit14" id="direct_io">DIRECT I/O</h3>
+<div class="level3">
+
+<p>
+Managerul validează bufferul din user space și adună informațiile necesare accesării bufferului; device driverul trebuie să pregătească bufferul din user space pentru folosire prin maparea în kernel-space (și eventual marcarea paginilor astfel încât acestea să nu fie evacuate).
+</p>
+
+<p>
+Pentru a folosi modul <code>DIRECT I/O</code> <sup><a href="lab05-old.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup>, trebuie realizate următoarele operații:
+</p>
+<ul>
+<li class="level1"><div class="li">la înregistrarea dispozitivului, în funcția <code>DriverEntry</code>, se setează câmpul <code>Flags</code> al variabilei de tip <code>DEVICE_OBJECT</code>  la <code>DO_DIRECT_IO</code>:<pre class="code c">device<span class="sy0">-&gt;</span>Flags <span class="sy0">|=</span> DO_DIRECT_IO<span class="sy0">;</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li">la accesarea buffer-ului, în funcția <code>read</code> sau <code>write</code>, se va accesa câmpul <code>MdlAddress</code> din <code>IRP</code>; pentru a accesa memoria referită de acest pointer se folosește macro-ul <a href="http://msdn.microsoft.com/en-us/library/ff554559.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff554559.aspx"  rel="nofollow">MmGetSystemAddressForMdlSafe</a>:<pre class="code c">buffer <span class="sy0">=</span> MmGetSystemAddressForMdlSafe<span class="br0">&#40;</span>irp<span class="sy0">-&gt;</span>MdlAddress<span class="sy0">,</span> NormalPagePriority<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit15" id="neither_buffered_nor_direct_io">Neither Buffered Nor Direct I/O</h3>
+<div class="level3">
+
+<p>
+Există și posibilitatea ca driver-ul să gestioneze singur transferul de date, fără ajutorul managerului I/O <sup><a href="lab05-old.html#fn__4" id="fnt__4" class="fn_top">4)</a></sup>. Pentru a nu folosi managerul I/O, trebuie realizate următoarele operații:
+</p>
+<ul>
+<li class="level1"><div class="li">la înregistrarea dispozitivului, în funcția <code>DriverEntry</code>, nu se modifică/setează câmpul <code>Flags</code> al variabilei de tip <code>DEVICE_OBJECT</code></div>
+</li>
+<li class="level1"><div class="li">la accesarea buffer-ului, în funcția <code>read</code> sau <code>write</code>, se va accesa câmpul <code>UserBuffer</code> din <code>IRP</code>; codul care accesează memoria referită de acest pointer trebuie inclus într-o secvență <a href="http://msdn.microsoft.com/en-us/library/ff546823.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff546823.aspx"  rel="nofollow">try/except</a> și trebuie să folosească funcțiile <a href="http://msdn.microsoft.com/en-us/library/ff559876.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff559876.aspx"  rel="nofollow">ProbeForRead</a> sau <a href="http://msdn.microsoft.com/en-us/library/ff559879.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff559879.aspx"  rel="nofollow">ProbeForWrite</a> înainte de acces; spre exemplu, în funcția <code>read</code> se va executa următoarea secvență:<pre class="code c">NTSTATUS status<span class="sy0">;</span>
+PIO_STACK_LOCATION pIrpStack <span class="sy0">=</span> IoGetCurrentIrpStackLocation<span class="br0">&#40;</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+try <span class="br0">&#123;</span>
+    ProbeForWrite<span class="br0">&#40;</span>irp<span class="sy0">-&gt;</span>UserBuffer<span class="sy0">,</span>pIrpStack <span class="sy0">-&gt;</span>Parameters.<span class="me1">Read</span>.<span class="me1">Length</span><span class="sy0">,</span>TYPE_ALIGNMENT<span class="br0">&#40;</span><span class="kw4">char</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    buffer <span class="sy0">=</span> irp<span class="sy0">-&gt;</span>UserBuffer<span class="sy0">;</span>
+    <span class="coMULTI">/* write to buffer */</span>
+<span class="br0">&#125;</span> except <span class="br0">&#40;</span>EXCEPTION_EXECUTE_HANDLER<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    status <span class="sy0">=</span> GetExceptionCode<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="coMULTI">/* Error handling code */</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+ <sup><a href="lab05-old.html#fn__5" id="fnt__5" class="fn_top">5)</a></sup>
+</p>
+</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit16" id="rutine_de_dispatch">Rutine de dispatch</h2>
+<div class="level2">
+
+<p>
+Pentru ca sistemul să știe ce funcții să apeleze pentru a trata o cerere din user space, device driverul trebuie să înregistreze una sau mai multe <a href="http://msdn.microsoft.com/en-us/library/ff566407.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff566407.aspx"  rel="nofollow">rutine de dispatch</a>. Rutinele de dispatch au următoarea signatură:
+</p>
+<pre class="code c">NTSTATUS MyOpen<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+NTSTATUS MyRead<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+NTSTATUS MyWrite<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+NTSTATUS MyDeviceIoControl<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+NTSTATUS MyClose<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+NTSTATUS MyCleanup<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Înregistrarea rutinelor de dispatch se face în rutina <code>DriverEntry</code>, prin setarea intrărilor <code>IRP_MJ_CREATE</code>, <code>IRP_MJ_READ</code>, etc. din vectorul <code>MajorFunction</code> (similar structurii <a href="lab04.html#structura-file_operations" class="wikilink1" title="so2:laboratoare:lab04"> struct file_operations</a> din Linux), vector care se găsește în obiectul ce identifică driverul:
+</p>
+<pre class="code c">NTSTATUS DriverEntry<span class="br0">&#40;</span>PDRIVER_OBJECT  driver<span class="sy0">,</span> PUNICODE_STRING  registry<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="co1">//...</span>
+    driver<span class="sy0">-&gt;</span>DriverUnload <span class="sy0">=</span> DriverUnload<span class="sy0">;</span>
+    driver<span class="sy0">-&gt;</span>MajorFunction<span class="br0">&#91;</span> IRP_MJ_CREATE <span class="br0">&#93;</span> <span class="sy0">=</span> MyOpen<span class="sy0">;</span>
+    driver<span class="sy0">-&gt;</span>MajorFunction<span class="br0">&#91;</span> IRP_MJ_READ <span class="br0">&#93;</span><span class="sy0">=</span> MyRead<span class="sy0">;</span>
+    driver<span class="sy0">-&gt;</span>MajorFunction<span class="br0">&#91;</span> IRP_MJ_WRITE <span class="br0">&#93;</span> <span class="sy0">=</span> MyWrite<span class="sy0">;</span>
+    driver<span class="sy0">-&gt;</span>MajorFunction<span class="br0">&#91;</span> IRP_MJ_DEVICE_CONTROL <span class="br0">&#93;</span><span class="sy0">=</span> MyDeviceIoControl<span class="sy0">;</span>
+    driver<span class="sy0">-&gt;</span>MajorFunction<span class="br0">&#91;</span> IRP_MJ_CLEANUP <span class="br0">&#93;</span> <span class="sy0">=</span> MyCleanup<span class="sy0">;</span>
+    driver<span class="sy0">-&gt;</span>MajorFunction<span class="br0">&#91;</span> IRP_MJ_CLOSE <span class="br0">&#93;</span> <span class="sy0">=</span> MyClose<span class="sy0">;</span>
+    <span class="co1">//...</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit17" id="open_si_close">Open și Close</h3>
+<div class="level3">
+
+<p>
+Funcțiile asociate cererilor de tip <a href="http://msdn.microsoft.com/en-us/library/ff550729.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550729.aspx"  rel="nofollow">IRP_MJ_CREATE</a>, <a href="http://msdn.microsoft.com/en-us/library/ff550720.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550720.aspx"  rel="nofollow">IRP_MJ_CLOSE</a> se vor apela la deschiderea, respectiv închiderea dispozitivului. Un dispozitiv, in terminologia unui device driver, este un obiect ce identifică un dispozitiv fizic (exemplu: portul serial COM1, portul serial COM2, portul paralel LPT1). Un driver poate gestiona mai multe dispozitive folosind, în general, aceleași funcții de dispatch. Revenind la cele două rutine, acestea sunt, în general, folosite de device driver pentru a inițializa hardware-ul, a aloca buffere și a iniția alte acțiuni administrative.
+</p>
+
+<p>
+O funcție <code>Open</code> va avea următoarea structură:
+</p>
+<pre class="code c">NTSTATUS MyOpen<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span> my_data <span class="sy0">=</span>
+         <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> device<span class="sy0">-&gt;</span>DeviceExtension<span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* validate access to device */</span>
+&nbsp;
+    <span class="coMULTI">/* initialize device */</span>
+    irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Status</span> <span class="sy0">=</span> STATUS_SUCCESS<span class="sy0">;</span>
+    irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Information</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+    IoCompleteRequest<span class="br0">&#40;</span>irp<span class="sy0">,</span> IO_NO_INCREMENT<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> STATUS_SUCCESS<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Funcția <code>Close</code> va avea o structură similară: va reseta informațiile de acces, va deinițializa dispozitivul si va marca terminarea procesării IRP-ului.
+</p>
+
+<p>
+La apelul funcțiilor <a href="http://msdn.microsoft.com/en-us/library/aa363858.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/aa363858.aspx"  rel="nofollow">CreateFile</a> și <a href="http://msdn.microsoft.com/en-us/library/ms724211.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms724211.aspx"  rel="nofollow">CloseHandle</a> din user-space asupra dispozitivului, se vor apela funcțiile <code>MyOpen</code>, respectiv <code>MyClose</code> din driver. Un exemplu de apel din user-space:
+</p>
+<pre class="code c"><span class="co2">#include &lt;windows.h&gt;</span>
+&nbsp;
+HANDLE hDevice <span class="sy0">=</span> CreateFile<span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\\</span><span class="es1">\\</span>.<span class="es1">\\</span>MyDevice&quot;</span><span class="sy0">,</span> GENERIC_READ <span class="sy0">|</span> GENERIC_WRITE<span class="sy0">,</span>
+                            <span class="nu0">0</span><span class="sy0">,</span> NULL<span class="sy0">,</span> OPEN_EXISTING<span class="sy0">,</span>
+                            FILE_ATTRIBUTE_NORMAL<span class="sy0">,</span> NULL<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>hDevice <span class="sy0">==</span> INVALID_HANDLE_VALUE<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* report error */</span>
+<span class="br0">&#125;</span>
+&nbsp;
+CloseHandle<span class="br0">&#40;</span>hDevice<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+După cum se poate observa, aplicația din user-space folosește prefix-ul <code>\\.\</code> pentru a accesa device-ul; intern, I/O manager-ul trasformă acest prefix în <code>\??\</code>, înainte de a începe căutarea dispozitivului .
+</p>
+
+</div>
+
+<h3 class="sectionedit18" id="read_si_write">Read și Write</h3>
+<div class="level3">
+
+<p>
+Funcțiile asociate cererilor de tip <a href="http://msdn.microsoft.com/en-us/library/ff550794.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550794.aspx"  rel="nofollow">IRP_MJ_READ</a> și <a href="http://msdn.microsoft.com/en-us/library/ff550819.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550819.aspx"  rel="nofollow">IRP_MJ_WRITE</a> trebuie să trateze cererile de citire, respectiv scriere. În aceste rutine, device driverele în general pregătesc hardware-ul și pornesc operațiile de citire sau scriere. Offset-ul și numărul de octeți de transferat se află din <code>IO_STACK_LOCATION</code>: <code>Parameters.Write.ByteOffset</code>, <code>Parameters.Write.Length</code> pentru scriere și <code>Parameters.Read.ByteOffset</code>, <code>Parameters.Read.Length</code> pentru citire.
+</p>
+
+<p>
+De cele mai multe ori, o funcție <code>Read</code> va avea următoarea structură:
+</p>
+<pre class="code c">NTSTATUS MyRead<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw4">char</span> <span class="sy0">*</span>readBuffer<span class="sy0">;</span>
+    <span class="kw4">int</span> sizeToRead<span class="sy0">,</span> sizeRead<span class="sy0">;</span>
+    PIO_STACK_LOCATION pIrpStack<span class="sy0">;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span>my_data <span class="sy0">=</span> 
+         <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> device<span class="sy0">-&gt;</span>DeviceExtension<span class="sy0">;</span>
+&nbsp;
+    pIrpStack <span class="sy0">=</span> IoGetCurrentIrpStackLocation<span class="br0">&#40;</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+    sizeToRead <span class="sy0">=</span> pIrpStack<span class="sy0">-&gt;</span>Parameters.<span class="me1">Read</span>.<span class="me1">Length</span><span class="sy0">;</span>
+    readBuffer <span class="sy0">=</span> irp<span class="sy0">-&gt;</span>AssociatedIrp.<span class="me1">SystemBuffer</span><span class="sy0">;</span>
+&nbsp;
+    <span class="coMULTI">/* read sizeToRead bytes from device and write to readBuffer */</span>
+&nbsp;
+    irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Status</span> <span class="sy0">=</span> STATUS_SUCCESS<span class="sy0">;</span>
+    irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Information</span> <span class="sy0">=</span> sizeRead<span class="sy0">;</span>
+    IoCompleteRequest<span class="br0">&#40;</span>irp<span class="sy0">,</span> IO_NO_INCREMENT<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> STATUS_SUCCESS<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pentru operații mai complexe, trebuie ținut cont și de poziția de la care se citește, dată în Parameters.Write.ByteOffset.
+</p>
+
+<p>
+Structura funcției <code>Write</code> este similară: numărul de octeți de scris se obține din <code>Parameters.Write.Length</code>, se citesc <code>Parameters.Write.Length</code> octeți din buffer-ul IRP-ului și se scriu pe device, iar la sfârșit trebuie marcată terminarea procesării IRP-ului. Dacă IRP-ul este păstrat intern și se amână procesarea lui, nu este necesar ca funcțiile <code>Read</code> sau <code>Write</code> să conțină codul pentru marcarea terminării procesării IRP-ului. 
+</p>
+
+<p>
+La apelul funcțiilor <a href="http://msdn.microsoft.com/en-us/library/aa365467.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/aa365467.aspx"  rel="nofollow">ReadFile</a> și <a href="http://msdn.microsoft.com/en-us/library/aa365747.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/aa365747.aspx"  rel="nofollow">WriteFile</a> din user-space, se vor apela funcțiile <code>MyRead</code>, respectiv <code>MyWrite</code> din driver. Un exemplu de apel din user-space:
+</p>
+<pre class="code c">BOOL status<span class="sy0">;</span>
+&nbsp;
+status <span class="sy0">=</span> ReadFile<span class="br0">&#40;</span>hDevice<span class="sy0">,</span> inBuffer<span class="sy0">,</span> inCount<span class="sy0">,</span> <span class="sy0">&amp;</span>bytesRead<span class="sy0">,</span> NULL<span class="br0">&#41;</span><span class="sy0">;</span>
+status <span class="sy0">=</span> WriteFile<span class="br0">&#40;</span>hDevice<span class="sy0">,</span> outBuffer<span class="sy0">,</span> outCount<span class="sy0">,</span> <span class="sy0">&amp;</span>bytesWritten<span class="sy0">,</span> NULL<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span>status<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* report error */</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit19" id="deviceiocontrol">DeviceIoControl</h3>
+<div class="level3">
+
+<p>
+Funcția asociată cu <a href="http://msdn.microsoft.com/en-us/library/ff550744.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550744.aspx"  rel="nofollow">IRP_MJ_DEVICE_CONTROL</a> se folosește la apeluri de gen <code>DeviceIoControl</code> (echivalentul <code>ioctl</code> din Unix). Codul (sub)operației, dimensiunea bufferului de intrare și dimensiunea bufferului de ieșire se află din <code>IO_STACK_LOCATION</code>: <code>Parameters.DeviceIoControl.IoControlCode</code>, <code>Parameters.DeviceIoControl.InputBufferLength</code> și <code>Parameters.DeviceIoControl.OutputBufferLength</code>. Bufferele de intrare sau ieșire se pot accesa din IRP (în funcție de modul de transfer din user-space în kernel-space). 
+</p>
+
+<p>
+Codul operației este dat de un număr pe 32 de biți, în care sunt codificate informații despre apelul <code>DeviceIoControl</code>. Funcția <a href="http://msdn.microsoft.com/en-us/library/ms902086.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ms902086.aspx"  rel="nofollow">CTL_CODE</a> oferă un mecanism simplu de generare a acestor coduri:
+</p>
+<pre class="code c">CTL_CODE<span class="br0">&#40;</span>DeviceType<span class="sy0">,</span> ControlCode<span class="sy0">,</span> TransferType<span class="sy0">,</span> RequiredAccess<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Tipul de transfer (<code>TransferType</code>) specifică tipul de acces la spațiul de adresă al procesului (<code>METHOD_BUFFERED</code>, <code>METHOD_IN_DIRECT</code>, <code>METHOD_OUT_DIRECT</code>, <code>METHOD_NEITHER</code>). După cum s-a specificat mai sus, accesul la spațiul de adresă al procesului pentru operațiile read și write este setat în momentul inițializării dispozitivului, la setarea flag-urilor acestuia. În cazul funcției <code>DeviceIoControl</code>, accesul este codificat direct în codul funcției și depinde de parametrul <code>TransferType</code> (astfel tipul de acces la spațiul de adresa al procesului depinde de codul DeviceIoControl, și nu de flag-urile device-ului). 
+</p>
+
+<p>
+Un exemplu pentru o funcție de dispatch de tip MyDeviceIoControl:
+</p>
+<pre class="code c"><span class="co2">#define MY_IOCTL_IN CTL_CODE(FILE_DEVICE_UNKNOWN, 0x01, \
+                    METHOD_BUFFERED, FILE_READ_DATA | FILE_WRITE_DATA)</span>
+&nbsp;
+NTSTATUS MyDeviceIoControl<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    ULONG controlCode<span class="sy0">,</span> inSize<span class="sy0">,</span> bytesWritten <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+    PIO_STACK_LOCATION pIrpStack<span class="sy0">;</span>
+    <span class="kw4">char</span><span class="sy0">*</span> buffer<span class="sy0">;</span>
+    NTSTATUS status <span class="sy0">=</span> STATUS_SUCCESS<span class="sy0">;</span>
+    <span class="kw4">struct</span> my_device_data <span class="sy0">*</span> my_data <span class="sy0">=</span> 
+         <span class="br0">&#40;</span><span class="kw4">struct</span> my_device_data <span class="sy0">*</span><span class="br0">&#41;</span> device<span class="sy0">-&gt;</span>DeviceExtension<span class="sy0">;</span>
+&nbsp;
+    pIrpStack <span class="sy0">=</span> IoGetCurrentIrpStackLocation<span class="br0">&#40;</span>irp<span class="br0">&#41;</span><span class="sy0">;</span>
+    controlCode <span class="sy0">=</span> pIrpStack<span class="sy0">-&gt;</span>Parameters.<span class="me1">DeviceIoControl</span>.<span class="me1">IoControlCode</span><span class="sy0">;</span>
+    buffer <span class="sy0">=</span> irp<span class="sy0">-&gt;</span>AssociatedIrp.<span class="me1">SystemBuffer</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">switch</span> <span class="br0">&#40;</span>controlCode<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        <span class="kw1">case</span> MY_IOCTL_IN<span class="sy0">:</span>
+            inSize <span class="sy0">=</span> pIrpStack<span class="sy0">-&gt;</span>Parameters.<span class="me1">DeviceIoControl</span>.<span class="me1">InputBufferLength</span><span class="sy0">;</span>
+            <span class="coMULTI">/* validate parameters (inSize) */</span>
+&nbsp;
+            <span class="coMULTI">/* read inSize bytes from buffer */</span>
+&nbsp;
+            <span class="kw2">break</span><span class="sy0">;</span>
+        <span class="kw1">default</span><span class="sy0">:</span>
+            status <span class="sy0">=</span> STATUS_INVALID_DEVICE_REQUEST<span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Status</span> <span class="sy0">=</span> status<span class="sy0">;</span>
+    irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Information</span> <span class="sy0">=</span> bytesWritten<span class="sy0">;</span> 
+    IoCompleteRequest<span class="br0">&#40;</span>irp<span class="sy0">,</span> IO_NO_INCREMENT<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> STATUS_SUCCESS<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Pentru un apel <code>DeviceIoControl</code> care transferă date în user-space, trebuie să setați câmpul <code>IoStatus.Information</code> al IRP-ului la numărul de octeți scriși (I/O manager-ul va transfera <code>IoStatus.Information</code> octeți în user-space).
+</p>
+
+<p>
+La apelul funcției <a href="http://msdn2.microsoft.com/en-us/library/aa363216(VS.85).aspx" class="urlextern" title="http://msdn2.microsoft.com/en-us/library/aa363216(VS.85).aspx"  rel="nofollow">DeviceIoControl</a> asupra dispozitivului din user-space, se va apela funcția<code>MyDeviceIoControl</code> din driver. Un exemplu de apel din user-space:
+</p>
+<pre class="code c">BOOL status<span class="sy0">;</span>
+DWORD bytesReturned<span class="sy0">;</span>
+&nbsp;
+status <span class="sy0">=</span> DeviceIoControl<span class="br0">&#40;</span>hDevice<span class="sy0">,</span> controlCode<span class="sy0">,</span> inBuffer<span class="sy0">,</span> inSize<span class="sy0">,</span> outBuffer<span class="sy0">,</span> outSize<span class="sy0">,</span> <span class="sy0">&amp;</span>bytesReturned<span class="sy0">,</span> NULL<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span><span class="br0">&#40;</span><span class="sy0">!</span>status<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* report error */</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Dacă apelul DeviceIoControl nu întoarce date, parametrul <code>outBuffer</code> va fi NULL și <code>outSize</code> zero, iar dacă nu necesită date de intrare, <code>inBuffer</code> va fi NULL si <code>inSize</code> zero. Pentru mai multe informații despre DeviceIoControl consultați <a href="http://msdn2.microsoft.com/en-us/library/aa363216(VS.85).aspx" class="urlextern" title="http://msdn2.microsoft.com/en-us/library/aa363216(VS.85).aspx"  rel="nofollow">Platform SDK</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit20" id="cleanup">Cleanup</h3>
+<div class="level3">
+
+<p>
+Funcția asociată cu <a href="http://msdn.microsoft.com/en-us/library/ff550718.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550718.aspx"  rel="nofollow">IRP_MJ_CLEANUP</a> se apelează atunci când un proces renunță la o cerere (fie că procesul renunță, fie că, spre exemplu, procesul s-a terminat și sistemul de operare renunță la cerere). În această rutină device driverele trebuie să termine toate IRP-urile asociate cu <code>FileObject</code>-ul din IRP-ul primit ca parametru (al funcției de tratare <code>IRP_MJ_CLEANUP</code>).
+</p>
+
+<p>
+Dacă driverul păstrează intern IRP-uri, este nevoie să marcheze terminarea procesării pentru fiecare dintre ele. Astfel, funcția <code>Cleanup</code> trebuie să execute următoarea secvență:
+</p>
+<pre class="code c">NTSTATUS MyCleanup<span class="br0">&#40;</span>PDEVICE_OBJECT device<span class="sy0">,</span> IRP <span class="sy0">*</span>irp<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="coMULTI">/* for every myIrp */</span> <span class="br0">&#123;</span>
+        <span class="coMULTI">/* get myIrp */</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>IoGetCurrentIrpStackLocation<span class="br0">&#40;</span>myIrp<span class="br0">&#41;</span><span class="sy0">-&gt;</span>FileObject <span class="sy0">==</span> 
+                    IoGetCurrentIrpStackLocation<span class="br0">&#40;</span>irp<span class="br0">&#41;</span><span class="sy0">-&gt;</span>FileObject<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+            myIrp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Status</span> <span class="sy0">=</span> STATUS_CANCELLED<span class="sy0">;</span>
+            IoCompleteRequest<span class="br0">&#40;</span>myIrp<span class="sy0">,</span> IO_NO_INCREMENT<span class="br0">&#41;</span><span class="sy0">;</span>
+        <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+&nbsp;
+    irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Status</span> <span class="sy0">=</span> STATUS_SUCCESS<span class="sy0">;</span>
+    irp<span class="sy0">-&gt;</span>IoStatus.<span class="me1">Information</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+    IoCompleteRequest<span class="br0">&#40;</span>irp<span class="sy0">,</span> IO_NO_INCREMENT<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+    <span class="kw1">return</span> STATUS_SUCCESS<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h2 class="sectionedit21" id="sincronizare">Sincronizare</h2>
+<div class="level2">
+
+<p>
+Pentru realizarea sincronizării între thread-uri, există obiecte de sincronizare (<a href="http://msdn.microsoft.com/en-us/library/ff553202.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff553202.aspx"  rel="nofollow">Kernel Dispatcher Objects</a>):
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://msdn.microsoft.com/en-us/library/ff544323.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff544323.aspx"  rel="nofollow">eveniment</a> (KEVENT)</div>
+</li>
+<li class="level1"><div class="li"><a href="http://msdn.microsoft.com/en-us/library/ff563719.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff563719.aspx"  rel="nofollow">semafor</a> (KSEMAPHORE)</div>
+</li>
+<li class="level1"><div class="li"><a href="http://msdn.microsoft.com/en-us/library/ff563719.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff563719.aspx"  rel="nofollow">mutex</a> (KMUTEX)</div>
+</li>
+<li class="level1"><div class="li"><a href="http://msdn.microsoft.com/en-us/library/ff564655.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff564655.aspx"  rel="nofollow">timer</a> (KTIMER)</div>
+</li>
+<li class="level1"><div class="li"><a href="http://msdn.microsoft.com/en-us/library/ff564633.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff564633.aspx"  rel="nofollow">thread</a> (KTHREAD)</div>
+</li>
+</ul>
+
+<p>
+În orice moment, aceste obiecte se pot afla în una din stările <em>signaled</em> sau <em>not-signaled</em>. Un thread poate aștepta ca un astfel de obiect sa ajungă în starea <em>signaled</em> printr-un apel al funcției <a href="http://msdn.microsoft.com/en-us/library/ff553350.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff553350.aspx"  rel="nofollow">KeWaitForSingleObject</a>.
+</p>
+
+</div>
+
+<h3 class="sectionedit22" id="evenimente">Evenimente</h3>
+<div class="level3">
+
+<p>
+Un <a href="http://msdn.microsoft.com/en-us/library/ff543006.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff543006.aspx"  rel="nofollow">eveniment kernel</a> este reprezentat de <code>KEVENT</code> și poate fi de două tipuri: eveniment de <strong>notificare</strong> (<code>NotificationEvent</code>) sau de <strong>sincronizare</strong> (<code>SynchronizationEvent</code>). În cazul unui eveniment de notificare, când acesta trece în starea <em>signaled</em> rămâne în această stare până când este resetat în mod explicit. Mai mult, toate thread-urile care așteaptă la acest eveniment sunt eliberate când evenimentul trece în starea <em>signaled</em>. Un eveniment de sincronizare trece automat în starea <em>not-signaled</em> în momentul în care un thread care așteptă la eveniment este eliberat. 
+</p>
+
+<p>
+Funcțiile folosite pentru manipularea evenimentelor sunt următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://msdn.microsoft.com/en-us/library/ff552137.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff552137.aspx"  rel="nofollow">KeInitializeEvent</a> inițializează evenimentul; parametrul <code>Type</code> poate fi <code>NotificationEvent</code> sau <code>SynchronizationEvent</code>, iar <code>State</code> indică starea inițială a evenimentului;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://msdn.microsoft.com/en-us/library/ff553253.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff553253.aspx"  rel="nofollow">KeSetEvent</a> trece evenimentul în starea <em>signaled</em>;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://msdn.microsoft.com/en-us/library/ff551980.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff551980.aspx"  rel="nofollow">KeClearEvent</a> și <a href="http://msdn.microsoft.com/en-us/library/ff553176.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff553176.aspx"  rel="nofollow">KeResetEvent</a> resetează evenimentul (trec evenimentul în starea <em>non-signaled</em>);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://msdn.microsoft.com/en-us/library/ff553089.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff553089.aspx"  rel="nofollow">KeReadStateEvent</a> întoarce starea curentă a evenimentului (valoare nenulă dacă este în starea <em>signaled</em>, zero în caz contrar);</div>
+</li>
+</ul>
+
+<p>
+Un exemplu de utilizare:
+</p>
+<dl class="code">
+<dt><a href="../../_export/code/so2/laboratoare/lab05-old%3Fcodeblock=24" title="Download Snippet" class="mediafile mf_">&quot;inițializare&quot;</a></dt>
+<dd><pre class="code c">KEVENT event<span class="sy0">;</span>
+NTSTATUS status<span class="sy0">;</span>
+&nbsp;
+KeInitializeEvent<span class="br0">&#40;</span><span class="sy0">&amp;</span>event<span class="sy0">,</span> SynchronizationEvent<span class="sy0">,</span> FALSE<span class="br0">&#41;</span><span class="sy0">;</span> </pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="../../_export/code/so2/laboratoare/lab05-old%3Fcodeblock=25" title="Download Snippet" class="mediafile mf_">&quot;signal&quot;</a></dt>
+<dd><pre class="code c">KeSetEvent<span class="br0">&#40;</span><span class="sy0">&amp;</span>event<span class="sy0">,</span> IO_NO_INCREMENT<span class="sy0">,</span> FALSE<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+</dd></dl>
+<dl class="code">
+<dt><a href="../../_export/code/so2/laboratoare/lab05-old%3Fcodeblock=26" title="Download Snippet" class="mediafile mf_">&quot;așteptare&quot;</a></dt>
+<dd><pre class="code c">status <span class="sy0">=</span> KeWaitForSingleObject<span class="br0">&#40;</span><span class="sy0">&amp;</span>event<span class="sy0">,</span> Executive<span class="sy0">,</span> KernelMode<span class="sy0">,</span> TRUE<span class="sy0">,</span> NULL<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">!</span>NT_SUCCESS<span class="br0">&#40;</span>status<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="coMULTI">/* handle error */</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+</div>
+
+<h2 class="sectionedit23" id="echivalente_device_drivere_in_linux_si_device_drivere_in_windows">Echivalențe device drivere în Linux și device drivere în Windows</h2>
+<div class="level2">
+
+<p>
+Tabelul de mai jos prezintă echivalențele (acolo unde există) între <abbr title="Application Programming Interface">API</abbr>-ul aferent device driverelor în Linux și device driverelor în Windows.
+</p>
+<div class="table sectionedit24"><table class="inline">
+	<tr class="row0">
+		<th class="col0 centeralign">    Concept                           </th><th class="col1 centeralign">   Linux                     </th><th class="col2 centeralign">    Windows                              </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0 centeralign">   structură aferentă dispozitivului  </td><td class="col1 centeralign">  struct cdev                </td><td class="col2 centeralign">  DEVICE_OBJECT                          </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0 centeralign">   structură aferentă driverului      </td><td class="col1 centeralign">     N/A                     </td><td class="col2 centeralign">  DRIVER_OBJECT                          </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0 centeralign">   pointer către structură proprie    </td><td class="col1 leftalign"><code>file→private_data</code>   </td><td class="col2 leftalign"><code>DEVICE_OBJECT→DeviceExtension</code>   </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0 centeralign">   operații expuse de dispozitive     </td><td class="col1 centeralign">  struct file_operations     </td><td class="col2 leftalign"><code>DRIVER_OBJECT→MajorFunctions</code>    </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 centeralign">   controlul dispozitivului           </td><td class="col1 centeralign">  ioctl                      </td><td class="col2 centeralign">  DeviceIoControl                        </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0 centeralign">   accesul la spațiul de adresă       </td><td class="col1 leftalign"><code>char __user *buffer</code>  </td><td class="col2 centeralign">  BUFFERED_IO, DIRECT_IO, neither I/O    </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0 centeralign">   nume uzual de dispozitiv           </td><td class="col1 centeralign">  /dev/my_device             </td><td class="col2 centeralign">  \\.\MyDevice                       </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 centeralign">   împachetare cerere din userspace   </td><td class="col1 centeralign">  buffer (pointer din userspace)  </td><td class="col2 centeralign">  IRP (I/O Request Packet)          </td>
+	</tr>
+</table></div>
+
+</div>
+
+<h2 class="sectionedit25" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+<p>
+<p><div class="noteimportant">
+</p>
+<ul>
+<li class="level1"><div class="li"> Toate exercițiile vor fi rezolvate pe <strong>mașina virtuală de Windows</strong>.</div>
+</li>
+<li class="level1"><div class="li"> Recomandăm să porniți VMware într-un workspace separat.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> Pentru accesarea locală a sistemului de fișiere de pe mașinile virtuale puteți folosi Samba/CIFS, prin intermediul a două scripturi:</div>
+<ul>
+<li class="level2"><div class="li"> Montarea <code>/root/share/</code> de pe mașina virtuală Linux în <code>/home/student/linux-share/</code> pe sistemul local se face folosind comanda <code>~/bin/mount-linux</code>.</div>
+</li>
+<li class="level2"><div class="li"> Montarea <code>/home/Administrator/share/</code> (Cygwin) de pe mașina virtuală Windows în <code>/home/student/windows-share/</code> pe sistemul local se face folosind comanda <code>~/bin/mount-windows</code>.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning">
+Înainte de a rezolva un exercițiu, citiți cu <strong>atenție</strong> toate bullet-urile acestuia.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notewarning">
+Nu lucrați în directoare care conțin spații (blank).
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+</p>
+<ul>
+<li class="level1"><div class="li"> Pe mașina virtuală de Windows recomandăm:</div>
+<ul>
+<li class="level2"><div class="li"> Folosirea mașinii virtuale în modul full screen.</div>
+</li>
+<li class="level2"><div class="li"> Accesarea tuturor resurselor (browser, LXR) din cadrul mașinii virtuale, fără interacțiune cu sistemul fizic.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Lucrul cu module de kernel în Windows se realizează din consola DDK (<code>Windows Server 2003 Checked x86 Build Environment</code>).</div>
+<ul>
+<li class="level2"><div class="li"> Folosiți icon-ul <code>x86 Checked Build Environment</code> din partea dreaptă a Desktop-ului pentru a deschide consola DDK.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Recomandăm să lucrați în <code>C:\Cygwin\home\Administrator\so2</code> sau <code>C:\Cygwin\home\Administrator\share</code>.</div>
+</li>
+<li class="level1"><div class="li"> Pentru a folosi Vim în consolele din Windows, folosiți comanda <code>vim-nox</code>.</div>
+</li>
+<li class="level1"><div class="li"> În cazul apariției unui <em>Blue Screen of Death</em> (BSOD), așteptați repornirea mașinii virtuale și apoi porniți <code>WinDbg</code> și din acesta dump-ul de memorie <code>C:\Windows\MEMORY.DMP</code>.</div>
+<ul>
+<li class="level2"><div class="li"> Folosiți comanda <code>!analyze -v</code> pentru depanare.</div>
+</li>
+<li class="level2"><div class="li"> Parcurgeți indicațiile din <a href="lab02.html#analiza_folosind_memory_dump" class="wikilink1" title="so2:laboratoare:lab02">laboratorul 2</a>.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> Folosiți <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-tasks.zip"  rel="nofollow">arhiva de sarcini</a> a laboratorului.</div>
+</li>
+<li class="level1"><div class="li"> Pentru crearea unui modul de kernel folosiți resursele din directorul <code>kernel/</code>. </div>
+</li>
+<li class="level1"><div class="li"> Pentru crearea unui modul de test folosiți resursele din directorul <code>user/</code>. </div>
+</li>
+<li class="level1"><div class="li"> Task-urile vor fi rezolvate succesiv prin completarea fișierului <code>kernel/so2_dev.c</code> cu noi funcții și prin completarea fișierului <code>user/so2_dev.c</code> cu noi apeluri din user-space. </div>
+</li>
+<li class="level1"><div class="li"> Folosiți macro-urile definite în fișierul <code>include/so2_dev.h</code>.</div>
+</li>
+<li class="level1"><div class="li"> Punctaj total: <strong>11 puncte</strong>.</div>
+</li>
+</ul>
+<ol>
+<li class="level1"><div class="li"> (<strong>1 punct</strong>) Compilați și încărcați driverul din <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-tasks.zip"  rel="nofollow">arhiva de sarcini</a>.</div>
+<ul>
+<li class="level2"><div class="li"> Urmăriți codul din <code>kernel/so2_dev.c</code>.</div>
+<ul>
+<li class="level3"><div class="li"> Driverul are implementate operațiile de înregistrare și deînregistrare în <code>DriverEntry</code> și <code>DriverUnload</code>.</div>
+</li>
+<li class="level3"><div class="li"> Parcugeți secțiunea <a href="lab05-old.html#inregistrarea_si_deinregistrarea_dispozitivelor" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Înregistrarea și deînregistrarea dispozitivelor</a>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Compilați modulul de kernel.</div>
+<ul>
+<li class="level3"><div class="li"> Pentru compilare folosiți consola <code>x86 Checked Build Environment</code>.</div>
+</li>
+<li class="level3"><div class="li"> Folosiți comanda <code>build</code> sau <code>nmake</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Încărcați modulul în kernel.</div>
+<ul>
+<li class="level3"><div class="li"> Înainte de inserare deschideți utilitarul <em>DebugView</em> (shortcut pe Desktop).</div>
+</li>
+<li class="level3"><div class="li"> Folosiți utilitarul <a href="lab02.html#incarcareadescarcarea_unui_modul_de_kernel1" class="wikilink1" title="so2:laboratoare:lab02">driver</a> sau aplicația grafică <a href="lab02.html#incarcareadescarcarea_unui_modul_de_kernel1" class="wikilink1" title="so2:laboratoare:lab02">OSR Driver Loader Loader</a> pentru încărcarea modulului.</div>
+</li>
+<li class="level3"><div class="li"> Urmăriți mesajul afișat în <em>DebugView</em>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> După încărcarea modulului în kernel consultați <em>Device Manager</em>.</div>
+<ul>
+<li class="level3"><div class="li"> Pentru a accesa Device Manager click dreapta pe My Computer→Manage→Device Manager sau urmăriți pașii de <a href="http://www.computerhope.com/issues/ch000833.htm#00a" class="urlextern" title="http://www.computerhope.com/issues/ch000833.htm#00a"  rel="nofollow">aici</a>.</div>
+</li>
+<li class="level3"><div class="li"> Pentru a afișa dispozitivele <em>non plug and play</em> în <em>Device Manager</em>, trebuie să selectați <em>View → Show Hidden Devices</em>.</div>
+</li>
+<li class="level3"><div class="li"> Driverul inserat se găsește în <em>Device Manager</em>, la secțiunea <em>Non-Plug and Play Drivers</em>.</div>
+</li>
+<li class="level3"><div class="li"> Pentru a vedea schimbările folosiți <em>Action → Scan for hardware changes</em>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Descărcați modulul din kernel.</div>
+<ul>
+<li class="level3"><div class="li"> Folosiți utilitarul <a href="lab02.html#incarcareadescarcarea_unui_modul_de_kernel1" class="wikilink1" title="so2:laboratoare:lab02">driver</a> sau aplicația grafică <a href="lab02.html#incarcareadescarcarea_unui_modul_de_kernel1" class="wikilink1" title="so2:laboratoare:lab02">OSR Driver Loader Loader</a> pentru descărcarea modulului.</div>
+</li>
+<li class="level3"><div class="li"> Urmăriți mesajul afișat în <em>DebugView</em>.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>1 punct</strong>) Folosiți linia de comandă și fișierul de test pentru deschiderea/închiderea dispozitivului.</div>
+<ul>
+<li class="level2"><div class="li"> Consultați fișierul header <code>include/so2_dev.h</code> pentru informații legate de numele dispozitivului (macro-ul <code>DEVICE_PATH_USER</code>).</div>
+</li>
+<li class="level2"><div class="li"> Operațiile <code>Open</code>, <code>Close</code> sunt implementate în modul.</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunile <a href="lab05-old.html#rutine_de_dispatch" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Rutine de dispatch</a> și <a href="lab05-old.html#open_si_close" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Open și Close</a>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Încărcați modulul în kernel.</div>
+</li>
+<li class="level2"><div class="li"> Folosiți comanda <code>ls \\.\TestDevice</code> pentru deschiderea/închiderea dispozitivului.</div>
+<ul>
+<li class="level3"><div class="li"> Observați în <em>DebugView</em> mesajele aferente.</div>
+</li>
+<li class="level3"><div class="li"> Observați în tray warning-urile OACR (<a href="http://technet.microsoft.com/en-us/subscriptions/ff549179(v=vs.85).aspx" class="urlextern" title="http://technet.microsoft.com/en-us/subscriptions/ff549179(v=vs.85).aspx"  rel="nofollow">Microsoft Auto Code Review</a>).</div>
+<ul>
+<li class="level4"><div class="li"> <em>We&#039;re programmers. We only care about errors.</em> <img src="../../lib/images/smileys/icon_smile.gif" class="icon" alt=":-)" /></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Urmăriți codul sursă din fișierul de test din <code>user/so2_dev_test.c</code>.</div>
+</li>
+<li class="level2"><div class="li"> Compilați fișierul de test.</div>
+<ul>
+<li class="level3"><div class="li"> Folosiți consola <code>Visual Studio 2008 Command Prompt</code> (shortcut pe Desktop) și comanda <code>nmake</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Rulați executabilul obținut.</div>
+<ul>
+<li class="level3"><div class="li"> Pentru rulare, transmiteți un argument “nevalid”; spre exemplu, rulați comanda:<pre class="code bash">.\so2_dev_test.exe <span class="nu0">0</span></pre>
+
+<p>
+ (argumentul este <code>0</code> - <em>zero</em>).
+</p>
+</div>
+</li>
+<li class="level3"><div class="li"> Observați în <em>DebugView</em> mesajele aferente.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Descărcați modulul de kernel.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>1 punct</strong>) Completați funcția <code>MyReadWrite</code> folosită ca rutină de dispatch pentru operații de citire și scriere.</div>
+<ul>
+<li class="level2"><div class="li"> Funcția va afișa un mesaj specific în funcție de tipul operației: <code>read</code> (<code>IRP_MJ_READ</code>) sau <code>write</code> (<code>IRP_MJ_WRITE</code>).</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#read_si_write" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Read și Write</a>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Implementarea va fi dummy.</div>
+<ul>
+<li class="level3"><div class="li"> Nu se vor efectua operații de transfer (copieri).</div>
+</li>
+<li class="level3"><div class="li"> Funcția va întoarce în IRP numărul de octeți solicitați de aplicație (chiar dacă nu face nicio operație).</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Pentru a face deosebire între operația de <code>read</code> sau de <code>write</code>, consultați <a href="http://msdn.microsoft.com/en-us/library/ff550659.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff550659.aspx"  rel="nofollow">documentația structurii IO_STACK_LOCATION</a>.</div>
+<ul>
+<li class="level3"><div class="li"> Sunt importante câmpurile <code>MajorFunction</code> și <code>Parameters</code> al structurii <code>IO_STACK_LOCATION</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> În consola <code>x86 Checked Build Environment</code> compilați modulul de kernel.</div>
+</li>
+<li class="level2"><div class="li"> Încărcați modulul în kernel.</div>
+</li>
+<li class="level2"><div class="li"> În consola <code>Visual Studio 2008 Command Prompt</code> testați folosind o comandă de forma<pre class="code bash">.\so2_dev_test.exe r</pre>
+
+<p>
+ și 
+</p>
+<pre class="code">.\so2_dev_test.exe w anaaremere</pre>
+</div>
+<ul>
+<li class="level3"><div class="li"> Urmăriți mesajele afișate în <em>DebugView</em>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Descărcați modulul din kernel.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>2 puncte</strong>) Modificați driverul pentru implementarea funcționalității de <code>read</code> (<code>IRP_MJ_READ</code>) în buffer.</div>
+<ul>
+<li class="level2"><div class="li"> Veți implementa funcția <code>MyRead</code>.</div>
+<ul>
+<li class="level3"><div class="li"> Comentați macrodefiniția <code>READ_WRITE_MERGED_ROUTINE</code> pentru a <strong>nu</strong> folosi funcția “comună” <code>MyReadWrite</code>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Modulul va scrie în user space datele din cadrul bufferului din kernel space (din structura <code>SO2_DEVICE_DATA</code>).</div>
+</li>
+<li class="level2"><div class="li"> Implementați funcția <code>MyRead</code> folosind <em>Buffered I/O</em>.</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#read_si_write" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Read și Write</a>.</div>
+</li>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#accesul_la_spatiul_de_adresa_al_procesului" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Accesul la spațiul de adresă al procesului</a>.</div>
+</li>
+<li class="level3"><div class="li"> Urmăriți zonele marcate cu <code>TODO</code> în comentarii.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Compilați modulul.</div>
+</li>
+<li class="level2"><div class="li"> Încărcarcați modulul în kernel.</div>
+</li>
+<li class="level2"><div class="li"> Testați folosind o comandă de forma<pre class="code bash">.\so2_dev_test.exe r</pre>
+</div>
+<ul>
+<li class="level3"><div class="li"> Urmăriți mesajele afișate în <em>DebugView</em>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Descărcați modulul din kernel.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>2 puncte</strong>) Modificați driverul pentru implementarea funcționalității de <code>write</code> (<code>IRP_MJ_WRITE</code>) în driver.</div>
+<ul>
+<li class="level2"><div class="li"> Modulul va scrie în bufferul din kernel (în cadrul structurii <code>SO2_DEVICE_DATA</code>) datele furnizate din user space.</div>
+<ul>
+<li class="level3"><div class="li"> Se va suprascrie conținutul existent în bufferul din kernel.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Implementați funcția <code>MyWrite</code> folosind <em>Buffered I/O</em>.</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#read_si_write" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Read și Write</a>.</div>
+</li>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#accesul_la_spatiul_de_adresa_al_procesului" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Accesul la spațiul de adresă al procesului</a>.</div>
+</li>
+<li class="level3"><div class="li"> Urmăriți zonele marcate cu <code>TODO</code> în comentarii.</div>
+</li>
+<li class="level3"><div class="li"> Nu uitați să actualizați dimensiunea utilă a bufferului (dată de câmpul <code>bufferSize</code> al structurii <code>SO2_DEVICE_DATA</code>).</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Compilați modulul.</div>
+</li>
+<li class="level2"><div class="li"> Încărcarcați modulul în kernel.</div>
+</li>
+<li class="level2"><div class="li"> Testați folosind o comandă de forma<pre class="code bash">.\so2_dev_test.exe <span class="kw2">w</span> anaaremere</pre>
+</div>
+<ul>
+<li class="level3"><div class="li"> Urmăriți mesajele afișate în <em>DebugView</em>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Descărcați modulul din kernel.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>2 puncte</strong>) Modificați driverul pentru a folosi <em>Direct I/O</em> la apelurile de tip <code>read</code> (<code>IRP_MJ_READ</code>) și <code>write</code> (<code>IRP_MJ_WRITE</code>).</div>
+<ul>
+<li class="level2"><div class="li"> Modificați funcțiile <code>MyRead</code> și <code>MyWrite</code> pentru a folosi <em>Direct I/O</em>.</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#read_si_write" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Read și Write</a>.</div>
+</li>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#accesul_la_spatiul_de_adresa_al_procesului" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Accesul la spațiul de adresă al procesului</a>.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> (<strong>2 puncte</strong>) Modificați driverul pentru a nu folosi nici <em>Direct I/O</em> nici <em>Buffered I/O</em> la apelurile <code>read</code> (<code>IRP_MJ_READ</code>) și <code>write</code> (<code>IRP_MJ_WRITE</code>).</div>
+<ul>
+<li class="level2"><div class="li"> Modificați funcțiile <code>MyRead</code> și <code>MyWrite</code> pentru a nu folosi nici <em>Direct I/O</em> nici <em>Buffered I/O</em>.</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#read_si_write" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Read și Write</a>.</div>
+</li>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#accesul_la_spatiul_de_adresa_al_procesului" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Accesul la spațiul de adresă al procesului</a>.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit26" id="extra">Extra</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> Adăugați operația ioctl <code>MY_IOCTL_PRINT</code> care să afișeze mesajul dat de macro-ul <code>IOCTL_MESSAGE</code> din driver folosind <code>DbgPrint</code>.</div>
+<ul>
+<li class="level2"><div class="li"> Reveniți la folosirea <code>Buffered I/O</code> în modul.</div>
+</li>
+<li class="level2"><div class="li"> Obțineți codul operației <code>DeviceIoControl</code> și implementați funcționalitate pentru codul <code>MY_IOCTL_PRINT</code>.</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#deviceiocontrol" title="so2:laboratoare:lab05-old ↵" class="wikilink1">DeviceIoControl</a>.</div>
+</li>
+<li class="level3"><div class="li"> Folosiți <code>DbgPrint</code> pentru afișarea mesajului.</div>
+</li>
+<li class="level3"><div class="li"> Nu uitați să încheiați IRP-ul.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Compilați modulul.</div>
+</li>
+<li class="level2"><div class="li"> Încărcați modulul în kernel.</div>
+</li>
+<li class="level2"><div class="li"> Testați folosind comanda<pre class="code bash">.\so2_dev_test.exe p</pre>
+</div>
+<ul>
+<li class="level3"><div class="li"> Urmăriți mesajele afișate în <em>DebugView</em>.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Descărcați modulul din kernel.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Extindeți modulul cu două operații de control al dispozitivului:</div>
+<ul>
+<li class="level2"><div class="li"> <code>MY_IOCTL_DOWN</code>, care să blocheze execuția în așteptarea unui eveniment;</div>
+</li>
+<li class="level2"><div class="li"> <code>MY_IOCTL_UP</code>, care să treacă evenimentul în starea <em>signaled</em>.</div>
+</li>
+<li class="level2"><div class="li"> Implementați operațiile <code>MY_IOCTL_DOWN</code> și <code>MY_IOCTL_UP</code> în funcția <code>MyDeviceIoControl</code>.</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunile <a href="lab05-old.html#sincronizare" title="so2:laboratoare:lab05-old ↵" class="wikilink1">Sincronizare</a> și <a href="lab05-old.html#deviceiocontrol" title="so2:laboratoare:lab05-old ↵" class="wikilink1">DeviceIoControl</a>.</div>
+</li>
+<li class="level3"><div class="li"> Folositi câmpul <code>event</code> din structura <code>SO2_DEVICE_DATA</code> aferentă dispozitivului.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Compilați modulul.</div>
+</li>
+<li class="level2"><div class="li"> Încărcați modulul în kernel.</div>
+</li>
+<li class="level2"><div class="li"> Programul user space trebuie să execute o operație în funcție de un parametru din linia de comandă.</div>
+<ul>
+<li class="level3"><div class="li"> Testați folosind comenzile<pre class="code bash">.\so2_dev_test.exe d</pre>
+
+<p>
+respectiv
+</p>
+<pre class="code bash">.\so2_dev_test.exe u</pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Descărcați modulul din kernel.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Extindeți driver-ul cu alte două operații ioctl:</div>
+<ul>
+<li class="level2"><div class="li"> <code>MY_IOCTL_SET_BUFFER</code>, care copiază un mesaj în buffer-ul deținut de driver (câmpul <code>buffer</code> din structura <code>SO2_DEVICE_DATA</code>);</div>
+</li>
+<li class="level2"><div class="li"> <code>MY_IOCTL_GET_BUFFER</code>, care întoarce în user-space mesajul curent din buffer-ul driver-ului.</div>
+</li>
+<li class="level2"><div class="li"> Implementați operațiile <code>MY_IOCTL_SET_BUFFER</code> și <code>MY_IOCTL_GET_BUFFER</code> în funcția <code>MyDeviceIoControl</code>.</div>
+<ul>
+<li class="level3"><div class="li"> Parcurgeți secțiunea <a href="lab05-old.html#deviceiocontrol" title="so2:laboratoare:lab05-old ↵" class="wikilink1">DeviceIoControl</a>.</div>
+</li>
+<li class="level3"><div class="li"> Folosiți <code>RtlCopyMemory</code> pentru copierea dintr-un buffer în altul.</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Compilați modulul.</div>
+</li>
+<li class="level2"><div class="li"> Încărcați modulul în kernel.</div>
+</li>
+<li class="level2"><div class="li"> Programul user space trebuie să execute o operație în funcție de un parametru din linia de comandă.</div>
+<ul>
+<li class="level3"><div class="li"> Testați folosind comenzile<pre class="code bash">.\so2_dev_test.exe s <span class="st0">&quot;anaaremere&quot;</span></pre>
+
+<p>
+respectiv
+</p>
+<pre class="code bash">.\so2_dev_test.exe g</pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level2"><div class="li"> Descărcați modulul din kernel.</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit27" id="solutii">Soluții</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-sol.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab05-sol.zip"  rel="nofollow"> Soluții exerciții laborator 5</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit28" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/lab-05/case-win.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/lab-05/case-win.zip"  rel="nofollow">Un exemplu de device driver în Windows</a></div>
+</li>
+<li class="level1"><div class="li"> The Windows 2000 Device Driver Book, Second Edition – Chapter 4. Drivers and Kernel-Mode Objects, Chapter 6. Initialization and Cleanup Routines, Chapter 7. Driver Dispatch Routines</div>
+</li>
+<li class="level1"><div class="li"> Programming the Microsoft Windows Driver Model, Second Edition - Chapter 4. Synchronization - Kernel Dispatcher Objects</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.codeproject.com/system/driverdev.asp" class="urlextern" title="http://www.codeproject.com/system/driverdev.asp"  rel="nofollow">Introduction to Drivers</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.codeproject.com/system/driverdev2.asp" class="urlextern" title="http://www.codeproject.com/system/driverdev2.asp"  rel="nofollow">Introduction to Implementing IOCTLs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://msdn.microsoft.com/en-us/library/ff543153.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff543153.aspx"  rel="nofollow">Device Objects and Device Stacks</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://msdn.microsoft.com/en-us/library/ff546847.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff546847.aspx"  rel="nofollow">Handling IRPs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://msdn.microsoft.com/en-us/library/ff566407.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff566407.aspx"  rel="nofollow">Writing Dispatch Routines</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://msdn.microsoft.com/en-us/library/ff553202.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff553202.aspx"  rel="nofollow">Kernel Dispatcher Objects</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://support.microsoft.com/default.aspx?scid=KB;EN-US;Q186775&amp;" class="urlextern" title="http://support.microsoft.com/default.aspx?scid=KB;EN-US;Q186775&amp;"  rel="nofollow">Tips for Windows NT Driver Developers - Things to Avoid</a></div>
+</li>
+</ul>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="lab05-old.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+driver stack – în exemplele de laborator și în teme, va exista un singur driver în stivă, care va implementa și funcționalitatea și conexiunea cu hardware-ul</div>
+<div class="fn"><sup><a href="lab05-old.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+BUFFERED I/O – <a href="http://msdn.microsoft.com/en-us/library/ff565356.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff565356.aspx"  rel="nofollow">http://msdn.microsoft.com/en-us/library/ff565356.aspx</a></div>
+<div class="fn"><sup><a href="lab05-old.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+DIRECT I/O – <a href="http://msdn.microsoft.com/en-us/library/ff565372.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff565372.aspx"  rel="nofollow">http://msdn.microsoft.com/en-us/library/ff565372.aspx</a></div>
+<div class="fn"><sup><a href="lab05-old.html#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+Neither Buffered Nor Direct I/O – <a href="http://msdn.microsoft.com/en-us/library/ff565432.aspx" class="urlextern" title="http://msdn.microsoft.com/en-us/library/ff565432.aspx"  rel="nofollow">http://msdn.microsoft.com/en-us/library/ff565432.aspx</a></div>
+<div class="fn"><sup><a href="lab05-old.html#fnt__5" id="fn__5" class="fn_bot">5)</a></sup> 
+warning_4116 – la compilare, din cauza modului în care este definit macro-ul <code>TYPE_ALIGNMENT</code>, se va genera warning-ul: <em>“warning C4116: unnamed type definition in parentheses”</em>; dezactivați acest warning folosind directiva <code>#pragma warning(disable:4116)</code></div>
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_67347458158357c3eb20b2" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_73778346558357c3eb5f2e" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_34846916258357c3eb8e10" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab05-old.html#laborator_5_-_device_drivere_in_windows_old">Laborator 5 - Device drivere în Windows [old]</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab05-old.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab05-old.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab05-old.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab05-old.html#concepte_generale">Concepte generale</a></div></li>
+<li class="level2"><div class="li"><a href="lab05-old.html#structuri_de_date_importante">Structuri de date importante</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05-old.html#driver_object">Driver Object</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#device_object">Device Object</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#device_extension">Device Extension</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#io_request_packet_irp">I/O Request Packet (IRP)</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab05-old.html#inregistrarea_si_deinregistrarea_dispozitivelor">Înregistrarea și deînregistrarea dispozitivelor</a></div></li>
+<li class="level2"><div class="li"><a href="lab05-old.html#accesul_la_spatiul_de_adresa_al_procesului">Accesul la spațiul de adresă al procesului</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05-old.html#buffered_io">BUFFERED I/O</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#direct_io">DIRECT I/O</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#neither_buffered_nor_direct_io">Neither Buffered Nor Direct I/O</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab05-old.html#rutine_de_dispatch">Rutine de dispatch</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05-old.html#open_si_close">Open și Close</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#read_si_write">Read și Write</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#deviceiocontrol">DeviceIoControl</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#cleanup">Cleanup</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab05-old.html#sincronizare">Sincronizare</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05-old.html#evenimente">Evenimente</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab05-old.html#echivalente_device_drivere_in_linux_si_device_drivere_in_windows">Echivalențe device drivere în Linux și device drivere în Windows</a></div></li>
+<li class="level2"><div class="li"><a href="lab05-old.html#exercitii">Exerciții</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab05-old.html#extra">Extra</a></div></li>
+<li class="level3"><div class="li"><a href="lab05-old.html#solutii">Soluții</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab05-old.html#resurse_utile">Resurse utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/laboratoare/lab05-old.txt · Last modified: 2014/03/12 20:51 by laura.vasilescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="lab05-old%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="lab05-old%3Fdo=media&amp;ns=so2%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab05-old.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Alaboratoare%253Alab05-old&amp;1479900222" width="2" height="1" alt="" /></div>
+</body>
+</html>

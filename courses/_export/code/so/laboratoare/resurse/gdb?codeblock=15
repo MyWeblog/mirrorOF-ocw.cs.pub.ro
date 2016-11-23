@@ -1,0 +1,35 @@
+    
+    
+
+ 1 #include <stdio.h>
+ 2 #include <sys/types.h>
+ 3 #include <sys/wait.h>
+ 4 #include <unistd.h>
+ 5
+ 6
+ 7 int main(int argc, char **argv) {
+ 8     pid_t childPID = fork();
+ 9
+10     if (childPID < 0) {
+11         // An error occured
+12         fprintf(stderr, "Could not fork!\n");
+13         return -1;
+14     } else if (childPID == 0) {
+15
+16         // We are in the child process
+17         printf("The child process is executing...\n");
+18         sleep(2);
+19
+20     } else {
+21
+22         // We are in the parent process
+23         if (wait(NULL) < 0) {
+24             fprintf(stderr, "Could not wait for child!\n");
+25             return -1;
+26         }
+27         printf("Everything is done!\n");
+28
+29     }
+30
+31     return 0;
+32 }

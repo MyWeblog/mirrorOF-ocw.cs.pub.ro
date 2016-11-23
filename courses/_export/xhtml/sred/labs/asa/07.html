@@ -1,0 +1,481 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>sred:labs:asa:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-06-01T20:53:14+0300"/>
+<meta name="keywords" content="sred,labs,asa,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../feed.php%3Fmode=list&amp;ns=sred:labs:asa"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../sred/labs/asa/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sred:labs:asa';var JSINFO = {"id":"sred:labs:asa:07","namespace":"sred:labs:asa","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="07.html#a07_-_ipsec_site-to-site">A07 - IPSec site-to-site</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#topology">Topology</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#basic_setup">1. Basic Setup</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#ipsec_site-to-site">2. IPSec Site-to-Site</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="07.html#a_isakmp">A. ISAKMP</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#b_interesting_traffic">B. Interesting traffic</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#c_transform_set">C. Transform set</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#d_crypto_map">D. Crypto map</a></div></li>
+<li class="level4"><div class="li"><a href="07.html#e_test">E. Test</a></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="a07_-_ipsec_site-to-site">A07 - IPSec site-to-site</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "A07 - IPSec site-to-site" [19-58] -->
+<h2 class="sectionedit2" id="topology">Topology</h2>
+<div class="level2">
+
+<p>
+<a href="../../../../../_detail/sred/labs/asa/asa_topology_07.png%3Fid=sred%253Alabs%253Aasa%253A07.html" class="media" title="sred:labs:asa:asa_topology_07.png"><img src="../../../../../_media/sred/labs/asa/asa_topology_07.png" class="mediacenter" title=" " alt=" " /></a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Topology" [59-122] -->
+<h2 class="sectionedit3" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "Tasks" [123-141] -->
+<h3 class="sectionedit4" id="basic_setup">1. Basic Setup</h3>
+<div class="level3">
+
+<p>
+In this task you will prepare the network for IPSec site-to-site configuration.
+</p>
+
+<p>
+Configure <strong>ASA1S</strong> with the following parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> Configure Gi0 as <em>inside</em> and Gi1 as <em>outside</em></div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# interface gigabit 0
+Atlas(config-if)# nameif inside
+Atlas(config)# interface gigabit 1
+Atlas(config-if)# nameif outside</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Gi0 IP address: 192.168.1.1/24 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# interface gigabit 0
+Atlas(config-if)# ip address 192.168.1.1 255.255.255.0
+Atlas(config-if)# no shutdown</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Gi1 IP address: 141.85.99.1/24 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# interface gigabit 1
+Atlas(config-if)# ip address 141.85.99.1 255.255.255.0
+Atlas(config-if)# no shutdown</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Route to 192.168.2.0/24 via 141.85.99.2</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# route outside 192.168.2.0 255.255.255.0 141.85.99.2</pre>
+
+
+</div></div>
+
+<p>
+Configure <strong>ASA2S</strong> with the following parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> Configure Gi0 as <em>inside</em> and Gi1 as <em>outside</em></div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">PBody(config)# interface gigabit 0
+PBody(config-if)# nameif inside
+PBody(config)# interface gigabit 1
+PBody(config-if)# nameif outside</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Gi0 IP address: 192.168.2.1/24 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">PBody(config)# interface gigabit 0
+PBody(config-if)# ip address 192.168.2.1 255.255.255.0
+PBody(config-if)# no shutdown</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Gi1 IP address: 141.85.99.2/24 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">PBody(config)# interface gigabit 1
+PBody(config-if)# ip address 141.85.99.2 255.255.255.0
+PBody(config-if)# no shutdown</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Route to 192.168.1.0/24 via 141.85.99.1 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">PBody(config)# route outside 192.168.1.0 255.255.255.0 141.85.99.1</pre>
+
+
+</div></div>
+
+<p>
+Configure R1 with the following parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> IP address: 192.168.1.100/24 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">R1(config)#interface fastethernet 0/0
+R1(config-if)#ip address 192.168.1.100 255.255.255.0
+R1(config-if)#no shutdown</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Default route via 192.168.1.1</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">R1(config)#ip route 0.0.0.0 0.0.0.0 192.168.1.1</pre>
+
+
+</div></div>
+
+<p>
+Configure R2 with the following parameters:
+</p>
+<ul>
+<li class="level1"><div class="li"> IP address: 192.168.2.100/24 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">R2(config)#int fastethernet 0/0
+R2(config-if)#ip address 192.168.2.100 255.255.255.0
+R2(config-if)#no shutdown</pre>
+
+
+</div></div>
+<ul>
+<li class="level1"><div class="li"> Default route via 192.168.2.1 </div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">R2(config)#ip route 0.0.0.0 0.0.0.0 192.168.2.1</pre>
+
+
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "1. Basic Setup" [142-2732] -->
+<h3 class="sectionedit5" id="ipsec_site-to-site">2. IPSec Site-to-Site</h3>
+<div class="level3">
+
+<p>
+In this task you will configure VPN IPSec Site-to-Site between two ASA devices.
+</p>
+
+</div>
+
+<h4 id="a_isakmp">A. ISAKMP</h4>
+<div class="level4">
+
+<p>
+Activate ISAKMP on the outside ASA interfaces.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# crypto ikev1 enable outside</pre>
+
+
+<pre class="code">PBody(config)# crypto ikev1 enable outside</pre>
+
+
+</div></div>
+
+<p>
+Define an ISAKMP policy using:
+</p>
+<ul>
+<li class="level1"><div class="li"> Encryption: 3DES</div>
+</li>
+<li class="level1"><div class="li"> Hashing: sha</div>
+</li>
+<li class="level1"><div class="li"> Authentication: PSK</div>
+</li>
+<li class="level1"><div class="li"> Diffie-Hellman: group 5</div>
+</li>
+<li class="level1"><div class="li"> Lifetime: 86400 seconds</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning"> In older ASA versions, <code>isakmp</code> commands were used to configure IKEv1. In <strong>ASA8.4</strong>, use the equivalent <code>crypto ikev1</code> commands instead. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# crypto ikev1 policy 10
+Atlas(config-isakmp-policy)# encryption 3des
+Atlas(config-isakmp-policy)# hash sha
+Atlas(config-isakmp-policy)# authentication pre-share
+Atlas(config-isakmp-policy)# group 5
+Atlas(config-isakmp-policy)# lifetime 86400</pre>
+
+
+<pre class="code">PBody(config)# crypto ikev1 policy 10
+PBody(config-isakmp-policy)# encryption 3des
+PBody(config-isakmp-policy)# hash sha
+PBody(config-isakmp-policy)# authentication pre-share
+PBody(config-isakmp-policy)# group 5
+PBody(config-isakmp-policy)# lifetime 86400</pre>
+
+
+</div></div>
+
+<p>
+Create a site-to-site type tunnel-group. Use the outside IP address of the remote ASA as the tunnel-group name.
+</p>
+
+<p>
+<p><div class="notewarning"> In <strong>ASA8.4</strong> you will need to use the <code>ikev1 pre-shared-key cisco123</code> command when configuring the tunnel-group attributes. 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# tunnel-group 141.85.99.2 type ipsec-l2l</pre>
+
+
+<pre class="code">PBody(config)# tunnel-group 141.85.99.1 type ipsec-l2l</pre>
+
+
+</div></div>
+
+<p>
+Add the <em>cisco123</em> PSK as an attribute of the tunnel-group created above.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# tunnel-group 141.85.99.2 ipsec-attributes
+Atlas(config-tunnel-ipsec)# ikev1 pre-shared-key cisco123</pre>
+
+
+<pre class="code">PBody(config)# tunnel-group 141.85.99.1 ipsec-attributes
+PBody(config-tunnel-ipsec)# ikev1 pre-shared-key cisco123</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="b_interesting_traffic">B. Interesting traffic</h4>
+<div class="level4">
+
+<p>
+Configure an <abbr title="Access Control List">ACL</abbr> that selects TCP traffic as interesting traffic. The source network is the network of the <em>inside</em> router and the destination network is the network of the remote router.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# access-list SELECT-TCP permit tcp 192.168.1.0 255.255.255.0 192.168.2.0 255.255.255.0</pre>
+
+
+<pre class="code">PBody(config)# access-list SELECT-TCP permit tcp 192.168.2.0 255.255.255.0 192.168.1.0 255.255.255.0</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="c_transform_set">C. Transform set</h4>
+<div class="level4">
+
+<p>
+Define a new transform set with:
+</p>
+<ul>
+<li class="level1"><div class="li"> ESP-3DES encryption</div>
+</li>
+<li class="level1"><div class="li"> SHA-HMAC authentication</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning"> In <strong>ASA8.4</strong> you will need to specify <code>ikev1</code> when creating the transform set (i.e. <code>crypto ipsec ikev1 transform-set …</code>) 
+</div></p>
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# crypto ipsec ikev1 transform-set MY-TRANSFORM-SET esp-3des esp-sha-hmac</pre>
+
+
+<pre class="code">PBody(config)# crypto ipsec ikev1 transform-set MY-TRANSFORM-SET esp-3des esp-sha-hmac</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="d_crypto_map">D. Crypto map</h4>
+<div class="level4">
+
+<p>
+Define a new crypto map. The crypto map must specify the following:
+</p>
+<ul>
+<li class="level1"><div class="li"> Peer IP Address (the <em>outside</em> IP address of the remote ASA)</div>
+</li>
+<li class="level1"><div class="li"> Interesting traffic <abbr title="Access Control List">ACL</abbr></div>
+</li>
+<li class="level1"><div class="li"> Transform set</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# crypto map MY-CRYPTO-MAP 10 match address SELECT-TCP
+Atlas(config)# crypto map MY-CRYPTO-MAP 10 set peer 141.85.99.2
+Atlas(config)# crypto map MY-CRYPTO-MAP 10 set transform-set MY-TRANSFORM-SET</pre>
+
+
+<pre class="code">PBody(config)# crypto map MY-CRYPTO-MAP 10 match address SELECT-TCP
+PBody(config)# crypto map MY-CRYPTO-MAP 10 set peer 141.85.99.1
+PBody(config)# crypto map MY-CRYPTO-MAP 10 set transform-set MY-TRANSFORM-SET</pre>
+
+
+</div></div>
+
+<p>
+Apply the crypto map on the <em>outside</em> interface.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">Atlas(config)# crypto map MY-CRYPTO-MAP interface outside</pre>
+
+
+<pre class="code">PBody(config)# crypto map MY-CRYPTO-MAP interface outside</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="e_test">E. Test</h4>
+<div class="level4">
+
+<p>
+Test the IPSec tunnel by generating interesting traffic from R1 and R2.
+</p>
+
+<p>
+Check that the ISAKMP and IPsec SAs have been established. Also print the number of encrypted packets.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">R1#telnet 192.168.2.100
+Trying 192.168.2.100 ... Open
+
+
+User Access Verification
+
+Password:
+R2&gt;</pre>
+
+
+<pre class="code">Atlas# show crypto isakmp sa
+
+   Active SA: 1
+    Rekey SA: 0 (A tunnel will report 1 Active and 1 Rekey SA during rekey)
+Total IKE SA: 1
+
+1   IKE Peer: 141.85.99.2
+    Type    : L2L             Role    : initiator
+    Rekey   : no              State   : MM_ACTIVE</pre>
+
+
+<pre class="code">Atlas# show crypto ipsec sa
+interface: outside
+    Crypto map tag: MY-CRYPTO-MAP, seq num: 10, local addr: 141.85.99.1
+
+      access-list SELECT-TCP permit tcp 192.168.1.0 255.255.255.0 192.168.2.0 255.255.255.0
+      local ident (addr/mask/prot/port): (192.168.1.0/255.255.255.0/6/0)
+      remote ident (addr/mask/prot/port): (192.168.2.0/255.255.255.0/6/0)
+      current_peer: 141.85.99.2
+
+      #pkts encaps: 30, #pkts encrypt: 30, #pkts digest: 30
+      #pkts decaps: 19, #pkts decrypt: 19, #pkts verify: 19
+      #pkts compressed: 0, #pkts decompressed: 0
+      #pkts not compressed: 30, #pkts comp failed: 0, #pkts decomp failed: 0
+      #pre-frag successes: 0, #pre-frag failures: 0, #fragments created: 0
+      #PMTUs sent: 0, #PMTUs rcvd: 0, #decapsulated frgs needing reassembly: 0
+      #send errors: 0, #recv errors: 0
+
+      local crypto endpt.: 141.85.99.1, remote crypto endpt.: 141.85.99.2
+
+      path mtu 1500, ipsec overhead 58, media mtu 1500
+      current outbound spi: 64EF0B22
+
+    inbound esp sas:
+      spi: 0x5EEBD949 (1592514889)
+         transform: esp-3des esp-sha-hmac none
+         in use settings ={L2L, Tunnel, }
+         slot: 0, conn_id: 4096, crypto-map: MY-CRYPTO-MAP
+         sa timing: remaining key lifetime (kB/sec): (3824999/28750)
+         IV size: 8 bytes
+         replay detection support: Y
+    outbound esp sas:
+      spi: 0x64EF0B22 (1693387554)
+         transform: esp-3des esp-sha-hmac none
+         in use settings ={L2L, Tunnel, }
+         slot: 0, conn_id: 4096, crypto-map: MY-CRYPTO-MAP
+         sa timing: remaining key lifetime (kB/sec): (3824998/28750)
+         IV size: 8 bytes
+         replay detection support: Y</pre>
+
+
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "2. IPSec Site-to-Site" [2733-] --></div>
+</body>
+</html>

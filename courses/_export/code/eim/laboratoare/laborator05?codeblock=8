@@ -1,0 +1,41 @@
+    
+    
+
+public class SomeStartedService extends Service {
+  private Looper looper;
+  private ServiceHandler serviceHandler;
+  private final static String handlerThreadName = "HandlerThread";
+
+  private final class ServiceHandler extends Handler {
+    public ServiceHandler(Looper looper) {
+      super(looper);
+    }
+    
+    @Override
+    public void handleMessage(Message message) {
+      // ...
+      stopSelf(message.arg1);
+    }
+  }
+
+  @Override
+  public void onCreate() {
+    HandlerThread handlerThread = new HandlerThread(handlerThreadName, Process.THREAD_PRIORITY_BACKGROUND);
+    handlerThread.start();
+    looper = handlerThread.getLooper();
+    serviceHandler = new ServiceHandler(looper);
+  }
+
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    Message message = serviceHandler.obtainMessage();
+    message.arg1 = startId;
+    serviceHandler.sendMessage(message);
+    return START_STICKY;
+  }
+
+  @Override
+  public IBinder onBind(Intent intent) {
+    return null;
+  }
+}

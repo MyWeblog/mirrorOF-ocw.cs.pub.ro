@@ -1,0 +1,400 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laboratorul 9    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-12-02T17:03:51+0200"/>
+<meta name="keywords" content="isrm,laboratoare,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=isrm:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/isrm/laboratoare/09.html"/>
+<link rel="canonical" href="09.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='isrm:laboratoare';var JSINFO = {"id":"isrm:laboratoare:09","namespace":"isrm:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_isrm.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="09%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="09%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="laboratorul_9">Laboratorul 9</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="carrier_sense_fizic_si_virtual">Carrier Sense fizic și virtual</h4>
+<div class="level4">
+
+<p>
+Scopul acestui laborator este de a înțelege conceptul de Carrier-Sensing în 802.11 și de a compara mecanismele fizic și virtual de a testa prezența purtătoarei.
+</p>
+
+<p>
+CS la nivel fizic este folosit atunci când un nod care vrea să transmită mai întâi evaluează starea canalului. Dacă energia detectată este peste un anumit prag, numit &#039;Carrier sense threshold&#039;, canalul este declarat ocupat, iar nodul trebuie să aștepte. Altfel, canalul este considerat liber, și nodul poate începe transmisia.
+</p>
+
+<p>
+În contrast, CS virtual folosește indicațiile NAV (Network Allocation Vector) pentru a estima cât timp este mediul ocupat. În principiu, o stație recepționează toate cadrele, inclusiv cele care nu îi sunt adresate explicit. Fiecare cadru conține în câmpul &#039;Duration&#039; o estimare a duratei conversației din care face parte. Un mod explicit de rezervare a mediului se face prin intermefdiul pachetelor RTS/CTS. Emițătorul trimite RTS, iar receptorul răspunde cu CTS. În pașii 3 și 4 se transmit datele și confirmarea ACK în modul obișnuit. Diferența este acum că nodurile vecine au ocazia să estimeze durata conversației în 4 pași prin citirea câmpului &#039;Durata&#039; fie din RTS, fie din CTS.
+În ns2 se folosește următorul <strong>pseudocod</strong> pentru recepția cadrelor de la distanța d în condițiile în care mai poate apărea un cadru de la distanța d1:
+</p>
+<pre class="code">recepție(d)
+{ 
+   if(alt_cadru(d1) &amp;&amp; (d1 &lt; CS)){
+       if(P(d) - P(d1) &gt;= 10dB)
+           captură()
+       else
+           coliziune()
+   } else { 
+       recepție OK...
+   }
+}</pre>
+
+</div>
+
+<h5 id="instructiuni_ns2">Instrucțiuni ns2</h5>
+<div class="level5">
+
+<p>
+<img src="../../_media/isrm/laboratoare/06/cs-1.gif" class="mediaright" alt="" />
+Pentru experimente se consideră topologia din dreapta. Nodul A transmite pachete cu flux constant CBR către nodul B, iar D transmite către C. Descărcați scriptul <a href="../../_media/isrm/laboratoare/src/twoflows.tcl" class="media mediafile mf_tcl" title="isrm:laboratoare:src:twoflows.tcl (7.3 KB)">twoflows.tcl</a> care primește următorii parametri:
+</p>
+<pre class="code">     ns twoflows.tcl -RTSthresh {RTS_Threshold} -CSthresh {carrier-sense threshold} -dist {x} -sendingRate {rate}</pre>
+
+<p>
+Cadrele cu lungime mai mare decât RTSthresh vor folosi RTS/CTS. Prin setarea acestui parametru la o valoare mare (3000) se dezactivează RTS/CTS. Setând acest parametru la 1 garantează folosirea RTS/CTS pentru toate cadrele. În scriptul furnizat se folosesc parametrii CSThresh_ și RXThresh_ pentru nivelele de putere în wați pentru CS și recepție respectiv. Setările de bază în ns2 corespund la 250m pentru recepție, și 550m pentru CS. În acest laborator nu vom schimba nivelul pragului de recepție, ci doar pe cel de CS, folosind parametrul din linia de comandă. Astfel, CSThresh=250m corespunde dezactivării CS fizic. Pentru a obține nivelele de putere corespunzând diverselor distanțe, se poate folosi utilitarul
+</p>
+<pre class="code">    	  /opt/ns/ns-2.34/indep-utils/propagation/threshold -m TwoRayGround [distanță_metri]</pre>
+
+<p>
+cu modelul TwoRayGround și păstrând toți ceilalți parametri la valorile default. Unele dintre aceste valori sunt deja calculate în scriptul twoflows.tcl (sunt comentate). Nu folosiți -fr 2.4e9, întrucât TwoRayGround trece la Friis sub 235m (vezi /opt/ns/ns-2.34/mobile/tworayground.cc). Pentru fiecare valoare CSThresh, rulați simularea dezactivând RTS/CTS pentru valori x=100m, 200m, 300m, si pentru fiecare valoare CSThresh corespunzătoare distanțelor 250m, 300m, 400m, 550m. Atenție, scriptul cere valoarea CSThresh în watți, nu în dBm, și nici în metri. 
+$$ 1mW = 10^{-6}W\\
+dBm = 10\log_{10}{mW}	\\
+    mW =10^{\frac{dBm}{10}} $$
+</p>
+
+<p>
+În utilitarul POSIX <code>bc</code>, aceste formule se pot exprima astfel: 
+</p>
+<pre class="code">$ dBm=24
+$ mW=3.5*10^-7 # atenție: bc nu acceptă formatul IEEE 3.5e-7 acceptat de tcl/C++  
+$ echo &quot;e($dBm/10*l(10))&quot; | bc -l 
+  adică 24dBm = 1258.92mW (1.25892W)
+$ echo &quot;10*l($mW)/l(10)&quot; | bc -l
+  adică 3.5e-7mW = -64.5dBm  </pre>
+
+<p>
+ Repetați toate experimentele și pentru cazul în care RTS/CTS este activat pentru toate cadrele.  Pentru fiecare situație, calulați debitul și numărul de pachete trimise/primite la nivel UDP. Folosiți indicațiile din laboratorul precedent pentru a sintetiza aceste statistici din fișierul trace rezultat în urma simulării. Din comenzile folosite în laboratorul trecut:
+</p>
+<ul>
+<li class="level1"><div class="li"> numărul de pachete trimise la nivel UDP de către toate nodurile.</div>
+</li>
+</ul>
+
+<p>
+     <code>cat fișier.tr | grep AGT | grep ^s |grep cbr | wc -l </code>
+</p>
+<ul>
+<li class="level1"><div class="li"> Pentru a obţine numărul de pachete primite, aveţi posibilitatea să utilizaţi o comandă similară:</div>
+</li>
+</ul>
+
+<p>
+<code>     cat fișier.tr | grep AGT | grep ^r |grep cbr | wc -l </code>
+</p>
+<ul>
+<li class="level1"><div class="li"> numărul de pachete trimise în mediu de către toate nodurile.</div>
+</li>
+</ul>
+
+<p>
+<code>     cat fișier.tr | grep MAC | grep ^s |grep cbr | wc -l </code>
+</p>
+<ul>
+<li class="level1"><div class="li"> numărul global de pachete de date (CBR) care au intrat în coliziune.</div>
+</li>
+</ul>
+
+<p>
+<code>     cat fișier.tr | grep COL | grep ^d |grep cbr | wc -l </code>
+</p>
+<ul>
+<li class="level1"><div class="li"> Deasemenea, calculați numărul de coliziuni pentru date și pentru non-date. De exemplu, pentru a calcula coliziunile cadrelor care nu conțin date (CBR), folosiți</div>
+</li>
+</ul>
+
+<p>
+<code>     cat fișier.tr | grep COL | grep ^d |grep -v cbr | wc -l </code>
+Cumulați toate rezultatele fie în tabele, fie în grafuri cu bare. Încercați să explicați <strong>fiecare</strong> număr obținut.
+</p>
+
+</div>
+
+<h5 id="analiza">Analiză</h5>
+<div class="level5">
+
+<p>
+IEEE 802.11 se bazează în principal pe două mecanisme pentru a combate interferența: CS la nivel fizic și la nivel virtual. În ce măsură sunt capabile aceste mecanisme de a rezolva conflictele dintre stații aflate în diverse configurații geometrice?
+În ns-2, un cadru este recepționat corect atunci când nivelul interferenței de la alte cadre este sub 10dB. Folosind utilitarul
+<code>/opt/ns/ns-2.34/indep-utils/propagation/threshold</code>, puteți calcula puterea recepționată la o anumită distanță. De exemplu, două cadre primite de la 200 metri și 200*sqrt(2) metri vor fi distruse, întrucât puterile sunt de 8.9e-10W respectiv 2.2e-10W. Pe de altă parte, dintre două cadre primite de la 200m și 360m, cel de la 200m va fi primit corect prin efectul de captură. La 355.7m avem exact 10dBm fata de 200m. Puteți folosi utilitare online pentru a lucra cu dBm.
+Teorema lui Pitagora
+</p>
+<pre class="code">         echo &quot;sqrt(200^2 + 300^2)&quot; | bc -l </pre>
+
+<p>
+Fiecare experiment este caracterizat de distanța x dintre nodurile B și D, și de distanța la care CS fizic este activ. Justificați valorile obținute pentru: debit, numărul de cadre trimise de MAC, numărul de coliziuni date, numărul de coliziuni non-date.
+</p>
+<ul>
+<li class="level1"><div class="li"> Care este capacitatea maximă a canalului în pps (pachete/sec), bps (biți/sec)? <sup><a href="09.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup></div>
+</li>
+<li class="level4"><div class="li"> Ce rată de transmisie folosiți pentru agentul UDP emitent?</div>
+</li>
+<li class="level4"><div class="li"> În ce măsură schimbul RTS/CTS afectează capacitatea sistemului?</div>
+</li>
+<li class="level4"><div class="li"> Explicați *fiecare* valoare obținută.</div>
+<ul>
+<li class="level5"><div class="li"> x=100m CS=250m(inactiv). Ce debit total ați obținut? De ce nu este maxim? <sup><a href="09.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup> De ce nu este 0 <sup><a href="09.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup>?</div>
+</li>
+<li class="level5"><div class="li"> x=100m CS=550m. Ce debit total ați obținut? De ce nu este maxim? De ce este exact ….? <sup><a href="09.html#fn__4" id="fnt__4" class="fn_top">4)</a></sup></div>
+</li>
+<li class="level5"><div class="li"> x=200m CS=250m(inactiv). Ce diferență cantitativă este față de cazurile precedente? Dar calitativă?</div>
+</li>
+<li class="level5"><div class="li">  x=300m CS=400m. De ce există coliziuni?</div>
+</li>
+<li class="level5"><div class="li">  Cu RTS: de ce exista cazuri in care mai avem coliziuni de date?</div>
+</li>
+<li class="level5"><div class="li"> Atenție: sunt 3 geometrii (x=100, 200, 300) și 4 cercuri de CS (250/off, 300, 400, 500) - deci un total de 12 situații diferite. <strong>Justificați fiecare valoare obținută</strong>.</div>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> Când este benefic CS virtual, și când CS fizic?</div>
+</li>
+<li class="level10"><div class="li"> În unele situatii se foloseste atât CS fizic, cât și virtual. Puteți garanta evitarea completă a coliziunilor atunci când ambele mecanisme sunt activate?</div>
+</li>
+<li class="level10"><div class="li"> Găsiți un exemplu de inechitate (CSThresh=?, x=?, debit=?)</div>
+</li>
+<li class="level10"><div class="li"> Refaceti xperimentele pentru cadre de dimensiune mica (32 de octeti). Ce se observa?</div>
+</li>
+<li class="level10"><div class="li"> Modificați topologia inițială pentru a avea A, B, C coliniare (D rămâne la fel). Rulați aceleași experimente și explicați coliziunile la RTS și la date.</div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="teoretica">Teoretică</h5>
+<div class="level5">
+
+<p>
+Să considerăm topologi a din dreapta:
+<img src="../../_media/isrm/laboratoare/06/cs-2.gif" class="mediaright" alt="" />
+</p>
+
+<p>
+Distanțele AB, BC, AC, and CD sunt toate de 200m. Avem un obstacol între A și C care nu permite propagarea radio (greu de realizat în ns2, deoarece AD=346m). Care vor fi comportările celor două forme de CS în acest caz? Discutați fiecare schemă și estimați care se va comporta mai bine. Reminder1: ACK se transmite după SIFS de la primire cadru. Reminder2: Un cadru primit cu putere peste CSThresh, dar sub RXThresh va distruge recepția curentă, fără captură. 
+</p>
+
+<p>
+<sup><a href="09.html#fn__5" id="fnt__5" class="fn_top">5)</a></sup>
+</p>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="09.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+Se rulează cu separare mare și CS la 250m, adică -CSthresh  3.65262e-10 -dist 10000, și rezultă o capacitate de 1.72Mbps pentru fiecare pereche în izolare. 720 pachete livrate pentru toata simularea de 5 duce la o capacitate de 144 pps, sau 1000/144 ~ 7ms / pachet. </div>
+<div class="fn"><sup><a href="09.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+avem coliziuni, este terminal ascuns, cadrele sunt distruse în mod sistematic</div>
+<div class="fn"><sup><a href="09.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+datorită coliziunilor repetate, CW crește suficient de mult… la o valoare suficient de mare, cealaltă conversație va reuși să strecoare un pachet</div>
+<div class="fn"><sup><a href="09.html#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+ emițătorii sunt în CS, împart mediul în mod egal, fiecare obține 50%</div>
+<div class="fn"><sup><a href="09.html#fnt__5" id="fn__5" class="fn_bot">5)</a></sup> 
+ACKNOWLEDGMENT: inspired by <a href="http://www.crhc.illinois.edu/wireless/assignments/simulations/lab103.html" class="urlextern" title="http://www.crhc.illinois.edu/wireless/assignments/simulations/lab103.html"  rel="nofollow">http://www.crhc.illinois.edu/wireless/assignments/simulations/lab103.html</a></div>
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_334264358355b887ae4e" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="isrm:laboratoare:01">Laboratorul 1</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="isrm:laboratoare:02">Laboratorul 2</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="isrm:laboratoare:03">Laboratorul 3</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="isrm:laboratoare:04">Laboratorul 4</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="isrm:laboratoare:05">Laboratorul 5</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="isrm:laboratoare:06">Laboratoarele 6 și 7</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="isrm:laboratoare:08">Laboratorul 8</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="09.html" class="wikilink1" title="isrm:laboratoare:09">Laboratorul 9</a></span></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="isrm:laboratoare:10">Laboratorul 10</a></div></li>
+<li class="level1"><div class="li"><a href="11.html" class="wikilink1" title="isrm:laboratoare:11">Laboratorul 11</a></div></li>
+<li class="level1"><div class="li"><a href="12.html" class="wikilink1" title="isrm:laboratoare:12">Laboratorul 12 (TODO)</a></div></li>
+<li class="level1"><div class="li"><a href="14.html" class="wikilink1" title="isrm:laboratoare:14">Colocviu</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Laboratoare" [1-62] -->
+<h1 class="sectionedit2" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_176192447158355b887cd8c" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../cursuri/01.html" class="wikilink1" title="isrm:cursuri:01">Cursul 1</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/02.html" class="wikilink1" title="isrm:cursuri:02">Cursuri 2-7</a></div></li>
+</ul>
+</div></div>
+<ul>
+<li class="level1"><div class="li"> <a href="http://wi-fi.cs.pub.ro/isrm/index.php" class="urlextern" title="http://wi-fi.cs.pub.ro/isrm/index.php"  rel="nofollow"> chestionare</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cursuri" [63-176] -->
+<h1 class="sectionedit3" id="resurse">Resurse</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../planificare.html" class="wikilink1" title="isrm:planificare">planificare + articole</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../documentatie.html" class="wikilink1" title="isrm:documentatie">documentație</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../instalare-ns2.html" class="wikilink1" title="isrm:instalare-ns2">instalare NS2</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://docs.google.com/spreadsheets/d/1GlBSHv4LsrdK_pD0Pl2eqERxAEBdtguPOoWROWhdhwQ/edit?usp=sharing" class="urlextern" title="https://docs.google.com/spreadsheets/d/1GlBSHv4LsrdK_pD0Pl2eqERxAEBdtguPOoWROWhdhwQ/edit?usp=sharing"  rel="nofollow"> catalog</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../news.html" class="wikilink1" title="isrm:news">diverse</a> </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Resurse" [177-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="09.html#laboratorul_9">Laboratorul 9</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="09.html#carrier_sense_fizic_si_virtual">Carrier Sense fizic și virtual</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          isrm/laboratoare/09.txt · Last modified: 2015/12/02 17:03 by dragos.niculescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="09%3Fdo=media&amp;ns=isrm%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="09.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=isrm%253Alaboratoare%253A09&amp;1479891848" width="2" height="1" alt="" /></div>
+</body>
+</html>

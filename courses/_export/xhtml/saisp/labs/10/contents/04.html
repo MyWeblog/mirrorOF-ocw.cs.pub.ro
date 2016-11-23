@@ -1,0 +1,146 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:10:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-11T14:10:22+0300"/>
+<meta name="keywords" content="saisp,labs,10,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:10:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/10/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:10:contents';var JSINFO = {"id":"saisp:labs:10:contents:04","namespace":"saisp:labs:10:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="04.html#p_design_patterns">04. [20p] Design patterns</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="04.html#packagefileservice">Package / File / Service</a></div></li>
+<li class="level4"><div class="li"><a href="04.html#exercitiu_-_apache">Exercitiu - Apache</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="p_design_patterns">04. [20p] Design patterns</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="packagefileservice">Package / File / Service</h4>
+<div class="level4">
+
+<p>
+In multe situatii, Puppet este folosit pentru a ne asigura ca un anumit serviciu de sistem este instalat, pornit si are configuratia corecta.
+</p>
+
+<p>
+Implementarea se poate realiza folosind trei resurse:
+</p>
+<ul>
+<li class="level1"><div class="li"> package</div>
+</li>
+<li class="level1"><div class="li"> file</div>
+</li>
+<li class="level1"><div class="li"> service</div>
+</li>
+</ul>
+
+<p>
+Intre primele doua avem o relatie de tip “before / require”, iar intre ultimele doua o relatie de tip “notify / subscribe”.
+</p>
+
+<p>
+Creati urmatorul manifest care implementeaza acest design pattern pentru serviciul SSH, apoi aplicati manifestul.
+</p>
+<pre class="code">package { &#039;openssh-server&#039;:
+  ensure =&gt; present,
+}
+-&gt;
+file { &#039;/etc/ssh/sshd_config&#039;:
+  ensure =&gt; file,
+  mode   =&gt; 600,
+  source =&gt; &#039;/root/examples/sshd_config&#039;,
+}
+~&gt;
+service { &#039;sshd&#039;:
+  ensure     =&gt; running,
+  enable     =&gt; true, 
+}</pre>
+
+<p>
+Modificati diverse stari ale tripletului “package / file / service”, apoi reaplicati manifestul. De exemplu:
+</p>
+<ul>
+<li class="level1"><div class="li"> dezinstalati pachetul;</div>
+</li>
+<li class="level1"><div class="li"> modificati fisierul de configurare;</div>
+</li>
+<li class="level1"><div class="li"> opriti serviciul.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="exercitiu_-_apache">Exercitiu - Apache</h4>
+<div class="level4">
+
+<p>
+Creati un manifest de tip “package / file / service” pentru serviciul Apache.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Fisierul de configurare trebuie sa aiba ca sursa o copie a fisierului actual.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+In CentOS, pachetul pentrul serverul Apache se numeste <strong>httpd</strong>, iar fisierul de configurare se afla in <strong>/etc/httpd/conf/httpd.conf</strong>
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

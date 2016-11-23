@@ -1,0 +1,874 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Matrice. Operaţii cu matrice: adunare, înmulţire. Reprezentarea în memorie.    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-09T14:20:41+0200"/>
+<meta name="keywords" content="programare,laboratoare,lab06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=programare:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/programare/laboratoare/lab06.html"/>
+<link rel="canonical" href="lab06.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='programare:laboratoare';var JSINFO = {"id":"programare:laboratoare:lab06","namespace":"programare:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_pc.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab06%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab06%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="matrice_operatii_cu_matriceadunare_inmultire_reprezentarea_in_memorie">Matrice. Operaţii cu matrice: adunare, înmulţire. Reprezentarea în memorie.</h2>
+<div class="level2">
+
+<p>
+<strong>Responsabil:</strong> <a href="mailto:&#x61;&#x6e;&#x64;&#x72;&#x65;&#x69;&#x2e;&#x70;&#x61;&#x72;&#x76;&#x75;&#x40;&#x63;&#x74;&#x69;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;" class="mail" title="&#x61;&#x6e;&#x64;&#x72;&#x65;&#x69;&#x2e;&#x70;&#x61;&#x72;&#x76;&#x75;&#x40;&#x63;&#x74;&#x69;&#x2e;&#x70;&#x75;&#x62;&#x2e;&#x72;&#x6f;">Andrei Pârvu</a>
+</p>
+
+</div>
+
+<h3 class="sectionedit2" id="obiective">Obiective</h3>
+<div class="level3">
+
+<p>
+În urma parcurgerii acestui laborator studentul va fi capabil:
+</p>
+<ul>
+<li class="level1"><div class="li"> să declare matrice si orice fel de tablou multidimensional; </div>
+</li>
+<li class="level1"><div class="li"> sa initializeze aceste structuri, atat din declaratie, cat si prin instructiuni iterative; </div>
+</li>
+<li class="level1"><div class="li"> sa cunoasca regulile de reprezentare ale tablourilor in memorie si sa inteleaga modul in care compilatorul interpreteaza operatorii de indexare; </div>
+</li>
+<li class="level1"><div class="li"> sa cunoasca scheme comune de utilizare a acestor structuri; </div>
+</li>
+<li class="level1"><div class="li"> sa foloseasca practici recunoscute si recomandate pentru scrierea de cod sursa care implica lucrul cu matrice;</div>
+</li>
+<li class="level1"><div class="li"> sa recunoasca si sa evite erorile comune de programare legate de aceste structuri</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit3" id="notiuni_teoretice">Noţiuni teoretice</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="matrice">Matrice</h4>
+<div class="level4">
+
+<p>
+Matricea este o colecţie omogenă şi bidimensională de elemente. Acestea pot fi accesate prin intermediul a doi indici, numerotaţi, ca şi în cazul vectorilor, începand de la 0. Declaraţia unei matrice este de forma:
+</p>
+<pre class="code bash"><span class="sy0">&lt;</span>tip_elemente<span class="sy0">&gt;</span> <span class="sy0">&lt;</span>nume_matrice<span class="sy0">&gt;</span><span class="br0">&#91;</span><span class="sy0">&lt;</span>dim_1<span class="sy0">&gt;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="sy0">&lt;</span>dim_2<span class="sy0">&gt;</span><span class="br0">&#93;</span>;</pre>
+
+<p>
+De exemplu, avem:
+</p>
+<pre class="code c"><span class="kw4">int</span> mat<span class="br0">&#91;</span><span class="nu0">5</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">10</span><span class="br0">&#93;</span><span class="sy0">;</span></pre>
+<pre class="code c"><span class="co2">#define MAX_ELEM 100</span>
+<span class="kw4">float</span> a<span class="br0">&#91;</span>MAX_ELEM<span class="br0">&#93;</span><span class="br0">&#91;</span>MAX_ELEM<span class="br0">&#93;</span><span class="sy0">;</span></pre>
+
+<p>
+Numărul de elemente ale unei matrice va fi <code>dim_1*dim_2</code>, şi semnificaţia fiecărei dimensiuni este o chestiune ce ţine de logica programului. În matematică, prima dimensiune poate să însemne linia şi a doua coloana pentru fiecare element, însa acest lucru nu este obligatoriu. Este necesar totuşi, pentru funcţionarea corectă a programului, să se respecte semnificaţiile alese pe întreg parcursul codului sursă.
+</p>
+
+</div>
+
+<h4 id="tablouri_multidimensionale">Tablouri multidimensionale</h4>
+<div class="level4">
+
+<p>
+Vectorii şi matricele se pot extrapola la noţiunea generală de tablou cu mai multe dimensiuni, care se declară în modul următor:
+</p>
+<pre class="code bash"><span class="sy0">&lt;</span>tip_elemente<span class="sy0">&gt;</span> <span class="sy0">&lt;</span>nume_tablou<span class="sy0">&gt;</span><span class="br0">&#91;</span><span class="sy0">&lt;</span>dim_1<span class="sy0">&gt;</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="sy0">&lt;</span>dim_2<span class="sy0">&gt;</span><span class="br0">&#93;</span>...<span class="br0">&#91;</span><span class="sy0">&lt;</span>dim_n<span class="sy0">&gt;</span><span class="br0">&#93;</span>;</pre>
+
+<p>
+De exemplu:
+</p>
+<pre class="code c"><span class="kw4">int</span> cube<span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span><span class="sy0">;</span></pre>
+
+<p>
+Deşi, în cazul a mai mult de 3 dimensiuni, tablourile pot să nu mai aibă sens concret sau fizic, acestea pot fi deosebit de utile în multe situaţii. În acest laborator ne vom rezuma totuşi la tablouri bidimensionale.
+</p>
+
+</div>
+
+<h4 id="adunarea_si_inmultirea_matricelor">Adunarea si înmulţirea matricelor</h4>
+<div class="level4">
+
+</div>
+
+<h5 id="suma_matricelor">Suma matricelor</h5>
+<div class="level5">
+
+<p>
+Fie $A \in {\mathbb R}^{m \times n}$, $B \in {\mathbb R}^{m \times n}$, atunci $(A+B) \in {\mathbb R}^{m \times n}$, unde: $(A+B)_{i,j} =  A_{i,j} + B_{i,j}$
+</p>
+
+<p>
+<a href="../../_detail/programare/laboratoare/sum.png%3Fid=programare%253Alaboratoare%253Alab06.html" class="media" title="programare:laboratoare:sum.png"><img src="../../_media/programare/laboratoare/sum.png" class="media" alt="" /></a>
+</p>
+
+<p>
+Exemplu:
+</p>
+
+<p>
+$$
+  \Large
+  \begin{bmatrix}
+     1 &amp; 3 \\ 
+     0 &amp; 4 \\
+     5 &amp; 8
+  \end{bmatrix}
++
+  \begin{bmatrix} 
+    2 &amp; 5 \\ 
+    1 &amp; 2 \\ 
+    6 &amp; 1
+  \end{bmatrix}
+=
+  \begin{bmatrix}
+    3 &amp; 8 \\ 
+    1 &amp; 6 \\ 
+    11 &amp; 9
+  \end{bmatrix}
+$$
+</p>
+
+</div>
+
+<h5 id="inmultirea_matricelor">Înmulţirea matricelor</h5>
+<div class="level5">
+
+<p>
+Fie $A \in {\mathbb R}^{m \times n}$, $B \in {\mathbb R}^{n \times p}$, atunci $(AB) \in {\mathbb R}^{m \times p}$, unde elementele $A.B$ sunt date de formula:
+$(AB)_{i,j} = \sum_{r=1}^n A_{i,r}B_{r,j}$
+</p>
+
+<p>
+<a href="../../_detail/programare/laboratoare/mul.png%3Fid=programare%253Alaboratoare%253Alab06.html" class="media" title="programare:laboratoare:mul.png"><img src="../../_media/programare/laboratoare/mul.png" class="media" alt="" /></a> Exemplul din stânga prezintă cum se calculează valorile (1,2) si (3,3) ale <code>&#039;AB</code>&#039; daca <code>&#039;A</code>&#039; este o matrice 3×2, si <code>&#039;B</code>&#039; o matrice 2×3. Pentru calculul unui element din matrice se consideră o linie respectiv o coloană din fiecare matrice conform săgeţilor. Elementele din acestea sunt înmulţite câte 2 conform înmulţirii pe vectori, apoi suma produselor constituie elementul din matricea finală
+</p>
+
+<p>
+$$
+  (\mathbf{AB})_{1,2} = \sum_{r=1}^2 a_{1,r}b_{r,2} = a_{1,1}b_{1,2}+a_{1,2}b_{2,2} \\ 
+  (\mathbf{AB})_{3,3} = \sum_{r=1}^2 a_{3,r}b_{r,3} = a_{3,1}b_{1,3}+a_{3,2}b_{2,3}
+$$
+</p>
+
+<p>
+Exemplu:
+</p>
+
+<p>
+$$
+  \Large
+  
+  \begin{bmatrix}
+     1 &amp; 0 &amp; 2 \\ 
+     -1 &amp; 3 &amp; 1
+  \end{bmatrix}
+\cdot
+  \begin{bmatrix} 
+    3 &amp; 1 \\ 
+    2 &amp; 1 \\ 
+    1 &amp; 0
+  \end{bmatrix}
+=
+\begin{bmatrix}
+   1 \times 3 + 0 \times 2 + 2 \times 1 &amp; 1 \times 1 + 0 \times 1 + 2 \times 0 \\
+  -1 \times 3 + 3 \times 2 + 1 \times 1 &amp; -1 \times 1 + 3 \times 1 + 1 \times 0 
+\end{bmatrix}
+=
+\begin{bmatrix}
+    5 &amp; 1 \\
+    4 &amp; 2
+\end{bmatrix}
+$$
+</p>
+
+</div>
+
+<h4 id="reprezentarea_in_memorie">Reprezentarea în memorie</h4>
+<div class="level4">
+
+<p>
+Cunoaşterea reprezentării în memorie a tablourilor vă ajută să înţelegeţi mai bine cum se lucrează cu aceste tipuri de date şi să evitaţi atât erorile comune, cât şi pe cele mai subtile. Aşa cum se ştie, fiecare variabilă are asociata o anumită adresă în memorie şi ocupă o anumită lungime, măsurată în octeţi. Standardul C impune ca un tablou să fie memorat într-o zonă continuă de memorie, astfel ca pentru un tabloul de forma: <code>T tab[dim1][dim2]…[dimn];</code>
+dimensiunea ocupată în memorie va fi <code>sizeof(T)*dim1*dim2*…*dimn</code>. Vom considera în continuare cazul particular al unui vector vect de lungime n, şi al unui element oarecare al acestuia, de pe pozitia i.
+Atunci când întalneşte numele vect, compilatorul va intelege <code>“adresa în memorie de la care începe vectorul vect”</code>. Operatorul de indexare [] aplicat numelui vect instruieşte compilatorul să <code>“evalueze acel element de tipul T, care se află pe pozitia i în vectorul care începe de la adresa vect”</code>. Acest lucru se poate exprima direct: <code>“evaluarea variabilei de tip T de la adresa vect + i * sizeof(T)”</code>.
+</p>
+
+<p>
+În ultima formulare observaţi ca nu mai intervine sub nici o formă dimensiunea vectorului dată la declarare. Aceea a fost necesară doar compilatorului, ca sa ştie câtă memorie să aloce pentru reprezentarea acestuia. De asemenea, observaţi că sunt permise indexari în afara spaţiului de memorie alocat, şi astfel programul va putea, din greşeala, accesa alte zone de memorie, lucru care poate avea repercursiuni grave. În cel mai bun caz programul nostru se va comporta foarte ciudat (erori în locuri total imprevizibile), şi în cel mai rău caz întreg sistemul va fi blocat (în cazul sistemelor care nu au implementate spaţii virtuale de memorie proprii fiecărei aplicaţii - platformele Windows NT si Linux).
+</p>
+
+<p>
+Faptul că graniţa dintre vectori şi adrese de memorie este atât de fină în limbajul C, sintaxa acestuia permite expresii ciudate, de forma:
+</p>
+<pre class="code c"><span class="kw4">char</span> a<span class="br0">&#91;</span><span class="nu0">100</span><span class="br0">&#93;</span><span class="sy0">;</span>
+a<span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span>
+<span class="nu0">3</span><span class="br0">&#91;</span>a<span class="br0">&#93;</span> <span class="sy0">=</span> <span class="nu0">5</span><span class="sy0">;</span></pre>
+
+<p>
+Instrucţiunea din urmă înseamna pur şi simplu “asignează 5 variabilei de tip char de la adresa 3 + a * sizeof(char) = 3 + a”. Observaţi că aceasta este echivalentă cu a[3] = 5;
+</p>
+
+<p>
+De asemenea, un alt avantaj apare la definirea unui parametru al unei funcţii, de tip vector, caz în care nu este necesară precizarea dimensiunii acestuia:
+void sort(int[] vect, n);
+</p>
+
+<p>
+Este de remarcat faptul că pentru tablouri de dimensiuni m &gt; 1, este necesară precizarea lungimilor primelor m - 1 dimensiuni, pentru ca compilatorul să poată calcula adresa fiecărui element atunci când acesta este referit în program.
+Mai multe detalii legate de reprezentarea tablourilor şi, în general, a datelor în memorie, vor fi date în laboratorul urmator.
+</p>
+
+</div>
+
+<h4 id="exemple_de_programe">Exemple de programe</h4>
+<div class="level4">
+<ul>
+<li class="level1"><div class="li"> Declararea unei matrici unitate:</div>
+</li>
+</ul>
+<pre class="code c"><span class="co2">#define M 20 /* nr maxim de linii si de coloane */</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw4">float</span> unit<span class="br0">&#91;</span>M<span class="br0">&#93;</span><span class="br0">&#91;</span>M<span class="br0">&#93;</span><span class="sy0">;</span>
+  <span class="kw4">int</span> i<span class="sy0">,</span>j<span class="sy0">,</span>n<span class="sy0">;</span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;nr.linii/coloane: &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>n<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>n <span class="sy0">&gt;</span> M<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">return</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> n<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="kw1">if</span> <span class="br0">&#40;</span>i <span class="sy0">!=</span> j<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        unit<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="sy0">=</span><span class="nu0">0</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+        unit<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="sy0">=</span><span class="nu0">1</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+<ul>
+<li class="level1"><div class="li"> Citire/scriere de matrice de reali:</div>
+</li>
+</ul>
+<pre class="code c"><span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw4">int</span> nl<span class="sy0">,</span> nc<span class="sy0">,</span> i<span class="sy0">,</span> j<span class="sy0">;</span>
+  <span class="kw4">float</span> a<span class="br0">&#91;</span><span class="nu0">20</span><span class="br0">&#93;</span><span class="br0">&#91;</span><span class="nu0">20</span><span class="br0">&#93;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="coMULTI">/* Citire de matrice */</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;nr.linii: &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>nl<span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;nr.coloane: &quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>nc<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">if</span> <span class="br0">&#40;</span>nl <span class="sy0">&gt;</span> <span class="nu0">20</span> <span class="sy0">||</span> nc <span class="sy0">&gt;</span> <span class="nu0">20</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Eroare: dimensiuni &gt; 20 <span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">return</span> <span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> nl<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> nc<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%f&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="coMULTI">/* Afisare matrice */</span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> nl<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> nc<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%f &quot;</span><span class="sy0">,</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a> <span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h3 class="sectionedit4" id="erori_comune">Erori comune</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> Inversarea indicilor pentru elementele unei matrice sau tablou. E usor sa-l inversezi pe i cu j in expresia A[i][j] astfel ca trebuie sa fiti atenti cand scrieti astfel de cod. Luati in considerare si folosirea de nume mai sugestive pentru variabile. </div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="referinte">Referinţe</h2>
+<div class="level2">
+
+<p>
+<a href="http://en.wikipedia.org/wiki/Matrix_multiplication" class="urlextern" title="http://en.wikipedia.org/wiki/Matrix_multiplication"  rel="nofollow"> Wikipedia - Matrix Multiplication</a>
+</p>
+
+<p>
+<a href="../../so/laboratoare/resurse/gdb.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/so/laboratoare/resurse/gdb"  rel="nofollow"> GDB - Tutorial</a>
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="exercitii_laborator_cbcd">Exerciții Laborator CB/CD</h3>
+<div class="level3">
+
+<p>
+Primul exercitiu presupune modificarea/adaugarea de instructiuni unui cod existent pentru a realiza anumite lucruri. In momentul actual programul realizeaza transpunerea unei matrice patratice primite ca parametru. Se afiseaza atat matricea initiala, cat si matricea transpusa.
+</p>
+<ul>
+<li class="level1"><div class="li">Nu uitati ca trebuie sa utilizam un <a href="../coding-style.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/programare/coding-style"  rel="nofollow"> coding style</a> adecvat atunci cand scriem sursele.</div>
+</li>
+</ul>
+<dl class="code">
+<dt><a href="../../_export/code/programare/laboratoare/lab06%3Fcodeblock=8" title="Download Snippet" class="mediafile mf_c">ex1.c</a></dt>
+<dd><pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="co2">#define N 100</span>
+&nbsp;
+&nbsp;
+<span class="kw4">void</span> transpose_matrix<span class="br0">&#40;</span><span class="kw4">int</span> m<span class="br0">&#91;</span>N<span class="br0">&#93;</span><span class="br0">&#91;</span>N<span class="br0">&#93;</span><span class="sy0">,</span> <span class="kw4">int</span> n<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> i<span class="sy0">,</span> j<span class="sy0">,</span> tmp<span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> i <span class="sy0">+</span> <span class="nu0">1</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> n<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			tmp <span class="sy0">=</span> m<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="sy0">;</span>
+			m<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span> <span class="sy0">=</span> m<span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy0">;</span>
+			m<span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> tmp<span class="sy0">;</span>
+		<span class="br0">&#125;</span>
+	<span class="br0">&#125;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">void</span> print_matrix<span class="br0">&#40;</span><span class="kw4">int</span> m<span class="br0">&#91;</span>N<span class="br0">&#93;</span><span class="br0">&#91;</span>N<span class="br0">&#93;</span><span class="sy0">,</span> <span class="kw4">int</span> n<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> i<span class="sy0">,</span> j<span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> n<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+			<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d &quot;</span><span class="sy0">,</span> m<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<span class="br0">&#125;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> i<span class="sy0">,</span> n <span class="sy0">=</span> <span class="nu0">3</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw4">int</span> V<span class="br0">&#91;</span>N<span class="br0">&#93;</span><span class="br0">&#91;</span>N<span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span>
+		<span class="br0">&#123;</span><span class="nu0">1</span><span class="sy0">,</span> <span class="nu0">2</span><span class="sy0">,</span> <span class="nu0">3</span><span class="br0">&#125;</span><span class="sy0">,</span>
+		<span class="br0">&#123;</span><span class="nu0">4</span><span class="sy0">,</span> <span class="nu0">5</span><span class="sy0">,</span> <span class="nu0">6</span><span class="br0">&#125;</span><span class="sy0">,</span>
+		<span class="br0">&#123;</span><span class="nu0">7</span><span class="sy0">,</span> <span class="nu0">8</span><span class="sy0">,</span> <span class="nu0">9</span><span class="br0">&#125;</span>
+	<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+	print_matrix<span class="br0">&#40;</span>V<span class="sy0">,</span> n<span class="br0">&#41;</span><span class="sy0">;</span>
+	transpose_matrix<span class="br0">&#40;</span>V<span class="sy0">,</span> n<span class="br0">&#41;</span><span class="sy0">;</span>
+	print_matrix<span class="br0">&#40;</span>V<span class="sy0">,</span> n<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Cerinte:
+</p>
+<ul>
+<li class="level1"><div class="li">Realizati citirea unei matrice patratice de la tastatura - se va suprascrie n.</div>
+</li>
+<li class="level1"><div class="li">Realizati suma elementelor de deasupra diagonalei principale.</div>
+</li>
+<li class="level1"><div class="li">Afisati elementele de sub diagonala secundara. In locul elementelor de deasupra diagonalei secundare se va afisa 0.</div>
+</li>
+</ul>
+
+<p>
+<strong>Următoarele două probleme vă vor fi date de asistent în cadrul laboratorului.</strong>
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="exercitii_de_laborator_seria_cb">Exerciții de Laborator seria CB</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> [2p] Următorul program ar trebui să citească și să afișeze o matrice. Compilați și rulați.</div>
+</li>
+</ol>
+<dl class="code">
+<dt><a href="../../_export/code/programare/laboratoare/lab06%3Fcodeblock=9" title="Download Snippet" class="mediafile mf_c">matrix.c</a></dt>
+<dd><pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="co2">#define MAX	100</span>
+&nbsp;
+<span class="kw4">void</span> read_matrix<span class="br0">&#40;</span><span class="kw4">int</span> a<span class="br0">&#91;</span>MAX<span class="br0">&#93;</span><span class="br0">&#91;</span>MAX<span class="br0">&#93;</span><span class="sy0">,</span> <span class="kw4">int</span> n<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> i<span class="sy0">,</span> j<span class="sy0">;</span>
+&nbsp;
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>n<span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> n<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span>
+			<a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> a<span class="br0">&#91;</span>MAX<span class="br0">&#93;</span><span class="br0">&#91;</span>MAX<span class="br0">&#93;</span><span class="sy0">,</span> n <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">,</span> i<span class="sy0">,</span> j<span class="sy0">;</span>
+&nbsp;
+	read_matrix<span class="br0">&#40;</span>a<span class="sy0">,</span> n<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span><span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span>j <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> j <span class="sy0">&lt;</span> n<span class="sy0">;</span> j<span class="sy0">++</span><span class="br0">&#41;</span>
+			<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d &quot;</span><span class="sy0">,</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#91;</span>j<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+<ul>
+<li class="level1"><div class="li"> ce observați?</div>
+</li>
+<li class="level2"><div class="li"> folosind printf, afișați după apelul <code>read_matrix</code> valoarea lui <code>n</code> și a lui <code>a[0][0]</code></div>
+</li>
+<li class="level2"><div class="li"> identificați problema</div>
+</li>
+<li class="level2"><div class="li"> rezolvați problema </div>
+</li>
+</ul>
+<ol>
+<li class="level2"><div class="li"> [3p] Următorul program inversează elementele unui vector. Compilați și rulați.</div>
+</li>
+</ol>
+<dl class="code">
+<dt><a href="../../_export/code/programare/laboratoare/lab06%3Fcodeblock=10" title="Download Snippet" class="mediafile mf_c">swap.c</a></dt>
+<dd><pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="co2">#define MAX	100</span>
+&nbsp;
+<span class="kw4">void</span> magic<span class="br0">&#40;</span><span class="kw4">int</span> a<span class="br0">&#91;</span>MAX<span class="br0">&#93;</span><span class="sy0">,</span> <span class="kw4">int</span> n<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> i<span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span>
+		a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">&amp;</span> <span class="br0">&#40;</span>~<span class="br0">&#40;</span><span class="nu12">0x01</span> <span class="sy0">&amp;</span> <span class="nu12">0x42</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">/</span><span class="nu0">2</span><span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">^</span> a<span class="br0">&#91;</span>n <span class="sy0">-</span> i<span class="br0">&#93;</span><span class="sy0">;</span>
+		a<span class="br0">&#91;</span>n <span class="sy0">-</span> i<span class="br0">&#93;</span> <span class="sy0">=</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">^</span> a<span class="br0">&#91;</span>n <span class="sy0">-</span> i<span class="br0">&#93;</span><span class="sy0">;</span>
+		a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">^</span> a<span class="br0">&#91;</span>n <span class="sy0">-</span> i<span class="br0">&#93;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">=</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">&amp;</span> <span class="br0">&#40;</span>~<span class="br0">&#40;</span><span class="nu12">0x42</span> <span class="sy0">&amp;</span> <span class="nu12">0x101</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> a<span class="br0">&#91;</span>MAX<span class="br0">&#93;</span><span class="sy0">,</span> n<span class="sy0">,</span> i<span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	magic<span class="br0">&#40;</span>a<span class="sy0">,</span> n<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> n<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span><span class="sy0">;</span> <span class="br0">&#123;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d &quot;</span><span class="sy0">,</span> a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+<ul>
+<li class="level1"><div class="li"> folosiți gdb pentru a identifica și rezolvați problemele</div>
+</li>
+</ul>
+<ol>
+<li class="level2"><div class="li"> Scrieţi un program pentru înmulţirea a două matrice, dacă aceasta este posibilă. Va trebui să implementaţi două funcţii:<br/>
+</div>
+</li>
+</ol>
+<ul>
+<li class="level2"><div class="li"> [1p] una pentru citirea unei matrice într-un tablou bidimensional, dat ca parametru.</div>
+</li>
+<li class="level2"><div class="li"> [2.5p] una care să realizeze efectiv înmulţirea a două matrice.</div>
+</li>
+</ul>
+<ol>
+<li class="level2"><div class="li"> [1.5p] Scrieţi un program care ridică o matrice patratică cu n linii şi n coloane la puterea p, cu p număr întreg pozitiv.</div>
+</li>
+</ol>
+
+</div>
+
+<h2 class="sectionedit8" id="exercitii_de_laborator">Exerciţii de Laborator</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Scrieţi un program pentru înmulţirea a două matrice, dacă aceasta este posibilă. Va trebui să implementaţi două funcţii:<br/>
+</div>
+<ul>
+<li class="level2"><div class="li"> [1p] una pentru citirea unei matrice într-un tablou bidimensional, dat ca parametru.</div>
+</li>
+<li class="level2"><div class="li"> [2.5p] una care să realizeze efectiv înmulţirea a două matrice.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> [1.5p] Scrieţi un program care ridică o matrice patratică cu n linii şi n coloane la puterea p, cu p număr întreg pozitiv.</div>
+</li>
+<li class="level1"><div class="li"> [2p] Scrieți un program care citeste o matrice si indicele unei coloane a acesteia și afișează cele două diagonale care pornesc de pe linia 0 și indicele coloanei respective. Valorile elementelor aflate pe diagonale vor fi inlocuite cu 0.<br/>
+Exemplu: <pre class="code">3 4 1
+1 2 3 4
+3 4 5 6
+6 7 8 9
+
+1 0 3 4
+3 4 0 6
+6 7 8 0
+
+1 0 3 4
+0 4 5 6
+6 7 8 9</pre>
+</div>
+</li>
+<li class="level1"><div class="li"> [3p] Fie două matrice $A$ si $B$. Să se afișeze toate perechile $(A&#039;, B&#039;)$, unde $A&#039;$ este submatrice a lui $A$ și $B&#039;$ este submatrice a lui $B$, în care suma elementelor din $A&#039;$ este egală cu suma elementelor din $B&#039;$. Submatricele $A&#039;$ si $B&#039;$ trebuie să aibă cel puțin 2 linii și 2 coloane.<br/>
+Exemplu: <pre class="code">3 4 // matricea A
+3 2 1 3
+6 5 2 3
+5 3 2 1
+4 3 // matricea B
+2 3 3
+4 1 2
+5 3 2
+2 7 6
+
+// Rezultat sub forma (linie stanga sus, coloana stanga sus, linie dreapta jos, coloana dreapta jos)
+(0, 0, 1, 3), (0, 0, 2, 2)
+(0, 0, 1, 3), (2, 0, 3, 2)
+(0, 1, 1, 2), (0, 0, 1, 1)
+(0, 1, 2, 2), (0, 0, 1, 2)
+(0, 1, 2, 3), (1, 0, 3, 1)
+(0, 2, 1, 3), (0, 1, 1, 2)
+(1, 0, 2, 3), (0, 0, 3, 1)
+(1, 0, 2, 3), (0, 1, 3, 2)
+(1, 2, 2, 3), (1, 1, 2, 2)
+</pre>
+</div>
+</li>
+</ol>
+
+<p>
+BONUS:
+</p>
+<ol>
+<li class="level1"><div class="li"> [2p] Dându-se o matrice $A$ de dimensiune $N * M$ să se sorteze diagonalele acesteia, utilizând un algoritm de bubble-sort. <br/>
+Exemplu: <pre class="code">4 3
+5 6 3
+3 4 5
+2 7 4
+5 1 1
+
+// Rezultat
+4 5 3
+1 4 6
+1 3 5
+5 2 7</pre>
+</div>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="resurse_generale">Resurse generale</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../regulament-ca.html" class="wikilink1" title="programare:regulament-ca">Regulament: seria CA</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../regulament-cb-cd.html" class="wikilink1" title="programare:regulament-cb-cd">Regulament: seria CB/CD</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../punctaj.html" class="wikilink1" title="programare:punctaj">Punctaj seria CA</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../calendar.html" class="wikilink1" title="programare:calendar">Calendar</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../catalog.html" class="wikilink1" title="programare:catalog">Catalog laborator</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../debugging.html" class="wikilink1" title="programare:debugging">Debugging</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../coding-style.html" class="wikilink1" title="programare:coding-style">Coding style</a> <br/>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Resurse generale" [1-375] -->
+<h2 class="sectionedit2" id="cursuri">Cursuri</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_START "programare:cursuri" [0-] --><div class="plugin_include_content plugin_include__programare:cursuri">
+<div class="level2">
+
+<p>
+<a href="../cursuri/sylabus.html" class="wikilink1" title="programare:cursuri:sylabus">Continutul Tematic</a> <br/>
+
+</p>
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_EDITBTN "programare:cursuri" [0-] --><!-- EDIT4 PLUGIN_INCLUDE_END "programare:cursuri" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT2 SECTION "Cursuri" [376-444] -->
+<h2 class="sectionedit6" id="laboratoare">Laboratoare</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT7 PLUGIN_INCLUDE_START "programare:laboratoare" [0-] --><div class="plugin_include_content plugin_include__programare:laboratoare">
+<div class="level2">
+
+<p>
+<a href="lab01.html" class="wikilink1" title="programare:laboratoare:lab01">01. Unelte de programare</a> <br/>
+
+<a href="lab02.html" class="wikilink1" title="programare:laboratoare:lab02">02. Tipuri de date. Operatori.</a> <br/>
+
+<a href="lab03.html" class="wikilink1" title="programare:laboratoare:lab03">03. Instrucțiunile limbajului C</a> <br/>
+
+<a href="lab04.html" class="wikilink1" title="programare:laboratoare:lab04">04. Funcții</a> <br/>
+
+<a href="lab05.html" class="wikilink1" title="programare:laboratoare:lab05">05. Tablouri. Particularizare - vectori</a> <br/>
+
+<span class="curid"><a href="lab06.html" class="wikilink1" title="programare:laboratoare:lab06">06. Matrice. Operații cu matrice</a></span> <br/>
+
+<a href="lab07.html" class="wikilink1" title="programare:laboratoare:lab07">07. Pointeri. Abordarea lucrului cu tablouri folosind pointeri</a> <br/>
+
+<a href="lab08.html" class="wikilink1" title="programare:laboratoare:lab08">08. Alocarea dinamică a memoriei. Aplicaţii folosind tablouri şi matrice</a> <br/>
+
+<a href="lab09.html" class="wikilink1" title="programare:laboratoare:lab09">09. Prelucrarea şirurilor de caractere. Funcţii. Aplicaţii</a> <br/>
+
+<a href="lab10.html" class="wikilink1" title="programare:laboratoare:lab10">10. Structuri. Uniuni. Aplicație: Matrice rare</a> <br/>
+
+<a href="lab11.html" class="wikilink1" title="programare:laboratoare:lab11">11. Operatii cu fişiere. Aplicaţii folosind fişiere.</a> <br/>
+
+<a href="lab12.html" class="wikilink1" title="programare:laboratoare:lab12">12. Parametrii liniei de comandă. Preprocesorul. Funcţii cu număr variabil de parametri</a> <br/>
+
+<a href="lab13.html" class="wikilink1" title="programare:laboratoare:lab13">13. Recapitulare</a> <br/>
+
+<a href="lab14.html" class="wikilink1" title="programare:laboratoare:lab14">14. Probleme diverse</a> <br/>
+
+<a href="lab12cb.html" class="wikilink1" title="programare:laboratoare:lab12cb">12.(CB) Laborator final</a> <br/>
+
+<a href="python.html" class="wikilink1" title="programare:laboratoare:python">Extra: python</a> <br/>
+
+</p>
+
+</div>
+<!-- EDIT9 PLUGIN_INCLUDE_EDITBTN "programare:laboratoare" [0-] --><!-- EDIT8 PLUGIN_INCLUDE_END "programare:laboratoare" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT6 SECTION "Laboratoare" [445-522] -->
+<h2 class="sectionedit10" id="teme_de_casa_general">Teme de casa (general)</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../regulament.html#reguli_de_trimitere_a_temelor" class="wikilink2" title="programare:regulament" rel="nofollow">Trimitere teme</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="programare:teme:general"> Indicații generale</a> <br/>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT10 SECTION "Teme de casa (general)" [523-752] -->
+<h2 class="sectionedit11" id="teme_de_casaseria_ca">Teme de casă: seria CA</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema1_2016_ca.html" class="wikilink1" title="programare:teme_2016:tema1_2016_ca">Tema 1</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema2_2016_ca.html" class="wikilink1" title="programare:teme_2016:tema2_2016_ca">Tema 2</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema3_2016_ca.html" class="wikilink1" title="programare:teme_2016:tema3_2016_ca">Tema 3</a> <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema4_2016_ca.html" class="wikilink1" title="programare:teme_2016:tema4_2016_ca">Tema 4</a> <br/>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT11 SECTION "Teme de casă: seria CA" [753-1946] -->
+<h2 class="sectionedit12" id="teme_de_casaseria_cbcd">Teme de casă: seria CB/CD</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme_2016/tema1_2016_cbd.html" class="wikilink1" title="programare:teme_2016:tema1_2016_cbd">Tema 1</a> <br/>
+</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT12 SECTION "Teme de casă: seria CB/CD" [1947-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab06.html#matrice_operatii_cu_matriceadunare_inmultire_reprezentarea_in_memorie">Matrice. Operaţii cu matrice: adunare, înmulţire. Reprezentarea în memorie.</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab06.html#obiective">Obiective</a></div></li>
+<li class="level3"><div class="li"><a href="lab06.html#notiuni_teoretice">Noţiuni teoretice</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab06.html#matrice">Matrice</a></div></li>
+<li class="level4"><div class="li"><a href="lab06.html#tablouri_multidimensionale">Tablouri multidimensionale</a></div></li>
+<li class="level4"><div class="li"><a href="lab06.html#adunarea_si_inmultirea_matricelor">Adunarea si înmulţirea matricelor</a></div></li>
+<li class="level4"><div class="li"><a href="lab06.html#reprezentarea_in_memorie">Reprezentarea în memorie</a></div></li>
+<li class="level4"><div class="li"><a href="lab06.html#exemple_de_programe">Exemple de programe</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="lab06.html#erori_comune">Erori comune</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab06.html#referinte">Referinţe</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab06.html#exercitii_laborator_cbcd">Exerciții Laborator CB/CD</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab06.html#exercitii_de_laborator_seria_cb">Exerciții de Laborator seria CB</a></div></li>
+<li class="level2"><div class="li"><a href="lab06.html#exercitii_de_laborator">Exerciţii de Laborator</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          programare/laboratoare/lab06.txt · Last modified: 2016/11/09 14:20 by claudia.ifrim          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab06%3Fdo=media&amp;ns=programare%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab06.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=programare%253Alaboratoare%253Alab06&amp;1479891468" width="2" height="1" alt="" /></div>
+</body>
+</html>

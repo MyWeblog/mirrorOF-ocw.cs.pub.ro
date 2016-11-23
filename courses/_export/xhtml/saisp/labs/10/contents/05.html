@@ -1,0 +1,204 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:10:contents:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-05-18T16:22:18+0300"/>
+<meta name="keywords" content="saisp,labs,10,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:10:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/10/contents/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:10:contents';var JSINFO = {"id":"saisp:labs:10:contents:05","namespace":"saisp:labs:10:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="05.html#p_variabile_si_selectori">05. [20p] Variabile si selectori</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="05.html#variabile">Variabile</a></div></li>
+<li class="level4"><div class="li"><a href="05.html#facts">Facts</a></div></li>
+<li class="level4"><div class="li"><a href="05.html#if">If</a></div></li>
+<li class="level4"><div class="li"><a href="05.html#manifest_pentru_instalare_ntp">Manifest pentru instalare NTP</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="p_variabile_si_selectori">05. [20p] Variabile si selectori</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="variabile">Variabile</h4>
+<div class="level4">
+
+<p>
+Pentru a defini variabile in Puppet, folosim sintaxa <code>$variabila</code>, atat pentru atribuire, cat si pentru referentiere.
+</p>
+
+<p>
+Rescriem manifestul pentru fisierul <strong>my_file</strong>, definind continutul fisierului intr-o variabila:
+</p>
+<pre class="code">$my_content = &quot;File created using Puppet.&quot;
+
+file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; $my_content,
+}</pre>
+
+</div>
+
+<h4 id="facts">Facts</h4>
+<div class="level4">
+
+<p>
+In afara de variabilele definite de utilizator, Puppet defineste si anumite variabile de sistem. Acestea se numesc <strong>facts</strong>.
+</p>
+
+<p>
+Pentru a vizualiza toate aceste variabile, folosim comanda <code>facter</code>:
+</p>
+<pre class="code">[root@learn ~]# facter 
+architecture =&gt; i386
+augeasversion =&gt; 1.1.0
+bios_release_date =&gt; 12/01/2006
+bios_vendor =&gt; innotek GmbH
+bios_version =&gt; VirtualBox
+blockdevice_sda_model =&gt; VBOX HARDDISK
+blockdevice_sda_size =&gt; 8589934592
+blockdevice_sda_vendor =&gt; ATA
+blockdevices =&gt; sda
+...</pre>
+
+</div>
+
+<h4 id="if">If</h4>
+<div class="level4">
+
+<p>
+Un exemplu de folosire a variabilelor de sistem este luarea anumitor decizii in functie de valoarea acestora.
+</p>
+
+<p>
+Urmatorul manifest se asigura ca serviciul NTP:
+</p>
+<ul>
+<li class="level1"><div class="li"> este pornit daca masina este fizica;</div>
+</li>
+<li class="level1"><div class="li"> este oprit daca masina este virtuala.</div>
+</li>
+</ul>
+
+<p>
+Decizia se ia in functie de valoarea variabile de sistem <code>$is_virtual</code>.
+</p>
+<pre class="code">if str2bool(&quot;$is_virtual&quot;) {
+  service {&#039;ntpd&#039;:
+    ensure =&gt; stopped,
+    enable =&gt; false,
+  }
+}
+else {
+  service { &#039;ntpd&#039;:
+    name       =&gt; &#039;ntpd&#039;,
+    ensure     =&gt; running,
+    enable     =&gt; true,
+    hasrestart =&gt; true,
+    require =&gt; Package[&#039;ntp&#039;],
+  }
+}</pre>
+
+<p>
+Aplicati manifestul si observati starea serviciului NTP.
+</p>
+
+</div>
+
+<h4 id="manifest_pentru_instalare_ntp">Manifest pentru instalare NTP</h4>
+<div class="level4">
+
+<p>
+Mai intai, dezinstalati serverul de NTP din masina virtuala.
+</p>
+
+<p>
+Apoi, scrieti un manifest care:
+</p>
+<ul>
+<li class="level1"><div class="li"> sa instaleze pachetul pentru serverul NTP;</div>
+</li>
+<li class="level1"><div class="li"> sa se asigure ca serviciul NTP este pornit (numele serviciului difera, in functie de distributia de Linux);</div>
+</li>
+<li class="level1"><div class="li"> sa se asigure ca fisierul de configurare este cel corect (in functie de distributie). </div>
+</li>
+</ul>
+
+<p>
+Folositi structura conditionala <strong>case</strong>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Consultati documentatia pentru <strong>case</strong>: <a href="http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html#case-statements" class="urlextern" title="http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html#case-statements"  rel="nofollow">http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html#case-statements</a>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+</p>
+<ul>
+<li class="level1"><div class="li"> Pentru Ubuntu sau Debian serviciul se numeste <strong>ntp</strong> iau pentru Redhat si Fedora se numeste <strong>ntpd</strong>.</div>
+</li>
+<li class="level1"><div class="li"> Descarcati fisierul de configurare pentru Debian / Ubuntu (<a href="http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.debian" class="urlextern" title="http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.debian"  rel="nofollow">http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.debian</a>) sau RedHat / Fedora (<a href="http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.el" class="urlextern" title="http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.el"  rel="nofollow">http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.el</a>)</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

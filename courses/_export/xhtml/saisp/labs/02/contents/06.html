@@ -1,0 +1,101 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:02:contents:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-03T00:19:35+0200"/>
+<meta name="keywords" content="saisp,labs,02,contents,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:02:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/02/contents/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:02:contents';var JSINFO = {"id":"saisp:labs:02:contents:06","namespace":"saisp:labs:02:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_instalare_server_de_ldap">06. [10p] Instalare server de LDAP</h3>
+<div class="level3">
+
+<p>
+Ne propunem să urmărim pașii instalării unui server de LDAP. Pentru aceasta o să instalăm un server LDAP pe stația client. Nu este util să existe două servere de LDAP, dar este mai ușor să instalăm un server de la zero decât să dezinstalăm și apoi să reinstalăm pe stația server.
+</p>
+
+<p>
+Pachetul pentru serverul de LDAP se numește <code>slapd</code>; îl instalăm
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span><span class="kw2">apt-get install</span> slapd</pre>
+
+<p>
+O să fie cerută parola serverului de LDAP. Introduceți o parolă dorită; recomandăm parola <code>student</code> pentru “unformitate”.
+</p>
+
+<p>
+După ce am instalat serverul urmărim că ascultă conexiuni pe portul LDAP 389
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="sy0">/</span>lab-02-solution<span class="co0"># netstat -tlpn | grep slapd</span>
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">389</span>             0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">5985</span><span class="sy0">/</span>slapd      
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">389</span>                  :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">5985</span><span class="sy0">/</span>slapd </pre>
+
+<p>
+Nu ni s-au cerut alte opțiuni pentru configurare. Asta pentru că serverul LDAP consideră că base dn-ul este FQDN-ul stației. În cazul de față este vorba de FQDN-ul <code>tasks.cs.pub.ro</code>, deci base dn-ul va fi <code>dc=tasks,dc=cs,dc=pub,dc=ro</code>. Putem urmări aceste lucru prin interograrea serverului LDAP local:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-s</span> base <span class="re5">-b</span> <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span>
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">olcDatabase</span>=<span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb,<span class="re2">cn</span>=config
+objectClass: olcDatabaseConfig
+objectClass: olcHdbConfig
+olcDatabase: <span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb
+olcDbDirectory: <span class="sy0">/</span>var<span class="sy0">/</span>lib<span class="sy0">/</span>ldap
+olcSuffix: <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+&nbsp;
+<span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldap:<span class="sy0">//</span>localhost <span class="re5">-b</span> <span class="st0">&quot;dc=tasks,dc=cs,dc=pub,dc=ro&quot;</span> dn
+dn: <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro</pre>
+
+<p>
+Pe moment, la nivel de date, baza de date LDAP conține doar intrarea pentru base dn și pentru contul de administrator (<code>cn=admin</code>).
+</p>
+
+<p>
+Dacă dorim să facem configurări în cadrul serverului de LDAP, vom crea fișiere LDIF și apoi le vom încărca în baza de date LDAP folosind comanda <code>ldapadd</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

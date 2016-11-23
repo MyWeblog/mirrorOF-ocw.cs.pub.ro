@@ -1,0 +1,165 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:12:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-01-09T16:35:39+0200"/>
+<meta name="keywords" content="rl,labs,12,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:12:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/12/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:12:contents';var JSINFO = {"id":"rl:labs:12:contents:01","namespace":"rl:labs:12:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_necesitatea_autentificarii_in_reteaua_locala">01. [15p] Necesitatea autentificării în rețeaua locală</h3>
+<div class="level3">
+
+<p>
+Se poate întâmpla ca într-o rețea locală un utilizator să folosească adresa IP a altui utilizator pentru diverse beneficii. De exemplu, în situația în care are accesul la Internet-ul blocat, un utilizator schimbă adresa IP (eventual și adresa MAC) și folosește accesul la Internet cu privilegiile utilizatorului căruia i-a “furat” adresa IP. Soluția folosită de furnizorii de servicii Internet este autentificarea utilizatorilor, lucru realizat folosind PPPoE (<em>Point to Point Protocol over Ethernet</em>).
+</p>
+
+<p>
+Ne propunem să punem la punct un astfel de scenariu în care o stație “fură” adresa IP a altei stații. Pentru aceasta, vom conecta stațiile <code>host</code>, <code>red</code> și <code>green</code> în aceeași rețea de nivel 2. Vom crea un bridge în care vom adăuga toate stațiile și vom configura adrese IP din aceeași rețea.
+</p>
+
+<p>
+Pentru început, creați pe stația <code>host</code> un switch virtual în Linux (bridge) denumit <code>br0</code> în care să adăugați interfețele <code>veth-red</code> și <code>veth-green</code>. Urmăriți indicațiile din <a href="../../../../../../rl/labs/11/contents/01.html" class="wikilink1" title="rl:labs:11:contents:01">laboratorul 11</a> (partea de jos, unde se lucrează cu bridge-uri).
+</p>
+
+<p>
+<p><div class="noteimportant">
+Trebuie să activați interfața <code>br0</code> – interfața bridge-ului. Folosiți comanda <code>ip link</code>.
+
+</div></p>
+</p>
+
+<p>
+Configurați pe interfața <code>br0</code> (interfața de tip bridge) de pe stația <code>host</code> adresa IP <code>192.168.0.1/24</code>. Pe stațiile <code>red</code> și <code>green</code> configurați adresa IP <code>192.168.0.2/24</code> pe interfața <code>eth0</code> a acestora.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Pe ambele stații (<code>red</code> și <code>green</code>) să fie aceeași adresă IP pe interfața <code>eth0</code>: <code>192.168.0.2/24</code>.
+
+</div></p>
+</p>
+
+<p>
+Pe stația <code>red</code> aflăm adresa MAC a interfeței <code>eth0</code> și apoi trimitem pachete către stația <code>host</code> (adică spre adresa <code>192.168.0.1/24</code> aferentă interfeței <code>br0</code> a bridge-ului de pe <code>host</code>):
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip link</span> show dev eth0
+<span class="nu0">22</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+<span class="co4">root@red:~# </span><span class="kw2">ping</span> 192.168.0.1
+PING 192.168.0.1 <span class="br0">&#40;</span>192.168.0.1<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 192.168.0.1: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.379</span> ms
+^C
+<span class="re5">---</span> 192.168.0.1 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">1</span> packets transmitted, <span class="nu0">1</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 0ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.379</span><span class="sy0">/</span><span class="nu0">0.379</span><span class="sy0">/</span><span class="nu0">0.379</span><span class="sy0">/</span><span class="nu0">0.000</span> ms</pre>
+
+<p>
+Urmărim pe stația <code>host</code> tabela ARP a interfeței <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip neigh</span> show dev br0
+192.168.0.2 lladdr 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> REACHABLE</pre>
+
+<p>
+Observăm că intrarea aferentă adresei IP <code>192.168.0.2</code> conține adresa MAC a interfeței <code>eth0</code> a stației <code>red</code>.
+</p>
+
+<p>
+Acum, pe stația <code>green</code> aflăm adresa MAC a interfeței <code>eth0</code> și apoi trimitem pachete către stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@green:~# </span><span class="kw2">ip link</span> show dev eth0 
+<span class="nu0">25</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> brd ff:ff:ff:ff:ff:ff
+<span class="co4">root@green:~# </span><span class="kw2">ping</span> 192.168.0.1
+PING 192.168.0.1 <span class="br0">&#40;</span>192.168.0.1<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 192.168.0.1: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.416</span> ms
+^C
+<span class="re5">---</span> 192.168.0.1 <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">1</span> packets transmitted, <span class="nu0">1</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 0ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.416</span><span class="sy0">/</span><span class="nu0">0.416</span><span class="sy0">/</span><span class="nu0">0.416</span><span class="sy0">/</span><span class="nu0">0.000</span> ms</pre>
+
+<p>
+Urmărim, din nou, pe stația <code>host</code> tabela ARP a interfeței <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip neigh</span> show dev br0
+192.168.0.2 lladdr 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> REACHABLE</pre>
+
+<p>
+Observăm că intrarea aferentă adresei IP <code>192.168.0.2</code> conține acum adresa MAC a interfeței <code>eth0</code> a stației <code>green</code>.
+</p>
+
+<p>
+Dacă executăm comanda
+</p>
+<pre class="code bash"><span class="kw2">ping</span> 192.168.0.1</pre>
+
+<p>
+simultan de pe stațiile <code>red</code> și <code>green</code>, observăm că doar o stație primește la un moment dat răspunsul: cea care are adresa MAC asociată la acel moment adresei IP <code>192.168.0.2</code> în tabela ARP a interfeței <code>br0</code>. După cum am precizat la început, acest lucru este întâlnit frecvent în rețele de dimensiuni medii și mari unde utilizatorii își pun aceeași adresă IP cu a unui alt calculator din rețea în încercarea de a fura identitatea acestuia.
+</p>
+
+<p>
+Pentru a ne asigura că utilizatorii nu folosesc alte adrese IP, folosim autentificare la nivelul 2; adică să condiționăm conectarea la Internet de furnizarea unei adrese IP și a unei parole. Ținând cont de prevalența rețelelor bazate pe Ethernet, este indicat să folosim un protocol de autentificare peste Ethernet. Una dintre cele mai întâlnite soluții este PPPoE (<em>Point to Point Protocol over Ethernet</em>).
+</p>
+
+<p>
+<p><div class="noteclassic">
+Autentificarea utilizatorului pentru a obține conectivitate la Internet este unul dintre motivele pentru care mulți furnizori de servicii Internet folosesc PPPoE pentru accesul la Internet (rețeaua din campusul Regie, rețeaua RDS etc.).
+
+</div></p>
+</p>
+
+<p>
+În secțiunile următoare vom configura un server și clienți de PPPoE.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Înainte de a trece la configurarea serverului de PPPoE ștergeți adresele IP de pe interfețele <code>eth0</code> ale containerelor <code>red</code> și <code>green</code>. Bridge-ul <code>br0</code> va fi în continuare activ cu adresa <code>192.168.0.1/24</code> și va avea conectate interfețele <code>veth-red</code> și <code>veth-green</code>.
+</p>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

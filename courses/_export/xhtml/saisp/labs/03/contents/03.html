@@ -1,0 +1,212 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:03:contents:03</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-14T20:40:30+0200"/>
+<meta name="keywords" content="saisp,labs,03,contents,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:03:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="03.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/03/contents/03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:03:contents';var JSINFO = {"id":"saisp:labs:03:contents:03","namespace":"saisp:labs:03:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="03.html#p_configurare_server_snmp_pe_echipamente_cisco">03. [15p] Configurare server SNMP pe echipamente CISCO</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="03.html#snmpv3">SNMPv3</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="p_configurare_server_snmp_pe_echipamente_cisco">03. [15p] Configurare server SNMP pe echipamente CISCO</h3>
+<div class="level3">
+
+<p>
+Folosind soluția de jurnalizare remote, în cazul în care dorim să monitorizăm lucruri diferite, trebuie sa realizăm configurații diferite pe fiecare stație monitorizata, fiind o soluție <em>one-way</em> (client către server).
+</p>
+
+<p>
+O alternativa este activarea serviciului de SNMP (<em>Simple Network Management Protocol</em>) pe fiecare dispozitiv monitorizat. SNMP este implementat în majoritatea echipamentelor de rețea și expune informații despre toate subsistemele unui dispozitiv (utilizare procesor, memorie, număr de interfețe, număr de pachete pe fiecare interfață, etc.). Interogarea fiecarui dispozitiv se va face centralizat de către stația de management, în cazul nostru stația <code>monitor</code>.
+</p>
+
+<p>
+Protocolul SNMP a evoluat trecând prin mai multe versiuni. Cele mai folosite în ziua de astăzi sunt versiunile <code>2c</code> și <code>3</code>.
+</p>
+
+<p>
+Versiunea <code>2c</code> nu dispune de criptarea datelor (trimite parola în clar) și este folosită în general în rețelele interne cu circuit închis. ce poartă adesea numele de rețea de management. Implementarea se realizeaza printr-un VLAN de management, unde numai echipamentele și stația de monitorizare au acces (nu există trafic de date public).
+</p>
+
+<p>
+Versiunea <code>3</code> dispune de autentificare pe bază de utilizator și parolă și asigură criptarea datelor. Este folosită în general peste rețelele publice.
+</p>
+
+<p>
+În continuare vom configura versiunea <code>2c</code> a protocolului. Pentru a funcționa, versiunea <code>2c</code> are nevoie de un <code>community string</code> - un șir de caractere ce este partajat între server și client (acea parolă care se trimite în clar).
+</p>
+
+<p>
+Pe un router Cisco, <code>community string</code>-ul se definește din modul global de configurare (în cazul nostru, parola va fi <code>public</code>):
+</p>
+<pre class="code bash">R1<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#snmp-server community public ro</span></pre>
+
+<p>
+Cuvântul cheie <code>ro</code> ce apare după community-ul <code>public</code> specifică faptul că folosind acest community se pot realiza doar operații <em>read-only</em>. Pentru securitate crescută, în general vom păstra atributul <code>ro</code> dacă vom face doar monitorizare.
+</p>
+
+<p>
+Pentru a testa funcționalitatea vom folosi utilitarul <code>snmpwalk</code> de pe stația monitor. Acesta întoarce toate proprietățile pe care protocolul SNMP le expune pe un echipament:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.1
+iso.3.6.1.2.1.1.1.0 = STRING: <span class="st0">&quot;Cisco IOS Software, 3600 Software (C3640-JS-M), Version 12.4(12), RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2006 by Cisco Systems, Inc.
+Compiled Fri 17-Nov-06 13:59 by prod_rel_team&quot;</span>
+iso.3.6.1.2.1.1.2.0 = OID: iso.3.6.1.4.1.9.1.110
+iso.3.6.1.2.1.1.3.0 = Timeticks: <span class="br0">&#40;</span><span class="nu0">1242819</span><span class="br0">&#41;</span> <span class="nu0">3</span>:<span class="nu0">27</span>:<span class="nu0">08.19</span>
+iso.3.6.1.2.1.1.4.0 = <span class="st0">&quot;&quot;</span>
+iso.3.6.1.2.1.1.5.0 = STRING: <span class="st0">&quot;R1&quot;</span>
+iso.3.6.1.2.1.2.2.1.1.1 = INTEGER: <span class="nu0">1</span>
+iso.3.6.1.2.1.2.2.1.1.3 = INTEGER: <span class="nu0">3</span>
+iso.3.6.1.2.1.2.2.1.2.1 = STRING: <span class="st0">&quot;FastEthernet0/0&quot;</span>
+iso.3.6.1.2.1.2.2.1.2.3 = STRING: <span class="st0">&quot;Null0&quot;</span>
+iso.3.6.1.2.1.2.2.1.3.1 = INTEGER: <span class="nu0">6</span>
+iso.3.6.1.2.1.2.2.1.3.3 = INTEGER: <span class="nu0">1</span>
+iso.3.6.1.2.1.2.2.1.4.1 = INTEGER: <span class="nu0">1500</span>
+iso.3.6.1.2.1.2.2.1.4.3 = INTEGER: <span class="nu0">1500</span>
+iso.3.6.1.2.1.2.2.1.5.1 = Gauge32: <span class="nu0">100000000</span>
+iso.3.6.1.2.1.2.2.1.5.3 = Gauge32: <span class="nu0">4294967295</span>
+^Ctrl+C
+&nbsp;
+<span class="co4">root@monitor:~# </span>snmpwalk <span class="re5">-v2c</span> <span class="re5">-c</span> public 192.168.1.1<span class="sy0">|</span><span class="kw2">wc</span> <span class="re5">-l</span>
+<span class="nu0">541</span></pre>
+
+<p>
+După cum se poate observa prin SNMP obținem toate informațiile necesare, de la tipul echipamentului (<code>CISCO</code>), versiunea sistemului de operare (<code>12.4(12)</code>) la numărul de pachete ce au trecut print-o interfață Ethernet. De asemenea se observă un număr relativ mare de proprietăți expuse de SNMP (<code>~540</code>).
+</p>
+
+<p>
+Încercați folosirea versiunilor <code>1</code> și <code>3</code>. Observați că folosirea versiunii 3 eșuează. În mod implicit, la configurarea unei comunități echipamentele CISCO vor folosi versiunea <code>1</code> sau <code>2c</code> a protocolului SNMP.
+</p>
+
+<p>
+Se observă că fiecare intrare are ca și cheie un șir de numere care poartă numele de OID (Object Identifier). În general este greu să lucrăm cu astfel de chei întrucât ele nu au nici o semnificație. Fiecare producător construiește baze de date ce poartă numele de <strong>MIB</strong> (Management Information Base) în care se asociază cuvinte cheie cu semnificație clară (<code>sysUptime</code>) cu câte o înșiruire de numere (OID-uri). Poate fi făcută o paralelă cu serviciul <abbr title="Domain Name System">DNS</abbr> care face legătura între nume de domenii și adrese IP.
+</p>
+
+<p>
+MIB-urile sunt stocate în fișiere pe sistemul ce realizează interogarea SNMP (în cazul de față stația <code>monitor</code>). Pentru a descărca aceste MIB-uri există deverse tool-uri. Noi vom folosi <code>snmp-mibs-downloader</code>:
+</p>
+<pre class="code">root@monitor:~# apt-get install snmp-mibs-downloader</pre>
+
+<p>
+O dată instalat, acest va descărca automat toate MIB-urile și le va plasa în <code>/var/lib/mibs</code>. Noi vom folosi MIB-ul cu numele <code>IF-MIB</code> (<code>/var/lib/mibs/ietf/IF-MIB</code>) pentru a realiza interogări legate de interfețe către ruterul <code>R1</code>. Vom lista toate numele interfețelor de pe <code>R1</code>:
+</p>
+<pre class="code">root@monitor:~# snmpwalk -c public -v 2c 192.168.1.1 IF-MIB::ifName
+IF-MIB::ifName.1 = STRING: Fa0/0
+IF-MIB::ifName.3 = STRING: Nu0</pre>
+
+<p>
+Se observă că <code>Fa0/0</code> are numărul instanței <code>1</code>. Acest număr al instanței este cheia prin care putem afișa și alte caracteristici ale interfeței cum ar fi tipul interfeței:
+</p>
+<pre class="code">root@monitor:~# snmpwalk -c public -v 2c 192.168.1.1 IF-MIB::ifType
+IF-MIB::ifType.1 = INTEGER: ethernetCsmacd(6)
+IF-MIB::ifType.3 = INTEGER: other(1)</pre>
+
+<p>
+Se observă că instanța <code>1</code> e de tip <code>ethernetCsmacd</code>. Asocierea cu <code>Fa0/0</code> se face prin numărul instanței.
+</p>
+
+<p>
+Afișați viteza interfeței <code>Fa0/0</code>, șirul de caractere descriptiv, numărul de octeți trimiși și primiți și dacă au existat erori pe interfață (Hint: inspectați fișierul <code>/var/lib/mibs/ietf/IF-MIB</code> pentru a afla numele proprietăților de afișat).
+</p>
+
+<p>
+Utilitarul <code>snmpwalk</code> întoarce toate înstanțele găsite pentru o anumită proprietate. Dacă se știe în mod particular numele proprietății și numărul unei instanțe se poate folosi <code>snmpget</code> pentru a găsi valoarea asociată (într-un script vom folosi <code>snmpget</code> în general):
+</p>
+<pre class="code">root@monitor:~# snmpget -c public -v 2c 192.168.1.1 IF-MIB::ifName.1
+IF-MIB::ifName.1 = STRING: Fa0/0</pre>
+
+</div>
+
+<h4 id="snmpv3">SNMPv3</h4>
+<div class="level4">
+
+<p>
+Pentru ruterul R2 dorim configurarea SNMP versiunea 3. Pentru acest lucru vom crea un grup <code>SAISP</code> pe care să permitem doar interogările pentru versiunea 3:
+</p>
+<pre class="code">R2(config)#snmp-server group SAISP v3 ?
+  auth    group using the authNoPriv Security Level
+  noauth  group using the noAuthNoPriv Security Level
+R2(config)#snmp-server group SAISP v3 auth</pre>
+
+<p>
+Avem opțiunea <code>auth</code> care ne permite autentificarea. <code>NoPriv</code> se referă la faptul că datele efective nu vor fi criptate (această imagine de IOS nu suportă modul de criptare al datelor transmise de SNMP).
+</p>
+
+<p>
+După acest pas trebuie să configurăm un utilizator și o parolă pentru accesul la informațiile SNMP:
+</p>
+<pre class="code bash">R2<span class="br0">&#40;</span>config<span class="br0">&#41;</span><span class="co0">#snmp-server user student SAISP v3 auth md5 student1</span></pre>
+
+<p>
+<code>student</code> se referă la numele utilizatorului creat, <code>SAISP</code> este grupul configurat mai sus, iar <code>student1</code> este parola pentru acest utilizator (trebuie să fie de minim 8 caractere).
+</p>
+
+<p>
+De pe stația <code>monitor</code> vom realiza o interogarea folosind versiunea 3:
+</p>
+<pre class="code bash"><span class="co4">root@monitor:~# </span>snmpget <span class="re5">-v</span> <span class="nu0">3</span> <span class="re5">-l</span> AuthNoPriv <span class="re5">-u</span> student <span class="re5">-a</span> md5 <span class="re5">-A</span> student1 192.168.1.2 IF-MIB::ifName.1
+IF-MIB::ifName.1 = STRING: Fa0<span class="sy0">/</span><span class="nu0">0</span></pre>
+
+<p>
+Se observă că am specificat versiunea 3 (<code>-v 3</code>), comunitatea <code>public</code> a dispărut întrucât autentificarea se face pe bază de utilizator (<code>-u student</code>) și parolă (<code>-A student1</code>). Observați că a trebuit să specificăm obligatoriu tipul de comunicație (<code>-l AuthNoPriv</code> - autentificare fără criptate) și modalitatea de criptare a parolei folosită (<code>-a md5</code>). Chiar dacă nu se criptează datele, credențialele NU sunt trimise în clar.
+</p>
+
+<p>
+Dezactivați folosirea versiunii 1 și 2c a protocolului SNMP de pe ruterul R2.
+</p>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1220 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    07. Code generation. Function calls and stack frames    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-15T02:35:57+0200"/>
+<meta name="keywords" content="cpl,labs,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cpl:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/cpl/labs/07.html"/>
+<link rel="canonical" href="07.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl:labs';var JSINFO = {"id":"cpl:labs:07","namespace":"cpl:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cpl.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="07%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="07%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="code_generation_function_calls_and_stack_frames">07. Code generation. Function calls and stack frames</h1>
+<div class="level1">
+
+</div>
+
+<h1 class="sectionedit2" id="apelul_de_functii">Apelul de funcţii</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit3" id="transmiterea_parametrilor">Transmiterea parametrilor</h2>
+<div class="level2">
+
+<p>
+În limbajele de nivel înalt, exista câteva modalități de transmitere a parametrilor și de întoarcere a rezultatelor, dintre care amintim:
+</p>
+<ul>
+<li class="level1"><div class="li"> apelul prin valoare</div>
+</li>
+<li class="level1"><div class="li"> apelul prin referinta </div>
+</li>
+<li class="level1"><div class="li"> apelul prin rezultat</div>
+</li>
+<li class="level1"><div class="li"> apelul prin valoare-rezultat</div>
+</li>
+<li class="level1"><div class="li"> apelul prin nume.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteclassic"> Folosim termenul de argument sau <strong>argument actual</strong> pentru a ne referi la expresia care este trimisă unei rutine și termenul de parametru sau <strong>parametru formal</strong> pentru a referi variabila căreia această expresie îi este asociată în rutina apelată 
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="apelul_prin_valoare">Apelul prin valoare</h3>
+<div class="level3">
+
+<p>
+Fiecare argument este evaluat și valoarea lui este pusă la dispoziție procedurii apelate în parametrul formal corespunzător. 
+</p>
+
+<p>
+În timpul execuției procedurii, nu există nicio interacțiune cu variabilele apelantului. Excepția apare în cazul în care argumentul este un pointer și procedura apelată ar putea folosi valoarea pointerului pentru a modifica valorile către care indică acesta. 
+</p>
+
+<p>
+Apelul prin valoare se implementează de obicei prin copierea valorii fiecărui argument în parametrul corespunzător la intrarea în procedura apelată. Aceasta modalitate poate fi foarte eficientă în cazul argumentelor care pot fi ținute în regiștri, dar foarte ineficientă pentru tipuri de date compuse - vectori, structuri, obiecte - deoarece presupune un transfer de date semnificativ în memorie.
+</p>
+
+<p>
+Apelul prin valoare este singurul mecanism de pasare a parametrilor în limbajul C. Un parametru poate fi însă și adresa unui obiect; se obține astfel efectul apelului prin referință.
+</p>
+
+<p>
+În C++, la transferul unui obiect prin valoare se va crea o copie a acelui obiect, si se va apela constructorul de copiere, daca acesta exista.
+</p>
+<pre class="code">class C;
+void f(C a);            // parametrul a se transmite prin valoare
+void g() { C x; f(x); } // se apeleaza constructorul C::C(const C&amp;) ce copiaza x in a</pre>
+
+</div>
+
+<h3 class="sectionedit5" id="apelul_prin_referinta">Apelul prin referință</h3>
+<div class="level3">
+
+<p>
+Realizează o asociere între argumentul actual și parametrul corespunzator. Procedura apelată va avea acces total la argument pe toată perioada execuției sale, putând să schimbe parametrul actual sau să îl transmită mai departe altor proceduri. 
+</p>
+
+<p>
+Ca implementare tipică, la intrarea în procedura apelată se determină adresa argumentului și aceasta se pune la dispoziția procedurii ca mijloc de accesare a argumentului. Acest mecanism este foarte eficient când vectori sunt transmiși ca parametri, dar poate fi ineficient în cazul parametrilor de mărime mică care ar putea fi transmiși prin regiștri. 
+</p>
+
+<p>
+Apelul prin referință poate cauza un <em>alias</em> - o situație în care aceeași locație de memorie poate fi accesată folosind două nume simbolice diferite. Un exemplu (C#) :
+</p>
+<pre class="code c""><span class="kw4">void</span> f<span class="br0">&#40;</span>ref <span class="kw4">int</span> i<span class="sy0">,</span> ref <span class="kw4">int</span> j<span class="br0">&#41;</span> <span class="br0">&#123;</span> i<span class="sy0">++;</span> j<span class="sy0">++;</span> <span class="br0">&#125;</span>
+<span class="kw4">void</span> g<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> <span class="kw4">int</span> x <span class="sy0">=</span> <span class="nu0">1</span><span class="sy0">;</span> f<span class="br0">&#40;</span>x<span class="sy0">,</span>x<span class="br0">&#41;</span><span class="sy0">;</span> <span class="coMULTI">/* x == 3 */</span> <span class="br0">&#125;</span></pre>
+
+<p>
+Pot apărea probleme în cazul în care o constantă este transmisă prin referință; procedura apelată ar putea modifica acea constantă, ceea ce este ilegal. Soluția uzuală este copierea constantelor în noi locații de memorie și transmiterea acestor adrese când se face apelul prin referință. 
+</p>
+
+<p>
+Apelul prin referința este implementat implicit în Fortran, sau explicit via o sintaxă specială în C++, C# sau PHP. Același efect se poate obține în C și C++ prin transmiterea adresei ca valoare.
+</p>
+
+<p>
+<p><div class="noteclassic">
+În Java, JavaScript sau Python, parametrii sunt transmiși prin valoare, la fel ca și în C. Acest lucru este valabil atât pentru primitive cât și pentru obiecte.
+</p>
+
+<p>
+Afirmația <strong>obiectele se transmit prin referință</strong> este greșită. Deoarece variabilele din Java conțin referințe către obiecte și nu obiectele în sine, corect este <strong>referința obiectelor este transmisă prin valoare</strong>.
+
+</div></p>
+</p>
+
+<p>
+Codul urmator C++ folosește apelul prin referință pentru a interschimba valorile variabilelor a și b. Codul similar Java, însă, folosește apelul prin valoare și lasă variabilele neschimbate.
+</p>
+
+<p>
+<strong>C++</strong>
+</p>
+<pre class="code c++"><span class="kw4">void</span> swap<span class="br0">&#40;</span>Obj <span class="sy0">&amp;</span>a<span class="sy0">,</span> Obj <span class="sy0">&amp;</span>b<span class="br0">&#41;</span> <span class="br0">&#123;</span> Obj t<span class="sy0">=</span>a<span class="sy0">;</span> a<span class="sy0">=</span>b<span class="sy0">;</span> b<span class="sy0">=</span>t<span class="sy0">;</span> <span class="br0">&#125;</span>
+<span class="kw4">void</span> f<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> Obj a<span class="sy0">,</span>b<span class="sy0">;</span> swap<span class="br0">&#40;</span>a<span class="sy0">,</span>b<span class="br0">&#41;</span><span class="sy0">;</span> <span class="br0">&#125;</span> </pre>
+
+<p>
+<strong>Java</strong>
+</p>
+<pre class="code java"><span class="kw4">void</span> swap<span class="br0">&#40;</span>Obj a, Obj b<span class="br0">&#41;</span> <span class="br0">&#123;</span> Obj t<span class="sy0">=</span>a<span class="sy0">;</span> a<span class="sy0">=</span>b<span class="sy0">;</span> b<span class="sy0">=</span>t<span class="sy0">;</span> <span class="br0">&#125;</span>
+<span class="kw4">void</span> f<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span> Obj a,b<span class="sy0">;</span> swap<span class="br0">&#40;</span>a,b<span class="br0">&#41;</span><span class="sy0">;</span> <span class="br0">&#125;</span> </pre>
+
+</div>
+
+<h3 class="sectionedit6" id="apelul_prin_rezultat">Apelul prin rezultat</h3>
+<div class="level3">
+
+<p>
+Este similar celui prin valoare, cu deosebirea că aici se întorc valorile de la apelat la apelant. La intrarea în procedura apelată nu se întamplă nimic, iar la întoarcere valoarea unui parametru apelat prin rezultat este pusă la dispoziția apelantului prin copierea valorii lui în argumentul asociat. Acest tip de apel apare în cazul parametrilor de tip out din Ada sau C#:
+</p>
+<pre class="code c""><span class="kw4">void</span> a<span class="br0">&#40;</span>out <span class="kw4">int</span> result<span class="br0">&#41;</span>
+<span class="br0">&#123;</span> result <span class="sy0">=</span> <span class="nu0">7</span><span class="sy0">;</span> <span class="coMULTI">/* daca lipseste atribuirea in result, da eroare de compilare */</span> <span class="br0">&#125;</span> 
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co1">// exemplu de folosire:</span>
+<span class="kw4">int</span> rez<span class="sy0">;</span>
+a<span class="br0">&#40;</span>out rez<span class="br0">&#41;</span><span class="sy0">;</span> <span class="co1">// acum rez a primit valoarea din a.</span></pre>
+
+</div>
+
+<h3 class="sectionedit7" id="apelul_prin_valoare-rezultat">Apelul prin valoare-rezultat</h3>
+<div class="level3">
+
+<p>
+Este caracterizat de reuniunea proprietăților celor două tipuri de apel: prin valoare și prin rezultat. La intrarea în procedura apelată valoarea argumentului se copiază în parametru, iar la ieșire valoarea parametrului se copiază înapoi în argument. Este implementat în Fortran sau Ada pentru parametri de tip inout, și apare și în cazul apelurilor de procedură pe un alt computer (<em>RPC - remote procedure calls</em>). Diferenta față de apelul prin referință este că nu mai apar situații de alias între argumente.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="apelul_prin_nume">Apelul prin nume</h3>
+<div class="level3">
+
+<p>
+Este un mecanism de evaluare întârziată a argumentelor unei funcții (<em>lazy evaluation</em>). Este similar cu transmiterea prin referință, însă argumentele actuale sunt evaluate de fiecare dată când parametrul formal este folosit și nu doar o singură dată la intrarea în procedură.
+</p>
+
+<p>
+Astfel, dacă argumentul este a[i], și valoarea lui i se schimbă între două folosiri ale argumentului, la cele două folosiri se vor accesa de fapt două elemente diferite ale vectorului.
+</p>
+
+<p>
+Mecanismul este rar în limbajele moderne, dar a fost folosit istoric (ALGOL 60). Un exemplu:
+</p>
+<pre class="code pascal"><span class="kw1">begin</span>
+  <span class="kw4">integer</span> <span class="kw4">array</span> a<span class="br0">&#91;</span><span class="nu0">1</span><span class="sy1">..</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="sy1">;</span> <span class="kw4">integer</span> i<span class="sy1">;</span>
+&nbsp;
+  <span class="kw1">procedure</span> f<span class="br0">&#40;</span>x<span class="sy1">,</span> j<span class="br0">&#41;</span><span class="sy1">;</span>
+    <span class="kw4">integer</span> x<span class="sy1">,</span> j<span class="sy1">;</span>
+    <span class="kw1">begin</span>
+      <span class="kw4">integer</span> k<span class="sy1">;</span>
+      k <span class="sy1">:</span><span class="sy3">=</span> x<span class="sy1">;</span>
+      j <span class="sy1">:</span><span class="sy3">=</span> j<span class="sy3">+</span><span class="nu0">1</span><span class="sy1">;</span>
+      x <span class="sy1">:</span><span class="sy3">=</span> j<span class="sy1">;</span>
+      f <span class="sy1">:</span><span class="sy3">=</span> k<span class="sy1">;</span>
+    <span class="kw1">end</span><span class="sy1">;</span>
+&nbsp;
+  i <span class="sy1">:</span><span class="sy3">=</span> <span class="nu0">1</span><span class="sy1">;</span>
+  a<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span> <span class="sy1">:</span><span class="sy3">=</span> <span class="nu0">5</span><span class="sy1">;</span>
+  a<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span> <span class="sy1">:</span><span class="sy3">=</span> <span class="nu0">8</span><span class="sy1">;</span>	
+  outinteger<span class="br0">&#40;</span>a<span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span><span class="sy1">,</span> f<span class="br0">&#40;</span>a<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy1">,</span>i<span class="br0">&#41;</span><span class="sy1">,</span> a<span class="br0">&#91;</span><span class="nu0">2</span><span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy1">;</span>
+<span class="kw1">end</span></pre>
+
+<p>
+În exemplul de mai sus în care i și a[i] sunt transmiși de către programul principal procedurii f, prima folosire a parametrului x aduce valoarea lui a[1], pe cand cea de-a doua folosire seteaza valoarea a[2]. Apelul outinteger() va avea ca rezultat afișarea valorilor „5 5 2”. Dacă s-ar fi folosit apelul prin referința, atunci s-ar fi afișat „5 5 8”.
+</p>
+
+<p>
+O variantă a apelului prin nume este folosită în unele limbaje funcționale, în care evaluarea unui argument se face o singură dată, dar la prima folosire a acestuia, și nu la intrarea în funcție.
+</p>
+
+</div>
+
+<h2 class="sectionedit9" id="conventii_de_apel">Convenții de apel</h2>
+<div class="level2">
+
+<p>
+Apelarea unei proceduri dintr-o altă procedură presupune existența unui &#039;protocol&#039; prin care se trece controlul de la apelant la apelat, prin care parametrii sunt pasați în aceeași direcție iar valoarea rezultatului este pasata de la apelat la apelant. În cazul unui model simplu de runtime, execuția unei proceduri constă în cinci faze, fiecare dintre acestea având mai multe subfaze:
+</p>
+<ul>
+<li class="level1"><div class="li"> Asamblarea argumentelor ce trebuie transferate procedurii și pasarea controlului.</div>
+<ul>
+<li class="level2"><div class="li"> Fiecare argument este evaluat și pus în registrul sau locația de pe stivă corespunzatoare; evaluare poate înseamna calcularea adresei lui (pentru cei pasați prin referință), valoarea lui (pentru cei pasați prin valoare), etc.</div>
+</li>
+<li class="level2"><div class="li"> Se stabilește adresa codului procedurii (pentru cele mai multe limbaje însă, a fost stabilită la compilare sau linkare)</div>
+</li>
+<li class="level2"><div class="li"> Regiștrii care au fost folosiți și vor mai fi și după întoarcerea din procedura apelată, se stochează în memorie dacă protocolul specifică că este datoria apelantului sa facă acest lucru</div>
+</li>
+<li class="level2"><div class="li"> Se salvează adresa de întoarcere și se execută un salt la adresa codului procedurii (de obicei o instrucțiune <code>call</code> face aceste lucruri)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Prologul procedurii, executat la întrarea în procedură, stabilește mediul necesar adresării și poate salva regiștrii folosiți de procedură în scopuri proprii</div>
+</li>
+<li class="level1"><div class="li"> Se executa procedura, care la rândul ei poate apela alte proceduri</div>
+</li>
+<li class="level1"><div class="li"> Epilogul procedurii restaurează valorile regiștrilor și mediul de adresare al apelantului, asamblează valoarea pe care trebuie să o întoarcă și îi redă controlul apelantului</div>
+<ul>
+<li class="level2"><div class="li"> Regiștrii salvați de procedura apelată sunt restaurați din memorie</div>
+</li>
+<li class="level2"><div class="li"> Valoarea care trebuie întoarsă se pune în locul corespunzator (dacă procedura întoarce o valoare)</div>
+</li>
+<li class="level2"><div class="li"> Se incarcă adresa de revenire și se executa un salt la această adresă (de obicei, o instrucțiune <code>ret</code> face acest lucru)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Codul din procedura apelantă care se afla după apel își termină restaurarea mediului sau de execuție și primește valoarea intoarsă</div>
+<ul>
+<li class="level2"><div class="li"> Regiștrii salvați de către procedura apelantă sunt restaurați din memorie</div>
+</li>
+<li class="level2"><div class="li"> Se folosește valoarea întoarsă de procedura apelată.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit10" id="cadre_de_stiva_stack_frames">Cadre de stiva (stack frames)</h2>
+<div class="level2">
+
+<p>
+Deși ar fi ideal ca toți operanzii să fie ținuți în regiștri, majoritatea procedurilor necesită spatiu de memorie pentru:
+</p>
+<ul>
+<li class="level1"><div class="li"> variabilele care fie nu au primit regiștri, fie nu pot fi ținute în regiștri pentru că le sunt încărcate adresele (explicit sau implicit, ca in cazul parametrilor transferati prin referință) sau pentru că trebuie să fie indexabile</div>
+</li>
+<li class="level1"><div class="li"> a oferi un loc “standard” pentru a salva valorile din regiștri atunci când se execută un apel de procedură</div>
+</li>
+<li class="level1"><div class="li"> a oferi unui debugger o modalitate de a cunoaște lanțul de proceduri active la un moment dat (call stack)</div>
+</li>
+</ul>
+
+<p>
+Deoarece aceste spații de memorie devin necesare la intrarea într-o procedură și devin inutile la ieșirea din aceasta, ele sunt grupate în cadre de stivă(activation records sau stack frames), care la randul lor sunt organizate sub formă de stiva. Un cadru de stivă poate conține:
+</p>
+<ul>
+<li class="level1"><div class="li"> valorile parametrilor trimiși rutinei curente care nu încap în regiștrii destinați acestui scop, </div>
+</li>
+<li class="level1"><div class="li"> toate sau o parte din variabilele locale, </div>
+</li>
+<li class="level1"><div class="li"> o zona de salvare a regiștrilor temporari alocați de compilator,</div>
+</li>
+<li class="level1"><div class="li"> adresa de întoarcere din procedura etc.</div>
+</li>
+</ul>
+
+<p>
+Pentru a putea accesa locatiile din cadrul de stivă curent în timpul execuției, acestora li se asociază distante în unitati de memorie relative la un pointer stocat într-un registru. Pointerul poate fi frame pointer-ul <code>fp</code> care indică prima locație a cadrului curent, sau stack pointer-ul <code>sp</code> care indică vârful stivei, adica imediat dupa ultima locație a cadrului curent. Numeroase compilatoare aranjează în memorie cadrele de stivă astfel încat începutul acestora se află la adrese mai mari de memorie decât sfârșitul acestora. Această alegere face ca deplasamentul față de sp-ul curent în cadrul curent să fie pozitiv, așa cum se vede în figura de mai jos.
+</p>
+
+<p>
+<a href="../../_detail/cpl/labs/laborator-05-stack-sp.png%3Fid=cpl%253Alabs%253A07.html" class="media" title="cpl:labs:laborator-05-stack-sp.png"><img src="../../_media/cpl/labs/laborator-05-stack-sp.png%3Fw=480&amp;tok=892431" class="mediacenter" alt="" width="480" /></a>
+</p>
+
+<p>
+Unele compilatoare folosesc amândoi pointerii, <code>sp</code> și fp, având variabile relative la amândoi regiștrii.
+</p>
+
+<p>
+<a href="../../_detail/cpl/labs/laborator-05-stack-fp.png%3Fid=cpl%253Alabs%253A07.html" class="media" title="cpl:labs:laborator-05-stack-fp.png"><img src="../../_media/cpl/labs/laborator-05-stack-fp.png%3Fw=480&amp;tok=1a0678" class="mediacenter" alt="" width="480" /></a>
+</p>
+
+<p>
+Caracteristicile limbajului și cele ale hardware-lui determină alegerea unuia dintre acești registri sau chiar folosirea ambilor pentru accesarea locațiilor de pe stivă. Problemele sunt urmatoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> folosirea a doi regiștri pentru accesul la stivă înseamnă a consuma un registru care ar putea folosi altor scopuri;</div>
+</li>
+<li class="level1"><div class="li"> dacă deplasamentul scurt față de un singur registru oferit de instrucțiunile load (încărcare din memorie) și store (salvare în memorie) este suficient pentru a acoperi spatiul de memorie al majorității înregistrărilor de activare (ceea ce se întâmplă pentru cele mai multe  arhitecturi).</div>
+</li>
+<li class="level1"><div class="li"> dacă dimensiunea cadrului de stivă este sau nu cunoscută la momentul compilării, și dacă se modifică pe parcursul execuției procedurii.</div>
+</li>
+</ul>
+
+<p>
+Dimensiunea unui cadru de stivă nu este cunoscută, de exemplu, dacă trebuie să fie suportate funcții de alocare a memoriei de tipul <code>alloca()</code> din biblioteca C prin care se alocă spațiu în mod dinamic în cadrul de stivă curent, și se întoarce un pointer la acel spațiu.
+</p>
+
+<p>
+Prin urmare, este suficient și de preferat să se folosească doar sp-ul, în cazul în care nu trebuie să se ofere suport pentru funcții de tipul <code>alloca()</code>.
+</p>
+
+<p>
+Efectul unui apel <code>alloca()</code> este să extindă cadrul de stivă făcând sp-ul să indice la o locație nouă. Prin urmare, deplasamentele relative la sp vor pointa către alte locații. Deoarece în C se poate calcula adresa unei variabile locale și apoi folosi, se impune ca acele cantități accesate relativ la sp să nu poată fi direct adresabile de catre utilizator și se preferă ca acestea să fie valori necesare la apelul unei alte proceduri. 
+</p>
+
+<p>
+Astfel, în momentul când există fp, adresarea relativa la sp se foloseste pentru:
+</p>
+<ul>
+<li class="level1"><div class="li"> transmiterea argumentelor unei alte proceduri, </div>
+</li>
+<li class="level1"><div class="li"> salvarea regiștrilor peste un apel de procedură</div>
+</li>
+<li class="level1"><div class="li"> întoarcerea rezultatelor dintr-o altă procedură. </div>
+</li>
+</ul>
+
+<p>
+Pentru a oferi suport pentru <code>alloca()</code> avem nevoie atât de un registru sp cât și de unul fp. Chiar dacă aceasta necesita înca un registru în plus, exista avantajul execuției rapide în cazul apelurilor de proceduri. Astfel, la intrarea în procedură:
+</p>
+<ul>
+<li class="level1"><div class="li"> se salvează vechiul fp pe stivă, în cadrul noului cadru,</div>
+</li>
+<li class="level1"><div class="li"> se setează valoarea noului fp la valoarea vechiului sp și</div>
+</li>
+<li class="level1"><div class="li"> adaugă lungimea cadrului curent la vechiul sp pentru a obține noua valoare a lui sp.</div>
+</li>
+</ul>
+
+<p>
+La întoarcerea din procedură, procesul invers este:
+</p>
+<ul>
+<li class="level1"><div class="li"> se setează valoarea noului sp la valoarea vechiului fp</div>
+</li>
+<li class="level1"><div class="li"> se încarcă noul fp de pe stivă</div>
+</li>
+</ul>
+
+<p>
+<a href="../../_detail/cpl/labs/laborator-05-stack-full.png%3Fid=cpl%253Alabs%253A07.html" class="media" title="cpl:labs:laborator-05-stack-full.png"><img src="../../_media/cpl/labs/laborator-05-stack-full.png%3Fw=480&amp;tok=585cfb" class="mediacenter" alt="" width="480" /></a>
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="exemplufunctie_minimala">Exemplu: funcție minimală</h3>
+<div class="level3">
+<pre class="code c"><span class="kw4">int</span> add<span class="br0">&#40;</span><span class="kw4">int</span> a<span class="sy0">,</span> <span class="kw4">int</span> b<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+      <span class="kw1">return</span> a <span class="sy0">+</span> b<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h5 id="gcc_-_x86_cisc">gcc - x86 (CISC)</h5>
+<div class="level5">
+<pre class="code asm">_add<span class="sy1">:</span>                     <span class="co1">; Identificatorii C sunt prefixati de caracterul _</span>
+&nbsp;
+                          <span class="co1">; La intrarea in functie, stiva contine:</span>
+                          <span class="co1">;     | b</span>
+                          <span class="co1">;     | a</span>
+                          <span class="co1">; esp | Adresa de intoarcere</span>
+&nbsp;
+  pushl   <span class="sy1">%</span><span class="kw4">ebp</span>            <span class="co1">; Prin conventie, registrul ebp este frame pointer</span>
+  movl    <span class="sy1">%</span><span class="kw4">esp</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">ebp</span>      <span class="co1">; catre inceputul cadrului de stiva al unei functii.</span>
+                          <span class="co1">; Stiva acum:</span>
+                          <span class="co1">; ebp + 12 | b</span>
+                          <span class="co1">; ebp +  8 | a</span>
+                          <span class="co1">; ebp +  4 | adresa de intoarcere</span>
+                          <span class="co1">; ebp      | ebp din functia anterioara</span>
+&nbsp;
+                          <span class="co1">; Deoarece stiva creste in jos, parametrii se gasesc la </span>
+                          <span class="co1">; deplasamente pozitive (ebp+8) in timp ce variabilele locale </span>
+                          <span class="co1">; se gasesc la deplasamente negative (ebp-8).</span>
+&nbsp;
+  movl    <span class="nu0">12</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>  <span class="co1">; eax = b [ebp + 12]</span>
+  movl    <span class="nu0">8</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">edx</span>   <span class="co1">; edx = a [ebp + 8 ]</span>
+                          <span class="co1">; Registrii eax si edx sunt volatili, deci pot fi folositi de </span>
+                          <span class="co1">; catre functie fara restrictii.</span>
+&nbsp;
+  addl    <span class="sy1">%</span><span class="kw4">edx</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>      <span class="co1">; eax += edx</span>
+                          <span class="co1">; Valoarea intoarsa de functie este plasata in registrul eax.</span>
+&nbsp;
+  popl    <span class="sy1">%</span><span class="kw4">ebp</span>
+  <span class="kw1">ret</span></pre>
+
+</div>
+
+<h5 id="gcc_arm_risc">gcc – ARM (RISC)</h5>
+<div class="level5">
+<pre class="code asm"><span class="kw1">add</span><span class="sy1">:</span>
+   <span class="kw1">add</span>     r0<span class="sy1">,</span> r0<span class="sy1">,</span> r1
+   <span class="kw4">bx</span>      lr</pre>
+
+<p>
+Functia nu foloseste stiva. Atat parametrii, cat si adresa de intoarcere sunt transmisi prin registrii procesorului:
+</p>
+<div class="table sectionedit12"><table class="inline">
+	<tr class="row0">
+		<td class="col0"> R0 </td><td class="col1"> a </td>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> R1 </td><td class="col1"> b </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> LR </td><td class="col1"> Adresa de intoarcere </td>
+	</tr>
+</table></div>
+
+<p>
+Valoarea intoarsa de functie trebuie plasata in R0. Codul generat este astfel echivalent cu:
+</p>
+<ul>
+<li class="level1"><div class="li"> R0 = R0 + R1</div>
+</li>
+<li class="level1"><div class="li"> Salt la LR.</div>
+</li>
+</ul>
+
+</div>
+
+<h5 id="jvm_masina_virtuala_bazata_pe_stiva">JVM (masina virtuala bazata pe stiva)</h5>
+<div class="level5">
+<pre class="code">public static int add(int, int);
+   Stack=2, Locals=2, Args_size=2
+   0:   iload_0
+   1:   iload_1
+   2:   iadd
+   3:   ireturn	</pre>
+
+<p>
+Masina virtuala Java nu are registri si foloseste stiva pentru toate operatiile.
+</p>
+
+<p>
+Functia are 2 argumente, ce sunt copiate in zona de variabile locale, si foloseste 2 locatii de stiva.
+</p>
+
+<p>
+Variabilele locale sunt copiate pe stiva:
+</p>
+<pre class="code">  push local[0]; --&gt; a
+  push local[1]; --&gt; b</pre>
+
+<p>
+Instructiunea de adunare inlocuieste doua valori din varful stivei cu suma lor. Codul echivalent intr-o masina cu registri:
+</p>
+<pre class="code">  pop a
+  pop b
+  c = a + b
+  push c</pre>
+
+<p>
+Functia intoarce valoarea ramasa în vârful stivei.
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="exempluevaluarea_unei_expresii">Exemplu: evaluarea unei expresii</h3>
+<div class="level3">
+<pre class="code c"><span class="kw4">int</span> add_mul<span class="br0">&#40;</span><span class="kw4">int</span> a<span class="sy0">,</span> <span class="kw4">int</span> b<span class="sy0">,</span> <span class="kw4">int</span> c<span class="sy0">,</span> <span class="kw4">int</span> d<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+      <span class="kw1">return</span> a <span class="sy0">*</span> b <span class="sy0">+</span> c <span class="sy0">*</span> d<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h5 id="gcc_-_x86">gcc - x86</h5>
+<div class="level5">
+<pre class="code asm">_add_mul<span class="sy1">:</span>
+  pushl   <span class="sy1">%</span><span class="kw4">ebp</span>
+  movl    <span class="sy1">%</span><span class="kw4">esp</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">ebp</span>
+&nbsp;
+<span class="co1">; Stiva, dupa executia codului de initializare:</span>
+<span class="co1">;    +20  d</span>
+<span class="co1">;    +16  c</span>
+<span class="co1">;    +12  b</span>
+<span class="co1">;    +8   a</span>
+<span class="co1">;    +4   Adresa de intoarcere</span>
+<span class="co1">; ebp+0   ebp din functia anterioara</span>
+&nbsp;
+<span class="co1">; Compilatorul descompune calculul expresiei in instructiuni simple</span>
+<span class="co1">; Apoi mapeaza variabilele temporare pe registrii hardware ai procesorului</span>
+&nbsp;
+  movl    <span class="nu0">8</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">edx</span>  <span class="co1">;   T1 = a       ; edx = a</span>
+  movl    <span class="nu0">12</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span> <span class="co1">;   T2 = b       ; eax = b</span>
+  imull   <span class="sy1">%</span><span class="kw4">edx</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>     <span class="co1">;   T3 = T1 * T2 ; eax = edx * eax</span>
+  movl    <span class="nu0">16</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">ecx</span> <span class="co1">;   T4 = c       ; ecx = c</span>
+  movl    <span class="nu0">20</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">edx</span> <span class="co1">;   T5 = d       ; edx = d</span>
+  imull   <span class="sy1">%</span><span class="kw4">ecx</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">edx</span>     <span class="co1">;   T6 = T4 * T5 ; edx = ecx * edx</span>
+  addl    <span class="sy1">%</span><span class="kw4">edx</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>     <span class="co1">;   T7 = T3 + T6 ; eax = eax + edx</span>
+&nbsp;
+  popl    <span class="sy1">%</span><span class="kw4">ebp</span>
+  <span class="kw1">ret</span></pre>
+
+</div>
+
+<h5 id="jvm">JVM</h5>
+<div class="level5">
+<div class="table sectionedit14"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> public static int add_mul(int, int, int, int); </th><th class="col1 centeralign">  Stiva  </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> Code: </td><td class="col1" rowspan="2"> </td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> Stack=3, Locals=4, Args_size=4 </td>
+	</tr>
+	<tr class="row3">
+		<td class="col0"> 0:   iload_0 </td><td class="col1 centeralign">  a  </td>
+	</tr>
+	<tr class="row4">
+		<td class="col0" rowspan="2"> 1:   iload_1 </td><td class="col1 centeralign">  a  </td>
+	</tr>
+	<tr class="row5">
+		<td class="col0 centeralign">  b  </td>
+	</tr>
+	<tr class="row6">
+		<td class="col0"> 2:   imul </td><td class="col1 centeralign">  a * b  </td>
+	</tr>
+	<tr class="row7">
+		<td class="col0" rowspan="2"> 3:   iload_2 </td><td class="col1 centeralign">  a * b  </td>
+	</tr>
+	<tr class="row8">
+		<td class="col0 centeralign">  c  </td>
+	</tr>
+	<tr class="row9">
+		<td class="col0" rowspan="3"> 4:   iload_3 </td><td class="col1 centeralign">  a * b  </td>
+	</tr>
+	<tr class="row10">
+		<td class="col0 centeralign">  c  </td>
+	</tr>
+	<tr class="row11">
+		<td class="col0 centeralign">  d  </td>
+	</tr>
+	<tr class="row12">
+		<td class="col0" rowspan="2"> 5:   imul </td><td class="col1 centeralign">  a * b  </td>
+	</tr>
+	<tr class="row13">
+		<td class="col0 centeralign">  c * d  </td>
+	</tr>
+	<tr class="row14">
+		<td class="col0"> 6:   iadd </td><td class="col1 centeralign">  a * b + c * d  </td>
+	</tr>
+	<tr class="row15">
+		<td class="col0"> 7:   ireturn </td><td class="col1"> </td>
+	</tr>
+</table></div>
+
+</div>
+
+<h3 class="sectionedit15" id="exempluapeluri_de_functii">Exemplu: apeluri de funcții</h3>
+<div class="level3">
+<pre class="code c"><span class="kw4">int</span> add_mul2<span class="br0">&#40;</span><span class="kw4">int</span> a<span class="sy0">,</span> <span class="kw4">int</span> b<span class="sy0">,</span> <span class="kw4">int</span> c<span class="sy0">,</span> <span class="kw4">int</span> d<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+      <span class="kw1">return</span> mul<span class="br0">&#40;</span>a<span class="sy0">,</span>b<span class="br0">&#41;</span> <span class="sy0">+</span> mul<span class="br0">&#40;</span>c<span class="sy0">,</span>d<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h5 id="gcc_-_x861">gcc - x86</h5>
+<div class="level5">
+<pre class="code asm">_add_mul2<span class="sy1">:</span>
+        pushl   <span class="sy1">%</span><span class="kw4">ebp</span>
+        movl    <span class="sy1">%</span><span class="kw4">esp</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">ebp</span>
+        pushl   <span class="sy1">%</span><span class="kw4">ebx</span>
+        subl    <span class="sy2">$</span><span class="nu0">20</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">esp</span>
+<span class="co1">; Conform conventiei de apel, registrul ebx nu trebuie modificat de catre functii. </span>
+<span class="co1">; Pentru ca add_mul2() il foloseste, el este salvat pe stiva la intrarea in functie</span>
+<span class="co1">; si restaurat la iesire.</span>
+<span class="co1">;</span>
+<span class="co1">; Stiva, dupa executia codului de initializare:</span>
+<span class="co1">;</span>
+<span class="co1">; ebp+20  d</span>
+<span class="co1">; ebp+16  c</span>
+<span class="co1">; ebp+12  b</span>
+<span class="co1">; ebp+8   a</span>
+<span class="co1">; ebp+4   Adresa de intoarcere</span>
+<span class="co1">; ebp+0   ebp din functia anterioara</span>
+<span class="co1">;         ebx din functia anterioara</span>
+<span class="co1">;         Spatiu pentru variabilele locale.</span>
+<span class="co1">; esp+4   Al doilea parametru pentru mul(int,int)</span>
+<span class="co1">; esp+0   Primul parametru pentru mul(int,int)</span>
+&nbsp;
+        movl    <span class="nu0">12</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>
+        movl    <span class="sy1">%</span><span class="kw4">eax</span><span class="sy1">,</span> <span class="nu0">4</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">esp</span><span class="br0">&#41;</span>
+        movl    <span class="nu0">8</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>
+        movl    <span class="sy1">%</span><span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">esp</span><span class="br0">&#41;</span>
+        <span class="kw1">call</span>    _mul
+<span class="co1">; Codul de nivel inalt: ebx = mul ( a, b )</span>
+<span class="co1">; Parametrii pentru mul ( a, b ) sunt plasati in spatiul prealocat.</span>
+&nbsp;
+        movl    <span class="sy1">%</span><span class="kw4">eax</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">ebx</span>
+<span class="co1">; Rezultatul functiei este salvat in ebx. Se foloseste ebx, deoarece, conform</span>
+<span class="co1">; conventiei, este un registru nonvolatil, prin urmare nu va fi distrus de urmatorul</span>
+<span class="co1">; apel al functiei mul().</span>
+&nbsp;
+        movl    <span class="nu0">20</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>
+        movl    <span class="sy1">%</span><span class="kw4">eax</span><span class="sy1">,</span> <span class="nu0">4</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">esp</span><span class="br0">&#41;</span>
+        movl    <span class="nu0">16</span><span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">ebp</span><span class="br0">&#41;</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>
+        movl    <span class="sy1">%</span><span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#40;</span><span class="sy1">%</span><span class="kw4">esp</span><span class="br0">&#41;</span>
+        <span class="kw1">call</span>    _mul
+<span class="co1">; eax = mul ( c,d )</span>
+<span class="co1">; De remarcat ca parametrii unei functii apartin cadrului de stiva al functiei </span>
+<span class="co1">; anterioare, care o apeleaza. </span>
+<span class="co1">; In cazul nostru, stiva la apelul lui mul(c,d) :</span>
+<span class="co1">;</span>
+<span class="co1">;                           d</span>
+<span class="co1">;                           c</span>
+<span class="co1">;                           b</span>
+<span class="co1">;                           a</span>
+<span class="co1">; Cadrul add_mul2() --&gt;     Adresa de intoarcere din add_mul2()</span>
+<span class="co1">;                           ebp din functia anterioara</span>
+<span class="co1">;                           ebx din functia anterioara</span>
+<span class="co1">;                           Spatiu pentru variabilele locale.</span>
+<span class="co1">;                           d</span>
+<span class="co1">;                           c</span>
+<span class="co1">; Cadrul mul()      --&gt;     Adresa de intoarcere din mul()</span>
+<span class="co1">;                           ...</span>
+&nbsp;
+        addl    <span class="sy1">%</span><span class="kw4">eax</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">ebx</span>
+        movl    <span class="sy1">%</span><span class="kw4">ebx</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">eax</span>
+<span class="co1">; Calculul valorii intoarse de add_mul2():</span>
+<span class="co1">;  ebx += eax</span>
+<span class="co1">;  eax = ebx</span>
+&nbsp;
+        addl    <span class="sy2">$</span><span class="nu0">20</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">esp</span>
+        popl    <span class="sy1">%</span><span class="kw4">ebx</span>
+        popl    <span class="sy1">%</span><span class="kw4">ebp</span>
+        <span class="kw1">ret</span></pre>
+
+</div>
+
+<h2 class="sectionedit16" id="prototipuri_de_functii">Prototipuri de funcții</h2>
+<div class="level2">
+
+<p>
+Un prototip de funcție reprezintă o declarare a funcției care omite corpul funcției, dar specifică numele, tipul parametrilor și tipul întors. În timp ce definiția unei funcții specifică implementarea unei funcții, prototipul poate fi descris ca fiind interfața funcției. Acest lucru este pus în evidență în IDE-urile care au opțiuni diferite “Go to declaration” și “Go to definition”.
+</p>
+
+<p>
+Prototipurile sunt folosite de compilator pentru a determina caracteristicile unei funcții ce urmează a fi apelata, pentru a i se transmite parametrii și a se primi valoarea întoarsă, fără a avea acces la codul sursă al funcției.
+</p>
+
+<p>
+Dacă prototipul funcției vizibil în locul în care funcția este apelata diferă de prototipul functiei din locul în care funcția este definita, atunci se pot ajunge la apeluri de funcție eronate, datorate incompatibilității între numărul și tipul parametrilor din locul apelării funcției și din funcția propriu-zisă.
+</p>
+
+<p>
+În limbajul C, dacă o funcție nu este declarată, ea va avea automat atribuit prototipul implicit al funcțiilor:
+</p>
+<pre class="code c"><span class="co1">// pentru apeluri de tipul</span>
+func<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span> x <span class="sy0">=</span> func<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">// semnătura implicită este</span>
+<span class="kw4">int</span> func<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Pentru funcții care sunt apelate cu argumente semnătura implicită este 
+</p>
+<pre class="code c">func<span class="br0">&#40;</span>x<span class="sy0">,</span> y<span class="sy0">,</span> z<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">//</span>
+<span class="kw4">int</span> func<span class="br0">&#40;</span>typeof_x<span class="sy0">,</span> typeof_y<span class="sy0">,</span> typeof_z<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+Un exemplu de functionare eronată a unui apel de funcție din motive de incompatibilitate între prototipurile unei funcții:
+</p>
+<pre class="code c"><span class="co1">//        fisier1.c</span>
+<span class="coMULTI">/* func() nedeclarata                   prototip implicit
+                                        int func(void) */</span>
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="coMULTI">/* ... */</span>
+    value <span class="sy0">+=</span> func<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="coMULTI">/* ... */</span>
+<span class="br0">&#125;</span></pre>
+<pre class="code c"><span class="co1">// fisier2.c</span>
+<span class="coMULTI">/* prototip int func(int, int) */</span>
+<span class="kw4">long</span> <span class="kw4">long</span> func<span class="br0">&#40;</span><span class="kw4">int</span> param1<span class="sy0">,</span> <span class="kw4">int</span> param2<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+    <span class="kw1">return</span> <span class="br0">&#40;</span><span class="kw4">long</span> <span class="kw4">long</span><span class="br0">&#41;</span> param1 <span class="sy0">+</span> param2<span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+În acest caz, în locul de unde se face apelul (din funcția main) se foloseşte prototipul implicit, care împreună cu un apel greşit de funcție, duce la cod eronat:
+</p>
+<ul>
+<li class="level1"><div class="li"> în locul de unde se face apelul, nu se transmite niciun parametru, și se aşteaptă să se întoarcă o valoare de tip int,</div>
+</li>
+<li class="level1"><div class="li"> în funcția apelată, se așteapta 2 parametri care vor fi citiți eronat din locațiile corespunzătoare, iar valoarea întoarsă va fi un long long. </div>
+</li>
+</ul>
+
+<p>
+Este important de observat, totuși, ca majoritatea limbajelor moderne (inclusiv C++, versus C) nu acceptă tipuri si prototipuri implicite.
+</p>
+
+</div>
+
+<h1 class="sectionedit17" id="exceptii">Excepții</h1>
+<div class="level1">
+
+<p>
+Există anumite situații în care se dorește/preferă să se arunce o excepție. Controlul se transferă către blocul de cod desemnat să se execute în momentul în care se produce excepția. Acest cod se numește handler. Când există un handler pentru excepția aruncată, se spune că excepția a fost prinsă.
+Din punctul de vedere al utilizatorului, mecanismul de tratare a excepțiilor este format din urmatoarele elemente: blocuri de try, blocuri de catch și expresii de throw.
+</p>
+<pre class="code C"><span class="co2">#include &lt;iostream&gt;</span>
+using namespace std<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> a<span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  try
+  <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>a <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+       throw <span class="nu0">10</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  catch <span class="br0">&#40;</span><span class="kw4">int</span> e<span class="br0">&#41;</span>
+  <span class="br0">&#123;</span>
+    cout <span class="sy0">&lt;&lt;</span> <span class="st0">&quot;A fost aruncata exceptia numarul &quot;</span> <span class="sy0">&lt;&lt;</span> e <span class="sy0">&lt;&lt;</span> <span class="st0">'<span class="es1">\n</span>'</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Când mai multe blocuri de try sunt imbricate și se produce un throw, într-o functie apelată de un bloc try interior, controlul se transferă spre exterior din blocurile try imbricate, până când se gasește primul bloc de catch al cărui argument se potrivește cu argumentul aruncat de excepție.
+</p>
+<pre class="code C">try
+<span class="br0">&#123;</span>
+      func1<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      try
+      <span class="br0">&#123;</span>
+             func2<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <span class="br0">&#125;</span>
+      catch <span class="br0">&#40;</span>type1_err<span class="br0">&#41;</span> <span class="br0">&#123;</span> <span class="coMULTI">/* ... */</span> <span class="br0">&#125;</span>
+      func3<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+catch <span class="br0">&#40;</span>type2_err<span class="br0">&#41;</span> <span class="br0">&#123;</span> <span class="coMULTI">/* ... */</span> <span class="br0">&#125;</span>
+<span class="co1">// daca nu se arunca nicio exceptie, executia ajunge in acest punct.</span></pre>
+
+<p>
+În exemplul de mai sus, dacă <em>type1_err</em> este aruncat din blocul try interior (din func2()), excepția este prinsă de blocul de catch interior, și, presupunand că acest bloc nu transferă controlul, este apelată func3(). Daca <em>type1_err</em> este aruncată după blocul de try interior, de exemplu de către func3(), din cauză că nu există niciun bloc catch care să prindă această excepție, se va apela funcția <strong>terminate()</strong>.
+</p>
+
+<p>
+Blocurile de catch conțin rutina de tratare a excepției. Obiectele permise, pe care rutina le poate prinde, sunt declarate în paranteză, după cuvântul cheie catch. 
+</p>
+
+</div>
+
+<h2 class="sectionedit18" id="exceptiile_la_compile-time">Excepțiile la compile-time</h2>
+<div class="level2">
+
+<p>
+Aruncarea unei excepții este de obicei implementată sub forma unui apel la o funcție _throw_ din biblioteca runtime. Numele difera de la o implementare la alta. Pentru ca _throw_ să funcționeze corect, are nevoie de o tabela ce listeaza toate blocurile catch ale unei funcții. Tabela este generată de catre compilator. Pentru a fi mai usor de urmarit, mai jos este adaugat si codul echivalent, cu etichete. 
+</p>
+<div class="table sectionedit19"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Cod cu excepții </th><th class="col1"> Cod echivalent </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> <pre class="code C">processFile<span class="br0">&#40;</span>...<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  try <span class="br0">&#123;</span>
+    f <span class="sy0">=</span> openFile<span class="br0">&#40;</span>...<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  catch <span class="br0">&#40;</span>FileError e<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/log.html"><span class="kw3">log</span></a><span class="br0">&#40;</span>e<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</td><td class="col1"> <pre class="code C">processFile<span class="br0">&#40;</span>...<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+try_start<span class="sy0">:</span>
+  f <span class="sy0">=</span> openFile<span class="br0">&#40;</span>...<span class="br0">&#41;</span><span class="sy0">;</span>
+try_end<span class="sy0">:</span>
+  <span class="kw1">goto</span> try_next<span class="sy0">;</span>
+catch_FileError<span class="sy0">:</span>
+  e<span class="sy0">=*</span><span class="br0">&#40;</span>FileError<span class="sy0">*</span><span class="br0">&#41;</span>_exception_<span class="sy0">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/log.html"><span class="kw3">log</span></a><span class="br0">&#40;</span>e<span class="br0">&#41;</span><span class="sy0">;</span>
+try_next<span class="sy0">:</span>
+<span class="br0">&#125;</span> </pre>
+</td>
+	</tr>
+	<tr class="row2">
+		<td class="col0"> <pre class="code C">openFile<span class="br0">&#40;</span>...<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  x <span class="sy0">=</span> open<span class="br0">&#40;</span>...<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>x <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+    throw FileError<span class="br0">&#40;</span>x<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>             </pre>
+</td><td class="col1"> <pre class="code C">openFile<span class="br0">&#40;</span>...<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  x <span class="sy0">=</span> open<span class="br0">&#40;</span>...<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span>x <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+     FileError tmp<span class="br0">&#40;</span>x<span class="br0">&#41;</span><span class="sy0">;</span>
+     _exception_ <span class="sy0">=</span> <span class="sy0">&amp;</span>tmp<span class="sy0">;</span>
+     _throw_<span class="br0">&#40;</span>“FileError”<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+</td>
+	</tr>
+</table></div>
+
+<p>
+Intrarea in tabela generata pentru intervalul try din exemplul de mai sus:
+</p>
+<div class="table sectionedit20"><table class="inline">
+	<tr class="row0">
+		<th class="col0"> Interval de aplicabilitate </th><th class="col1"> Început catch </th><th class="col2"> Tipul excepției </th>
+	</tr>
+	<tr class="row1">
+		<td class="col0"> try_start … try_end </td><td class="col1 leftalign"> catch_FileError  </td><td class="col2"> FileError </td>
+	</tr>
+</table></div>
+
+<p>
+GCC-ul genereaza tabela de exceptii (exception handler framework) in sectiunile .eh_frame / .eh_frame_hdr):
+</p>
+
+</div>
+
+<h2 class="sectionedit21" id="exceptiile_la_runtime">Excepțiile la runtime</h2>
+<div class="level2">
+
+<p>
+Să presupunem că se executa funcția func_ex, care aruncă o excepție. În vârful stivei se află cadrul de stivă al funcției func_ex. În cazul în care excepția a fost aruncată dintr-un bloc de try, se caută un blocul de catch care sa trateze tipul erorii aruncate. În cazul în care acesta se găsește, se începe procesul de stack-unwinding, dacă nu se găsește, se va apela funcția terminate().
+Vom discuta în continuare despre <strong>stack unwinding</strong>, pornind de la următorul exemplu:
+</p>
+<pre class="code C"><span class="co2">#include &lt;iostream&gt;</span>
+<span class="co2">#include &lt;string&gt;</span>
+&nbsp;
+ <span class="kw4">void</span> func2<span class="br0">&#40;</span><span class="br0">&#41;</span>
+ <span class="br0">&#123;</span> 
+  throw std<span class="sy0">::</span><span class="me2">exception</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ <span class="br0">&#125;</span>
+&nbsp;
+ <span class="kw4">void</span> func1<span class="br0">&#40;</span><span class="br0">&#41;</span>
+ <span class="br0">&#123;</span>
+   std<span class="sy0">::</span><span class="me2">string</span> str <span class="sy0">=</span> <span class="st0">&quot;Ana are ...&quot;</span><span class="sy0">;</span> 
+   func2<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ <span class="br0">&#125;</span>
+&nbsp;
+ <span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+ <span class="br0">&#123;</span>
+   try
+   <span class="br0">&#123;</span>
+      func1<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+   <span class="br0">&#125;</span> 
+   catch<span class="br0">&#40;</span>...<span class="br0">&#41;</span> 
+   <span class="br0">&#123;</span> <span class="br0">&#125;</span>
+ <span class="br0">&#125;</span></pre>
+
+<p>
+La runtime, în momentul în care func2 aruncă excepția, pe stivă există următoarele cadre: main, func1, func2.
+Funcția func2 nu prinde aceasta excepție, dar există in program un bloc de catch care sa o prinda, așadar, incepe <strong>stack unwinding</strong>. 
+</p>
+
+<p>
+Stack unwinding parcurge lista de cadre de stiva pornind din vârful stivei, și:
+</p>
+<ol>
+<li class="level1"><div class="li"> apelează destructorii pentru toate obiectele locale funcției al cărei cadrul se află în vârful stivei;</div>
+</li>
+<li class="level1"><div class="li"> face restore la regiștrii callee-saved</div>
+</li>
+<li class="level1"><div class="li"> se scoate cadrul de pe stiva</div>
+</li>
+<li class="level1"><div class="li"> se revine la pasul 1 (acum, în vârful stivei este funcția care a apelat funcția ce tocmai am scos-o de pe stivă);</div>
+</li>
+</ol>
+
+<p>
+Revenind la exemplul nostru, func2() nu prinde exceptia, nu are nicio variabilă locală, deci singurul pas va fi scoaterea cadrului de pe stivă. Funția func1() are acum cadrul în vârful stivei, dar nici func1() nu contine blocul de catch, deci, se va apela destructorul lui <strong>str</strong>, apoi cadrul funcției func1() este scos de pe stiva. Se ajunge astfel la funcția main() care prinde excepția.  
+</p>
+
+<p>
+<p><div class="noteclassic">În procesul de unwinding, destructorii sunt apelați în ordine inversă constructorilor.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">Stack unwinding este folosit și de <code>debugger</code> pentru a afișa stiva de apeluri și pentru a putea reveni cu execuția dintr-un punct anterior. 
+
+</div></p>
+</p>
+
+<p>
+Puteți să vă gandiți și la altă situație în care s-ar putea folosi acelați mecanism? 
+</p>
+
+</div>
+
+<h1 class="sectionedit22" id="exercitii">Exerciții</h1>
+<div class="level1">
+
+<p>
+<a href="../../_media/cpl/labs/laborator-07-arhiva.zip" class="media mediafile mf_zip" title="cpl:labs:laborator-07-arhiva.zip (8.2 KB)">Arhiva</a> laboratorului.
+</p>
+<ol>
+<li class="level1"><div class="li"> Scrieți un program <code>C</code> care să determine sensul stivei (este mărită sau micșorată valoarea adresei vârfului stivei la operații de <code>push</code>?).</div>
+</li>
+<li class="level1"><div class="li"> În directorul <code>return_struct</code> din arhiva laboratorului aveți implementate două funcții: una care întoarce o structură și alta care primește o structură ca parametru. Rulați <code>make asm</code> pentru a genera un fișier ”.s” și explicați:</div>
+<ul>
+<li class="level2"><div class="li"> modul în care se trimite un argument de tip structură,</div>
+</li>
+<li class="level2"><div class="li"> modul în care se întoarce o structură.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Modificați <code>doar</code> funcția <strong>ask</strong> din programul <strong>ovr</strong> pentru a afișa nota corectă.</div>
+</li>
+<li class="level1"><div class="li"> Scrieți o funcție <code>fast_multiply_3</code> în asm care să înmulțească trei numere întregi primite ca argumente. Declarați funcția ca fiind de tip <code>fastcall</code> (Pe arhitecturi Intel x86, folosirea conveției de apel fastcall, presupune că:</div>
+<ul>
+<li class="level2"><div class="li"> primul argument se află în <code>%ecx</code></div>
+</li>
+<li class="level2"><div class="li"> al doilea argument se află în <code>%edx</code></div>
+</li>
+<li class="level2"><div class="li"> toți ceilalți parametri se află pe stivă ca la convenția de apel</div>
+</li>
+<li class="level2"><div class="li"> Următoarea linie declară o funcție specificându-i convenție de apel de tip <code>fastcall</code></div>
+</li>
+<li class="level2"><div class="li"> <pre class="code c"> __attribute__<span class="br0">&#40;</span><span class="br0">&#40;</span>fastcall<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="kw4">int</span> fast_multiply_3<span class="br0">&#40;</span><span class="kw4">int</span> a<span class="sy0">,</span> <span class="kw4">int</span> b<span class="sy0">,</span> <span class="kw4">int</span> c<span class="br0">&#41;</span><span class="sy0">;</span> </pre>
+</div>
+</li>
+<li class="level2"><div class="li"> Apelați funcția definită la pasul anterior dintr-un fișier <code>C</code>. Observați și explicați ce se întâmplă dacă în cadrul fișierului <code>C</code> nu apare declarația funcției <code>fast_multiply_3</code> sau dacă acestei declarații îi lipsește decoratorul <code>fastcall</code>.</div>
+</li>
+<li class="level2"><div class="li"> Pentru operația de înmulțire folosiți instrucțiunea</div>
+</li>
+<li class="level2"><div class="li"> <pre class="code asm"> imull <span class="sy1">%</span><span class="kw4">eax</span><span class="sy1">,</span> <span class="sy1">%</span><span class="kw4">ecx</span> # echivalent cu <span class="sy1">%</span><span class="kw4">ecx</span> <span class="sy1">:</span>= <span class="sy1">%</span><span class="kw4">ecx</span> <span class="sy1">*</span> <span class="sy1">%</span><span class="kw4">eax</span> </pre>
+</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Comentați performanța codului <code>perf_exceptii.cpp</code>, din directorul exceptii.</div>
+</li>
+<li class="level1"><div class="li"> Executati exemplul <code>exceptii.cpp</code> din directorul exceptii, explicati ce se intampla la runtime si corectati-l.</div>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_cpl">Informații generale CPL</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_39720522358355b08eedff" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../info/documentatie.html" class="wikilink1" title="cpl:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../info/lista-discutii.html" class="wikilink1" title="cpl:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../info/trimitere-teme.html" class="wikilink1" title="cpl:info:trimitere-teme">Trimitere teme</a></div></li>
+<li class="level1"><div class="li"><a href="../info/vm.html" class="wikilink1" title="cpl:info:vm">Mașina virtuală</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale CPL" [12-86] -->
+<h1 class="sectionedit2" id="informatii_cpl_2016-2017">Informații CPL 2016-2017</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_161303843858355b08efd9a" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../meta/notare/reguli-notare.html" class="wikilink1" title="cpl:meta:notare:reguli-notare">Notare</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../meta/anunturi.html" class="wikilink1" title="cpl:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/calendar.html" class="wikilink1" title="cpl:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/catalog.html" class="wikilink1" title="cpl:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/examen.html" class="wikilink1" title="cpl:meta:examen">Examen</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/need-to-know.html" class="wikilink1" title="cpl:meta:need-to-know">CPL Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../meta/orar.html" class="wikilink1" title="cpl:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații CPL 2016-2017" [87-155] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_124956381258355b08f0d39" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="cpl:labs:01">01. Introduction to Flex</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="cpl:labs:02">02. Introduction to Bison</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="cpl:labs:03">03. Bison Advanced</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="cpl:labs:04">04. Introduction to LLVM</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="cpl:labs:05">05. LLVM IR - C++ API</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="cpl:labs:06">06. Code generation. Structure of data and objects in memory</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="07.html" class="wikilink1" title="cpl:labs:07">07. Code generation. Function calls and stack frames</a></span></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="cpl:labs:08">08. LLVM backend</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="cpl:labs:09">09. LLVM Passes - displaying code structure</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="cpl:labs:10">10. LLVM Passes - code analysis</a></div></li>
+<li class="level1"><div class="li"><a href="11.html" class="wikilink1" title="cpl:labs:11">11. LLVM Passes - code optimizations</a></div></li>
+<li class="level1"><div class="li"><a href="12.html" class="wikilink1" title="cpl:labs:12">12. Linkers and Loaders</a></div></li>
+<li class="level1"><div class="li"><a href="llvm-pass.html" class="wikilink1" title="cpl:labs:llvm-pass">LLVM Passes</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [156-209] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_43663027658355b08f1cd9" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="cpl:courses:01">Cursul 01. Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="cpl:courses:02">Cursul 02. Analiză sintatică LL</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="cpl:courses:03">Cursul 03. Analiză sintatică LR</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="cpl:courses:04">Cursul 04. Analiză semantică</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="cpl:courses:05">Cursul 05. Generarea codului obiect. Arhitectura setului de instrucțiuni</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="cpl:courses:06">Cursul 06. Generarea apelurilor de funcții și a codului orientat obiect.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/07.html" class="wikilink1" title="cpl:courses:07">Cursul 07. Optimizări. Analiza fluxului de control (CFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/08.html" class="wikilink1" title="cpl:courses:08">Cursul 08. Analiza fluxului de date (DFA)</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/09.html" class="wikilink1" title="cpl:courses:09">Cursul 09. Analiza fluxului de date. Forma SSA. Extragerea codului invariant din bucle. Variabile de inducție.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/10.html" class="wikilink1" title="cpl:courses:10">Cursul 10. Arhitectura Calculatoarelor. Dependență. Planificarea instrucțiunilor</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/11.html" class="wikilink1" title="cpl:courses:11">Cursul 11. Garbage Collection</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/12.html" class="wikilink1" title="cpl:courses:12">Cursul 12. Alocarea de registre. Linkers.</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/13.html" class="wikilink1" title="cpl:courses:13">Cursul 13. Just in Time Compilers (JIT)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [210-262] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_21154782958355b08f2c78" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../teme/concurs.html" class="wikilink1" title="cpl:teme:concurs">Concurs</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/general.html" class="wikilink1" title="cpl:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema1.html" class="wikilink1" title="cpl:teme:tema1">Tema de casă 1 - Analiza sintactică</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema2.html" class="wikilink1" title="cpl:teme:tema2">Tema de casă 2 - Generarea de cod</a></div></li>
+<li class="level1"><div class="li"><a href="../teme/tema3.html" class="wikilink1" title="cpl:teme:tema3">Tema de casa 3 - Backend</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [263-310] -->
+<h1 class="sectionedit6" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_57585575058355b08f3c14" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/materiale.html" class="wikilink1" title="cpl:res:materiale">Nice to read</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 SECTION "Resurse" [311-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="07.html#code_generation_function_calls_and_stack_frames">07. Code generation. Function calls and stack frames</a></div></li>
+<li class="level1"><div class="li"><a href="07.html#apelul_de_functii">Apelul de funcţii</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#transmiterea_parametrilor">Transmiterea parametrilor</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#apelul_prin_valoare">Apelul prin valoare</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#apelul_prin_referinta">Apelul prin referință</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#apelul_prin_rezultat">Apelul prin rezultat</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#apelul_prin_valoare-rezultat">Apelul prin valoare-rezultat</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#apelul_prin_nume">Apelul prin nume</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="07.html#conventii_de_apel">Convenții de apel</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#cadre_de_stiva_stack_frames">Cadre de stiva (stack frames)</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#exemplufunctie_minimala">Exemplu: funcție minimală</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#exempluevaluarea_unei_expresii">Exemplu: evaluarea unei expresii</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#exempluapeluri_de_functii">Exemplu: apeluri de funcții</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="07.html#prototipuri_de_functii">Prototipuri de funcții</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="07.html#exceptii">Excepții</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#exceptiile_la_compile-time">Excepțiile la compile-time</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#exceptiile_la_runtime">Excepțiile la runtime</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="07.html#exercitii">Exerciții</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cpl/labs/07.txt · Last modified: 2016/11/15 02:35 by bogdan.nitulescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="07%3Fdo=media&amp;ns=cpl%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="07.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=cpl%253Alabs%253A07&amp;1479891721" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,746 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 5: Minimax    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-01T09:31:41+0300"/>
+<meta name="keywords" content="pa,laboratoare,laborator-05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=pa:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/pa/laboratoare/laborator-05.html"/>
+<link rel="canonical" href="laborator-05.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='pa:laboratoare';var JSINFO = {"id":"pa:laboratoare:laborator-05","namespace":"pa:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="laborator-05%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="laborator-05%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_5minimax">Laborator 5: Minimax</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiective_laborator">Obiective laborator</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">Insusirea unor cunostinte de baza despre teoria jocurilor precum si despre jocurile de tip zero-sum;</div>
+</li>
+<li class="level1"><div class="li">Insusirea abilitatii de rezolvare a problemelor ce presupun cunoasterea si exploatarea conceptului de zero-sum;</div>
+</li>
+<li class="level1"><div class="li">Insusirea unor cunostinte elementare despre algoritmii necesari rezolvarii unor probleme de tip zero-sum.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="importanta_aplicatii_practice">Importanţă – aplicaţii practice</h2>
+<div class="level2">
+
+<p>
+Algoritmul Minimax si variantele sale imbunatatite (Negamax, Alpha-Beta, Negascout etc) sunt folosite in diverse domenii precum teoria jocurilor (Game Theory), teoria jocurilor combinatorice (Combinatorial Game Theory – CGT), teoria deciziei (Decision Theory) si statistica. Astfel, diferite variante ale algoritmului sunt necesare in proiectarea si implementarea de aplicatii legate de inteligenta artificiala, economie, dar si in domenii precum stiinte politice sau biologie.
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="descrierea_problemei_si_a_rezolvarilor">Descrierea problemei și a rezolvărilor</h2>
+<div class="level2">
+
+<p>
+Algoritmii Minimax permit abordarea unor probleme ce tin de teoria jocurilor combinatorice. CGT este o ramura a matematicii ce se ocupa cu studierea jocurilor in doi (two-player games), in care participantii isi modifica rand pe rand pozitiile in diferite moduri, prestabilite de regulile jocului, pentru a indeplini una sau mai multe conditii de castig. Exemple de astfel de jocuri sunt: sah, go, dame (checkers), X si O (tic-tac-toe) etc. CGT nu studiaza jocuri ce presupun implicarea unui element aleator (sansa) in derularea jocului precum poker, blackjack, zaruri etc. Astfel decizia abordarii unor probleme rezolvabile prin metode de tip Minimax se datoreaza in principal simplitatii atat conceptuale, cat si raportat la implementarea propriu-zisa.
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="minimax">Minimax</h3>
+<div class="level3">
+
+<p>
+Strategia pe care se bazeaza ideea algoritmului este ca jucatorii implicati adopta urmatoarele strategii:
+</p>
+<ul>
+<li class="level1"><div class="li">Jucatorul 1 (maxi) va incerca mereu sa-si maximizeze propriul castig prin mutarea pe care o are de facut;</div>
+</li>
+<li class="level1"><div class="li">Jucatorul 2 (mini) va incerca mereu sa minimizeze castigul jucatorului 1 la fiecare mutare.</div>
+</li>
+</ul>
+
+<p>
+De ce merge o astfel de abordare? Dupa cum se preciza la inceput, discutia se axeaza pe jocuri zero-sum. Acest lucru garanteaza, printre altele, ca orice castig al Jucatorului 1 este egal cu modulul sumei pierdute de Jucatorul 2. Cu alte cuvinte cat pierde Jucator 2, atat castiga Jucator 1. Invers, cat pierde Jucator 1, atat castiga Jucator 2. Sau
+</p>
+
+<p>
+Win_Player_1 = | Loss_Player_2 |
+si | Loss_Player_1 | = Win_Player_2
+</p>
+
+</div>
+
+<h2 class="sectionedit6" id="reprezentarea_spatiului_solutiilor">Reprezentarea spatiului solutiilor</h2>
+<div class="level2">
+
+<p>
+In general spatiul solutiilor pentru un joc in doi de tip zero-sum se reprezinta ca un arbore, fiecarui nod fiindu-i asociata o stare a jocului in desfasurare (game state). Pentru exemplul nostru de X si O putem considera urmatorul arbore ( partial ) de solutii, ce corespunde primelor mutari ale lui X, respectiv O: 
+</p>
+
+<p>
+<a href="../../_detail/pa/laboratoare/5.1_cr.png%3Fid=pa%253Alaboratoare%253Alaborator-05.html" class="media" title="pa:laboratoare:5.1_cr.png"><img src="../../_media/pa/laboratoare/5.1_cr.png" class="mediacenter" alt="" /></a>
+</p>
+
+<p>
+Metodele de reprezentare a arborelui variaza in functie de paradigma de programare aleasa, de limbaj, precum si de gradul de optimizare avut in vedere.
+</p>
+
+<p>
+Avand notiunile de baza asupra strategiei celor doi jucatori, precum si a reprezentarii spatiului solutiilor problemei, putem formula o prima varianta a algoritmului Minimax:
+</p>
+<pre class="code cpp">	<span class="kw4">int</span> maxi<span class="br0">&#40;</span> <span class="kw4">int</span> depth <span class="br0">&#41;</span>
+	<span class="br0">&#123;</span>
+		<span class="kw1">if</span> <span class="br0">&#40;</span> gameOver<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy3">||</span> depth <span class="sy1">==</span> <span class="nu0">0</span> <span class="br0">&#41;</span> <span class="kw1">return</span> evaluate<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+		<span class="kw4">int</span> max <span class="sy1">=</span> <span class="sy2">-</span>oo<span class="sy4">;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span> all moves<span class="br0">&#41;</span>
+		<span class="br0">&#123;</span>
+			score <span class="sy1">=</span> mini<span class="br0">&#40;</span> depth <span class="sy2">-</span> <span class="nu0">1</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+			<span class="kw1">if</span><span class="br0">&#40;</span> score <span class="sy1">&gt;</span> max <span class="br0">&#41;</span>
+				max <span class="sy1">=</span> score<span class="sy4">;</span>
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> max<span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw4">int</span> mini<span class="br0">&#40;</span> <span class="kw4">int</span> depth <span class="br0">&#41;</span>
+	<span class="br0">&#123;</span>
+		<span class="kw1">if</span> <span class="br0">&#40;</span> gameOver<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy3">||</span> depth <span class="sy1">==</span> <span class="nu0">0</span> <span class="br0">&#41;</span> <span class="kw1">return</span> <span class="sy2">-</span>evaluate<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+		<span class="kw4">int</span> min <span class="sy1">=</span> <span class="sy2">+</span>oo<span class="sy4">;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span> all moves<span class="br0">&#41;</span>
+		<span class="br0">&#123;</span>
+			score <span class="sy1">=</span> maxi<span class="br0">&#40;</span> depth <span class="sy2">-</span> <span class="nu0">1</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+			<span class="kw1">if</span><span class="br0">&#40;</span> score <span class="sy1">&lt;</span> min <span class="br0">&#41;</span>
+				min <span class="sy1">=</span> score<span class="sy4">;</span>
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> min<span class="sy4">;</span>
+	<span class="br0">&#125;</span></pre>
+
+</div>
+
+<h2 class="sectionedit7" id="argumentarea_utilizarii_unei_adancimi_maxime">Argumentarea utilizarii unei adancimi maxime</h2>
+<div class="level2">
+
+<p>
+Datorita spatiului de solutii mare, de multe ori coplesitor ca volum, o inspectare completa a acestuia nu este fezabila si devine impracticabila din punctul de vedere al timpului consumat sau chiar a memoriei alocate (se vor discuta aceste aspecte in paragraful legat de complexitate). Astfel, de cele mai multe ori este preferata o abordare care parcurge arborele numai pana la o anumita adancime maxima („depth”). Aceasta abordare permite examinarea arborelui destul de mult pentru a putea lua decizii minimalist coerente in desfasurarea jocului. Totusi, dezavantajul major este ca pe termen lung se poate dovedi ca decizia luata la adancimea depth nu este global favorabila jucatorului in cauza.
+De asemenea, se observa recursivitatea indirecta. Prin conventie acceptam ca inceputul algoritmului sa fie cu functia maxi. Astfel, se analizeaza succesiv diferite stari ale jocului din punctul de vedere al celor doi jucatori pana la adancimea depth. Rezultatul intors este scorul final al miscarii celei mai bune.
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="negamax">Negamax</h3>
+<div class="level3">
+
+<p>
+Negamax este o varianta a minimax, ce se bazeaza pe urmatoarea observatie: intr-un joc zero-sum castigul unui jucator este egal cu modulul sumei pierdute de celalalt jucator si invers. Intr-adevar putem spune ca jucatorul mini incearca de fapt sa maximizeze in modul suma pierduta de maxi. Astfel putem formula urmatoarea implementare ce profita de observatia de mai sus (Nota: putem exprima aceasta observatie si pe baza formulei <strong>max(a, b) = -min(-a, -b))</strong>:
+</p>
+<pre class="code cpp">	<span class="kw4">int</span> negaMax<span class="br0">&#40;</span> <span class="kw4">int</span> depth <span class="br0">&#41;</span>
+	<span class="br0">&#123;</span>
+		<span class="kw1">if</span> <span class="br0">&#40;</span> gameOver<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy3">||</span> depth <span class="sy1">==</span> <span class="nu0">0</span> <span class="br0">&#41;</span> <span class="kw1">return</span> evaluate<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+		<span class="kw4">int</span> max <span class="sy1">=</span> <span class="sy2">-</span>oo<span class="sy4">;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span> all moves<span class="br0">&#41;</span>
+		<span class="br0">&#123;</span>
+			score <span class="sy1">=</span> <span class="sy2">-</span>negaMax<span class="br0">&#40;</span> depth <span class="sy2">-</span> <span class="nu0">1</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+			<span class="kw1">if</span><span class="br0">&#40;</span> score <span class="sy1">&gt;</span> max <span class="br0">&#41;</span>
+				max <span class="sy1">=</span> score<span class="sy4">;</span>
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> max<span class="sy4">;</span>
+	<span class="br0">&#125;</span></pre>
+
+<p>
+Se observa direct avantajele acestei formulari fata de Minimax-ul standard prezentat anterior:
+</p>
+<ul>
+<li class="level1"><div class="li">Claritatea sporita a codului</div>
+</li>
+<li class="level1"><div class="li">Eleganta implementarii</div>
+</li>
+<li class="level1"><div class="li">Usurinta in intretinere si extindere a functionalitatii</div>
+</li>
+</ul>
+
+<p>
+Din punctul de vedere al complexitatii temporale, Negamax nu difera absolut deloc de Minimax (ambele examineaza acelasi numar de stari in arborele de solutii). Putem concluziona ca este de preferat o implementare ce foloseste negamax fata de una bazata pe minimax in rezolvarea unor probleme ce tin de aceasta tehnica.
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="alpha-beta_pruning">Alpha-beta pruning</h3>
+<div class="level3">
+
+<p>
+Pana acum s-a discutat despre algoritmii Minimax si Negamax. Acestia sunt algoritmi exhaustivi (exhausting search algorithms). Cu alte cuvinte, ei gasesc solutia optima examinand intreg spatiul de solutii al problemei. Acest mod de abordare este extrem de ineficient in ceea ce priveste efortul de calcul necesar, mai ales considerand ca extrem de multe stari de joc inutile sunt explorate (este vorba de acele stari care nu pot fi atinse datorita incalcarii principiului de maximizare a castigului la fiecare runda).
+</p>
+
+<p>
+O imbunatatire substantiala a minimax/negamax este Alpha-beta pruning. Acest algoritm incearca sa optimizeze mini/nega-max profitand de o observatie importanta: pe parcursul examinarii arborelui de solutii se pot elimina intregi subarbori, corespunzatori unei miscari m, daca pe parcursul analizei gasim ca miscarea m este mai slaba calitativ decat cea mai buna miscare curenta.
+</p>
+
+<p>
+Astfel, consideram ca pornim cu o prima miscare M1. Dupa ce analizam aceasta miscare in totalitate si ii atribuim un scor, continuam sa analizam miscarea M2. Daca in analiza ulterioara gasim ca adversarul are cel putin o miscare care transforma M2 intr-o miscare mai slaba decat M1 atunci orice alte variante ce corespund miscarii M2 (subarbori) nu mai trebuie analizate.
+</p>
+
+<p>
+De ce? Pentru ca stim ca exista <em>cel putin</em> o varianta in care adversarul obtine un castig mai bun decat daca am fi jucat miscarea M1. Nu conteaza exact cat de slaba poate fi miscarea M2 fata de M1. O analiza amanuntita ar putea releva ca poate fi si mai slaba decat am constatat initial, insa acest lucru este irelevant. De ce insa ignoram intregi subarbori si miscari potential bune numai pentru o miscare slaba gasita? Pentru ca, in conformitate cu principiul de maximizare al castigului folosit de fiecare jucator, adeversarul va alege exact acea miscare ce ii va da un castig maximal. Daca exista o varianta si mai buna pentru el este irelevant, deoarece noi suntem interesati daca cea mai slaba miscare buna a lui este mai buna decat miscarea noastra curent analizata.
+</p>
+
+<p>
+O observatie foarte importanta se poate face analizand modul de functionare al acestui algoritm: este extrem de importanta ordonarea miscarilor dupa valoarea castigului. In cazul ideal in care cea mai buna miscare a jucatorului curent este analizata prima, toate celelalte miscari, fiind mai slabe, vor fi eliminate din cautare timpuriu. In cel mai defavorabil caz insa, in care miscarile sunt ordonate crescator dupa castigul furnizat, Alpha-beta are aceeasi compelxitate cu Mini/Nega-max, neobtinandu-se nicio imbunatatire.  In medie se constata o imbunatatire vizibila a algoritmului Alpha-beta fata de Mini/Nega-max.
+</p>
+
+<p>
+Rolul miscarilor analizate la inceput presupune stabilirea unor plafoane de minim si maxim legate de cat de bune/slabe pot fi miscarile. Astfel, plafonul de minim (Lower Bound), numit alpha stabileste ca o miscare nu poate fi mai slaba decat valoarea acestui plafon. Plafonul de maxim (Upper Bound), numit beta, este important doarece el foloseste la a stabili daca o miscare este prea buna pentru a fi luata in considerare. Depasirea plafonului de maxim inseamna ca o miscare este atat de buna incat adversarul nu ar fi permis-o, adica mai sus in arbore exista o miscare pe care ar fi putut s-o joace pentru a nu ajunge in situatia curent analizata. Astfel alpha si beta furnizeaza o fereastra  folosita pentru a filtra miscarile posibile pentru cei doi jucatori. Evident aceasta fereastra se poate actualiza pe masura ce se analizeaza mai multe miscari. De exemplul plafonul minim alpha se mareste pe masura ce gasim anumite tipuri de miscari mai bune (better worst best moves). Asadar, in implementare tinem seama si de aceste doua plafoane. In conformitate cu principiul Minimax, plafonul de minim al unui jocator (alpha-ul) este plafonul de maxim al celuilalt (beta-ul) si invers. Prezentam in continuare o descriere grafica a algoritmului Alpha-beta:
+</p>
+
+<p>
+<a href="../../_detail/pa/laboratoare/5.2_cr.png%3Fid=pa%253Alaboratoare%253Alaborator-05.html" class="media" title="pa:laboratoare:5.2_cr.png"><img src="../../_media/pa/laboratoare/5.2_cr.png" class="mediacenter" alt="" /></a>
+</p>
+
+<p>
+O animație foarte bună pentru execuția Alpha-beta prunning găsiți la [11].
+</p>
+
+<p>
+In continuare prezentam o implementare conceptuala a Alpha-beta, atat pentru Minimax, cat si pentru Negamax:
+</p>
+
+<p>
+Varianta Minimax:
+</p>
+<pre class="code cpp">	<span class="kw4">int</span> alphaBetaMax<span class="br0">&#40;</span> <span class="kw4">int</span> alpha, <span class="kw4">int</span> beta, <span class="kw4">int</span> depthleft <span class="br0">&#41;</span>
+	<span class="br0">&#123;</span>
+		<span class="kw1">if</span> <span class="br0">&#40;</span> gameOver<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy3">||</span> depthleft <span class="sy1">==</span> <span class="nu0">0</span> <span class="br0">&#41;</span> <span class="kw1">return</span> evaluate<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span> all moves<span class="br0">&#41;</span>
+		<span class="br0">&#123;</span>
+			score <span class="sy1">=</span> alphaBetaMin<span class="br0">&#40;</span> alpha, beta, depthleft <span class="sy2">-</span> <span class="nu0">1</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+			<span class="kw1">if</span><span class="br0">&#40;</span> score <span class="sy1">&gt;=</span> beta <span class="br0">&#41;</span>
+				<span class="kw1">return</span> beta<span class="sy4">;</span>   <span class="co1">// beta-cutoff</span>
+			<span class="kw1">if</span><span class="br0">&#40;</span> score <span class="sy1">&gt;</span> alpha <span class="br0">&#41;</span>
+				alpha <span class="sy1">=</span> score<span class="sy4">;</span>
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> alpha<span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+&nbsp;
+	<span class="kw4">int</span> alphaBetaMin<span class="br0">&#40;</span> <span class="kw4">int</span> alpha, <span class="kw4">int</span> beta, <span class="kw4">int</span> depthleft <span class="br0">&#41;</span>
+	<span class="br0">&#123;</span>
+		<span class="kw1">if</span> <span class="br0">&#40;</span> gameOver<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy3">||</span> depthleft <span class="sy1">==</span> <span class="nu0">0</span> <span class="br0">&#41;</span> <span class="kw1">return</span> <span class="sy2">-</span>evaluate<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span> all moves<span class="br0">&#41;</span>
+		<span class="br0">&#123;</span>
+			score <span class="sy1">=</span> alphaBetaMax<span class="br0">&#40;</span> alpha, beta, depthleft <span class="sy2">-</span> <span class="nu0">1</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+			<span class="kw1">if</span><span class="br0">&#40;</span> score <span class="sy1">&lt;=</span> alpha <span class="br0">&#41;</span>
+				<span class="kw1">return</span> alpha<span class="sy4">;</span> <span class="co1">// alpha-cutoff</span>
+			<span class="kw1">if</span><span class="br0">&#40;</span> score <span class="sy1">&lt;</span> beta <span class="br0">&#41;</span>
+				beta <span class="sy1">=</span> score<span class="sy4">;</span>
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> beta<span class="sy4">;</span>
+	<span class="br0">&#125;</span></pre>
+
+<p>
+Varianta Negamax:
+</p>
+<pre class="code cpp">	<span class="kw4">int</span> alphaBeta<span class="br0">&#40;</span> <span class="kw4">int</span> alpha, <span class="kw4">int</span> beta, <span class="kw4">int</span> depthleft <span class="br0">&#41;</span>
+	<span class="br0">&#123;</span>
+		<span class="kw1">if</span><span class="br0">&#40;</span> gameOver<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy3">||</span> depthleft <span class="sy1">==</span> <span class="nu0">0</span> <span class="br0">&#41;</span> <span class="kw1">return</span> evaluate<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy4">;</span>
+		<span class="kw1">for</span> <span class="br0">&#40;</span> all moves<span class="br0">&#41;</span>
+		<span class="br0">&#123;</span>
+			score <span class="sy1">=</span> <span class="sy2">-</span>alphaBeta<span class="br0">&#40;</span> <span class="sy2">-</span>beta, <span class="sy2">-</span>alpha, depthleft <span class="sy2">-</span> <span class="nu0">1</span> <span class="br0">&#41;</span><span class="sy4">;</span>
+                        <span class="kw1">if</span><span class="br0">&#40;</span> score <span class="sy1">&gt;=</span> alpha <span class="br0">&#41;</span>
+				alpha <span class="sy1">=</span> score<span class="sy4">;</span>
+			<span class="kw1">if</span><span class="br0">&#40;</span> alpha <span class="sy1">&gt;=</span> beta <span class="br0">&#41;</span>
+				<span class="kw1">break</span><span class="sy4">;</span>   <span class="co1">// cutoff</span>
+&nbsp;
+		<span class="br0">&#125;</span>
+		<span class="kw1">return</span> alpha<span class="sy4">;</span>
+	<span class="br0">&#125;</span></pre>
+
+<p>
+Din nou remarcam claritatea si coerenta sporita a variantei negamax.
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="complexitate">Complexitate</h3>
+<div class="level3">
+
+<p>
+In continuare prezentam complexitatile asociate algoritmilor prezentati anterior. Pentru aceasta vom introduce cateva notiuni ce tin de terminologia folosita in descrierile de specialitate, dupa cum urmeaza:
+</p>
+<ul>
+<li class="level1"><div class="li">Branch factor – notat cu b, reprezinta in medie numarul de fii ai unui nod oarecare, neterminal, al arborelui de solutii</div>
+</li>
+<li class="level1"><div class="li">Depth – notat cu d, reprezinta adancimea pana la care se face cautarea in arborele de solutii. Orice nod de adancime d va fi considerat terminal</div>
+</li>
+<li class="level1"><div class="li">Ply ( -pl plies ) – reprezinta un nivel al arborelui</div>
+</li>
+</ul>
+
+<p>
+Folosind termenii de mai sus putem spune ca un arbore cu un branching factor b, care va fi examinat pana la un nivel d va furniza <em>b<sup>d</sup></em> noduri ce vor trebui procesate. Un algoritm mini/nega-max glasic care analizeaza toate starile posibile, deci fiecare nod va avea complexitatea O(b<sup>d</sup>), deci exponentiala. Cat de bun este insa Alpha-beta fata de un mini/nega-max naiv? Dupa cum s-a mentionat anterior, in functie de ordonarea miscarilor ce vor fi evaluate putem avea un caz cel mai favorabil si un caz cel mai defavorabil. Le vom examina separat:
+</p>
+
+<p>
+Cazul cel mai favorabil, in care miscarile sunt ordonate descrescator dupa castig (deci ordonate optim), rezulta o complexitate O(b*1*b*1*b*1…de d ori…b*1) pentru d par sau O(b*1*b*1*b*1…de d ori…b) pentru d impar. Restrangand ambele expresii rezulta o complexitate O(b<sup>d/2</sup>), sau O(√b<sup>d</sup>). Asadar complexitatea este radical din complexitatea obtinuta cu un algoritm mini/nega-max naiv. Explicatia este ca pentru jucatorul 1 trebuie examinate toate miscarile posibile pentru a putea gasi miscarea optima. Insa, pentru fiecare miscare examinata, nu este necesara decat cea mai buna miscare a jucatorului 2 pentru a trunchia restul de miscari ale jucatorului 1, in afara de prima (prima fiind si cea mai buna).
+</p>
+
+<p>
+Prin urmare, intr-un caz ideal, algoritmul Alpha-beta poate explora de 2 ori mai multe nivele in arborele de solutii fata de un algoritm mini/nega-max naiv.
+</p>
+
+<p>
+Cazul cel mai defavorabil a fost deja discutat, in prezentarea Alpha-beta. El apare atunci cand miscarie sunt ordonate crescator dupa castigul furnizat unui jucator, astfel fiind necesara o examinare a tuturor nodurilor pentru gasirea celei mai bune miscari. In consecinta complexitatea devine egala cu cea a unui algoritm mini/nega-max naiv.
+</p>
+
+</div>
+
+<h2 class="sectionedit11" id="concluzii_si_observatii">Concluzii si observatii</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li">Minimax este un algoritm ce analizeaza spatiul solutiilor unui joc de tip zero-sum, dar nu numai;</div>
+</li>
+<li class="level1"><div class="li">Complexitatea Mini/Nega-max este una prohibitiva: O(b<sup>d</sup>), facandu-l impractic pentru examinarea unui volum mare de noduri; limitele sale sunt undeva in jurul a 3-4 nivele in arborele de solutii (pe masini standard);</div>
+</li>
+<li class="level1"><div class="li">Este de preferat folosirea unei variante mai clare de implementare a minimax, si anume Negamax;</div>
+</li>
+<li class="level1"><div class="li">Exista mai multe optimizari posibile pentru reducerea complexitatii, precum Alpha-Beta Pruning, Negascout, Transposition Tables</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit12" id="referinte">Referinte</h2>
+<div class="level2">
+
+<p>
+[1] <a href="http://en.wikipedia.org/wiki/Alpha-beta_pruning" class="urlextern" title="http://en.wikipedia.org/wiki/Alpha-beta_pruning"  rel="nofollow">http://en.wikipedia.org/wiki/Alpha-beta_pruning</a>
+</p>
+
+<p>
+[2] <a href="http://en.wikipedia.org/wiki/Minimax" class="urlextern" title="http://en.wikipedia.org/wiki/Minimax"  rel="nofollow">http://en.wikipedia.org/wiki/Minimax</a>
+</p>
+
+<p>
+[3] <a href="http://en.wikipedia.org/wiki/Negamax" class="urlextern" title="http://en.wikipedia.org/wiki/Negamax"  rel="nofollow">http://en.wikipedia.org/wiki/Negamax</a>
+</p>
+
+<p>
+[4] <a href="http://starbase.trincoll.edu/~ram/cpsc352/notes/minimax.html" class="urlextern" title="http://starbase.trincoll.edu/~ram/cpsc352/notes/minimax.html"  rel="nofollow">http://starbase.trincoll.edu/~ram/cpsc352/notes/minimax.html</a>
+</p>
+
+<p>
+[5] <a href="https://chessprogramming.wikispaces.com/Negamax" class="urlextern" title="https://chessprogramming.wikispaces.com/Negamax"  rel="nofollow">https://chessprogramming.wikispaces.com/Negamax</a>
+</p>
+
+<p>
+[6] <a href="https://chessprogramming.wikispaces.com/Minimax" class="urlextern" title="https://chessprogramming.wikispaces.com/Minimax"  rel="nofollow">https://chessprogramming.wikispaces.com/Minimax</a>
+</p>
+
+<p>
+[7] <a href="https://chessprogramming.wikispaces.com/Alpha-Beta" class="urlextern" title="https://chessprogramming.wikispaces.com/Alpha-Beta"  rel="nofollow">https://chessprogramming.wikispaces.com/Alpha-Beta</a>
+</p>
+
+<p>
+[8] <a href="http://en.wikipedia.org/wiki/Zero-sum" class="urlextern" title="http://en.wikipedia.org/wiki/Zero-sum"  rel="nofollow">http://en.wikipedia.org/wiki/Zero-sum</a>
+</p>
+
+<p>
+[9] <a href="http://en.wikipedia.org/wiki/Game_theory" class="urlextern" title="http://en.wikipedia.org/wiki/Game_theory"  rel="nofollow">http://en.wikipedia.org/wiki/Game_theory</a>
+</p>
+
+<p>
+[10] <a href="http://en.wikipedia.org/wiki/Combinatorial_game_theory" class="urlextern" title="http://en.wikipedia.org/wiki/Combinatorial_game_theory"  rel="nofollow">http://en.wikipedia.org/wiki/Combinatorial_game_theory</a>
+</p>
+
+<p>
+[11] <a href="http://www.emunix.emich.edu/~evett/AI/AlphaBeta_movie/index_movie.htm" class="urlextern" title="http://www.emunix.emich.edu/~evett/AI/AlphaBeta_movie/index_movie.htm"  rel="nofollow">http://www.emunix.emich.edu/~evett/AI/AlphaBeta_movie/index_movie.htm</a>
+</p>
+
+<p>
+[12] <a href="http://cs.curs.pub.ro/2015/pluginfile.php/31727/mod_resource/content/1/Lab%205%20MNM.pdf" class="urlextern" title="http://cs.curs.pub.ro/2015/pluginfile.php/31727/mod_resource/content/1/Lab%205%20MNM.pdf"  rel="nofollow">Descarcati varianta PDF a laboratorului</a>
+</p>
+
+</div>
+
+<h2 class="sectionedit13" id="probleme">Probleme</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit14" id="nim_si_reversi_game">Nim si Reversi game</h3>
+<div class="level3">
+
+<p>
+A sosit timpul să ne jucăm puțin, iar aplicatia de laborator presupune aplicarea unor algoritmi de tip Minimax (Negamax si Alpha-Beta Pruning) în scopul rezolvării următoarelor 2 jocului:
+</p>
+
+<p>
+<strong>Nim</strong>:
+</p>
+
+<p>
+Fiind date 3 multimi de bile, fiecare jucator trebuie sa extraga la fiecare mutare 1, 2 sau 3 bile din oricare multime. <strong>Cel care este fortat sa aleaga ultima bila, pierde.</strong>
+</p>
+
+<p>
+<strong>Reversi game [1]</strong>:
+</p>
+
+<p>
+Tabla de joc consista dintr-un grid 6&times;6. Piesele pot fi reprezentate de monede, fiecarui jucator fiindu-i asociata o fata diferita a monezii. Jucatorii muta alternativ, dupa regula urmatoare:
+</p>
+<ul>
+<li class="level1"><div class="li"> Pozitia (x, y) in care este plasata piesa trebuie sa fie libera</div>
+</li>
+<li class="level1"><div class="li"> Trebuie sa existe o alta pozitie (x&#039;, y&#039;), pe aceeasi linie, coloana sau diagonala a jucatorului aflat la mutare si toate pozitiile dintre (x, y) si (x&#039;, y&#039;) trebuie sa fie ocupate de piese ale adversarului</div>
+</li>
+<li class="level1"><div class="li"> Piesele adversarului dintre (x, y) si (x&#039;, y&#039;) vor fi capturate, intorcandu-se monedele pe cealalta fata.</div>
+</li>
+</ul>
+
+<p>
+Mai jos, de la stanga spre dreapta: pozitia initiala, posibilitatile de mutare ale primului jucator, tabla dupa prima mutare, posibilitatile de mutare ale celuilalt jucator, tabla dupa a doua mutare.
+</p>
+
+<p>
+<a href="../../_detail/pa/laboratoare/1.png%3Fid=pa%253Alaboratoare%253Alaborator-05.html" class="media" title="pa:laboratoare:1.png"><img src="../../_media/pa/laboratoare/1.png%3Fw=200&amp;tok=2b89c8" class="media" alt="" width="200" /></a>
+<a href="../../_detail/pa/laboratoare/2.png%3Fid=pa%253Alaboratoare%253Alaborator-05.html" class="media" title="pa:laboratoare:2.png"><img src="../../_media/pa/laboratoare/2.png%3Fw=200&amp;tok=7113a3" class="media" alt="" width="200" /></a>
+<a href="../../_detail/pa/laboratoare/3.png%3Fid=pa%253Alaboratoare%253Alaborator-05.html" class="media" title="pa:laboratoare:3.png"><img src="../../_media/pa/laboratoare/3.png%3Fw=200&amp;tok=aff3d2" class="media" alt="" width="200" /></a>
+<a href="../../_detail/pa/laboratoare/4.png%3Fid=pa%253Alaboratoare%253Alaborator-05.html" class="media" title="pa:laboratoare:4.png"><img src="../../_media/pa/laboratoare/4.png%3Fw=200&amp;tok=72847b" class="media" alt="" width="200" /></a>
+<a href="../../_detail/pa/laboratoare/5.png%3Fid=pa%253Alaboratoare%253Alaborator-05.html" class="media" title="pa:laboratoare:5.png"><img src="../../_media/pa/laboratoare/5.png%3Fw=200&amp;tok=3afa40" class="media" alt="" width="200" /></a>
+</p>
+
+<p>
+Observatii:
+</p>
+<ul>
+<li class="level1"><div class="li"> Jucatorul poate acapara piese ale adversarului in mai multe directii simultan</div>
+</li>
+<li class="level1"><div class="li"> Daca un jucator nu are unde muta, acesta cedeaza randul, adversarul efectuand a doua mutare la rand</div>
+</li>
+<li class="level1"><div class="li"> Jocul se incheie cand nimeni nu mai poate muta, invingatorul fiind acela care detine cele mai multe piese proprii</div>
+</li>
+</ul>
+
+<p>
+Pentru a verifica daca ati inteles regulile jocului, puteti sa exersati aici.[2]
+</p>
+
+</div>
+
+<h2 class="sectionedit15" id="cerinte">Cerinte</h2>
+<div class="level2">
+
+<p>
+<p><div class="noteimportant">
+La finalul laboratorului, încărcați soluțiile <a href="http://cs.curs.pub.ro/2015/mod/assign/view.php?id=5145" class="urlextern" title="http://cs.curs.pub.ro/2015/mod/assign/view.php?id=5145"  rel="nofollow">aici</a>.
+
+</div></p>
+</p>
+
+</div>
+
+<h4 id="minimax_nim_4p">1. Minimax Nim [4p]</h4>
+<div class="level4">
+
+<p>
+Se doreste implementarea algoritmulului minimax sau negamax pentru Nim. 
+</p>
+
+</div>
+
+<h4 id="minimax_reversi_4p">2. Minimax Reversi [4p]</h4>
+<div class="level4">
+
+<p>
+Se doreste implementarea algoritmulului minimax sau negamax pentru Reversi.
+</p>
+
+</div>
+
+<h4 id="alpha-beta_pruning_2p_2p">2. Alpha-beta pruning [2p + 2p]</h4>
+<div class="level4">
+
+<p>
+Extindeti algoritmul minimax/negamax anterior într-un algoritm de tip alpha-beta pruning. 
+</p>
+
+<p>
+[1] <a href="http://en.wikipedia.org/wiki/Reversi" class="urlextern" title="http://en.wikipedia.org/wiki/Reversi"  rel="nofollow">http://en.wikipedia.org/wiki/Reversi</a>
+</p>
+
+<p>
+[2] <a href="https://www.mathsisfun.com/games/reversi.html" class="urlextern" title="https://www.mathsisfun.com/games/reversi.html"  rel="nofollow">https://www.mathsisfun.com/games/reversi.html</a>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="diverse">Diverse</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../echipa-pa-2006-2012.html" class="wikilink1" title="pa:echipa-pa-2006-2012">Hall of PA</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../regulamente.html" class="wikilink1" title="pa:regulamente">Regulamente PA 2016</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../proiect.html" class="wikilink1" title="pa:proiect">Proiect</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../catalog.html" class="wikilink1" title="pa:catalog">Catalog</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../test_practic.html" class="wikilink1" title="pa:test_practic">Test practic</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Diverse" [1-254] -->
+<h2 class="sectionedit2" id="schelet_cod">Schelet Cod</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../../_media/pa/lab00.zip" class="media mediafile mf_zip" title="pa:lab00.zip (8.4 KB)">Laborator 0: Introducere și Relaxare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2015/lab01.zip" class="media mediafile mf_zip" title="pa:schelete:2015:lab01.zip (35.5 KB)">Laborator 1: Divide et Impera</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab02-skel.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab02-skel.zip (53.5 KB)">Laborator 2: Greedy</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab03.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab03.zip (6.3 KB)">Laborator 3: Programare Dinamică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2014/lab04.zip" class="media mediafile mf_zip" title="pa:schelete:2014:lab04.zip (23.2 KB)">Laborator 4: Backtracking și optimizări</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/lab05.zip" class="media mediafile mf_zip" title="pa:schelete:lab05.zip (10.8 KB)">Laborator 5: Minimax</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab06.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab06.zip (37.7 KB)">Laborator 6: Parcurgerea Grafurilor. Sortare Topologică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab07.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab07.zip (14.2 KB)"> Laborator 7: Aplicații DFS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab08.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab08.zip (20.7 KB)">Laborator 8: Drumuri minime</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2016/lab09.zip" class="media mediafile mf_zip" title="pa:schelete:2016:lab09.zip (6.4 KB)">Laborator 9: Arbori minimi de acoperire</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2014/lab10.zip" class="media mediafile mf_zip" title="pa:schelete:2014:lab10.zip (29.4 KB)">Laborator 10: Flux Maxim</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/schelete/2014/lab11.zip" class="media mediafile mf_zip" title="pa:schelete:2014:lab11.zip (38.1 KB)">Laborator 11: A*</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/lab12.zip" class="media mediafile mf_zip" title="pa:lab12.zip (10.9 KB)">Laborator 12: Algoritmi Aleatori</a></div>
+</li>
+</ul>
+<ul>
+<li class="level1"><div class="li"> <a href="https://github.com/laurentiustamate94/laboratoare-pa-c-sharp" class="urlextern" title="https://github.com/laurentiustamate94/laboratoare-pa-c-sharp"  rel="nofollow">Schelete de cod in C# pentru 2014-2015</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Schelet Cod" [255-1244] -->
+<h2 class="sectionedit3" id="laboratoare">Laboratoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="laborator-00.html" class="wikilink1" title="pa:laboratoare:laborator-00">Laborator 0: Introducere și Relaxare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-01.html" class="wikilink1" title="pa:laboratoare:laborator-01">Laborator 1: Divide et Impera</a> </div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-02.html" class="wikilink1" title="pa:laboratoare:laborator-02">Laborator 2 &amp; 3: Greedy și Programare Dinamică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-04.html" class="wikilink1" title="pa:laboratoare:laborator-04">Laborator 4: Backtracking și optimizări</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="laborator-05.html" class="wikilink1" title="pa:laboratoare:laborator-05">Laborator 5: Minimax</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-06.html" class="wikilink1" title="pa:laboratoare:laborator-06">Laborator 6: Parcurgerea Grafurilor. Sortare Topologică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-07.html" class="wikilink1" title="pa:laboratoare:laborator-07">Laborator 7: Aplicații DFS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-08.html" class="wikilink1" title="pa:laboratoare:laborator-08">Laborator 8: Drumuri minime</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-09.html" class="wikilink1" title="pa:laboratoare:laborator-09">Laborator 9: Arbori minimi de acoperire</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-10.html" class="wikilink1" title="pa:laboratoare:laborator-10">Laborator 10: Flux Maxim</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-11.html" class="wikilink1" title="pa:laboratoare:laborator-11">Laborator 11: A*</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-12.html" class="wikilink1" title="pa:laboratoare:laborator-12">Laborator 12: Algoritmi Aleatori</a> </div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [1245-2123] -->
+<h2 class="sectionedit4" id="materiale_suplimentare_test_practic">Materiale Suplimentare Test Practic</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../materiale_test_practic/articole.html" class="wikilink1" title="pa:materiale_test_practic:articole">Articole</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../materiale_test_practic/probleme.html" class="wikilink1" title="pa:materiale_test_practic:probleme">Probleme</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Materiale Suplimentare Test Practic" [2124-2278] -->
+<h2 class="sectionedit5" id="crash-course_optional">Crash-course Opțional</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="../curs-optional/sd-si-debugging.html" class="wikilink1" title="pa:curs-optional:sd-si-debugging">Debugging și Structuri de Date</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../../_media/pa/workshop.zip" class="media mediafile mf_zip" title="pa:workshop.zip (36.9 KB)">Schelet: Debugging și Structuri de Date</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT5 SECTION "Crash-course Opțional" [2279-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-05.html#laborator_5minimax">Laborator 5: Minimax</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-05.html#obiective_laborator">Obiective laborator</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-05.html#importanta_aplicatii_practice">Importanţă – aplicaţii practice</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-05.html#descrierea_problemei_si_a_rezolvarilor">Descrierea problemei și a rezolvărilor</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-05.html#minimax">Minimax</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-05.html#reprezentarea_spatiului_solutiilor">Reprezentarea spatiului solutiilor</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-05.html#argumentarea_utilizarii_unei_adancimi_maxime">Argumentarea utilizarii unei adancimi maxime</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-05.html#negamax">Negamax</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-05.html#alpha-beta_pruning">Alpha-beta pruning</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-05.html#complexitate">Complexitate</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-05.html#concluzii_si_observatii">Concluzii si observatii</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-05.html#referinte">Referinte</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-05.html#probleme">Probleme</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-05.html#nim_si_reversi_game">Nim si Reversi game</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-05.html#cerinte">Cerinte</a></div>
+<ul class="toc">
+<li class="clear">
+<ul class="toc">
+<li class="level4"><div class="li"><a href="laborator-05.html#minimax_nim_4p">1. Minimax Nim [4p]</a></div></li>
+<li class="level4"><div class="li"><a href="laborator-05.html#minimax_reversi_4p">2. Minimax Reversi [4p]</a></div></li>
+<li class="level4"><div class="li"><a href="laborator-05.html#alpha-beta_pruning_2p_2p">2. Alpha-beta pruning [2p + 2p]</a></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          pa/laboratoare/laborator-05.txt · Last modified: 2016/04/01 09:31 by vicentiu.ciorbaru          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="laborator-05%3Fdo=media&amp;ns=pa%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="laborator-05.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=pa%253Alaboratoare%253Alaborator-05&amp;1479891579" width="2" height="1" alt="" /></div>
+</body>
+</html>

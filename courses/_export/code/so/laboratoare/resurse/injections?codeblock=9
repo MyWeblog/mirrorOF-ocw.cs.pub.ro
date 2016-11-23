@@ -1,0 +1,52 @@
+    
+    
+
+#include <cstdio>
+using namespace std;
+#include <windows.h>
+
+int main()
+{
+    bool done  =  false;
+    while (!done) {
+        HWND hwnd = FindWindow(NULL, TEXT("Heroes of Newerth"));
+        if (NULL != hwnd) {
+            LONG styles = GetWindowLong(hwnd,  GWL_STYLE);
+            if (0 != styles) {
+                styles ^= WS_CAPTION;
+
+                bool deflate = 0 == (styles & WS_CAPTION);
+                RECT rc;
+                GetWindowRect(hwnd, &rc);
+
+                int captionHeight = GetSystemMetrics(SM_CYCAPTION);
+                int borderWidth = GetSystemMetrics(SM_CXDLGFRAME);
+                int borderHeight = GetSystemMetrics(SM_CYDLGFRAME);
+
+                if (deflate) {
+                    rc.left += borderWidth;
+                    rc.right -= borderWidth;
+                    rc.top += captionHeight + borderHeight;
+                    rc.bottom -= borderHeight;
+                }
+                else {
+                    rc.left -= borderWidth;
+                    rc.right += borderWidth;
+                    rc.top -= captionHeight + borderHeight;
+                    rc.bottom += borderHeight;
+                }
+                LONG result = SetWindowLong(hwnd, GWL_STYLE, styles);
+                if (0 != result)
+                    SetWindowPos(hwnd, NULL,
+                        rc.left, rc.top,
+                        rc.right - rc.left, rc.bottom - rc.top,
+                        SWP_FRAMECHANGED);
+            }
+        }
+        char c;
+        scanf("%c", &c);
+        if ('q' == c)
+            done = true;
+    }
+    return 0;
+}

@@ -1,0 +1,33 @@
+    
+    
+
+#!/bin/bash
+
+rm -rf target.rrd
+
+# Init timestamp.
+timestamp=$(date +%s)
+
+# Align timestamp to multiple of 5 seconds.
+timestamp=$(($timestamp/5*5))
+init_timestamp=$timestamp
+
+rrdtool create target.rrd \
+         --start $timestamp \
+         --step 5 \
+         DS:speedIn:COUNTER:10:U:U \
+         DS:speedOut:COUNTER:10:U:U \
+         RRA:AVERAGE:0.5:2:60 \
+         RRA:AVERAGE:0.5:60:12
+
+for i in $(seq 1 24); do
+   sleep 5
+   timestamp=$(($timestamp + 5))
+
+   outOctets=$(...)
+   inOctets=$(...)
+
+   rrdtool update target.rrd  $timestamp:$inOctets:$outOctets
+done
+
+echo --start $init_timestamp --end $timestamp

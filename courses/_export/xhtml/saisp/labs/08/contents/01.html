@@ -1,0 +1,166 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:08:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-09T12:32:16+0200"/>
+<meta name="keywords" content="saisp,labs,08,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/08/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:08:contents';var JSINFO = {"id":"saisp:labs:08:contents:01","namespace":"saisp:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="01.html#p_kernel-based_virtual_machine_kvm">01. [15p] Kernel-based Virtual Machine (KVM)</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="01.html#exportare_display_prin_vnc">Exportare display prin VNC</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="p_kernel-based_virtual_machine_kvm">01. [15p] Kernel-based Virtual Machine (KVM)</h3>
+<div class="level3">
+
+<p>
+Virtualizarea este folosită pe scară largă în centrele de date întrucât oferă flexibilitate foarte mare în managementul resurselor. Pentru a nu afecta perfomanța, producătorii de procesoare au introdus facilități de virtualizare pentru a permite sistemelor de operare să ruleze nemodificate. Entitatea software care folosește aceste facilități se numește <strong>hypervisor</strong>. KVM este un hypervisor ce oferă suport pentru virtualizarea nativă (implementează facilități de virtualizare). În continuare vom prezenta modul de lucru cu soluția implementată de KVM.
+</p>
+
+<p>
+Trebuie să verificăm dacă hardware-ul are suport pentru <strong>virtualizare nativă</strong> (mai poartă denumirea și de <strong>extensie de virtualizare</strong>). Numele extensiilor de virtualizare diferă de la un producător la altul astfel:
+</p>
+<ul>
+<li class="level1"><div class="li"> INTEL - <strong>vmx</strong> (Virtual Machine eXtensions)</div>
+</li>
+<li class="level2"><div class="li"> AMD - <strong>svm</strong> (Secure Virtual Machine)</div>
+</li>
+</ul>
+
+<p>
+Pentru a verifica prezența extensiilor de mai sus trebuie să ne uităm în <code>/proc/cpuinfo</code> dacă câmpul <em>Flags</em> conține numele extensiei (<strong>vmx</strong> pentru Intel sau <strong>svm</strong> pentru AMD):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~$ </span><span class="kw2">cat</span> <span class="sy0">/</span>proc<span class="sy0">/</span>cpuinfo <span class="sy0">|</span><span class="kw2">grep</span> vmx
+flags           : ... ds_cpl <span class="sy0">**</span>vmx<span class="sy0">**</span> smx...</pre>
+
+<p>
+Pentru a folosi KVM trebuie să instalăm pachetul <code>qemu-kvm</code>, <strong>qemu</strong> fiind utilitarul din userspace ce porneste mașinile virtuale și transmite parametri doriți hypervisorului:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">apt-get install</span> qemu-kvm
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Înainte de a porni o mașina virtuală bazată pe KVM, trebuie să verificăm dacă modulul de kernel este încărcat:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">lsmod</span><span class="sy0">|</span><span class="kw2">grep</span> kvm
+kvm_intel             <span class="nu0">121968</span>  <span class="nu0">0</span>
+kvm                   <span class="nu0">287572</span>  <span class="nu0">1</span> kvm_intel</pre>
+
+<p>
+Observați în acest caz folosirea unei arhitecturi Intel. Pentru fiecare arhitectură există un modul separat. Încărcarea modului de kernel atrage după sine crearea unui device <code>/dev/kvm</code> prin care se controlează modulul de kernel folosind operații de tip <code>ioctl</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ls</span> <span class="re5">-l</span> <span class="sy0">/</span>dev<span class="sy0">/</span>kvm
+crw-rw---T <span class="nu0">1</span> root kvm <span class="nu0">10</span>, <span class="nu0">232</span> Jan  <span class="nu0">5</span> <span class="nu0">21</span>:<span class="nu0">34</span> <span class="sy0">/</span>dev<span class="sy0">/</span>kvm</pre>
+
+<p>
+Pentru a porni o mașină virtuală vom folosi comanda <code>kvm</code>. Utilizatorul care execută comanda (dorește să pornească o mașină virtuală) trebuie să fie cel privilegiat (<code>root</code>) sau să facă parte din grupul setat ca owner pe device-ul <code>/dev/kvm</code> (în cazul de fată <code>kvm</code>). În cadrul laboratorului vom lucra cu utilizatorul privilegiat, dacă nu se specifică altfel.
+</p>
+
+<p>
+Vom crea o mașină virtuală având 256MB RAM (parametrul <code>-m</code>), 2 procesoare (numărul este dat de parametrul <code>-smp</code>) și va avea ca dispozitiv de stocare o imagine virtuală denumită <code>base.qcow2</code> (mai multe detalii în exercițiul următor), specificată cu parametrul <code>-hda</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">256</span> <span class="re5">-smp</span> <span class="nu0">2</span></pre>
+
+<p>
+În acest moment se va deschide o fereastră în care se va afișa output-ul consolei mașinii virtuale (veți vedea cum bootează). Verificați că resursele mașinii virtuale coincid cu parametri trimiși comenzii <code>kvm</code> inspectând sistemul de fișiere <code>/proc</code>.
+</p>
+
+<p>
+Deschidem o nouă consolă și vom afișa numărul de thread-uri <code>kvm</code> prezente în sistem:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ps</span> <span class="re5">-eLf</span> <span class="sy0">|</span><span class="kw2">grep</span> kvm</pre>
+
+<p>
+Opriți rularea mașinii virtuale rulând <code>Ctrl+c</code> în consola unde ați rulat comanda <code>kvm</code>. Porniți-o din nou cu 4 procesoare și 512MB RAM.
+</p>
+
+<p>
+Deschidem o nouă consolă și vom afișa numărul de thread-uri <code>kvm</code> prezente în sistem:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ps</span> <span class="re5">-eLf</span> <span class="sy0">|</span><span class="kw2">grep</span> kvm</pre>
+
+<p>
+Observați că fiecare nou procesor adăugat în mașina virtuală crește numărul thread-urilor <code>kvm</code> în sistemul gazdă (numărul de thread-uri este mai mare decât numărul de procesoare din cauza existenței unor <em>thread-uri de management</em> necesare procesului <code>kvm</code>).
+</p>
+
+</div>
+
+<h4 id="exportare_display_prin_vnc">Exportare display prin VNC</h4>
+<div class="level4">
+
+<p>
+De cele mai multe ori nu dorim deschiderea unei console în sesiunea curentă ci dorim rularea mașinii în background, iar la nevoie să putem accesa consola acesteia. Acest lucru este posibil folosind parametrul <code>-vnc</code> al comenzii <code>kvm</code> care va porni un server de VNC prin care se va exporta consola mașinii virtuale:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">512</span> <span class="re5">-smp</span> <span class="nu0">4</span> <span class="re5">-vnc</span> :<span class="nu0">1</span></pre>
+
+<p>
+Observați în continuare că procesul <code>kvm</code> nu a intrat în background. Pentru acest lucru trebuie să mai adăugăm parametroul <code>-daemonize</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">512</span> <span class="re5">-smp</span> <span class="nu0">4</span> <span class="re5">-vnc</span> :<span class="nu0">1</span> <span class="re5">-daemonize</span></pre>
+
+<p>
+Parametrul <code>-vnc :1</code> activează serverul VNC pe portul <strong>1</strong> al protocolului. Pentru a afla portul TCP pe care ascultă serverul de VNC prin care este exportată consola trebuie să adunați <strong>5900</strong> la numărul pe care l-ați pus parametrului <code>-vnc</code>, în cazul nostru <code>5901</code>. Pentru a verifica acest lucru executați comanda <code>netstat</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">netstat</span> <span class="re5">-ntpl</span></pre>
+
+<p>
+În acest moment mașina virtuală KVM rulează în background, singura modalitate de interacțiune cu aceasta fiind prin consola VNC. Ne vom conecta la portul <code>5901</code> folosind utilitarul <code>vncviewer</code> (instalați-l dacă este cazul folosind <code>apt-get install xtightvncviewer</code>):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>vncviewer localhost:<span class="nu0">5901</span></pre>
+
+<p>
+Închideți mașina virtuală executând comanda <code>poweroff</code> în consola acesteia. Porniți-o din nou având 256MB RAM și 2 procesoare, tot în background (<code>-daemonize</code>). Găsiți o modalitate de a opri mașina virtuală executând o comanda pe mașina fizică (cea pe care lucrați voi).
+</p>
+
+</div>
+</div>
+</body>
+</html>

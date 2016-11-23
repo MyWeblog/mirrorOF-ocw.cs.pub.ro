@@ -1,0 +1,220 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:12:contents:03</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-01-18T20:59:45+0200"/>
+<meta name="keywords" content="rl,labs,12,contents,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:12:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="03.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/12/contents/03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:12:contents';var JSINFO = {"id":"rl:labs:12:contents:03","namespace":"rl:labs:12:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_configurare_client_de_pppoe_pe_statia_red">03. [20p] Configurare client de PPPoE pe stația red</h3>
+<div class="level3">
+
+<p>
+Având pornit serverul de PPPoE, putem acum să configurăm clienții de PPPoE. Clienții, adică stațiile de tip client, se vor autentifica la serverul de PPPoE pornit anterior și vor primi o adresă IP.
+</p>
+
+<p>
+Pentru configurarea unui client, cel mai simplu este să folosim utilitarul <code>pppoeconf</code>. Acest utilitar prezintă întrebări de configurare utilizatorului și generează informațiile necesare în fișierele de configurare din <code>/etc/ppp/</code>. Fișierele de configurare ce vor fi alterate sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>/etc/ppp/pap-secrets</code>: configurare pentru autentificare folosind PAP (<em>Password Authentication Protocol</em>)</div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/ppp/chap-secrets</code>: configurare pentru autentificare folosind CHAP (<em>Challenge-Handshake Authentication Protocol</em>)</div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/ppp/peers/dsl-provider</code>: configurare pentru conectarea la serverul PPPoE</div>
+</li>
+<li class="level1"><div class="li"> <code>/etc/network/interfaces</code>: configurare persistentă pentru conexiunea PPPoE</div>
+</li>
+</ul>
+
+<p>
+Pentru început vom configura pe stația <code>red</code> un client PPPoE. Vom rula comanda:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span>pppoeconf</pre>
+
+<p>
+ și vom ține cont de următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> la username și parolă folosim <code>red</code> (le-am configurat anterior în server)</div>
+</li>
+<li class="level1"><div class="li"> la toate celelalte opțiuni lăsăm valorile implicite</div>
+</li>
+</ul>
+
+<p>
+Pentru a valida configurarea corectă, inspectăm mesajele PPPoE folosind comanda <code>plog</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span>plog
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">670</span><span class="br0">&#93;</span>: Plugin rp-pppoe.so loaded.
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: pppd 2.4.5 started by root, uid <span class="nu0">0</span>
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: PPP session is <span class="nu0">1</span>
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: Connected to 7e:9e:4a:5a:<span class="nu0">49</span>:<span class="nu0">77</span> via interface eth0
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: Using interface ppp0
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">23</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: Connect: ppp0 <span class="sy0">&lt;</span>--<span class="sy0">&gt;</span> eth0
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">26</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: peer from calling number 7E:9E:4A:5A:<span class="nu0">49</span>:<span class="nu0">77</span> authorized
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">26</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: <span class="kw3">local</span>  IP address 192.168.0.2
+Dec <span class="nu0">19</span> <span class="nu0">21</span>:<span class="nu0">11</span>:<span class="nu0">26</span> <span class="kw2">red</span> pppd<span class="br0">&#91;</span><span class="nu0">672</span><span class="br0">&#93;</span>: remote IP address 192.168.0.1</pre>
+
+<p>
+Din output-ul comenzii <code>plog</code> observăm că:
+</p>
+<ul>
+<li class="level1"><div class="li"> stația se conectează la serverul PPPoE prin intermediul interfeței <code>eth0</code></div>
+</li>
+<li class="level1"><div class="li"> se creează interfața <code>ppp0</code></div>
+</li>
+<li class="level1"><div class="li"> se atașează interfeței <code>ppp0</code> adresa <code>192.168.0.2</code> (<code>local</code>) pe o legătură punct-la-punct cu interfața de pe server (<code>192.168.0.1</code>).</div>
+</li>
+</ul>
+
+<p>
+Observăm crearea interfeței <code>ppp0</code> și atașarea adresei <code>192.168.0.2</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev ppp0
+<span class="nu0">13</span>: ppp0: <span class="sy0">&lt;</span>POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1492</span> qdisc pfifo_fast state UNKNOWN qlen <span class="nu0">3</span>
+    link<span class="sy0">/</span>ppp
+    inet 192.168.0.2 peer 192.168.0.1<span class="sy0">/</span><span class="nu0">32</span> scope global ppp0</pre>
+
+<p>
+Verificăm conectivitatea la serverul PPPoE folosind comanda <code>ping</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> 192.168.0.1
+PING 192.168.0.1 <span class="br0">&#40;</span>192.168.0.1<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from 192.168.0.1: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">1.63</span> ms
+<span class="nu0">64</span> bytes from 192.168.0.1: <span class="re2">icmp_req</span>=<span class="nu0">2</span> <span class="re2">ttl</span>=<span class="nu0">64</span> <span class="re2">time</span>=<span class="nu0">0.270</span> ms
+^C</pre>
+
+<p>
+Observăm că pe stația <code>host</code> a apărut de asemenea o interfață <code>ppp0</code>, perechea interfeței create pe stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> a s
+<span class="nu0">32</span>: ppp0: <span class="sy0">&lt;</span>POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1492</span> qdisc pfifo_fast state UNKNOWN qlen <span class="nu0">3</span>
+    link<span class="sy0">/</span>ppp 
+    inet 192.168.0.1 peer 192.168.0.2<span class="sy0">/</span><span class="nu0">32</span> scope global ppp0</pre>
+
+<p>
+Interfața <code>ppp0</code> de pe stația <code>host</code> are adresa <code>192.168.0.1</code>, adresa aferentă stației host.
+</p>
+
+<p>
+O dată configurată, conexiunea PPPoE poate fi pornită folosind comanda <code>pon dsl-provider</code> și oprită folosind <code>poff dsl-provider</code>. Comanda <code>pon dsl-provider</code> este în general rulată în momentul configurării (adică în momentul folosirii comenzii <code>pppoeconf</code>); este ultimul ecran de interogare a utilizatorului furnizat de comanda <code>pppoeconf</code>.
+</p>
+
+<p>
+Doar pentru testare, vom opri și vom porni conexiunea PPPoE pe stația <code>red</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev ppp0
+<span class="nu0">13</span>: ppp0: <span class="sy0">&lt;</span>POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1492</span> qdisc pfifo_fast state UNKNOWN qlen <span class="nu0">3</span>
+    link<span class="sy0">/</span>ppp
+    inet 192.168.0.2 peer 192.168.0.1<span class="sy0">/</span><span class="nu0">32</span> scope global ppp0
+<span class="co4">root@red:~# </span>poff dsl-provider
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev ppp0
+Device <span class="st0">&quot;ppp0&quot;</span> does not exist.
+<span class="co4">root@red:~# </span>pon dsl-provider
+Plugin rp-pppoe.so loaded.
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> address show dev ppp0
+<span class="nu0">15</span>: ppp0: <span class="sy0">&lt;</span>POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1492</span> qdisc pfifo_fast state UNKNOWN qlen <span class="nu0">3</span>
+    link<span class="sy0">/</span>ppp
+    inet 192.168.0.3 peer 192.168.0.1<span class="sy0">/</span><span class="nu0">32</span> scope global ppp0</pre>
+
+<p>
+Observăm că la a doua rulare am obținut altă adresă IP (<code>192.168.0.3</code>), următoarea din spațiul de adrese expus de serverul de PPPoE. Aceasta se întâmplă pentru că la fiecare conectare la serverul PPPoE se obține următoarea adresă nefolosită. La un număr suficient de mari de rulări ale comenzilor <code>poff dsl-provider</code> și <code>pon dsl-provider</code> se poate reajunge la adresa IP <code>192.168.0.3</code>.
+</p>
+
+<p>
+Ca să vedem cum se realizează conectarea între cele două capete consultăm tabela de rutare:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip route</span>
+default dev ppp0  scope <span class="kw2">link</span>
+192.168.0.1 dev ppp0  proto kernel  scope <span class="kw2">link</span>  src 192.168.0.3</pre>
+
+<p>
+Observăm că ruta implicită este specificată folosind doar interfața de ieșire (<code>ppp0</code>). Acest lucru este suficient întrucât este o conexiune punct-la-punct și nu un mediu multi-acces cum este Ethernet. Legătura este punct la punct motiv pentru care nu avem mască aferentă rutei către <code>192.168.0.1</code>. Este vorba de o rută punct la punct. Similar arată tabela de rutare și pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> r s dev ppp0
+192.168.0.3  proto kernel  scope <span class="kw2">link</span>  src 192.168.0.1</pre>
+
+<p>
+Să urmărim conținutul mesajelor PPPoE. Vom captura cadrele <code>Ethernet</code> pe stația <code>host</code> folosind comanda <code>tcpdump</code> pe interfața <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>tcpdump <span class="re5">-n</span> <span class="re5">-i</span> br0 <span class="re5">-e</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Opțiunea <code>-e</code> a comenzii <code>tcpdump</code> afișează și antetul de nivel 2, adică antetul Ethernet și implicit, antetul PPP.
+</p>
+
+<p>
+Pe stația red pornim comanda ping către stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> 192.168.0.1
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Acum observăm pe stația <code>host</code> rezultatul capturii:
+</p>
+<pre class="code bash"><span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="nu0">23</span>:<span class="nu0">29</span>:<span class="nu0">20.668204</span> 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> <span class="br0">&#40;</span>oui Unknown<span class="br0">&#41;</span> <span class="sy0">&gt;</span> 7e:9e:4a:5a:<span class="nu0">49</span>:<span class="nu0">77</span> <span class="br0">&#40;</span>oui Unknown<span class="br0">&#41;</span>, ethertype PPPoE S <span class="br0">&#40;</span>0x8864<span class="br0">&#41;</span>, length <span class="nu0">106</span>: PPPoE  <span class="br0">&#91;</span>ses 0x1<span class="br0">&#93;</span> IP <span class="br0">&#40;</span>0x0021<span class="br0">&#41;</span>, length <span class="nu0">86</span>: 192.168.0.3 <span class="sy0">&gt;</span> 192.168.0.1: ICMP <span class="kw3">echo</span> request, <span class="kw2">id</span> <span class="nu0">732</span>, <span class="kw2">seq</span> <span class="nu0">47</span>, length <span class="nu0">64</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+În cadrul capturat mai sus observăm următoarele:
+</p>
+<ul>
+<li class="level1"><div class="li"> adresa MAC sursă este adresa MAC a interfeței <code>eth0</code> a stației <code>red</code>: <code>00:16:3e:8e:84:21</code>;</div>
+</li>
+<li class="level1"><div class="li"> adresa MAC destinație este adresa MAC a interfeței de tip bridge <code>br0</code> de pe stația <code>host</code>: <code>7e:9e:4a:5a:49:77</code>;</div>
+</li>
+<li class="level1"><div class="li"> tipul protocolului încapsulat în cadrul Ethernet este PPPoE (<code>0x8864</code> – faza de sesiune); în mod obișnuit ar fi fost IP (<code>0x0800</code>)<sup><a href="03.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>;</div>
+</li>
+<li class="level1"><div class="li"> pachetul <code>PPPoE</code> încasulează la rândul său protocolul IP.</div>
+</li>
+</ul>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="03.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+tipurile de protocoale încapsulate într-un cadru Ethernet sunt listate în <code>/etc/ethertypes</code></div>
+</div>
+</div>
+</body>
+</html>

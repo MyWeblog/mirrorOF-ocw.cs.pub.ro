@@ -1,0 +1,723 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-02-28T23:46:02+0200"/>
+<meta name="keywords" content="saisp,labs,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../saisp/labs/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs';var JSINFO = {"id":"saisp:labs:07","namespace":"saisp:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="laborator_7_virtualizarea_bazata_pe_containere">Laborator 7. Virtualizarea bazată pe containere</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 7. Virtualizarea bazată pe containere" [12-75] -->
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Interactiunea cu containerele</div>
+</li>
+<li class="level1"><div class="li"> Crearea de noi containere</div>
+</li>
+<li class="level1"><div class="li"> Configurarea retelei pentru containere</div>
+</li>
+<li class="level1"><div class="li"> Interactiunea folosind Virsh</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cunoștințe și abilități ce vor fi dobândite" [76-279] -->
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+Pentru a pregăti configurația de laborator va trebui să descărcați pe mașina fizică (<code>mjolnir</code>), în directorul <code>saisp/</code>, arhiva laboratorului:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw3">cd</span> saisp<span class="sy0">/</span>
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">wget</span> <span class="re5">--user</span>=user-curs <span class="re5">--ask-password</span> http:<span class="sy0">//</span>repository.grid.pub.ro<span class="sy0">/</span>cs<span class="sy0">/</span>saisp<span class="sy0">/</span>laboratoare<span class="sy0">/</span>lab-07.zip
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">unzip</span> lab-07.zip</pre>
+
+<p>
+În urma dezarhivării rezultă mai multe fișiere imagine KVM și un script de pornire a mașinilor virtuale:
+</p>
+<ul>
+<li class="level1"><div class="li"> Imaginea de bază <code>base.qcow2</code> este deja în directorul <code>saisp/</code> și este baza pentru celelalte.</div>
+</li>
+<li class="level1"><div class="li"> Fișierul <code>saisp-vm-1.qcow2</code> este obținut din <code>base.qcow2</code> și este folosit pentru pornirea masinii virtuale.</div>
+</li>
+</ul>
+
+<p>
+Pentru a porni mașina virtuala, vom folosi comanda: 
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span>.<span class="sy0">/</span>lab07-start-kvm</pre>
+
+<p>
+După pornirea mașinii virtuale KVM, o putem accesa prin folosirea SSH către adresa IP aferenta. Vom folosi comanda:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>10.0.0.10</pre>
+
+</div>
+<!-- EDIT3 SECTION "Pregătire infrastructură de laborator" [280-1338] -->
+<h2 class="sectionedit4" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/07.html" class="wikilink1" title="saisp:labs:07">Laboratorul 7</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "saisp:labs:07:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_1711780111583567ad43fa2" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/01.html" class="wikilink1" title="saisp:labs:07:contents:01">01. [5p] Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/02.html" class="wikilink1" title="saisp:labs:07:contents:02">02. [20p] Interactiunea cu containerele</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/03.html" class="wikilink1" title="saisp:labs:07:contents:03">03. [10p] Spatiul de procese</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/04.html" class="wikilink1" title="saisp:labs:07:contents:04">04. [10p] Sistemul de fisiere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/05.html" class="wikilink1" title="saisp:labs:07:contents:05">05. [10p] Crearea containerelor</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/06.html" class="wikilink1" title="saisp:labs:07:contents:06">06. [25p] Networking</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/07.html" class="wikilink1" title="saisp:labs:07:contents:07">07. [20p] Interactiune folosind Virsh</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/08.html" class="wikilink1" title="saisp:labs:07:contents:08">08. [BONUS - 10p] Script pentru pornire si oprire</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 PLUGIN_INCLUDE_END "saisp:labs:07:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Navigare" [1339-1453] -->
+<h2 class="sectionedit7" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 PLUGIN_INCLUDE_START "saisp:labs:07:contents:01" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:01">
+
+<h3 class="sectionedit10" id="p_introducere">01. [5p] Introducere</h3>
+<div class="level3">
+
+<p>
+LXC este o implementare pentru Linux a virtualizarii la nivelul sistemului de operare. Incepand cu versiunea 2.6.29 a nucleului Linux, este integrata in mainline, ceea ce inseamna ca orice imagine de nucleu Linux poate oferi suport pentru LXC. 
+</p>
+
+<p>
+Cele mai importante aspecte legate de LXC si virtualizarea la nivelul sistemului de operare sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> “masina fizica” se numeste <strong>hardware node</strong>;</div>
+</li>
+<li class="level1"><div class="li"> “masinile virtuale” se numesc <strong>containere</strong>;</div>
+</li>
+<li class="level1"><div class="li"> nucleul este <strong>partajat</strong> intre hardware node si containere;</div>
+</li>
+<li class="level1"><div class="li"> fiecare container poseda:</div>
+<ul>
+<li class="level2"><div class="li"> ierarhie de fisiere izolata;</div>
+</li>
+<li class="level2"><div class="li"> spatiu de procese izolat;</div>
+</li>
+<li class="level2"><div class="li"> fisier de configurare (in care se specifica parametrii specifici - retea, consola etc.).</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Verificati daca nucleul din masina gazda (<strong>saisp-vm-1</strong>) suporta LXC, folosind comanda <code>lxc-checkconfig</code>.
+</p>
+
+<p>
+Apoi, verificati daca sistemul de fisiere virtual de tip “cgroup” este montat.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "01. [5p] Introducere" [1-] --><!-- EDIT9 PLUGIN_INCLUDE_END "saisp:labs:07:contents:01" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT11 PLUGIN_INCLUDE_START "saisp:labs:07:contents:02" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:02">
+
+<h3 class="sectionedit13" id="p_interactiunea_cu_containerele">02. [20p] Interactiunea cu containerele</h3>
+<div class="level3">
+
+<p>
+Masina virtuala <strong>saisp-vm-1</strong> contine un container deja creat, cu numele <code>ct1</code>.
+</p>
+
+<p>
+Folosind comanda <code>lxc-start</code>, vom porni containerul:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-start <span class="re5">-n</span> ct1
+&nbsp;
+INIT: version <span class="nu0">2.88</span> booting
+Using makefile-style concurrent boot <span class="kw1">in</span> runlevel S.
+Cleaning up ifupdown....
+Setting up networking....
+Activating lvm and md swap...done.
+Checking <span class="kw2">file</span> systems...fsck from util-linux-ng 2.17.2
+done.
+Mounting <span class="kw3">local</span> filesystems...done.
+Activating swapfile swap...done.
+Cleaning up temporary files....
+Setting kernel variables ...done.
+...
+Cleaning up temporary files....
+INIT: Entering runlevel: <span class="nu0">3</span>
+Using makefile-style concurrent boot <span class="kw1">in</span> runlevel <span class="nu0">3</span>.
+Starting OpenBSD Secure Shell server: sshd.
+&nbsp;
+Debian GNU<span class="sy0">/</span>Linux <span class="nu0">6.0</span> ct1 console
+&nbsp;
+ct1 login: </pre>
+
+<p>
+Observam ca terminalul este atasat la container, acesta fiind pornit in <strong>foreground</strong>.
+</p>
+
+<p>
+Pentru a va loga in container, folositi credentialele <strong>root</strong> / <strong>root</strong>.
+</p>
+
+<p>
+Vom opri containerul din interiorul acestuia, ca pe orice statie Linux, folosind <code>halt</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ct1:~# </span>halt     
+&nbsp;
+Broadcast message from root<span class="sy0">@</span>ct1 <span class="br0">&#40;</span>console<span class="br0">&#41;</span> <span class="br0">&#40;</span>Sun Apr <span class="nu0">13</span> <span class="nu0">18</span>:<span class="nu0">22</span>:<span class="nu0">16</span> <span class="nu0">2014</span><span class="br0">&#41;</span>:
+&nbsp;
+The system is going down <span class="kw1">for</span> system halt NOW<span class="sy0">!</span>
+INIT: Switching to runlevel: <span class="nu0">0</span>
+INIT: Sending processes the TERM signal
+<span class="co4">root@ct1:~# </span>Using makefile-style concurrent boot <span class="kw1">in</span> runlevel <span class="nu0">0</span>.
+mount: <span class="sy0">/</span> is busy
+<span class="co4">root@saisp-vm-1:~#</span></pre>
+
+<p>
+O varianta mai comoda este pornirea containerului in <strong>background</strong>. Vom adauga parametrul <code>-d</code> la comanda <code>lxc-start</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-start <span class="re5">-n</span> ct1 <span class="re5">-d</span></pre>
+
+<p>
+Verificam starea containerului folosind <code>lxc-info</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-info <span class="re5">-n</span> ct1
+state:   RUNNING
+pid:      <span class="nu0">8269</span></pre>
+
+<p>
+Pentru a putea interactiona cu un container pornit in background, trebuie sa ne conectam la consola acestuia. Folosim comanda <code>lxc-console</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-console <span class="re5">-n</span> ct1
+&nbsp;
+Type <span class="sy0">&lt;</span>Ctrl+a q<span class="sy0">&gt;</span> to <span class="kw3">exit</span> the console, <span class="sy0">&lt;</span>Ctrl+a Ctrl+a<span class="sy0">&gt;</span> to enter Ctrl+a itself
+&nbsp;
+Debian GNU<span class="sy0">/</span>Linux <span class="nu0">6.0</span> ct1 tty1
+&nbsp;
+ct1 login: </pre>
+
+<p>
+Apoi, ne putem deconecta, fara a opri containerul, folosind combinatie de taste <strong>CTRL+A, Q</strong>.
+</p>
+
+</div>
+<!-- EDIT13 SECTION "02. [20p] Interactiunea cu containerele" [1-] --><!-- EDIT12 PLUGIN_INCLUDE_END "saisp:labs:07:contents:02" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT14 PLUGIN_INCLUDE_START "saisp:labs:07:contents:03" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:03">
+
+<h3 class="sectionedit16" id="p_spatiul_de_procese">03. [10p] Spatiul de procese</h3>
+<div class="level3">
+
+<p>
+Folositi comanda <code>lxc-info</code> pentru a afla PID-ul containerului <code>ct1</code>. Acest PID este al procesului <code>init</code> corespunzator containerului. Restul proceselor din container vor fi copii ai acestui proces <code>init</code>.
+</p>
+
+<p>
+Atasati-va la consola containerului, logati-va, apoi detasati-va de la consola.
+</p>
+
+<p>
+Pe <strong>saisp-vm-1</strong>, afisati intreaga ierarhie de procese:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span><span class="kw2">pstree</span> <span class="re5">-p</span>
+init<span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span>─┬─acpid<span class="br0">&#40;</span><span class="nu0">1542</span><span class="br0">&#41;</span>
+        ├─atd<span class="br0">&#40;</span><span class="nu0">1565</span><span class="br0">&#41;</span>
+        ├─cron<span class="br0">&#40;</span><span class="nu0">1652</span><span class="br0">&#41;</span>
+        ├─dbus-daemon<span class="br0">&#40;</span><span class="nu0">1602</span><span class="br0">&#41;</span>
+        ├─exim4<span class="br0">&#40;</span><span class="nu0">1902</span><span class="br0">&#41;</span>
+        ├─getty<span class="br0">&#40;</span><span class="nu0">1959</span><span class="br0">&#41;</span>
+        ├─getty<span class="br0">&#40;</span><span class="nu0">1960</span><span class="br0">&#41;</span>
+        ├─getty<span class="br0">&#40;</span><span class="nu0">1961</span><span class="br0">&#41;</span>
+        ├─getty<span class="br0">&#40;</span><span class="nu0">1962</span><span class="br0">&#41;</span>
+        ├─getty<span class="br0">&#40;</span><span class="nu0">1963</span><span class="br0">&#41;</span>
+        ├─getty<span class="br0">&#40;</span><span class="nu0">1964</span><span class="br0">&#41;</span>
+        ├─lxc-start<span class="br0">&#40;</span><span class="nu0">8267</span><span class="br0">&#41;</span>───init<span class="br0">&#40;</span><span class="nu0">8269</span><span class="br0">&#41;</span>─┬─getty<span class="br0">&#40;</span><span class="nu0">8508</span><span class="br0">&#41;</span>
+        │                              ├─getty<span class="br0">&#40;</span><span class="nu0">8510</span><span class="br0">&#41;</span>
+        │                              ├─getty<span class="br0">&#40;</span><span class="nu0">8511</span><span class="br0">&#41;</span>
+        │                              ├─getty<span class="br0">&#40;</span><span class="nu0">8512</span><span class="br0">&#41;</span>
+        │                              ├─<span class="kw2">login</span><span class="br0">&#40;</span><span class="nu0">8509</span><span class="br0">&#41;</span>───<span class="kw2">bash</span><span class="br0">&#40;</span><span class="nu0">8751</span><span class="br0">&#41;</span>
+        │                              └─sshd<span class="br0">&#40;</span><span class="nu0">8478</span><span class="br0">&#41;</span>
+        ├─rpc.idmapd<span class="br0">&#40;</span><span class="nu0">1237</span><span class="br0">&#41;</span>
+        ├─rpc.statd<span class="br0">&#40;</span><span class="nu0">1223</span><span class="br0">&#41;</span>
+        ├─rpcbind<span class="br0">&#40;</span><span class="nu0">1195</span><span class="br0">&#41;</span>
+        ├─rsyslogd<span class="br0">&#40;</span><span class="nu0">1480</span><span class="br0">&#41;</span>─┬─<span class="br0">&#123;</span>rsyslogd<span class="br0">&#125;</span><span class="br0">&#40;</span><span class="nu0">1485</span><span class="br0">&#41;</span>
+        │                ├─<span class="br0">&#123;</span>rsyslogd<span class="br0">&#125;</span><span class="br0">&#40;</span><span class="nu0">1486</span><span class="br0">&#41;</span>
+        │                └─<span class="br0">&#123;</span>rsyslogd<span class="br0">&#125;</span><span class="br0">&#40;</span><span class="nu0">1487</span><span class="br0">&#41;</span>
+        ├─sshd<span class="br0">&#40;</span><span class="nu0">1935</span><span class="br0">&#41;</span>───sshd<span class="br0">&#40;</span><span class="nu0">1965</span><span class="br0">&#41;</span>───<span class="kw2">bash</span><span class="br0">&#40;</span><span class="nu0">1967</span><span class="br0">&#41;</span>───<span class="kw2">pstree</span><span class="br0">&#40;</span><span class="nu0">8762</span><span class="br0">&#41;</span>
+        └─udevd<span class="br0">&#40;</span><span class="nu0">280</span><span class="br0">&#41;</span></pre>
+
+<p>
+Observati ca procesul <code>init</code> corespunzator containerului este copil al procesului <code>lxc-start</code>.
+</p>
+
+<p>
+Putem afisa ierarhia de procese pentru un container si folosind comanda <code>lxc-ps</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-ps <span class="re5">-n</span> ct1 <span class="re5">--forest</span>
+CONTAINER   PID TTY          TIME CMD
+ct1        <span class="nu0">8269</span> ?        00:00:00  \_ init
+ct1        <span class="nu0">8478</span> ?        00:00:00      \_ sshd
+ct1        <span class="nu0">8508</span> pts<span class="sy0">/</span><span class="nu0">5</span>    00:00:00      \_ getty
+ct1        <span class="nu0">8509</span> pts<span class="sy0">/</span><span class="nu0">1</span>    00:00:00      \_ <span class="kw2">login</span>
+ct1        <span class="nu0">8751</span> pts<span class="sy0">/</span><span class="nu0">1</span>    00:00:00      <span class="sy0">|</span>   \_ <span class="kw2">bash</span>
+ct1        <span class="nu0">8510</span> pts<span class="sy0">/</span><span class="nu0">2</span>    00:00:00      \_ getty
+ct1        <span class="nu0">8511</span> pts<span class="sy0">/</span><span class="nu0">3</span>    00:00:00      \_ getty
+ct1        <span class="nu0">8512</span> pts<span class="sy0">/</span><span class="nu0">4</span>    00:00:00      \_ getty</pre>
+
+<p>
+Apoi, conectati-va la consola containerului si afisati procesele din <strong>interiorul</strong> acestuia:
+</p>
+<pre class="code bash"><span class="co4">root@ct1:~# </span><span class="kw2">ps</span> <span class="re5">-ef</span>     
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         <span class="nu0">1</span>     <span class="nu0">0</span>  <span class="nu0">0</span> <span class="nu0">18</span>:<span class="nu0">34</span> ?        00:00:00 init <span class="br0">&#91;</span><span class="nu0">3</span><span class="br0">&#93;</span>  
+root       <span class="nu0">182</span>     <span class="nu0">1</span>  <span class="nu0">0</span> <span class="nu0">18</span>:<span class="nu0">34</span> ?        00:00:00 <span class="sy0">/</span>usr<span class="sy0">/</span>sbin<span class="sy0">/</span>sshd
+root       <span class="nu0">212</span>     <span class="nu0">1</span>  <span class="nu0">0</span> <span class="nu0">18</span>:<span class="nu0">34</span> console  00:00:00 <span class="sy0">/</span>sbin<span class="sy0">/</span>getty <span class="nu0">38400</span> console
+root       <span class="nu0">213</span>     <span class="nu0">1</span>  <span class="nu0">0</span> <span class="nu0">18</span>:<span class="nu0">34</span> tty1     00:00:00 <span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw2">login</span> <span class="re5">--</span>     
+root       <span class="nu0">214</span>     <span class="nu0">1</span>  <span class="nu0">0</span> <span class="nu0">18</span>:<span class="nu0">34</span> tty2     00:00:00 <span class="sy0">/</span>sbin<span class="sy0">/</span>getty <span class="nu0">38400</span> tty2 linux
+root       <span class="nu0">215</span>     <span class="nu0">1</span>  <span class="nu0">0</span> <span class="nu0">18</span>:<span class="nu0">34</span> tty3     00:00:00 <span class="sy0">/</span>sbin<span class="sy0">/</span>getty <span class="nu0">38400</span> tty3 linux
+root       <span class="nu0">216</span>     <span class="nu0">1</span>  <span class="nu0">0</span> <span class="nu0">18</span>:<span class="nu0">34</span> tty4     00:00:00 <span class="sy0">/</span>sbin<span class="sy0">/</span>getty <span class="nu0">38400</span> tty4 linux
+root       <span class="nu0">217</span>   <span class="nu0">213</span>  <span class="nu0">0</span> <span class="nu0">18</span>:<span class="nu0">53</span> tty1     00:00:00 <span class="re5">-bash</span>
+root       <span class="nu0">228</span>   <span class="nu0">217</span>  <span class="nu0">0</span> <span class="nu0">19</span>:00 tty1     00:00:00 <span class="kw2">ps</span> <span class="re5">-ef</span></pre>
+
+<p>
+Observati ca desi apar aceleasi procese, valorile PID-urilor difera in interiorul containerului si in exteriorul acestuia. Practic, se produce o translatie la nivelul spatiului de procese.
+</p>
+
+</div>
+<!-- EDIT16 SECTION "03. [10p] Spatiul de procese" [1-] --><!-- EDIT15 PLUGIN_INCLUDE_END "saisp:labs:07:contents:03" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT17 PLUGIN_INCLUDE_START "saisp:labs:07:contents:04" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:04">
+
+<h3 class="sectionedit19" id="p_sistemul_de_fisiere">04. [10p] Sistemul de fisiere</h3>
+<div class="level3">
+
+<p>
+Sistemul de fisiere al unui container se gaseste stocat pe masina gazda sub calea:
+</p>
+
+<p>
+<code>/var/lib/lxc/<strong>NUME</strong>/rootfs/</code>
+</p>
+
+<p>
+Astfel se pot partaja foarte usor fisiere intre containere si masina gazda:
+</p>
+<ul>
+<li class="level1"><div class="li"> In container, creati un fisier in directorul <code>/root/</code>.</div>
+</li>
+<li class="level1"><div class="li"> In masina gazda (statia <strong>saisp-vm-1</strong>), accesati fisierul folosind calea descrisa mai sus.</div>
+</li>
+<li class="level1"><div class="li"> Modificati fisierul si salvati-l.</div>
+</li>
+<li class="level1"><div class="li"> In container, deschideti fisierul si observati modificarile.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT19 SECTION "04. [10p] Sistemul de fisiere" [1-] --><!-- EDIT18 PLUGIN_INCLUDE_END "saisp:labs:07:contents:04" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT20 PLUGIN_INCLUDE_START "saisp:labs:07:contents:05" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:05">
+
+<h3 class="sectionedit22" id="p_crearea_containerelor">05. [10p] Crearea containerelor</h3>
+<div class="level3">
+
+<p>
+Pentru a crea in mod facil un container, exista comanda <strong>lxc-create</strong>. Aceasta:
+</p>
+<ul>
+<li class="level1"><div class="li"> creaza un fisier de configurare minimal;</div>
+</li>
+<li class="level1"><div class="li"> creaza sistemul de fisiere al containerului, descarcand pachetele corespunzatoare din repository.</div>
+</li>
+</ul>
+
+<p>
+Sintaxa comenzii este:
+</p>
+<pre class="code bash">lxc-create <span class="re5">-n</span> NUME <span class="re5">-t</span> TIP</pre>
+
+<p>
+unde <code>TIP</code> poate fi ales dintre <code>busybox</code>, <code>debian</code>, <code>fedora</code>, <code>sshd</code> etc.
+</p>
+
+<p>
+In urma crearii containerului, va rezulta directorul cu numele <code>/var/lib/lxc/<strong>NUME</strong></code>, ce contine:
+</p>
+<ul>
+<li class="level1"><div class="li"> fisierul de configurare - <code>config</code></div>
+</li>
+<li class="level1"><div class="li"> sistemul de fisiere - <code>rootfs/</code></div>
+</li>
+</ul>
+
+<p>
+Creati un nou container, de tip <code>debian</code>, cu numele <code><strong>ct2</strong></code>.
+</p>
+
+<p>
+Verificati ca a fost creat, folosind <code>lxc-ls</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>lxc-ls 
+ct1  ct2</pre>
+
+<p>
+Inspectati fisierul de configurare creat:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>var<span class="sy0">/</span>lib<span class="sy0">/</span>lxc<span class="sy0">/</span>ct2<span class="sy0">/</span>config</pre>
+
+<p>
+Apoi:
+</p>
+<ul>
+<li class="level1"><div class="li"> porniti containerul in background</div>
+</li>
+<li class="level1"><div class="li"> afisati, pe statia <strong>saisp-vm-1</strong>, ierarhia de procese si observati procesele corespunzatoare celor 2 containere.</div>
+</li>
+<li class="level1"><div class="li"> opriti cele doua containere, folosind comanda <code>lxc-stop</code>.</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT22 SECTION "05. [10p] Crearea containerelor" [1-] --><!-- EDIT21 PLUGIN_INCLUDE_END "saisp:labs:07:contents:05" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT23 PLUGIN_INCLUDE_START "saisp:labs:07:contents:06" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:06">
+
+<h3 class="sectionedit25" id="p_networking">06. [25p] Networking</h3>
+<div class="level3">
+
+<p>
+In mod implicit, un container are doar o interfata de loopback. Daca dorim sa il conectam cu “exteriorul”, trebuie sa ii adaugam o interfata Ethernet.
+</p>
+
+<p>
+Vom adauga urmatoarele linii in fisierul de configurare al containerului <code>ct1</code>:
+</p>
+<pre class="code bash">lxc.network.type = veth           <span class="co0"># Virtual ethernet - virtualizare la nivel 2</span>
+lxc.network.flags = up            <span class="co0"># Interfata va fi &quot;up&quot;</span>
+lxc.network.link = br0            <span class="co0"># Containerul va fi legat intr-un &quot;bridge&quot; din masina gazda.</span>
+lxc.network.name = eth0           <span class="co0"># Numele interfetei &quot;vazut&quot; in container.</span>
+lxc.network.veth.pair = veth0-ct1 <span class="co0"># Numele interfetei &quot;vazut&quot; pe masina fizica.</span></pre>
+
+<p>
+<p><div class="notewarning">Nu adaugati si comentariile de la sfarsitul liniilor, deoarece nu sunt permise de sintaxa lxc.
+</div></p>
+</p>
+
+<p>
+Analog, editati fisierul de configurare al containerului <code>ct2</code>. Pentru atributul <code>lxc.network.veth.pair</code> specificati valoarea <code><strong>veth0-ct2</strong></code>.
+</p>
+
+<p>
+In prealabil, bridge-ul <strong>br0</strong> trebuie creat pe masina gazda, folosind comanda <strong>brctl</strong>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>brctl addbr br0
+<span class="co4">root@saisp-vm-1:~# </span><span class="kw2">ifconfig</span> br0 up</pre>
+
+<p>
+Porniti cele doua containere in <strong>background</strong>, apoi verificati ca intefetele virtuale au fost adaugate in bridge:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>brctl show
+bridge name     bridge <span class="kw2">id</span>               STP enabled     interfaces
+br0             <span class="nu0">8000</span>.fe6d63702103       no              veth0-ct1
+                                                        veth0-ct2</pre>
+
+<p>
+Alocati adrese IP din spatiul <code>192.168.1.0/24</code> pentru:
+</p>
+<ul>
+<li class="level1"><div class="li"> interfata <code><strong>br0</strong></code> de pe masina gazda</div>
+</li>
+<li class="level1"><div class="li"> interfata <code><strong>eth0</strong></code> de pe containerul <code><strong>ct1</strong></code></div>
+</li>
+<li class="level1"><div class="li"> interfata <code><strong>eth0</strong></code> de pe containerul <code><strong>ct2</strong></code></div>
+</li>
+</ul>
+
+<p>
+Apoi, testati conectivitatea prin <code>ping</code> de pe masina gazda catre cele 2 containere.
+</p>
+
+<p>
+Pentru a avea conectivitate din containere catre Internet, trebuie sa configuram NAT si sa activam rutarea pe masina gazda:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-o</span> eth0 <span class="re5">-j</span> MASQUERADE
+<span class="co4">root@saisp-vm-1:~# </span><span class="kw3">echo</span> <span class="nu0">1</span> <span class="sy0">&gt;</span> <span class="sy0">/</span>proc<span class="sy0">/</span>sys<span class="sy0">/</span>net<span class="sy0">/</span>ipv4<span class="sy0">/</span>ip_forward </pre>
+
+<p>
+Apoi, pe cele doua containere adaugati ruta default si testati conectivitatea.
+</p>
+
+</div>
+<!-- EDIT25 SECTION "06. [25p] Networking" [1-] --><!-- EDIT24 PLUGIN_INCLUDE_END "saisp:labs:07:contents:06" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT26 PLUGIN_INCLUDE_START "saisp:labs:07:contents:07" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:07">
+
+<h3 class="sectionedit28" id="p_interactiune_folosind_virsh">07. [20p] Interactiune folosind Virsh</h3>
+<div class="level3">
+
+<p>
+Virsh este capabil sa gestioneze si containere LXC. Deosebirea este ca nu tine seama de fisierul de configurare creat de <strong>lxc-create</strong>, ci foloseste propriul fisier de configurare, in format <strong>XML</strong>.
+</p>
+
+<p>
+Creati un nou container, de tip <code>debian</code>, cu numele <code><strong>ct3</strong></code>. <strong>Nu</strong> porniti containerul.
+</p>
+
+<p>
+Creati un fisier XML ce va fi folosit in Virsh, dupa modelul de mai jos:
+</p>
+<pre class="code xml"><span class="sc3"><span class="re1">&lt;domain</span> <span class="re0">type</span>=<span class="st0">'lxc'</span><span class="re2">&gt;</span></span>
+  <span class="sc3"><span class="re1">&lt;name<span class="re2">&gt;</span></span></span>NUME_CONTAINER<span class="sc3"><span class="re1">&lt;/name<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;memory<span class="re2">&gt;</span></span></span>500000<span class="sc3"><span class="re1">&lt;/memory<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;os<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;type<span class="re2">&gt;</span></span></span>exe<span class="sc3"><span class="re1">&lt;/type<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;init<span class="re2">&gt;</span></span></span>/sbin/init<span class="sc3"><span class="re1">&lt;/init<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;/os<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;vcpu<span class="re2">&gt;</span></span></span>1<span class="sc3"><span class="re1">&lt;/vcpu<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;clock</span> <span class="re0">offset</span>=<span class="st0">'utc'</span><span class="re2">/&gt;</span></span>
+  <span class="sc3"><span class="re1">&lt;on_poweroff<span class="re2">&gt;</span></span></span>destroy<span class="sc3"><span class="re1">&lt;/on_poweroff<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;on_reboot<span class="re2">&gt;</span></span></span>restart<span class="sc3"><span class="re1">&lt;/on_reboot<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;on_crash<span class="re2">&gt;</span></span></span>destroy<span class="sc3"><span class="re1">&lt;/on_crash<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;devices<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;interface</span> <span class="re0">type</span>=<span class="st0">'network'</span><span class="re2">&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;source</span> <span class="re0">network</span>=<span class="st0">'default'</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;/interface<span class="re2">&gt;</span></span></span>
+    <span class="sc3"><span class="re1">&lt;console</span> <span class="re0">type</span>=<span class="st0">'pty'</span> <span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;filesystem</span> <span class="re0">type</span>=<span class="st0">'mount'</span><span class="re2">&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;source</span> <span class="re0">dir</span>=<span class="st0">'CALE_CATRE_ROOTFS'</span><span class="re2">/&gt;</span></span>
+      <span class="sc3"><span class="re1">&lt;target</span> <span class="re0">dir</span>=<span class="st0">'/'</span><span class="re2">/&gt;</span></span>
+    <span class="sc3"><span class="re1">&lt;/filesystem<span class="re2">&gt;</span></span></span>
+  <span class="sc3"><span class="re1">&lt;/devices<span class="re2">&gt;</span></span></span>
+<span class="sc3"><span class="re1">&lt;/domain<span class="re2">&gt;</span></span></span></pre>
+
+<p>
+Porniti virsh, conectandu-va la <abbr title="Uniform Resource Identifier">URI</abbr>-ul corespunzator LXC:
+</p>
+<pre class="code bash"><span class="co4">root@saisp-vm-1:~# </span>virsh <span class="re5">-c</span> lxc:<span class="sy0">///</span>
+Welcome to virsh, the virtualization interactive terminal.
+&nbsp;
+Type:  <span class="st_h">'help'</span> <span class="kw1">for</span> <span class="kw3">help</span> with commands
+       <span class="st_h">'quit'</span> to quit
+&nbsp;
+virsh <span class="co0"># </span></pre>
+
+<p>
+In Virsh, efectuati urmatoarele operatii:
+</p>
+<ul>
+<li class="level1"><div class="li"> definiti containerul, folosind fisierul XML creat:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># define ct3.xml</span>
+Domain ct3 defined from ct3.xml</pre>
+<ul>
+<li class="level1"><div class="li"> porniti reteaua virtuala, folosind comanda <code>net-start default</code></div>
+</li>
+<li class="level1"><div class="li"> porniti containerul:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># start ct3</span>
+Domain ct3 started</pre>
+<ul>
+<li class="level1"><div class="li"> conectati-va la consola containerului:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># console ct3</span>
+Connected to domain ct3
+Escape character is ^<span class="br0">&#93;</span></pre>
+
+<p>
+<p><div class="noteclassic">Parola de root nu este setata, deci nu va veti putea loga.
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"> deconectati-va de la consola, folosind combinatia de taste <code><strong>Ctrl+]</strong></code></div>
+</li>
+<li class="level1"><div class="li"> listati informatii despre container:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># dominfo ct3</span>
+Id:             <span class="nu0">2603</span>
+Name:           ct3
+UUID:           27f50e10-99dc-44ce-827d-ed8888115eb4
+OS Type:        exe
+State:          running
+CPU<span class="br0">&#40;</span>s<span class="br0">&#41;</span>:         <span class="nu0">1</span>
+CPU time:       0.5s
+Max memory:     <span class="nu0">500000</span> KiB
+Used memory:    <span class="nu0">12564</span> KiB
+Persistent:     <span class="kw2">yes</span>
+Autostart:      disable
+Managed save:   unknown
+Security model: none
+Security DOI:   <span class="nu0">0</span></pre>
+<ul>
+<li class="level1"><div class="li"> opriti, apoi stergeti containerul:</div>
+</li>
+</ul>
+<pre class="code bash">virsh <span class="co0"># shutdown ct3</span>
+virsh <span class="co0"># undefine ct3</span></pre>
+
+</div>
+<!-- EDIT28 SECTION "07. [20p] Interactiune folosind Virsh" [1-] --><!-- EDIT27 PLUGIN_INCLUDE_END "saisp:labs:07:contents:07" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT29 PLUGIN_INCLUDE_START "saisp:labs:07:contents:08" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:08">
+
+<h3 class="sectionedit31" id="bonus_-_10p_script_pentru_pornire_si_oprire">08. [BONUS - 10p] Script pentru pornire si oprire</h3>
+<div class="level3">
+
+<p>
+Creati un script care primeste 2 parametri:
+</p>
+<ul>
+<li class="level1"><div class="li"> numele containerului</div>
+</li>
+<li class="level1"><div class="li"> actiunea: <strong>start</strong> sau <strong>stop</strong>.</div>
+</li>
+</ul>
+
+<p>
+Daca actiunea este <strong>start</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> se porneste containerul in background;</div>
+</li>
+<li class="level1"><div class="li"> se <strong>asteapta</strong> pana containerul termina de bootat (hint: lxc-wait)</div>
+</li>
+<li class="level1"><div class="li"> se afiseaza un mesaj.</div>
+</li>
+</ul>
+
+<p>
+Daca actiunea este <strong>stop</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> se comanda oprirea “graceful” a containerului;</div>
+</li>
+<li class="level1"><div class="li"> se <strong>asteapta</strong> pana containerul se opreste complet;</div>
+</li>
+<li class="level1"><div class="li"> se afiseaza un mesaj</div>
+</li>
+</ul>
+
+<p>
+<strong>Hint:</strong> Folositi <code>lxc-monitor</code> in timp ce porniti un container pentru a vedea prin ce stari trece.
+</p>
+
+</div>
+<!-- EDIT31 SECTION "08. [BONUS - 10p] Script pentru pornire si oprire" [1-] --><!-- EDIT30 PLUGIN_INCLUDE_END "saisp:labs:07:contents:08" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT32 PLUGIN_INCLUDE_START "saisp:labs:07:contents:sidebar" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:contents:sidebar">
+
+<h3 class="sectionedit34" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/07.html" class="wikilink1" title="saisp:labs:07">Laboratorul 7</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT35 PLUGIN_INCLUDE_START "saisp:labs:07:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:07:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_1711780111583567ad43fa2" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/01.html" class="wikilink1" title="saisp:labs:07:contents:01">01. [5p] Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/02.html" class="wikilink1" title="saisp:labs:07:contents:02">02. [20p] Interactiunea cu containerele</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/03.html" class="wikilink1" title="saisp:labs:07:contents:03">03. [10p] Spatiul de procese</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/04.html" class="wikilink1" title="saisp:labs:07:contents:04">04. [10p] Sistemul de fisiere</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/05.html" class="wikilink1" title="saisp:labs:07:contents:05">05. [10p] Crearea containerelor</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/06.html" class="wikilink1" title="saisp:labs:07:contents:06">06. [25p] Networking</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/07.html" class="wikilink1" title="saisp:labs:07:contents:07">07. [20p] Interactiune folosind Virsh</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/07/contents/08.html" class="wikilink1" title="saisp:labs:07:contents:08">08. [BONUS - 10p] Script pentru pornire si oprire</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT36 PLUGIN_INCLUDE_END "saisp:labs:07:meta:nav" [0-] --></div>
+<div class="level4">
+
+</div>
+<!-- EDIT34 SECTION "Navigare" [1-] --><!-- EDIT33 PLUGIN_INCLUDE_END "saisp:labs:07:contents:sidebar" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Exerciții" [1454-] --></div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:11:contents:09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-23T17:35:42+0300"/>
+<meta name="keywords" content="saisp,labs,11,contents,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:11:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="09.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/11/contents/09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:11:contents';var JSINFO = {"id":"saisp:labs:11:contents:09","namespace":"saisp:labs:11:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="bonus_-_10p_tcng_traffic_control_next_generation">09. [BONUS - 10p] tcng (traffic control next generation)</h3>
+<div class="level3">
+
+<p>
+Utilitarul <code>tc</code> oferă un control foarte bun asupra parametrilor QoS. Dar, din păcate, sintaxa este foarte complexă, greu de reținut și puțin lizibilă. <code>tcng</code> este un utilitar cu o sintaxă mult mai expresivă, asemănătoare limbajului C. Folosind aceasta sintaxă, el poate genera comenzile <code>tc</code> echivalente.
+</p>
+
+<p>
+Pe stația <code>gateway</code> descărcați și instalați utilitarul <code>tcng</code>:
+</p>
+<pre class="code">root@gateway:~# wget http://archive.debian.org/debian/pool/main/t/tcng/tcng_10b-3_amd64.deb
+root@gateway:~# dpkg -i tcng_10b-3_amd64.deb</pre>
+
+<p>
+Un fișier <code>tcng</code> are următoarea sintaxă simplificată:
+</p>
+<pre class="code bash">dev INTERFATA
+<span class="br0">&#123;</span>
+     QDISC <span class="br0">&#40;</span><span class="br0">&#41;</span>
+     <span class="br0">&#123;</span>
+          class <span class="br0">&#40;</span> ACTIUNE <span class="br0">&#41;</span> FILTRU ;
+          class <span class="br0">&#40;</span> ACTIUNE <span class="br0">&#41;</span> FILTRU ;
+          ...
+          class <span class="br0">&#40;</span> ACTIUNE <span class="br0">&#41;</span> FILTRU ;
+      <span class="br0">&#125;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Ne propunem să creăm un fișier <code>tcng</code>, echivalent configurațiilor HTB de la <a href="../../../../../../saisp/labs/11/contents/05.html" class="wikilink1" title="saisp:labs:11:contents:05">05. [10p] Traffic shaping classful</a>:
+</p>
+<ul>
+<li class="level1"><div class="li"> Creati un fisier numit <code>eth0_htb.tc</code>.</div>
+</li>
+<li class="level1"><div class="li"> Specificați interfața <code>eth0</code> în câmpul <code>dev</code>.</div>
+</li>
+<li class="level1"><div class="li"> Specificați <code>QDISC</code>-ul <code>htb</code>.</div>
+</li>
+<li class="level1"><div class="li"> Pentru fiecare clasă, specificați acțiunea <code>rate xMbps</code>, unde <code>x</code> este lățimea de bandă corespunzătoare.</div>
+</li>
+<li class="level1"><div class="li"> Pentru fiecare clasă, specificați filtrul în formatul <code>udp_port == ABCD</code>, respectiv <code>tcp_port == ABCD</code>, unde <code>ABCD</code> este portul corespunzător.</div>
+</li>
+</ul>
+<pre class="code">dev eth0
+{
+	htb ()
+	{
+		class ( rate 1Mbps ) if udp_dport == 8000 ; 
+		class ( rate 40Mbps ) if udp_dport == 6000 ;
+		class ( rate 5Mbps ) if tcp_dport == 21 ;
+		class ( rate 3Mbps ) if tcp_dport == 80 ; 
+	}
+}</pre>
+
+<p>
+Rulați <code>tcng</code> pentru a obține comenzile echivalente <code>tc</code>:
+</p>
+<pre class="code bash">tcng eth0_htb.tc</pre>
+
+<p>
+Inspectați comenzile <code>tc</code> generate și observați asemănările cu comenzile introduse manual.
+</p>
+
+</div>
+</div>
+</body>
+</html>

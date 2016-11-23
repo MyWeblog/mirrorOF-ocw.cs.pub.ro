@@ -1,0 +1,79 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:09:contents:07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-12-11T13:46:32+0200"/>
+<meta name="keywords" content="rl,labs,09,contents,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="07.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/09/contents/07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:09:contents';var JSINFO = {"id":"rl:labs:09:contents:07","namespace":"rl:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_format_de_pachete_la_port_forwarding">07. [10p] Format de pachete la port forwarding</h3>
+<div class="level3">
+
+<p>
+La exercițiul <a href="../../../../../../rl/labs/09/contents/03.html" class="wikilink1" title="rl:labs:09:contents:03">03. [10p] Format de pachete TCP la translatare</a> am observat cum se modifică adresa IP sursă și portul sursă în cazul translatării de adrese. La port forwarding vom observa cum se modifică adresa IP destinație (de aici și numele DNAT: <code>Destination NAT</code>).
+</p>
+
+<p>
+Vom captura traficul SSH inițiat din exterior către stația <code>red</code>, prin intermediul portului <code>10022</code> al stației <code>host</code>. Este vorba de traficul înainte de <em>port forwarding</em>. Pentru aceasta, pe stația <code>host</code> vom folosi comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>tcpdump <span class="re5">-n</span> <span class="re5">-i</span> eth0 tcp dst port <span class="nu0">10022</span></pre>
+
+<p>
+Pe un alt terminal, tot pe stația <code>host</code> capturăm traficul <strong>după</strong> <em>port forwarding</em>, pe interfața <code>veth-red</code> către portul SSH (<code>22</code>) al stației red. Pe stația <code>host</code> folosim comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>tcpdump <span class="re5">-n</span> <span class="re5">-i</span> veth-red tcp dst port <span class="nu0">22</span></pre>
+
+<p>
+Pentru a genera trafic, de pe <code>fep.grid.pub.ro</code> realizăm o conexiune SSH la stația <code>host</code> pe portul <code>10022</code>, conexiune ce va fi redirectată la portul <code>22</code> al stației <code>red</code>:
+</p>
+<pre class="code bash">mihai.carabas<span class="sy0">@</span>fep:~$ <span class="kw2">ssh</span> <span class="re5">-l</span> root <span class="re1">$ADRESA_IP_VM</span> <span class="re5">-p</span> <span class="nu0">10022</span>
+root<span class="sy0">@</span>host.local<span class="st_h">'s password: 
+[...]
+root@red:~# </span></pre>
+
+<p>
+În capturile realizate de comenzile de mai sus, observăm cu se translatează adresa IP și portul destinație din perechea <code>&lt;$ADRESA_IP_VM, 10022&gt;</code> în perechea <code>&lt;192.168.1.2, 22&gt;</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

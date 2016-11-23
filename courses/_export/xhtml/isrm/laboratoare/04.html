@@ -1,0 +1,229 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>isrm:laboratoare:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-26T18:00:24+0300"/>
+<meta name="keywords" content="isrm,laboratoare,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=isrm:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../isrm/laboratoare/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='isrm:laboratoare';var JSINFO = {"id":"isrm:laboratoare:04","namespace":"isrm:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="04.html#laboratorul_4">Laboratorul 4</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="04.html#modelul_two_ray_ground">Modelul Two Ray Ground</a></div></li>
+<li class="level4"><div class="li"><a href="04.html#modelul_shadowing">Modelul Shadowing</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="04.html#plan_de_organizare_a_datelor_intermediare">Plan de organizare a datelor intermediare</a></div></li>
+<li class="level3"><div class="li"><a href="04.html#taskuri">Taskuri</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="laboratorul_4">Laboratorul 4</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="modelul_two_ray_ground">Modelul Two Ray Ground</h4>
+<div class="level4">
+
+<p>
+Cercurile de comunicare și de CS sunt definite în putere(W), care corespunde unei distanțe(m).  
+</p>
+<pre class="file">set opt(prop) Propagation/TwoRayGround;
+Phy/WirelessPhy set CSThresh_ 1.55924e-11       ; #550m - exact 
+Phy/WirelessPhy set RXThresh_ 3.65262e-10       ; #250m - exact 
+Phy/WirelessPhy set CPThresh_ 10.0              ; #captura, în dB</pre>
+
+<p>
+În acest exemplu la 251m nu se primește nici un cadru, deși la 250m se primesc toate. Două noduri aflate sub 550m își cedează reciproc accesul când este cazul, adică nu-și sunt terminale ascunse unul altuia. Captura este atunci când într-o coliziune se poate recupera cadrul mai puternic, dacă acesta e cu 10dB mai puternic.   
+</p>
+
+<p>
+<img src="../../../../_media/isrm/laboratoare/04/tworay_prop_sim.png" class="media" alt="" />
+</p>
+
+</div>
+
+<h4 id="modelul_shadowing">Modelul Shadowing</h4>
+<div class="level4">
+<pre class="file">set prop Propagation/Shadowing;
+Phy/WirelessPhy set CSThresh_ 1.55924e-11       ; #550m - probabilistic 
+Phy/WirelessPhy set RXThresh_ 3.65262e-10       ; #50m - probabilistic 
+Phy/WirelessPhy set CPThresh_ 10.0              ; #captura
+
+# parametri specifici modelului  
+$prop set pathlossExp_ 2.7
+$prop set std_db_ 2.2
+$prop set dist0_ 1.0
+</pre>
+
+<p>
+<img src="../../../../_media/isrm/laboratoare/04/shadowing_prop_sim.png" class="media" alt="" />
+</p>
+
+<p>
+Se dă scriptul <a href="../../../../_media/isrm/laboratoare/src/shadow2.tcl" class="media mediafile mf_tcl" title="isrm:laboratoare:src:shadow2.tcl (8.4 KB)"> shadow2.tcl</a> care folosește 802.11b, MCS=2Mbps cu modelul shadowing și definește următoarea topologie: 
+S1–dist–D1 …10000m … S2–dist–D2. Scriptul acceptă parametrii -dist pentru a seta distanța sursă-destinație, și -tries pentru a seta numărul maxim de încercări. Cele două perechi nu se influențează reciproc din cauza distanței mari, iar S1→D1 folosește UDP, în timp ce S2→D2 folosește TCP. Practic se rulează două experimente pentru aceeași distanță de comunicare, si acelasi regim de retransmisii. Scriptul afișează debitul în bps obținut de cele 2 fluxuri, dar generează și fișierul shadow2.tr care poate fi analizat pentru a contoriza pachetele în diverse ipostaze. 
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laboratorul 4" [1-2020] -->
+<h3 class="sectionedit2" id="plan_de_organizare_a_datelor_intermediare">Plan de organizare a datelor intermediare</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> citiți toate cerințele din secțiunea <strong>Taskuri</strong> de mai jos înainte de a decide un plan de măsurători. Strategia optimă este de a extrage mai mulți parametri în urma unei simulări pentru a putea răspunde mai multor cerințe. Exemple: apariții unice ale unui nr de secvență cbr la emisie/recepție MAC, total cadre cu cbr emise/primite la MAC, thruput UDP, thruput TCP, etc.  </div>
+</li>
+<li class="level1"><div class="li"> decideți structura fișierului text care va conține datele din care se pot produce graficele cerute.</div>
+<ul>
+<li class="level3"><div class="li"> ce avem pe axele x, y? </div>
+</li>
+<li class="level3"><div class="li"> ce reprezintă fiecare coloană? </div>
+</li>
+<li class="level3"><div class="li"> ce parametri se pot obține ca o funcție de coloane? Exemplu $probabilitate_{livrare} = primite/trimise$  </div>
+</li>
+<li class="level3"><div class="li"> ce grafice au axe care nu corespund direct unoar coloane din fișierul generat? cum se pot obține acele axe?</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> prelucrați ieșirile simulatorului (stdout sau fișierul de trace) pentru a obține un fișier <strong>text</strong> de date intermediare cu semnificații clare pentru linii și coloane. Exemplu: fiecare linie e pentru o distanță, fiecare coloană e un counter de cadre sau un debit în Mbps      </div>
+</li>
+<li class="level1"><div class="li"> plotați interactiv datele intermediare. Unele grafice sunt o simplă dependență a două coloane (de exemplu Thruput(distanță)). Pentru combinații de coloane, gnuplot acceptă sintaxa <code>&gt; plot “date” using 1:($3*100.0/$5) with …</code> adică axa y este raportul coloanelor 3 și 5 în procente, iar axa x este coloana 1. Nu vă preocupați de partea estetică a graficelor (etichete, legendă, culori, etc).    </div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT2 SECTION "Plan de organizare a datelor intermediare" [2021-3593] -->
+<h3 class="sectionedit3" id="taskuri">Taskuri</h3>
+<div class="level3">
+<ol>
+<li class="level1"><div class="li"> analiză: dacă probabilitatea de livrare la nivel fizic este p, cât este la MAC, după r încercări? <sup><a href="04.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>   </div>
+</li>
+<li class="level1"><div class="li"> plotați packet delivery ratio la nivel fizic (tries=1) și la nivel MAC (tries=4,10) pentru distanțele 50m-250m <sup><a href="04.html#fn__2" id="fnt__2" class="fn_top">2)</a></sup>. Comparați cu imaginea de mai sus care prezintă spațial probabilitatea de recepție </div>
+<ul>
+<li class="level2"><div class="li"> se analizează fișierul trace doar pentru traficul cbr</div>
+</li>
+<li class="level2"><div class="li"> tries=1 înseamnă că fiecare cadru este încercat o singură dată</div>
+</li>
+<li class="level2"><div class="li"> pentru tries&gt;1, trebuie numărate cadrele unice emise și primite la nivelul MAC. Atenție, această statistică nu poate fi obținută la UDP </div>
+</li>
+<li class="level2"><div class="li"> în trace, la coloana 47 se află câmpul cbr sequence number, unic per pachet original emis de udp/cbr.  </div>
+</li>
+<li class="level2"><div class="li"> exemplu de calcul al numărului de cadre unice emise  	<pre class="code">unqsent=$(cat shadow2.tr  | grep MAC | grep &#039;^s&#039; | grep cbr | awk &#039;$3 &lt;= 25.0 {print $47}&#039; | uniq -c| wc -l) </pre>
+</div>
+</li>
+<li class="level2"><div class="li"> comparați în câteva puncte cu formula din analiză</div>
+</li>
+<li class="level2"><div class="li"> se poate spune că reîncercările cresc distanța de comunicare?</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> plotați capacitatea obținută de UDP pentru tries=1, 4, 10 la distanțe 50-250m. Justificați relația cu graficul de la punctul precedent. <sup><a href="04.html#fn__3" id="fnt__3" class="fn_top">3)</a></sup></div>
+<ul>
+<li class="level2"><div class="li"> Opțional: plotați numărul de cadre unice emise în aer pentru tries=1,4, 10  </div>
+</li>
+<li class="level2"><div class="li"> Opțional: plotați interdeparture times pentru cadrele emise de MAC(toate, inclusiv cele care nu vor fi primite) <sup><a href="04.html#fn__4" id="fnt__4" class="fn_top">4)</a></sup></div>
+</li>
+<li class="level2"><div class="li"> Opțional: plotați interarrival times pentru cadrele primite de MAC(implicit doar cele primite cu succes) <sup><a href="04.html#fn__5" id="fnt__5" class="fn_top">5)</a></sup></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> plotați capacitatea obținută de TCP pentru tries=1 la distanțe 50-250. Justificați relația cu graficele precedente. </div>
+<ul>
+<li class="level2"><div class="li"> de ce la tries=1 (nu se reîncearcă), TCP nu atinge capacitatea maximă chiar când canalul este perfect, de exemplu la 10m? </div>
+</li>
+<li class="level2"><div class="li"> Analizați pachetele pierdute în trace, și justificați folosind timpii de emisie ai pachetelor.  </div>
+</li>
+<li class="level2"><div class="li"> activați RTS/CTS pentru acest caz(tries=1, loss=0). De ce nu se îmbunătățește situația TCP-ului?</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> plotați capacitatea obținută de TCP pentru tries=4, 10 la distanțe 50-250. Explicați diferențele față de comportarea UDP în același setup <sup><a href="04.html#fn__6" id="fnt__6" class="fn_top">6)</a></sup></div>
+</li>
+<li class="level1"><div class="li"> dorim exprimarea capacității UDP și TCP ca funcție de rata de livrare la nivel fizic</div>
+<ul>
+<li class="level2"><div class="li"> axa x: PDR la nivel fizic se poate obține cu UDP cu tries=1 scalat la capacitatea maximă (1.7Mbps), sau ca raport între numărul de cadre recepționate si emise la nivel MAC. </div>
+</li>
+<li class="level2"><div class="li"> axa y: debit în Mbps obținut de TCP cu tries=1, 4, 10. <sup><a href="04.html#fn__7" id="fnt__7" class="fn_top">7)</a></sup>  </div>
+</li>
+<li class="level2"><div class="li"> același grafic pentru UDP <sup><a href="04.html#fn__8" id="fnt__8" class="fn_top">8)</a></sup></div>
+</li>
+<li class="level2"><div class="li"> tries=1 este best case pentru UDP și worst case pentru TCP?</div>
+</li>
+<li class="level2"><div class="li"> tries=1 de ce TCP nu obține debit maxim, chiar în condiții optime (livrare 100%)?</div>
+</li>
+<li class="level2"><div class="li"> de ce scade capacitatea UDP când crește numărul de încercări? <sup><a href="04.html#fn__9" id="fnt__9" class="fn_top">9)</a></sup></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Scripturile folosite și graficele obținute sunt disponibile în Media Manager/<a href="../../../../index.html%3Ftab_files=files&amp;do=media&amp;ns=isrm%252Flaboratoare%252F04.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/?tab_files=files&amp;do=media&amp;ns=isrm%2Flaboratoare%2F04"  rel="nofollow"> Rezultate</a> </div>
+</li>
+</ol>
+
+</div>
+<!-- EDIT3 SECTION "Taskuri" [3594-] --><div class="footnotes">
+<div class="fn"><sup><a href="04.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+ $PDR(p,r)= 1-(1-p)^r$ de ce?</div>
+<div class="fn"><sup><a href="04.html#fnt__2" id="fn__2" class="fn_bot">2)</a></sup> 
+<a href="../../../../_media/isrm/laboratoare/04/mac-pdr.png" class="media" title="isrm:laboratoare:04:mac-pdr.png"><img src="../../../../_media/isrm/laboratoare/04/mac-pdr.png%3Fw=200&amp;tok=c28771" class="media" alt="" width="200" /></a></div>
+<div class="fn"><sup><a href="04.html#fnt__3" id="fn__3" class="fn_bot">3)</a></sup> 
+<a href="../../../../_media/isrm/laboratoare/04/thr-udp.png" class="media" title="isrm:laboratoare:04:thr-udp.png"><img src="../../../../_media/isrm/laboratoare/04/thr-udp.png%3Fw=200&amp;tok=30400e" class="media" alt="" width="200" /></a> </div>
+<div class="fn"><sup><a href="04.html#fnt__4" id="fn__4" class="fn_bot">4)</a></sup> 
+<a href="../../../../_media/isrm/laboratoare/04/s1-4.png" class="media" title="isrm:laboratoare:04:s1-4.png"><img src="../../../../_media/isrm/laboratoare/04/s1-4.png%3Fw=200&amp;tok=1a1fc6" class="media" alt="" width="200" /></a> </div>
+<div class="fn"><sup><a href="04.html#fnt__5" id="fn__5" class="fn_bot">5)</a></sup> 
+<a href="../../../../_media/isrm/laboratoare/04/r1-4.png" class="media" title="isrm:laboratoare:04:r1-4.png"><img src="../../../../_media/isrm/laboratoare/04/r1-4.png%3Fw=200&amp;tok=2ab745" class="media" alt="" width="200" /></a> </div>
+<div class="fn"><sup><a href="04.html#fnt__6" id="fn__6" class="fn_bot">6)</a></sup> 
+<a href="../../../../_media/isrm/laboratoare/04/thr-tcp.png" class="media" title="isrm:laboratoare:04:thr-tcp.png"><img src="../../../../_media/isrm/laboratoare/04/thr-tcp.png%3Fw=200&amp;tok=80e0ff" class="media" alt="" width="200" /></a> </div>
+<div class="fn"><sup><a href="04.html#fnt__7" id="fn__7" class="fn_bot">7)</a></sup> 
+<a href="../../../../_media/isrm/laboratoare/04/tcp-cap.png" class="media" title="isrm:laboratoare:04:tcp-cap.png"><img src="../../../../_media/isrm/laboratoare/04/tcp-cap.png%3Fw=200&amp;tok=b0ec5f" class="media" alt="" width="200" /></a> </div>
+<div class="fn"><sup><a href="04.html#fnt__8" id="fn__8" class="fn_bot">8)</a></sup> 
+<a href="../../../../_media/isrm/laboratoare/04/udp-cap.png" class="media" title="isrm:laboratoare:04:udp-cap.png"><img src="../../../../_media/isrm/laboratoare/04/udp-cap.png%3Fw=200&amp;tok=7af579" class="media" alt="" width="200" /></a> </div>
+<div class="fn"><sup><a href="04.html#fnt__9" id="fn__9" class="fn_bot">9)</a></sup> 
+<a href="../../../../_media/isrm/laboratoare/04/unq-sent.png" class="media" title="isrm:laboratoare:04:unq-sent.png"><img src="../../../../_media/isrm/laboratoare/04/unq-sent.png%3Fw=200&amp;tok=b15bd8" class="media" alt="" width="200" /></a> </div>
+</div>
+</div>
+</body>
+</html>

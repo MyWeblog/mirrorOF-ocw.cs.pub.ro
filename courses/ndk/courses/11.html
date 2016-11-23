@@ -1,0 +1,311 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    11. NDK Optimization and Portability    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-08-10T14:00:47+0300"/>
+<meta name="keywords" content="ndk,courses,11"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=ndk:courses"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/ndk/courses/11.html"/>
+<link rel="canonical" href="11.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ndk:courses';var JSINFO = {"id":"ndk:courses:11","namespace":"ndk:courses","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_ndk.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="11%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="11%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="ndk_optimization_and_portability">11. NDK Optimization and Portability</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Description: Porting NDK apps across hardware platforms and Android versions</div>
+</li>
+<li class="level1"><div class="li"> Practical part: Run/port NDK apps on different platforms (x86, ARM LE/BE), native executables</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit2" id="lecture">Lecture</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="../../_media/ndk/courses/lecture-11.pdf" class="media mediafile mf_pdf" title="ndk:courses:lecture-11.pdf (1.2 MB)"> Lecture Slides</a></div>
+</li>
+</ul>
+
+<p>
+<iframe title="" src="../../_media/ndk/courses/lecture-11.pdf" style="width:98%; height:400px"></iframe>
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="practical">Practical</h3>
+<div class="level3">
+
+<p>
+<a href="../../_media/ndk/courses/lab-11.zip" class="media mediafile mf_zip" title="ndk:courses:lab-11.zip (1.7 MB)">lab-11.zip</a>
+</p>
+
+</div>
+
+<h4 id="task_1_-_identifying_cpu_features">Task 1 - Identifying CPU features</h4>
+<div class="level4">
+
+<p>
+Look over the print_cpu_features function found in the Lab11_Task1 project. This function helps identify the type of CPU being used and what features are available. These functions can help guard code optimized for different CPU features or to load certain libraries depending on CPU features.
+</p>
+
+</div>
+
+<h4 id="task_2_-_build_standalone_toolchains">Task 2 - Build standalone toolchains</h4>
+<div class="level4">
+
+<p>
+Build two NDK toolchains, one for ARM and one for x86.
+</p>
+<pre class="code">$NDKROOT/build/tools/make-standalone-toolchain.sh --platform=android-&lt;API_VERSION&gt; --arch=&lt;ARCHITECTURE&gt; --install-dir=&lt;DIRECTORY&gt;</pre>
+
+<p>
+Use these toolchains to compile the timing library. You must set the CROSS_COMPILE variable for make to use the new toolchains. The CROSS_COMPILE variable must contain the path to the toolchain and the common root of the tools. For example:
+</p>
+<pre class="code"> make CROSS_COMPILE=/home/student/ndk_x86_toolchain/bin/i686-linux-android-</pre>
+
+<p>
+Compile the library for both x86 and ARM and give them a different name. Add the libraries to your project. In Application.mk make sure to select only x86, armeabi and armeabi-v7a.
+</p>
+
+<p>
+Then, in Android.mk, add the library module to the compilation:
+</p>
+<pre class="code">include $(CLEAR_VARS)
+
+ifeq ($(TARGET_ARCH_ABI),x86)
+ARCH_SRC_FILES  := libtiming_x86.a
+endif
+ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+ARCH_SRC_FILES  := libtiming_arm.a
+endif
+ifeq ($(TARGET_ARCH_ABI),armeabi)
+ARCH_SRC_FILES  := libtiming_arm.a
+endif
+
+LOCAL_MODULE    := timing
+LOCAL_SRC_FILES := $(ARCH_SRC_FILES)
+
+include $(PREBUILT_STATIC_LIBRARY)</pre>
+
+<p>
+Test that the project compiles correctly. Run the program and check how much time it takes for the loop in timing_test to run. Check the header of the library for <abbr title="Application Programming Interface">API</abbr> details.
+</p>
+
+</div>
+
+<h4 id="task_3_-_compiler_optimizations">Task 3 - Compiler optimizations</h4>
+<div class="level4">
+
+<p>
+Add the timing library to the Lab11_Task3 project. Compile the project with -O0 flags (LOCAL_CFLAGS) and check how much time it takes to run the grayscale function. Then compile the project with -O2 and check again. Try the -msse, -msse2 and -msse3 and see if there is any noticeable difference. On ARM, see if compiling with NEON support makes any difference. To add NEON support, append to the file name in the Android.mk file (not the filename itself) the .neon extension.
+</p>
+
+</div>
+
+<h4 id="task_4_-_optimized_libraries">Task 4 - Optimized libraries</h4>
+<div class="level4">
+
+<p>
+Since the architecture and features are not known at compile time, an usual way to choose optimized code is to dynamically load libraries. Compile the files in the optimized_libs folder using the android toolchain. Add these libraries to one of the project in the libs folder. Use dlopen to load the library, once the &#039;unoptimized&#039; one (libprint_no.so) and then the optimized one (libprint_o.so). Add the header print.h header to your project and call the optimized_print function after calling dlopen.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<p>
+<a href="../grading.html" class="wikilink1" title="ndk:grading">Rules and Grading</a> <br/>
+
+<a href="../register.html" class="wikilink1" title="ndk:register">Class Register</a>
+</p>
+
+<h1 class="sectionedit1" id="lectures_labs">Lectures &amp; labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_65425651758357acba5a7f" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="ndk:courses:01">01. Android Technology</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="ndk:courses:02">02. Android Platform</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="ndk:courses:03">03. Android Internals</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="ndk:courses:04">04. C, Bionic and Low-Level Libraries</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="ndk:courses:05">05. NDK Integration (JNI)</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="ndk:courses:06">06. NDK Integration (JNI)</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="ndk:courses:07">07. Debugging and Profiling</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="ndk:courses:08">08. OpenGL on Android</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="ndk:courses:09">09. Native Activity</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="ndk:courses:10">10. Renderscript</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="11.html" class="wikilink1" title="ndk:courses:11">11. NDK Optimization and Portability</a></span></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Lectures & labs" [73-130] -->
+<h1 class="sectionedit2" id="resources">Resources</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_200303641058357acba6a23" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resources/01.html" class="wikilink1" title="ndk:resources:01">Resources</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Resources" [131-184] -->
+<h1 class="sectionedit3" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_1922276558357acba79ba" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/project.html" class="wikilink1" title="ndk:assignments:project">Project</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/warmup.html" class="wikilink1" title="ndk:assignments:warmup">Warm-up assignment</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Assignments" [185-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="11.html#ndk_optimization_and_portability">11. NDK Optimization and Portability</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="11.html#lecture">Lecture</a></div></li>
+<li class="level3"><div class="li"><a href="11.html#practical">Practical</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="11.html#task_1_-_identifying_cpu_features">Task 1 - Identifying CPU features</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#task_2_-_build_standalone_toolchains">Task 2 - Build standalone toolchains</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#task_3_-_compiler_optimizations">Task 3 - Compiler optimizations</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#task_4_-_optimized_libraries">Task 4 - Optimized libraries</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          ndk/courses/11.txt · Last modified: 2014/08/10 14:00 by petre.eftime          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="11%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="11%3Fdo=media&amp;ns=ndk%253Acourses.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="11.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=ndk%253Acourses%253A11&amp;1479899851" width="2" height="1" alt="" /></div>
+</body>
+</html>

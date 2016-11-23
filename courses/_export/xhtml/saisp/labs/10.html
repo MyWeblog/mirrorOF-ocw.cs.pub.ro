@@ -1,0 +1,973 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:10</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-02-28T23:46:35+0200"/>
+<meta name="keywords" content="saisp,labs,10"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="10.html"/>
+<link rel="canonical" href="../../../../saisp/labs/10.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs';var JSINFO = {"id":"saisp:labs:10","namespace":"saisp:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="laboratorul_10_automatizarea_scalabila_a_sistemelor">Laboratorul 10. Automatizarea scalabila a sistemelor</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laboratorul 10. Automatizarea scalabila a sistemelor" [12-79] -->
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Interactiunea cu Puppet folosind comenzi</div>
+</li>
+<li class="level1"><div class="li"> Scrierea si aplicarea manifestelor Puppet</div>
+</li>
+<li class="level1"><div class="li"> Resurse si dependente intre resurse</div>
+</li>
+<li class="level1"><div class="li"> Variabile si selectori</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cunoștințe și abilități ce vor fi dobândite" [80-300] -->
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+Pentru a pregăti configurația de laborator va trebui să descărcați pe mașina fizică (<code>mjolnir</code>), în directorul <code>saisp/</code>, arhiva laboratorului:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">wget</span> <span class="re5">--user</span>=user-curs <span class="re5">--ask-password</span> http:<span class="sy0">//</span>repository.grid.pub.ro<span class="sy0">/</span>cs<span class="sy0">/</span>saisp<span class="sy0">/</span>laboratoare<span class="sy0">/</span>lab-<span class="nu0">10</span>.zip
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>saisp$ <span class="kw2">unzip</span> lab-<span class="nu0">10</span>.zip</pre>
+
+<p>
+În urma dezarhivării rezultă un fișier imagine KVM (format <code>qcow2</code>, <code>puppet.qcow2</code>) și un script de pornire a mașinilor virtuale (<code>lab10-start-kvm</code>).
+</p>
+
+<p>
+Puteți urma pașii de mai sus pentru a descărca infrastructura KVM pentru laborator pentru lucru acasă.
+</p>
+
+<p>
+Pentru pornirea mașinii virtuale, rulați scriptul de pornire:
+</p>
+<pre class="code">student@mjolnir:~/saisp$ ./lab10-start-kvm</pre>
+
+<p>
+Va porni mașina virtuala KVM pentru laborator.
+</p>
+
+<p>
+Pentru accesarea mașinii folosiți SSH către adresela IP aferenta:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 10.0.0.2</pre>
+
+<p>
+Parola de <code>root</code> pentru mașina virtuala este <code>student</code>.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Pregătire infrastructură de laborator" [301-1333] -->
+<h2 class="sectionedit4" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/10.html" class="wikilink1" title="saisp:labs:10">Laboratorul 10</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "saisp:labs:10:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_2134346439583567c528ad8" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/01.html" class="wikilink1" title="saisp:labs:10:contents:01">01. [20p] Resurse Puppet</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/02.html" class="wikilink1" title="saisp:labs:10:contents:02">02. [20p] Manifeste Puppet</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/03.html" class="wikilink1" title="saisp:labs:10:contents:03">03. [20p] Dependente intre resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/04.html" class="wikilink1" title="saisp:labs:10:contents:04">04. [20p] Design patterns</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/05.html" class="wikilink1" title="saisp:labs:10:contents:05">05. [20p] Variabile si selectori</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/06.html" class="wikilink1" title="saisp:labs:10:contents:06">06. [BONUS - 10p] Site manifest si consola web</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 PLUGIN_INCLUDE_END "saisp:labs:10:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Navigare" [1334-1449] -->
+<h2 class="sectionedit7" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 PLUGIN_INCLUDE_START "saisp:labs:10:contents:01" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:contents:01">
+<div class="level2">
+
+<p>
+<p><div class="notewarning">
+Pentru a avea acces la Internet din masina virtuala, rulati pe <strong>masina fizica</strong> comanda:
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-o</span> eno1 <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="p_resurse_puppet">01. [20p] Resurse Puppet</h3>
+<div class="level3">
+
+<p>
+<strong>Puppet</strong> este un tool pentru gestiunea configuratiei unui sistem. Pentru descrierea configuratiilor foloseste un limbaj declarativ. Puppet poate gestiona atat sisteme Linux, cat si Windows.
+</p>
+
+</div>
+
+<h4 id="notiunea_de_resursa">Notiunea de &quot;resursa&quot;</h4>
+<div class="level4">
+
+<p>
+Puppet abstractizeaza majoritatea entitatilor din sistem prin <strong>resurse</strong>. De exemplu, fiecare serviciu, fie ca este pornit sau oprit, este vazut ca o resursa.
+</p>
+
+<p>
+Folositi comanda <strong><code>puppet resource service</code></strong> pentru a inspecta serviciile de sistem din perspectiva Puppet:
+</p>
+<pre class="code">[root@learn ~]# puppet resource service
+service { &#039;abrt-ccpp&#039;:
+  ensure =&gt; &#039;running&#039;,
+  enable =&gt; &#039;true&#039;,
+}
+service { &#039;abrt-oops&#039;:
+  ensure =&gt; &#039;stopped&#039;,
+  enable =&gt; &#039;false&#039;,
+}
+service { &#039;abrtd&#039;:
+  ensure =&gt; &#039;running&#039;,
+  enable =&gt; &#039;true&#039;,
+}
+service { &#039;acpid&#039;:
+  ensure =&gt; &#039;running&#039;,
+  enable =&gt; &#039;true&#039;,
+}
+...</pre>
+
+<p>
+Semnificatia comenzii <code>puppet resource service</code> este urmatoarea:
+</p>
+<ul>
+<li class="level1"><div class="li"> comanda <strong>puppet</strong> este folosita pentru accesarea majoritatii functiilor oferite de Puppet; </div>
+</li>
+<li class="level1"><div class="li"> subcomanda <strong>resource</strong> interactioneaza cu resursele “vazute” de Puppet;</div>
+</li>
+<li class="level1"><div class="li"> parametrul <strong>service</strong> reprezinta tipul resurselor ce vor fi inspectate.</div>
+</li>
+</ul>
+
+<p>
+In afara de servicii, si alte entitati din sistem sunt abstractizate prin resurse. Spre exemplu:
+</p>
+<ul>
+<li class="level1"><div class="li"> utilizatori</div>
+</li>
+<li class="level1"><div class="li"> fisiere sau directoare</div>
+</li>
+<li class="level1"><div class="li"> pachete (software)</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="structura_unei_resurse">Structura unei resurse</h4>
+<div class="level4">
+
+<p>
+Afisati resursa ce descrie contul utilizatorului <strong>root</strong>, folosind comanda <strong><code>puppet resource user root</code></strong>.
+</p>
+<pre class="code">[root@learn ~]# puppet resource user root
+user { &#039;root&#039;:
+  ensure           =&gt; &#039;present&#039;,
+  comment          =&gt; &#039;root&#039;,
+  gid              =&gt; &#039;0&#039;,
+  home             =&gt; &#039;/root&#039;,
+  password         =&gt; &#039;$1$jrm5tnjw$h8JJ9mCZLmJvIxvDLjw1M/&#039;,
+  password_max_age =&gt; &#039;99999&#039;,
+  password_min_age =&gt; &#039;0&#039;,
+  shell            =&gt; &#039;/bin/bash&#039;,
+  uid              =&gt; &#039;0&#039;,</pre>
+
+<p>
+Structura resursei este data de urmatoarele elemente:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Tipul</strong> resursei: in cazul nostru, <strong>user</strong>;</div>
+</li>
+<li class="level1"><div class="li"> <strong>Numele</strong> resursei: <strong>&#039;root&#039;</strong>;</div>
+</li>
+<li class="level1"><div class="li"> <strong>Atributele</strong> resursei: <strong>ensure</strong>, <strong>comment</strong>, <strong>gid</strong>, <strong>home</strong> etc.;</div>
+</li>
+<li class="level1"><div class="li"> Fiecare atribut are o <strong>valoare</strong>. </div>
+</li>
+</ul>
+
+<p>
+Sintaxa de mai sus constituie “declararea unei resurse”.
+</p>
+
+</div>
+
+<h4 id="tipuri_de_resurse">Tipuri de resurse</h4>
+<div class="level4">
+
+<p>
+In afara de servicii si utilizatori, Puppet implementeaza multe alte tipuri de resurse. Pentru a le lista, folositi comanda <code>puppet describe –list</code>:
+</p>
+<pre class="code">[root@learn ~]# puppet describe --list
+These are the types known to puppet:
+anchor          -  A simple resource type intended to be used a ...
+augeas          -  Apply a change or an array of changes to the ...
+computer        - Computer object management using DirectorySer ...
+cron            -  Installs and manages cron jobs
+exec            - Executes external commands
+file            - Manages files, including their content, owner ...
+file_line       -  Ensures that a given line is contained withi ...
+filebucket      -  A repository for storing and retrieving file ...
+firewall        -  This type provides the capability to manage  ...
+firewallchain   -  This type provides the capability to manage  ...
+group           - Manage groups
+...</pre>
+
+</div>
+
+<h4 id="creareastergerea_manuala_a_unei_resurse">Crearea / stergerea manuala a unei resurse</h4>
+<div class="level4">
+
+<p>
+Folosind comanda <code>puppet resource</code> putem crea si resurse noi. Sintaxa generala este: 
+</p>
+
+<p>
+<code>puppet resource type name attr1=val1 attr2=val2 …</code>
+</p>
+
+<p>
+Dorim sa cream utilizatorul <strong>gigel</strong> astfel incat:
+</p>
+<ul>
+<li class="level1"><div class="li"> sa aiba directorul home in <strong>/home/gigel</strong>;</div>
+</li>
+<li class="level1"><div class="li"> sa aiba ca shell default <strong>/bin/sh</strong>.</div>
+</li>
+</ul>
+
+<p>
+Comanda Puppet corespunzatoare este:
+</p>
+<pre class="code">[root@learn ~]# puppet resource user gigel ensure=present shell=&quot;/bin/sh&quot; home=&quot;/home/gigel&quot;
+Notice: /User[gigel]/ensure: created
+user { &#039;gigel&#039;:
+  ensure =&gt; &#039;present&#039;,
+  home   =&gt; &#039;/home/gigel&#039;,
+  shell  =&gt; &#039;/bin/sh&#039;,
+}</pre>
+
+<p>
+Inspectati fisierul <strong>/etc/passwd</strong> si verificati ca utilizatorul a fost creat.
+</p>
+
+<p>
+Pentru a sterge o resursa, atributul <strong>ensure</strong> al acesteia trebuie setat la valoarea <strong>absent</strong>.
+</p>
+
+<p>
+De exemplu, pentru a sterge utilizatorul <strong>gigel</strong> creat anterior: 
+</p>
+<pre class="code">[root@learn ~]# puppet resource user gigel ensure=absent
+Notice: /User[gigel]/ensure: removed
+user { &#039;gigel&#039;:
+  ensure =&gt; &#039;absent&#039;,
+}</pre>
+
+<p>
+Verificati, din nou, in <strong>/etc/passwd</strong> faptul ca utilizatorul a fost sters.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "01. [20p] Resurse Puppet" [193-] --><!-- EDIT9 PLUGIN_INCLUDE_END "saisp:labs:10:contents:01" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT11 PLUGIN_INCLUDE_START "saisp:labs:10:contents:02" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:contents:02">
+
+<h3 class="sectionedit13" id="p_manifeste_puppet">02. [20p] Manifeste Puppet</h3>
+<div class="level3">
+
+<p>
+Cu toate ca putem crea, modifica sau sterge resurse folosind comenzi de tip <code>puppet resource</code>, aceasta nu este o solutie potrivita pentru situatii complexe. 
+</p>
+
+<p>
+O solutie mai buna consta in:
+</p>
+<ul>
+<li class="level1"><div class="li"> declararea resurselor in fisiere (text);</div>
+</li>
+<li class="level1"><div class="li"> efectuarea modificarilor descrise in fisiere folosind Puppet.</div>
+</li>
+</ul>
+
+<p>
+Fisierele ce contin declarari de resurse Puppet se numesc <strong>manifeste</strong> si au, de obicei, extensia <strong>.pp</strong>.
+</p>
+
+</div>
+
+<h4 id="crearea_unui_manifest">Crearea unui manifest</h4>
+<div class="level4">
+
+<p>
+Vom scrie un manifest care sa descrie o resursa de tip fisier. Fisierul va avea urmatoarele proprietati:
+</p>
+<ul>
+<li class="level1"><div class="li"> nume si cale: <strong>/tmp/my_file</strong>;</div>
+</li>
+<li class="level1"><div class="li"> drepturi de acces: <strong>0640</strong>;</div>
+</li>
+<li class="level1"><div class="li"> continut: “File created using Puppet”;</div>
+</li>
+</ul>
+
+<p>
+Declararea resursei va arata astfel:
+</p>
+<pre class="code">file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; &quot;File created using Puppet.&quot;,
+}</pre>
+
+<p>
+Salvati codul de mai sus intr-un fisier manifest numit <strong>my_file_manif.pp</strong>.
+</p>
+
+</div>
+
+<h4 id="aplicarea_unui_manifest">Aplicarea unui manifest</h4>
+<div class="level4">
+
+<p>
+Aplicarea unui manifest se executa folosind comanda <code>puppet apply</code>:
+</p>
+<pre class="code">[root@learn ~]# puppet apply my_file_manif.pp
+Notice: Compiled catalog for learn.localdomain in environment production in 0.18 seconds                             
+Notice: /Stage[main]//File[my_file]/ensure: created                                                                  
+Notice: Finished catalog run in 0.38 seconds                                                                         </pre>
+
+<p>
+Verificati ca fisierul a fost creat, iar continutul si drepturile de acces sunt corecte.
+</p>
+
+<p>
+Incercati sa aplicati din nou manifestul:
+</p>
+<pre class="code">[root@learn ~]# puppet apply my_file_manif.pp
+Notice: Compiled catalog for learn.localdomain in environment production in 0.16 seconds
+Notice: Finished catalog run in 0.38 seconds</pre>
+
+<p>
+Observati ca daca resursa este deja in starea descrisa de manifest, Puppet nu mai executa nici o actiune.
+</p>
+
+<p>
+Modificati drepturile de acces ale fisierului la <strong>755</strong>, apoi aplicati din nou manifestul:
+</p>
+<pre class="code">[root@learn ~]# chmod 755 /tmp/my_file 
+[root@learn ~]# puppet apply my_file_manif.pp
+Notice: Compiled catalog for learn.localdomain in environment production in 0.18 seconds
+Notice: /Stage[main]//File[my_file]/mode: mode changed &#039;0755&#039; to &#039;0640&#039;
+Notice: Finished catalog run in 0.38 seconds</pre>
+
+<p>
+Modificati continutul fisierului, apoi aplicati din nou manifestul:
+</p>
+<pre class="code">[root@learn ~]# echo &quot;This is not my file&quot; &gt; /tmp/my_file 
+[root@learn ~]# puppet apply my_file_manif.pp
+Notice: Compiled catalog for learn.localdomain in environment production in 0.18 seconds
+Notice: /Stage[main]//File[my_file]/content: content changed &#039;{md5}7225302b0d15d4a2562c2ab55e45d4cc&#039; to &#039;{md5}b4fdf30d694de5a5d7fe7a50cda27851&#039;
+Notice: Finished catalog run in 0.41 seconds</pre>
+
+<p>
+Observati ca daca atributele resursei difera de cele descrise in manifest, aplicarea manifestului readuce resursa in starea dorita.
+</p>
+
+</div>
+
+<h4 id="stari_ensure">Stari (ensure)</h4>
+<div class="level4">
+
+<p>
+Atributul <strong>ensure</strong> specifica de cele mai multe ori daca resursa:
+</p>
+<ul>
+<li class="level1"><div class="li"> trebuie sa existe (ensure ⇒ present);</div>
+</li>
+<li class="level1"><div class="li"> trebuie sa NU existe (ensure ⇒ absent).</div>
+</li>
+</ul>
+
+<p>
+Unele tipuri de resurse definesc stari aditionale pentru acest atribut. Resursele de tip <strong>file</strong> pot avea, in plus, urmatoarele valori pentru <strong>ensure</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li"> directory</div>
+</li>
+<li class="level1"><div class="li"> link </div>
+</li>
+<li class="level1"><div class="li"> file</div>
+</li>
+</ul>
+
+<p>
+Definiti un manifest care sa creeze un link simbolic la fisierul <strong>/tmp/my_file</strong>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Resursa trebuie sa aiba si atributul <strong>target</strong>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Folositi documentatia Puppet pentru tipul de resursa <strong>file</strong>: <a href="http://docs.puppetlabs.com/references/stable/type.html#file" class="urlextern" title="http://docs.puppetlabs.com/references/stable/type.html#file"  rel="nofollow">http://docs.puppetlabs.com/references/stable/type.html#file</a>
+
+</div></p>
+</p>
+
+</div>
+
+<h4 id="cheie_autorizata_ssh">Cheie autorizata SSH</h4>
+<div class="level4">
+
+<p>
+Intr-un manifest, definiti o resursa de tip “cheie autorizata SSH”.
+</p>
+
+<p>
+Resursa trebuie sa permita autentificarea utilizatorului <code>student</code> de pe masina fizica, in contul utilizatorului <code>root</code> de pe masina virtuala, fara parola.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Daca nu exista, perechea de chei pentru utilizatorul <strong>student</strong> trebuie generata in prealabil.
+</p>
+
+<p>
+Apoi, rulati comanda <code>ssh-add ~/.ssh.id_rsa</code> pe masina fizica, din contul <code>student</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Folositi documentatia Puppet pentru tipul de resursa <strong>sshauthorizedkey</strong>: <a href="http://docs.puppetlabs.com/references/stable/type.html#sshauthorizedkey" class="urlextern" title="http://docs.puppetlabs.com/references/stable/type.html#sshauthorizedkey"  rel="nofollow">http://docs.puppetlabs.com/references/stable/type.html#sshauthorizedkey</a>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "02. [20p] Manifeste Puppet" [1-] --><!-- EDIT12 PLUGIN_INCLUDE_END "saisp:labs:10:contents:02" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT14 PLUGIN_INCLUDE_START "saisp:labs:10:contents:03" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:contents:03">
+
+<h3 class="sectionedit16" id="p_dependente_intre_resurse">03. [20p] Dependente intre resurse</h3>
+<div class="level3">
+
+<p>
+Un manifest Puppet poate contine declarari pentru mai multe resurse, insa ordinea in care sunt aplicate nu este bine definita.
+</p>
+
+<p>
+Sunt cazuri in care trebuie sa ne asiguram ca o resursa este aplicata inaintea alteia (de exemplu, un pachet este instalat inaintea pornirii serviciului).
+</p>
+
+<p>
+In aceste situatii, trebuie sa definim dependente intre resurse.
+</p>
+
+</div>
+
+<h4 id="beforerequire">Before / Require</h4>
+<div class="level4">
+
+<p>
+Modificam manifestul creat anterior astfel:
+</p>
+<pre class="code">file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; &quot;File created using Puppet.&quot;,
+}
+
+notify {&#039;my_notify&#039;:
+  message =&gt; &quot;File /tmp/my_file has been synced&quot;,
+  require =&gt; File[&#039;my_file&#039;],
+}</pre>
+<ul>
+<li class="level1"><div class="li"> Resursa de tip <code>notify</code> defineste un mesaj ce va fi afisat in momentul cand declaratia sa este evaluata;</div>
+</li>
+<li class="level1"><div class="li"> Dependenta intre resurse este definita prin atributul <code>require</code>. In cazul de fata, resursa <strong>my_file</strong> este evaluata inaintea resursei <strong>my_notify</strong>.</div>
+</li>
+</ul>
+
+<p>
+Modificati fisierul <strong>/tmp/my_file</strong>, apoi aplicati manifestul de mai sus. Observati ordinea in care resursele sunt evaluate.
+</p>
+
+<p>
+O sintaxa echivalenta ar fi folosirea parametrului <code>before</code> in resursa <strong>my_file</strong>:
+</p>
+<pre class="code">file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; &quot;File created using Puppet.&quot;,
+  before  =&gt; Notify[&#039;my_notify&#039;],
+}
+
+notify {&#039;my_notify&#039;:
+  message =&gt; &quot;File /tmp/my_file has been synced&quot;,
+}</pre>
+
+</div>
+
+<h4 id="notifysubscribe">Notify / Subscribe</h4>
+<div class="level4">
+
+<p>
+Pentru unele resurse are sens actiunea de “refresh” (de exemplu, un serviciu care trebuie repornit).
+</p>
+
+<p>
+Daca dorim ca, in plus fata de dependenta intre resurse, sa facem “refresh” pentru a doua resursa, cand prima resursa este modificata, trebuie:
+</p>
+<ul>
+<li class="level1"><div class="li"> sa folosim <strong>notify</strong> in loc de <strong>before</strong>, sau</div>
+</li>
+<li class="level1"><div class="li"> sa folosim <strong>subscribe</strong> in loc de <strong>require</strong>.</div>
+</li>
+</ul>
+
+<p>
+Un exemplu ar fi repornirea serviciului SSH atunci cand fisierul sau de configurare este modificat:
+</p>
+<pre class="code">file { &#039;/etc/ssh/sshd_config&#039;:
+  ensure =&gt; file,
+  mode   =&gt; 600,
+  source =&gt; &#039;/root/examples/sshd_config&#039;,
+}
+service { &#039;sshd&#039;:
+  ensure    =&gt; running,
+  enable    =&gt; true,
+  subscribe =&gt; File[&#039;/etc/ssh/sshd_config&#039;],
+}</pre>
+
+<p>
+Creati un manifest cu codul de mai sus, apoi modificati fisierul <strong>/etc/ssh/sshd_config</strong> si aplicati manifestul.
+</p>
+
+</div>
+
+<h4 id="sintaxa_echivalenta">Sintaxa echivalenta</h4>
+<div class="level4">
+
+<p>
+In locul atributelor <strong>before / require</strong> sau <strong>notify / subscribe</strong> putem folosi operatorul <code>→</code>, respectiv <code>~&gt;</code>.
+</p>
+
+<p>
+Exemplu:
+</p>
+<pre class="code">file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; &quot;File created using Puppet.&quot;,
+}
+-&gt;
+notify {&#039;my_notify&#039;:
+  message =&gt; &quot;File /tmp/my_file has been synced&quot;,
+}</pre>
+
+</div>
+<!-- EDIT16 SECTION "03. [20p] Dependente intre resurse" [1-] --><!-- EDIT15 PLUGIN_INCLUDE_END "saisp:labs:10:contents:03" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT17 PLUGIN_INCLUDE_START "saisp:labs:10:contents:04" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:contents:04">
+
+<h3 class="sectionedit19" id="p_design_patterns">04. [20p] Design patterns</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="packagefileservice">Package / File / Service</h4>
+<div class="level4">
+
+<p>
+In multe situatii, Puppet este folosit pentru a ne asigura ca un anumit serviciu de sistem este instalat, pornit si are configuratia corecta.
+</p>
+
+<p>
+Implementarea se poate realiza folosind trei resurse:
+</p>
+<ul>
+<li class="level1"><div class="li"> package</div>
+</li>
+<li class="level1"><div class="li"> file</div>
+</li>
+<li class="level1"><div class="li"> service</div>
+</li>
+</ul>
+
+<p>
+Intre primele doua avem o relatie de tip “before / require”, iar intre ultimele doua o relatie de tip “notify / subscribe”.
+</p>
+
+<p>
+Creati urmatorul manifest care implementeaza acest design pattern pentru serviciul SSH, apoi aplicati manifestul.
+</p>
+<pre class="code">package { &#039;openssh-server&#039;:
+  ensure =&gt; present,
+}
+-&gt;
+file { &#039;/etc/ssh/sshd_config&#039;:
+  ensure =&gt; file,
+  mode   =&gt; 600,
+  source =&gt; &#039;/root/examples/sshd_config&#039;,
+}
+~&gt;
+service { &#039;sshd&#039;:
+  ensure     =&gt; running,
+  enable     =&gt; true, 
+}</pre>
+
+<p>
+Modificati diverse stari ale tripletului “package / file / service”, apoi reaplicati manifestul. De exemplu:
+</p>
+<ul>
+<li class="level1"><div class="li"> dezinstalati pachetul;</div>
+</li>
+<li class="level1"><div class="li"> modificati fisierul de configurare;</div>
+</li>
+<li class="level1"><div class="li"> opriti serviciul.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="exercitiu_-_apache">Exercitiu - Apache</h4>
+<div class="level4">
+
+<p>
+Creati un manifest de tip “package / file / service” pentru serviciul Apache.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Fisierul de configurare trebuie sa aiba ca sursa o copie a fisierului actual.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+In CentOS, pachetul pentrul serverul Apache se numeste <strong>httpd</strong>, iar fisierul de configurare se afla in <strong>/etc/httpd/conf/httpd.conf</strong>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT19 SECTION "04. [20p] Design patterns" [1-] --><!-- EDIT18 PLUGIN_INCLUDE_END "saisp:labs:10:contents:04" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT20 PLUGIN_INCLUDE_START "saisp:labs:10:contents:05" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:contents:05">
+
+<h3 class="sectionedit22" id="p_variabile_si_selectori">05. [20p] Variabile si selectori</h3>
+<div class="level3">
+
+</div>
+
+<h4 id="variabile">Variabile</h4>
+<div class="level4">
+
+<p>
+Pentru a defini variabile in Puppet, folosim sintaxa <code>$variabila</code>, atat pentru atribuire, cat si pentru referentiere.
+</p>
+
+<p>
+Rescriem manifestul pentru fisierul <strong>my_file</strong>, definind continutul fisierului intr-o variabila:
+</p>
+<pre class="code">$my_content = &quot;File created using Puppet.&quot;
+
+file {&#039;my_file&#039;:
+  path    =&gt; &#039;/tmp/my_file&#039;,
+  ensure  =&gt; present,
+  mode    =&gt; 0640,
+  content =&gt; $my_content,
+}</pre>
+
+</div>
+
+<h4 id="facts">Facts</h4>
+<div class="level4">
+
+<p>
+In afara de variabilele definite de utilizator, Puppet defineste si anumite variabile de sistem. Acestea se numesc <strong>facts</strong>.
+</p>
+
+<p>
+Pentru a vizualiza toate aceste variabile, folosim comanda <code>facter</code>:
+</p>
+<pre class="code">[root@learn ~]# facter 
+architecture =&gt; i386
+augeasversion =&gt; 1.1.0
+bios_release_date =&gt; 12/01/2006
+bios_vendor =&gt; innotek GmbH
+bios_version =&gt; VirtualBox
+blockdevice_sda_model =&gt; VBOX HARDDISK
+blockdevice_sda_size =&gt; 8589934592
+blockdevice_sda_vendor =&gt; ATA
+blockdevices =&gt; sda
+...</pre>
+
+</div>
+
+<h4 id="if">If</h4>
+<div class="level4">
+
+<p>
+Un exemplu de folosire a variabilelor de sistem este luarea anumitor decizii in functie de valoarea acestora.
+</p>
+
+<p>
+Urmatorul manifest se asigura ca serviciul NTP:
+</p>
+<ul>
+<li class="level1"><div class="li"> este pornit daca masina este fizica;</div>
+</li>
+<li class="level1"><div class="li"> este oprit daca masina este virtuala.</div>
+</li>
+</ul>
+
+<p>
+Decizia se ia in functie de valoarea variabile de sistem <code>$is_virtual</code>.
+</p>
+<pre class="code">if str2bool(&quot;$is_virtual&quot;) {
+  service {&#039;ntpd&#039;:
+    ensure =&gt; stopped,
+    enable =&gt; false,
+  }
+}
+else {
+  service { &#039;ntpd&#039;:
+    name       =&gt; &#039;ntpd&#039;,
+    ensure     =&gt; running,
+    enable     =&gt; true,
+    hasrestart =&gt; true,
+    require =&gt; Package[&#039;ntp&#039;],
+  }
+}</pre>
+
+<p>
+Aplicati manifestul si observati starea serviciului NTP.
+</p>
+
+</div>
+
+<h4 id="manifest_pentru_instalare_ntp">Manifest pentru instalare NTP</h4>
+<div class="level4">
+
+<p>
+Mai intai, dezinstalati serverul de NTP din masina virtuala.
+</p>
+
+<p>
+Apoi, scrieti un manifest care:
+</p>
+<ul>
+<li class="level1"><div class="li"> sa instaleze pachetul pentru serverul NTP;</div>
+</li>
+<li class="level1"><div class="li"> sa se asigure ca serviciul NTP este pornit (numele serviciului difera, in functie de distributia de Linux);</div>
+</li>
+<li class="level1"><div class="li"> sa se asigure ca fisierul de configurare este cel corect (in functie de distributie). </div>
+</li>
+</ul>
+
+<p>
+Folositi structura conditionala <strong>case</strong>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Consultati documentatia pentru <strong>case</strong>: <a href="http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html#case-statements" class="urlextern" title="http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html#case-statements"  rel="nofollow">http://docs.puppetlabs.com/puppet/latest/reference/lang_conditional.html#case-statements</a>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+</p>
+<ul>
+<li class="level1"><div class="li"> Pentru Ubuntu sau Debian serviciul se numeste <strong>ntp</strong> iau pentru Redhat si Fedora se numeste <strong>ntpd</strong>.</div>
+</li>
+<li class="level1"><div class="li"> Descarcati fisierul de configurare pentru Debian / Ubuntu (<a href="http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.debian" class="urlextern" title="http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.debian"  rel="nofollow">http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.debian</a>) sau RedHat / Fedora (<a href="http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.el" class="urlextern" title="http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.el"  rel="nofollow">http://docs.puppetlabs.com/learning/files/examples/modules/ntp/files/ntp.conf.el</a>)</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT22 SECTION "05. [20p] Variabile si selectori" [1-] --><!-- EDIT21 PLUGIN_INCLUDE_END "saisp:labs:10:contents:05" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT23 PLUGIN_INCLUDE_START "saisp:labs:10:contents:06" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:contents:06">
+
+<h3 class="sectionedit25" id="bonus_-_10p_site_manifest_si_consola_web">06. [BONUS - 10p] Site manifest si consola web</h3>
+<div class="level3">
+
+<p>
+Resursele Puppet se pot declara si intr-un fisier manifest special, numit “site manifest”: <code>/etc/puppetlabs/puppet/manifests/site.pp</code>.
+</p>
+
+<p>
+Acesta are semnificatia de manifest global si este folosit de agentul Puppet pentru a gestiona configuratia unui sistem in mod unitar.
+</p>
+
+<p>
+Adaugati continutul manifestului pentru seriviciul SSH creat la task-ul 03 in “site manifest”.
+</p>
+
+<p>
+Apoi:
+</p>
+<ul>
+<li class="level1"><div class="li"> dezactivati, din <code>/etc/ssh/sshd_config</code> login-ul pentru <code>root</code>;</div>
+</li>
+<li class="level1"><div class="li"> restartati serviciul SSH;</div>
+</li>
+<li class="level1"><div class="li"> deconectati-va de la masina virtuala;</div>
+</li>
+<li class="level1"><div class="li"> verificati ca nu va mai puteti conecta prin SSH.</div>
+</li>
+</ul>
+
+<p>
+Conectati-va la consola web a Puppet: <a href="https://10.0.0.2/" class="urlextern" title="https://10.0.0.2/"  rel="nofollow">https://10.0.0.2/</a> (folositi user-ul <code>puppet@example.com</code> si parola <code>learningpuppet</code>).
+</p>
+
+<p>
+Apoi, fortati agentul Puppet sa re-ruleze pentru a reaplica site manifest-ul.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Hint: <a href="http://docs.puppetlabs.com/pe/latest/orchestration_puppet.html" class="urlextern" title="http://docs.puppetlabs.com/pe/latest/orchestration_puppet.html"  rel="nofollow">http://docs.puppetlabs.com/pe/latest/orchestration_puppet.html</a>
+
+</div></p>
+</p>
+
+<p>
+Verificati ca va puteti conecta din nou prin SSH.
+</p>
+
+</div>
+<!-- EDIT25 SECTION "06. [BONUS - 10p] Site manifest si consola web" [1-] --><!-- EDIT24 PLUGIN_INCLUDE_END "saisp:labs:10:contents:06" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT26 PLUGIN_INCLUDE_START "saisp:labs:10:contents:sidebar" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:contents:sidebar">
+
+<h3 class="sectionedit28" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/10.html" class="wikilink1" title="saisp:labs:10">Laboratorul 10</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT29 PLUGIN_INCLUDE_START "saisp:labs:10:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:10:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_2134346439583567c528ad8" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/01.html" class="wikilink1" title="saisp:labs:10:contents:01">01. [20p] Resurse Puppet</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/02.html" class="wikilink1" title="saisp:labs:10:contents:02">02. [20p] Manifeste Puppet</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/03.html" class="wikilink1" title="saisp:labs:10:contents:03">03. [20p] Dependente intre resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/04.html" class="wikilink1" title="saisp:labs:10:contents:04">04. [20p] Design patterns</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/05.html" class="wikilink1" title="saisp:labs:10:contents:05">05. [20p] Variabile si selectori</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/10/contents/06.html" class="wikilink1" title="saisp:labs:10:contents:06">06. [BONUS - 10p] Site manifest si consola web</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT30 PLUGIN_INCLUDE_END "saisp:labs:10:meta:nav" [0-] --></div>
+<div class="level4">
+
+</div>
+<!-- EDIT28 SECTION "Navigare" [1-] --><!-- EDIT27 PLUGIN_INCLUDE_END "saisp:labs:10:contents:sidebar" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Exerciții" [1450-] --></div>
+</body>
+</html>

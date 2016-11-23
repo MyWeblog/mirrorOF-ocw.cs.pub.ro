@@ -1,0 +1,84 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:11:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-19T13:16:19+0300"/>
+<meta name="keywords" content="saisp,labs,11,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:11:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/11/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:11:contents';var JSINFO = {"id":"saisp:labs:11:contents:04","namespace":"saisp:labs:11:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_traffic_shaping_in_linux">04. [5p] Traffic shaping în Linux</h3>
+<div class="level3">
+
+<p>
+Am observat faptul că policing-ul pe baza ToS-ului nu este suficient pentru a asigura echitatea între servicii. Soluția ce se apoate aplica este dată de limitarea serviciilor <abbr title="File Transfer Protocol">FTP</abbr> și HTTP.
+</p>
+
+<p>
+<code>tbf</code> este cea mai simplă metodă de a face traffic shaping în Linux.  Este, de asemenea, un qdisc <strong>classless</strong> (ca și <code>pfifo_fast</code>).
+</p>
+
+<p>
+Dorim să limităm viteza pentru fluxurile <abbr title="File Transfer Protocol">FTP</abbr> și HTTP (însumate) la aproximativ 9Mbps. Deoarece fluxul de voce are 640kbps, iar cel video are 30Mbps, rezulta ca o valoare acceptabila pentru viteza totală ar fi 40Mbps. Pe stația <code>gateway</code> ne dorim următoarele setări:
+</p>
+<ul>
+<li class="level1"><div class="li"> Viteza maximă de transfer să fie 50Mbps (40Mbps pentru datele propriu zise și o marjă de 20% pentru încapsulare - headere IP, TCP/UDP, Ethernet)</div>
+</li>
+<li class="level1"><div class="li"> În caz de congestie, acceptăm un surplus de 128Kbps, pentru 50ms.</div>
+</li>
+</ul>
+
+<p>
+Vom seta qdisc-ul <code>tbf</code>, pe interfața <code>eth0</code> astfel:
+</p>
+<pre class="code bash"><span class="co4">root@gateway:~# </span>tc qdisc add dev eth0 root tbf rate 50mbit burst 128kbit latency 50ms</pre>
+
+<p>
+Rulați din nou script-ul <code>iperf-gateway.sh</code> de pe stația <code>gateway</code>. Asteptați 60 de secunde și inspectați output-ul afișat. Ce observați? Pierderile de pachete pentru conexiunea UDP au dispărut, qdisc-ul <code>tbf</code> asigurând echitate între conexiuni.
+</p>
+
+<p>
+Cu toate că suma vitezelor fluxurilor este de aproximativ 50Mbps, ea nu este distribuită așa cum ne-am fi asteptat. Fluxurile <abbr title="File Transfer Protocol">FTP</abbr> și HTTP ocupa mai mult decât 9Mbps. Motivul este că limitarea a fost facută printr-o metoda <strong>classless</strong>, ce limitează întreg traficul de pe o interfață, fără a avea posibilitatea de a selecta și clasifica diferite tipuri de trafic. Soluția este dată de aplicarea unui qdisc <strong>classful</strong>, ce trateaza in mod separat diferitele clase de trafic.
+</p>
+
+</div>
+</div>
+</body>
+</html>

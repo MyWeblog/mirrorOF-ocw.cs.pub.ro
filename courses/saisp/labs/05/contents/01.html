@@ -1,0 +1,275 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    01. [20p] LVS-DR (direct routing)    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-04-04T11:38:02+0300"/>
+<meta name="keywords" content="saisp,labs,05,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:05:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/saisp/labs/05/contents/01.html"/>
+<link rel="canonical" href="01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:05:contents';var JSINFO = {"id":"saisp:labs:05:contents:01","namespace":"saisp:labs:05:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="01%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="01%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_lvs-dr_direct_routing">01. [20p] LVS-DR (direct routing)</h3>
+<div class="level3">
+
+<p>
+Serviciul pentru care vom face load-balancing este <strong>HTTP</strong>. Serverul de web Apache2 este deja instalat pe realservere. Directorul va imparti cererile venite din partea clientului catre cele 2 realservere.
+</p>
+
+<p>
+Pe director este deja instalat pachetul <code>ipvsadm</code> necesar configurării load balancing-ului.
+</p>
+
+<p>
+Mai intai vom configura adresa virtuala pe director. Adaugam adresa <strong>10.0.0.1/24</strong> pe subinterfata <strong>eth0:1</strong> de pe <strong>saisp-vm-1</strong>:
+</p>
+<pre class="code">root@saisp-vm-1:~# ip addr add dev eth0 10.0.0.1/24 label eth0:1</pre>
+
+<p>
+Vom configura HTTP ca serviciu virtual. Trebuie să specificăm adresa si portul serverului virtual și protocolul de nivel transport (TCP, în cazul nostru).
+</p>
+<pre class="code">root@saisp-vm-1:~# ipvsadm -A -t 10.0.0.1:80</pre>
+
+<p>
+Serviciul virtual a fost configurat, dar trebuie să adăugăm și servere reale:
+</p>
+<pre class="code">root@saisp-vm-1:~# ipvsadm -a -t 10.0.0.1:80 -r 10.0.0.20:80 -g
+root@saisp-vm-1:~# ipvsadm -a -t 10.0.0.1:80 -r 10.0.0.30:80 -g</pre>
+
+<p>
+Parametrul <strong>-g</strong> semnifică folosirea LVS-DR.
+</p>
+
+<p>
+Trebuie, de asemenea, să “convingem” RS-urile să răspundă la cereri pe adresa VS-ului. Există cel puțin două posibilități pentru acest lucru:
+</p>
+<ul>
+<li class="level1"><div class="li"> configurarea adresei VS pe o interfață de loopback a RS. Această metodă are neajunsul că un RS ar putea răspunde unei cereri ARP pentru VS. Problema astfel creată se numește, în LVS, <em><a href="http://www.austintek.com/LVS/LVS-HOWTO/HOWTO/LVS-HOWTO.arp_problem.html" class="urlextern" title="http://www.austintek.com/LVS/LVS-HOWTO/HOWTO/LVS-HOWTO.arp_problem.html"  rel="nofollow">The ARP Problem</a></em>.</div>
+</li>
+<li class="level1"><div class="li"> utilizarea unei reguli iptables care face RS-ul să accepte pachete, chiar dacă adresa VS-ului nu este configurată pe nicio interfață. <strong>Vom folosi această abordare</strong>.</div>
+</li>
+</ul>
+<pre class="code">root@saisp-vm-2:~# iptables -t nat -A PREROUTING -d 10.0.0.1 -j REDIRECT</pre>
+<pre class="code">root@saisp-vm-3:~# iptables -t nat -A PREROUTING -d 10.0.0.1 -j REDIRECT</pre>
+
+<p>
+Acum puteți utiliza serviciul configurat.
+</p>
+
+<p>
+Verificati functionarea deschizand in browser adresa <a href="http://10.0.0.1" class="urlextern" title="http://10.0.0.1"  rel="nofollow">http://10.0.0.1</a> Folosind <strong>CTRL+F5</strong>, faceti refresh de cateva ori si observati cum apar, pe rand, paginile de pe cele 2 realservere.
+</p>
+
+<p>
+Folosind Wireshark, porniti o captura pe interfata <strong>br0</strong> de pe masina fizica. Observati adresele IP si MAC din:
+</p>
+<ul>
+<li class="level1"><div class="li"> pachetele care circula de la client spre director;</div>
+</li>
+<li class="level1"><div class="li"> pachetele care circula de la director spre realservere;</div>
+</li>
+<li class="level1"><div class="li"> pachetele care se intorc de la realservere catre client.</div>
+</li>
+</ul>
+
+<p>
+Pentru a vizualiza starea VS-ului, folositi parametrul <strong>-l</strong>:
+</p>
+<pre class="code">root@saisp-vm-1:~# ipvsadm -l</pre>
+
+<p>
+Pentru a afisa detalii despre conexiunile gestionate de VS, adaugati si parametrul <strong>-c</strong>:
+</p>
+<pre class="code">root@saisp-vm-1:~# ipvsadm -l -c</pre>
+
+<p>
+Pe langa configuratia de baza pe care am realizat-o, putem seta parametri aditionali.
+</p>
+
+<p>
+De exemplu, vom activa scheduler-ul de tip round-robin, apoi vom configura un maxim de 4 conexiuni simultane pentru fiecare RS:
+</p>
+<pre class="code">root@saisp-vm-1:~# ipvsadm -E -t 10.0.0.1:80 -s rr
+root@saisp-vm-1:~# ipvsadm -e -t 10.0.0.1:80 -r 10.0.0.20:80 -x 4
+root@saisp-vm-1:~# ipvsadm -e -t 10.0.0.1:80 -r 10.0.0.30:80 -x 4</pre>
+
+<p>
+Parametrul <strong>-E</strong> desemneaza editarea serviciului (in cazul nostru, s-a modificat scheduler-ul).
+</p>
+
+<p>
+Parametrul <strong>-e</strong> desemneaza editarea realserverului (in cazul nostru, s-a modificat limita maxima de conexiuni).
+</p>
+
+<p>
+In browser, faceti refresh de cateva ori si observati cum dupa 8 refresh-uri, directorul nu va mai trimite cererile catre realservere.
+</p>
+
+<p>
+Pentru RS-uri cu configurație hardware diferită, se pot folosi valori diferite ale numărului maxim de conexiuni. Alternativ, se poate defini o pondere (weight) diferită pentru fiecare server și se poate folosi un scheduler ponderat (de exemplu, wrr) pe VS. 
+</p>
+
+<p>
+Pentru a sterge serviciul definit, folosim parametrul <strong>-D</strong>:
+</p>
+<pre class="code">root@saisp-vm-1:~# ipvsadm -D -t 10.0.0.1:80</pre>
+
+<p>
+In plus, pe realservere vom sterge regulile iptables definite:
+</p>
+<pre class="code">root@saisp-vm-2:~# iptables -t nat -F</pre>
+<pre class="code">root@saisp-vm-3:~# iptables -t nat -F</pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../05.html" class="wikilink1" title="saisp:labs:05">Laboratorul 5</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:05:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:05:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_5639045325835679f47fa5" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="00.html" class="wikilink1" title="saisp:labs:05:contents:00">00. Linux Virtual Server</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="01.html" class="wikilink1" title="saisp:labs:05:contents:01">01. [20p] LVS-DR (direct routing)</a></span></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="saisp:labs:05:contents:02">02. [20p] LVS-TUN (tunneling)</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="saisp:labs:05:contents:03">03. [20p] Linux-HA</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="saisp:labs:05:contents:04">04. [20p] DRBD</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="saisp:labs:05:contents:05">05. [20p] Integrare DRBD cu Linux-HA</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="saisp:labs:05:contents:06">06. [BONUS - 10p] Verificare online pentru DRBD</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:05:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/05/contents/01.txt · Last modified: 2014/04/04 11:38 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="01%3Fdo=media&amp;ns=saisp%253Alabs%253A05%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="01.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A05%253Acontents%253A01&amp;1479894943" width="2" height="1" alt="" /></div>
+</body>
+</html>

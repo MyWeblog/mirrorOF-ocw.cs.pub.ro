@@ -1,0 +1,43 @@
+    
+    
+
+#include <cstdio>
+#include "HotPatch.hpp"
+using namespace std;
+using namespace HotPatch;
+
+function<void()> fooPatch;
+
+void foo()
+{
+    printf("In foo()\n");
+}
+
+void bar()
+{
+    printf("I'm hackin ur function\n");
+    if (fooPatch.IsPatched())
+        fooPatch();
+}
+
+int main()
+{
+    void (*pfoo)() = foo;
+    void (*pbar)() = bar;
+
+    pfoo(); // calls foo()
+    pbar(); // calls bar()
+
+    fooPatch = foo;
+    fooPatch.SetPatch(bar);
+    fooPatch.ApplyPatch();
+
+    pfoo(); // calls bar()
+    pbar(); // calls bar()
+
+    fooPatch.RemovePatch();
+
+    pfoo(); // calls foo()
+    pbar(); // calls bar()
+    return 0;
+}

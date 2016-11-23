@@ -1,0 +1,123 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:08:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-12-08T10:47:28+0200"/>
+<meta name="keywords" content="rl,labs,08,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/08/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:08:contents';var JSINFO = {"id":"rl:labs:08:contents:01","namespace":"rl:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_trafic_criptat_si_necriptat">1. [5p] Trafic criptat și necriptat</h3>
+<div class="level3">
+
+<p>
+Traficul generat de servicii se clasifică în <strong>trafic criptat</strong> și <strong>trafic în clar</strong>. Traficul <strong>în clar (necriptat)</strong> poate fi interpretat și înțeles dacă este capturat. Traficul criptat nu poate fi interpretat în absența cheii de criptare; doar transmițătorul și receptorul cunosc cheia pentru a putea comunica.
+</p>
+
+<p>
+Ne propunem să analizăm, din punctul de vedere al criptării traficului, următoarele protocoale/servicii:
+</p>
+<ul>
+<li class="level1"><div class="li"> telnet (port TCP 23)</div>
+</li>
+<li class="level1"><div class="li"> SSH (port TCP 22)</div>
+</li>
+<li class="level1"><div class="li"> <abbr title="File Transfer Protocol">FTP</abbr> (port TCP 21)</div>
+</li>
+</ul>
+
+<p>
+Vom folosi <code>dsniff</code>, un utilitar cu ajutorul căruia putem captura în clar pachetele care trec printr-un anumit server, pentru a afișa datele transmise (username, parolă, comenzi). Vom folosi topologia de laborator și ne vom conecta de la stația <code>red</code> la stația <code>green</code> prin intermediul stației <code>host</code>.
+</p>
+
+<p>
+Pentru a porni procesul de captură, autentificați-vă ca <code>root</code> pe stația <code>host</code> și rulați comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>dsniff <span class="re5">-i</span> veth-green</pre>
+
+<p>
+Pentru comunicație prin telnet, rulați pe stația <code>red</code> comanda
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span>telnet green</pre>
+
+<p>
+În urma rulării comenzii ați realizat o conexiune telnet de la stația <code>red</code> la stația <code>green</code> prin intermediul stației <code>host</code>. La prompt-ul generat de comandă folosiți username-ul <code>student</code> și parola <code>student</code>; după aceea rulați comanda <code>ls</code> și apoi comanda <code>exit</code> pentru a închide conexiunea. Observați pe stația <code>host</code> captura credențialelor (username și parolă) transmise prin telnet între stațiile <code>red</code> și <code>green</code> ⇒ traficul telnet între cele două stații a fost <strong>trafic în clar</strong> și a fost capturat pe stația <code>host</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+<code>dsniff</code> capturează traficul de rețea și afișează credențialele doar la încheierea conexiunilor. Trebuie folosite comenzi de tipul <code>exit</code> pentru a închide conexiunea și pentru ca <code>dsniff</code> să afișeze credențialele.
+
+</div></p>
+</p>
+
+<p>
+Pentru comunicație prin <abbr title="File Transfer Protocol">FTP</abbr>, rulați pe stația <code>red</code> comanda
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ftp</span> green</pre>
+
+<p>
+În urma rulării comenzii ați realizat o conexiune <abbr title="File Transfer Protocol">FTP</abbr> de la stația <code>red</code> la stația <code>green</code> prin intermediul stației <code>host</code>. La prompt-ul generat de comandă folosiți username-ul <code>student</code> și parola <code>student</code>; după aceea rulați comanda <code>ls</code> și apoi comanda <code>quit</code> pentru a închide conexiunea. Observați pe stația <code>host</code> captura credențialelor (username și parolă) transmise prin <abbr title="File Transfer Protocol">FTP</abbr> între stațiile <code>red</code> și <code>green</code> ⇒ traficul <abbr title="File Transfer Protocol">FTP</abbr> între cele două stații a fost <strong>trafic în clar</strong> și a fost capturat pe stația <code>host</code>.
+</p>
+
+<p>
+Pentru comunicație prin SSH, rulați pe stația <code>red</code> comanda
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ssh</span> <span class="re5">-l</span> student green</pre>
+
+<p>
+În urma rulării comenzii ați realizat o conexiune SSH de la stația <code>red</code> la stația <code>green</code> prin intermediul stației <code>host</code>. În sesiunea de shell deschisă la distanță, rulați comanda <code>ls</code> și apoi comanda <code>exit</code> pentru a închide conexiunea. Observați că pe stația <code>host</code> <code>dsniff</code> nu afișează informații despre credențialele (username și parolă) transmise între stațiile <code>red</code> și <code>green</code> ⇒ traficul SSH între cele două stații a fost <strong>trafic criptat</strong> și <strong>nu</strong> a putut fi capturat pe stația <code>host</code>.
+</p>
+
+<p>
+Pe stația <code>host</code>, pentru a opri comanda <code>dsniff</code> folosiți combinația de taste <code>Ctrl+c</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Traficul telnet și <abbr title="File Transfer Protocol">FTP</abbr> este trafic necriptat (în clar), în timp ce traficul SSH este trafic criptat.
+
+</div></p>
+</p>
+
+</div>
+</div>
+</body>
+</html>

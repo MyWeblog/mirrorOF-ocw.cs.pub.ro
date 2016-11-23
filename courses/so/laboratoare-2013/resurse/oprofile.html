@@ -1,0 +1,796 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Oprofile    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-05T22:19:57+0200"/>
+<meta name="keywords" content="so,laboratoare-2013,resurse,oprofile"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=so:laboratoare-2013:resurse"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../_export/xhtml/so/laboratoare-2013/resurse/oprofile.html"/>
+<link rel="canonical" href="oprofile.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so:laboratoare-2013:resurse';var JSINFO = {"id":"so:laboratoare-2013:resurse:oprofile","namespace":"so:laboratoare-2013:resurse","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so/"><img height="70" src="../../../res/sigla_so.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../systems/index.html"/><img height="70" src="../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="oprofile%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="oprofile%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="oprofile">Oprofile</h3>
+<div class="level3">
+
+<p>
+Oprofile este un sistem de profiling disponibil ca modul pentru kernel-ul de Linux (și integrat în variantele mai noi ale acestuia), capabil să analizeze atât kernel-ul, cât și aplicațiile utilizator. Folosește tehnica de sampling și se bazează pe informațiile oferite de contoarele din CPU.
+</p>
+
+<p>
+<strong>Avantaje</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li">overhead redus</div>
+</li>
+<li class="level1"><div class="li">profiling al întregului sistem (inclusiv secțiuni “delicate” din kernel)</div>
+</li>
+<li class="level1"><div class="li">prezentarea efectelor la nivel de hardware</div>
+</li>
+</ul>
+
+<p>
+<strong>Dezavantaje</strong>:
+</p>
+<ul>
+<li class="level1"><div class="li">necesita drepturi de utilizator privilegiat (root)</div>
+</li>
+<li class="level1"><div class="li">nu poate fi folosit pentru cod compilat dinamic sau interpretat (Java, Python, etc)</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit2" id="arhitectura_si_modul_de_functionare">Arhitectura și modul de funcționare</h3>
+<div class="level3">
+
+<p>
+<a href="../../../_detail/so/laboratoare-2013/lab12-oprofile.png%3Fid=so%253Alaboratoare-2013%253Aresurse%253Aoprofile.html" class="media" title="so:laboratoare-2013:lab12-oprofile.png"><img src="../../../_media/so/laboratoare-2013/lab12-oprofile.png" class="media" title="Arhitectura Oprofile" alt="Arhitectura Oprofile" /></a>
+Procesoarele au niște countere speciale pe care le decrementează de fiecare dată când are loc un eveniment de un anumit tip (cache miss, tlb miss, branch miss-predictions, etc.). Când un astfel de counter se ajunge la valoarea zero, se trimite o întrerupere NMI care este interceptată de modulul de kernel al oprofile. Modulul de kernel resetează counterul la o valoare fixată de utilizator și salvează într-un buffer din kernel date despre locația care a generat întreruperea (proces/kernel, id-ul threadului, instrucținea curentă care a generat decrementarea counterului, etc.).
+</p>
+
+<p>
+Oprofile e format din 3 componente majore:
+</p>
+<ul>
+<li class="level1"><div class="li"><strong>modul de kernel</strong> - un driver special care este notificat de la fiecare întrerupere NMI generată de procesor</div>
+</li>
+<li class="level1"><div class="li"><strong>daemon</strong> - intermediar între modulul kernel și toolurile userspace. Preia date din kernel și le scrie (după procesare) în <code>/var/lib/oprofile/samples/</code>.</div>
+</li>
+<li class="level1"><div class="li"><strong>utilitare user space</strong>:</div>
+<ul>
+<li class="level2"><div class="li"><code>opcontrol</code> - permite configurarea evenimentelor monitorizate și a frecvenței cu care sunt eșantionate, a proceselor pentru care se face monitorizarea, etc. </div>
+</li>
+<li class="level2"><div class="li"><code>opreport</code> - sumar al monitorizării</div>
+</li>
+<li class="level2"><div class="li"><code>opannotate</code> - adnotează pe surse sau pe codul dezasamblat al programului numărul de evenimente care au fost eșantionate la fiecare instrucțiune.</div>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit3" id="utilizare">Utilizare</h3>
+<div class="level3">
+
+</div>
+
+<h3 class="sectionedit4" id="configurare">Configurare</h3>
+<div class="level3">
+
+<p>
+Primul pas este verificarea existenței modulului oprofile:
+</p>
+<pre class="code">muttley:~# modinfo oprofile</pre>
+
+<p>
+Apoi este necesară încărcarea efectivă:
+</p>
+<pre class="code">muttley:~# modprobe oprofile</pre>
+
+<p>
+<strong>sau</strong>
+</p>
+<pre class="code">muttley:~# opcontrol --init</pre>
+
+<p>
+Înainte de a începe colectarea datelor de profiling, trebuie configurat și pornit daemonul <code>oprofiled</code>.
+Pentru a afla informații despre kernel, <code>oprofile</code> are nevoie de calea către imaginea vmlinux (necompresată) a kernelului activ:
+</p>
+<pre class="code">muttley:~# opcontrol --vmlinux=/boot/vmlinux-`uname -r`</pre>
+
+<p>
+Dacă nu se dorește analizarea kernelului, ci doar a unor aplicații, se folosește:
+</p>
+<pre class="code">muttley:~# opcontrol --no-vmlinux</pre>
+
+<p>
+Pentru a afla tipurile de evenimente disponibile si detalii despre acestea (inclusiv valoarea minima a contorului asociat) se foloseste:
+</p>
+<pre class="code">student@muttley:~$ opcontrol --list-events</pre>
+
+<p>
+<strong>sau</strong>
+</p>
+<pre class="code">student@muttley:~$ ophelp</pre>
+
+<p>
+<code>opcontrol</code> poate monitoriza maximum două tipuri de evenimente în același timp (deoarece procesoarele nu au mai multe countere de performanță care pot fi folosite simultan). Pentru a alege evenimentele dorite se folosește opțiunea <code>–event</code>. Sintaxa acesteia este:
+</p>
+<pre class="code"># opcontrol --event=&lt;TIP_EVENIMENT&gt;:&lt;COUNT&gt;:&lt;UNIT-MASK&gt;:&lt;KERNEL-SPACE-COUNTING&gt;:&lt;USER-SPACE-COUNTING&gt;</pre>
+
+<p>
+Unde:
+</p>
+<ul>
+<li class="level1"><div class="li">TIP_EVENIMENT - reprezintă numărul evenimentului care se dorește monitorizat</div>
+</li>
+<li class="level1"><div class="li">COUNT - reprezintă numărul de evenimente hardware de acest tip după care procesorul emite o întrerupere NMI.</div>
+</li>
+<li class="level1"><div class="li">UNIT-MASK - o valoare numerică ce poate modifica comportamentul pentru counterul curent. Dacă nu este specificat se folosește o valoarea implicită (poate fi determinată cu <code>ophelp</code>).</div>
+</li>
+<li class="level1"><div class="li">KERNEL-SPACE-COUNTING - poate lua două valori, 0/1, și specifică dacă se activează sau nu counterul atunci când se rulează cod kernel. Implicit are valoarea 1.</div>
+</li>
+<li class="level1"><div class="li">USER-SPACE-COUNTING - paote lua două valori, 0/1, și specifică dacă se activează sau nu counterul atunci când se rulează cod user. Implicit are valoarea 1.</div>
+</li>
+</ul>
+
+<p>
+De exemplu: pe procesoare Core 2 duo, counterul DTLB_MISSES poate fi folosit cu oricare combinație a următoarelor valori:
+</p>
+<ul>
+<li class="level1"><div class="li">0x01: ANY       Memory accesses that missed the DTLB.</div>
+</li>
+<li class="level1"><div class="li">0x02: MISS_LD   DTLB misses due to load operations.</div>
+</li>
+<li class="level1"><div class="li">0x04: L0_MISS_LD L0 DTLB misses due to load operations.</div>
+</li>
+<li class="level1"><div class="li">0x08: MISS_ST   TLB misses due to store operations.</div>
+</li>
+</ul>
+<pre class="code"># se dorește măsurarea toate evenimentele de tip DTLB_MISSES (0xf = 0x1|0x2|0x4|0x8) 
+# care au avut loc în timp ce rulam cod user space
+# ignorând cele care au avut loc în kernel space.
+# Se dorește cuantificarea fiecărui al 10000-lea eveniment de acest tip.
+muttley:~# opcontrol --event=DTLB_MISSES:10000:0x0f:0:1</pre>
+
+<p>
+Pentru a vedea care sunt parametrii cu care este configurat în acest moment oprofile se poate folosi
+</p>
+<pre class="code">muttley:~# opcontrol --status
+Daemon not running
+Event 0: PREF_RQSTS_DN:45000:0:1:1
+Separate options: library thread
+vmlinux file: none
+Image filter: /home/gringo/labs/so/profiling/cache_trashing/with_padding
+Call-graph depth: 6
+Buffer size: 65536</pre>
+
+</div>
+
+<h3 class="sectionedit5" id="pornire">Pornire</h3>
+<div class="level3">
+
+<p>
+După configurare, trebuie pornit daemonul:
+</p>
+<pre class="code">muttley:~# opcontrol --start</pre>
+
+</div>
+
+<h3 class="sectionedit6" id="oprire">Oprire</h3>
+<div class="level3">
+<pre class="code">muttley:~# opcontrol --shutdown</pre>
+
+</div>
+
+<h3 class="sectionedit7" id="colectarea_si_analizarea_datelor">Colectarea și analizarea datelor</h3>
+<div class="level3">
+
+<p>
+Pentru a nu fi influențați de eventuale date rămase de la o rulare anterioară, trebuiesc curațate datele salvate:
+</p>
+<pre class="code"># se șterg toate datele din buffer
+muttley:~# opcontrol --reset</pre>
+
+<p>
+<strong>sau</strong> se salvează bufferul curent în sesiunea cu numele <code>sesiunea_anterioara</code>
+</p>
+<pre class="code">muttley:~# opcontrol --save=sesiunea_anterioara</pre>
+
+<p>
+Odată pornit daemonul, <code>oprofile</code> va colecta date despre toate executabilele ce rulează pe acea mașină (sau dacă a fost configurat cu <code>–image</code> va colecta date doar pentru executabilele din calea specificată). Acum trebuie executat și binarul pe care dorim să îl măsurăm. Deoarece <code>oprofile</code> încearcă să-și minimizeze impactul asupra performanțelor sistemului, acesta va amâna pe cât posibil scrierea datelor din bufferele interne pe disk. Dacă toolurile userspace <code>opreport</code> sau <code>opannotate</code> nu găsesc informații de profiling pe disk vor raporta o eroare:
+</p>
+<pre class="code">student@muttley:~$ opannotate --source
+opannotate error: No sample file found: try running opcontrol --dump or specify a session containing sample files</pre>
+
+<p>
+Putem să forțăm scrierea pe disc a bufferelor curente cu:
+</p>
+<pre class="code">student@muttley:~$ opcontrol --dump</pre>
+
+</div>
+
+<h3 class="sectionedit8" id="exemplu_de_rulare">Exemplu de rulare</h3>
+<div class="level3">
+
+<p>
+Avem următorul program care calculează numărul de numere divizibile cu 2 și cu 3 din intervalul 0..2<sup>30</sup> (exercițiu pur teoretic <img src="../../../lib/images/smileys/icon_smile.gif" class="icon" alt=":-)" />.
+</p>
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/oprofile%3Fcodeblock=16" title="Download Snippet" class="mediafile mf_c">simple.c</a></dt>
+<dd><pre class="code file c"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+  <span class="kw4">int</span> start <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">,</span> stop  <span class="sy0">=</span> <span class="br0">&#40;</span><span class="nu0">1</span> <span class="sy0">&lt;&lt;</span> <span class="nu0">30</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw4">int</span> div2 <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">,</span> div3 <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+  <span class="kw4">int</span> i<span class="sy0">;</span>
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> start<span class="sy0">;</span> i <span class="sy0">&lt;</span> stop<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>i <span class="sy0">%</span> <span class="nu0">2</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+      div2 <span class="sy0">++;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>i <span class="sy0">%</span> <span class="nu0">3</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+      div3 <span class="sy0">++;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;div2=%d, div3=%d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> div2<span class="sy0">,</span> div3<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Dacă rulăm programul obținem:
+</p>
+<pre class="code">student@muttley:~$ time ./simple
+div2=536870912, div3=357913942
+
+real	0m13.828s
+user	0m12.525s
+sys	0m0.020s</pre>
+
+<p>
+Dorim să îmbunătățim performanțele programului și îl paralelizăm.
+</p>
+
+<p>
+O variantă ar fi să incrementăm variabilele <code>div2</code> și <code>div3</code> din două threaduri diferite protejând accesul la variabilele <code>div2</code> și <code>div3</code> cu un mutex. Această implementare va fi mult mai ineficientă decât cea prezentată mai sus, majoritatea timpului de rulare fiind petrecut în rutinele de preluare și eliberare a mutexului.
+</p>
+
+<p>
+O paralelizare mai bună se poate implementa folosind variabile separate pentru fiecare thread și integrarea rezultatelor parțiale la final (folosind o paradigma de programare de tipul <a href="http://en.wikipedia.org/wiki/MapReduce" class="urlextern" title="http://en.wikipedia.org/wiki/MapReduce"  rel="nofollow">map-reduce</a>).
+</p>
+<dl class="file">
+<dt><a href="../../../_export/code/so/laboratoare-2013/resurse/oprofile%3Fcodeblock=18" title="Download Snippet" class="mediafile mf_c">complex.c</a></dt>
+<dd><pre class="code file c"><span class="co2">#define _GNU_SOURCE</span>
+<span class="co2">#include &lt;sched.h&gt;</span>
+<span class="co2">#include &lt;stdio.h&gt;</span>
+<span class="co2">#include &lt;pthread.h&gt;</span>
+<span class="co2">#include &lt;stdlib.h&gt;</span>
+&nbsp;
+<span class="co2">#define BIGNUM           (1 &lt;&lt; 30) // limita superioară a intervalului de prelucrare</span>
+<span class="co2">#define NR_CPUS           2</span>
+<span class="co2">#define NR_THREADS        NR_CPUS</span>
+<span class="co2">#define PER_CPU_INTERVAL (BIGNUM / NR_CPUS) //lungimea intervalului pe care va căuta fiecare thread</span>
+&nbsp;
+<span class="kw4">struct</span> thd_data <span class="br0">&#123;</span>
+  <span class="kw4">int</span> div2<span class="sy0">;</span>
+  <span class="kw4">int</span> div3<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">struct</span> thd_data per_cpu_vec<span class="br0">&#91;</span>NR_THREADS<span class="br0">&#93;</span><span class="sy0">;</span>
+pthread_t threads<span class="br0">&#91;</span>NR_THREADS<span class="br0">&#93;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/**
+  * Se impune threadului `thdid` să ruleze doar pe procesorul `thdid % NR_CPUS`.
+  * Dacă există procesoare &gt;= threaduri, fiecare thread va rula pe un procesor separat.
+  */</span>
+<span class="kw4">static</span> <span class="kw4">void</span> set_affinity<span class="br0">&#40;</span><span class="kw4">int</span> thdid<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+  <span class="kw4">int</span> rc<span class="sy0">;</span>
+  cpu_set_t cmask<span class="sy0">;</span>
+  CPU_ZERO<span class="br0">&#40;</span><span class="sy0">&amp;</span>cmask<span class="br0">&#41;</span><span class="sy0">;</span>
+  CPU_SET<span class="br0">&#40;</span>thdid <span class="sy0">%</span> NR_CPUS<span class="sy0">,</span> <span class="sy0">&amp;</span>cmask<span class="br0">&#41;</span><span class="sy0">;</span>
+  rc <span class="sy0">=</span> sched_setaffinity<span class="br0">&#40;</span><span class="nu0">0</span> <span class="coMULTI">/*current thead*/</span><span class="sy0">,</span> <span class="kw4">sizeof</span><span class="br0">&#40;</span>cpu_set_t<span class="br0">&#41;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>cmask<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">-</span><span class="nu0">1</span> <span class="sy0">==</span> rc<span class="br0">&#41;</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/perror.html"><span class="kw3">perror</span></a><span class="br0">&#40;</span><span class="st0">&quot;sched_setaffinity error&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">void</span> <span class="sy0">*</span> thd_func<span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span>param<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+  <span class="kw4">int</span> thdid <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">int</span><span class="br0">&#41;</span>param<span class="sy0">;</span>
+  <span class="kw4">int</span> i<span class="sy0">;</span>
+  <span class="coMULTI">/* Fiecare thread operează pe o porțiune distinctă a intervalului. */</span>
+  <span class="kw4">int</span> start <span class="sy0">=</span> thdid       <span class="sy0">*</span> PER_CPU_INTERVAL<span class="sy0">;</span>
+  <span class="kw4">int</span> stop  <span class="sy0">=</span> <span class="br0">&#40;</span>thdid <span class="sy0">+</span> <span class="nu0">1</span><span class="br0">&#41;</span> <span class="sy0">*</span> PER_CPU_INTERVAL<span class="sy0">;</span>
+&nbsp;
+  set_affinity<span class="br0">&#40;</span>thdid<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+&nbsp;
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> start<span class="sy0">;</span> i <span class="sy0">&lt;</span> stop<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>i <span class="sy0">%</span> <span class="nu0">2</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+      per_cpu_vec<span class="br0">&#91;</span>thdid<span class="br0">&#93;</span>.<span class="me1">div2</span> <span class="sy0">++;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span>i <span class="sy0">%</span> <span class="nu0">3</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span>
+      per_cpu_vec<span class="br0">&#91;</span>thdid<span class="br0">&#93;</span>.<span class="me1">div3</span> <span class="sy0">++;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+  <span class="kw1">return</span> NULL<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+  <span class="kw4">int</span> rc<span class="sy0">,</span> i<span class="sy0">,</span> sum<span class="sy0">;</span>
+&nbsp;
+  <span class="coMULTI">/* se creează threadurile */</span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> NR_THREADS<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    rc <span class="sy0">=</span> pthread_create<span class="br0">&#40;</span><span class="sy0">&amp;</span>threads<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy0">,</span> NULL<span class="sy0">,</span> thd_func<span class="sy0">,</span> <span class="br0">&#40;</span><span class="kw4">void</span><span class="sy0">*</span><span class="br0">&#41;</span>i<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">-</span><span class="nu0">1</span> <span class="sy0">==</span> rc<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/perror.html"><span class="kw3">perror</span></a><span class="br0">&#40;</span><span class="st0">&quot;error creating thread&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/exit.html"><span class="kw3">exit</span></a><span class="br0">&#40;</span><span class="sy0">-</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+  <span class="coMULTI">/* se așteaptă ca toate threadurile să-și termine execuția */</span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> NR_THREADS<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    rc <span class="sy0">=</span> pthread_join<span class="br0">&#40;</span>threads<span class="br0">&#91;</span>i<span class="br0">&#93;</span><span class="sy0">,</span> NULL<span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy0">-</span><span class="nu0">1</span> <span class="sy0">==</span> rc<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/perror.html"><span class="kw3">perror</span></a><span class="br0">&#40;</span><span class="st0">&quot;error joining thread&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+      <a href="http://www.opengroup.org/onlinepubs/009695399/functions/exit.html"><span class="kw3">exit</span></a><span class="br0">&#40;</span><span class="sy0">-</span><span class="nu0">1</span><span class="br0">&#41;</span><span class="sy0">;</span>
+    <span class="br0">&#125;</span>
+  <span class="br0">&#125;</span>
+&nbsp;
+&nbsp;
+  <span class="coMULTI">/* se integrează rezultatele parțiale ale fiecărui thread */</span>
+  sum <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> NR_THREADS<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    sum <span class="sy0">+=</span> per_cpu_vec<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">div2</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;div2=%d, &quot;</span><span class="sy0">,</span> sum<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+  sum <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+  <span class="kw1">for</span> <span class="br0">&#40;</span>i <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span> i <span class="sy0">&lt;</span> NR_THREADS<span class="sy0">;</span> i<span class="sy0">++</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+    sum <span class="sy0">+=</span> per_cpu_vec<span class="br0">&#91;</span>i<span class="br0">&#93;</span>.<span class="me1">div3</span><span class="sy0">;</span>
+  <span class="br0">&#125;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;div3=%d<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> sum<span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Programul paralelizat este mai complex, performanțele lui fiind:
+</p>
+<pre class="code">student@muttley:~$ time ./complex
+div2=536870912, div3=357913942
+
+real	0m38.865s
+user	1m14.913s
+sys	0m0.016s</pre>
+
+<p>
+Pentru programul paralelizat
+</p>
+<ul>
+<li class="level1"><div class="li">timpul total de rulare este cu 350% peste cel al variantei neparalelizate.</div>
+</li>
+<li class="level1"><div class="li">timpul de procesor este cu 700% peste cel al variantei neparalelizate, folosind 2 core-uri în același timp</div>
+</li>
+</ul>
+
+<p>
+Intuitiv timpul de procesor ar fi trebuit să crească, dar timpul de rulare ar fi trebuit să scadă. Vom investiga problema folosind oprofile.
+</p>
+
+<p>
+Partea computațională (for-ul) folosește puține date și ar trebui să încapă în cache-ul L1. Vom verifica dacă se fac accese în cache-ul L2.
+</p>
+<pre class="code"># se șterg datele unei rulări anterioare
+muttley:~# opcontrol --reset
+# se monitorizează toate cererile în cache-ul L2 (L2_RQSTS) făcute de executabilul &quot;complex&quot;
+muttley:~# opcontrol --no-vmlinux --image=./complex --event=L2_RQSTS:7500
+# se pornește serverul oprofiled
+muttley:~# opcontrol --start
+# se rulează aplicația monitorizată
+muttley:~# ./complex
+div2=536870912, div3=357913942
+# se închide serverul
+muttley:~# opcontrol --dump; opcontrol --shutdown
+
+# se preiau datele
+muttley:~# opreport 
+CPU: Core 2, speed 1833 MHz (estimated)
+Counted L2_RQSTS events (number of L2 cache requests) with a unit mask of 0x7f (multiple flags) count 90000
+   L2_RQSTS:90000|
+  samples|      %|
+------------------
+     1660 100.000 p1
+
+
+# se afișează informații per-simbol 
+muttley:~# opreport --symbols
+CPU: Core 2, speed 1833 MHz (estimated)
+Counted L2_RQSTS events (number of L2 cache requests) with a unit mask of 0x7f (multiple flags) count 90000
+samples  %        symbol name
+1660     100.000  thd_func
+
+
+# se afișează detalii per instrucțiune și se afișează informații despre fișierul și linia din care provine fiecare instrucțiune.
+muttley:~# opreport --debug-info --details
+CPU: Core 2, speed 1833 MHz (estimated)
+Counted L2_RQSTS events (number of L2 cache requests) with a unit mask of 0x7f (multiple flags) count 90000
+vma      samples  %        linenr info                 symbol name
+08048600 1660     100.000  cache_trashing.c:40         thd_func
+  0804863a 5         0.3012  cache_trashing.c:51
+  08048648 597      35.9639  cache_trashing.c:52 --       per_cpu_vec[thdid].div2 ++;
+  08048658 1         0.0602  cache_trashing.c:53
+  0804865f 8         0.4819  cache_trashing.c:53
+  08048681 2         0.1205  cache_trashing.c:53
+  08048684 1         0.0602  cache_trashing.c:53
+  08048694 1044     62.8916  cache_trashing.c:54 --       per_cpu_vec[thdid].div3 ++;
+  0804869e 1         0.0602  cache_trashing.c:50
+  080486a2 1         0.0602  cache_trashing.c:50
+
+
+# se adnotează pe codul sursă date de profiling
+muttley:~# opannotate --source
+...
+     2  0.1205 :  for (i = start; i &lt; stop; i++) {
+     5  0.3012 :    if (i % 2 == 0)
+   597 35.9639 :      per_cpu_vec[thdid].div2 ++;
+    12  0.7229 :    if (i % 3 == 0)
+  1044 62.8916 :      per_cpu_vec[thdid].div3 ++;
+...
+
+
+# se adnotează pe codul dezasamblat al programului date de profiling
+muttley:~# opannotate --assembly
+...
+     5  0.3012 : 804863a:	test   %eax,%eax
+               : 804863c:	jne    8048652 &lt;thd_func+0x52&gt;
+               : 804863e:	mov    -0x4(%ebp),%eax
+               : 8048641:	mov    0x8049a44(,%eax,8),%edx
+   597 35.9639 : 8048648:	add    $0x1,%edx
+               : 804864b:	mov    %edx,0x8049a44(,%eax,8)
+               : 8048652:	mov    -0x8(%ebp),%eax
+               : 8048655:	mov    %eax,-0x18(%ebp)
+     1  0.0602 : 8048658:	movl   $0x55555556,-0x1c(%ebp)
+     8  0.4819 : 804865f:	mov    -0x1c(%ebp),%eax
+...
+     2  0.1205 : 8048681:	mov    %edx,-0x14(%ebp)
+     1  0.0602 : 8048684:	cmpl   $0x0,-0x14(%ebp)
+               : 8048688:	jne    804869e &lt;thd_func+0x9e&gt;
+               : 804868a:	mov    -0x4(%ebp),%eax
+               : 804868d:	mov    0x8049a48(,%eax,8),%edx
+  1044 62.8916 : 8048694:	add    $0x1,%edx
+               : 8048697:	mov    %edx,0x8049a48(,%eax,8)
+     1  0.0602 : 804869e:	addl   $0x1,-0x8(%ebp)
+     1  0.0602 : 80486a2:	mov    -0x8(%ebp),%eax</pre>
+
+<p>
+Din rezultatele monitorizării se observă că se fac un număr mare de accese în cache-ul L2 când se accesează datele per-cpu, deși datele în loop încap în cache-ul L1.
+</p>
+<pre class="code c"><span class="kw4">struct</span> thd_data <span class="br0">&#123;</span>
+  <span class="kw4">int</span> div2<span class="sy0">;</span>
+  <span class="kw4">int</span> div3<span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+<span class="kw4">struct</span> thd_data per_cpu_vec<span class="br0">&#91;</span>NR_THREADS<span class="br0">&#93;</span><span class="sy0">;</span></pre>
+
+<p>
+Procesorul pe care a fost rulat exemplul anterior deține câte un cache L1 pentru fiecare core și un cache L2 partajat. Dacă mai multe core-uri modifică date care corespund unei aceleiași linii din cache-ul L2, de fiecare dată când unul din core-uri scrie în acea linie, linia va fi invalidată în cache-ul L1 al celorlalte core-uri. Astfel celelalte threaduri vor trebui să recitească din L2 toată linia curentă, cache-ul L1 ne mai ajutând în acest caz, toate acesele făcându-se la o viteză mai mică chiar decât cea a cache-ului L2.
+</p>
+
+<p>
+Dacă se modifică structura de date specifică fiecărui thread, se poate elimina problema de “false sharing”.
+</p>
+<pre class="code c"><span class="kw4">struct</span> thd_data <span class="br0">&#123;</span>
+  <span class="kw4">int</span> div2<span class="sy0">;</span>
+  <span class="kw4">int</span> div3<span class="sy0">;</span>
+  <span class="kw4">char</span> padding<span class="br0">&#91;</span>NR_PADDING_BYTES<span class="br0">&#93;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span><span class="sy0">;</span>
+<span class="kw4">struct</span> thd_data per_cpu_vec<span class="br0">&#91;</span>NR_THREADS<span class="br0">&#93;</span><span class="sy0">;</span></pre>
+<pre class="code">muttley:~# time ./with_padding 
+div2=536870912, div3=357913942
+real	0m6.432s
+user	0m12.793s
+sys	0m0.008s
+
+
+muttley:~# opreport 
+CPU: Core 2, speed 1833 MHz (estimated)
+Counted L2_RQSTS events (number of L2 cache requests) with a unit mask of 0x7f (multiple flags) count 7500
+    L2_RQSTS:7500|
+  samples|      %|
+------------------
+        1 100.000 with_padding</pre>
+
+<p>
+În acest caz a avut loc doar un singur eșantion de citire în L2 (în realitate au avut loc între 7500 și 2*7500-1 evenimente de acest tip).
+</p>
+<ul>
+<li class="level1"><div class="li">timpul total de rulare este 58% din cel al variantei neparalelizate</div>
+</li>
+<li class="level1"><div class="li">timpul de procesor este 112% din cel al variantei neparalelizate.</div>
+</li>
+</ul>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_so">Informații generale SO</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_47218755458357c0840aa1" data-jsajax="%26skipfile%3D%253D/so%253Ainfo%253Astart/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../info/documentatie.html" class="wikilink1" title="so:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/feed.html" class="wikilink1" title="so:info:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/hall.html" class="wikilink1" title="so:info:hall">Hall of SO</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/lista-discutii.html" class="wikilink1" title="so:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/mv.html" class="wikilink1" title="so:info:mv">Mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/trimitere-teme.html" class="wikilink1" title="so:info:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale SO" [12-194] -->
+<h1 class="sectionedit2" id="informatii_so_2015-2016">Informații SO 2015-2016</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_33330321858357c084491f" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../../meta/examen.html" class="indexmenu_idx_head">Examen CA/CC</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../meta/examen/2012-2013.html" class="wikilink1" title="so:meta:examen:2012-2013">Examen CA/CC 2012-2013</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/examen/2013-2014.html" class="wikilink1" title="so:meta:examen:2013-2014">Examen CA/CC 2013-2014</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/examen/2014-2015.html" class="wikilink1" title="so:meta:examen:2014-2015">Examen CA/CC 2014-2015</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../meta/notare/reguli-notare-ca-cc.html" class="wikilink1" title="so:meta:notare:reguli-notare-ca-cc">Notare CA/CC</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/notare/reguli-notare-cb.html" class="wikilink1" title="so:meta:notare:reguli-notare-cb">Notare CB</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../../meta/anunturi.html" class="wikilink1" title="so:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/calendar.html" class="wikilink1" title="so:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/catalog.html" class="wikilink1" title="so:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/echivalari.html" class="wikilink1" title="so:meta:echivalari">Echivalări teme</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/karma.html" class="wikilink1" title="so:meta:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/need-to-know.html" class="wikilink1" title="so:meta:need-to-know">SO Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/orar.html" class="wikilink1" title="so:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații SO 2015-2016" [195-261] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_22310635458357c084685e" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../../laboratoare/resurse.html" class="indexmenu_idx_head">Resurse</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/c_tips.html" class="wikilink1" title="so:laboratoare:resurse:c_tips">C/SO Tips</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/die.html" class="wikilink1" title="so:laboratoare:resurse:die">Macro-ul DIE</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/gdb.html" class="wikilink1" title="so:laboratoare:resurse:gdb">GDB</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/home.html" class="wikilink1" title="so:laboratoare:resurse:home">Resurse</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/injections.html" class="wikilink1" title="so:laboratoare:resurse:injections">Function Hooking and Windows Dll Injection</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/oprofile.html" class="wikilink1" title="so:laboratoare:resurse:oprofile">Oprofile</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/recapitulare.html" class="wikilink1" title="so:laboratoare:resurse:recapitulare">Recapitulare</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/threaduri_extra.html" class="wikilink1" title="so:laboratoare:resurse:threaduri_extra">Thread-uri - Extra</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/vs_tips.html" class="wikilink1" title="so:laboratoare:resurse:vs_tips">Visual Studio Tips and Tricks</a></div></li>
+<li class="level2"><div class="li"><a href="../../laboratoare/resurse/windows-video.html" class="wikilink1" title="so:laboratoare:resurse:windows-video">windows-video</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-01.html" class="wikilink1" title="so:laboratoare:laborator-01">Laborator 01 - Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-02.html" class="wikilink1" title="so:laboratoare:laborator-02">Laborator 02 - Operații I/O simple</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-03.html" class="wikilink1" title="so:laboratoare:laborator-03">Laborator 03 - Procese</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-04.html" class="wikilink1" title="so:laboratoare:laborator-04">Laborator 04 - Semnale</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-05.html" class="wikilink1" title="so:laboratoare:laborator-05">Laborator 05 - Gestiunea memoriei</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-06.html" class="wikilink1" title="so:laboratoare:laborator-06">Laborator 06 - Memoria virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-07.html" class="wikilink1" title="so:laboratoare:laborator-07">Laborator 07 - Profiling &amp; Debugging</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-08.html" class="wikilink1" title="so:laboratoare:laborator-08">Laborator 08 - Thread-uri Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-09.html" class="wikilink1" title="so:laboratoare:laborator-09">Laborator 09 - Thread-uri Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-10.html" class="wikilink1" title="so:laboratoare:laborator-10">Laborator 10 - Operații IO avansate - Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-11.html" class="wikilink1" title="so:laboratoare:laborator-11">Laborator 11 - Operații IO avansate - Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../../laboratoare/laborator-12.html" class="wikilink1" title="so:laboratoare:laborator-12">Laborator 12 - Implementarea sistemelor de fișiere</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [262-322] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_7868405458357c084879e" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../../cursuri/curs-01.html" class="indexmenu_idx_head">Curs 01 - Introducere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-02.html" class="indexmenu_idx_head">Curs 02 - Sistemul de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-03.html" class="indexmenu_idx_head">Curs 03 - Procese</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-04.html" class="indexmenu_idx_head">Curs 04 - Planificarea execuției. IPC</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-05.html" class="indexmenu_idx_head">Curs 05 - Gestiunea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-06.html" class="indexmenu_idx_head">Curs 06 - Memoria virtuală</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-07.html" class="indexmenu_idx_head">Curs 07 - Securitatea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-08.html" class="indexmenu_idx_head">Curs 08 - Fire de execuție</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-09.html" class="indexmenu_idx_head">Curs 09 - Sincronizare</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-10.html" class="indexmenu_idx_head">Curs 10 - Dispozitive de intrare/ieșire</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-11.html" class="indexmenu_idx_head">Curs 11 - Networking în sistemul de operare</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-12.html" class="indexmenu_idx_head">Curs 12 - Implementarea sistemelor de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-13.html" class="indexmenu_idx_head">Curs 13 - Securitatea sistemului</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/quiz/start.html" class="indexmenu_idx_head">Quizz-uri curs</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra-2.html" class="wikilink1" title="so:cursuri:curs-extra-2">Curs extra - Android</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra-3.html" class="wikilink1" title="so:cursuri:curs-extra-3">Curs extra - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra.html" class="wikilink1" title="so:cursuri:curs-extra">Curs extra - Sincronizarea proceselor</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/note.html" class="wikilink1" title="so:cursuri:note">Note de curs</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [323-374] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_128236688858357c084a6df" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../../teme/tema-asist.html" class="indexmenu_idx_head">Tema Asistenți - Guardian process</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/contestatii.html" class="wikilink1" title="so:teme:contestatii">Contestații</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/folosire-gitlab.html" class="wikilink1" title="so:teme:folosire-gitlab">Git. Indicații folosire GitLab</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/general.html" class="wikilink1" title="so:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-1.html" class="wikilink1" title="so:teme:tema-1">Tema 1 Multi-platform Development</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-2.html" class="wikilink1" title="so:teme:tema-2">Tema 2 Mini-shell</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-3.html" class="wikilink1" title="so:teme:tema-3">Tema 3 Memorie virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-4.html" class="wikilink1" title="so:teme:tema-4">Tema 4 Planificator de threaduri</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-5.html" class="wikilink1" title="so:teme:tema-5">Tema 5 Server web asincron</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [375-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="oprofile.html#oprofile">Oprofile</a></div></li>
+<li class="level3"><div class="li"><a href="oprofile.html#arhitectura_si_modul_de_functionare">Arhitectura și modul de funcționare</a></div></li>
+<li class="level3"><div class="li"><a href="oprofile.html#utilizare">Utilizare</a></div></li>
+<li class="level3"><div class="li"><a href="oprofile.html#configurare">Configurare</a></div></li>
+<li class="level3"><div class="li"><a href="oprofile.html#pornire">Pornire</a></div></li>
+<li class="level3"><div class="li"><a href="oprofile.html#oprire">Oprire</a></div></li>
+<li class="level3"><div class="li"><a href="oprofile.html#colectarea_si_analizarea_datelor">Colectarea și analizarea datelor</a></div></li>
+<li class="level3"><div class="li"><a href="oprofile.html#exemplu_de_rulare">Exemplu de rulare</a></div></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so/laboratoare-2013/resurse/oprofile.txt · Last modified: 2014/03/05 22:19 (external edit)          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="oprofile%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="oprofile%3Fdo=media&amp;ns=so%253Alaboratoare-2013%253Aresurse.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="oprofile.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../feed.php" title="Recent changes RSS feed"><img src="../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../lib/exe/indexer.php%3Fid=so%253Alaboratoare-2013%253Aresurse%253Aoprofile&amp;1479900168" width="2" height="1" alt="" /></div>
+</body>
+</html>

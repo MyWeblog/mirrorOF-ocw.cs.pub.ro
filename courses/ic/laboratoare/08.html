@@ -1,0 +1,513 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laboratorul 08 - MACs    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="date" content="2016-11-21T22:38:03+0200"/>
+<meta name="keywords" content="ic,laboratoare,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=ic:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="http://ocw.cs.pub.ro/courses/_export/xhtml/ic/laboratoare/08"/>
+<link rel="canonical" href="08.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ic:laboratoare';var JSINFO = {"id":"ic:laboratoare:08","namespace":"ic:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a style="color: #AAA !important;" href="../../../index.html"> Open CourseWare </a>        </div>
+        <div class="logo">
+                  </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="http://ocw.cs.pub.ro/courses/ic/laboratoare/08?do=recent"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="http://ocw.cs.pub.ro/courses/ic/laboratoare/08?do=login&amp;sectok=f62420cf5b01253da4b50505d148181b"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="laboratorul_08_-_macs">Laboratorul 08 - MACs</h2>
+<div class="level2">
+
+<p>
+In this lab we&#039;ll do some exercises with Message Authentication Codes.
+</p>
+
+</div>
+
+<h3 class="sectionedit2" id="exercise_1_-_existential_unforgeability">Exercise 1 - Existential Unforgeability</h3>
+<div class="level3">
+
+<p>
+In this exercise we will attack an insecure MAC algorithm by showing that an adversary can forge a (message, tag) pair without first querying a $\mathsf{Tag}$ oracle with the message.
+</p>
+
+<p>
+Let $F$ be a $\mathsf{PRF}$. Show that the following MAC is insecure by constructing an efficient adversary with non-negligible advantage. The key is $k \in \{0, 1\}^n$, and for any message $m = m1 \| m2$ with $\left|m_1\right| = \left|m_2\right| = n$, the MAC is computed as:
+</p>
+
+<p>
+$\mathsf{Tag}(k, m_1 \| m_2) = F_k(m_1) \| F_k(F_k(m_2)) $
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="exercise_2_-_timing_attack">Exercise 2 - Timing attack</h3>
+<div class="level3">
+
+<p>
+In this exercise you will perform a timing attack against CBC-MAC.
+</p>
+
+<p>
+You are given access to a CBC-MAC $\mathsf{Verify}$ oracle, which tests whether the received tag matches the one computed using the secret key. Timing attacks exploit naive equality comparisons between the received and computed MACs (for example, the comparison is done byte by byte; more checks means more latency).
+</p>
+
+<p>
+Your task is to produce a forged tag for the message &#039;Hristos a inviat&#039; without knowing the key. Do this by iterating through all possible values for a specific byte; when the oracle&#039;s latency for a certain value seems larger than the rest, it suggests that the equality test returned True and the oracle passed to the next byte.
+</p>
+
+<p>
+Try to start by finding the first byte and checking your result with the timing attack.
+</p>
+
+<p>
+You can use <code>time.clock()</code> before and after each oracle query to measure its runtime.
+</p>
+
+<p>
+<p><div class="noteimportant">
+The oracle&#039;s latency is subject to noise; for the best results, you may need to run each query multiple times (try 30) and compute the mean latency.
+
+</div></p>
+</p>
+
+<p>
+TODO1: Implement the CBC-MAC function.
+</p>
+
+<p>
+<p><div class="noteclassic">
+To check your implementation of CBC-MAC is correct, verify that this (plaintext,tag) verifies fine:
+plaintext = &#039;Placinta de mere&#039;
+tag = &#039;07d2771038d62b94fce106cff957da0f&#039;  (in hex, you need to apply decode to get a bytestream)
+
+</div></p>
+</p>
+
+<p>
+TODO2: Implement the MAC time verification attack and obtain the desired MAC without knowing the key.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Try to print the resulting tag in hex (with tag.encode(hex)). It should start with 51 and end with 81.
+
+</div></p>
+</p>
+<dl class="file">
+<dt><a href="http://ocw.cs.pub.ro/courses/_export/code/ic/laboratoare/08?codeblock=0" title="Download Snippet" class="mediafile mf_py">timing.py</a></dt>
+<dd><pre class="code file python"><span class="kw1">import</span> <span class="kw3">sys</span>
+<span class="kw1">import</span> <span class="kw3">random</span>
+<span class="kw1">import</span> <span class="kw3">string</span>
+<span class="kw1">import</span> <span class="kw3">time</span>
+<span class="kw1">import</span> <span class="kw3">itertools</span>
+<span class="kw1">import</span> <span class="kw3">operator</span>
+<span class="kw1">import</span> <span class="kw3">base64</span>
+&nbsp;
+<span class="kw1">from</span> Crypto.<span class="me1">Cipher</span> <span class="kw1">import</span> AES
+<span class="kw1">from</span> Crypto.<span class="me1">Hash</span> <span class="kw1">import</span> SHA256
+&nbsp;
+<span class="kw1">def</span> slow_foo<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+    p <span class="sy0">=</span> <span class="nu0">181</span>
+    k <span class="sy0">=</span> <span class="nu0">2</span>
+    <span class="kw1">while</span> k <span class="sy0">&lt;</span> p:
+        <span class="kw1">if</span> p % k <span class="sy0">==</span> <span class="nu0">0</span>:
+            <span class="kw1">return</span>
+        k +<span class="sy0">=</span> <span class="nu0">1</span>
+&nbsp;
+<span class="kw1">def</span> aes_enc<span class="br0">&#40;</span>k<span class="sy0">,</span> m<span class="br0">&#41;</span>:
+  <span class="st0">&quot;&quot;&quot; 
+  Encrypt a message m with a key k in ECB mode using AES as follows:
+  c = AES(k, m)
+&nbsp;
+  Args:
+    m should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as 'Hello...' or '<span class="es0">\x</span>02<span class="es0">\x</span>04...')
+    k should be a bytestring of length exactly 16 bytes.
+&nbsp;
+  Return:
+    The bytestring ciphertext c
+  &quot;&quot;&quot;</span>
+  aes <span class="sy0">=</span> AES.<span class="kw3">new</span><span class="br0">&#40;</span>k<span class="br0">&#41;</span>
+  c <span class="sy0">=</span> aes.<span class="me1">encrypt</span><span class="br0">&#40;</span>m<span class="br0">&#41;</span>
+&nbsp;
+  <span class="kw1">return</span> c
+&nbsp;
+<span class="kw1">def</span> aes_dec<span class="br0">&#40;</span>k<span class="sy0">,</span> c<span class="br0">&#41;</span>:
+  <span class="st0">&quot;&quot;&quot;
+  Decrypt a ciphertext c with a key k in ECB mode using AES as follows:
+  m = AES(k, c)
+&nbsp;
+  Args:
+    c should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as 'Hello...' or '<span class="es0">\x</span>02<span class="es0">\x</span>04...')
+    k should be a bytestring of length exactly 16 bytes.
+&nbsp;
+  Return:
+    The bytestring message m
+  &quot;&quot;&quot;</span>
+  aes <span class="sy0">=</span> AES.<span class="kw3">new</span><span class="br0">&#40;</span>k<span class="br0">&#41;</span>
+  m <span class="sy0">=</span> aes.<span class="me1">decrypt</span><span class="br0">&#40;</span>c<span class="br0">&#41;</span>
+&nbsp;
+  <span class="kw1">return</span> m
+&nbsp;
+<span class="kw1">def</span> aes_enc_cbc<span class="br0">&#40;</span>k<span class="sy0">,</span> m<span class="sy0">,</span> iv<span class="br0">&#41;</span>:
+  <span class="st0">&quot;&quot;&quot;
+  Encrypt a message m with a key k in CBC mode using AES as follows:
+  c = AES(k, m)
+&nbsp;
+  Args:
+    m should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as 'Hello...' or '<span class="es0">\x</span>02<span class="es0">\x</span>04...')
+    k should be a bytestring of length exactly 16 bytes.
+    iv should be a bytestring of length exactly 16 bytes.
+&nbsp;
+  Return:
+    The bytestring ciphertext c
+  &quot;&quot;&quot;</span>
+  aes <span class="sy0">=</span> AES.<span class="kw3">new</span><span class="br0">&#40;</span>k<span class="sy0">,</span> AES.<span class="me1">MODE_CBC</span><span class="sy0">,</span> iv<span class="br0">&#41;</span>
+  c <span class="sy0">=</span> aes.<span class="me1">encrypt</span><span class="br0">&#40;</span>m<span class="br0">&#41;</span>
+&nbsp;
+  <span class="kw1">return</span> c
+&nbsp;
+<span class="kw1">def</span> aes_dec_cbc<span class="br0">&#40;</span>k<span class="sy0">,</span> c<span class="sy0">,</span> iv<span class="br0">&#41;</span>:
+  <span class="st0">&quot;&quot;&quot;
+  Decrypt a ciphertext c with a key k in CBC mode using AES as follows:
+  m = AES(k, c)
+&nbsp;
+  Args:
+    c should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as 'Hello...' or '<span class="es0">\x</span>02<span class="es0">\x</span>04...')
+    k should be a bytestring of length exactly 16 bytes.
+    iv should be a bytestring of length exactly 16 bytes.
+&nbsp;
+  Return:
+    The bytestring message m
+  &quot;&quot;&quot;</span>
+  aes <span class="sy0">=</span> AES.<span class="kw3">new</span><span class="br0">&#40;</span>k<span class="sy0">,</span> AES.<span class="me1">MODE_CBC</span><span class="sy0">,</span> iv<span class="br0">&#41;</span>
+  m <span class="sy0">=</span> aes.<span class="me1">decrypt</span><span class="br0">&#40;</span>c<span class="br0">&#41;</span>
+&nbsp;
+  <span class="kw1">return</span> m
+&nbsp;
+<span class="kw1">def</span> aes_cbc_mac<span class="br0">&#40;</span>k<span class="sy0">,</span> m<span class="br0">&#41;</span>:
+  <span class="st0">&quot;&quot;&quot;
+  Compute a CBC-MAC of message m with a key k using AES as follows:
+  t = AES-CBC-MAC(k=(k1,k2), m),
+  where k1 is used for the raw-CBC operation and k2 is used for the final
+  encryption.
+&nbsp;
+  k1 and k2 are derived from k as follows:
+  [k1|k2] = SHA256(k | &quot;CBC MAC keys&quot;)
+&nbsp;
+  Note: the IV for CBC in this case will be 0.
+&nbsp;
+  Args:
+    m should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as 'Hello...' or '<span class="es0">\x</span>02<span class="es0">\x</span>04...')
+    k should be a bytestring of length exactly 16 bytes.
+&nbsp;
+  Return:
+    The bytestring MAC t, of 16 bytes.
+  &quot;&quot;&quot;</span>
+&nbsp;
+  <span class="co1">#Require good size</span>
+  m <span class="sy0">=</span> m.<span class="me1">ljust</span><span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span>
+  k <span class="sy0">=</span> k.<span class="me1">ljust</span><span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span>
+&nbsp;
+  <span class="co1">#Derive the keys for raw-CBC and for the final tag</span>
+  <span class="co1">#[k1 | k2] = SHA256(k + &quot;CBC MAC keys&quot;)</span>
+&nbsp;
+  <span class="co1">#Get the MAC:</span>
+  <span class="co1">#1 - Do aes-CBC with k1 and iv=0, then keep only last block (last 16 bytes) of encryption</span>
+  <span class="co1">#2 - Perform another AES encryption (simple, without CBC) on the last block from #1 using k2</span>
+  <span class="co1">#t = tag</span>
+  t <span class="sy0">=</span> <span class="nu0">16</span>*<span class="st0">'<span class="es0">\x</span>00'</span>
+&nbsp;
+  <span class="kw1">return</span> t
+&nbsp;
+<span class="kw1">def</span> verify<span class="br0">&#40;</span>message<span class="sy0">,</span> tag<span class="br0">&#41;</span>:
+  key <span class="sy0">=</span> <span class="st0">'Cozonace si oua '</span>
+&nbsp;
+  <span class="co1"># Get correct tag</span>
+  goodtag <span class="sy0">=</span> aes_cbc_mac<span class="br0">&#40;</span>key<span class="sy0">,</span> message<span class="br0">&#41;</span>
+&nbsp;
+  <span class="co1"># Compare tags</span>
+  <span class="kw1">for</span> i <span class="kw1">in</span> <span class="kw2">range</span><span class="br0">&#40;</span><span class="nu0">16</span><span class="br0">&#41;</span>:
+    <span class="co1"># Artificially extend byte comparison duration</span>
+    slow_foo<span class="br0">&#40;</span><span class="br0">&#41;</span>
+    <span class="kw1">if</span> tag<span class="br0">&#91;</span>i<span class="br0">&#93;</span> <span class="sy0">!=</span> goodtag<span class="br0">&#91;</span>i<span class="br0">&#93;</span>:
+      <span class="kw1">return</span> <span class="kw2">False</span>
+&nbsp;
+  <span class="kw1">return</span> <span class="kw2">True</span>
+&nbsp;
+&nbsp;
+<span class="kw1">def</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+  message <span class="sy0">=</span> <span class="st0">'Hristos a inviat'</span>
+&nbsp;
+  <span class="co1"># Step 1. Iterate through all possible first byte values, and call the</span>
+  <span class="co1"># Verify oracle for each of them</span>
+  tag <span class="sy0">=</span> <span class="nu0">16</span>*<span class="st0">'<span class="es0">\x</span>00'</span>
+  verify<span class="br0">&#40;</span>message<span class="sy0">,</span> tag<span class="br0">&#41;</span>
+&nbsp;
+  <span class="co1"># Step 2. Store the byte that caused the longest computation time</span>
+&nbsp;
+  <span class="co1"># Step 3. Continue the operation for each byte (except the last)</span>
+&nbsp;
+  <span class="co1"># Step 4. Guess the last byte, and query the oracle with the complete tag</span>
+  mytag <span class="sy0">=</span> <span class="st0">'???'</span>
+  result <span class="sy0">=</span> verify<span class="br0">&#40;</span>message<span class="sy0">,</span> mytag<span class="br0">&#41;</span>
+  <span class="kw1">if</span> result <span class="sy0">==</span> <span class="kw2">True</span>:
+    <span class="kw1">print</span> <span class="st0">&quot;Found tag: &quot;</span> + mytag
+&nbsp;
+<span class="kw1">if</span> __name__ <span class="sy0">==</span> <span class="st0">&quot;__main__&quot;</span>:
+  main<span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+</div>
+
+<h3 class="sectionedit4" id="exercise_3_-_birthday_attack">Exercise 3 - Birthday attack</h3>
+<div class="level3">
+
+<p>
+In this exercise you will perform a Birthday attack on SHA256.
+</p>
+
+<p>
+Your goal is to find two messages, $M_1$ and $M_2$, such that for the first <strong>four</strong> bytes $\mathsf{SHA256}(M_1) = \mathsf{SHA256}(M_2)$.
+</p>
+
+<p>
+The collision will be $32$ bits long, which means you will need $2^{16}$ random messages in your attack. Note that the attack is not guaranteed to succeed; on average, two iterations of the attack are required to find a collision.
+</p>
+<dl class="file">
+<dt><a href="http://ocw.cs.pub.ro/courses/_export/code/ic/laboratoare/08?codeblock=1" title="Download Snippet" class="mediafile mf_py">birthday.py</a></dt>
+<dd><pre class="code file python"><span class="kw1">import</span> <span class="kw3">sys</span>
+<span class="kw1">import</span> <span class="kw3">string</span>
+<span class="kw1">import</span> <span class="kw3">base64</span>
+&nbsp;
+<span class="kw1">from</span> Crypto.<span class="me1">Hash</span> <span class="kw1">import</span> SHA256
+&nbsp;
+<span class="kw1">def</span> raw2hex<span class="br0">&#40;</span>raw<span class="br0">&#41;</span>:
+    <span class="kw1">return</span> raw.<span class="me1">encode</span><span class="br0">&#40;</span><span class="st0">'hex'</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+<span class="kw1">def</span> hex2raw<span class="br0">&#40;</span>hexstring<span class="br0">&#41;</span>:
+    <span class="kw1">return</span> <span class="kw3">base64</span>.<span class="me1">b16decode</span><span class="br0">&#40;</span>hexstring<span class="br0">&#41;</span>
+&nbsp;
+hexdigits <span class="sy0">=</span> <span class="st0">'0123456789ABCDEF'</span>
+&nbsp;
+<span class="kw1">def</span> <span class="kw2">hash</span><span class="br0">&#40;</span>message<span class="br0">&#41;</span>:
+    h <span class="sy0">=</span> SHA256.<span class="kw3">new</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    h.<span class="me1">update</span><span class="br0">&#40;</span>message<span class="br0">&#41;</span>
+    <span class="kw1">return</span> h.<span class="me1">digest</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+&nbsp;
+<span class="kw1">def</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>:
+    <span class="co1"># Try to find a collision on the first 4 bytes (32 bits)</span>
+&nbsp;
+    <span class="co1"># Step 1. Generate 2^16 different random messages</span>
+&nbsp;
+    <span class="co1"># Step 2. Compute hashes</span>
+&nbsp;
+    <span class="co1"># Step 3. Check if there exist two hashes that match in the first</span>
+    <span class="co1"># four bytes.</span>
+&nbsp;
+    <span class="co1"># Step 3a. If a match is found, print the messages and hashes</span>
+&nbsp;
+    <span class="co1"># Step 3b. If no match is found, repeat the attack with a new set</span>
+    <span class="co1"># of random messages</span>
+&nbsp;
+    <span class="kw1">pass</span>
+&nbsp;
+<span class="kw1">if</span> __name__ <span class="sy0">==</span> <span class="st0">&quot;__main__&quot;</span>:
+    main<span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_190477733158355b23d3942" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../cursuri/01.html" class="wikilink1" title="ic:cursuri:01">Cursul 01.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/02.html" class="wikilink1" title="ic:cursuri:02">Cursul 02.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/03.html" class="wikilink1" title="ic:cursuri:03">Cursul 03.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/04.html" class="wikilink1" title="ic:cursuri:04">Cursul 04.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/05.html" class="wikilink1" title="ic:cursuri:05">Cursul 05.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/06.html" class="wikilink1" title="ic:cursuri:06">Cursul 06.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/07.html" class="wikilink1" title="ic:cursuri:07">Cursul 07.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/08.html" class="wikilink1" title="ic:cursuri:08">Cursul 08.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/09.html" class="wikilink1" title="ic:cursuri:09">Cursul 09.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/10.html" class="wikilink1" title="ic:cursuri:10">Cursul 10.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/11.html" class="wikilink1" title="ic:cursuri:11">Cursul 11.</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/12.html" class="wikilink1" title="ic:cursuri:12">Cursul 12.</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Cursuri" [1-49] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_81159878058355b23d48e3" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="ic:laboratoare:01">Laboratorul 01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="ic:laboratoare:02">Laboratorul 02 - Shift and Vigenère ciphers</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="ic:laboratoare:03">Laboratorul 03 - PRGs</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="ic:laboratoare:04">Laboratorul 04 - PRFs and PRPs</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="ic:laboratoare:05">Laboratorul 05 - DES</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="ic:laboratoare:06">Laboratorul 06 - CBC Padding Attack</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="ic:laboratoare:07">Laboratorul 07 - Correlation Power Analysis</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="08.html" class="wikilink1" title="ic:laboratoare:08">Laboratorul 08 - MACs</a></span></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="ic:laboratoare:09">Laboratorul 09.</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="ic:laboratoare:10">Laboratorul 10.</a></div></li>
+<li class="level1"><div class="li"><a href="11.html" class="wikilink1" title="ic:laboratoare:11">Laboratorul 11.</a></div></li>
+<li class="level1"><div class="li"><a href="12.html" class="wikilink1" title="ic:laboratoare:12">Laboratorul 12.</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [50-108] -->
+<h1 class="sectionedit3" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_1847510558355b23d5882" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/tema1.html" class="wikilink1" title="ic:res:tema1">Homework 1</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Resurse" [109-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="08.html#laboratorul_08_-_macs">Laboratorul 08 - MACs</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="08.html#exercise_1_-_existential_unforgeability">Exercise 1 - Existential Unforgeability</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#exercise_2_-_timing_attack">Exercise 2 - Timing attack</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#exercise_3_-_birthday_attack">Exercise 3 - Birthday attack</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          ic/laboratoare/08.txt · Last modified: 2016/11/21 22:38 by veronica.velciu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="http://ocw.cs.pub.ro/courses/ic/laboratoare/08?do=media&amp;ns=ic%3Alaboratoare"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="08.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="http://ocw.cs.pub.ro/courses/lib/exe/indexer.php?id=ic%3Alaboratoare%3A08&amp;1479891747" width="2" height="1" alt="" /></div>
+</body>
+</html>

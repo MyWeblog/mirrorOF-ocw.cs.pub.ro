@@ -1,0 +1,81 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:06:contents:05</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-11T21:12:20+0300"/>
+<meta name="keywords" content="saisp,labs,06,contents,05"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:06:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="05.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/06/contents/05.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:06:contents';var JSINFO = {"id":"saisp:labs:06:contents:05","namespace":"saisp:labs:06:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_restrictionarea_accesului_la_dispozitivile_logice_lun">05. [10p] Restricționarea accesului la dispozitivile logice (LUN)</h3>
+<div class="level3">
+
+<p>
+Vom mai crea un nou <code>LUN</code> ce are ca <code>backstore</code> tot un fișier:
+</p>
+<pre class="code bash"><span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> create disk2 <span class="sy0">/</span>disk2.img 100M
+Generating a wwn serial.
+Not using buffered mode.
+Created fileio disk2.
+<span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">&gt;</span> <span class="kw3">cd</span> <span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.2003-01.org.linux-iscsi.storage1.x8664:sn.25e09e86bb4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">/</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">&gt;</span></pre>
+
+<p>
+Vom mai crea încă un <code>LUN</code> asociat backstore-ului <code>disk2.img</code>:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">&gt;</span> create <span class="sy0">/</span>backstores<span class="sy0">/</span>fileio<span class="sy0">/</span>disk2 <span class="nu0">1</span>
+Successfully created LUN <span class="nu0">1</span>.
+Created mapped LUN <span class="nu0">1</span> <span class="kw1">in</span> node ACL iqn.2005-03.org.open-iscsi:fc35d7d3fc24</pre>
+
+<p>
+Observați că în mod implicit acesta s-a adăugat automat pentru clientul <code>storage2</code> (la IQN-ul acestuia). Dorim să scoatem această mapare:
+</p>
+<pre class="code bash"><span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...4d<span class="sy0">/</span>tpgt1<span class="sy0">/</span>luns<span class="sy0">&gt;</span> <span class="kw3">cd</span> ..<span class="sy0">/</span>acls<span class="sy0">/</span>iqn.2005-03.org.open-iscsi:fc35d7d3fc24
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...:fc35d7d3fc24<span class="sy0">&gt;</span> <span class="kw2">ls</span>
+o- iqn.2005-03.org.open-iscsi:fc35d7d3fc24 ........................................... <span class="br0">&#91;</span><span class="nu0">2</span> Mapped LUNs<span class="br0">&#93;</span>
+  o- mapped_lun0 ......................................................................... <span class="br0">&#91;</span>lun0 <span class="br0">&#40;</span>rw<span class="br0">&#41;</span><span class="br0">&#93;</span>
+  o- mapped_lun1 ......................................................................... <span class="br0">&#91;</span>lun1 <span class="br0">&#40;</span>rw<span class="br0">&#41;</span><span class="br0">&#93;</span>
+<span class="sy0">/</span>iscsi<span class="sy0">/</span>iqn.20...:fc35d7d3fc24<span class="sy0">&gt;</span> delete <span class="nu0">1</span>
+Deleted Mapped LUN <span class="nu0">1</span>.</pre>
+
+</div>
+</div>
+</body>
+</html>

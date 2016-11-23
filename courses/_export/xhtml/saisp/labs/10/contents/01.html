@@ -1,0 +1,256 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:10:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-05-16T20:13:06+0300"/>
+<meta name="keywords" content="saisp,labs,10,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:10:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/10/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:10:contents';var JSINFO = {"id":"saisp:labs:10:contents:01","namespace":"saisp:labs:10:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="01.html#p_resurse_puppet">01. [20p] Resurse Puppet</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="01.html#notiunea_de_resursa">Notiunea de &quot;resursa&quot;</a></div></li>
+<li class="level4"><div class="li"><a href="01.html#structura_unei_resurse">Structura unei resurse</a></div></li>
+<li class="level4"><div class="li"><a href="01.html#tipuri_de_resurse">Tipuri de resurse</a></div></li>
+<li class="level4"><div class="li"><a href="01.html#creareastergerea_manuala_a_unei_resurse">Crearea / stergerea manuala a unei resurse</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<p>
+<p><div class="notewarning">
+Pentru a avea acces la Internet din masina virtuala, rulati pe <strong>masina fizica</strong> comanda:
+</p>
+<pre class="code bash"><span class="kw2">sudo</span> iptables <span class="re5">-t</span> nat <span class="re5">-A</span> POSTROUTING <span class="re5">-o</span> eno1 <span class="re5">-j</span> MASQUERADE</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<h3 class="sectionedit1" id="p_resurse_puppet">01. [20p] Resurse Puppet</h3>
+<div class="level3">
+
+<p>
+<strong>Puppet</strong> este un tool pentru gestiunea configuratiei unui sistem. Pentru descrierea configuratiilor foloseste un limbaj declarativ. Puppet poate gestiona atat sisteme Linux, cat si Windows.
+</p>
+
+</div>
+
+<h4 id="notiunea_de_resursa">Notiunea de &quot;resursa&quot;</h4>
+<div class="level4">
+
+<p>
+Puppet abstractizeaza majoritatea entitatilor din sistem prin <strong>resurse</strong>. De exemplu, fiecare serviciu, fie ca este pornit sau oprit, este vazut ca o resursa.
+</p>
+
+<p>
+Folositi comanda <strong><code>puppet resource service</code></strong> pentru a inspecta serviciile de sistem din perspectiva Puppet:
+</p>
+<pre class="code">[root@learn ~]# puppet resource service
+service { &#039;abrt-ccpp&#039;:
+  ensure =&gt; &#039;running&#039;,
+  enable =&gt; &#039;true&#039;,
+}
+service { &#039;abrt-oops&#039;:
+  ensure =&gt; &#039;stopped&#039;,
+  enable =&gt; &#039;false&#039;,
+}
+service { &#039;abrtd&#039;:
+  ensure =&gt; &#039;running&#039;,
+  enable =&gt; &#039;true&#039;,
+}
+service { &#039;acpid&#039;:
+  ensure =&gt; &#039;running&#039;,
+  enable =&gt; &#039;true&#039;,
+}
+...</pre>
+
+<p>
+Semnificatia comenzii <code>puppet resource service</code> este urmatoarea:
+</p>
+<ul>
+<li class="level1"><div class="li"> comanda <strong>puppet</strong> este folosita pentru accesarea majoritatii functiilor oferite de Puppet; </div>
+</li>
+<li class="level1"><div class="li"> subcomanda <strong>resource</strong> interactioneaza cu resursele “vazute” de Puppet;</div>
+</li>
+<li class="level1"><div class="li"> parametrul <strong>service</strong> reprezinta tipul resurselor ce vor fi inspectate.</div>
+</li>
+</ul>
+
+<p>
+In afara de servicii, si alte entitati din sistem sunt abstractizate prin resurse. Spre exemplu:
+</p>
+<ul>
+<li class="level1"><div class="li"> utilizatori</div>
+</li>
+<li class="level1"><div class="li"> fisiere sau directoare</div>
+</li>
+<li class="level1"><div class="li"> pachete (software)</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="structura_unei_resurse">Structura unei resurse</h4>
+<div class="level4">
+
+<p>
+Afisati resursa ce descrie contul utilizatorului <strong>root</strong>, folosind comanda <strong><code>puppet resource user root</code></strong>.
+</p>
+<pre class="code">[root@learn ~]# puppet resource user root
+user { &#039;root&#039;:
+  ensure           =&gt; &#039;present&#039;,
+  comment          =&gt; &#039;root&#039;,
+  gid              =&gt; &#039;0&#039;,
+  home             =&gt; &#039;/root&#039;,
+  password         =&gt; &#039;$1$jrm5tnjw$h8JJ9mCZLmJvIxvDLjw1M/&#039;,
+  password_max_age =&gt; &#039;99999&#039;,
+  password_min_age =&gt; &#039;0&#039;,
+  shell            =&gt; &#039;/bin/bash&#039;,
+  uid              =&gt; &#039;0&#039;,</pre>
+
+<p>
+Structura resursei este data de urmatoarele elemente:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>Tipul</strong> resursei: in cazul nostru, <strong>user</strong>;</div>
+</li>
+<li class="level1"><div class="li"> <strong>Numele</strong> resursei: <strong>&#039;root&#039;</strong>;</div>
+</li>
+<li class="level1"><div class="li"> <strong>Atributele</strong> resursei: <strong>ensure</strong>, <strong>comment</strong>, <strong>gid</strong>, <strong>home</strong> etc.;</div>
+</li>
+<li class="level1"><div class="li"> Fiecare atribut are o <strong>valoare</strong>. </div>
+</li>
+</ul>
+
+<p>
+Sintaxa de mai sus constituie “declararea unei resurse”.
+</p>
+
+</div>
+
+<h4 id="tipuri_de_resurse">Tipuri de resurse</h4>
+<div class="level4">
+
+<p>
+In afara de servicii si utilizatori, Puppet implementeaza multe alte tipuri de resurse. Pentru a le lista, folositi comanda <code>puppet describe –list</code>:
+</p>
+<pre class="code">[root@learn ~]# puppet describe --list
+These are the types known to puppet:
+anchor          -  A simple resource type intended to be used a ...
+augeas          -  Apply a change or an array of changes to the ...
+computer        - Computer object management using DirectorySer ...
+cron            -  Installs and manages cron jobs
+exec            - Executes external commands
+file            - Manages files, including their content, owner ...
+file_line       -  Ensures that a given line is contained withi ...
+filebucket      -  A repository for storing and retrieving file ...
+firewall        -  This type provides the capability to manage  ...
+firewallchain   -  This type provides the capability to manage  ...
+group           - Manage groups
+...</pre>
+
+</div>
+
+<h4 id="creareastergerea_manuala_a_unei_resurse">Crearea / stergerea manuala a unei resurse</h4>
+<div class="level4">
+
+<p>
+Folosind comanda <code>puppet resource</code> putem crea si resurse noi. Sintaxa generala este: 
+</p>
+
+<p>
+<code>puppet resource type name attr1=val1 attr2=val2 …</code>
+</p>
+
+<p>
+Dorim sa cream utilizatorul <strong>gigel</strong> astfel incat:
+</p>
+<ul>
+<li class="level1"><div class="li"> sa aiba directorul home in <strong>/home/gigel</strong>;</div>
+</li>
+<li class="level1"><div class="li"> sa aiba ca shell default <strong>/bin/sh</strong>.</div>
+</li>
+</ul>
+
+<p>
+Comanda Puppet corespunzatoare este:
+</p>
+<pre class="code">[root@learn ~]# puppet resource user gigel ensure=present shell=&quot;/bin/sh&quot; home=&quot;/home/gigel&quot;
+Notice: /User[gigel]/ensure: created
+user { &#039;gigel&#039;:
+  ensure =&gt; &#039;present&#039;,
+  home   =&gt; &#039;/home/gigel&#039;,
+  shell  =&gt; &#039;/bin/sh&#039;,
+}</pre>
+
+<p>
+Inspectati fisierul <strong>/etc/passwd</strong> si verificati ca utilizatorul a fost creat.
+</p>
+
+<p>
+Pentru a sterge o resursa, atributul <strong>ensure</strong> al acesteia trebuie setat la valoarea <strong>absent</strong>.
+</p>
+
+<p>
+De exemplu, pentru a sterge utilizatorul <strong>gigel</strong> creat anterior: 
+</p>
+<pre class="code">[root@learn ~]# puppet resource user gigel ensure=absent
+Notice: /User[gigel]/ensure: removed
+user { &#039;gigel&#039;:
+  ensure =&gt; &#039;absent&#039;,
+}</pre>
+
+<p>
+Verificati, din nou, in <strong>/etc/passwd</strong> faptul ca utilizatorul a fost sters.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "01. [20p] Resurse Puppet" [193-] --></div>
+</body>
+</html>

@@ -1,0 +1,433 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>iocla:laboratoare:laborator-09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T18:17:05+0300"/>
+<meta name="keywords" content="iocla,laboratoare,laborator-09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=iocla:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="laborator-09.html"/>
+<link rel="canonical" href="../../../../iocla/laboratoare/laborator-09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='iocla:laboratoare';var JSINFO = {"id":"iocla:laboratoare:laborator-09","namespace":"iocla:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-09.html#laborator_09gestiunea_bufferelor_buffer_overflow">Laborator 09: Gestiunea bufferelor. Buffer overflow</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-09.html#pregatire_infrastructura">Pregătire infrastructură</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_1_tutorialfolosirea_unui_buffer_in_zona_de_date">[1p] 1. Tutorial: Folosirea unui buffer în zona de date</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_2_tutorialfolosirea_unui_buffer_pe_stiva">[1p] 2. Tutorial: Folosirea unui buffer pe stivă</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_3_citirea_de_date_dincolo_de_dimensiunea_buffer-ului">[1p] 3. Citirea de date dincolo de dimensiunea buffer-ului</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_4_scrierea_de_date_dincolo_de_dimensiunea_buffer-ului">[1p] 4. Scrierea de date dincolo de dimensiunea buffer-ului</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_5_tutorialcitirea_de_date_de_la_intrarea_standard">[1p] 5. Tutorial: Citirea de date de la intrarea standard</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_6_buffer_overflow_cu_date_de_la_intrarea_standard">[1.5p] 6. Buffer overflow cu date de la intrarea standard</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_7_buffer_overflow_cu_date_de_la_intrarea_standard_si_fgets">[1.5p] 7. Buffer overflow cu date de la intrarea standard și fgets()</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_8_buffer_overflow_pentru_program_scris_in_cod_c">[2p] 8. Buffer overflow pentru program scris în cod C</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-09.html#p_bonusbuffer_overflow_pentru_binar">[2p] Bonus: Buffer overflow pentru binar</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_09gestiunea_bufferelor_buffer_overflow">Laborator 09: Gestiunea bufferelor. Buffer overflow</h1>
+<div class="level1">
+
+<p>
+Acest laborator este destinat înțelegerii modului în care funcționează bufferele și cum pot fi folosit la nivel de început vulnerabilităti de tip <em>buffer overflow</em>, adică depășirea limitelor unui buffer.
+</p>
+
+<p>
+Un buffer este o zonă de memorie definită printr-o adresă de start și o dimensiune. Cel mai adesea un buffer este vector de N elemente. Dimensiunea totală a bufferului este <code>N</code> x dimensiunea unui element. Un șir de caracter (<em>string</em>) este un caz particular de buffer.
+</p>
+
+<p>
+În cele ce urmează vom urmări exemple de folosire a bufferelor și vom vedea cum putem trece dincolo de limita unui buffer (de dimensiunea sa) provocând ceea ce se numește <em>buffer overflow</em>.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laborator 09: Gestiunea bufferelor. Buffer overflow" [1-764] -->
+<h2 class="sectionedit2" id="pregatire_infrastructura">Pregătire infrastructură</h2>
+<div class="level2">
+
+<p>
+Pentru acest laborator vom folosi <a href="../../../../lib/exe/fetch.php%3Fhash=fbef67&amp;media=http%253A%252F%252Felf.cs.pub.ro%252Fasm%252Fres%252Flaboratoare%252Flab-09-tasks.zip" class="media mediafile mf_zip" title="http://elf.cs.pub.ro/asm/res/laboratoare/lab-09-tasks.zip">această arhivă de resurse</a>. Descărcați arhiva și accesați conținutul acesteia.
+</p>
+
+<p>
+Pentru desfășurarea acestui laborator vom folosi interfața în linia de comandă. Întrucât în exercițiile finale avem nevoie și de compilatorul de la Microsoft, este recomandat să deschideți consola de Visual Studio, care are mediul deja configurat pentru compilarea de programe.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Nu este nevoie să deschideti consola de Visual Studio până la exercițiul 7 inclusiv. Până acolo puteți folosi orice consolă.
+</p>
+
+<p>
+Pentru a deschide consola de Visual Studio urmați pașii:
+</p>
+<ul>
+<li class="level1"><div class="li"> Apăsați butonul <code>Start</code>.</div>
+</li>
+<li class="level1"><div class="li"> Accesați opțiunea <code>All apps</code>.</div>
+</li>
+<li class="level1"><div class="li"> Mergeți la litera <code>V</code>.</div>
+</li>
+<li class="level1"><div class="li"> Deschideți meniul <strong>de tip director</strong> <code>Visual Studio 2015</code>.</div>
+</li>
+<li class="level1"><div class="li"> Selectați opțiunea <code>VS2015 x86 Native Tools Command Prompt</code>.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+În general, pe parcursul laboratorului, în linia de comandă, vom folosi:
+</p>
+<ul>
+<li class="level1"><div class="li"> asamblorul <code>nasm</code></div>
+</li>
+<li class="level1"><div class="li"> comanda <code>gcc</code> pe post de linker</div>
+</li>
+<li class="level1"><div class="li"> <code>objdump</code> pentru dezasamblarea fișierelor obiect și executabile</div>
+</li>
+<li class="level1"><div class="li"> <code>gdb</code> pentru analiza dinamică, investigație și debugging</div>
+</li>
+</ul>
+
+<p>
+În general nu va fi nevoie să dați comenzi de compilare. Fiecare director cuprinde un script batch (<code>build.bat</code>) pe care îl puteți rula pentru a compila în mod automat fișierele cod sursă limbaj de asamblare sau C.
+</p>
+
+<p>
+Înainte de începe laboratorul, alocați-vă 1-2 minute să reparcurgeți diagrama de mai jos ce arată structura stivei în cazul unui apel de funcție, accesibilă în format PDF și original DIA la adresa: <a href="http://elf.cs.pub.ro/asm/res/laboratoare/lab-04-img/" class="urlextern" title="http://elf.cs.pub.ro/asm/res/laboratoare/lab-04-img/"  rel="nofollow">http://elf.cs.pub.ro/asm/res/laboratoare/lab-04-img/</a>
+</p>
+
+<p>
+<a href="http://ocw.cs.pub.ro/courses/_detail/laboratoare/stack-in-function-call.png?id=iocla%3Alaboratoare%3Alaborator-09" class="media wikilink2" title="laboratoare:stack-in-function-call.png"><img src="http://ocw.cs.pub.ro/courses/_media/laboratoare/stack-in-function-call.png?w=600&amp;tok=bad2bb" class="mediacenter" alt="" width="600" /></a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Pregătire infrastructură" [765-2543] -->
+<h2 class="sectionedit3" id="p_1_tutorialfolosirea_unui_buffer_in_zona_de_date">[1p] 1. Tutorial: Folosirea unui buffer în zona de date</h2>
+<div class="level2">
+
+<p>
+Accesați directorul <code>data-buffer/</code> din arhiva de resurse a laboratorului și consultați fișierul <code>data_buffer.asm</code>. În acest fișier se găsește un program care populează un buffer cu informații și apoi le afișează.
+</p>
+
+<p>
+Consultați cu atenție programul, apoi compilați-l folosind comanda
+</p>
+<pre class="code">build.bat</pre>
+
+<p>
+ apoi rulați-l folosind comanda
+</p>
+<pre class="code">.\data_buffer</pre>
+
+<p>
+Observați comportamentul programului funcție de codul său.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "[1p] 1. Tutorial: Folosirea unui buffer în zona de date" [2544-3062] -->
+<h2 class="sectionedit4" id="p_2_tutorialfolosirea_unui_buffer_pe_stiva">[1p] 2. Tutorial: Folosirea unui buffer pe stivă</h2>
+<div class="level2">
+
+<p>
+Accesați directorul <code>stack-buffer/</code> din arhiva de resurse a laboratorului și consultați fișierul <code>stack_buffer.asm</code>. În acest fișier se găsește un program care populează un buffer cu informații și apoi le afișează. Este similar celui de mai sus doar că acum buffer-ul este alocat pe stivă.
+</p>
+
+<p>
+Consultați cu atenție programul, apoi compilați-l folosind comanda
+</p>
+<pre class="code">build.bat</pre>
+
+<p>
+ apoi rulați-l folosind comanda
+</p>
+<pre class="code">.\stack_buffer</pre>
+
+<p>
+Observați comportamentul programului funcție de codul său.
+</p>
+
+<p>
+Pe lângă buffer am mai alocat o variabilă locală pe 4 octeți, accesibilă la adresa <code>ebp-4</code>. Este inițializată la valoarea <code>0xCAFEBABE</code>. Această variabilă va fi importantă mai târziu. Ce este relevant acum este să știm că această variabilă este, în memorie <strong>imediat după buffer</strong>: când se trece de limita buffer-ului se ajunge la această variabilă.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "[1p] 2. Tutorial: Folosirea unui buffer pe stivă" [3063-4030] -->
+<h2 class="sectionedit5" id="p_3_citirea_de_date_dincolo_de_dimensiunea_buffer-ului">[1p] 3. Citirea de date dincolo de dimensiunea buffer-ului</h2>
+<div class="level2">
+
+<p>
+Acum că am văzut cum arată buffer-ul în memorie și un este plasată variabila, actualizați programul <code>stack_buffer.asm</code> pentru ca secvența de afișare a buffer-ului (cea din jurul etichetei <code>print_byte</code>) să ducă și la afișarea octeților variabilei. Adică trebuie să citiți date dincolo de dimensiunea buffer-ului (și să le afișați). Este un caz de buffer overflow de citire, cu obiectiv de <em>information leak</em>: aflarea de informații din memorie.
+</p>
+
+<p>
+<p><div class="notetip">
+Nu e ceva complicat, trebuie doar să &quot;instruiți&quot; secvența de afișare să folosească altă limită pentru afișare, nu limita curentă de <code>64</code> de octeți.
+
+</div></p>
+</p>
+
+<p>
+Afișați și alte informații dincolo chiar de variabila locală. Ce informație vine pe stivă după variabila locală (următorii 4 octeți)? Dar următorii 4 octeți după?
+</p>
+
+</div>
+<!-- EDIT5 SECTION "[1p] 3. Citirea de date dincolo de dimensiunea buffer-ului" [4031-4937] -->
+<h2 class="sectionedit6" id="p_4_scrierea_de_date_dincolo_de_dimensiunea_buffer-ului">[1p] 4. Scrierea de date dincolo de dimensiunea buffer-ului</h2>
+<div class="level2">
+
+<p>
+Pe baza experienței de mai sus, realizați modificări pentru ca valoarea variabilei să fie <code>0xDEADBEEF</code> (în loc de <code>0xCAFEBABE</code> cum este la început) fără a modifica însă explicit valoarea variabilei. Folosiți-vă de modificarea buffer-ului și de registrul <code>ebx</code> în care am stocat adresa de început a buffer-ului.
+</p>
+
+<p>
+<p><div class="notetip">
+Din nou, nu este ceva complicat. Trebuie să vă folosiți de valoarea <code>ebx</code> și un offset ca să scrieți valoarea <code>0xDEADBEEF</code> la acea adresă.
+</p>
+
+<p>
+Realizați acest lucru după secvența de inițializare a buffer-ului din jurul label-ului <code>fill_byte</code>.
+
+</div></p>
+</p>
+
+<p>
+La o rezolvare corectă a acestui exercițiu, programul va afișa valoarea <code>0xDEADBEEF</code> pentru variabila locală.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "[1p] 4. Scrierea de date dincolo de dimensiunea buffer-ului" [4938-5737] -->
+<h2 class="sectionedit7" id="p_5_tutorialcitirea_de_date_de_la_intrarea_standard">[1p] 5. Tutorial: Citirea de date de la intrarea standard</h2>
+<div class="level2">
+
+<p>
+Accesați directorul <code>read-stdin/</code> din arhiva de resurse a laboratorului și consultați fișierul <code>read_stdin.asm</code>. În acest fișier se găsește un program care folosește apelul <code>gets</code> ca să citească informații de la intrarea standard într-un buffer de pe stivă. La fel ca în cazul precedent am alocat o variabilă locală pe 4 octeți imediat după buffer-ul de pe stivă.
+</p>
+
+<p>
+Consultați cu atenție programul, apoi compilați-l folosind comanda
+</p>
+<pre class="code">build.bat</pre>
+
+<p>
+ apoi rulați-l folosind comanda
+</p>
+<pre class="code">.\read_stdin</pre>
+
+<p>
+Observați comportamentul programului funcție de codul său.
+</p>
+
+</div>
+<!-- EDIT7 SECTION "[1p] 5. Tutorial: Citirea de date de la intrarea standard" [5738-6416] -->
+<h2 class="sectionedit8" id="p_6_buffer_overflow_cu_date_de_la_intrarea_standard">[1.5p] 6. Buffer overflow cu date de la intrarea standard</h2>
+<div class="level2">
+
+<p>
+Funcția <a href="http://man7.org/linux/man-pages/man3/gets.3.html" class="urlextern" title="http://man7.org/linux/man-pages/man3/gets.3.html"  rel="nofollow">gets</a> este o funcție care este practic interzisă în programele în din cauza vulnerabilității mari a acesteia: nu verifică limitele buffer-ului în care se face citirea, putând fi ușor folosită pentru buffer overflow.
+</p>
+
+<p>
+Pentru aceasta transmiteți șirul de intrare corespunzător pentru ca valoarea afișată pentru variabila locală să nu mai fie <code>0xCAFEBABE</code> ci să fie <code>0x574F4C46</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Ca să transmiteți șirul de intrare, e recomandat să-l scrieți într-un fișier și apoi să redirectați acel fișier către comanda aferentă programului. Puteți folosi un editor precum <code>Notapad++</code> pentru editarea fișierului. Avantajul <code>Notepad++</code> este că vă afișează și coloana pe care vă aflați și puteți să știți câte caractere ați scris în fișier.
+</p>
+
+<p>
+E recomandat să numiți fișierul <code>payload</code>. Redirectarea fișierului <code>payload</code> către program se face folosind o comandă precum
+</p>
+<pre class="code">.\read_stdin &lt; payload</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "[1.5p] 6. Buffer overflow cu date de la intrarea standard" [6417-7522] -->
+<h2 class="sectionedit9" id="p_7_buffer_overflow_cu_date_de_la_intrarea_standard_si_fgets">[1.5p] 7. Buffer overflow cu date de la intrarea standard și fgets()</h2>
+<div class="level2">
+
+<p>
+Așa cum am precizat mai sus, funcția <code>gets</code> este interzisă în programele curente. În locul acesteia se poate folosi funcția <a href="http://man7.org/linux/man-pages/man3/fgets.3.html" class="urlextern" title="http://man7.org/linux/man-pages/man3/fgets.3.html"  rel="nofollow">fgets</a>. Creați o copie a fișierului cod sursă <code>read_stdin.asm</code> din subdirectorul <code>read-stdin/</code> într-u fișier cod sursă <code>read_stdin_fgets.asm</code> în subdirectorul <code>read-stdin-fgets/</code>. În fișierul cod sursă <code>read_stdin.asm</code> schimbați apelul funcției <code>gets</code> cu apelul funcției <code>fgets</code>.
+</p>
+
+<p>
+Pentru apelul <code>fgets</code> citiți de la intrarea standard. Ca argument pentru al treilea parametru al <code>fgets</code> (de tipul <code>FILE *</code>) veți folosi intrarea standard. Pentru a specifica intrarea standard folosiți construcția <a href="http://www.nongnu.org/avr-libc/user-manual/group__avr__stdio.html" class="urlextern" title="http://www.nongnu.org/avr-libc/user-manual/group__avr__stdio.html"  rel="nofollow">__iob</a>. Va trebui să o marcați externă la modul <code>extern __iob</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Urmăriți pagina de manual a <a href="http://man7.org/linux/man-pages/man3/fgets.3.html" class="urlextern" title="http://man7.org/linux/man-pages/man3/fgets.3.html"  rel="nofollow">funcției fgets()</a> pentru a afla ce parametri primește.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru apelul funcției <code>fgets</code> folosiți construcția
+</p>
+<pre class="code">call _fgets</pre>
+
+<p>
+De asemenea, marcați simbolul ca fiind extern folosind construcția
+</p>
+<pre class="code">extern _fgets</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Întrucât funcția <code>fgets</code> are 3 parametri (care ocupă <code>3&times;4=12</code> octeți) va trebui ca după apelul funcției, în restaurarea stivei, să folosiți <code>add esp, 12</code> (în loc de <code>add esp, 4</code> ca în cazul programul de mai sus care folosea <code>gets()</code>).
+
+</div></p>
+</p>
+
+<p>
+Să păstrați posibilitatea unui buffer overflow și să demonstrați acest lucru prin afișarea valorii <code>0x574F4C46</code> pentru variabila locală. Adică să folosiți ca al doilea argument pentru <code>fgets</code> (dimensiunea) o valoare suficient de mare cât să permită realizarea unui buffer overflow.
+</p>
+
+<p>
+<p><div class="notetip">
+La fel ca mai sus, ca să transmiteți șirul de intrare pentru program, e recomandat să-l scrieți într-un fișier și apoi să redirectați acel fișier către comanda aferentă programului. Redirectarea fișierului <code>payload</code> către program se face folosind o comandă precum
+</p>
+<pre class="code">.\read_stdin &lt; payload</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "[1.5p] 7. Buffer overflow cu date de la intrarea standard și fgets()" [7523-9742] -->
+<h2 class="sectionedit10" id="p_8_buffer_overflow_pentru_program_scris_in_cod_c">[2p] 8. Buffer overflow pentru program scris în cod C</h2>
+<div class="level2">
+
+<p>
+De cele mai multe ori vom identifica vulnerabilități de tip buffer overflow în programe scrise în C. Acolo trebuie să vedem ce buffere sunt și care este distanța de la buffer la variabila dorită pentru a putea face suprascriere.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Este important de avut în vedere că distanța între un buffer și o altă variabilă în C poate nu corespunde cu cea &quot;din teren&quot;; compilatorul poate face actualizări, reordonări, poate lăsa spații libere între variabile etc.
+
+</div></p>
+</p>
+
+<p>
+Pentru exercițiul curent, accesați directorul <code>c-buffer-overflow/</code> din arhiva de resurse a laboratorului și observați codul sursă aferent în C. Pentru cazul în care doriți să nu mai compilați voi codul aveți în arhivă și fișierul limbaj de asamblare echivalent și fișierul în cod obiect și fișierul executabil.
+</p>
+
+<p>
+Descoperiți diferența între adresa buffer-ului și adresa variabilei, creați un fișier de intrare (numit și <code>payload</code>) cu care să declanșați overflow-ul și faceți în așa fel încât să fie afișat mesajul <em>Full of win!</em>.
+</p>
+
+<p>
+<p><div class="notetip">
+Ca să vedeți realitatea &quot;din teren&quot;, adică să aflați care este diferența dintre buffer și variabila pe care dorim să o suprascriem, consultați fișierul în limbaj de asamblare echivalent (<code>do_overflow.asm</code>), obținut prin asamblarea codului C.
+</p>
+
+<p>
+În acest fișier puteți afla adresa relativă a buffer-ului față de <code>ebp</code> și a variabilei față de <code>ebp</code>; urmăriți secvența cuprinsă între liniile <code>32</code> și <code>37</code>; aveți o mapare între numele variabilei și offset-ul relativ față de <code>ebp</code>. Cu aceste informații puteți crea șirul pe care să îl transmiteți ca payload către intrarea standard a programului.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Dacă doriți să recompilați fișierele rulați scriptul de compilare
+</p>
+<pre class="code">build.bat</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+La fel ca mai sus, ca să transmiteți șirul de intrare pentru program, e recomandat să-l scrieți într-un fișier și apoi să redirectați acel fișier către comanda aferentă programului. Redirectarea fișierului <code>payload</code> către program se face folosind o comandă precum
+</p>
+<pre class="code">.\do_overflow &lt; payload</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT10 SECTION "[2p] 8. Buffer overflow pentru program scris în cod C" [9743-12004] -->
+<h2 class="sectionedit11" id="p_bonusbuffer_overflow_pentru_binar">[2p] Bonus: Buffer overflow pentru binar</h2>
+<div class="level2">
+
+<p>
+De multe ori nu avem șansa accesului la codul sursă și vrem să descoperim vulnerabilități în fișiere executabile. În directorul <code>overflow-in-binary</code> din arhiva de resurse a laboratorului, găsiți un fișier executabil și fișierul modul obiect din care a fost obținut. Folosind <code>objdump</code> sau <code>gdb</code> pentru investigație descoperiți cum puteți exploata vulnerabilitatea de tip buffer overflow, pentru ca programul să afișeze mesajul <em>Great success!</em>.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru a rula <code>objdump</code> pe fișierul obiect <code>overflow_in_binary.obj</code> trebuie să rulați comanda
+</p>
+<pre class="code">C:\&quot;Program Files (x86)&quot;\SASM\MinGW\bin\objdump.exe -M intel -d overflow_in_binary.obj</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "[2p] Bonus: Buffer overflow pentru binar" [12005-] --></div>
+</body>
+</html>

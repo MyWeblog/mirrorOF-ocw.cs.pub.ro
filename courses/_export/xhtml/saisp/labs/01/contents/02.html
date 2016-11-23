@@ -1,0 +1,150 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:01:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-16T19:42:20+0200"/>
+<meta name="keywords" content="saisp,labs,01,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:01:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/01/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:01:contents';var JSINFO = {"id":"saisp:labs:01:contents:02","namespace":"saisp:labs:01:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="02.html#p_conectare_securizata_la_serviciu_de_ldap">02. [10p] Conectare securizată la serviciu de LDAP</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="02.html#folosire_ldaps_ldap_ssl">Folosire LDAPS (LDAP+SSL)</a></div></li>
+<li class="level4"><div class="li"><a href="02.html#folosire_ldap_cu_tls">Folosire LDAP cu TLS</a></div></li>
+<li class="level4"><div class="li"><a href="02.html#exercitiuinterogare_swarmcspubro">Exercițiu: Interogare swarm.cs.pub.ro</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="p_conectare_securizata_la_serviciu_de_ldap">02. [10p] Conectare securizată la serviciu de LDAP</h3>
+<div class="level3">
+
+<p>
+Informațiile accesibile prin LDAP sunt, în general, sensibile și este necesară securizarea comunicației. Pentru aceasta serverul LDAP poate fi configurat să folosească LDAPS (LDAP cu suport SSL) sau să folosească TLS.
+</p>
+
+</div>
+
+<h4 id="folosire_ldaps_ldap_ssl">Folosire LDAPS (LDAP+SSL)</h4>
+<div class="level4">
+
+<p>
+În cazul în care folosește LDAPS, serverul LDAP ascultă conexiuni pe portul <code>636</code> (portul aferent LDAPS), lucru care se poate observa cu ajutorul comenzii <code>netstat</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span><span class="kw2">netstat</span> <span class="re5">-tlpn</span> <span class="sy0">|</span> <span class="kw2">grep</span> slapd
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">636</span>             0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">1902</span><span class="sy0">/</span>slapd      
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">389</span>             0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">1902</span><span class="sy0">/</span>slapd      
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">636</span>                  :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">1902</span><span class="sy0">/</span>slapd      
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">389</span>                  :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">1902</span><span class="sy0">/</span>slapd </pre>
+
+<p>
+Serverul LDAP ascultă, așadar, conexiuni nesecurizate pe portul <code>389</code> și conexiuni securizate (LDAPS) pe portul <code>636</code>. Serverul LDAP poartă numele <code>slapd</code> (<em>Standalone LDAP Daemon</em>).
+</p>
+
+<p>
+De pe client dacă vrem să folosim conexiune securizată, vom folosi <abbr title="Uniform Resource Identifier">URI</abbr>-ul începând cu șirul <code>ldaps://</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>ldap-server.local
+ldap_sasl_bind<span class="br0">&#40;</span>SIMPLE<span class="br0">&#41;</span>: Can<span class="st_h">'t contact LDAP server (-1)</span></pre>
+
+<p>
+Obținem o eroare de conectare. În cazul conexiunilor LDAPS aceasta sa datorează configurării necorespunzătoare a certificatelor. Întrucât pe serverul LDAP(S) am configurat un certificat self-signed, vom ignora verificarea certificatelor. Pentru aceasta folosim un editor pentru a adăuga linia de mai jos la sfârșitul fișierului <code>/etc/ldap/ldap.conf</code> de pe stația client:
+</p>
+<pre class="code bash">TLS_REQCERT	never</pre>
+
+<p>
+Acum conexiune va funcționa peste LDAPS:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>ldap-server.local
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Dacă dorim, putem actualiza directiva <code><abbr title="Uniform Resource Identifier">URI</abbr></code> din fișierul <code>/etc/ldap/ldap.conf</code> pentru a realiza implicit conexiuni pe LDAPS:
+</p>
+<pre class="code bash">URI	ldaps:<span class="sy0">//</span>ldap-server.local</pre>
+
+<p>
+<p><div class="noteimportant">
+Folosirea liniei
+</p>
+<pre class="code">TLS_REQCERT     never</pre>
+
+<p>
+ în fișierul <code>/etc/ldap/ldap.conf</code> permite conexiunea LDAPS ignorând validitatea certificatului serverului. Este o configurare rapidă, dar cu probleme de securitate. Pentru servere de producție este nevoie de verificarea validității certificatului folosind directive precum <code>TLS_CACERT</code> sau <code>TLS_CACERTDIR</code>.
+
+</div></p>
+</p>
+
+</div>
+
+<h4 id="folosire_ldap_cu_tls">Folosire LDAP cu TLS</h4>
+<div class="level4">
+
+<p>
+Un alt mod de a securiza comunicația LDAP este prin intermediul suportului TLS. Suportul TLS nu necesită ca serverul să asculte conexiuni pe alt port. Se folosește inițial protocolul LDAP în clar și apoi se declanșează handshake-ul TLS în urma căruia comunicația va fi securizată. Pentru a realiza o conexiune securizată cu suport TLS, folosim opțiunea <code>-Z</code> a comenzii <code>ldapsearch</code>, la fel ca mai jos (pe stația client):
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-Z</span> <span class="re5">-H</span> ldap:<span class="sy0">//</span>ldap-server.local
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro</pre>
+
+<p>
+În general, serverul LDAP va fi configurat în așa fel încât să impună folosirea TLS pentru operațiile sensibile. În această situația absența opțiunii <code>-Z</code> va conduce la afișarea unui mesaj de eroare pe client.
+</p>
+
+</div>
+
+<h4 id="exercitiuinterogare_swarmcspubro">Exercițiu: Interogare swarm.cs.pub.ro</h4>
+<div class="level4">
+
+<p>
+Pe serverul <code>swarm.cs.pub.ro</code> rulează un server LDAP. Punctul de cautare în arbore este <code>dc=swarm,dc=cs,dc=pub,dc=ro</code>. Interogați serverul LDAP folosind LDAP, LDAPS și LDAP cu suport SSL. Ce moduri de interogare sunt disponibile pe server?
+</p>
+
+</div>
+</div>
+</body>
+</html>

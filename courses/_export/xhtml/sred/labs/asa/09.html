@@ -1,0 +1,532 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>sred:labs:asa:09</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-06-01T20:53:25+0300"/>
+<meta name="keywords" content="sred,labs,asa,09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../feed.php%3Fmode=list&amp;ns=sred:labs:asa"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="09.html"/>
+<link rel="canonical" href="../../../../../sred/labs/asa/09.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sred:labs:asa';var JSINFO = {"id":"sred:labs:asa:09","namespace":"sred:labs:asa","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="09.html#a09_-_high_availability">A09 - High Availability</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="09.html#topology">Topology</a></div></li>
+<li class="level2"><div class="li"><a href="09.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="09.html#primary_asa_setup">1. Primary ASA Setup</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="09.html#a_hostname">A. Hostname</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#b_failover_interface">B. Failover interface</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#c_inside_interface">C. Inside interface</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#d_outside_interface">D. Outside interface</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#e_failover_interface_addressing">E. Failover interface addressing</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#f_primary_failover_unit">F. Primary failover unit</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#g_activate_failover">G. Activate failover</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="09.html#secondary_asa_setup">2. Secondary ASA Setup</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="09.html#a_hostname1">A. Hostname</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#b_failover_interface1">B. Failover interface</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#c_failover_interface_addressing">C. Failover interface addressing</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#d_secondary_failover_unit">D. Secondary failover unit</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#e_activate_failover">E. Activate failover</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#f_test">F. Test</a></div></li>
+</ul>
+</li>
+<li class="level3"><div class="li"><a href="09.html#ha_monitoring">3. HA Monitoring</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="09.html#a_icmp_inspection">A. ICMP inspection</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#b_setup_remote_access">B. Setup remote access</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#c_ping">C. Ping!</a></div></li>
+<li class="level4"><div class="li"><a href="09.html#d_telnet">D. Telnet</a></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="a09_-_high_availability">A09 - High Availability</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "A09 - High Availability" [19-57] -->
+<h2 class="sectionedit2" id="topology">Topology</h2>
+<div class="level2">
+
+<p>
+<a href="../../../../../_detail/sred/labs/asa/asa_topology_09.png%3Fid=sred%253Alabs%253Aasa%253A09.html" class="media" title="sred:labs:asa:asa_topology_09.png"><img src="../../../../../_media/sred/labs/asa/asa_topology_09.png" class="mediacenter" title=" " alt=" " /></a>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Topology" [58-122] -->
+<h2 class="sectionedit3" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "Tasks" [123-142] -->
+<h3 class="sectionedit4" id="primary_asa_setup">1. Primary ASA Setup</h3>
+<div class="level3">
+
+<p>
+In this task you will configure the primary ASA of a high-availability setup.
+</p>
+
+</div>
+
+<h4 id="a_hostname">A. Hostname</h4>
+<div class="level4">
+
+<p>
+Configure the hostname of the first ASA (note the title of the console window) to <strong>ASA1</strong>. <strong>ASA1</strong> will play the role of the primary active device.
+</p>
+
+</div>
+
+<h4 id="b_failover_interface">B. Failover interface</h4>
+<div class="level4">
+
+<p>
+Configure interface Gi2 as a failover interface. Use <em>Control</em> for the interface name.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ciscoasa(config)# hostname ASA1
+ASA1(config)# failover lan interface Control gigabit 2
+INFO: Non-failover interface config is cleared on Ethernet0/3 and its sub-interfaces</pre>
+
+
+</div></div>
+
+<p>
+Use the <code>show running interface Gi2</code> command to inspect the automatically generated commands for this interface. Bring Gi2 up.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1# show running-config interface gigabit 2</pre>
+
+
+<pre class="code">!
+interface Gigabit2
+ description LAN Failover Interface
+ shutdown</pre>
+
+
+<pre class="code">ASA1(config)# interface gigabit 2
+ASA1(config-if)# no shutdown
+</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="c_inside_interface">C. Inside interface</h4>
+<div class="level4">
+
+<p>
+Configure Gi0 using the following settings:
+</p>
+<ul>
+<li class="level1"><div class="li"> name: inside</div>
+</li>
+<li class="level1"><div class="li"> security level: 100</div>
+</li>
+<li class="level1"><div class="li"> IP address: 192.168.1.1/24</div>
+</li>
+<li class="level1"><div class="li"> Standby address: 192.168.1.2</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1(config)# interface gigabit 0
+ASA1(config-if)# nameif inside
+INFO: Security level for &quot;inside&quot; set to 100 by default.
+ASA1(config-if)# ip address 192.168.1.1 255.255.255.0 standby 192.168.1.2
+ASA1(config-if)# no shutdown</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="d_outside_interface">D. Outside interface</h4>
+<div class="level4">
+
+<p>
+Configure Gi1 using the following settings:
+</p>
+<ul>
+<li class="level1"><div class="li"> name: outside</div>
+</li>
+<li class="level1"><div class="li"> security level: 0</div>
+</li>
+<li class="level1"><div class="li"> IP address: 141.85.99.1/24</div>
+</li>
+<li class="level1"><div class="li"> Standby address: 141.85.99.2</div>
+</li>
+</ul>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1(config)# interface gigabit 1
+ASA1(config-if)# nameif outside
+INFO: Security level for &quot;outside&quot; set to 0 by default.
+ASA1(config-if)# ip address 141.85.99.1 255.255.255.0 standby 141.85.99.2
+ASA1(config-if)# no shutdown</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="e_failover_interface_addressing">E. Failover interface addressing</h4>
+<div class="level4">
+
+<p>
+Configure the 11.11.11.1/30 failover IP address for the active unit and the 11.11.11.2 IP address for the standby unit. 
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1(config)# failover interface ip Control 11.11.11.1 255.255.255.252 standby 11.11.11.2</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="f_primary_failover_unit">F. Primary failover unit</h4>
+<div class="level4">
+
+<p>
+Configure <strong>ASA1</strong> as the primary failover unit.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1(config)# failover lan unit primary</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="g_activate_failover">G. Activate failover</h4>
+<div class="level4">
+
+<p>
+Activate the failover process using the <code>failover</code> command.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1(config)# failover</pre>
+
+
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "1. Primary ASA Setup" [143-2701] -->
+<h3 class="sectionedit5" id="secondary_asa_setup">2. Secondary ASA Setup</h3>
+<div class="level3">
+
+<p>
+In this task you will configure the secondary ASA of a high-availability setup.
+</p>
+
+</div>
+
+<h4 id="a_hostname1">A. Hostname</h4>
+<div class="level4">
+
+<p>
+Configure the hostname of the second ASA to <strong>ASA2</strong>. <strong>ASA2</strong> will play the role of the secondary standby device.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ciscoasa(config)# hostname ASA2
+ASA2(config)#</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="b_failover_interface1">B. Failover interface</h4>
+<div class="level4">
+
+<p>
+Configure interface Gi2 as a failover interface. Use <em>Control</em> for the interface name.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA2(config)# failover lan interface Control gigabit 2
+INFO: Non-failover interface config is cleared on Gigabit2 and its sub-interfaces
+ASA2(config)# interface gigabit 2
+ASA2(config-if)# no shutdown</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="c_failover_interface_addressing">C. Failover interface addressing</h4>
+<div class="level4">
+
+<p>
+Configure the 11.11.11.1/30 failover IP address for the active unit and the 11.11.11.2 IP address for the standby unit. 
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA2(config)# failover interface ip Control 11.11.11.1 255.255.255.252 standby 11.11.11.2</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="d_secondary_failover_unit">D. Secondary failover unit</h4>
+<div class="level4">
+
+<p>
+Configure <strong>ASA2</strong> as the secondary failover unit.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA2(config)# failover lan unit secondary</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="e_activate_failover">E. Activate failover</h4>
+<div class="level4">
+
+<p>
+Activate the failover process using the <code>failover</code> command.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA2(config)# failover</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="f_test">F. Test</h4>
+<div class="level4">
+
+<p>
+Wait for a few seconds. Use the <code>show failover state</code> to check the active or standby status of an ASA.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">        Detected an Active mate
+Beginning configuration replication from mate.
+WARNING: Config register and NV boot data structure damaged, it has been recreated.
+
+Failed to write offset 218 to IDPROM ARRAY slot 0,I2C addr 0x4, dev 0xb0, error 7ERROR: Password recovery was not changed, unable to access
+the configuration register.
+End configuration replication from mate.</pre>
+
+
+<pre class="code">ASA1# show failover state
+
+               State          Last Failure Reason      Date/Time
+This host  -   Primary
+               Active         None
+Other host -   Secondary
+               Standby Ready  Comm Failure             00:12:30 UTC Nov 30 1999
+
+====Configuration State===
+        Sync Done
+====Communication State===
+        Mac set</pre>
+
+
+<pre class="code">ASA1# show failover state
+
+               State          Last Failure Reason      Date/Time
+This host  -   Secondary
+               Standby Ready  None
+Other host -   Primary
+               Active         None
+
+====Configuration State===
+        Sync Done - STANDBY
+====Communication State===
+        Mac set
+</pre>
+
+
+</div></div>
+
+<p>
+After the active unit has been renegociated, verify the hostname of the standby ASA. What do you notice? Issue the <code>show interface ip brief</code> command on each of the ASAs.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">! On old ASA1:
+ASA1# show interface ip brief
+Interface                  IP-Address      OK? Method Status                Protocol
+Gigabit0                   192.168.1.1     YES manual up                    up
+Gigabit1                   141.85.99.1     YES manual up                    up
+Gigabit2                   11.11.11.1      YES unset  up                    up</pre>
+
+
+<pre class="code">! On old ASA2:
+ASA1# show interface ip brief
+Interface                  IP-Address      OK? Method Status                Protocol
+Gigabit0                   192.168.1.2     YES CONFIG up                    up
+Gigabit1                   141.85.99.2     YES CONFIG up                    up
+Gigabit2                   11.11.11.2      YES unset  up                    up</pre>
+
+
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "2. Secondary ASA Setup" [2702-6270] -->
+<h3 class="sectionedit6" id="ha_monitoring">3. HA Monitoring</h3>
+<div class="level3">
+
+<p>
+In this task you will learn how to monitor the active ASA in a high-availability setup.
+</p>
+
+</div>
+
+<h4 id="a_icmp_inspection">A. ICMP inspection</h4>
+<div class="level4">
+
+<p>
+Configure ICMP inspection on the active ASA. Check if the configuration has been replicated to the standby ASA.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1(config)# access-list SELECT_ICMP extended permit icmp any any
+ASA1(config)# class-map CLASS_ICMP
+ASA1(config-cmap)# match access-list SELECT_ICMP
+ASA1(config)# policy-map POLICY_ICMP
+ASA1(config-pmap)# class CLASS_ICMP
+ASA1(config-pmap-c)# inspect icmp
+ASA1(config)# service-policy POLICY_ICMP interface inside</pre>
+
+
+<pre class="code">! On &quot;ASA2&quot;:
+ASA1# show running-config class-map
+!
+class-map CLASS_ICMP
+ match access-list SELECT_ICMP
+!</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="b_setup_remote_access">B. Setup remote access</h4>
+<div class="level4">
+
+<p>
+Configure the telnet and enable passwords on each <strong>router</strong> (not the ASA).
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">R1(config)#enable secret cisco
+R1(config)#line vty 0 4
+R1(config-line)#password cisco
+R1(config-line)#login</pre>
+
+
+<pre class="code">R2(config)#enable secret cisco
+R2(config)#line vty 0 4
+R2(config-line)#password cisco
+R2(config-line)#login</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="c_ping">C. Ping!</h4>
+<div class="level4">
+
+<p>
+Start 1000-packet ping from <strong>R1</strong> to <strong>R2</strong>.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">R2#ping 141.85.99.100 repeat 1000</pre>
+
+
+</div></div>
+
+<p>
+<p><div class="notewarning"> Don&#039;t forget to save the running configuration before attempting the next step 
+</div></p>
+</p>
+
+<p>
+While the ping is active, restart the active ASA. Is the failover successful?
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1# copy running-config startup-config
+
+Source filename [running-config]?
+Cryptochecksum: e6cf168e f9f04cc8 d064c3af 435c821e
+
+1977 bytes copied in 2.290 secs (988 bytes/sec)open(ffsdev/2/write/41) failed
+open(ffsdev/2/write/40) failed</pre>
+
+
+<pre class="code">! On &quot;ASA2&quot;:
+ASA1#
+        Switching to Active</pre>
+
+
+</div></div>
+
+</div>
+
+<h4 id="d_telnet">D. Telnet</h4>
+<div class="level4">
+
+<p>
+Repeat the test using a Telnet session.
+</p>
+
+<p>
+Configure the failover s.t. the telnet session is not terminated when performing failover. Test by rebooting the active ASA again.
+</p>
+<div class="solution"><div class="solution_title hidden_solution_title"><img src="../../../../../lib/tpl/arctic/images/tool-source.png"/><span class="title_text">Show solution</span></div><div class="hide_text">Hide solution</div><div class="show_text">Show solution</div><div class="solution_contents hidden_solution_contents"> <pre class="code">ASA1(config)# failover link CONTROL</pre>
+
+
+<pre class="code">R3#telnet 141.85.99.100
+Trying 141.85.99.100 ... Open
+
+
+User Access Verification
+
+Password:
+R1&gt;enable
+Password:
+R1#</pre>
+
+
+<pre class="code">! The Telnet connection is still up even though the active ASA is restarted
+R1#</pre>
+
+
+</div></div>
+
+</div>
+<!-- EDIT6 SECTION "3. HA Monitoring" [6271-] --></div>
+</body>
+</html>

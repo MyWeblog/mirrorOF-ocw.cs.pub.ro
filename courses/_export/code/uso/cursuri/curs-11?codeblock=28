@@ -1,0 +1,25 @@
+    
+    
+
+#!/bin/bash
+
+dropbox_folder=~/Downloads/Dropbox/school/uso-shared
+remote_end=uso@elf.cs.pub.ro:res/current/cursuri
+
+if test $# -eq 1; then
+    id=$(printf "%02g" $1)
+    pushd curs-$id/ > /dev/null 2>&1
+    make all
+    cp *.pdf "$dropbox_folder"/curs-$id/
+    scp *handout*.pdf "$remote_end"/curs-$id/
+    popd > /dev/null 2>&1
+    exit 0
+fi
+
+for id in $(seq -f "%02g" 0 13); do
+    pushd curs-$id/ > /dev/null 2>&1
+    make all
+    cp *.pdf "$dropbox_folder"/curs-$id/
+    scp *handout*.pdf "$remote_end"/curs-$id/
+    popd > /dev/null 2>&1
+done

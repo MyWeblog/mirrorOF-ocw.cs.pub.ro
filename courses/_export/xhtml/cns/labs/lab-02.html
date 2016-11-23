@@ -1,0 +1,703 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cns:labs:lab-02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-17T12:55:13+0300"/>
+<meta name="keywords" content="cns,labs,lab-02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="lab-02.html"/>
+<link rel="canonical" href="../../../../cns/labs/lab-02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-02","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-02.html#lab_02_-_assembly_language">Lab 02 - Assembly Language</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-02.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="lab-02.html#supporting_files">Supporting files</a></div></li>
+<li class="level2"><div class="li"><a href="lab-02.html#tutorials">Tutorials</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-02.html#a_hello_world_program">A Hello World program</a></div></li>
+<li class="level3"><div class="li"><a href="lab-02.html#function_calls">Function calls</a></div></li>
+<li class="level3"><div class="li"><a href="lab-02.html#linux_system_call_convention">Linux system call convention</a></div></li>
+<li class="level3"><div class="li"><a href="lab-02.html#compiler_patterns">Compiler patterns</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-02.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-02.html#simple_system_call_3p">1. Simple system call [3p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-02.html#looping_math_3p">2. Looping math [3p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-02.html#funny_convention_4p">3. Funny convention [4p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-02.html#extraobfuscation_1p">4. Extra: Obfuscation [1p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-02.html#extraplatform-independent_1p">5. Extra: Platform-independent [1p]</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="lab_02_-_assembly_language">Lab 02 - Assembly Language</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Lab 02 - Assembly Language" [1-42] -->
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://www.cs.virginia.edu/~evans/cs216/guides/x86.html" class="urlextern" title="http://www.cs.virginia.edu/~evans/cs216/guides/x86.html"  rel="nofollow">x86 Assembly Guide</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://ref.x86asm.net/index.html" class="urlextern" title="http://ref.x86asm.net/index.html"  rel="nofollow">X86 Opcode and Instruction Reference</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html" class="urlextern" title="http://www.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html"  rel="nofollow">Intel 64 and IA-32 Architectures Software Developer Manuals</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://net.cs.uni-bonn.de/fileadmin/user_upload/plohmann/x86_opcode_structure_and_instruction_overview.pdf" class="urlextern" title="https://net.cs.uni-bonn.de/fileadmin/user_upload/plohmann/x86_opcode_structure_and_instruction_overview.pdf"  rel="nofollow">x86 opcode &amp; instruction structure cheatsheet</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.nasm.us/xdoc/2.11.05/html/nasmdoc0.html" class="urlextern" title="http://www.nasm.us/xdoc/2.11.05/html/nasmdoc0.html"  rel="nofollow">NASM Documentation</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://security.cs.pub.ro/hexcellents/wiki/kb/exploiting/linux_abi_x32" class="urlextern" title="http://security.cs.pub.ro/hexcellents/wiki/kb/exploiting/linux_abi_x32"  rel="nofollow">Linux syscall ABI</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://en.wikibooks.org/wiki/X86_Assembly/Arithmetic" class="urlextern" title="https://en.wikibooks.org/wiki/X86_Assembly/Arithmetic"  rel="nofollow"> X86 ASM Arithmetic</a></div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">
+If you are just beginning using assembly, you can follow <a href="http://cs.lmu.edu/~ray/notes/nasmtutorial/" class="urlextern" title="http://cs.lmu.edu/~ray/notes/nasmtutorial/"  rel="nofollow">this tutorial</a>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Resources" [43-948] -->
+<h2 class="sectionedit3" id="supporting_files">Supporting files</h2>
+<div class="level2">
+
+<p>
+<a href="http://elf.cs.pub.ro/oss/res/labs/lab-02.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-02.tar.gz"  rel="nofollow">Lab archive</a>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Supporting files" [949-1042] -->
+<h2 class="sectionedit4" id="tutorials">Tutorials</h2>
+<div class="level2">
+
+<p>
+This lab aims to guide you through the basics of x86 assembly, from architectural specifics and instruction encoding to programming, disassembly and code generation from C snippets. For the sake of simplicity, we will focus on the <strong>32-bit</strong> x86 Instruction Set Architecture (ISA). The 64-bit ISA is very similar, and is backwards compatible with the older one.
+</p>
+
+<p>
+<p><div class="noteclassic">Note that we will use the <strong>Intel/NASM</strong> syntax (as opposed to the AT&amp;T syntax used by default in <code>objdump</code> and the GNU assembler) throughout the course and labs. See the <a href="http://www.nasm.us/xdoc/2.11.05/html/nasmdoc0.html" class="urlextern" title="http://www.nasm.us/xdoc/2.11.05/html/nasmdoc0.html"  rel="nofollow">NASM documentation</a> for more information.
+</p>
+
+<p>
+You can make <code>objdump</code> emit Intel assembly by using the <code><a href="http://linux.die.net/man/1/objdump" class="urlextern" title="http://linux.die.net/man/1/objdump"  rel="nofollow">-M intel</a></code> option.
+
+</div></p>
+</p>
+
+<p>
+x86 processors implement the following types of instructions:
+</p>
+<ul>
+<li class="level1"><div class="li"> Data transfer: <code>mov</code>, <code>xchg</code>, <code>lea</code>, <code>movsb</code>, etc.</div>
+</li>
+<li class="level1"><div class="li"> Control flow: <code>jmp</code>, <code>call</code>, <code>ret</code>, <code>loop</code></div>
+</li>
+<li class="level1"><div class="li"> Arithmetic/Logic: <code>add</code>, <code>sub</code>, <code>mul</code>, <code>div</code>, <code>and</code>, <code>or</code>, etc.</div>
+</li>
+</ul>
+
+<p>
+The following addressing modes are available (note that NASM uses semicolons for comments):
+</p>
+<pre class="code asm"><span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="nu0">0xcafebab3</span><span class="br0">&#93;</span>         <span class="co1">; direct (displacement)</span>
+<span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="kw4">esi</span><span class="br0">&#93;</span>                <span class="co1">; register indirect (base)</span>
+<span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="kw4">ebp</span><span class="sy1">-</span><span class="nu0">8</span><span class="br0">&#93;</span>              <span class="co1">; based (base + displacement)</span>
+<span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="kw4">ebx</span><span class="sy1">*</span><span class="nu0">4</span> <span class="sy1">+</span> <span class="nu0">0xdeadbeef</span><span class="br0">&#93;</span> <span class="co1">; indexed (index*scale + displacement)</span>
+<span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="kw4">edx</span> <span class="sy1">+</span> <span class="kw4">ebx</span> <span class="sy1">+</span> <span class="nu0">12</span><span class="br0">&#93;</span>     <span class="co1">; based-indexed w/o scale (base + index + displacement)</span>
+<span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="kw4">edx</span> <span class="sy1">+</span> <span class="kw4">ebx</span><span class="sy1">*</span><span class="nu0">4</span> <span class="sy1">+</span> <span class="nu0">42</span><span class="br0">&#93;</span>   <span class="co1">; based-indexed w/ scale (base + index*scale + displacement)</span></pre>
+
+<p>
+The rest of the introduction gives some examples and guidelines to aid in x86 assembly programming in Linux.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Tutorials" [1043-2732] -->
+<h3 class="sectionedit5" id="a_hello_world_program">A Hello World program</h3>
+<div class="level3">
+
+<p>
+<p><div class="noteimportant">
+Before going through this tutorial, make sure you have 32-bit support libraries installed on your box (they are already installed on the lab machines). On a Debian machine, you can set them up using the following recipe:
+</p>
+<pre class="code">$ sudo dpkg --add-architecture i386
+$ sudo apt-get update
+$ sudo apt-get install libc6-dev:i386
+$ sudo apt-get install gcc-multilib</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Consider the following simple C program:
+</p>
+<pre class="code C"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/puts.html"><span class="kw3">puts</span></a><span class="br0">&#40;</span><span class="st0">&quot;Hello world!&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+You can compile this with <code>gcc -m32 -O0 hello.c -o hello</code>. Let&#039;s take a sneak peek at the assembly generated by the GCC compiler for this basic program: <code>objdump -M intel -d hello</code>. Notice that the generated binary contains a lot of extra stuff in addition to our <code>main</code> function. For now, we need to obtain an executable that contains the following information:
+</p>
+<ul>
+<li class="level1"><div class="li"> some <strong>data</strong> (the <code>“Hello world!”</code> string)</div>
+</li>
+<li class="level1"><div class="li"> actual <strong>executable code</strong></div>
+</li>
+<li class="level1"><div class="li"> <strong>metadata</strong> (e.g. in the ELF header) to help us reach the <code>puts</code> library function; note that we can either statically link <code>puts</code> in our executable, or dynamically link with the <code>libc.so</code> binary available in the system.</div>
+</li>
+</ul>
+
+<p>
+The following assembly source should cover the above:
+</p>
+<pre class="code asm"><span class="kw5">extern</span> puts
+<span class="kw5">section</span> <span class="kw5">.data</span>
+  helloStr<span class="sy1">:</span> <span class="kw5">db</span> <span class="st0">'Hello, world!'</span><span class="sy1">,</span><span class="nu0">0</span>
+<span class="kw5">section</span> <span class="kw5">.text</span>
+  <span class="kw5">global</span> main
+main<span class="sy1">:</span>
+  <span class="kw1">push</span> helloStr
+  <span class="kw1">call</span> puts</pre>
+
+<p>
+To assemble this run: <code>nasm -f elf32 hello.asm</code>. This will produce an object file that we can inspect with objdump.
+</p>
+<pre class="code">$ objdump -M intel -d hello.o
+ 
+hello.o:     file format elf32-i386
+ 
+ 
+Disassembly of section .text:
+ 
+00000000 &lt;main&gt;:
+   0:	68 00 00 00 00       	push   0x0
+   5:	e8 fc ff ff ff       	call   6 &lt;main+0x6&gt;</pre>
+
+<p>
+As we can see, there is no reference to the <code>puts</code> function but it is present in the relocation records that will be used by the linker.
+</p>
+<pre class="code">$ objdump -M intel -r hello.o
+ 
+hello.o:     file format elf32-i386
+ 
+RELOCATION RECORDS FOR [.text]:
+OFFSET   TYPE              VALUE 
+00000001 R_386_32          .data
+00000006 R_386_PC32        puts</pre>
+
+<p>
+To dynamically link our object file with <code>libc</code> we can use <code>ld</code>.
+</p>
+<pre class="code">$ ld -s -lc -m elf_i386 -dynamic-linker /lib/ld-linux.so.2 -e main hello.o -o hello_min</pre>
+
+<p>
+You can spend a few minutes and figure out what all those options do. The most important are: <code><strong>-lc</strong></code> and <code><strong>-e main</strong></code>.
+</p>
+
+<p>
+The disassembly of the final binary also contains some code that will find <code>puts</code> at runtime. We will learn more about the <code>.plt</code> section in the following sessions.
+</p>
+<pre class="code">$ objdump -M intel -d hello_min
+ 
+hello_min:     file format elf32-i386
+ 
+ 
+Disassembly of section .plt:
+ 
+08048170 &lt;puts@plt-0x10&gt;:
+ 8048170:	ff 35 40 92 04 08    	push   DWORD PTR ds:0x8049240
+ 8048176:	ff 25 44 92 04 08    	jmp    DWORD PTR ds:0x8049244
+ 804817c:	00 00                	add    BYTE PTR [eax],al
+	...
+ 
+08048180 &lt;puts@plt&gt;:
+ 8048180:	ff 25 48 92 04 08    	jmp    DWORD PTR ds:0x8049248
+ 8048186:	68 00 00 00 00       	push   0x0
+ 804818b:	e9 e0 ff ff ff       	jmp    8048170 &lt;puts@plt-0x10&gt;
+ 
+Disassembly of section .text:
+ 
+08048190 &lt;.text&gt;:
+ 8048190:	68 4c 92 04 08       	push   0x804924c
+ 8048195:	e8 e6 ff ff ff       	call   8048180 &lt;puts@plt&gt;</pre>
+
+<p>
+<p><div class="noteclassic">You may notice that the program gives a segmentation fault message upon exit. This happens because we don&#039;t call <code>exit</code> at the end of <code>main</code>. This should normally be handled by <code><a href="http://refspecs.linuxbase.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/baselib---libc-start-main-.html" class="urlextern" title="http://refspecs.linuxbase.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/baselib---libc-start-main-.html"  rel="nofollow">__libc_start_main</a></code>, which is part of the Linux Standard Base Core Specification.
+</div></p>
+</p>
+
+</div>
+<!-- EDIT5 SECTION "A Hello World program" [2733-6415] -->
+<h3 class="sectionedit6" id="function_calls">Function calls</h3>
+<div class="level3">
+
+<p>
+C compilers translate function calls into assembly using a standard <a href="https://en.wikipedia.org/wiki/X86_calling_conventions" class="urlextern" title="https://en.wikipedia.org/wiki/X86_calling_conventions"  rel="nofollow">calling convention</a>. Calling conventions determine how function parameters are passed (e.g. via registers or the stack) and which of the registers must be saved by the caller or the callee. On x86, <code>esp</code> and <code>ebp</code> are typically involved in holding information about the current stack frame, for the stack pointer and base pointer respectively.
+</p>
+
+<p>
+<p><div class="noteclassic">You can think of each stack frame like a contextual area on the stack which is specific for each function call. The function manages its arguments and parameters in this given area on the stack.
+</div></p>
+</p>
+
+<p>
+Here&#039;s an example of a stack frame holding local variables and parameters:
+</p>
+
+<p>
+<a href="../../../../_detail/cns/labs/stack-convention.png%3Fid=cns%253Alabs%253Alab-02.html" class="media" title="cns:labs:stack-convention.png"><img src="../../../../_media/cns/labs/stack-convention.png" class="mediacenter" alt="" /></a>
+</p>
+
+<p>
+(Source: <a href="http://www.cs.virginia.edu/~evans/cs216/guides/x86.html" class="urlextern" title="http://www.cs.virginia.edu/~evans/cs216/guides/x86.html"  rel="nofollow">x86 Assembly Guide</a>)
+</p>
+
+<p>
+<p><div class="notewarning">
+Note that on many architectures (including x86), the stack “grows down”, i.e. opposite to the addresses&#039; growth. The figure above is turned upside down to better illustrate the concept of a stack.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT6 SECTION "Function calls" [6416-7549] -->
+<h3 class="sectionedit7" id="linux_system_call_convention">Linux system call convention</h3>
+<div class="level3">
+
+<p>
+Calls to the operating system are similar to function calls in the sense that they require passing a set of parameters according to a given convention and altering the control flow of the program. However, unlike function calls, which for example on x86 are issued using the <code>call</code> instruction, system calls are issued using a software interrupt instruction, e.g. <code><strong>int 0x80</strong></code> on x86. Note that the system call convention is not only architecture-specific, but also <abbr title="Operating System">OS</abbr>-specific.
+</p>
+
+<p>
+Linux adopts the following convention on x86:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>eax</code> contains the <strong>syscall ID</strong></div>
+</li>
+<li class="level1"><div class="li"> <strong>parameters</strong> are passed in <code>ebx</code>, <code>ecx</code>, <code>edx</code>, <code>esi</code>, <code>edi</code>, <code>ebp</code> (in this order)</div>
+</li>
+<li class="level1"><div class="li"> <strong>return values</strong> are placed in <code>eax</code> (where available)</div>
+</li>
+<li class="level1"><div class="li"> the syscall is responsible for <strong>saving</strong> and <strong>restoring</strong> all registers</div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">Syscalls are not usually invoked directly, but through wrappers in <code>libc</code>. You can read about how this is implemented in <a href="http://lwn.net/Articles/534682/" class="urlextern" title="http://lwn.net/Articles/534682/"  rel="nofollow">this LWN article</a>.
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+<strong>Other useful references:</strong>
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://docs.cs.up.ac.za/programming/asm/derick_tut/syscalls.html" class="urlextern" title="http://docs.cs.up.ac.za/programming/asm/derick_tut/syscalls.html"  rel="nofollow">Linux syscall table</a> with ID, source code, and parameters.</div>
+</li>
+<li class="level1"><div class="li"> <a href="../../../../so2/cursuri/curs02.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/so2/cursuri/curs02"  rel="nofollow">Operation Systems lecture (Romanian)</a> discussing syscalls theory and Linux implementation.</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linuxjournal.com/article/3326" class="urlextern" title="http://www.linuxjournal.com/article/3326"  rel="nofollow">Implementing Linux syscalls</a></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT7 SECTION "Linux system call convention" [7550-9014] -->
+<h3 class="sectionedit8" id="compiler_patterns">Compiler patterns</h3>
+<div class="level3">
+
+<p>
+We encourage you to run common code patterns, such as <strong>for</strong> and <strong>while</strong> loops, <strong>switch</strong> statements as well as others in the <strong>Compiler Explorer</strong> available at <a href="http://gcc.godbolt.org/" class="urlextern" title="http://gcc.godbolt.org/"  rel="nofollow">http://gcc.godbolt.org/</a>. Check <a href="http://goo.gl/gVeH5p" class="urlextern" title="http://goo.gl/gVeH5p"  rel="nofollow">this example</a> out.
+</p>
+
+<p>
+<p><div class="noteimportant">Due to a bug, you need to click <code>Colorise</code> two times to enable coloring annotations
+</div></p>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "Compiler patterns" [9015-9392] -->
+<h2 class="sectionedit9" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT9 SECTION "Tasks" [9393-9411] -->
+<h3 class="sectionedit10" id="simple_system_call_3p">1. Simple system call [3p]</h3>
+<div class="level3">
+
+<p>
+<p><div class="notetip">
+You can check <a href="https://github.com/razvand/snippets/blob/master/execve/execve_argv.c" class="urlextern" title="https://github.com/razvand/snippets/blob/master/execve/execve_argv.c"  rel="nofollow">this</a> C source code for a better understanding how the <a href="https://github.com/razvand/snippets/tree/master/execve" class="urlextern" title="https://github.com/razvand/snippets/tree/master/execve"  rel="nofollow">execve</a> call behaves.
+
+</div></p>
+</p>
+
+<p>
+Use assembly to write a program that receives N command line parameters, and dispatches them to the <code>execve</code> syscall. If the 1st parameter starts with <code>.</code> (such as <code>./ping 8.8.8.8</code>) the program should NOT call <code>execve</code> and instead print an error message. You can use libc&#039;s <code>printf</code> or <code>puts</code> for the error message, but you should call <code>execve</code> directly. You can assume the command line parameters are already on the stack, and you can generate the boilerplate code that takes care of this by linking with <code>gcc</code> as opposed to <code>ld</code>:
+</p>
+<pre class="code">$ nasm -f elf32 execve.asm
+$ gcc -lc -m32 execve.o -o execve</pre>
+
+<p>
+Skeleton code:
+</p>
+<pre class="code asm"><span class="kw5">extern</span> puts
+&nbsp;
+<span class="kw5">global</span> main
+&nbsp;
+<span class="kw5">section</span> <span class="kw5">.data</span>
+  callDenied<span class="sy1">:</span> <span class="kw5">db</span> <span class="st0">'call denied!'</span><span class="sy1">,</span><span class="nu0">0x0a</span><span class="sy1">,</span><span class="nu0">0</span>
+<span class="kw5">section</span> <span class="kw5">.text</span>
+main<span class="sy1">:</span>
+  <span class="kw1">push</span> <span class="kw4">ebp</span>
+  <span class="kw1">mov</span> <span class="kw4">ebp</span><span class="sy1">,</span> <span class="kw4">esp</span>
+&nbsp;
+  <span class="co1">; write your code here -------------------------------</span>
+  <span class="co1">; TODO</span>
+  <span class="co1">; ----------------------------------------------------</span>
+&nbsp;
+  <span class="kw1">leave</span>
+  <span class="kw1">ret</span></pre>
+
+<p>
+Examples:
+</p>
+<pre class="code">$ ./execve ./ping 8.8.8.8 =&gt; FAILS
+$ ./execve /bin/ping 8.8.8.8 =&gt; WORKS</pre>
+
+<p>
+As a warm-up, let&#039;s take a look at how we can structure our assembly program. It needs to do the following:
+</p>
+<ol>
+<li class="level1"><div class="li"> (Optionally) check that <code>argc</code> is greater than one. We&#039;ll do this to make sure that <code>argv</code> is properly accessed at run-time.</div>
+</li>
+<li class="level1"><div class="li"> Check that <code>argv[1]</code> doesn&#039;t start with a period, i.e. that <code>argv[1][0] != &#039;.&#039;</code>. We know that <code>.</code> <abbr title="American Standard Code for Information Interchange">ASCII</abbr> is <code>0x2e</code>.</div>
+</li>
+<li class="level1"><div class="li"> Call <code>execve</code> (system call <a href="http://docs.cs.up.ac.za/programming/asm/derick_tut/syscalls.html" class="urlextern" title="http://docs.cs.up.ac.za/programming/asm/derick_tut/syscalls.html"  rel="nofollow">number 11</a>) directly as a system call (read <a href="lab-02.html#linux_system_call_convention" title="cns:labs:lab-02 ↵" class="wikilink1">above</a> for the system call convention).</div>
+</li>
+<li class="level1"><div class="li"> Return, if there&#039;s an error.</div>
+</li>
+</ol>
+
+<p>
+We&#039;ll mark all these actions as assembly labels, making our program look like this:
+</p>
+<pre class="code asm"><span class="kw5">extern</span> puts
+&nbsp;
+<span class="kw5">global</span> main
+&nbsp;
+<span class="kw5">section</span> <span class="kw5">.data</span>
+  callDenied<span class="sy1">:</span> <span class="kw5">db</span> <span class="st0">'call denied!'</span><span class="sy1">,</span><span class="nu0">0x0a</span><span class="sy1">,</span><span class="nu0">0</span>
+<span class="kw5">section</span> <span class="kw5">.text</span>
+main<span class="sy1">:</span>
+  <span class="kw1">push</span> <span class="kw4">ebp</span>
+  <span class="kw1">mov</span> <span class="kw4">ebp</span><span class="sy1">,</span> <span class="kw4">esp</span>
+&nbsp;
+check_argc<span class="sy1">:</span>
+&nbsp;
+check_argv1<span class="sy1">:</span>
+&nbsp;
+do_execve<span class="sy1">:</span>
+&nbsp;
+<span class="co1">; Should never get here</span>
+done<span class="sy1">:</span>
+&nbsp;
+  <span class="kw1">leave</span>
+  <span class="kw1">ret</span></pre>
+
+<p>
+Implementing <code>check_argc</code> should be pretty straightforward. According to the <a href="lab-02.html#function_calls" title="cns:labs:lab-02 ↵" class="wikilink1">stack layout</a>, we know that <code>argc</code> is being held at <code>ebp + 8</code>, so we can just move the value into one of the free registers and compare it with <code>1</code>. x86 assembly gives us the <code><a href="http://www.aldeid.com/wiki/X86-assembly/Instructions/jg" class="urlextern" title="http://www.aldeid.com/wiki/X86-assembly/Instructions/jg"  rel="nofollow">jg</a></code> (jump if greater) instruction to do conditional jumps after a <code>cmp</code>. In case everything&#039;s ok, we can jump to <code>check_argv1</code>, otherwise we&#039;ll jump to <code>done</code>:
+</p>
+<pre class="code asm">check_argc<span class="sy1">:</span>
+  <span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="kw4">ebp</span> <span class="sy1">+</span> <span class="nu0">8</span><span class="br0">&#93;</span>
+  <span class="kw1">cmp</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="nu0">1</span>
+  <span class="kw1">jg</span> check_argv1 <span class="co1">; we're ok</span>
+  <span class="kw1">jmp</span> done</pre>
+
+<p>
+To make things more verbose, let&#039;s also display a message in case the condition is not respected. We&#039;ll need to call <code>puts</code>, so we&#039;ll have to reference it in the header of our code:
+</p>
+<pre class="code asm"><span class="kw5">extern</span> puts
+&nbsp;
+<span class="kw5">global</span> main</pre>
+
+<p>
+We also have to add a string comprising the error message:
+</p>
+<pre class="code asm"><span class="kw5">section</span> <span class="kw5">.data</span>
+  callDenied<span class="sy1">:</span> <span class="kw5">db</span> <span class="st0">'call denied!'</span><span class="sy1">,</span><span class="nu0">0x0a</span><span class="sy1">,</span><span class="nu0">0</span>
+  nothingToCall<span class="sy1">:</span> <span class="kw5">db</span> <span class="st0">'nothing to call!'</span><span class="sy1">,</span><span class="nu0">0x0a</span><span class="sy1">,</span><span class="nu0">0</span></pre>
+
+<p>
+Now we can modify <code>check_argc</code> to push <code>nothingToCall</code> on the stack and call <code>puts</code> when the <code>cmp</code> doesn&#039;t pass:
+</p>
+<pre class="code asm">check_argc<span class="sy1">:</span>
+  <span class="kw1">mov</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="br0">&#91;</span><span class="kw4">ebp</span> <span class="sy1">+</span> <span class="nu0">8</span><span class="br0">&#93;</span>
+  <span class="kw1">cmp</span> <span class="kw4">eax</span><span class="sy1">,</span> <span class="nu0">1</span>
+  <span class="kw1">jg</span> check_argv1 <span class="co1">; we're ok</span>
+  <span class="kw1">push</span> nothingToCall
+  <span class="kw1">call</span> puts
+  <span class="kw1">jmp</span> done</pre>
+
+<p>
+<p><div class="noteclassic">
+There are, of course, other (possibly more efficient) ways to organize your program and do sanity checks. Give it some thought!
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+<code>check_argv1</code> is implemented similarly. Remember:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>argv</code> can be found on the stack at <code>ebp + 12</code></div>
+</li>
+<li class="level1"><div class="li"> Checking <code>argv[1][0]</code> incurs an additional level of indirection. <code>argv</code> is a pointer to pointers, so you must compute the offset in increments of 4. <code>argv[1]</code> is an array of characters.</div>
+</li>
+<li class="level1"><div class="li"> Use 8-bit registers such as <code>al</code>, <code>ah</code>, <code>bl</code>, etc. to copy, manipulate and test characters. For example, to copy a byte from register <code>eax</code> to <code>dl</code>, you would do (in NASM) a</div>
+</li>
+</ul>
+<pre class="code asm"><span class="kw1">mov</span> <span class="kw4">dl</span><span class="sy1">,</span> <span class="kw6">byte</span> <span class="br0">&#91;</span><span class="kw4">eax</span><span class="br0">&#93;</span></pre>
+
+<p>
+Also remember from the <a href="lab-02.html#linux_system_call_convention" title="cns:labs:lab-02 ↵" class="wikilink1">Linux system call convention</a> how to implement <code>do_execve</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>eax</code> should contain the system call number (11)</div>
+</li>
+<li class="level1"><div class="li"> <code>ebx</code> should contain a pointer to the executable&#039;s path, i.e. <code>argv[1]</code></div>
+</li>
+<li class="level1"><div class="li"> <code>ecx</code> should contain a pointer to the arguments, i.e. <code>argv + 1</code> (equivalent to <code>&amp;argv[1]</code>); use <code><a href="https://en.wikibooks.org/wiki/X86_Assembly/Data_Transfer#Load_Effective_Address" class="urlextern" title="https://en.wikibooks.org/wiki/X86_Assembly/Data_Transfer#Load_Effective_Address"  rel="nofollow">lea</a></code> to compute this address</div>
+</li>
+<li class="level1"><div class="li"> <code>edx</code> should contain a pointer to <code>envp</code> (you can set it to zero)</div>
+</li>
+<li class="level1"><div class="li"> The call should be triggered by a <code>int 0x80</code> instruction</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+In order to test that the system call was done, you can run the program with <code>strace</code>:
+</p>
+<pre class="code">$ strace ./execve /bin/ls
+execve(&quot;./execve&quot;, [&quot;./execve&quot;, &quot;/bin/ls&quot;], [/* 48 vars */]) = 0
+[ Process PID=... runs in 32 bit mode. ]
+...
+execve(&quot;/bin/ls&quot;, [&quot;/bin/ls&quot;], [/* 0 vars */]) = 0
+...</pre>
+
+</div>
+<!-- EDIT10 SECTION "1. Simple system call [3p]" [9412-14558] -->
+<h3 class="sectionedit11" id="looping_math_3p">2. Looping math [3p]</h3>
+<div class="level3">
+
+<p>
+<p><div class="notetip">
+You can find a tutorial on doing assembly-based multiplication and division <a href="https://en.wikibooks.org/wiki/X86_Assembly/Arithmetic" class="urlextern" title="https://en.wikibooks.org/wiki/X86_Assembly/Arithmetic"  rel="nofollow">here</a>.
+
+</div></p>
+</p>
+
+<p>
+Use assembly to write a program that iterates through a statically allocated string (use the <code>.data</code> section), and calls a function that replaces each letter based on the following formula:
+</p>
+<pre class="code">NEW_LETTER = 33 + ((OLD_LETTER * 42 / 3 + 13) % 94)</pre>
+
+<p>
+Print the new string at the end.
+</p>
+
+<p>
+<p><div class="noteimportant">Some tips:
+</p>
+<ul>
+<li class="level1"><div class="li"> Reuse the basic structure in the previous task. You only need to import <code>puts</code>, declare <code>.data</code> with a string and <code>.text</code> with <code>main</code>, as well as your implementation.</div>
+</li>
+<li class="level1"><div class="li"> Create a mapping between the variables you&#039;d have in your C program and actual CPU registers. If you think you don&#039;t have enough available CPU registers, don&#039;t be afraid to allocate space on the stack (but don&#039;t do it if it&#039;s not necessary!).</div>
+</li>
+<li class="level1"><div class="li"> Compilers are smart and they produce fairly readable code with <code>-O0</code>, so copy <a href="lab-02.html#compiler_patterns" title="cns:labs:lab-02 ↵" class="wikilink1">the patterns</a> there.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "2. Looping math [3p]" [14559-15636] -->
+<h3 class="sectionedit12" id="funny_convention_4p">3. Funny convention [4p]</h3>
+<div class="level3">
+
+<p>
+The <code>funny</code> binary is already dynamically linked with a missing library (<code>libfunny.so</code>), that you&#039;ll have to recreate in assembly. The library contains a wrapper for the <code>write</code> syscall called <code>leet_write</code>. The original library was using a funny calling convention, slightly different from the standard one. Figure out the convention, write the wrapper in NASM, and compile the library. Test by running the provided binary.
+</p>
+
+<p>
+The library is position independent, and exposes 2 symbols: the function, and some global variable. The skeleton is provided in <code>libfunny.asm</code>:
+</p>
+<pre class="code asm"><span class="kw5">extern</span> _GLOBAL_OFFSET_TABLE_
+<span class="kw5">extern</span> puts
+&nbsp;
+<span class="co1">; export a library function and a global var</span>
+<span class="kw5">global</span> count_param<span class="sy1">:</span><span class="kw5">data</span> <span class="nu0">4</span>
+<span class="kw5">global</span> leet_write<span class="sy1">:</span>function
+&nbsp;
+<span class="kw5">section</span> <span class="kw5">.data</span>
+  leet<span class="sy1">:</span> <span class="kw5">db</span> <span class="st0">&quot;executing leet_write()&quot;</span><span class="sy1">,</span> <span class="nu0">0</span>
+  count_param<span class="sy1">:</span> <span class="kw5">dd</span> <span class="nu0">0</span>
+&nbsp;
+<span class="kw5">section</span> <span class="kw5">.text</span>
+leet_write<span class="sy1">:</span>
+  <span class="co1">; debugging purpose</span>
+  <span class="kw1">push</span> leet
+  <span class="kw1">call</span> puts
+&nbsp;
+  <span class="co1">; write your code here --------------------------------------------</span>
+  <span class="co1">; TODO</span>
+  <span class="co1">; -----------------------------------------------------------------</span>
+&nbsp;
+  <span class="kw1">add</span> <span class="kw4">esp</span><span class="sy1">,</span> <span class="nu0">4</span> <span class="co1">; leet from above</span>
+  <span class="kw1">ret</span></pre>
+
+<p>
+To assemble and create the <code>.so</code> file run:
+</p>
+<pre class="code">$ nasm -f elf32 libfunny.asm
+$ ld -shared -lc -m elf_i386 libfunny.o -o libfunny.so</pre>
+
+<p>
+You should be able to run the provided binary as long as the correct library is in <code>./</code>.
+</p>
+
+<p>
+<p><div class="noteimportant"><strong>Hint</strong>: The <code>count_param</code> symbol is in the caller&#039;s address space, even if it is exported by the library. You&#039;ll have to use <code>count_param wrt ..sym</code> to reference it in the library. See <a href="http://www.nasm.us/xdoc/2.10rc8/html/nasmdoc9.html#section-9.2.4" class="urlextern" title="http://www.nasm.us/xdoc/2.10rc8/html/nasmdoc9.html#section-9.2.4"  rel="nofollow">Section 9.2.4</a> in the NASM documentation.
+</p>
+
+<p>
+Pay attention especially to the distinction between <code>wrt ..got</code> and <code>wrt ..gotoff</code>, you&#039;ll probably need to use both in your implementation.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT12 SECTION "3. Funny convention [4p]" [15637-17462] -->
+<h3 class="sectionedit13" id="extraobfuscation_1p">4. Extra: Obfuscation [1p]</h3>
+<div class="level3">
+
+<p>
+Write a program that does a completely different thing than what <code>objdump</code> will show by jumping into the middle of an instruction. After the jump, the processor will “see” another stream of valid instructions.
+</p>
+
+<p>
+<p><div class="noteimportant"><strong>Hint:</strong> <a href="http://reverseengineering.stackexchange.com/questions/1531/what-is-overlapping-instructions-obfuscation" class="urlextern" title="http://reverseengineering.stackexchange.com/questions/1531/what-is-overlapping-instructions-obfuscation"  rel="nofollow">Overlapping instructions</a>
+</div></p>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "4. Extra: Obfuscation [1p]" [17463-17884] -->
+<h3 class="sectionedit14" id="extraplatform-independent_1p">5. Extra: Platform-independent [1p]</h3>
+<div class="level3">
+
+<p>
+Write a program (shellcode) that will print “Hello World” both on x86 and ARM. You can use <code>qemu-arm-static</code> to run your binary. For QEMU setup see <a href="https://wiki.debian.org/QemuUserEmulation" class="urlextern" title="https://wiki.debian.org/QemuUserEmulation"  rel="nofollow">QemuUserEmulation</a>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Here are some helpful links:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://users.ece.cmu.edu/~sangkilc/papers/ccs10-cha.pdf" class="urlextern" title="http://users.ece.cmu.edu/~sangkilc/papers/ccs10-cha.pdf"  rel="nofollow">Platform-Independent Programs</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://sigint.ru/writeups/2014/05/18/defcon-2014-quals--polyglot/" class="urlextern" title="http://sigint.ru/writeups/2014/05/18/defcon-2014-quals--polyglot/"  rel="nofollow">DEFCON 2014 Quals: polyglot</a></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+You can probably use a small program like this to test your shellcode:
+</p>
+<pre class="code C"><span class="kw4">static</span> <span class="kw4">char</span> sc<span class="br0">&#91;</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="st0">&quot;<span class="es2">\xde</span><span class="es2">\xad</span><span class="es2">\xbe</span><span class="es2">\xef</span>&quot;</span><span class="sy0">;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+  <span class="kw4">void</span> <span class="br0">&#40;</span><span class="sy0">*</span>code<span class="br0">&#41;</span><span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="sy0">=</span> <span class="br0">&#40;</span><span class="kw4">void</span> <span class="sy0">*</span><span class="br0">&#41;</span>sc<span class="sy0">;</span>
+  code<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+  <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+NASM can also assemble in binary format (not ELF). You will also need to mark <code>.data</code> as executable.
+</p>
+
+</div>
+<!-- EDIT14 SECTION "5. Extra: Platform-independent [1p]" [17885-] --></div>
+</body>
+</html>

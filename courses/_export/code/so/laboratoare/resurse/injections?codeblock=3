@@ -1,0 +1,44 @@
+    
+    
+
+#include <windows.h>
+#include <cstdio>
+using namespace std;
+
+const unsigned char OP_JMP = 0xE9;  // 32 bit relative jmp
+const SIZE_T SIZE_PATCH = 5;        // jmp dword ptr distance; 1 byte + 4 bytes
+typedef void (*MyProc)();
+
+void SimpleFunction1()
+{
+    printf("foo\n");
+}
+
+void SimpleFunction2()
+{
+    printf("bar\n");
+}
+
+int main()
+{
+    PBYTE foo = reinterpret_cast<PBYTE>(SimpleFunction1);
+    PBYTE bar = reinterpret_cast<PBYTE>(SimpleFunction2);
+
+    DWORD oldProtection;
+    // make sure the bytes of the function are writable
+    // by default they are only readable and executable
+    BOOL res = VirtualProtect(foo, SIZE_PATCH, PAGE_EXECUTE_READWRITE, &oldProtection);
+    if (!res) return 1;
+
+    // be mindful of pointer arithmetic
+    // works with PBYTE, won't with PDWORD
+    DWORD distanceToNewFoo = bar - foo - SIZE_PATCH;
+
+    *foo = OP_JMP;
+    *reinterpret_cast<PDWORD>(foo + 1) = distanceToNewFoo;
+
+    // called though the pointer instead of foo()
+    // to make sure the compiler won't inline or do some other stupid stuff
+    reinterpret_cast<MyProc>(foo)(); // will print "bar\n"
+    return 0;
+}

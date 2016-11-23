@@ -1,0 +1,285 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    01. [15p] Kernel-based Virtual Machine (KVM)    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-09T12:32:16+0200"/>
+<meta name="keywords" content="saisp,labs,08,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../../_export/xhtml/saisp/labs/08/contents/01.html"/>
+<link rel="canonical" href="01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:08:contents';var JSINFO = {"id":"saisp:labs:08:contents:01","namespace":"saisp:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/saisp/"><img height="70" src="../../../../res/sigla_saisp.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../../systems/index.html"/><img height="70" src="../../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="01%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="01%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h3 class="sectionedit1" id="p_kernel-based_virtual_machine_kvm">01. [15p] Kernel-based Virtual Machine (KVM)</h3>
+<div class="level3">
+
+<p>
+Virtualizarea este folosită pe scară largă în centrele de date întrucât oferă flexibilitate foarte mare în managementul resurselor. Pentru a nu afecta perfomanța, producătorii de procesoare au introdus facilități de virtualizare pentru a permite sistemelor de operare să ruleze nemodificate. Entitatea software care folosește aceste facilități se numește <strong>hypervisor</strong>. KVM este un hypervisor ce oferă suport pentru virtualizarea nativă (implementează facilități de virtualizare). În continuare vom prezenta modul de lucru cu soluția implementată de KVM.
+</p>
+
+<p>
+Trebuie să verificăm dacă hardware-ul are suport pentru <strong>virtualizare nativă</strong> (mai poartă denumirea și de <strong>extensie de virtualizare</strong>). Numele extensiilor de virtualizare diferă de la un producător la altul astfel:
+</p>
+<ul>
+<li class="level1"><div class="li"> INTEL - <strong>vmx</strong> (Virtual Machine eXtensions)</div>
+</li>
+<li class="level2"><div class="li"> AMD - <strong>svm</strong> (Secure Virtual Machine)</div>
+</li>
+</ul>
+
+<p>
+Pentru a verifica prezența extensiilor de mai sus trebuie să ne uităm în <code>/proc/cpuinfo</code> dacă câmpul <em>Flags</em> conține numele extensiei (<strong>vmx</strong> pentru Intel sau <strong>svm</strong> pentru AMD):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~$ </span><span class="kw2">cat</span> <span class="sy0">/</span>proc<span class="sy0">/</span>cpuinfo <span class="sy0">|</span><span class="kw2">grep</span> vmx
+flags           : ... ds_cpl <span class="sy0">**</span>vmx<span class="sy0">**</span> smx...</pre>
+
+<p>
+Pentru a folosi KVM trebuie să instalăm pachetul <code>qemu-kvm</code>, <strong>qemu</strong> fiind utilitarul din userspace ce porneste mașinile virtuale și transmite parametri doriți hypervisorului:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">apt-get install</span> qemu-kvm
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Înainte de a porni o mașina virtuală bazată pe KVM, trebuie să verificăm dacă modulul de kernel este încărcat:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">lsmod</span><span class="sy0">|</span><span class="kw2">grep</span> kvm
+kvm_intel             <span class="nu0">121968</span>  <span class="nu0">0</span>
+kvm                   <span class="nu0">287572</span>  <span class="nu0">1</span> kvm_intel</pre>
+
+<p>
+Observați în acest caz folosirea unei arhitecturi Intel. Pentru fiecare arhitectură există un modul separat. Încărcarea modului de kernel atrage după sine crearea unui device <code>/dev/kvm</code> prin care se controlează modulul de kernel folosind operații de tip <code>ioctl</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ls</span> <span class="re5">-l</span> <span class="sy0">/</span>dev<span class="sy0">/</span>kvm
+crw-rw---T <span class="nu0">1</span> root kvm <span class="nu0">10</span>, <span class="nu0">232</span> Jan  <span class="nu0">5</span> <span class="nu0">21</span>:<span class="nu0">34</span> <span class="sy0">/</span>dev<span class="sy0">/</span>kvm</pre>
+
+<p>
+Pentru a porni o mașină virtuală vom folosi comanda <code>kvm</code>. Utilizatorul care execută comanda (dorește să pornească o mașină virtuală) trebuie să fie cel privilegiat (<code>root</code>) sau să facă parte din grupul setat ca owner pe device-ul <code>/dev/kvm</code> (în cazul de fată <code>kvm</code>). În cadrul laboratorului vom lucra cu utilizatorul privilegiat, dacă nu se specifică altfel.
+</p>
+
+<p>
+Vom crea o mașină virtuală având 256MB RAM (parametrul <code>-m</code>), 2 procesoare (numărul este dat de parametrul <code>-smp</code>) și va avea ca dispozitiv de stocare o imagine virtuală denumită <code>base.qcow2</code> (mai multe detalii în exercițiul următor), specificată cu parametrul <code>-hda</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">256</span> <span class="re5">-smp</span> <span class="nu0">2</span></pre>
+
+<p>
+În acest moment se va deschide o fereastră în care se va afișa output-ul consolei mașinii virtuale (veți vedea cum bootează). Verificați că resursele mașinii virtuale coincid cu parametri trimiși comenzii <code>kvm</code> inspectând sistemul de fișiere <code>/proc</code>.
+</p>
+
+<p>
+Deschidem o nouă consolă și vom afișa numărul de thread-uri <code>kvm</code> prezente în sistem:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ps</span> <span class="re5">-eLf</span> <span class="sy0">|</span><span class="kw2">grep</span> kvm</pre>
+
+<p>
+Opriți rularea mașinii virtuale rulând <code>Ctrl+c</code> în consola unde ați rulat comanda <code>kvm</code>. Porniți-o din nou cu 4 procesoare și 512MB RAM.
+</p>
+
+<p>
+Deschidem o nouă consolă și vom afișa numărul de thread-uri <code>kvm</code> prezente în sistem:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">ps</span> <span class="re5">-eLf</span> <span class="sy0">|</span><span class="kw2">grep</span> kvm</pre>
+
+<p>
+Observați că fiecare nou procesor adăugat în mașina virtuală crește numărul thread-urilor <code>kvm</code> în sistemul gazdă (numărul de thread-uri este mai mare decât numărul de procesoare din cauza existenței unor <em>thread-uri de management</em> necesare procesului <code>kvm</code>).
+</p>
+
+</div>
+
+<h4 id="exportare_display_prin_vnc">Exportare display prin VNC</h4>
+<div class="level4">
+
+<p>
+De cele mai multe ori nu dorim deschiderea unei console în sesiunea curentă ci dorim rularea mașinii în background, iar la nevoie să putem accesa consola acesteia. Acest lucru este posibil folosind parametrul <code>-vnc</code> al comenzii <code>kvm</code> care va porni un server de VNC prin care se va exporta consola mașinii virtuale:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">512</span> <span class="re5">-smp</span> <span class="nu0">4</span> <span class="re5">-vnc</span> :<span class="nu0">1</span></pre>
+
+<p>
+Observați în continuare că procesul <code>kvm</code> nu a intrat în background. Pentru acest lucru trebuie să mai adăugăm parametroul <code>-daemonize</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>kvm <span class="re5">-hda</span> base.qcow2 <span class="re5">-m</span> <span class="nu0">512</span> <span class="re5">-smp</span> <span class="nu0">4</span> <span class="re5">-vnc</span> :<span class="nu0">1</span> <span class="re5">-daemonize</span></pre>
+
+<p>
+Parametrul <code>-vnc :1</code> activează serverul VNC pe portul <strong>1</strong> al protocolului. Pentru a afla portul TCP pe care ascultă serverul de VNC prin care este exportată consola trebuie să adunați <strong>5900</strong> la numărul pe care l-ați pus parametrului <code>-vnc</code>, în cazul nostru <code>5901</code>. Pentru a verifica acest lucru executați comanda <code>netstat</code>:
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span><span class="kw2">netstat</span> <span class="re5">-ntpl</span></pre>
+
+<p>
+În acest moment mașina virtuală KVM rulează în background, singura modalitate de interacțiune cu aceasta fiind prin consola VNC. Ne vom conecta la portul <code>5901</code> folosind utilitarul <code>vncviewer</code> (instalați-l dacă este cazul folosind <code>apt-get install xtightvncviewer</code>):
+</p>
+<pre class="code bash"><span class="co4">root@saisp:~# </span>vncviewer localhost:<span class="nu0">5901</span></pre>
+
+<p>
+Închideți mașina virtuală executând comanda <code>poweroff</code> în consola acesteia. Porniți-o din nou având 256MB RAM și 2 procesoare, tot în background (<code>-daemonize</code>). Găsiți o modalitate de a opri mașina virtuală executând o comanda pe mașina fizică (cea pe care lucrați voi).
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h2 class="sectionedit1" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><a href="../../08.html" class="wikilink1" title="saisp:labs:08">Laboratorul 8</a></strong>
+</p>
+
+</div>
+<!-- EDIT2 PLUGIN_INCLUDE_START "saisp:labs:08:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:08:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_159509761583567b898646" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><span class="curid"><a href="01.html" class="wikilink1" title="saisp:labs:08:contents:01">01. [15p] Kernel-based Virtual Machine (KVM)</a></span></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="saisp:labs:08:contents:02">02. [10p] Copy-on-write virtual storage</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="saisp:labs:08:contents:03">03. [10p] Adăugare resurse la o mașină virtuală KVM</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="saisp:labs:08:contents:04">04. [10p] Multiplicare mașini virtuale folosind o singură image de bază</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="saisp:labs:08:contents:05">05. [10p] Conversie disk virtual între diferite formate</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="saisp:labs:08:contents:06">06. [15p] Interconectare mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="saisp:labs:08:contents:07">07. [10p] Conectarea mașinilor virtuale la rețeaua publică</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="saisp:labs:08:contents:08">08. [15p] Managementul mașinilor virtuale KVM folosind virsh</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="saisp:labs:08:contents:09">09. [5p] Rularea mașinilor virtuale de către un utilizator neprivilegiat</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="saisp:labs:08:contents:10">10. [BONUS - 10p] Migrarea mașinilor virtuale între noduri</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 PLUGIN_INCLUDE_END "saisp:labs:08:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="01.html#p_kernel-based_virtual_machine_kvm">01. [15p] Kernel-based Virtual Machine (KVM)</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="01.html#exportare_display_prin_vnc">Exportare display prin VNC</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          saisp/labs/08/contents/01.txt · Last modified: 2014/03/09 12:32 by mihai.carabas          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="01%3Fdo=media&amp;ns=saisp%253Alabs%253A08%253Acontents.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="01.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../../feed.php" title="Recent changes RSS feed"><img src="../../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../../lib/exe/indexer.php%3Fid=saisp%253Alabs%253A08%253Acontents%253A01&amp;1479894968" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>pa:instructiuni-schelet-cod-laborator</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-02-10T02:43:49+0200"/>
+<meta name="keywords" content="pa,instructiuni-schelet-cod-laborator"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=pa"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="instructiuni-schelet-cod-laborator.html"/>
+<link rel="canonical" href="../../../pa/instructiuni-schelet-cod-laborator.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='pa';var JSINFO = {"id":"pa:instructiuni-schelet-cod-laborator","namespace":"pa","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h1 class="sectionedit1" id="instructiuni_schelet_cod_laborator">Instructiuni schelet cod laborator</h1>
+<div class="level1">
+
+<p>
+1) Scheletele pentru problemele din laborator se pot descărca de pe wiki (în dreapta sus, este un link către scheletul de cod) sau direct din linia de comandă cu:
+</p>
+<pre class="code">wget http://elf.cs.pub.ro/pa/scheletCodPA.zip </pre>
+
+<p>
+Atentie! Numele arhivei este case sensitive. Dupa ce o descărcați, puteți să o dezarhivati pe HDD local. Din linia de comandă, puteți folosi:
+</p>
+<pre class="code">unzip scheletCodPA.zip</pre>
+
+<p>
+2) Trebuie sa editați fișierele din directorul corespunzător laboratorului curent:
+</p>
+<pre class="code">codeBase/$Limbaj/src-labX/ </pre>
+
+<p>
+De exemplu, un student care vrea să rezolve problema 2 din laboratorul 0 în C++ va edita fișierul corespunzător:
+</p>
+<pre class="code">codeBase/C++/src-lab0/lab0p2.cpp</pre>
+
+<p>
+Nu trebuie să mutați sau să redenumiți fișiere, pentru că nu va mai functiona corect Makefile-ul.
+</p>
+
+<p>
+3) Pentru a compila soluțiile, mergeți în directorul:
+</p>
+<pre class="code">codeBase/$Limbaj </pre>
+
+<p>
+si apelați Makefile, definind variabilele de mediu <strong>LAB</strong> și <strong>TASK</strong> astfel: 
+</p>
+<pre class="code">make LAB=0 TASK=2</pre>
+
+<p>
+Veți fi avertizați cu un mesaj la consola dacă unul din parametri este incorect.
+</p>
+
+<p>
+4) Executabilele vor fi generate in directorul:
+</p>
+<pre class="code">codeBase/$Limbaj</pre>
+
+<p>
+de unde le puteți rula cu <strong>./</strong>.
+</p>
+
+<p>
+5) Anul acesta ne dorim simplificarea fundamentală a scheletelor de cod scrise în C++. Pentru aceasta, am scris headere template-izate în <strong>VectorIO.h</strong> si <strong>PairIO.h</strong>. Practic, acum pentru citirea/scrierea de vectori/perechi la consolă/în fișiere, este suficient următorul cod:
+</p>
+<pre class="code cpp"><span class="co2">#include &quot;VectorIO.h&quot; // Includem headerul pentru IO.</span>
+&nbsp;
+std<span class="sy4">::</span><span class="me2">vector</span><span class="sy1">&lt;</span><span class="kw4">double</span><span class="sy1">&gt;</span> v<span class="sy4">;</span> <span class="co1">// Se poate specializa vectorul cu orice tip: float, int, string, std::pair&lt;float, int&gt;, etc.</span>
+std<span class="sy4">::</span><span class="kw3">cin</span> <span class="sy1">&gt;&gt;</span> v<span class="sy4">;</span> std<span class="sy4">::</span><span class="kw3">cout</span> <span class="sy1">&lt;&lt;</span> v<span class="sy4">;</span> <span class="co1">// Automagically works :).</span></pre>
+
+<p>
+De exemplu, dacă aveți de citit un vector de perechi, trebuie să includeți atât <strong>VectorIO.h</strong>, cat și <strong>PairIO.h</strong>.
+</p>
+
+<p>
+Singura observatie de facut aici este că atunci când se citește un vector, el trebuie dat la consolă sub forma:
+</p>
+<pre class="code">N
+v0 v1 v2 ... vn-1</pre>
+
+<p>
+6) Headerele și implementările pe care le punem noi la dispoziție se află în directoarele:
+</p>
+<pre class="code">codeBase/C++/include
+codeBase/C++/src
+codeBase/Java/src</pre>
+
+<p>
+Le puteți consulta și folosi după bunul plac, dar nu vă recomandăm să le modificați sau să le mutați în altă locație din motive ce țin de buna funcționare a comenzii <strong>make</strong>.
+</p>
+
+<p>
+Observații!
+- Makefile-ul este util doar in Linux!
+- Comanda wget exista doar in Linux!
+- $Limbaj poate fi <strong>C++</strong> sau <strong>Java</strong>, în funcție de preferințele fiecăruia (cu excepția Laboratorului 0, care are exerciții simple de acomodare cu STL și deci trebuie rezolvat în C++).
+</p>
+
+</div>
+</div>
+</body>
+</html>

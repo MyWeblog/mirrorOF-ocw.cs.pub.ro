@@ -1,0 +1,172 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>ndk:courses:11</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-08-10T14:00:47+0300"/>
+<meta name="keywords" content="ndk,courses,11"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=ndk:courses"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="11.html"/>
+<link rel="canonical" href="../../../../ndk/courses/11.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ndk:courses';var JSINFO = {"id":"ndk:courses:11","namespace":"ndk:courses","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="11.html#ndk_optimization_and_portability">11. NDK Optimization and Portability</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="11.html#lecture">Lecture</a></div></li>
+<li class="level3"><div class="li"><a href="11.html#practical">Practical</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="11.html#task_1_-_identifying_cpu_features">Task 1 - Identifying CPU features</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#task_2_-_build_standalone_toolchains">Task 2 - Build standalone toolchains</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#task_3_-_compiler_optimizations">Task 3 - Compiler optimizations</a></div></li>
+<li class="level4"><div class="li"><a href="11.html#task_4_-_optimized_libraries">Task 4 - Optimized libraries</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="ndk_optimization_and_portability">11. NDK Optimization and Portability</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Description: Porting NDK apps across hardware platforms and Android versions</div>
+</li>
+<li class="level1"><div class="li"> Practical part: Run/port NDK apps on different platforms (x86, ARM LE/BE), native executables</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "11. NDK Optimization and Portability" [1-230] -->
+<h3 class="sectionedit2" id="lecture">Lecture</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="../../../../_media/ndk/courses/lecture-11.pdf" class="media mediafile mf_pdf" title="ndk:courses:lecture-11.pdf (1.2 MB)"> Lecture Slides</a></div>
+</li>
+</ul>
+
+<p>
+<iframe title="" src="../../../../_media/ndk/courses/lecture-11.pdf" style="width:98%; height:400px"></iframe>
+</p>
+
+</div>
+<!-- EDIT2 SECTION "Lecture" [231-373] -->
+<h3 class="sectionedit3" id="practical">Practical</h3>
+<div class="level3">
+
+<p>
+<a href="../../../../_media/ndk/courses/lab-11.zip" class="media mediafile mf_zip" title="ndk:courses:lab-11.zip (1.7 MB)">lab-11.zip</a>
+</p>
+
+</div>
+
+<h4 id="task_1_-_identifying_cpu_features">Task 1 - Identifying CPU features</h4>
+<div class="level4">
+
+<p>
+Look over the print_cpu_features function found in the Lab11_Task1 project. This function helps identify the type of CPU being used and what features are available. These functions can help guard code optimized for different CPU features or to load certain libraries depending on CPU features.
+</p>
+
+</div>
+
+<h4 id="task_2_-_build_standalone_toolchains">Task 2 - Build standalone toolchains</h4>
+<div class="level4">
+
+<p>
+Build two NDK toolchains, one for ARM and one for x86.
+</p>
+<pre class="code">$NDKROOT/build/tools/make-standalone-toolchain.sh --platform=android-&lt;API_VERSION&gt; --arch=&lt;ARCHITECTURE&gt; --install-dir=&lt;DIRECTORY&gt;</pre>
+
+<p>
+Use these toolchains to compile the timing library. You must set the CROSS_COMPILE variable for make to use the new toolchains. The CROSS_COMPILE variable must contain the path to the toolchain and the common root of the tools. For example:
+</p>
+<pre class="code"> make CROSS_COMPILE=/home/student/ndk_x86_toolchain/bin/i686-linux-android-</pre>
+
+<p>
+Compile the library for both x86 and ARM and give them a different name. Add the libraries to your project. In Application.mk make sure to select only x86, armeabi and armeabi-v7a.
+</p>
+
+<p>
+Then, in Android.mk, add the library module to the compilation:
+</p>
+<pre class="code">include $(CLEAR_VARS)
+
+ifeq ($(TARGET_ARCH_ABI),x86)
+ARCH_SRC_FILES  := libtiming_x86.a
+endif
+ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+ARCH_SRC_FILES  := libtiming_arm.a
+endif
+ifeq ($(TARGET_ARCH_ABI),armeabi)
+ARCH_SRC_FILES  := libtiming_arm.a
+endif
+
+LOCAL_MODULE    := timing
+LOCAL_SRC_FILES := $(ARCH_SRC_FILES)
+
+include $(PREBUILT_STATIC_LIBRARY)</pre>
+
+<p>
+Test that the project compiles correctly. Run the program and check how much time it takes for the loop in timing_test to run. Check the header of the library for <abbr title="Application Programming Interface">API</abbr> details.
+</p>
+
+</div>
+
+<h4 id="task_3_-_compiler_optimizations">Task 3 - Compiler optimizations</h4>
+<div class="level4">
+
+<p>
+Add the timing library to the Lab11_Task3 project. Compile the project with -O0 flags (LOCAL_CFLAGS) and check how much time it takes to run the grayscale function. Then compile the project with -O2 and check again. Try the -msse, -msse2 and -msse3 and see if there is any noticeable difference. On ARM, see if compiling with NEON support makes any difference. To add NEON support, append to the file name in the Android.mk file (not the filename itself) the .neon extension.
+</p>
+
+</div>
+
+<h4 id="task_4_-_optimized_libraries">Task 4 - Optimized libraries</h4>
+<div class="level4">
+
+<p>
+Since the architecture and features are not known at compile time, an usual way to choose optimized code is to dynamically load libraries. Compile the files in the optimized_libs folder using the android toolchain. Add these libraries to one of the project in the libs folder. Use dlopen to load the library, once the &#039;unoptimized&#039; one (libprint_no.so) and then the optimized one (libprint_o.so). Add the header print.h header to your project and call the optimized_print function after calling dlopen.
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Practical" [374-] --></div>
+</body>
+</html>

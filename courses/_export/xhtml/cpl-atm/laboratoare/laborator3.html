@@ -1,0 +1,186 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cpl-atm:laboratoare:laborator3</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-11-01T13:13:33+0200"/>
+<meta name="keywords" content="cpl-atm,laboratoare,laborator3"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cpl-atm:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="laborator3.html"/>
+<link rel="canonical" href="../../../../cpl-atm/laboratoare/laborator3.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cpl-atm:laboratoare';var JSINFO = {"id":"cpl-atm:laboratoare:laborator3","namespace":"cpl-atm:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator3.html#laborator_3_-_jison">Laborator 3 - Jison</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator3.html#instalarea_jison">Instalarea Jison</a></div></li>
+<li class="level2"><div class="li"><a href="laborator3.html#lexer">Lexer</a></div></li>
+<li class="level2"><div class="li"><a href="laborator3.html#exemplu">Exemplu</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_3_-_jison">Laborator 3 - Jison</h1>
+<div class="level1">
+
+<p>
+Jison este un generator de parsere pentru javascript. Acesta are sintaxa similara cu Flex si Yacc.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laborator 3 - Jison" [1-135] -->
+<h2 class="sectionedit2" id="instalarea_jison">Instalarea Jison</h2>
+<div class="level2">
+
+<p>
+Instalarea jison se poate face fie local in directorul proiectului folosind
+</p>
+<pre class="code">npm install jison</pre>
+
+<p>
+fie global folosind
+</p>
+<pre class="code">npm install -g jison</pre>
+
+</div>
+<!-- EDIT2 SECTION "Instalarea Jison" [136-331] -->
+<h2 class="sectionedit3" id="lexer">Lexer</h2>
+<div class="level2">
+<pre class="code">npm install -g jison-lex</pre>
+
+</div>
+<!-- EDIT3 SECTION "Lexer" [332-390] -->
+<h2 class="sectionedit4" id="exemplu">Exemplu</h2>
+<div class="level2">
+
+<p>
+O să construim cu ajutorul unui lexer, un program simplu care calculează suma mai multor numere.
+</p>
+
+<p>
+Pentru început, definim lexerul:
+</p>
+<dl class="code">
+<dt><a href="../../../code/cpl-atm/laboratoare/laborator3%3Fcodeblock=3" title="Download Snippet" class="mediafile mf_lex">sum.lex</a></dt>
+<dd><pre class="code lex">%%
+[0-9]+	return 'NUMBER';
+'+'	return '+';
+' '+	return 'SPACE';
+%%</pre>
+</dd></dl>
+
+<p>
+Generăm un fișier js din acesta:
+</p>
+<pre class="code">jison-lex sum.lex</pre>
+
+<p>
+Observăm că a apărut un nou fișier numit <code>sum.js</code>.
+</p>
+
+<p>
+Acest fișier trebuie modificat astfel:
+</p>
+<ul>
+<li class="level1"><div class="li"> se șterge tot conținutul funcției <code>parseError</code> și se lasă doar <code>throw new Error(str);</code></div>
+</li>
+<li class="level1"><div class="li"> la sfârșitul fișierului trebuie adăugată următoarea linie <code>exports.nume_fisier = nume_fisier</code>, unde <code>nume_fisier</code> reprezintă numele fișierului anterior, fără extensie; în cazul nostru, <code>sum</code>.</div>
+</li>
+</ul>
+
+<p>
+Construim programul de bază. Vom realiza un parser, folosindu-ne de lexerul anterior.
+</p>
+<dl class="code">
+<dt><a href="../../../code/cpl-atm/laboratoare/laborator3%3Fcodeblock=5" title="Download Snippet" class="mediafile mf_lex">main.lex</a></dt>
+<dd><pre class="code lex">var lexer = require(&quot;./sum.js&quot;).sum;
+lexer.setInput(&quot;10+12+1&quot;);
+&nbsp;
+&nbsp;
+function my_sum ()
+{
+	var sum = 0;
+	var i;
+&nbsp;
+	for (i = 0; i &lt; tokens.length; i++)
+		if (tokens[i][0] == 'NUMBER')
+			sum = sum + tokens[i][1];
+&nbsp;
+	console.log(&quot;Sum = &quot; + sum);
+}
+&nbsp;
+&nbsp;
+var token;
+var tokens = [];
+do
+{
+	token = lexer.lex();
+	if (token != 'SPACE' &amp;&amp; token != lexer.EOF)
+		tokens.push([token, parseInt(lexer.yytext)]);
+}
+while (token != lexer.EOF);
+&nbsp;
+my_sum();</pre>
+</dd></dl>
+
+</div>
+
+<h5 id="exercitiu">Exercițiu</h5>
+<div class="level5">
+
+<p>
+Construiți un lexer pentru următoarea gramatică:
+</p>
+<pre class="code">xml: &lt;ID parameters&gt;xml&lt;/ID&gt;
+parameters: parameter parameters |;
+parameter: ID = &quot;TEXT&quot;
+TEXT: &#039;{&#039; ALFANUMERIC &#039;}&#039;</pre>
+
+<p>
+Realizați în js un parser pentru aceasta.
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Exemplu" [391-] --></div>
+</body>
+</html>

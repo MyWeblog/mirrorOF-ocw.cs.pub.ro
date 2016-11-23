@@ -1,0 +1,937 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-03-07T16:29:42+0200"/>
+<meta name="keywords" content="saisp,labs,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=saisp:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../saisp/labs/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs';var JSINFO = {"id":"saisp:labs:02","namespace":"saisp:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+
+
+<h1 class="sectionedit1" id="laborator_2_administrarea_ldap">Laborator 2. Administrarea LDAP</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Laborator 2. Administrarea LDAP" [12-58] -->
+<h2 class="sectionedit2" id="cunostinte_si_abilitati_ce_vor_fi_dobandite">Cunoștințe și abilități ce vor fi dobândite</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Autentificarea în Unix bazată pe LDAP</div>
+</li>
+<li class="level1"><div class="li"> Configurarea unui server de LDAP</div>
+</li>
+<li class="level1"><div class="li"> Instalarea unui server de LDAP</div>
+</li>
+<li class="level1"><div class="li"> Securizarea accesului la serverul de LDAP</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Cunoștințe și abilități ce vor fi dobândite" [59-284] -->
+<h2 class="sectionedit3" id="pregatire_infrastructura_de_laborator">Pregătire infrastructură de laborator</h2>
+<div class="level2">
+
+<p>
+Vom rula o masină virtuală în <a href="http://cloud.curs.pub.ro" class="urlextern" title="http://cloud.curs.pub.ro"  rel="nofollow"> cloud-ul facultății</a>. Pentru a porni o astfel de masină urmăriți tutorialul de la <a href="https://cloud.curs.pub.ro/about/tutorial-for-students/" class="urlextern" title="https://cloud.curs.pub.ro/about/tutorial-for-students/"  rel="nofollow"> această adresă</a>. Când creați instanța de mașină virtuală (în fereastra “Launch instance”):
+</p>
+<ul>
+<li class="level1"><div class="li"> La opțiunea <code>Availability zone</code> să alegeți <code>CI</code> sau <code>hp</code>.</div>
+</li>
+<li class="level3"><div class="li"> La opțiunea <code>Instance Boot Source</code> să alegeți <code>Boot from Image</code>.</div>
+</li>
+<li class="level3"><div class="li"> La opțiunea <code>Image Name</code> (apărută după ce efectuați pasul de mai sus) să alegeți imaginea <code>SAISP Template v1</code>.</div>
+</li>
+</ul>
+
+<p>
+Pentru a pregăti configurația de laborator, pe mașina virtuală folosiți comenzile următoare din contul utilizatorului <code>student</code>:
+</p>
+<ul>
+<li class="level1"><div class="li"> <pre class="code -bash">student@mjolnir:~/saisp$ cd saisp/
+student@mjolnir:~/saisp$ wget --user=user-curs --ask-password http://repository.grid.pub.ro/cs/saisp/laboratoare/lab-02.zip
+student@mjolnir:~/saisp$ unzip lab-02.zip</pre>
+</div>
+</li>
+</ul>
+
+<p>
+În urma dezarhivării rezultă trei fișiere imagine KVM (format <code>qcow2</code>) și un script de pornire a mașinilor virtuale. Imaginea de bază <code>base.qcow2</code> este baza pentru celelalte două fișiere: <code>ldap-client.qcow2</code> și <code>ldap-server.qcow2</code>.
+</p>
+
+<p>
+Pentru pornirea celor două mașini virtuale (clientul de LDAP și serverul de LDAP) rulați scriptul de pornire:
+</p>
+<pre class="code -bash">student@mjolnir:~/saisp$ ./ldap-start-kvm</pre>
+
+<p>
+Pentru accesarea celor două mașini folosiți SSH către adresele IP aferente fiecăreia. Pentru conectarea la mașina virtuală pentru serverul de LDAP folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.0.2</pre>
+
+<p>
+iar pentru conectarea la clientul de LDAP folosiți comanda
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~/saisp$ </span><span class="kw2">ssh</span> <span class="re5">-l</span> root 192.168.0.3</pre>
+
+<p>
+Parola pe cele două mașini virtuale este <code>student</code> atât pentru utilizatorul <code>root</code> cât și pentru utilizatorul <code>student</code>.
+</p>
+<div class="hiddenGlobal  hiddenActive"><div class="hiddenElements"></div><div class="hiddenHead  hiddenSinceBeginning"><div class="hiddenOnHidden">
+<p>
+Detalii rulare masina virtuala KVM local
+</p>
+</div><div class="hiddenOnVisible">
+<p>
+Detalii rulare masina virtuala KVM local
+</p>
+</div></div> <!-- .hiddenHead --><div class="hiddenBody">
+<p>
+Pentru a pregăti configurația de laborator va trebui să descărcați pe mașina fizică (mjolnir), în directorul saisp/, arhiva laboratorului (<code>base.qcow2</code> există deja):
+</p>
+<pre class="code -bash">student@mjolnir:~/saisp$ wget --user=user-curs --ask-password http://repository.grid.pub.ro/cs/saisp/laboratoare/base.qcow2
+student@mjolnir:~/saisp$ wget --user=user-curs --ask-password http://repository.grid.pub.ro/cs/saisp/laboratoare/lab-02.zip
+student@mjolnir:~/saisp$ unzip lab-02.zip</pre>
+
+<p>
+Puteți urma pașii de mai sus pentru a descărca infrastructura KVM pentru laborator pentru lucru acasă.
+</p>
+</div></div>
+</div>
+<!-- EDIT3 SECTION "Pregătire infrastructură de laborator" [285-2887] -->
+<h2 class="sectionedit4" id="navigare">Navigare</h2>
+<div class="level2">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/02.html" class="wikilink1" title="saisp:labs:02">Laboratorul 2</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT5 PLUGIN_INCLUDE_START "saisp:labs:02:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:meta:nav">
+<div class="level2">
+
+<div><div id="nojs_indexmenu_10164084995835677d51f8d" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/01.html" class="wikilink1" title="saisp:labs:02:contents:01">01. [15p] Configurare autentificare Unix prin LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/02.html" class="wikilink1" title="saisp:labs:02:contents:02">02. [15p] Configurare grupuri POSIX în LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/03.html" class="wikilink1" title="saisp:labs:02:contents:03">03. [10p] Configurare autentificare LDAP pentru anumite grupuri</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/04.html" class="wikilink1" title="saisp:labs:02:contents:04">04. [15p] Configurare hostname prin LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/05.html" class="wikilink1" title="saisp:labs:02:contents:05">05. [10p] Actualizare configurare pentru server</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/06.html" class="wikilink1" title="saisp:labs:02:contents:06">06. [10p] Instalare server de LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/07.html" class="wikilink1" title="saisp:labs:02:contents:07">07. [15p] Configurare suport SSL/TLS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/08.html" class="wikilink1" title="saisp:labs:02:contents:08">08. [10p] Configurare ACL în serverul de LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/09.html" class="wikilink1" title="saisp:labs:02:contents:09">09. [BONUS - 10p] Configurare suplimentară de ACL în serverul de LDAP</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT6 PLUGIN_INCLUDE_END "saisp:labs:02:meta:nav" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT4 SECTION "Navigare" [2888-3002] -->
+<h2 class="sectionedit7" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT8 PLUGIN_INCLUDE_START "saisp:labs:02:contents:01" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:01">
+
+<h3 class="sectionedit10" id="p_configurare_autentificare_unix_prin_ldap">01. [15p] Configurare autentificare Unix prin LDAP</h3>
+<div class="level3">
+
+<p>
+Serviciul de LDAP poate fi folosit ca mod centralizat de a permite autentificarea altor servicii. În laboratorul 1, am configurat <a href="../../../../saisp/labs/01/contents/07.html" class="wikilink1" title="saisp:labs:01:contents:07">DokuWiki</a> și <a href="../../../../saisp/labs/01/contents/07.html" class="wikilink1" title="saisp:labs:01:contents:07">MediaWiki</a> pentru a folosi serviciul de LDAP pentru autentificare. O formă frecventă, mai ales în mediile care folosesc Active Directory, este autentificare utilizatorilor locali prin LDAP.
+</p>
+
+<p>
+În cele ce urmează vom configura sistemul client pentru a folosi back-end-ul LDAP server pentru autentificarea utilizatorilor. Adică să fie folosite numele de utilizator și parola din baza de date LDAP pentru autentificarea unui utilizator local în Unix. Pentru aceasta vom configura PAM (<em>Pluggable Authentication Module</em>) și NSS (<em>Name Service Switch</em>) pentru a permite autentificarea prin LDAP. În baza de date LDAP sunt deja configurați utilizatori, fiecare cu parola <code>student</code>. Pentru a vedea utilizatorii rulăm, pe stația client, comanda:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> dn
+dn: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Configurarea autentificării Unix prin LDAP o vom face pe stația client. Utilizatorii de pe stația client vor fi autentificați folosind datele din cadrul serverului de LDAP. Vom configura întâi NSS și apoi vom configura PAM.
+</p>
+
+<p>
+Pentru configurarea NSS cu suport LDAP instalăm pe stația client pachetul <code>libnss-ldap</code> și răspundem la întrebări cu datele de conectare la serverul de LDAP, ca mai jos:
+</p>
+<ul>
+<li class="level1"><div class="li"> <em>LDAP server Uniform Resource Identifier</em>: <code>ldaps://192.168.0.2</code></div>
+</li>
+<li class="level1"><div class="li"> <em>Distinguished name of the search base</em>: <code>dc=labs,dc=cs,dc=pub,dc=ro</code></div>
+</li>
+<li class="level1"><div class="li"> <em>LDAP version to use</em>: <code>3</code></div>
+</li>
+<li class="level1"><div class="li"> <em>LDAP account for root</em>: <code>cn=admin,dc=labs,dc=cs,dc=pub,dc=ro</code></div>
+</li>
+<li class="level1"><div class="li"> <em>LDAP root account password</em>: <code>student</code></div>
+</li>
+<li class="level1"><div class="li"> <em>Configuring nslcd, LDAP server <abbr title="Uniform Resource Identifier">URI</abbr></em>: <code>ldaps://192.168.0.2</code> (valoarea implicită)</div>
+</li>
+<li class="level1"><div class="li"> <em>Configuring nslcd, LDAP server search base</em>: <code>dc=labs,dc=cs,dc=pub,dc=ro</code> (valoarea implicită)</div>
+</li>
+<li class="level1"><div class="li"> <em>Check server&#039;s SSL certificate</em>: <code>never</code></div>
+</li>
+</ul>
+
+<p>
+<p><div class="noteimportant">
+Configuarea <code>never</code> pentru verificarea certificatului serverului nu este recomandată în mediile de producție. O folosim aici pentru simplitate.
+
+</div></p>
+</p>
+
+<p>
+După acest proces de instalare și configurare a fost instalat și pornit <em>Name Service Caching Daemon</em>. Acesta cache-uiește informații transmise de NSS (<em>Name Service Switch</em>) pentru a evita overhead-ul cauzat de interogări continue.
+</p>
+
+<p>
+Pentru a valida configurarea inspectăm pe stația client fișierele <code>/etc/libnss-ldap.conf</code> și <code>/etc/libnss-ldap.secret</code>:
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="co0"># cat /etc/libnss-ldap.conf | grep -v '^#' | grep -v '^[ \t]*$'</span>
+base <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+uri ldaps:<span class="sy0">//</span>192.168.0.2
+ldap_version <span class="nu0">3</span>
+rootbinddn <span class="re2">cn</span>=admin,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+<span class="co4">root@ldap-client:~# </span><span class="kw2">cat</span> <span class="sy0">/</span>etc<span class="sy0">/</span>libnss-ldap.secret 
+student</pre>
+
+<p>
+Pentru a activa suportul LDAP în NSS, configurăm fișierul <code>/etc/nsswitch.conf</code>. Folosim un editor și edităm liniile aferente categoriilor <code>passwd</code>, <code>group</code> și <code>shadow</code>, ca mai jos:
+</p>
+<dl class="file">
+<dt><a href="../../../code/saisp/labs/02%3Fcodeblock=7" title="Download Snippet" class="mediafile mf_conf">nsswitch.conf</a></dt>
+<dd><pre class="code file none"># /etc/nsswitch.conf
+#
+# Example configuration of GNU Name Service Switch functionality.
+# If you have the `glibc-doc-reference' and `info' packages installed, try:
+# `info libc &quot;Name Service Switch&quot;' for information about this file.
+&nbsp;
+passwd:         files ldap
+group:          files ldap
+shadow:         files ldap
+&nbsp;
+hosts:          files mdns4_minimal [NOTFOUND=return] dns
+networks:       files
+&nbsp;
+protocols:      db files
+services:       db files
+ethers:         db files
+rpc:            db files
+&nbsp;
+netgroup:       nis</pre>
+</dd></dl>
+
+<p>
+După configurarea NSS în fișierul <code>/etc/nsswitch.conf</code>, repornim <code>nscd</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>service nscd restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Restarting Name Service Cache Daemon: nscd.</pre>
+
+<p>
+și apoi verificăm servirea datelor prin LDAP folosind comenzi precum <code>getent</code>, <code>id</code> și <code>finger</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span><span class="kw2">getent</span> <span class="kw2">passwd</span> amengsk
+amengsk:x:<span class="nu0">1001</span>:<span class="nu0">1000</span>:Arcturus Mengsk,,,:<span class="sy0">/</span>home<span class="sy0">/</span>amengsk:<span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw2">bash</span>
+&nbsp;
+<span class="co4">root@ldap-client:~# </span><span class="kw2">id</span> amengsk
+<span class="re2">uid</span>=<span class="nu0">1001</span><span class="br0">&#40;</span>amengsk<span class="br0">&#41;</span> <span class="re2">gid</span>=<span class="nu0">1000</span><span class="br0">&#40;</span>student<span class="br0">&#41;</span> <span class="re2">groups</span>=<span class="nu0">1000</span><span class="br0">&#40;</span>student<span class="br0">&#41;</span>
+&nbsp;
+<span class="co4">root@ldap-client:~# </span>finger amengsk
+Login: amengsk        			Name: Arcturus Mengsk
+Directory: <span class="sy0">/</span>home<span class="sy0">/</span>amengsk            	Shell: <span class="sy0">/</span>bin<span class="sy0">/</span><span class="kw2">bash</span>
+Never logged in.
+No mail.
+No Plan.</pre>
+
+<p>
+<p><div class="noteimportant">
+Parola utilizatorului <code>amengsk</code> trebuie setata folosind <code>ldappasswd</code>.
+</p>
+
+<p>
+Revedeti Laboratorul 1: <a href="../../../../saisp/labs/01/contents/06.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06"  rel="nofollow">http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06</a>
+
+</div></p>
+</p>
+
+<p>
+Observăm că acum sistemul furnizează informații despre utilizatori din baza de date LDAP. Întrucât a fost instalat și configurat simultan pachetul <code>libpam-ldap</code>, vom putea sa ne și autentificăm la utilizatorul <code>amengsk</code>. Putem face acest lucru folosind comanda <code>ssh</code> de pe sistemul fizic:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>vm<span class="sy0">/</span>kvm$ <span class="kw2">ssh</span> <span class="re5">-l</span> amengsk 192.168.0.3
+amengsk<span class="sy0">@</span>192.168.0.3<span class="st_h">'s password: 
+[...]
+Could not chdir to home directory /home/amengsk: No such file or directory
+amengsk@ldap-client:/$</span></pre>
+
+<p>
+Observăm că nu a fost creat directorul home pentru utilizator pe stația client. Pentru aceasta cel mai simplu este să activăm modulul <code>pam_mkhomedir</code> prin editarea fișierului <code>/etc/pam.d/common-session</code> și adăugarea liniei:
+</p>
+<pre class="code">session required        pam_mkhomedir.so skel=/etc/skel/ umask=0022</pre>
+
+<p>
+După configurarea liniei de mai sus va funcționa conectarea la stația client și crearea directorului home al utilizatorului cu care a fost realizată autentificarea:
+</p>
+<pre class="code bash">razvan<span class="sy0">@</span>einherjar:~<span class="sy0">/</span>vm<span class="sy0">/</span>kvm$ <span class="kw2">ssh</span> <span class="re5">-l</span> amengsk 192.168.0.3
+amengsk<span class="sy0">@</span>192.168.0.3<span class="st_h">'s password: 
+Creating directory '</span><span class="sy0">/</span>home<span class="sy0">/</span>amengsk<span class="st_h">'.
+[...]
+amengsk@ldap-client:~$ </span></pre>
+
+<p>
+Mai sus apare mesajul creării directorului home al utilizatorului <code>amengsk</code>. Sistemul funcționează corespunzător cu autentificarea utilizatorilor prin intermediul LDAP.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "01. [15p] Configurare autentificare Unix prin LDAP" [1-] --><!-- EDIT9 PLUGIN_INCLUDE_END "saisp:labs:02:contents:01" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT11 PLUGIN_INCLUDE_START "saisp:labs:02:contents:02" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:02">
+
+<h3 class="sectionedit13" id="p_configurare_grupuri_posix_in_ldap">02. [15p] Configurare grupuri POSIX în LDAP</h3>
+<div class="level3">
+
+<p>
+Pentru a avea granularitate la oferirea de drepturi, putem folosi grupuri POSIX în LDAP. Un grup POSIX este identificat în LDAP de un atribut <code>cn</code> și necesită un identificator de grup, adică atributul <code>gidNumber</code>.
+</p>
+
+<p>
+Creați două fișiere LDIF denumite <code>cn-fighters.ldif</code> și <code>cn-politicians.ldif</code> în care creați două grupuri:
+</p>
+<ul>
+<li class="level1"><div class="li"> grupul <code>politicians</code> identificat de <code>cn=politicians,dc=labs,dc=cs,dc=pub,dc=ro</code>, cu <code>gidNumber</code> la valoarea <code>1500</code> și având în componență pe <code>amengsk</code> și <code>vmengsk</code>;</div>
+</li>
+<li class="level1"><div class="li"> grupul <code>fighters</code> identificat de <code>cn=fighters,dc=labs,dc=cs,dc=pub,dc=ro</code>, cu <code>gidNumber</code> la valoarea <code>1501</code> și având în componență pe <code>raynor</code>, <code>horner</code>, <code>zeratul</code> și <code>artanis</code>.</div>
+</li>
+</ul>
+
+<p>
+După ce creați cele două fișiere LDIF încărcați-le în LDAP și verificați prezența noilor grupuri folosind comanda <code>getent</code> și a apartenței utilizatorilor la grupuri folosind comanda <code>id</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Fiecare membru al unui grup este indicat în fișierul LDIF de o linie de forma:
+</p>
+<pre class="code">memberUid: &lt;uid&gt;</pre>
+
+<p>
+unde <code>&lt;uid&gt;</code> este identificatorul literal al utilizatorului care face parte din grup. De exemplu, <code>amengsk</code> sau <code>artanis</code>.
+</p>
+
+<p>
+Clasa LDAP folosită pentru grupuri este <code>posixGroup</code>. Consultați schema acesteia pe stația server în fișierul <code>/etc/ldap/schema/nis.schema</code>; căutați în fișier după <code>posixGroup</code>.
+</p>
+
+<p>
+Reporniți NSCD pentru a încărca noile configurații.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "02. [15p] Configurare grupuri POSIX în LDAP" [1-] --><!-- EDIT12 PLUGIN_INCLUDE_END "saisp:labs:02:contents:02" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT14 PLUGIN_INCLUDE_START "saisp:labs:02:contents:03" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:03">
+
+<h3 class="sectionedit16" id="p_configurare_autentificare_ldap_pentru_anumite_grupuri">03. [10p] Configurare autentificare LDAP pentru anumite grupuri</h3>
+<div class="level3">
+
+<p>
+Ne propunem ca pe stația client să se autentifice doar utilizatorii din grupul POSIX <code>politicians</code> stocat în baza de date LDAP. Realizați această configurare și testați-o. Urmăriți și mesajele de jurnalizare din fișierul <code>/var/log/auth.log</code> pentru verificare.
+</p>
+
+<p>
+<p><div class="notetip">
+Indicații despre configurarea unui anumit grup găsiți aici: <a href="https://wiki.debian.org/LDAP/PAM" class="urlextern" title="https://wiki.debian.org/LDAP/PAM"  rel="nofollow">https://wiki.debian.org/LDAP/PAM</a>, secțiunea “Allowing logins on a per-group basis”.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+Parola utilizatorului <code>raynor</code> trebuie setata folosind <code>ldappasswd</code>.
+</p>
+
+<p>
+Revedeti Laboratorul 1: <a href="../../../../saisp/labs/01/contents/06.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06"  rel="nofollow">http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06</a>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT16 SECTION "03. [10p] Configurare autentificare LDAP pentru anumite grupuri" [1-] --><!-- EDIT15 PLUGIN_INCLUDE_END "saisp:labs:02:contents:03" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT17 PLUGIN_INCLUDE_START "saisp:labs:02:contents:04" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:04">
+
+<h3 class="sectionedit19" id="p_configurare_hostname_prin_ldap">04. [15p] Configurare hostname prin LDAP</h3>
+<div class="level3">
+
+<p>
+Modul în care se face interogarea numelor de stații (<em>hostname</em>) este descris în <code>/etc/nsswitch.conf</code>, componenta <code>hosts</code>. De obicei se întâmplă prin <abbr title="Domain Name System">DNS</abbr> și prin intermediul fișierului <code>/etc/hosts</code>. Putem adăuga intrări și prin LDAP.
+</p>
+
+<p>
+Configurați suport de LDAP în NSS (<em>Name Service Switch</em>) pe stația client astfel încât serverul LDAP să fie accesibil prin numele <code>server</code>, clientul prin numele <code>client</code> iar sistemul fizic prin numele <code>host</code>. Pentru validare folosiți <code>getent</code> și <code>ping</code>.
+</p>
+
+<p>
+Folosiți pe post de <code>dn</code> valorile:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>cn=server,dc=labs,dc=cs,dc=pub,dc=ro</code></div>
+</li>
+<li class="level1"><div class="li"> <code>cn=client,dc=labs,dc=cs,dc=pub,dc=ro</code></div>
+</li>
+<li class="level1"><div class="li"> <code>cn=host,dc=labs,dc=cs,dc=pub,dc=ro</code></div>
+</li>
+</ul>
+
+<p>
+Va trebui sa creati fisiere ldif care sa descrie valorile de mai sus, iar apoi sa adaugati intrarile respective in baza de date LDAP.
+</p>
+
+<p>
+<p><div class="notetip">
+Urmăriți schema clasei <code>ipHost</code> descrisă în fișierul <code>/etc/ldap/schema/nis.schema</code> de pe stația server.
+</p>
+
+<p>
+Urmăriți exemplul de configurare de aici: <a href="https://wiki.archlinux.org/index.php/LDAP_Hosts" class="urlextern" title="https://wiki.archlinux.org/index.php/LDAP_Hosts"  rel="nofollow">https://wiki.archlinux.org/index.php/LDAP_Hosts</a>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT19 SECTION "04. [15p] Configurare hostname prin LDAP" [1-] --><!-- EDIT18 PLUGIN_INCLUDE_END "saisp:labs:02:contents:04" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT20 PLUGIN_INCLUDE_START "saisp:labs:02:contents:05" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:05">
+
+<h3 class="sectionedit22" id="p_actualizare_configurare_pentru_server">05. [10p] Actualizare configurare pentru server</h3>
+<div class="level3">
+
+<p>
+Serverul de LDAP are două tipuri de baze de date. O bază de date internă, pentru configuare, și o bază de date cu informații LDAP. Baza de date internă permite serverului de LDAP configurarea acestuia tot prin comenzi LDAP; se asigură astfel o interfață unificată și, mai mult, posibilitatea de a realiza configurații fără a fi nevoie de repornirea serverului.
+</p>
+
+<p>
+Pentru a urmări și configura întreaga bază de date de internă a serverului rulăm, pe stația de tip server, comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;cn=config&quot;</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Sunt afișate foarte multe informații, practic toată baza de date internă a serverului LDAP. Dacă vrem să afișăm doar informațiile ce țin de configurarea informațiilor, vom investiga intrarea <code>olcDatabase={1}hdb,cn=config</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span>
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">olcDatabase</span>=<span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb,<span class="re2">cn</span>=config
+objectClass: olcDatabaseConfig
+objectClass: olcHdbConfig
+olcDatabase: <span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb
+olcDbDirectory: <span class="sy0">/</span>var<span class="sy0">/</span>lib<span class="sy0">/</span>ldap
+olcSuffix: <span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Dacă vrem să afișăm informații legate strict de configurarea serverului LDAP (număr de thread-uri folosite, nivel de jurnalizare, certificat) vom investiga doar baza intrării <code>cn=config</code>:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;cn=config&quot;</span> <span class="re5">-s</span> base
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">cn</span>=config
+objectClass: olcGlobal
+cn: config
+olcArgsFile: <span class="sy0">/</span>var<span class="sy0">/</span>run<span class="sy0">/</span>slapd<span class="sy0">/</span>slapd.args
+olcLogLevel: none
+olcPidFile: <span class="sy0">/</span>var<span class="sy0">/</span>run<span class="sy0">/</span>slapd<span class="sy0">/</span>slapd.pid
+olcTLSCACertificateFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>cacert.org_root.pem
+olcTLSCertificateFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>slapd-cert.pem
+olcTLSCertificateKeyFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>private<span class="sy0">/</span>slapd-key.pem
+olcToolThreads: <span class="nu0">1</span></pre>
+
+<p>
+Directivele de configurare în serverul LDAP sunt atribute în intrările cu dn-uri care se termină în <code>cn=config</code>. Atributele încep cu prefixul <code>olc</code> însemnând <em>OpenLDAP Configuration</em>.
+</p>
+
+<p>
+Dorim să configurăm nivelul de jurnalizare al serverului LDAP. Directiva de configurare se numește <code>olcLogLevel</code>, așa cum este documentată <a href="http://www.openldap.org/doc/admin24/slapdconf2.html#cn=config" class="urlextern" title="http://www.openldap.org/doc/admin24/slapdconf2.html#cn=config"  rel="nofollow">aici</a>. Observăm că area valoarea <code>none</code>. Vrem să-i schimbăm valoarea la <code>stats</code>.
+</p>
+
+<p>
+Pentru aceasta construim un fișier LDIF:
+</p>
+<dl class="file">
+<dt><a href="../../../code/saisp/labs/02%3Fcodeblock=33" title="Download Snippet" class="mediafile mf_ldif">change-log-level.ldif</a></dt>
+<dd><pre class="code file none">dn: cn=config
+changetype: modify
+replace: olcLogLevel
+olcLogLevel: stats</pre>
+</dd></dl>
+
+<p>
+ apoi încărcăm fișierul în baza de date LDAP:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapadd <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-f</span> change-log-level.ldif
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+modifying entry <span class="st0">&quot;cn=config&quot;</span></pre>
+
+<p>
+ și verificăm faptul că a fost încărcat corespunzător:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;cn=config&quot;</span> <span class="re5">-s</span> base olcLogLevel
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">cn</span>=config
+olcLogLevel: stats</pre>
+
+<p>
+În exemplul de mai sus am creat un fișier LDIF care a modificat valoarea atributului <code>olcLogLevel</code> la valoarea <code>stats</code>. Putem observa informațiile de jurnalizare generate de serverul de LDAP în fișierul <code>/var/log/syslog</code> de pe stația server; eventual facem niște cereri de interogare LDAP (folosind <code>ldapsearch</code>) de pe stația client.
+</p>
+
+<p>
+<strong>Exercițiu</strong>: Modificați nivelul de jurnalizare al serverului LDAP astfel încât să jurnalizeze și mesaje de tipul <code>stats</code> și mesaje de tipul <code>stats2</code>. E ceva simplu <img src="../../../../lib/images/smileys/icon_smile.gif" class="icon" alt=":-)" />
+</p>
+
+</div>
+<!-- EDIT22 SECTION "05. [10p] Actualizare configurare pentru server" [1-] --><!-- EDIT21 PLUGIN_INCLUDE_END "saisp:labs:02:contents:05" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT23 PLUGIN_INCLUDE_START "saisp:labs:02:contents:06" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:06">
+
+<h3 class="sectionedit25" id="p_instalare_server_de_ldap">06. [10p] Instalare server de LDAP</h3>
+<div class="level3">
+
+<p>
+Ne propunem să urmărim pașii instalării unui server de LDAP. Pentru aceasta o să instalăm un server LDAP pe stația client. Nu este util să existe două servere de LDAP, dar este mai ușor să instalăm un server de la zero decât să dezinstalăm și apoi să reinstalăm pe stația server.
+</p>
+
+<p>
+Pachetul pentru serverul de LDAP se numește <code>slapd</code>; îl instalăm
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span><span class="kw2">apt-get install</span> slapd</pre>
+
+<p>
+O să fie cerută parola serverului de LDAP. Introduceți o parolă dorită; recomandăm parola <code>student</code> pentru “unformitate”.
+</p>
+
+<p>
+După ce am instalat serverul urmărim că ascultă conexiuni pe portul LDAP 389
+</p>
+<pre class="code bash">root<span class="sy0">@</span>ldap-client:<span class="sy0">/</span>etc<span class="sy0">/</span>ldap<span class="sy0">/</span>ldif<span class="sy0">/</span>lab-02-solution<span class="co0"># netstat -tlpn | grep slapd</span>
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">389</span>             0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">5985</span><span class="sy0">/</span>slapd      
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">389</span>                  :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">5985</span><span class="sy0">/</span>slapd </pre>
+
+<p>
+Nu ni s-au cerut alte opțiuni pentru configurare. Asta pentru că serverul LDAP consideră că base dn-ul este FQDN-ul stației. În cazul de față este vorba de FQDN-ul <code>tasks.cs.pub.ro</code>, deci base dn-ul va fi <code>dc=tasks,dc=cs,dc=pub,dc=ro</code>. Putem urmări aceste lucru prin interograrea serverului LDAP local:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-s</span> base <span class="re5">-b</span> <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span>
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">olcDatabase</span>=<span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb,<span class="re2">cn</span>=config
+objectClass: olcDatabaseConfig
+objectClass: olcHdbConfig
+olcDatabase: <span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb
+olcDbDirectory: <span class="sy0">/</span>var<span class="sy0">/</span>lib<span class="sy0">/</span>ldap
+olcSuffix: <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+&nbsp;
+<span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldap:<span class="sy0">//</span>localhost <span class="re5">-b</span> <span class="st0">&quot;dc=tasks,dc=cs,dc=pub,dc=ro&quot;</span> dn
+dn: <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro</pre>
+
+<p>
+Pe moment, la nivel de date, baza de date LDAP conține doar intrarea pentru base dn și pentru contul de administrator (<code>cn=admin</code>).
+</p>
+
+<p>
+Dacă dorim să facem configurări în cadrul serverului de LDAP, vom crea fișiere LDIF și apoi le vom încărca în baza de date LDAP folosind comanda <code>ldapadd</code>.
+</p>
+
+</div>
+<!-- EDIT25 SECTION "06. [10p] Instalare server de LDAP" [1-] --><!-- EDIT24 PLUGIN_INCLUDE_END "saisp:labs:02:contents:06" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT26 PLUGIN_INCLUDE_START "saisp:labs:02:contents:07" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:07">
+
+<h3 class="sectionedit28" id="p_configurare_suport_ssltls">07. [15p] Configurare suport SSL/TLS</h3>
+<div class="level3">
+
+<p>
+Pentru a securiza comunicația cu serverul de LDAP avem două opțiuni
+</p>
+<ol>
+<li class="level1"><div class="li"> configurarea suportului SSL, adică LDAPS</div>
+</li>
+<li class="level1"><div class="li"> configurarea suportului de TLS</div>
+</li>
+</ol>
+
+<p>
+Pentru configurarea suportului de SSL, edităm în fișierul <code>/etc/default/slapd</code> linia care conține directiva <code>SLAPD_SERVICES</code>. Linia trebuie să ajungă la forma:
+</p>
+<pre class="code">SLAPD_SERVICES=&quot;ldap:/// ldapi:/// ldaps:///&quot;</pre>
+
+<p>
+Apoi repornim serverul de LDAP
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>service slapd restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Stopping OpenLDAP: slapd.
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Starting OpenLDAP: slapd.</pre>
+
+<p>
+ și urmărim dacă acum ascultă conexiuni LDAPS (pe portul <code>636</code>):
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span><span class="kw2">netstat</span> <span class="re5">-tlpn</span> <span class="sy0">|</span> <span class="kw2">grep</span> slapd
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">636</span>             0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">3620</span><span class="sy0">/</span>slapd      
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">389</span>             0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">3620</span><span class="sy0">/</span>slapd      
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">636</span>                  :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">3620</span><span class="sy0">/</span>slapd      
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">389</span>                  :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">3620</span><span class="sy0">/</span>slapd </pre>
+
+<p>
+Cu toate acestea, dacă încercăm să ne conectăm la server folosind LDAPS obținem eroare:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>localhost <span class="re5">-b</span> <span class="st0">&quot;dc=tasks,dc=cs,dc=pub,dc=ro&quot;</span> dn
+ldap_sasl_bind<span class="br0">&#40;</span>SIMPLE<span class="br0">&#41;</span>: Can<span class="st_h">'t contact LDAP server (-1)</span></pre>
+
+<p>
+Acest lucru este datorat absenței certificatelor SSL. Ca să rezolvăm acest lucru, generăm un certificat SSL self-signed, urmărind indicațiile de <a href="https://wiki.debian.org/Self-Signed_Certificate#STEP_2" class="urlextern" title="https://wiki.debian.org/Self-Signed_Certificate#STEP_2"  rel="nofollow">aici</a>. Vom rula comanda:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>openssl req <span class="re5">-new</span> <span class="re5">-x509</span> <span class="re5">-days</span> <span class="nu0">365</span> <span class="re5">-nodes</span> <span class="re5">-out</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>slapd-cert.pem <span class="re5">-keyout</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>private<span class="sy0">/</span>slapd-key.pem
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span></pre>
+
+<p>
+Introduceți în cadrul comenzii de mai sus opțiunile utile. Acum cheia privată este generată în fișierul <code>/etc/ssl/private/slapd-key.pem</code>, iar cheia publică este generată în fișierul <code>/etc/ssl/certs/slapd-cert.pem</code>.
+</p>
+
+<p>
+Acum trebuie să configurăm serverul de LDAP pentru a folosi certificatele. Vom urmări indicațiile de <a href="https://wiki.debian.org/LDAP/OpenLDAPSetup#Configuring_LDAPS" class="urlextern" title="https://wiki.debian.org/LDAP/OpenLDAPSetup#Configuring_LDAPS"  rel="nofollow">aici</a>. Vom crea un fișier LDIF și în cadrul acestuia vom preciza directivele <code>olcTLSCertificateKeyFile</code> respectiv <code>olcTLSCertificateFile</code>:
+</p>
+<dl class="file">
+<dt><a href="../../../code/saisp/labs/02%3Fcodeblock=47" title="Download Snippet" class="mediafile mf_ldif">slapd-config-tls.ldif</a></dt>
+<dd><pre class="code file note">dn: cn=config
+changetype: modify
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/slapd-key.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/certs/slapd-cert.pem</pre>
+</dd></dl>
+
+<p>
+Încărcăm apoi acest fișier în baza de date de configurare internă a serverului LDAP:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapmodify <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-f</span> slapd-config-tls.ldif 
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+modifying entry <span class="st0">&quot;cn=config&quot;</span></pre>
+
+<p>
+ și verificăm informațiile prezente acum în baza de date
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-s</span> base <span class="re5">-b</span> <span class="st0">&quot;cn=config&quot;</span>
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">cn</span>=config
+objectClass: olcGlobal
+cn: config
+olcArgsFile: <span class="sy0">/</span>var<span class="sy0">/</span>run<span class="sy0">/</span>slapd<span class="sy0">/</span>slapd.args
+olcLogLevel: none
+olcPidFile: <span class="sy0">/</span>var<span class="sy0">/</span>run<span class="sy0">/</span>slapd<span class="sy0">/</span>slapd.pid
+olcToolThreads: <span class="nu0">1</span>
+olcTLSCertificateKeyFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>private<span class="sy0">/</span>slapd-key.pem
+olcTLSCertificateFile: <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>certs<span class="sy0">/</span>slapd-cert.pem</pre>
+
+<p>
+În baza de date internă de configurare sunt prezente acum cheia privată și certificatul SSL utile pentru funcționarea LDAPS și LDAP+TLS. Va trebui să acordăm serverului LDAP acces la cheia privată folosind comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>adduser openldap ssl-cert</pre>
+
+<p>
+și apoi să repornim serviciul:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>service slapd restart
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Stopping OpenLDAP: slapd.
+<span class="br0">&#91;</span> ok <span class="br0">&#93;</span> Starting OpenLDAP: slapd.</pre>
+
+<p>
+După aceasta vom putea folosi <abbr title="Uniform Resource Identifier">URI</abbr> de tipul LDAPS pentru a interoga serverul de LDAP local:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldaps:<span class="sy0">//</span>localhost <span class="re5">-b</span> <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro dn
+dn: <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro</pre>
+
+<p>
+Pe această configurație putem verifica și conexiunea folosind TLS. <abbr title="Uniform Resource Identifier">URI</abbr>-ul de conectare la server este același ca în cazul nesecurizat, dar folosim opțiunea <code>-Z</code> pentru a activa suportul TLS:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-Z</span> <span class="re5">-LLL</span> <span class="re5">-H</span> ldap:<span class="sy0">//</span>localhost <span class="re5">-b</span> <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro dn
+dn: <span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+dn: <span class="re2">cn</span>=admin,<span class="re2">dc</span>=tasks,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro</pre>
+
+<p>
+Acum serverul funcționează corespunzător cu suport SSL (LDAPS) și TLS.
+</p>
+
+</div>
+<!-- EDIT28 SECTION "07. [15p] Configurare suport SSL/TLS" [1-] --><!-- EDIT27 PLUGIN_INCLUDE_END "saisp:labs:02:contents:07" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT29 PLUGIN_INCLUDE_START "saisp:labs:02:contents:08" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:08">
+
+<h3 class="sectionedit31" id="p_configurare_acl_in_serverul_de_ldap">08. [10p] Configurare ACL în serverul de LDAP</h3>
+<div class="level3">
+
+<p>
+Pentru a securiza operațiile către serverul de LDAP acesta folosește liste de control al accesului (<abbr title="Access Control List">ACL</abbr> – <em>Access Control Lists</em>). Acestea oferă administratorului posibilitatea de a alege ce operații pot fi realizate de un utilizator.
+</p>
+
+<p>
+În cadrul serverului OpenLDAP configurarea <abbr title="Access Control List">ACL</abbr>-urilor se realizează în cadrul bazei de date <code>olcDatabase={1}hdb,cn=config</code>. Pentru a observa <abbr title="Access Control List">ACL</abbr>-urile configurate implicit folosim, pe stația server, comanda
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span>  olcAccess
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">olcDatabase</span>=<span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb,<span class="re2">cn</span>=config
+olcAccess: <span class="br0">&#123;</span><span class="nu0">0</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=userPassword,shadowLastChange by self <span class="kw2">write</span> by anonymous auth by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">write</span> by <span class="sy0">*</span> none
+olcAccess: <span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=loginShell,gecos by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=example,dc=com&quot;</span> <span class="kw2">write</span> by self <span class="kw2">write</span> by <span class="sy0">*</span> <span class="kw2">read</span>
+olcAccess: <span class="br0">&#123;</span><span class="nu0">2</span><span class="br0">&#125;</span>to dn.base=<span class="st0">&quot;&quot;</span> by <span class="sy0">*</span> <span class="kw2">read</span>
+olcAccess: <span class="br0">&#123;</span><span class="nu0">3</span><span class="br0">&#125;</span>to <span class="sy0">*</span> by self <span class="kw2">write</span> by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">write</span> by <span class="sy0">*</span> <span class="kw2">read</span></pre>
+
+<p>
+Fiecare intrare este prefixată de un index care înseamnă ordinea în care sunt prelucrate: <code>{0}</code>, <code>{1}</code>, <code>{2}</code>, <code>{3}</code>. Cele patru reguli au următorul efect:
+</p>
+<ol>
+<li class="level1"><div class="li"> Atributele <code>userPassword</code>, respectiv <code>shadowLastChange</code> pot fi</div>
+<ul>
+<li class="level2"><div class="li"> scrise de deținător (<code>self</code>)</div>
+</li>
+<li class="level2"><div class="li"> folosite pentru autentificare de anonim</div>
+</li>
+<li class="level2"><div class="li"> scrise de admin</div>
+</li>
+<li class="level2"><div class="li"> fără drepturi pentru ceilați</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Atributul <code>loginShell</code> poate fi modificat de admin și de deținător și citit de oricine.</div>
+</li>
+<li class="level1"><div class="li"> Oricine poate citi intrările din întreaga bază de date LDAP.</div>
+</li>
+<li class="level1"><div class="li"> Celelalte atribute pot fi modificate de deținător și de admin și pot fi citite de oricine.</div>
+</li>
+</ol>
+
+<p>
+Dorim să ascundem adresa de e-mail a oricărui utilizator și să facem să fie modificată chiar de acesta. Pentru aceasta va trebui să adăugăm o regulă de forma:
+</p>
+<pre class="code">access to mail
+   by self write
+   by dn=&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot; write
+   by * none</pre>
+
+<p>
+Pentru aceasta vom crea un fișier LDIF care să conțină informațiile de mai jos:
+</p>
+<dl class="file">
+<dt><a href="../../../code/saisp/labs/02%3Fcodeblock=56" title="Download Snippet" class="mediafile mf_ldif">acl-mail-hidden.ldif</a></dt>
+<dd><pre class="code file none">dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+add: olcAccess
+olcAccess: {1}to attrs=mail by dn=&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot; write by self write by * none</pre>
+</dd></dl>
+
+<p>
+Apoi încărcăm fișierul de configurare LDIF în LDAP:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapadd <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-f</span> acl-mail-hidden.ldif 
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+modifying entry <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span></pre>
+
+<p>
+ și validăm noua configurație:
+</p>
+<pre class="code bash"><span class="co4">root@ldap-server:~# </span>ldapsearch <span class="re5">-LLL</span> <span class="re5">-Y</span> EXTERNAL <span class="re5">-H</span> ldapi:<span class="sy0">///</span> <span class="re5">-b</span> <span class="st0">&quot;olcDatabase={1}hdb,cn=config&quot;</span>  olcAccess
+SASL<span class="sy0">/</span>EXTERNAL authentication started
+SASL username: <span class="re2">gidNumber</span>=<span class="nu0">0</span>+<span class="re2">uidNumber</span>=<span class="nu0">0</span>,<span class="re2">cn</span>=peercred,<span class="re2">cn</span>=external,<span class="re2">cn</span>=auth
+SASL SSF: <span class="nu0">0</span>
+dn: <span class="re2">olcDatabase</span>=<span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>hdb,<span class="re2">cn</span>=config
+olcAccess: <span class="br0">&#123;</span><span class="nu0">0</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=userPassword,shadowLastChange by self <span class="kw2">write</span> by anonymou
+ s auth by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">write</span> by <span class="sy0">*</span> none
+olcAccess: <span class="br0">&#123;</span><span class="nu0">1</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=mail by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">write</span> 
+ by self <span class="kw2">write</span> by <span class="sy0">*</span> none
+olcAccess: <span class="br0">&#123;</span><span class="nu0">2</span><span class="br0">&#125;</span>to <span class="re2">attrs</span>=loginShell,gecos by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=example,dc=com&quot;</span> wri
+ te by self <span class="kw2">write</span> by <span class="sy0">*</span> <span class="kw2">read</span>
+olcAccess: <span class="br0">&#123;</span><span class="nu0">3</span><span class="br0">&#125;</span>to dn.base=<span class="st0">&quot;&quot;</span> by <span class="sy0">*</span> <span class="kw2">read</span>
+olcAccess: <span class="br0">&#123;</span><span class="nu0">4</span><span class="br0">&#125;</span>to <span class="sy0">*</span> by self <span class="kw2">write</span> by <span class="re2">dn</span>=<span class="st0">&quot;cn=admin,dc=labs,dc=cs,dc=pub,dc=ro&quot;</span> <span class="kw2">w</span>
+ rite by <span class="sy0">*</span> <span class="kw2">read</span></pre>
+
+<p>
+Am inserat astfel o nouă regulă pe poziția <code>{1}</code>, celelalte reguli deplasându-se o poziție în jos.
+</p>
+
+<p>
+De pe stația client validăm regula: interogăm intrarea aferentă <code>uid=zeratul</code> făcând bind cu <code>uid=raynor</code> și cu <code>uid=zeratul</code>.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Parola utilizatorului <code>zeratul</code> trebuie setata folosind <code>ldappasswd</code>.
+</p>
+
+<p>
+Revedeti Laboratorul 1: <a href="../../../../saisp/labs/01/contents/06.html" class="urlextern" title="http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06"  rel="nofollow">http://ocw.cs.pub.ro/courses/saisp/labs/01/contents/06</a>
+
+</div></p>
+</p>
+<pre class="code bash"><span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-D</span> <span class="re2">uid</span>=raynor,<span class="re2">ou</span>=Raiders,<span class="re2">o</span>=Terran,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro <span class="re5">-w</span> student <span class="re2">uid</span>=zeratul mail
+dn: <span class="re2">uid</span>=zeratul,<span class="re2">ou</span>=Nerazim,<span class="re2">o</span>=Protoss,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+&nbsp;
+<span class="co4">root@ldap-client:~# </span>ldapsearch <span class="re5">-x</span> <span class="re5">-LLL</span> <span class="re5">-D</span> <span class="re2">uid</span>=zeratul,<span class="re2">ou</span>=Nerazim,<span class="re2">o</span>=Protoss,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro <span class="re5">-w</span> student <span class="re2">uid</span>=zeratul mail
+dn: <span class="re2">uid</span>=zeratul,<span class="re2">ou</span>=Nerazim,<span class="re2">o</span>=Protoss,<span class="re2">dc</span>=labs,<span class="re2">dc</span>=cs,<span class="re2">dc</span>=pub,<span class="re2">dc</span>=ro
+mail: zeratul<span class="sy0">@</span>void.protoss.mil</pre>
+
+<p>
+Observăm că dacă facem bind cu <code>uid=raynor</code> nu avem acces la adresa de e-mail a <code>uid=zeratul</code>, dar avem la bind cu <code>uid=zeratul</code>; o intrare are acces la propria adresă de e-mail.
+</p>
+
+</div>
+<!-- EDIT31 SECTION "08. [10p] Configurare ACL în serverul de LDAP" [1-] --><!-- EDIT30 PLUGIN_INCLUDE_END "saisp:labs:02:contents:08" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT32 PLUGIN_INCLUDE_START "saisp:labs:02:contents:09" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:09">
+
+<h3 class="sectionedit34" id="bonus_-_10p_configurare_suplimentara_de_acl_in_serverul_de_ldap">09. [BONUS - 10p] Configurare suplimentară de ACL în serverul de LDAP</h3>
+<div class="level3">
+
+<p>
+Actualizați <abbr title="Access Control List">ACL</abbr>-urile din serverul de LDAP cu următoarele reguli:
+</p>
+<ol>
+<li class="level1"><div class="li"> Intrarea cu <code>uid=zeratul</code> să poată vizualiza adresele de mail ale tuturor utilizatorilor, iar intrarea cu <code>uid=amengsk</code> să le poată și modifica.</div>
+</li>
+<li class="level1"><div class="li"> Doar utilizatorii autentificați (bind) să poată vizualiza orice intrare din baza de date LDAP.</div>
+</li>
+</ol>
+
+<p>
+<p><div class="notetip">
+Informații complete despre <abbr title="Access Control List">ACL</abbr>-uri în OpenLDAP găsiți aici: <a href="http://www.openldap.org/doc/admin24/access-control.html" class="urlextern" title="http://www.openldap.org/doc/admin24/access-control.html"  rel="nofollow">http://www.openldap.org/doc/admin24/access-control.html</a>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT34 SECTION "09. [BONUS - 10p] Configurare suplimentară de ACL în serverul de LDAP" [1-] --><!-- EDIT33 PLUGIN_INCLUDE_END "saisp:labs:02:contents:09" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT35 PLUGIN_INCLUDE_START "saisp:labs:02:contents:sidebar" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:contents:sidebar">
+
+<h3 class="sectionedit37" id="navigare1">Navigare</h3>
+<div class="level3">
+
+<p>
+<strong><span class="curid"><a href="../../../../saisp/labs/02.html" class="wikilink1" title="saisp:labs:02">Laboratorul 2</a></span></strong>
+</p>
+
+</div>
+<!-- EDIT38 PLUGIN_INCLUDE_START "saisp:labs:02:meta:nav" [0-] --><div class="plugin_include_content plugin_include__saisp:labs:02:meta:nav">
+<div class="level4">
+
+<div><div id="nojs_indexmenu_10164084995835677d51f8d" data-jsajax="%26skipfile%3D%252B/sidebar/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/01.html" class="wikilink1" title="saisp:labs:02:contents:01">01. [15p] Configurare autentificare Unix prin LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/02.html" class="wikilink1" title="saisp:labs:02:contents:02">02. [15p] Configurare grupuri POSIX în LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/03.html" class="wikilink1" title="saisp:labs:02:contents:03">03. [10p] Configurare autentificare LDAP pentru anumite grupuri</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/04.html" class="wikilink1" title="saisp:labs:02:contents:04">04. [15p] Configurare hostname prin LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/05.html" class="wikilink1" title="saisp:labs:02:contents:05">05. [10p] Actualizare configurare pentru server</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/06.html" class="wikilink1" title="saisp:labs:02:contents:06">06. [10p] Instalare server de LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/07.html" class="wikilink1" title="saisp:labs:02:contents:07">07. [15p] Configurare suport SSL/TLS</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/08.html" class="wikilink1" title="saisp:labs:02:contents:08">08. [10p] Configurare ACL în serverul de LDAP</a></div></li>
+<li class="level1"><div class="li"><a href="../../../../saisp/labs/02/contents/09.html" class="wikilink1" title="saisp:labs:02:contents:09">09. [BONUS - 10p] Configurare suplimentară de ACL în serverul de LDAP</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT39 PLUGIN_INCLUDE_END "saisp:labs:02:meta:nav" [0-] --></div>
+<div class="level4">
+
+</div>
+<!-- EDIT37 SECTION "Navigare" [1-] --><!-- EDIT36 PLUGIN_INCLUDE_END "saisp:labs:02:contents:sidebar" [0-] --></div>
+<div class="level2">
+
+</div>
+<!-- EDIT7 SECTION "Exerciții" [3003-] --></div>
+</body>
+</html>

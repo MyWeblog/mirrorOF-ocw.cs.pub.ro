@@ -1,0 +1,171 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:11:contents:02</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-19T13:01:02+0300"/>
+<meta name="keywords" content="saisp,labs,11,contents,02"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:11:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="02.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/11/contents/02.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:11:contents';var JSINFO = {"id":"saisp:labs:11:contents:02","namespace":"saisp:labs:11:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_generarea_traficului_pe_baza_unor_caracteristici_si_constrangeri_din_lumea_reala">02. [10p] Generarea traficului pe baza unor caracteristici și constrângeri din lumea reală</h3>
+<div class="level3">
+
+<p>
+În cadrul laboratorului, vom explora principalele strategii de QoS din Linux. Pentru a observa comportamentul strategiilor implementate, vom folosi un model de trafic, compus din:
+</p>
+<ul>
+<li class="level1"><div class="li"> trafic de <strong>voce</strong> (UDP, port 8000)</div>
+</li>
+<li class="level1"><div class="li"> trafic <strong>video</strong> (UDP, port 6000)</div>
+</li>
+<li class="level1"><div class="li"> trafic <strong><abbr title="File Transfer Protocol">FTP</abbr></strong> (TCP, port 21)</div>
+</li>
+<li class="level1"><div class="li"> trafic <strong>HTTP</strong> (TCP, port 80)</div>
+</li>
+</ul>
+
+<p>
+Traficul <strong>nu</strong> va fi real ci îl vom <strong>simula</strong> cu ajutorul lui <code>iperf</code> prezentat anterior.
+</p>
+
+<p>
+Fiecare tip de trafic din cele considerate mai sus are anumite caracteristici și constrângeri. Pentru o funcționare optimă, trebuie să ținem seama de acestea:
+</p>
+<ul>
+<li class="level1"><div class="li"> trafic de <strong>voce</strong></div>
+<ul>
+<li class="level2"><div class="li"> sensibil la: delay, jitter, packet loss</div>
+</li>
+<li class="level2"><div class="li"> consum de banda: mic, constant</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> trafic <strong>video</strong></div>
+<ul>
+<li class="level2"><div class="li"> sensibil la: delay, jitter, packet loss</div>
+</li>
+<li class="level2"><div class="li"> consum de banda: mare, constant</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> trafic <strong><abbr title="File Transfer Protocol">FTP</abbr></strong> si <strong>HTTP</strong></div>
+<ul>
+<li class="level2"><div class="li"> sensibil la: nimic</div>
+</li>
+<li class="level2"><div class="li"> consum de banda: mare, variabil, greedy (tinde sa “umple” intreaga latime de banda a legaturii)</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Dupa cum ați observat la exercițiul anterior, o conexiune <code>iperf</code> client-server generează un singur tip de trafic (implicit, trafic TCP pe portul 5001). Noi dorim să generăm mai multe tipuri de trafic, concomitent, pentru a vedea cum se afectează între ele. Deci va trebui să instanțiem mai multe astfel de perechi, în background.
+</p>
+
+<p>
+Vom crea un script cu numele <code>iperf-client1.sh</code> care va porni 4 servere <code>iperf</code> pe stația <code>client1</code> (urmăriți comentariile):
+</p>
+<dl class="file">
+<dt><a href="../../../../../code/saisp/labs/11/contents/02%3Fcodeblock=0" title="Download Snippet" class="mediafile mf_sh">iperf-client1.sh</a></dt>
+<dd><pre class="code file bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="co0"># Asculta trafic UDP, pe port-ul 8000 - fluxul de voce</span>
+iperf <span class="re5">--server</span> <span class="re5">--udp</span> <span class="re5">--port</span> <span class="nu0">8000</span> <span class="sy0">&amp;&gt;</span> out1.txt  <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Asculta trafic UDP, pe port-ul 6000 - fluxul video</span>
+iperf <span class="re5">--server</span> <span class="re5">--udp</span> <span class="re5">--port</span> <span class="nu0">6000</span> <span class="sy0">&amp;&gt;</span> out2.txt <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Asculta trafic TCP, pe port-ul 21 - fluxul FTP</span>
+<span class="co0"># Daca nu se specifica --udp, implicit este TCP</span>
+iperf <span class="re5">--server</span> <span class="re5">--port</span> <span class="nu0">21</span> <span class="sy0">&amp;&gt;</span> out3.txt <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Asculta trafic TCP, pe port-ul 80 - fluxul HTTP</span>
+<span class="co0"># Daca nu se specifica --udp, implicit este TCP.</span>
+iperf <span class="re5">--server</span> <span class="re5">--port</span> <span class="nu0">80</span> <span class="sy0">&amp;&gt;</span> out4.txt <span class="sy0">&amp;</span>
+&nbsp;
+<span class="kw3">echo</span> <span class="st0">&quot;iperf servers started. Now run the script on the gateway.&quot;</span></pre>
+</dd></dl>
+
+<p>
+Vom crea pe stația <code>gateway</code> un script cu numele <code>iperf-gateway.sh</code> care se va conecta la cele 4 servere pornite pe stația <code>client1</code>, generând cele 4 tipuri de trafic prezentate anterior. Simulăm tipurile de trafic prin generare de pachete ce au caracteristici asemănătoare cu cele din cazurile reale. Urmăriți comentariile din fișier:
+</p>
+<dl class="file">
+<dt><a href="../../../../../code/saisp/labs/11/contents/02%3Fcodeblock=1" title="Download Snippet" class="mediafile mf_sh">iperf-gateway.sh</a></dt>
+<dd><pre class="code file bash"><span class="co0">#!/bin/bash</span>
+&nbsp;
+<span class="re2">IP_VM</span>=<span class="st0">&quot;192.168.1.1&quot;</span>
+<span class="re2">TIME</span>=<span class="nu0">60</span> <span class="co0"># Durata unui test</span>
+&nbsp;
+<span class="co0"># Initiaza un flux UDP catre server, pe portul 8000</span>
+<span class="co0"># Fiecare datagrama are dimensiunea de 128 octeti (tipic pentru pachetele de voce)</span>
+<span class="co0"># Se trimite la o rata de 640Kbps (dorim sa simulam 10 conversatii VoIP, a cate 64Kbps)</span>
+iperf <span class="re5">-x</span> SC <span class="re5">--client</span> <span class="re1">$IP_VM</span> <span class="re5">--port</span> <span class="nu0">8000</span> <span class="re5">--udp</span> <span class="re5">--len</span> <span class="nu0">128</span> <span class="re5">--bandwidth</span> 640K <span class="re5">--time</span> <span class="re1">$TIME</span> <span class="sy0">&gt;</span> out3.txt <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Initiaza un flux UDP catre server, pe portul 6000</span>
+<span class="co0"># Fiecare datagrama are dimensiunea maxima (pentru ca nu o specificam explicit)</span>
+<span class="co0"># Se trimite la o rata de 30Mbps</span>
+iperf <span class="re5">-x</span> SC <span class="re5">--client</span> <span class="re1">$IP_VM</span> <span class="re5">--port</span> <span class="nu0">6000</span> <span class="re5">--udp</span> <span class="re5">--bandwidth</span> 30M <span class="re5">--time</span> <span class="re1">$TIME</span> <span class="sy0">&gt;</span> out4.txt <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Initiaza un flux TCP catre server, pe portul 80 (HTTP)</span>
+<span class="co0"># Limitam dimensiunea unui segment la 512 octeti</span>
+iperf <span class="re5">-x</span> SC <span class="re5">--client</span> <span class="re1">$IP_VM</span> <span class="re5">--port</span> <span class="nu0">80</span> <span class="re5">--mss</span> <span class="nu0">512</span> <span class="re5">--time</span> <span class="re1">$TIME</span> <span class="sy0">&gt;</span> out1.txt <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&amp;</span>
+&nbsp;
+<span class="co0"># Initiaza un flux TCP catre server, pe portul 21 (FTP)</span>
+<span class="co0"># Dimensiunea unui segment va fi de 1400 octeti (dorim ca fluxul FTP sa fie mai agresiv)</span>
+<span class="co0"># Dimensiunea ferestrei TCP va fi de 256K (dorim ca fluxul FTP sa fie mai agresiv)</span>
+iperf <span class="re5">-x</span> SC <span class="re5">--client</span> <span class="re1">$IP_VM</span> <span class="re5">--port</span> <span class="nu0">21</span> <span class="re5">--window</span> 256K <span class="re5">--mss</span> <span class="nu0">1400</span> <span class="re5">--time</span> <span class="re1">$TIME</span> <span class="sy0">&gt;</span> out2.txt <span class="nu0">2</span><span class="sy0">&gt;</span> <span class="sy0">/</span>dev<span class="sy0">/</span>null <span class="sy0">&amp;</span>
+&nbsp;
+<span class="kw3">wait</span>
+<span class="kw1">for</span> i <span class="kw1">in</span> out<span class="sy0">*</span>; <span class="kw1">do</span> <span class="kw3">echo</span>; <span class="kw2">cat</span> <span class="re1">$i</span>; <span class="kw1">done</span>
+<span class="kw2">rm</span> out<span class="sy0">*</span>.txt</pre>
+</dd></dl>
+
+<p>
+Rulați script-urile create anterior (<code>iperf-client1.sh</code> pe stația <code>client1</code> și <code>iperf-gateway.sh</code> pe stația <code>gateway</code>). Așteptați 60 de secunde și inspectați output-ul de pe stația <code>gateway</code>. Ce observați?
+</p>
+
+<p>
+Observăm că fluxurile UDP au suferit <strong>packet loss</strong>, ele neavând nici un mecanism pentru retransmitere sau reglare a vitezei în funcție e starea legăturii. Pentru fluxul video, o pierdere de pachete de câteva procente este inacceptabilă. În continuare vom studia mecanismele implicite de QoS din Linux și cum putem preveni aceste pierderi de pachete.
+</p>
+
+</div>
+</div>
+</body>
+</html>

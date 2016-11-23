@@ -1,0 +1,153 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:11:contents:04</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-01-15T13:09:14+0200"/>
+<meta name="keywords" content="rl,labs,11,contents,04"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:11:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="04.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/11/contents/04.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:11:contents';var JSINFO = {"id":"rl:labs:11:contents:04","namespace":"rl:labs:11:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_conectare_de_containere_la_reteaua_publica">04. [15p] Conectare de containere la rețeaua publică</h3>
+<div class="level3">
+
+<p>
+Până acum conectarea la Internet containerelor <code>red</code>, <code>green</code> și <code>blue</code> se face prin intermediul stației <code>host</code> pe post de ruter/gateway. Stația <code>host</code> preia pachetele sosite pe interfața <code>br0</code> și le transferă apoi pe interfața <code>eth0</code> legată la o rețea pe care vom denumi în continuare <em>rețea publică</em>.
+</p>
+
+<p>
+Dorim să realizăm conectarea la Internet a containerelor direct la rețeaua publică, renunțânt astfel la rutare și la NAT pe stația <code>host</code>. Pentru aceasta vom adăuga inclusiv interfața <code>eth0</code> la bridge-ul <code>br0</code>, asigurând astfel o conexiune ,prin bridge, a containerelelor la <em>rețeaua publică</em>.
+</p>
+
+<p>
+Pentru început dezactivăm NAT pe stația <code>host</code>:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">1</span> packets, <span class="nu0">32</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+   <span class="nu0">50</span>  <span class="nu0">3166</span> MASQUERADE  all  <span class="re5">--</span>  <span class="sy0">*</span>      eth1    0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>           
+<span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-F</span> POSTROUTING
+<span class="co4">root@host:~# </span>iptables <span class="re5">-t</span> nat <span class="re5">-L</span> POSTROUTING <span class="re5">-n</span> <span class="re5">-v</span>
+Chain POSTROUTING <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination</pre>
+
+<p>
+<p><div class="noteimportant">
+Operațiile următoare le vom efectua direct în consola mașinii virtuale VMware, adică în fereastra VMware, întrucât vor afecta configurația rețelei și vor închide conexiunile SSH curente.
+
+</div></p>
+</p>
+
+<p>
+După cum am precizat, adăugăm interfața <code>eth0</code> în brige-ul <code>br0</code> (practic creăm o legătură între switch-ul nostru virtual <code>br0</code> și rețeaua publică):
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>brctl addif br0 eth0
+<span class="co4">root@host:~# </span>brctl show br0
+bridge name	bridge <span class="kw2">id</span>		STP enabled	interfaces
+br0		8000.080027db5278	no		eth0
+							veth-blue
+							veth-green
+							veth-red</pre>
+
+<p>
+Pentru a reveni la conectare prin SSH de pe sistemul fizic pe stația <code>host</code>, va trebui să configurăm o adresă IP pe bridge-ul <code>br0</code>. Pentru acesta vom șterge vechile adrese de pe interfețele <code>eth0</code> și <code>br0</code> și vom obține o adresă nouă pe interfața <code>br0</code> folosind comenzile:
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a f dev br0
+<span class="co4">root@host:~# </span>dhclient br0
+<span class="co4">root@host:~# </span><span class="kw2">ip</span> a s br0
+<span class="nu0">25</span>: br0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc noqueue state UP 
+    link<span class="sy0">/</span>ether 08:00:<span class="nu0">27</span>:db:<span class="nu0">52</span>:<span class="nu0">78</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global br0</pre>
+
+<p>
+<p><div class="noteclassic">
+Sunt șanse ca pe interfața <code>br0</code> să fie primită, prin DHCP, aceeași adresă IP. În acest caz conexiunea SSH existentă va fi deblocată și veți putea continua lucrul la exerciții. Adică nu va mai fi nevoie să rulați comanda <code>ssh</code> indicată imediat mai jos.
+
+</div></p>
+</p>
+
+<p>
+Acum ne putem reconecta de pe sistemul fizic la stația <code>host</code> prin SSH, folosind adresa IP asociată acum interfeței <code>br0</code>:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_BR0</pre>
+
+<p>
+Acum containerele sunt conectate la <em>rețeaua publică</em>. Pentru a obține adrese din acea rețea, ștergem vechea adresă pe interfața <code>eth0</code>, rulăm pe fiecare container comanda <code>dhclient eth0</code> și observăm ce adrese IP a obținut fiecare container:
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@red:~# </span>dhclient eth0
+<span class="co4">root@red:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">26</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:8e:<span class="nu0">84</span>:<span class="nu0">21</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.102<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0
+&nbsp;
+<span class="co4">root@blue:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@blue:~# </span>dhclient eth0
+<span class="co4">root@blue:~# </span><span class="kw2">ip</span> a s eth0
+<span class="nu0">19</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:<span class="nu0">32</span>:0f:ae brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.103<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0
+&nbsp;
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a f dev eth0
+<span class="co4">root@green:~# </span>dhclient eth0
+<span class="co4">root@green:~# </span><span class="kw2">ip</span> a s dev eth0
+<span class="nu0">22</span>: eth0: <span class="sy0">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="sy0">&gt;</span> mtu <span class="nu0">1500</span> qdisc pfifo_fast state UP qlen <span class="nu0">1000</span>
+    link<span class="sy0">/</span>ether 00:<span class="nu0">16</span>:3e:d1:b2:<span class="nu0">95</span> brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.104<span class="sy0">/</span><span class="nu0">24</span> brd 192.168.56.255 scope global eth0</pre>
+
+<p>
+Folosind noile adrese obținute ne putem conecta <strong>direct</strong> prin SSH de pe sistemul fizic pe containere:
+</p>
+<pre class="code bash"><span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_RED
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@red:~#
+</span>
+<span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_GREEN
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@green:~#
+</span>
+<span class="co4">student@mjonir:~$ </span><span class="kw2">ssh</span> root<span class="sy0">@</span>ADRESA_IP_BLUE
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="co4">root@blue:~#</span></pre>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,683 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    GDB    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2015-03-18T22:55:05+0200"/>
+<meta name="keywords" content="so,laboratoare,resurse,gdb"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../feed.php%3Fmode=list&amp;ns=so:laboratoare:resurse"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../../_export/xhtml/so/laboratoare/resurse/gdb.html"/>
+<link rel="canonical" href="gdb.html"/>
+<link rel="stylesheet" type="text/css" href="../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so:laboratoare:resurse';var JSINFO = {"id":"so:laboratoare:resurse:gdb","namespace":"so:laboratoare:resurse","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so/"><img height="70" src="../../../res/sigla_so.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../systems/index.html"/><img height="70" src="../../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="gdb%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="gdb%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="gdb">GDB</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="rulare_gdb">Rulare gdb</h2>
+<div class="level2">
+
+<p>
+GDB poate fi folosit în două moduri pentru a depana programul:
+</p>
+<ul>
+<li class="level1"><div class="li"> rulându-l folosind comanda gdb</div>
+</li>
+<li class="level1"><div class="li"> folosind fişierul core generat în urma unei erori grave (de obicei segmentation fault) </div>
+</li>
+</ul>
+
+<p>
+Cea de a doua modalitate este utilă în cazul în care bug-ul nu a fost corectat înainte de lansarea programului. În acest caz, dacă utilizatorul întâlneşte o eroare gravă, poate trimite programatorului fişierul core cu care acesta poate depana programul şi corecta bug-ul.
+</p>
+
+<p>
+Cea mai simplă formă de depanare cu ajutorul GDB este cea în care dorim să determinăm linia programului la care s-a produs eroarea. Pentru exemplificare considerăm următorul program: 
+</p>
+<dl class="code">
+<dt><a href="../../../_export/code/so/laboratoare/resurse/gdb%3Fcodeblock=0" title="Download Snippet" class="mediafile mf_c">1 add.c</a></dt>
+<dd><pre class="code c"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> f<span class="br0">&#40;</span><span class="kw4">int</span> a<span class="sy0">,</span> <span class="kw4">int</span> b<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">int</span> c<span class="sy0">;</span>    
+	c <span class="sy0">=</span> a <span class="sy0">+</span> b<span class="sy0">;</span>    
+	<span class="kw1">return</span> c<span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">char</span> <span class="sy0">*</span>bug <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+	<span class="sy0">*</span>bug <span class="sy0">=</span> f<span class="br0">&#40;</span><span class="nu0">1</span><span class="sy0">,</span> <span class="nu0">2</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+După compilarea programului acesta poate fi depanat folosind GDB. După încărcarea programului de depanat, GDB intră în mod interactiv. Utilizatorul poate folosi apoi comenzi pentru a depana programul:
+</p>
+<pre class="code bash">$ <span class="kw2">gcc</span> <span class="re5">-Wall</span> <span class="re5">-g</span> add.c
+$ <span class="kw2">gdb</span> a.out
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+Starting program: a.out
+&nbsp;
+Program received signal SIGSEGV, Segmentation fault.
+0x08048411 <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span> at add.c:<span class="nu0">13</span>
+<span class="nu0">13</span>              <span class="sy0">*</span><span class="re2">bug</span>=f<span class="br0">&#40;</span><span class="nu0">1</span>, <span class="nu0">2</span><span class="br0">&#41;</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span></pre>
+
+<p>
+Prima comandă folosită este <code>run</code>. Această comandă va porni execuţia programului. Dacă această comandă primeşte argumente de la utilizator, acestea vor fi transmise programului. Înainte de a trece la prezentarea unor comenzi de bază din <code>gdb</code>, să demonstrăm cum se poate depana un program cu ajutorul fişierului core:
+</p>
+<pre class="code bash"><span class="co0"># ulimit -c 4</span>
+<span class="co0"># ./a.out</span>
+Segmentation fault <span class="br0">&#40;</span>core dumped<span class="br0">&#41;</span>
+<span class="co0"># gdb a.out core</span>
+Core was generated by <span class="sy0">`</span>.<span class="sy0">/</span>a.out<span class="st_h">'.
+Program terminated with signal 11, Segmentation fault.
+#0  0x08048411 in main () at add.c:13
+13              *bug=f(1, 2);
+(gdb) </span></pre>
+
+</div>
+
+<h2 class="sectionedit3" id="comenzi_de_baza_gdb">Comenzi de bază GDB</h2>
+<div class="level2">
+
+<p>
+Câteva din comenzile de bază în <code>gdb</code> sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>b[reakpoint]</strong> - primeşte ca argument un nume de funcţie (ex: main), un număr de linie şi, eventual, un fişier (ex: break sursa.c:50), o funcţie (b sursa.c:my_function) sau o adresă (ex: breakpoint *0x80483d3). </div>
+</li>
+<li class="level1"><div class="li"> <strong>n[ext]</strong> - va continua execuţia programului până ce se va ajunge la următoarea linie din codul sursă. Dacă linia de executat conţine un apel de funcţie, funcţia se va executa complet. </div>
+</li>
+<li class="level1"><div class="li"> <strong>s[tep]</strong> - dacă se doreşte şi inspectarea funcţiilor.</div>
+</li>
+<li class="level1"><div class="li"> <strong>fin[ish]</strong> - dacă se doreşte ieşirea din funcţia curentă.</div>
+</li>
+</ul>
+
+<p>
+Folosirea acestor comenzi este exemplificată mai jos:
+</p>
+<table class="columns-plugin" style="width:100%">
+<tr><td class="columns-plugin first" style="width:50%;">
+<pre class="code bash">$ <span class="kw2">gdb</span> a.out
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> main
+Breakpoint <span class="nu0">1</span> at 0x80483f6: <span class="kw2">file</span> add.c, line <span class="nu0">12</span>.
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+Starting program: a.out
+&nbsp;
+Breakpoint <span class="nu0">1</span>, main <span class="br0">&#40;</span><span class="br0">&#41;</span> at add.c:<span class="nu0">12</span>
+<span class="nu0">12</span>              char <span class="sy0">*</span><span class="re2">bug</span>=<span class="nu0">0</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> next
+<span class="nu0">13</span>              <span class="sy0">*</span><span class="re2">bug</span>=f<span class="br0">&#40;</span><span class="nu0">1</span>, <span class="nu0">2</span><span class="br0">&#41;</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> next
+&nbsp;
+Program received signal SIGSEGV, Segmentation fault.
+0x08048411 <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span> at add.c:<span class="nu0">13</span>
+<span class="nu0">13</span>              <span class="sy0">*</span><span class="re2">bug</span>=f<span class="br0">&#40;</span><span class="nu0">1</span>, <span class="nu0">2</span><span class="br0">&#41;</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+The program being debugged has been started already.
+Start it from the beginning? <span class="br0">&#40;</span>y or n<span class="br0">&#41;</span> y</pre>
+</td><td class="columns-plugin last">
+<pre class="code bash">Starting program: a.out
+Breakpoint <span class="nu0">1</span>, main <span class="br0">&#40;</span><span class="br0">&#41;</span> at add.c:<span class="nu0">12</span>
+<span class="nu0">12</span>              char <span class="sy0">*</span><span class="re2">bug</span>=<span class="nu0">0</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> next
+<span class="nu0">13</span>              <span class="sy0">*</span><span class="re2">bug</span>=f<span class="br0">&#40;</span><span class="nu0">1</span>, <span class="nu0">2</span><span class="br0">&#41;</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> step
+f <span class="br0">&#40;</span><span class="re2">a</span>=<span class="nu0">1</span>, <span class="re2">b</span>=<span class="nu0">2</span><span class="br0">&#41;</span> at add.c:<span class="nu0">8</span>
+<span class="nu0">6</span>               <span class="re2">c</span>=a+b;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> next
+<span class="nu0">7</span>               <span class="kw3">return</span> c;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> next
+<span class="nu0">8</span>      <span class="br0">&#125;</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> next
+&nbsp;
+Program received signal SIGSEGV, Segmentation fault.
+0x08048411 <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span> at add.c:<span class="nu0">13</span>
+<span class="nu0">13</span>              <span class="sy0">*</span><span class="re2">bug</span>=f<span class="br0">&#40;</span><span class="nu0">1</span>, <span class="nu0">2</span><span class="br0">&#41;</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span></pre>
+</td></tr></table>
+<ul>
+<li class="level1"><div class="li"><strong>list</strong> - această comandă va lista fişierul sursă al programului depanat. Comanda primeşte ca argument un număr de linie (eventual nume fişier), o funcţie sau o adresă de la care să listeze. Al doilea argument este opţional şi precizează câte linii vor fi afişate. În cazul în care comanda nu are nici un parametru, ea va lista de unde s-a oprit ultima afişare. </div>
+</li>
+<li class="level1"><div class="li"><strong>continue</strong> - se foloseşte atunci când se doreşte continuarea execuţiei programului. </div>
+</li>
+</ul>
+<table class="columns-plugin" style="width:100%">
+<tr><td class="columns-plugin first" style="width:40%;">
+<pre class="code bash">$ <span class="kw2">gdb</span> a.out
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> list add.c:<span class="nu0">1</span>
+<span class="nu0">1</span>       <span class="co0">#include &lt;stdio.h&gt;</span>
+<span class="nu0">2</span>
+<span class="nu0">3</span>       int f<span class="br0">&#40;</span>int a, int b<span class="br0">&#41;</span>
+<span class="nu0">4</span>       <span class="br0">&#123;</span>
+<span class="nu0">5</span>               int c;
+<span class="nu0">6</span>               <span class="re2">c</span>=a+b;
+<span class="nu0">7</span>               <span class="kw3">return</span> c;
+<span class="nu0">8</span>       <span class="br0">&#125;</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> add.c:<span class="nu0">6</span>
+Breakpoint <span class="nu0">1</span> at 0x80483d6: <span class="kw2">file</span> add.c, line <span class="nu0">6</span>.</pre>
+</td><td class="columns-plugin last">
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+Starting program: a.out
+&nbsp;
+Breakpoint <span class="nu0">1</span>, f <span class="br0">&#40;</span><span class="re2">a</span>=<span class="nu0">1</span>, <span class="re2">b</span>=<span class="nu0">2</span><span class="br0">&#41;</span> at add.c:<span class="nu0">6</span>
+<span class="nu0">6</span>               <span class="re2">c</span>=a+b;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> next
+<span class="nu0">7</span>               <span class="kw3">return</span> c;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">continue</span>
+Continuing.
+&nbsp;
+Program received signal SIGSEGV, Segmentation fault.
+0x08048411 <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span> at add.c:<span class="nu0">13</span>
+<span class="nu0">13</span>              <span class="sy0">*</span><span class="re2">bug</span>=f<span class="br0">&#40;</span><span class="nu0">1</span>, <span class="nu0">2</span><span class="br0">&#41;</span>;</pre>
+</td></tr></table>
+<ul>
+<li class="level1"><div class="li"><strong>print</strong> - cu ajutorul acesteia se pot afişa valorile variabilelor din funcţia curentă sau a variabilelor globale. <code>print</code> poate primi ca argument şi expresii complicate (dereferenţieri de pointeri, referenţieri ale variabilelor, expresii aritmetice, aproape orice expresie C validă). În plus, <code>print</code> poate afişa structuri de date precum <code>struct</code> şi <code>union</code> sau evalua funcţii şi întoarcerea rezultatului lor.</div>
+</li>
+</ul>
+<table class="columns-plugin" style="width:100%">
+<tr><td class="columns-plugin first" style="width:40%;">
+<pre class="code bash">$ <span class="kw2">gdb</span> a.out
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> f
+Breakpoint <span class="nu0">1</span> at 0x80483d6: <span class="kw2">file</span> add.c, line <span class="nu0">6</span>.
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+Starting program: a.out
+&nbsp;
+Breakpoint <span class="nu0">1</span>, f <span class="br0">&#40;</span><span class="re2">a</span>=<span class="nu0">1</span>, <span class="re2">b</span>=<span class="nu0">2</span><span class="br0">&#41;</span> at add.c:<span class="nu0">6</span>
+<span class="nu0">6</span>               <span class="re2">c</span>=a+b;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> print a
+<span class="re4">$1</span> = <span class="nu0">1</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> print b
+<span class="re4">$2</span> = <span class="nu0">2</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> print f<span class="br0">&#40;</span>a, b<span class="br0">&#41;</span>
+<span class="re4">$3</span> = <span class="nu0">3</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> print c
+<span class="re4">$4</span> = <span class="nu0">1073792080</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> next
+<span class="nu0">7</span>               <span class="kw3">return</span> c;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> print c
+<span class="re4">$5</span> = <span class="nu0">3</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> finish
+Run till <span class="kw3">exit</span> from <span class="co0">#0  f (a=1, b=2) at add.c:7</span>
+0x08048409 <span class="kw1">in</span> main <span class="br0">&#40;</span><span class="br0">&#41;</span> at add.c:<span class="nu0">13</span>
+<span class="nu0">13</span>              <span class="sy0">*</span><span class="re2">bug</span>=f<span class="br0">&#40;</span><span class="nu0">1</span>, <span class="nu0">2</span><span class="br0">&#41;</span>;
+Value returned is <span class="re4">$5</span> = <span class="nu0">3</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> print bug
+<span class="re4">$6</span> = 0x0</pre>
+</td><td class="columns-plugin last">
+<pre class="code bash">&nbsp;
+&nbsp;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> print <span class="br0">&#40;</span>struct sigaction<span class="br0">&#41;</span>bug
+<span class="re4">$1</span><span class="nu0">3</span> = <span class="br0">&#123;</span>__sigaction_handler =
+ <span class="br0">&#123;</span>
+    sa_handler = 0x8049590 <span class="sy0">&lt;</span>object.2<span class="sy0">&gt;</span>,
+    sa_sigaction = 0x8049590 <span class="sy0">&lt;</span>object.2<span class="sy0">&gt;</span>
+ <span class="br0">&#125;</span>,
+ sa_mask =
+ <span class="br0">&#123;</span>
+   __val =
+  <span class="br0">&#123;</span>
+    <span class="nu0">3221223384</span>, <span class="nu0">1073992320</span>, <span class="nu0">1</span>, <span class="nu0">3221223428</span>,
+    <span class="nu0">3221223436</span>, <span class="nu0">134513290</span>, <span class="nu0">134513760</span>, <span class="nu0">0</span>, <span class="nu0">3221223384</span>,
+    <span class="nu0">1073992298</span>, <span class="nu0">0</span>, <span class="nu0">3221223436</span>, <span class="nu0">1075157952</span>,
+    <span class="nu0">1073827112</span>, <span class="nu0">1</span>, <span class="nu0">134513360</span>, <span class="nu0">0</span>, <span class="nu0">134513393</span>, <span class="nu0">134513648</span>, <span class="nu0">1</span>,
+    <span class="nu0">3221223428</span>, <span class="nu0">134513268</span>, <span class="nu0">134513760</span>, <span class="nu0">1073794080</span>,
+    <span class="nu0">3221223420</span>, <span class="nu0">1073828556</span>, <span class="nu0">1</span>, <span class="nu0">3221223760</span>, <span class="nu0">0</span>,
+    <span class="nu0">3221223804</span>, <span class="nu0">3221223846</span>,	<span class="nu0">3221223866</span>
+  <span class="br0">&#125;</span>
+ <span class="br0">&#125;</span>,
+ sa_flags = -<span class="nu0">1073743402</span>,
+ sa_restorer = 0xbffff9f2<span class="br0">&#125;</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span></pre>
+</td></tr></table>
+
+</div>
+
+<h2 class="sectionedit4" id="depanarea_unui_proces">Depanarea unui proces</h2>
+<div class="level2">
+
+<p>
+Pe majoritatea sistemelor de operare pe care a fost portat, <code>gdb</code> nu poate detecta când un proces realizează o operație <code>fork</code>. Atunci când programul este pornit, depanarea are loc exclusiv în procesul <strong>inițial</strong>, procesele copil nefiind atașate debugger-ului. În acest caz, singura soluție este introducerea unor întârzieri în execuţia procesului nou creat (de exemplu, prin apelul de sistem <code>sleep</code>), care să ofere programatorului suficient timp pentru a atașa, manual, <code>gdb</code>-ul la respectivul proces, presupunând că i-a aflat <code>PID</code>-ul, în prealabil.
+</p>
+
+<p>
+Pentru a atașa debugger-ul la un proces deja existent, se folosește comanda <code>attach</code>, în felul următor:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> attach PID</pre>
+
+<p>
+Această metodă este destul de incomodă și poate cauza chiar o funcționare anormală a aplicației depanate, în cazul în care necesitățile de sincronizare între procese sunt stricte (de exemplu operații cu timeout).
+</p>
+
+<p>
+Din fericire, pe un număr limitat de sisteme, printre care și Linux, <code>gdb</code> permite depanarea comodă a programelor care creează mai multe procese prin <code>fork</code> și <code>vfork</code>. Pentru ca <code>gdb</code> să urmărească activitatea proceselor create ulterior, se poate folosi comanda <code>set follow-fork-mode</code>, în felul următor:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw1">set</span> follow-fork-mode mode </pre>
+
+<p>
+unde <code>mode</code> poate lua valoarea <code>parent</code>, caz în care debugger-ul continuă depanarea procesului părinte, sau valoarea <code>child</code>, și atunci noul proces creat va fi depanat în continuare. Se poate observa că în această manieră debugger-ul este atașat la un moment dat doar la un <strong>singur</strong> proces, neputând urmări mai multe simultan.
+</p>
+
+<p>
+Cu toate acestea, <code>gdb</code> poate ține evidența tuturor proceselor create de către programul depanat, deși, în continuare numai un singur proces poate fi rulat prin debugger la un moment dat. Comanda <code>set detach-on-fork</code> realizează acest lucru:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw1">set</span> detach-on-fork mode </pre>
+
+<p>
+unde <code>mode</code> poate fi <code>on</code>, atunci când <code>gdb</code> se va atașa unui singur proces la un moment dat (comportament implicit), sau <code>off</code>, caz în care <code>gdb</code> se atașează la toate procesele create în timpul execuției, și le suspendă pe acelea care nu sunt urmărite, în funcție de valoarea setării <code>follow-fork-mode</code>.
+</p>
+
+<p>
+Comanda <code>info forks</code> afișează informații legate de toate procesele aflate sub controlul <code>gdb</code> la un moment dat:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> info forks</pre>
+
+<p>
+De asemenea, comanda <code>fork</code> poate fi utilizată pentru a seta unul din procesele din listă drept cel activ (care este urmărit de debugger).
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> fork fork-id </pre>
+
+<p>
+unde <code>fork-id</code> este identificatorul asociat procesului, așa cum apare în lista afișată de comanda <code>info forks</code>.
+</p>
+
+<p>
+Atunci când un anumit proces nu mai trebuie urmărit, el poate fi înlaturat din listă folosind comenzile <code>detach fork</code> și <code>delete fork</code>:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> detach fork fork-id 
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> delete fork fork-id </pre>
+
+<p>
+Diferența dintre cele două comenzi este că <code>detach fork</code> lasă procesul să ruleze independent, în continuare, în timp ce <code>delete fork</code> îl încheie.
+</p>
+
+<p>
+Pentru a ilustra aceste comenzi într-un exemplu concret, să considerăm programul următor:
+</p>
+<dl class="code">
+<dt><a href="../../../_export/code/so/laboratoare/resurse/gdb%3Fcodeblock=15" title="Download Snippet" class="mediafile mf_c">forktest.c</a></dt>
+<dd><pre class="code c"> <span class="nu0">1</span> <span class="co2">#include &lt;stdio.h&gt;</span>
+ <span class="nu0">2</span> <span class="co2">#include &lt;sys/types.h&gt;</span>
+ <span class="nu0">3</span> <span class="co2">#include &lt;sys/wait.h&gt;</span>
+ <span class="nu0">4</span> <span class="co2">#include &lt;unistd.h&gt;</span>
+ <span class="nu0">5</span>
+ <span class="nu0">6</span>
+ <span class="nu0">7</span> <span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span> <span class="sy0">**</span>argv<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+ <span class="nu0">8</span>     pid_t childPID <span class="sy0">=</span> fork<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+ <span class="nu0">9</span>
+<span class="nu0">10</span>     <span class="kw1">if</span> <span class="br0">&#40;</span>childPID <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+<span class="nu0">11</span>         <span class="co1">// An error occured</span>
+<span class="nu0">12</span>         <a href="http://www.opengroup.org/onlinepubs/009695399/functions/fprintf.html"><span class="kw3">fprintf</span></a><span class="br0">&#40;</span>stderr<span class="sy0">,</span> <span class="st0">&quot;Could not fork!<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="nu0">13</span>         <span class="kw1">return</span> <span class="sy0">-</span><span class="nu0">1</span><span class="sy0">;</span>
+<span class="nu0">14</span>     <span class="br0">&#125;</span> <span class="kw1">else</span> <span class="kw1">if</span> <span class="br0">&#40;</span>childPID <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+<span class="nu0">15</span>
+<span class="nu0">16</span>         <span class="co1">// We are in the child process</span>
+<span class="nu0">17</span>         <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;The child process is executing...<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="nu0">18</span>         sleep<span class="br0">&#40;</span><span class="nu0">2</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="nu0">19</span>
+<span class="nu0">20</span>     <span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+<span class="nu0">21</span>
+<span class="nu0">22</span>         <span class="co1">// We are in the parent process</span>
+<span class="nu0">23</span>         <span class="kw1">if</span> <span class="br0">&#40;</span>wait<span class="br0">&#40;</span>NULL<span class="br0">&#41;</span> <span class="sy0">&lt;</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+<span class="nu0">24</span>             <a href="http://www.opengroup.org/onlinepubs/009695399/functions/fprintf.html"><span class="kw3">fprintf</span></a><span class="br0">&#40;</span>stderr<span class="sy0">,</span> <span class="st0">&quot;Could not wait for child!<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="nu0">25</span>             <span class="kw1">return</span> <span class="sy0">-</span><span class="nu0">1</span><span class="sy0">;</span>
+<span class="nu0">26</span>         <span class="br0">&#125;</span>
+<span class="nu0">27</span>         <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Everything is done!<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="nu0">28</span>
+<span class="nu0">29</span>     <span class="br0">&#125;</span>
+<span class="nu0">30</span>
+<span class="nu0">31</span>     <span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="nu0">32</span> <span class="br0">&#125;</span></pre>
+</dd></dl>
+
+<p>
+Dacă vom rula programul cu parametrii impliciți de depanare, vom constata că <code>gdb</code> va urmări exclusiv execuția procesului părinte:
+</p>
+<pre class="code bash">$ <span class="kw2">gcc</span> <span class="re5">-O0</span> <span class="re5">-g3</span> <span class="re5">-o</span> forktest forktest.c
+$ <span class="kw2">gdb</span> .<span class="sy0">/</span>forktest
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+Starting program: <span class="sy0">/</span>home<span class="sy0">/</span>mihnea<span class="sy0">/</span>forktest
+The child process is executing...
+Everything is <span class="kw1">done</span><span class="sy0">!</span>
+&nbsp;
+Program exited normally.</pre>
+
+<p>
+Punem câte un <code>breakpoint</code> în codul asociat procesului părinte, respectiv procesului copil, pentru a evidenția mai bine acest comportament:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> <span class="nu0">17</span>
+Breakpoint <span class="nu0">1</span> at 0x8048497: <span class="kw2">file</span> forktest.c, line <span class="nu0">17</span>.
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">break</span> <span class="nu0">27</span>
+Breakpoint <span class="nu0">2</span> at 0x80484f0: <span class="kw2">file</span> forktest.c, line <span class="nu0">27</span>.
+&nbsp;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+Starting program: <span class="sy0">/</span>home<span class="sy0">/</span>mihnea<span class="sy0">/</span>forktest
+The child process is executing...
+&nbsp;
+Breakpoint <span class="nu0">2</span>, main <span class="br0">&#40;</span><span class="br0">&#41;</span> at forktest.c:<span class="nu0">27</span>
+<span class="nu0">27</span>                      <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;Everything is done!<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">continue</span>
+Continuing.
+Everything is <span class="kw1">done</span><span class="sy0">!</span>
+&nbsp;
+Program exited normally.</pre>
+
+<p>
+Setăm debugger-ul să urmărească procesele copil, și observăm că, de data aceasta, celălalt <code>breakpoint</code> este atins:
+</p>
+<pre class="code bash"><span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw1">set</span> follow-fork-mode child
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> run
+Starting program: <span class="sy0">/</span>home<span class="sy0">/</span>mihnea<span class="sy0">/</span>forktest
+<span class="br0">&#91;</span>Switching to process <span class="nu0">6217</span><span class="br0">&#93;</span>
+&nbsp;
+Breakpoint <span class="nu0">1</span>, main <span class="br0">&#40;</span><span class="br0">&#41;</span> at forktest.c:<span class="nu0">17</span>
+<span class="nu0">17</span>                      <span class="kw3">printf</span><span class="br0">&#40;</span><span class="st0">&quot;The child process is executing...<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span>;
+<span class="br0">&#40;</span><span class="kw2">gdb</span><span class="br0">&#41;</span> <span class="kw3">continue</span>
+Continuing.
+The child process is executing...
+&nbsp;
+Program exited normally.
+Everything is <span class="kw1">done</span><span class="sy0">!</span></pre>
+
+<p>
+Observați că ultimele două mesaje au fost <strong>inversate</strong>, față de cazul precedent: debugger-ul încheie procesul copil, apoi procesul părinte afișează mesajul de final (<code>Everything is done!</code>). 
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="nice_to_read">Nice to read</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="https://blogs.oracle.com/ksplice/entry/8_gdb_tricks_you_should" class="urlextern" title="https://blogs.oracle.com/ksplice/entry/8_gdb_tricks_you_should"  rel="nofollow"> 8 gdb tricks you should know </a></div>
+</li>
+<li class="level1"><div class="li"><a href="http://techblog.rosedu.org/gdb-a-basic-workflow.html" class="urlextern" title="http://techblog.rosedu.org/gdb-a-basic-workflow.html"  rel="nofollow"> A basic workflow with GDB </a></div>
+</li>
+</ul>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<h1 class="sectionedit1" id="informatii_generale_so">Informații generale SO</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_131070863858355acc54773" data-jsajax="%26skipfile%3D%253D/so%253Ainfo%253Astart/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../../info/documentatie.html" class="wikilink1" title="so:info:documentatie">Documentație și alte resurse</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/feed.html" class="wikilink1" title="so:info:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/hall.html" class="wikilink1" title="so:info:hall">Hall of SO</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/lista-discutii.html" class="wikilink1" title="so:info:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/mv.html" class="wikilink1" title="so:info:mv">Mașini virtuale</a></div></li>
+<li class="level1"><div class="li"><a href="../../info/trimitere-teme.html" class="wikilink1" title="so:info:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Informații generale SO" [12-194] -->
+<h1 class="sectionedit2" id="informatii_so_2015-2016">Informații SO 2015-2016</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_161158923358355acc57652" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../../meta/examen.html" class="indexmenu_idx_head">Examen CA/CC</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../meta/examen/2012-2013.html" class="wikilink1" title="so:meta:examen:2012-2013">Examen CA/CC 2012-2013</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/examen/2013-2014.html" class="wikilink1" title="so:meta:examen:2013-2014">Examen CA/CC 2013-2014</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/examen/2014-2015.html" class="wikilink1" title="so:meta:examen:2014-2015">Examen CA/CC 2014-2015</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../meta/notare.html" class="indexmenu_idx_head">Reguli generale și notare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../../meta/notare/reguli-notare-ca-cc.html" class="wikilink1" title="so:meta:notare:reguli-notare-ca-cc">Notare CA/CC</a></div></li>
+<li class="level2"><div class="li"><a href="../../meta/notare/reguli-notare-cb.html" class="wikilink1" title="so:meta:notare:reguli-notare-cb">Notare CB</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../../meta/anunturi.html" class="wikilink1" title="so:meta:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/calendar.html" class="wikilink1" title="so:meta:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/catalog.html" class="wikilink1" title="so:meta:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/echivalari.html" class="wikilink1" title="so:meta:echivalari">Echivalări teme</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/karma.html" class="wikilink1" title="so:meta:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/need-to-know.html" class="wikilink1" title="so:meta:need-to-know">SO Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../../meta/orar.html" class="wikilink1" title="so:meta:orar">Orar și împărțire pe semigrupe</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Informații SO 2015-2016" [195-261] -->
+<h1 class="sectionedit3" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_90057933958355acc585f6" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../resurse.html" class="indexmenu_idx_head">Resurse</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="c_tips.html" class="wikilink1" title="so:laboratoare:resurse:c_tips">C/SO Tips</a></div></li>
+<li class="level2"><div class="li"><a href="die.html" class="wikilink1" title="so:laboratoare:resurse:die">Macro-ul DIE</a></div></li>
+<li class="level2"><div class="li"><span class="curid"><a href="gdb.html" class="wikilink1" title="so:laboratoare:resurse:gdb">GDB</a></span></div></li>
+<li class="level2"><div class="li"><a href="home.html" class="wikilink1" title="so:laboratoare:resurse:home">Resurse</a></div></li>
+<li class="level2"><div class="li"><a href="injections.html" class="wikilink1" title="so:laboratoare:resurse:injections">Function Hooking and Windows Dll Injection</a></div></li>
+<li class="level2"><div class="li"><a href="oprofile.html" class="wikilink1" title="so:laboratoare:resurse:oprofile">Oprofile</a></div></li>
+<li class="level2"><div class="li"><a href="recapitulare.html" class="wikilink1" title="so:laboratoare:resurse:recapitulare">Recapitulare</a></div></li>
+<li class="level2"><div class="li"><a href="threaduri_extra.html" class="wikilink1" title="so:laboratoare:resurse:threaduri_extra">Thread-uri - Extra</a></div></li>
+<li class="level2"><div class="li"><a href="vs_tips.html" class="wikilink1" title="so:laboratoare:resurse:vs_tips">Visual Studio Tips and Tricks</a></div></li>
+<li class="level2"><div class="li"><a href="windows-video.html" class="wikilink1" title="so:laboratoare:resurse:windows-video">windows-video</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../laborator-01.html" class="wikilink1" title="so:laboratoare:laborator-01">Laborator 01 - Introducere</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-02.html" class="wikilink1" title="so:laboratoare:laborator-02">Laborator 02 - Operații I/O simple</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-03.html" class="wikilink1" title="so:laboratoare:laborator-03">Laborator 03 - Procese</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-04.html" class="wikilink1" title="so:laboratoare:laborator-04">Laborator 04 - Semnale</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-05.html" class="wikilink1" title="so:laboratoare:laborator-05">Laborator 05 - Gestiunea memoriei</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-06.html" class="wikilink1" title="so:laboratoare:laborator-06">Laborator 06 - Memoria virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-07.html" class="wikilink1" title="so:laboratoare:laborator-07">Laborator 07 - Profiling &amp; Debugging</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-08.html" class="wikilink1" title="so:laboratoare:laborator-08">Laborator 08 - Thread-uri Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-09.html" class="wikilink1" title="so:laboratoare:laborator-09">Laborator 09 - Thread-uri Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-10.html" class="wikilink1" title="so:laboratoare:laborator-10">Laborator 10 - Operații IO avansate - Windows</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-11.html" class="wikilink1" title="so:laboratoare:laborator-11">Laborator 11 - Operații IO avansate - Linux</a></div></li>
+<li class="level1"><div class="li"><a href="../laborator-12.html" class="wikilink1" title="so:laboratoare:laborator-12">Laborator 12 - Implementarea sistemelor de fișiere</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Laboratoare" [262-322] -->
+<h1 class="sectionedit4" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_151658116058355acc59596" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../../cursuri/curs-01.html" class="indexmenu_idx_head">Curs 01 - Introducere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-02.html" class="indexmenu_idx_head">Curs 02 - Sistemul de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-03.html" class="indexmenu_idx_head">Curs 03 - Procese</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-04.html" class="indexmenu_idx_head">Curs 04 - Planificarea execuției. IPC</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-05.html" class="indexmenu_idx_head">Curs 05 - Gestiunea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-06.html" class="indexmenu_idx_head">Curs 06 - Memoria virtuală</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-07.html" class="indexmenu_idx_head">Curs 07 - Securitatea memoriei</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-08.html" class="indexmenu_idx_head">Curs 08 - Fire de execuție</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-09.html" class="indexmenu_idx_head">Curs 09 - Sincronizare</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-10.html" class="indexmenu_idx_head">Curs 10 - Dispozitive de intrare/ieșire</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-11.html" class="indexmenu_idx_head">Curs 11 - Networking în sistemul de operare</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-12.html" class="indexmenu_idx_head">Curs 12 - Implementarea sistemelor de fișiere</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/curs-13.html" class="indexmenu_idx_head">Curs 13 - Securitatea sistemului</a></div></li>
+<li class="closed"><div class="li"><a href="../../cursuri/quiz/start.html" class="indexmenu_idx_head">Quizz-uri curs</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra-2.html" class="wikilink1" title="so:cursuri:curs-extra-2">Curs extra - Android</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra-3.html" class="wikilink1" title="so:cursuri:curs-extra-3">Curs extra - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/curs-extra.html" class="wikilink1" title="so:cursuri:curs-extra">Curs extra - Sincronizarea proceselor</a></div></li>
+<li class="level1"><div class="li"><a href="../../cursuri/note.html" class="wikilink1" title="so:cursuri:note">Note de curs</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Cursuri" [323-374] -->
+<h1 class="sectionedit5" id="teme">Teme</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_214585847858355acc5a537" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="closed"><div class="li"><a href="../../teme/tema-asist.html" class="indexmenu_idx_head">Tema Asistenți - Guardian process</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/contestatii.html" class="wikilink1" title="so:teme:contestatii">Contestații</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/folosire-gitlab.html" class="wikilink1" title="so:teme:folosire-gitlab">Git. Indicații folosire GitLab</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/general.html" class="wikilink1" title="so:teme:general">Indicații generale teme</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-1.html" class="wikilink1" title="so:teme:tema-1">Tema 1 Multi-platform Development</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-2.html" class="wikilink1" title="so:teme:tema-2">Tema 2 Mini-shell</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-3.html" class="wikilink1" title="so:teme:tema-3">Tema 3 Memorie virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-4.html" class="wikilink1" title="so:teme:tema-4">Tema 4 Planificator de threaduri</a></div></li>
+<li class="level1"><div class="li"><a href="../../teme/tema-5.html" class="wikilink1" title="so:teme:tema-5">Tema 5 Server web asincron</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT5 SECTION "Teme" [375-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="gdb.html#gdb">GDB</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="gdb.html#rulare_gdb">Rulare gdb</a></div></li>
+<li class="level2"><div class="li"><a href="gdb.html#comenzi_de_baza_gdb">Comenzi de bază GDB</a></div></li>
+<li class="level2"><div class="li"><a href="gdb.html#depanarea_unui_proces">Depanarea unui proces</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="gdb.html#nice_to_read">Nice to read</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so/laboratoare/resurse/gdb.txt · Last modified: 2015/03/18 22:55 by marius.ungureanu93          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="gdb%3Fdo=media&amp;ns=so%253Alaboratoare%253Aresurse.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="gdb.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../../feed.php" title="Recent changes RSS feed"><img src="../../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../../lib/exe/indexer.php%3Fid=so%253Alaboratoare%253Aresurse%253Agdb&amp;1479891660" width="2" height="1" alt="" /></div>
+</body>
+</html>

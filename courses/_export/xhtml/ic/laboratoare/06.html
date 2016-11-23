@@ -1,0 +1,321 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>ic:laboratoare:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-07T20:24:34+0200"/>
+<meta name="keywords" content="ic,laboratoare,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=ic:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../ic/laboratoare/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ic:laboratoare';var JSINFO = {"id":"ic:laboratoare:06","namespace":"ic:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="06.html#laboratorul_06_-_cbc_padding_attack">Laboratorul 06 - CBC Padding Attack</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="06.html#about_padding">About padding</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#attacking_cbc-padding">Attacking CBC-padding</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#your_task">Your task</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h2 class="sectionedit1" id="laboratorul_06_-_cbc_padding_attack">Laboratorul 06 - CBC Padding Attack</h2>
+<div class="level2">
+
+<p>
+In this lab we&#039;ll try to implement the CBC-padding attack of Serge Vaudenay:
+<a href="http://link.springer.com/content/pdf/10.1007%2F3-540-46035-7_35.pdf" class="urlextern" title="http://link.springer.com/content/pdf/10.1007%2F3-540-46035-7_35.pdf"  rel="nofollow">http://link.springer.com/content/pdf/10.1007%2F3-540-46035-7_35.pdf</a>
+</p>
+
+<p>
+See sections 3.1 to 3.3 of chapter 3 in the paper above.
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laboratorul 06 - CBC Padding Attack" [1-254] -->
+<h3 class="sectionedit2" id="about_padding">About padding</h3>
+<div class="level3">
+
+<p>
+Given a message of length L bytes, we need to pad with b more bytes such that L+b is a multiple of the cipher&#039;s block size (e.g. 16 bytes in the case of AES). Each of the last b bytes will have the value b. For example, for a message that has 30 bytes, we shall add two bytes with the value 0x02 at the end, obtaining m = [b1 | b2 | .. | b30 | 0x02 | 0x02], where bi are the 30 original bytes.
+</p>
+
+</div>
+<!-- EDIT2 SECTION "About padding" [255-673] -->
+<h3 class="sectionedit3" id="attacking_cbc-padding">Attacking CBC-padding</h3>
+<div class="level3">
+
+<p>
+The idea in short is the following: given a 1-block ciphertext c = [c1 | c2 | … | c16], you can find its last byte by crafting a 2-block ciphetext c&#039; = [r | c], where r = [r1 | r2 | … | r16] contains random bytes. Then, by using an oracle that tells you whether the padding of the decryption of c&#039; is correct or not, you can determine the value of c16. For this you just try all possible values of r16, until for one of them you will find that the oracle returns a successful result (it will do that for one value). In that case, due to the workings of CBC, you found out that r16 ⊕ LSB(Dec(k, c)) = 1. Hence you find that the last byte of the decryption of c is r16 ⊕ 1.
+</p>
+
+<p>
+Once you found the last byte c16 of the decryption of c, you can work your way towards the following byte, c15. This time you need to target the two-byte padding [0x02 | 0x02]. For this you simply use for r16 the value LSB(Dec(k, c)) ⊕ 0x02, and try all values for r15 just as we did above for r16. In the same manner you can decrypt all the ciphertext blocks c1 … c16.
+</p>
+
+<p>
+You can then repeat the above process for any ciphertext of arbitrary length. Simply apply the attack on all blocks.
+</p>
+
+<p>
+<p><div class="notetip">
+To obtain a message that was encrypted with CBC, you also need the initial value (IV) and then you need to apply CBC decryption using the values obtained above. Those are just intermediary values, and not the actual message.
+Check the course for details:
+<a href="http://cs.curs.pub.ro/2014/pluginfile.php/13369/mod_resource/content/2/sasc_curs6.pdf" class="urlextern" title="http://cs.curs.pub.ro/2014/pluginfile.php/13369/mod_resource/content/2/sasc_curs6.pdf"  rel="nofollow">http://cs.curs.pub.ro/2014/pluginfile.php/13369/mod_resource/content/2/sasc_curs6.pdf</a>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT3 SECTION "Attacking CBC-padding" [674-2242] -->
+<h3 class="sectionedit4" id="your_task">Your task</h3>
+<div class="level3">
+
+<p>
+You are given the following ciphertext:
+553b43d4b821332868fece8149eea14a2b0a98c7bed43cc1cf75f4e778cb315dc1d92
+8d0340e0aab4900ca8af9adaee761e2affa3e9996d81483e950b913492b
+</p>
+
+<p>
+and a padding oracle (see the method “check_cbcpad” below), which knows the key that was used to encrypt the ciphertext and which will answer 1 if the padding of the ciphertext is correct and 0 otherwise.
+</p>
+
+<p>
+Your task is to decrypt the message by using the CBC-padding attack.
+</p>
+
+<p>
+<p><div class="notetip">
+You are not allowed to use the key from the file, but you can (and you may have to) use the IV in order to decrypt the entire message.
+
+</div></p>
+</p>
+
+<p>
+Here is a starting python script, which contains your padding oracle:
+</p>
+<pre class="code">import sys
+import random
+import string
+import time
+from Crypto.Cipher import AES
+
+IV = &#039;Hristos a inviat&#039;
+
+def strxor(a, b): # xor two strings (trims the longer input)
+  return &quot;&quot;.join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a, b)])
+
+def hexxor(a, b): # xor two hex strings (trims the longer input)
+  ha = a.decode(&#039;hex&#039;)
+  hb = b.decode(&#039;hex&#039;)
+  return &quot;&quot;.join([chr(ord(x) ^ ord(y)).encode(&#039;hex&#039;) for (x, y) in zip(ha, hb)])
+
+def bitxor(a, b): # xor two bit strings (trims the longer input)
+  return &quot;&quot;.join([str(int(x)^int(y)) for (x, y) in zip(a, b)])
+
+def str2bin(ss):
+  &quot;&quot;&quot;
+    Transform a string (e.g. &#039;Hello&#039;) into a string of bits
+  &quot;&quot;&quot;
+  bs = &#039;&#039;
+  for c in ss:
+    bs = bs + bin(ord(c))[2:].zfill(8)
+  return bs
+
+def str2int(ss):
+  &quot;&quot;&quot;
+    Transform a string (e.g. &#039;Hello&#039;) into a (long) integer by converting
+    first to a bistream
+  &quot;&quot;&quot;
+  bs = str2bin(ss)
+  li = int(bs, 2)
+  return li
+
+def hex2bin(hs):
+  &quot;&quot;&quot;
+    Transform a hex string (e.g. &#039;a2&#039;) into a string of bits (e.g.10100010)
+  &quot;&quot;&quot;
+  bs = &#039;&#039;
+  for c in hs:
+    bs = bs + bin(int(c,16))[2:].zfill(4)
+  return bs
+
+def bin2hex(bs):
+  &quot;&quot;&quot;
+    Transform a bit string into a hex string
+  &quot;&quot;&quot;
+  bv = int(bs,2)
+  return int2hexstring(bv)
+
+def byte2bin(bval):
+  &quot;&quot;&quot;
+    Transform a byte (8-bit) value into a bitstring
+  &quot;&quot;&quot;
+  return bin(bval)[2:].zfill(8)
+
+def int2hexstring(bval):
+  &quot;&quot;&quot;
+    Transform an int value into a hexstring (even number of characters)
+  &quot;&quot;&quot;
+  hs = hex(bval)[2:]
+  lh = len(hs)
+  return hs.zfill(lh + lh%2)
+  
+def check_cbcpad(c):
+  &quot;&quot;&quot;
+  Oracle for checking if a given ciphertext has correct CBC-padding.
+  That is, it checks that the last n bytes all have the value n.
+
+  Args:
+    c is the ciphertext to be checked. Note: the key is supposed to be
+    known just by the oracle.
+
+  Return 1 if the pad is correct, 0 otherwise.
+  &quot;&quot;&quot;
+  ko = &#039;Sfantul Gheorghe&#039;
+  m = aes_dec_cbc(ko, c, IV)
+  lm = len(m)
+  lb = ord(m[lm-1])
+
+  if lb &gt; lm:
+    return 0
+
+  for k in range(lb):
+    if ord(m[lm-1-k]) != lb:
+      return 0
+
+  return 1
+
+def aes_enc(k, m):
+  &quot;&quot;&quot;
+  Encrypt a message m with a key k in ECB mode using AES as follows:
+  c = AES(k, m)
+
+  Args:
+    m should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as &#039;Hello...&#039; or &#039;\x02\x04...&#039;)
+    k should be a bytestring of length exactly 16 bytes.
+
+  Return:
+    The bytestring ciphertext c
+  &quot;&quot;&quot;
+  aes = AES.new(k)
+  c = aes.encrypt(m)
+
+  return c
+
+def aes_dec(k, c):
+  &quot;&quot;&quot;
+  Decrypt a ciphertext c with a key k in ECB mode using AES as follows:
+  m = AES(k, c)
+
+  Args:
+    c should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as &#039;Hello...&#039; or &#039;\x02\x04...&#039;)
+    k should be a bytestring of length exactly 16 bytes.
+
+  Return:
+    The bytestring message m
+  &quot;&quot;&quot;
+  aes = AES.new(k)
+  m = aes.decrypt(c)
+
+  return m
+
+def aes_enc_cbc(k, m, iv):
+  &quot;&quot;&quot;
+  Encrypt a message m with a key k in CBC mode using AES as follows:
+  c = AES(k, m)
+
+  Args:
+    m should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as &#039;Hello...&#039; or &#039;\x02\x04...&#039;)
+    k should be a bytestring of length exactly 16 bytes.
+    iv should be a bytestring of length exactly 16 bytes.
+
+  Return:
+    The bytestring ciphertext c
+  &quot;&quot;&quot;
+  aes = AES.new(k, AES.MODE_CBC, iv)
+  c = aes.encrypt(m)
+
+  return c
+
+def aes_dec_cbc(k, c, iv):
+  &quot;&quot;&quot;
+  Decrypt a ciphertext c with a key k in CBC mode using AES as follows:
+  m = AES(k, c)
+
+  Args:
+    c should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as &#039;Hello...&#039; or &#039;\x02\x04...&#039;)
+    k should be a bytestring of length exactly 16 bytes.
+    iv should be a bytestring of length exactly 16 bytes.
+
+  Return:
+    The bytestring message m
+  &quot;&quot;&quot;
+  aes = AES.new(k, AES.MODE_CBC, iv)
+  m = aes.decrypt(c)
+
+  return m
+
+def main():
+
+  # Find the message corresponding to this ciphertext by using the cbc-padding attack
+  c = &#039;553b43d4b821332868fece8149eea14a2b0a98c7bed43cc1cf75f4e778cb315dc1d928d0340e0aab4900ca8af9adaee761e2affa3e9996d81483e950b913492b&#039;
+  ct = c.decode(&#039;hex&#039;)
+
+  #Check correct padding
+  print &#039;Oracle check of pad = &#039; + str(check_cbcpad(ct))
+
+  # TODO: implement the CBC-padding attack to find the message corresponding to the above ciphertext
+  # Note: you cannot use the key known by the oracle
+  # You can use the known IV in order to recover the full message
+
+
+if __name__ == &quot;__main__&quot;:
+  main()</pre>
+
+</div>
+<!-- EDIT4 SECTION "Your task" [2243-] --></div>
+</body>
+</html>

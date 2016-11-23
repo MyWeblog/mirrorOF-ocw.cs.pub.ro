@@ -1,0 +1,56 @@
+    
+    
+
+#include <cstdio>
+#include <cstdarg>
+using namespace std;
+
+class Base
+{
+public:
+    Base(int a) : _a(a)
+    {
+    }
+
+    int Foo(int offset)
+    {
+        return offset + _a * _a;
+    }
+private:
+    int _a;
+};
+
+void *DisMember(size_t size, ...)
+{
+    // the pointer can be more complicated than a plain data pointer
+    // think of virtual member functions, multiple inheritance, etc
+    if (size < sizeof(void *)) return NULL;
+    va_list args;
+    va_start(args, size);
+    void *res = va_arg(args, void *);
+    va_end(args);
+    return res;
+}
+
+int main()
+{
+    Base b(5);
+    Base c(8);
+
+    // regular pointer to member function
+    int (Base::*ptrFoo)(int);
+    ptrFoo = &Base::Foo;
+
+    printf("Calling Base::Foo(3) through the regular pointer gives %d.\n", (b.*ptrFoo)(3));
+
+    // void *pVoid1 = reinterpret_cast<void *>(ptrFoo);    // won't work
+    // void *pVoid2 = reinterpret_cast<void *>(&(b.*ptrFoo));    // won't work
+    printf("sizeof(&Base::Foo) = %ld.\n", sizeof(&Base::Foo));
+    void *pVoid3 = DisMember(sizeof(&Base::Foo), &Base::Foo);
+    printf("%p.\n", pVoid3);
+
+    printf("Calling Foo from the void* through b: %d.\n", reinterpret_cast<int (*)(Base *, int)>(pVoid3)(&b, 3));
+    // printf("Calling Foo from the void* through c: %d.\n", reinterpret_cast<int (Base::*)(int)>(pVoid3)(3)); // won't work; gotta stick with the illegal form from above
+    printf("Calling Foo from the void* through c: %d.\n", reinterpret_cast<int (*)(Base *, int)>(pVoid3)(&c, 3));
+    return 0;
+}

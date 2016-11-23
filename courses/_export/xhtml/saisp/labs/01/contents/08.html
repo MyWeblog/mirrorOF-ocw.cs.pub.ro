@@ -1,0 +1,277 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:01:contents:08</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-02-22T19:51:45+0200"/>
+<meta name="keywords" content="saisp,labs,01,contents,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:01:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="08.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/01/contents/08.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:01:contents';var JSINFO = {"id":"saisp:labs:01:contents:08","namespace":"saisp:labs:01:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level3"><div class="li"><a href="08.html#bonus_-_10p_configurare_suport_de_ldap_in_mediawiki">08. [BONUS - 10p] Configurare suport de LDAP în MediaWiki</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="08.html#configurare_baza_de_date">Configurare bază de date</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#instalare_mediawiki">Instalare MediaWiki</a></div></li>
+<li class="level4"><div class="li"><a href="08.html#configuare_autentificare_prin_ldap">Configuare autentificare prin LDAP</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h3 class="sectionedit1" id="bonus_-_10p_configurare_suport_de_ldap_in_mediawiki">08. [BONUS - 10p] Configurare suport de LDAP în MediaWiki</h3>
+<div class="level3">
+
+<p>
+MediaWiki este una dintre cele mai cunoscute și folosite soluții de wiki. Spre deosebire de DokuWiki folosește o bază de date. Pentru aceasta am instalat pe stația client un server MySQL.
+</p>
+
+<p>
+Similar cu DokuWiki vom instala MediaWiki în directorul <code>public_html/mediawiki/</code> din directorul home al utilizatorului <code>student</code>. Pentru instalare vom folosi fișierul arhivă <code>mediawiki-1.22.2.tar.gz</code> din directorul home al utilizatorului <code>student</code>. Vom urma indicațiile de instalare din <a href="http://www.mediawiki.org/wiki/Manual:Installing_MediaWiki" class="urlextern" title="http://www.mediawiki.org/wiki/Manual:Installing_MediaWiki"  rel="nofollow">pagina de instalare a MediaWiki</a>.
+</p>
+
+</div>
+
+<h4 id="configurare_baza_de_date">Configurare bază de date</h4>
+<div class="level4">
+
+<p>
+În primă fază vom configura baza de date. Pentru început ne vom conecta cu utilizatorul privilegiat al MySQL (parola este <code>student</code>):
+</p>
+<pre class="code bash"><span class="co4">student@ldap-client:~$ </span>mysql <span class="re5">-u</span> root <span class="re5">-pstudent</span>
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+mysql<span class="sy0">&gt;</span> </pre>
+
+<p>
+Astfel conectați vom crea baza de date pentru MediaWiki (denumită <code>wikidb</code>):
+</p>
+<pre class="code bash">mysql<span class="sy0">&gt;</span> create database wikidb;
+Query OK, <span class="nu0">1</span> row affected <span class="br0">&#40;</span><span class="nu0">0.08</span> sec<span class="br0">&#41;</span></pre>
+
+<p>
+și apoi creăm utilizatorul care să fie folosit de MediaWiki pentru accesarea bazei de date (denumit <code>wikiuser</code>, folosibil de pe <code>localhost</code>):
+</p>
+<pre class="code bash">mysql<span class="sy0">&gt;</span> grant index, create, <span class="kw1">select</span>, insert, update, delete, alter, lock tables on wikidb.<span class="sy0">*</span> to <span class="st_h">'wikiuser'</span><span class="sy0">@</span><span class="st_h">'localhost'</span> identified by <span class="st_h">'student'</span>;
+Query OK, <span class="nu0">0</span> rows affected <span class="br0">&#40;</span><span class="nu0">0.00</span> sec<span class="br0">&#41;</span></pre>
+
+<p>
+Am configurat baza de date MySQL și acum putem ieși din modul de configurare:
+</p>
+<pre class="code bash">mysql<span class="sy0">&gt;</span> <span class="kw3">exit</span>
+Bye
+<span class="co4">student@ldap-client:~$ </span></pre>
+
+</div>
+
+<h4 id="instalare_mediawiki">Instalare MediaWiki</h4>
+<div class="level4">
+
+<p>
+După cum am spus vom instala MediaWiki în directorul <code>public_html/mediaiki/</code> din directorul home al utilizatorului <code>student</code>. Pentru început vom dezarhiva, în acel director, arhiva <code>~student/public_html/mediawiki-1.22.2.tar.gz</code>, ca utilizatorul <code>student</code>. Vom rula comenzile de mai jos:
+</p>
+<pre class="code bash"><span class="co4">student@ldap-client:~$ </span><span class="kw2">ls</span>
+admin-public.git  mediawiki-1.22.2.tar.gz  public_html
+<span class="co4">student@ldap-client:~$ </span><span class="kw3">cd</span> public_html<span class="sy0">/</span>
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html$ <span class="kw2">ls</span>
+dokuwiki
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html$ <span class="kw2">tar</span> xzf ..<span class="sy0">/</span>mediawiki-1.22.2.tar.gz 
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html$ <span class="kw2">ls</span>
+dokuwiki  mediawiki-1.22.2
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html$ <span class="kw2">mv</span> mediawiki-1.22.2<span class="sy0">/</span> mediawiki
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html$ <span class="kw2">ls</span>
+dokuwiki  mediawiki</pre>
+
+<p>
+Mai sus am redenumit directorul obținut după dezarhivare din <code>mediawiki-1.22.2/</code> în <code>mediawiki/</code>.
+</p>
+
+<p>
+În continuare vom rula scriptul de instalare al MediaWiki. Accesăm <abbr title="Uniform Resource Locator">URL</abbr>-ul aferent MediaWiki: <a href="http://192.168.0.3/~student/mediawiki/" class="urlextern" title="http://192.168.0.3/~student/mediawiki/"  rel="nofollow">http://192.168.0.3/~student/mediawiki/</a>. De la acesta vom continua către pagina de configurare: <a href="http://192.168.0.3/~student/mediawiki/mw-config/index.php" class="urlextern" title="http://192.168.0.3/~student/mediawiki/mw-config/index.php"  rel="nofollow">http://192.168.0.3/~student/mediawiki/mw-config/index.php</a>. În acea pagină realizăm configurarea dorită, adică pașii:
+</p>
+<ul>
+<li class="level1"><div class="li"> Limba dorită: vom opta pentru valoarea implicită (engleză).</div>
+</li>
+<li class="level1"><div class="li"> Verificările de mediu vor fi trecute: vom apăsa butonul “Continue”.</div>
+</li>
+<li class="level1"><div class="li"> La configurările de bază de date, vom folosi pentru diversele câmpuri următoarele valori:</div>
+<ul>
+<li class="level2"><div class="li"> <em>Database host</em>: <code>localhost</code></div>
+</li>
+<li class="level2"><div class="li"> <em>Database name</em>: <code>wikidb</code> (configurat anterior)</div>
+</li>
+<li class="level2"><div class="li"> <em>Database table prefix</em>: nu completăm nimic (nu dorim să avem un prefix în numele tabelelor din baza de date)</div>
+</li>
+<li class="level2"><div class="li"> <em>Database username</em>: <code>wikiuser</code> (configurat anterior)</div>
+</li>
+<li class="level2"><div class="li"> <em>Database password</em>: <code>student</code> (configurat anterior)</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> În opțiunile de bază de date alegem <code>InnoDB</code> ca engine de stocare și <code>UTF-8</code> ca set de caractere.</div>
+</li>
+<li class="level1"><div class="li"> În fereastra denumită “Name” completați ce opțiuni doriți.</div>
+</li>
+<li class="level1"><div class="li"> În celelalte ferestre alegeți, în continuare, ceea ce vi se pare potrivit.</div>
+</li>
+<li class="level1"><div class="li"> După realizarea configurărilor de mai sus, se va rula scriptul intern de configurare.</div>
+</li>
+<li class="level1"><div class="li"> Apoi se descarcă scriptul de configurare a wiki-ului. Acesta trebuie copiat în directorul de instalare al MediaWiki. Pentru aceasta, mergem în directorul unde a fost descărcat pe sistemul fizic și îl copiem în directorul de instalare folosind comanda <code>scp</code>:<pre class="code bash">student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>Downloads$ <span class="kw2">scp</span> LocalSettings.php student<span class="sy0">@</span>192.168.0.3:public_html<span class="sy0">/</span>mediawiki<span class="sy0">/</span>
+student<span class="sy0">@</span>192.168.0.3<span class="st_h">'s password: 
+LocalSettings.php                             100% 4296     4.2KB/s   00:00</span></pre>
+</div>
+</li>
+<li class="level1"><div class="li"> Acum putem accesa wiki-ul folosind <abbr title="Uniform Resource Locator">URL</abbr>-ul <a href="http://192.168.0.3/~student/mediawiki/index.php/Main_Page" class="urlextern" title="http://192.168.0.3/~student/mediawiki/index.php/Main_Page"  rel="nofollow">http://192.168.0.3/~student/mediawiki/index.php/Main_Page</a>.</div>
+</li>
+</ul>
+
+</div>
+
+<h4 id="configuare_autentificare_prin_ldap">Configuare autentificare prin LDAP</h4>
+<div class="level4">
+
+<p>
+Pentru început trebuie să adăugăm <a href="http://www.mediawiki.org/wiki/Special:ExtensionDistributor/LdapAuthentication" class="urlextern" title="http://www.mediawiki.org/wiki/Special:ExtensionDistributor/LdapAuthentication"  rel="nofollow">extensia de LDAP aferentă MediaWiki</a>. Este deja descărcată în fișierul <code>wikimedia-mediawiki…</code> din directorul home al utilizatorului <code>student</code> de pe stația client. O vom dezarhiva în subdirectorul <code>extensions/</code> din directorul de instalare al MediaWiki (în cazul nostru <code>~student/public_html/mediawiki/</code>):
+</p>
+<pre class="code bash"><span class="co4">student@ldap-client:~$ </span><span class="kw3">cd</span> public_html<span class="sy0">/</span>mediawiki<span class="sy0">/</span>extensions<span class="sy0">/</span>
+&nbsp;
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>mediawiki<span class="sy0">/</span>extensions$ <span class="kw2">tar</span> xzf ~<span class="sy0">/</span>wikimedia-mediawiki-extensions-LdapAuthentication-2.0c-<span class="nu0">31</span>-g300d43f.tar.gz
+&nbsp;
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>mediawiki<span class="sy0">/</span>extensions$ <span class="kw2">ls</span>
+Cite                Poem
+ConfirmEdit         README
+Gadgets             Renameuser
+ImageMap            SimpleAntiSpam
+InputBox            SpamBlacklist
+Interwiki           SyntaxHighlight_GeSHi
+LocalisationUpdate  TitleBlacklist
+Nuke                WikiEditor
+ParserFunctions     wikimedia-mediawiki-extensions-LdapAuthentication-300d43f
+PdfHandler
+&nbsp;
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>mediawiki<span class="sy0">/</span>extensions$ <span class="kw2">mv</span> wikimedia-mediawiki-extensions-LdapAuthentication-300d43f<span class="sy0">/</span> LdapAuthentication
+&nbsp;
+student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>mediawiki<span class="sy0">/</span>extensions$ <span class="kw2">ls</span>
+Cite         Interwiki           PdfHandler      SpamBlacklist
+ConfirmEdit  LdapAuthentication  Poem            SyntaxHighlight_GeSHi
+Gadgets      LocalisationUpdate  README          TitleBlacklist
+ImageMap     Nuke                Renameuser      WikiEditor
+InputBox     ParserFunctions     SimpleAntiSpam</pre>
+
+<p>
+Am redenumit mai sus directorul aferent extensiei de LDAP pentru MediaWiki în <code>LdapAuthentication/</code>.
+</p>
+
+<p>
+Pentru configurarea autentificării prin LDAP pentru MediaWiki urmărim <a href="http://www.mediawiki.org/wiki/Extension:LDAP_Authentication/Options" class="urlextern" title="http://www.mediawiki.org/wiki/Extension:LDAP_Authentication/Options"  rel="nofollow">pagina aferentă pentru configurare</a>. Configurările vor fi realizate din directorul de instalare al MediaWiki (adică <code>~student/public_html/mediawiki/</code>).
+</p>
+
+<p>
+Adăugăm suport pentru autentificarea pe bază de LDAP în fișierul <code>LocalSettings.php</code>, folosind un editor. Le adăugăm la sfârșitul fișierului ca să avem rezultatul de mai jos:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>mediawiki$ <span class="kw2">tail</span> <span class="re5">-5</span> LocalSettings.php
+&nbsp;
+<span class="co0"># End of automatically generated settings.</span>
+<span class="co0"># Add more configuration options below.</span>
+require_once<span class="br0">&#40;</span> <span class="st0">&quot;<span class="es2">$IP</span>/extensions/LdapAuthentication/LdapAuthentication.php&quot;</span> <span class="br0">&#41;</span>;
+require_once<span class="br0">&#40;</span> <span class="st0">&quot;<span class="es2">$IP</span>/includes/AuthPlugin.php&quot;</span> <span class="br0">&#41;</span>;
+<span class="re1">$wgAuth</span> = new LdapAuthenticationPlugin<span class="br0">&#40;</span><span class="br0">&#41;</span>;</pre>
+
+<p>
+Adăugăm apoi, în continuare în același fișier (<code>LocalSettings.php</code>) directivele de configurare specifice pentru serverul de LDAP:
+</p>
+<pre class="code php"><span class="re0">$wgLDAPDomainNames</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'my-ldap-server'</span><span class="sy0">,</span>
+<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$wgLDAPServerNames</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'my-ldap-server'</span> <span class="sy0">=&gt;</span> <span class="st_h">'ldap-server.local'</span><span class="sy0">,</span>
+<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$wgLDAPUseLocal</span> <span class="sy0">=</span> <span class="kw4">false</span><span class="sy0">;</span>
+<span class="re0">$wgLDAPEncryptionType</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'my-ldap-server'</span> <span class="sy0">=&gt;</span> <span class="st_h">'ssl'</span><span class="sy0">,</span>
+<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$wgLDAPPort</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'my-ldap-server'</span> <span class="sy0">=&gt;</span> <span class="nu0">636</span><span class="sy0">,</span>
+<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$wgLDAPSearchAttributes</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'my-ldap-server'</span> <span class="sy0">=&gt;</span> <span class="st_h">'uid'</span>
+<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="re0">$wgLDAPBaseDNs</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'my-ldap-server'</span> <span class="sy0">=&gt;</span> <span class="st_h">'dc=labs,dc=cs,dc=pub,dc=ro'</span><span class="sy0">,</span>
+<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co2"># To pull e-mail address from LDAP
+</span><span class="re0">$wgLDAPPreferences</span> <span class="sy0">=</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span>
+  <span class="st_h">'my-ldap-server'</span> <span class="sy0">=&gt;</span> <a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span> <span class="st_h">'email'</span> <span class="sy0">=&gt;</span> <span class="st_h">'mail'</span><span class="br0">&#41;</span>
+<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="co1">// May use debug level 3 for extensive debugging.</span>
+<span class="co1">// $wgLDAPDebug = 1;</span>
+<span class="co1">// $wgDebugLogGroups['ldap'] = '/tmp/debug.log';</span></pre>
+
+<p>
+Am marcat opțiunea de debug comentată. La nevoie poate fi decomentată și valoarea sa crescută până la 3 pentru mesaje detaliate.
+</p>
+
+<p>
+O dată realizată configurația LDAP în fișierul de configurare (<code>LocalSettings.php</code>), va trebui să creăm tabelele aferente în baza de date. Pentru aceasta rulăm scriptul de actualizare:
+</p>
+<pre class="code bash">student<span class="sy0">@</span>ldap-client:~<span class="sy0">/</span>public_html<span class="sy0">/</span>mediawiki$ php maintenance<span class="sy0">/</span>update.php
+<span class="br0">&#91;</span>...<span class="br0">&#93;</span>
+Creating ldap_domains table ...done.
+...site_stats is populated...done.
+...rev_len column of revision table already populated.
+...Update <span class="st_h">'populate rev_sha1'</span> already logged <span class="kw2">as</span> completed.
+...img_sha1 column of image table already populated.
+...protocol-relative URLs <span class="kw1">in</span> externallinks table already fixed.
+...fa_sha1 column of filearchive table already populated.
+Purging caches...done.
+&nbsp;
+Done.</pre>
+
+<p>
+După aceasta se accesează instanța de MediaWiki (<a href="http://192.168.0.3/~student/mediawiki/index.php/Main_Page" class="urlextern" title="http://192.168.0.3/~student/mediawiki/index.php/Main_Page"  rel="nofollow">http://192.168.0.3/~student/mediawiki/index.php/Main_Page</a>) și apoi se poate folosi link-ul “Log in” pentru autentificarea folosind LDAP. La opțiunea “Your domain:” se păstrează valoarea <code>my-ldap-server</code>.
+</p>
+
+</div>
+</div>
+</body>
+</html>

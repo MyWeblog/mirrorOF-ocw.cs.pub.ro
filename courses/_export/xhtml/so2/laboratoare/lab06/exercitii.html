@@ -1,0 +1,531 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>so2:laboratoare:lab06:exercitii</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-09T21:39:08+0300"/>
+<meta name="keywords" content="so2,laboratoare,lab06,exercitii"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../feed.php%3Fmode=list&amp;ns=so2:laboratoare:lab06"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="exercitii.html"/>
+<link rel="canonical" href="../../../../../so2/laboratoare/lab06/exercitii.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare:lab06';var JSINFO = {"id":"so2:laboratoare:lab06:exercitii","namespace":"so2:laboratoare:lab06","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="exercitii.html#laborator_6exercitii">Laborator 6: Exerciții</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="exercitii.html#p_intro">[0.5p] Intro</a></div></li>
+<li class="level2"><div class="li"><a href="exercitii.html#p_exercitii">[10.5p] Exerciții</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="exercitii.html#p_timer">1. [2p] Timer</a></div></li>
+<li class="level3"><div class="li"><a href="exercitii.html#p_timer_periodic">2. [1p] Timer periodic</a></div></li>
+<li class="level3"><div class="li"><a href="exercitii.html#p_controlare_timer_folosind_ioctl">3. [2p] Controlare timer folosind ioctl</a></div></li>
+<li class="level3"><div class="li"><a href="exercitii.html#p_operatii_blocante">4. [1.5p] Operații blocante</a></div></li>
+<li class="level3"><div class="li"><a href="exercitii.html#p_workqueues">5. [1.5p] Workqueues</a></div></li>
+<li class="level3"><div class="li"><a href="exercitii.html#p_kernel_thread">6. [2.5p] Kernel thread</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="exercitii.html#extra">Extra</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="exercitii.html#karma_buffer_partajat_intre_timer_si_proces">[3 karma] Buffer partajat între timer și proces</a></div></li>
+<li class="level3"><div class="li"><a href="exercitii.html#karma_citire_date_din_user_space_folosind_read">[1 karma] Citire date din user space folosind read</a></div></li>
+<li class="level3"><div class="li"><a href="exercitii.html#solutii">Soluții</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="laborator_6exercitii">Laborator 6: Exerciții</h1>
+<div class="level1">
+
+<p>
+Pentru desfășurarea laboratorului pornim de la <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip"  rel="nofollow">arhiva de sarcini a laboratorului</a>. Descărcăm și decomprimăm arhiva în directorul <code>so2/</code> din directorul home al utilizatorului <code>student</code> de pe sistemul de bază (stația <code>asgard</code>):
+</p>
+<pre class="code bash"><span class="co4">student@asgard:~$ </span><span class="kw3">cd</span> so2<span class="sy0">/</span>
+student<span class="sy0">@</span>asgard:~<span class="sy0">/</span>so2$ <span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>so2<span class="sy0">/</span>res<span class="sy0">/</span>laboratoare<span class="sy0">/</span>lab06-tasks.zip
+student<span class="sy0">@</span>asgard:~<span class="sy0">/</span>so2$ <span class="kw2">unzip</span> lab06-tasks.zip
+student<span class="sy0">@</span>asgard:~<span class="sy0">/</span>so2$ <span class="kw2">tree</span> lab06-tasks</pre>
+
+<p>
+În cadrul directorului <code>lab06-tasks/</code> se găsesc resursele necesare pentru dezvoltarea exercițiilor de mai jos: fișiere schelet de cod sursă, fișiere Makefile și Kbuild, scripturi și programe de test.
+</p>
+
+<p>
+Vom dezvolta exercițiile pe sistemul de bază (stația <code>asgard</code>) și apoi le vom testa pe <a href="../../../../../so2/resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">mașina virtuală QEMU</a>. După editarea și compilarea unui modul de kernel îl vom copia în directorul dedicat pentru mașina virtuală QEMU folosind o comandă de forma
+</p>
+<pre class="code bash"><span class="co4">student@asgard:~/so2$ </span><span class="kw2">cp</span> <span class="sy0">/</span>path<span class="sy0">/</span>to<span class="sy0">/</span>module.ko ~<span class="sy0">/</span>so2<span class="sy0">/</span>qemu-vm<span class="sy0">/</span>fsimg<span class="sy0">/</span>root<span class="sy0">/</span>modules<span class="sy0">/</span></pre>
+
+<p>
+ unde <code>/path/to/module.ko</code> este calea către fișierul obiect aferent modulului de kernel. Apoi vom porni, din directorul <code>~/so2/qemu-vm/</code>, mașina virtuală QEMU folosind comanda
+</p>
+<pre class="code bash"><span class="co4">student@asgard:~/so2/qemu-vm$ </span><span class="kw2">make</span></pre>
+
+<p>
+După pornirea mașinii virtuale QEMU vom putea folosi comenzi în fereastra QEMU pentru a încărca și descărca modulul de kernel:
+</p>
+<pre class="code"># insmod modules/module-name.ko
+# rmmod module/module-name</pre>
+
+<p>
+ unde <code>module-name</code> este numele modulului de kernel.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Pentru dezvoltarea laboratorului, este recomandat să folosim trei terminale sau, mai bine, trei tab-uri de terminal. Pentru a deschide un nou tab de terminal folosim combinația de taste <code>Ctrl+Shift+t</code>. Cele trei tab-uri de terminal îndeplinesc următoarele roluri:
+</p>
+<ol>
+<li class="level1"><div class="li"> În primul tab de terminal dezvoltăm modulul de kernel: editare, compilare, copiere în directorul dedicat pentru mașina virtuală QEMU. Lucrăm în directorul aferent rezultat în urma decomprimării arhivei de sarcini a laboratorului.</div>
+</li>
+<li class="level1"><div class="li"> În al doilea tab de terminal pornim mașina virtuală QEMU și apoi testăm modulul de kernel: încărcare/descărcare modul, rulare teste. Lucrăm în directorul aferent mașinii virtuale: <code>~/so2/qemu-vm/</code>.</div>
+</li>
+<li class="level1"><div class="li"> În al treilea tab de terminal pornim un server UDP care să primească <a href="../../../../../so2/laboratoare/lab02.html#netconsole" class="wikilink1" title="so2:laboratoare:lab02">mesajele de netconsole</a>. Nu contează în ce director ne aflăm. Folosim comanda<pre class="code bash"><span class="co4">student@asgard:~$ </span>netcat <span class="re5">-lup</span> <span class="nu0">6666</span></pre>
+</div>
+</li>
+</ol>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notewarning">
+Citiți cu atenție toate precizările unui exercițiu înainte de a începe rezolvarea acestuia.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT1 SECTION "Laborator 6: Exerciții" [1-2771] -->
+<h2 class="sectionedit2" id="p_intro">[0.5p] Intro</h2>
+<div class="level2">
+
+<p>
+Găsiți definițiile următoarelor simboluri în nucleul Linux:
+</p>
+<ul>
+<li class="level1"><div class="li"> definiția lui <code>jiffies</code>;</div>
+</li>
+<li class="level1"><div class="li"> structura <code>timer_list</code>;</div>
+</li>
+<li class="level1"><div class="li"> funcția <code>spin_lock_bh</code>;</div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "[0.5p] Intro" [2772-2956] -->
+<h2 class="sectionedit3" id="p_exercitii">[10.5p] Exerciții</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT3 SECTION "[10.5p] Exerciții" [2957-2988] -->
+<h3 class="sectionedit4" id="p_timer">1. [2p] Timer</h3>
+<div class="level3">
+
+<p>
+Urmărim crearea unui modul simplu de kernel care să afișeze un mesaj la <code>TIMER_TIMEOUT</code> secunde de la încărcarea modulului în kernel.
+</p>
+
+<p>
+În directorul <code>1-2-timer/</code> din <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip"  rel="nofollow">arhiva de sarcini</a> a laboratorului este scheletul de cod <code>timer.c</code> de unde să porniți pentru implementare. Urmăriți secțiunile marcate cu <code>TODO 1</code> în scheletul de laborator.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Pentru afișare folosiți <code>printk(LOG_LEVEL ... )</code>. Mesajele vor fi afișate la consolă și pot fi vizualizate și folosind <code>dmesg</code> și consola de netconsole.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Planificarea pentru rularea timer-ului se face folosind timpul absolut al sistemului în număr de tick-uri. Timpul absolut al sistemului în număr de tick-uri este dat de variabila <code>jiffies</code>. Pentru a indica timpul <em>după <code>TIMER_TIMEOUT</code> secunde</em> folosim construcția <code>jiffies + TIMER_TIMEOUT * HZ</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Parcurgeți secțiunea <a href="../../../../../so2/laboratoare/lab06.html#timere" class="wikilink1" title="so2:laboratoare:lab06">Timere</a> din laborator.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "1. [2p] Timer" [2989-4048] -->
+<h3 class="sectionedit5" id="p_timer_periodic">2. [1p] Timer periodic</h3>
+<div class="level3">
+
+<p>
+Ne propunem realizarea unui timer periodic.
+</p>
+
+<p>
+Modificați modulul anterior pentru a afișa mesajul în <code>dmesg</code> o dată la fiecare <code>TIMER_TIMEOUT</code> secunde. Urmăriți secțiunea marcată cu <code>TODO 2</code> în scheletul de laborator.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "2. [1p] Timer periodic" [4049-4314] -->
+<h3 class="sectionedit6" id="p_controlare_timer_folosind_ioctl">3. [2p] Controlare timer folosind ioctl</h3>
+<div class="level3">
+
+<p>
+Ne propunem să afișăm informații despre procesul curent după <strong>N</strong> secunde de la primirea unei comezi de tipul <code>ioctl</code> apelată din user space. <strong>N</strong> este transmis ca paramentru prin <code>ioctl</code>.
+</p>
+
+<p>
+Porniți de la fișierele din subdirectorul <code>3-4-5-deferred/kernel/</code> din <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip"  rel="nofollow">arhiva de sarcini</a> a laboratorului. Urmăriți secțiunile marcate cu <code>TODO 1</code> în scheletul de laborator.
+</p>
+
+<p>
+Va trebui să implementați următoarele operații <code>ioctl</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>MY_IOCTL_TIMER_SET</code> pentru planificarea unui timer să ruleze dupa un număr de secunde primit ca argument de rutina <code>ioctl</code>. Timer-ul <strong>nu</strong> rulează periodic.</div>
+<ul>
+<li class="level2"><div class="li"> Această comandă primește ca argument din user space (din programul de test din <code>3-4-5-deferred/user</code>) direct o valoare, nu un pointer.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <code>MY_IOCTL_TIMER_CANCEL</code> pentru dezactivarea timer-ului.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notetip">
+Planificarea pentru rularea timer-ului se face folosind timpul absolut al sistemului în număr de tick-uri. Timpul absolut al sistemului în număr de tick-uri este dat de variabila <code>jiffies</code>. Pentru a indica timpul <em>după <code>N</code> secunde</em> folosim construcția <code>jiffies + N * HZ</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru modalitatea de acces a unui argument de <code>ioctl</code> revedeți <a href="../../../../../so2/laboratoare/lab04.html#ioctl" class="wikilink1" title="so2:laboratoare:lab04">secțiunea aferentă din laboratorul 4</a>.
+</p>
+
+<p>
+Anularea unui timer este echivalentă cu apelarea <code>mod_timer(..., 0)</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Parcurgeți secțiunea <a href="../../../../../so2/laboratoare/lab06.html#timere" class="wikilink1" title="so2:laboratoare:lab06">Timere</a> din laborator pentru informații legate de activarea/dezactivarea unui timer.
+
+</div></p>
+</p>
+
+<p>
+În rutina de tratare a timer-ului, afișați identificatorul procesului curent (PID-ul) și numele imaginii de executabil.
+</p>
+
+<p>
+<p><div class="notetip">
+Identificatorul procesului curent îl puteți afla folosind construcția <code>current-&gt;pid</code>, iar imaginea de executabil folosind construcția <code>current-&gt;comm</code>. Pentru detalii, revedeți <a href="../../../../../so2/laboratoare/lab02.html#linux" class="wikilink1" title="so2:laboratoare:lab02">Laboratorul 2</a>.
+
+</div></p>
+</p>
+
+<p>
+Pentru a putea folosi device driver-ul din user-space, trebuie sa creați fișierul pentru dispozitivul de tip caracter <code>/dev/deferred</code> folosind utilitarul <code>mknod</code>. Alternativ, puteți rula scriptul <code>makenode</code> din <code>3-4/deferred/kernel/</code>, care realizează aceste operații.
+</p>
+
+<p>
+<p><div class="notetip">
+Scriptul <code>makenode</code> trebuie copiat în mașina virtuală QEMU pentru a-l rula acolo.
+
+</div></p>
+</p>
+
+<p>
+Activați și dezactivați timer-ul prin apelul operațiilor ioctl din user-space. Utilizați programul <code>3-4-5-deferred/user/test/</code> din <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip"  rel="nofollow">arhiva de sarcini</a>. Rulați programul pentru a testa planificarea și dezactivarea unui timer. Programul primește ca parametri în linie de comandă operația de tip ioctl și parametrii acesteia (dacă e cazul).
+</p>
+
+<p>
+<p><div class="notetip">
+<strong>Pe stațiile din sala de laborator EG106</strong>, pentru a compila codul sursă de user space folosiți compilatorul <code>gcc-5</code>. Pentru aceasta rulați comanda:
+</p>
+<pre class="code">/usr/bin/gcc-5 -m32 -static -Wall -g -o test test.c</pre>
+
+<p>
+Executabilul rezultat (<code>test</code>) trebuie să îl copiați pe mașina virtuală QEMU la fel ca modulul de kernel și să îl rulați pe mașina virtuală pentru a valida implementarea corectă a <code>ioctl</code>.
+</p>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Rulați executabilul rezultat (<code>test</code>) <strong>fără argumente</strong> pentru a observa opțiunile de rulare în linia de comandă ale acestuia.
+</p>
+
+<p>
+Pentru a activa timer-ul la <code>3</code> secunde folosind executabilul <code>test</code> pe mașina virtuală QEMU folosiți comanda
+</p>
+<pre class="code">./test s 3</pre>
+
+<p>
+Pentru a dezactiva timer-ul folosind executabilul <code>test</code> pe mașina virtuală QEMU folosiți comanda
+</p>
+<pre class="code">./test c</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+Observați că la fiecare rulare a timer-ului procesul afișat este <code>swapper/0</code> cu PID-ul <code>0</code>. Procesul <code>swapper/0</code> este procesul idle pe un sistem Linux. E procesul rulat când nu există altceva de rulat. Întrucât sistemul de operare de pe mașina virtuală nu face mare lucru, este natural că procesul <code>swapper/0</code> va rula mai tot timpul. Iar rutina de rulare a timer-ului rulează foarte aproape de momentul întreruperii de ceas, care va întrerupe procesul care rulează atunci pe procesor, adică <code>swapper/0</code>.
+</p>
+
+</div>
+<!-- EDIT6 SECTION "3. [2p] Controlare timer folosind ioctl" [4315-8549] -->
+<h3 class="sectionedit7" id="p_operatii_blocante">4. [1.5p] Operații blocante</h3>
+<div class="level3">
+
+<p>
+Urmărim să vedem ce se întâmplă atunci când într-o rutină de tratare a unui timer realizăm operații blocante. Pentru aceasta urmărim să apelăm în rutine de tratare a timer-ului o funcție numită <code>alloc_io()</code> care simulează o operație blocantă.
+</p>
+
+<p>
+Modificați modulul astfel încât la primirea comenzii <code>MY_IOCTL_TIMER_SET</code> să se păstreze funcționalitatea de la task-ul numărul 3, iar la primirea comenzii <code>MY_IOCTL_TIMER_ALLOC</code> rutina de tratare a timerului să apeleze funcția <code>alloc_io()</code>. Urmăriți secțiunile marcate cu <code>TODO 2</code> în scheletul de laborator.
+</p>
+
+<p>
+Folosiți același <strong>timer</strong>. Pentru a diferenția funcționalitățile în rutina de tratare a <strong>timer</strong>-ului, folosiți un flag în structura device-ului. Pentru valorile pe care le poate lua flag-ul folosiți constantele <code>TIMER_TYPE_ALLOC</code> și <code>TIMER_TYPE_SET</code> definite în scheletul de cod. Pentru inițializare folosiți <code>TIMER_TYPE_NONE</code>.
+</p>
+
+<p>
+Rulați programul de test pentru a verifica funcționalitatea de la task-ul 3. Rulați din nou programul de test pentru a apela funcția <code>alloc_io()</code>.
+</p>
+
+<p>
+Observați că programul cauzează eroare pentru că se apelează o funcție blocantă în context atomic (handler-ul de timer rulează în context amânabil/întrerupere).
+</p>
+
+</div>
+<!-- EDIT7 SECTION "4. [1.5p] Operații blocante" [8550-9865] -->
+<h3 class="sectionedit8" id="p_workqueues">5. [1.5p] Workqueues</h3>
+<div class="level3">
+
+<p>
+Vom modifica modulul pentru a preîntâmpina eroarea observată la task-ul numărul 4.
+</p>
+
+<p>
+Pentru aceasta apelați funcția <code>alloc_io()</code> folosind workqueues. Veți planifica un work din rutina de tratare a timer-ului care va fi planificat pentru rulare în context proces. În work handler (care rulează în context proces) veți apela funcția <code>alloc_io()</code>. Urmăriți secțiunile marcate cu <code>TODO 3</code> în scheletul de laborator.
+</p>
+
+<p>
+<p><div class="notetip">
+Adăugați un câmp <code>work</code> de tipul <code>struct work_struct</code> în structura de dispozitiv. Inițializați acest câmp. Submiterea work-ului după <strong>N</strong> secunde o veți face din rutina de tratare a timer-ului, folosind funcția <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L555" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L555"  rel="nofollow">schedule_work</a>. Timer-ul va fi planificat să ruleze după <strong>N</strong> secunde, rutina de tratare a timer-ului va planifica work-ul și acesta va rula cât mai aproape de acel moment. <strong>Nu</strong> folosiți funcția <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L571" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L571"  rel="nofollow">schedule_delayed_work_on</a>.
+</p>
+
+<p>
+Folosiți <strong>workqueue</strong>-ul implicit (adică <strong>nu</strong> creați un workqueue, adică <strong>nu</strong> apelați <a href="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L452" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/workqueue.h?v=3.13#L452"  rel="nofollow">create_workqueue</a>).
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Parcurgeți secțiunea <a href="../../../../../so2/laboratoare/lab06.html#workqueues" class="wikilink1" title="so2:laboratoare:lab06"> Workqueues</a> și secțiunea <a href="../../../../../so2/laboratoare/lab06.html#timere" class="wikilink1" title="so2:laboratoare:lab06">Timere</a> din laborator.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT8 SECTION "5. [1.5p] Workqueues" [9866-11325] -->
+<h3 class="sectionedit9" id="p_kernel_thread">6. [2.5p] Kernel thread</h3>
+<div class="level3">
+
+<p>
+Dorim să creăm un modul simplu în care să creăm un kernel thread cu ajutorul căruia să afișăm identificatorul procesului curent.
+</p>
+
+<p>
+Porniți de la fișierele din subdirectorul <code>6-kthread/</code> din <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-tasks.zip"  rel="nofollow">arhiva de sarcini</a> a laboratorului și urmăriți TODO-urile din codul sursă.
+</p>
+
+<p>
+Veți crea și veți porni kernel thread-ul la încărcarea modulului.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru crearea unui thread aveți două opțiuni:
+</p>
+<ul>
+<li class="level1"><div class="li"> Apelați macro-ul <a href="http://lxr.free-electrons.com/source/include/linux/kthread.h?v=3.13#L22" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kthread.h?v=3.13#L22"  rel="nofollow">kthread_run</a>.</div>
+</li>
+<li class="level1"><div class="li"> Apelați macro-ul <a href="http://lxr.free-electrons.com/source/include/linux/kthread.h?v=3.13#L13" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kthread.h?v=3.13#L13"  rel="nofollow">kthread_create</a> care creează un thread suspendat și apoi apelați funcția <a href="http://lxr.free-electrons.com/source/kernel/sched/core.c?v=3.13#L1674" class="urlextern" title="http://lxr.free-electrons.com/source/kernel/sched/core.c?v=3.13#L1674"  rel="nofollow">wake_up_process</a> pentru rularea acestuia; așa cum se întâmplă în cadrul macro-ului <a href="http://lxr.free-electrons.com/source/include/linux/kthread.h?v=3.13#L22" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/kthread.h?v=3.13#L22"  rel="nofollow">kthread_run</a>.</div>
+</li>
+</ul>
+
+<p>
+Parcurgeți secțiunea <a href="../../../../../so2/laboratoare/lab06.html#kernel_threads" class="wikilink1" title="so2:laboratoare:lab06">Kernel threads</a> din laborator.
+
+</div></p>
+</p>
+
+<p>
+Thread-ul se va sincroniza cu funcția de descărcare a modulului. Adică:
+</p>
+<ul>
+<li class="level1"><div class="li"> Thread-ul își va încheia execuția doar după ce funcția de descărcare a modulului a fost apelată.</div>
+</li>
+<li class="level1"><div class="li"> Funcția de descărcare a modulului își va încheia execuția numai după ce thread-ul și-a încheiat execuția.</div>
+</li>
+</ul>
+
+<p>
+Pentru sincronizare folosiți două cozi de așteptare și două flag-uri aferente.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru modalitatea de utilizare a cozilor de așteptare, revedeți <a href="../../../../../so2/laboratoare/lab04.html#sincronizare_-_cozi_de_asteptare" class="wikilink1" title="so2:laboratoare:lab04">Laboratorul 4</a>.
+</p>
+
+<p>
+Pentru flag-uri folosiți variabile atomice. Pentru modul de utilizare al variabilelor atomice revedeți <a href="../../../../../so2/laboratoare/lab03.html#utilizarea_variabilelor_atomice" class="wikilink1" title="so2:laboratoare:lab03">Laboratorul 3</a>.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT9 SECTION "6. [2.5p] Kernel thread" [11326-13207] -->
+<h2 class="sectionedit10" id="extra">Extra</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT10 SECTION "Extra" [13208-13226] -->
+<h3 class="sectionedit11" id="karma_buffer_partajat_intre_timer_si_proces">[3 karma] Buffer partajat între timer și proces</h3>
+<div class="level3">
+
+<p>
+Dorim să ne acomodăm cu modul de sincronizare între o rutină amânabilă (un timer) și contextul proces.
+</p>
+
+<p>
+Pentru aceasta, dorim să colectăm informații periodice despre procesul idle (<code>swapper/0</code>), procesul cu PID-ul <code>0</code>, pe care să le scriem într-un buffer. Informațiile le vom colecta în momentul în care este invocată rutina de tratare a timer-ului. Informația colectată va fi numărul de schimbări involuntare de până atunci ale procesului idle. Acest număr este dat de câmpul <code>nivcsw</code> (de tipul <code>unsigned long</code>) din cadrul structurii <code>task_struct</code>, adică folosind <code>current-&gt;nivcsw</code>.
+</p>
+
+<p>
+În rutina de timer, dacă la orice moment de timp procesul întrerupt este procesul idle (adică are PID-ul <code>0</code>), se stochează într-un buffer o nouă valoarea a numărului de schimbări involuntare. Dacă buffer-ul este plin nu se stochează nimic.
+</p>
+
+<p>
+<p><div class="notetip">
+Citirea datelor o veți face la fiecare secundă dacă flag-ul dispozitivului este inițializat la valoarea <code>TIMER_TYPE_ACCT</code>. Pentru inițializarea flag-ului veți comanda din user space dispozitivul (prin <code>ioctl</code>) folosind executabilul de test, după încărcarea modulului și crearea dispozitivului, astfel:
+</p>
+<pre class="code">./test t</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+În rutina de read a modulului se transferă în user space datele din buffer și se resetează buffer-ul.
+</p>
+
+<p>
+Folosiți un spinlock și operațiile corespunzătoare pentru a asigura accesul corect la buffer din rutina de timer și din rutina de read.
+</p>
+
+<p>
+<p><div class="notetip">
+Veți folosi un buffer temporar pentru a copia datele în user space. Nu puteți copia date în user space cu un spinlock deținut; rutina <code>copy_to_user</code> poate fi blocantă.
+</p>
+
+<p>
+Spinlock-ul, bufferul și bufferul temporar folosit pentru copiere sunt definite în structura dispozitivului.
+</p>
+
+<p>
+O parte din rutina de read este implementată; trebuie să implementați partea în care se face sincronizarea.
+
+</div></p>
+</p>
+
+<p>
+În implementare porniți de la codul din subdirectorul <code>3-4-5-deferred/</code>. Urmăriți secțiunile marcate cu <code>TODO karma</code> în scheletul de laborator.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru a testa modulul de kernel space puteți citi date din dispozitiv folosind comanda
+</p>
+<pre class="code">od -s /dev/deferred</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT11 SECTION "[3 karma] Buffer partajat între timer și proces" [13227-15496] -->
+<h3 class="sectionedit12" id="karma_citire_date_din_user_space_folosind_read">[1 karma] Citire date din user space folosind read</h3>
+<div class="level3">
+
+<p>
+Actualizați modulul de test din user space (<code>user/test.c</code>) ca să ofere opțiunea <code>r</code>. În momentul în care se transmite opțiunea către modulul de test acesta citește conținutul buffer-ului din kernel space folosind apelul <code>read()</code> și afișează în format zecimal (<code>%lu</code>) rezultatele primite (vector de <code>unsigned long</code>).
+</p>
+
+</div>
+<!-- EDIT12 SECTION "[1 karma] Citire date din user space folosind read" [15497-15898] -->
+<h3 class="sectionedit13" id="solutii">Soluții</h3>
+<div class="level3">
+
+<p>
+<a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-sol.zip" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab06-sol.zip"  rel="nofollow">Soluții exerciții laborator 6</a>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "Soluții" [15899-] --></div>
+</body>
+</html>

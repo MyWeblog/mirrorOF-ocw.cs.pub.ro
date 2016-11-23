@@ -1,0 +1,155 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:05:contents:03</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-03-24T16:30:42+0200"/>
+<meta name="keywords" content="saisp,labs,05,contents,03"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:05:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="03.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/05/contents/03.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:05:contents';var JSINFO = {"id":"saisp:labs:05:contents:03","namespace":"saisp:labs:05:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_linux-ha">03. [20p] Linux-HA</h3>
+<div class="level3">
+
+<p>
+<strong>Linux-HA</strong> este o solutie de clustering. Vom configura un cluster simplu, format din două noduri. 
+</p>
+
+<p>
+<a href="../../../../../../_detail/saisp/labs/05/contents/lab05-ha.jpg%3Fid=saisp%253Alabs%253A05%253Acontents%253A03.html" class="media" title="saisp:labs:05:contents:lab05-ha.jpg"><img src="../../../../../../_media/saisp/labs/05/contents/lab05-ha.jpg" class="media" alt="" /></a>
+</p>
+
+<p>
+Topologia conceptuala este cea din figura de mai sus. Observatii:
+</p>
+<ul>
+<li class="level1"><div class="li"> Cele două realservere din topologia LVS vor fi configurate ca un cluster.</div>
+</li>
+<li class="level1"><div class="li"> Directorul din topologia LVS nu mai are nici un rol aici. Inchideti masina virtuala respectiva, pentru a nu consuma resurse inutil.</div>
+</li>
+<li class="level1"><div class="li"> Adresa IP prin care va fi accesibil serviciul HTTP este 10.0.0.50.</div>
+</li>
+</ul>
+
+<p>
+Pachetul <code>heartbeat</code> este deja instalat pe <strong>saisp-vm-2</strong> si <strong>saisp-vm-3</strong>.
+</p>
+
+<p>
+Este necesar ca stațiile să se poată adresa una pe cealaltă folosind doar hostname-ul. Adăugați liniile corespunzătoare în /etc/hosts:
+</p>
+<pre class="code">saisp-vm-2# echo &quot;10.0.0.30 saisp-vm-3&quot; &gt;&gt; /etc/hosts</pre>
+<pre class="code">saisp-vm-3# echo &quot;10.0.0.20 saisp-vm-2&quot; &gt;&gt; /etc/hosts</pre>
+
+<p>
+Fișierele de configurare pentru heartbeat se găsesc în directorul <code>/etc/ha.d/</code>. Creați, <strong>pe ambele stații</strong>, fișierul <code>ha.cf</code>.
+</p>
+<ul>
+<li class="level1"><div class="li"> Dezactivați <strong>auto-discovery</strong> (Nodurile vor fi specificate manual)</div>
+</li>
+</ul>
+<pre class="code">autojoin none</pre>
+<ul>
+<li class="level1"><div class="li"> Specificați modul de comunicare (unicast), interfața pe care se comunică (eth0) și <strong>adresa celuilalt nod</strong> (Linux-HA poate folosi, de asemenea, broadcast sau multicast)</div>
+</li>
+</ul>
+<pre class="code">ucast eth0 10.0.0.30</pre>
+<ul>
+<li class="level1"><div class="li"> Specificați nodurile care participă la cluster. Va trebui să specificați <strong>inclusiv nodul local</strong> - numele unui nod trebuie întotdeauna să coincidă cu hostname-ul masinii:</div>
+</li>
+</ul>
+<pre class="code">node saisp-vm-2 saisp-vm-3</pre>
+
+<p>
+Linux-HA oferă suport pentru autentificarea conexiunii. Să configurăm folosirea SHA1:
+</p>
+<ul>
+<li class="level1"><div class="li"> Fișierul de configurare corespunzător este <code>authkeys</code>:</div>
+</li>
+</ul>
+<pre class="code">auth 1
+1 sha1 42ade27dad9045964fab10a395ffe4e0f726a80b</pre>
+<ul>
+<li class="level1"><div class="li"> Puteți genera un digest SHA1 folosind <code>echo “my secret” | openssl sha1</code>.</div>
+</li>
+<li class="level1"><div class="li"> Fișierul <code>authkeys</code> trebuie să poată fi citit numai de root: <code>chmod 600 /etc/ha.d/authkeys</code>.</div>
+</li>
+</ul>
+
+<p>
+Nu în ultimul rând, trebuie să configurăm serviciile oferite de cluster. În acest exemplu, vom configura HTTP.
+</p>
+<ul>
+<li class="level1"><div class="li"> Creați fișierul de configurare <code>/etc/ha.d/haresources</code>:</div>
+</li>
+</ul>
+<pre class="code">saisp-vm-2 10.0.0.50 apache2</pre>
+<ul>
+<li class="level1"><div class="li"> Linia de mai sus configurează serviciile apache2 să ruleze inițial pe nodul <code>saisp-vm-2</code>. Dacă acest nod pică, serviciile vor fi oferite de <code>saisp-vm-3</code>.</div>
+</li>
+<li class="level1"><div class="li"> <strong>Atentie:</strong> Folositi <strong>aceeasi linie</strong> si pe saisp-vm-3 (resursa trebuie detinuta de un singur owner).</div>
+</li>
+<li class="level1"><div class="li"> Este important de observat că, în acest exemplu, serviciile rulează pe ambele noduri tot timpul. Ceea ce se schimbă este nodul cu care este asociată adresa IP.</div>
+</li>
+</ul>
+
+<p>
+Reporniți serviciul <code>heartbeat</code> pe ambele mașini și observați adresele lor IP.
+</p>
+
+<p>
+Folosind un browser, accesati adresa <a href="http://10.0.0.50/" class="urlextern" title="http://10.0.0.50/"  rel="nofollow">http://10.0.0.50/</a>
+</p>
+
+<p>
+Experimentați oprind serviciul heartbeat de pe <code>saisp-vm-2</code>. După un timeout, <code>saisp-vm-3</code> va avea configurată adresa serviciului pe interfața sa eth0.
+</p>
+
+<p>
+Accesati din nou adresa <a href="http://10.0.0.50/" class="urlextern" title="http://10.0.0.50/"  rel="nofollow">http://10.0.0.50/</a> dar observati ca de aceasta data va raspunde statia <code>saisp-vm-3</code>.
+</p>
+
+<p>
+<strong>Atenție</strong>: acest setup oferă redundanță la nivelul serviciilor, dar nu asigură și replicare. Într-o situație concretă, trebuie să ne asigurăm că ambele servere oferă aceleași informații.
+</p>
+
+</div>
+</div>
+</body>
+</html>

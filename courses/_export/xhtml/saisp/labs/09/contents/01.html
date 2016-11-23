@@ -1,0 +1,128 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>saisp:labs:09:contents:01</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-05-05T13:11:28+0300"/>
+<meta name="keywords" content="saisp,labs,09,contents,01"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=saisp:labs:09:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="01.html"/>
+<link rel="canonical" href="../../../../../../saisp/labs/09/contents/01.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='saisp:labs:09:contents';var JSINFO = {"id":"saisp:labs:09:contents:01","namespace":"saisp:labs:09:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_utilitate_varnish">01. [20p] Utilitate Varnish</h3>
+<div class="level3">
+
+<p>
+Dorim să urmărim efectul folosirii Varnish față de accesarea directă a unui server web. Vom folosi utilitarul <code>httperf</code> pentru a evalua comportamentul accesului web folosind Varnish sau fără Varnish.
+</p>
+
+<p>
+Pe mașina virtuală <code>varnish</code> (accesibilă folosind <code>ssh -l root 192.168.0.3</code>) este instalat Varnish. Este configurat să asculte conexiuni pe portul 80, lucru pe care îl putem verifica folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">root@varnish:~# </span><span class="kw2">netstat</span> <span class="re5">-tlpn</span> <span class="sy0">|</span> <span class="kw2">grep</span> varnish
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 0.0.0.0:<span class="nu0">80</span>              0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">2366</span><span class="sy0">/</span>varnishd
+tcp        <span class="nu0">0</span>      <span class="nu0">0</span> 127.0.0.1:<span class="nu0">6082</span>          0.0.0.0:<span class="sy0">*</span>               LISTEN      <span class="nu0">2364</span><span class="sy0">/</span>varnishd
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> :::<span class="nu0">80</span>                   :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">2366</span><span class="sy0">/</span>varnishd
+tcp6       <span class="nu0">0</span>      <span class="nu0">0</span> ::<span class="nu0">1</span>:<span class="nu0">6082</span>                :::<span class="sy0">*</span>                    LISTEN      <span class="nu0">2364</span><span class="sy0">/</span>varnishd</pre>
+
+<p>
+Portul <code>6082</code> este portul de administrare. Configurația aferentă se găsește în fișierul <code>/etc/default/varnish</code>. Putem folosi un editor/viewer sau comanda de mai jos pentru a investiga configurația:
+</p>
+<pre class="code bash"><span class="co4">root@varnish:~# </span><span class="kw2">grep</span> <span class="re5">-A</span> <span class="nu0">4</span> DAEMON_OPTS <span class="sy0">/</span>etc<span class="sy0">/</span>default<span class="sy0">/</span>varnish <span class="sy0">|</span> <span class="kw2">grep</span> <span class="re5">-v</span> <span class="st_h">'^#'</span>
+<span class="re5">--</span>
+<span class="re5">--</span>
+<span class="re2">DAEMON_OPTS</span>=<span class="st0">&quot;-a :80 <span class="es1">\
+</span>             -T localhost:6082 <span class="es1">\
+</span>             -f /etc/varnish/default.vcl <span class="es1">\
+</span>             -S /etc/varnish/secret <span class="es1">\
+</span>             -s malloc,256m&quot;</span>
+<span class="re5">--</span>
+<span class="re5">--</span></pre>
+
+<p>
+Pentru a urmări utilitatea folosirii Varnish, vrem să ne conectăm la un server pe legătură directă și prin intermediul Varnish. Alegem serverul <code>ocw.cs.pub.ro</code>. Pentru aceasta, serviciul Varnish a fost configurat să folosească pe post de back end <code>ocw.cs.pub.ro</code>. Putem consulta această configurație în fișierul <code>/etc/varnish/default.vcl</code> folosind un editor/viewer sau comanda de mai jos:
+</p>
+<pre class="code bash"><span class="co4">root@varnish:~# </span><span class="kw2">grep</span> <span class="re5">-A</span> <span class="nu0">3</span> <span class="st_h">'backend default'</span> <span class="sy0">/</span>etc<span class="sy0">/</span>varnish<span class="sy0">/</span>default.vcl 
+backend default <span class="br0">&#123;</span>
+    .host = <span class="st0">&quot;ocw.cs.pub.ro&quot;</span>;
+    .port = <span class="st0">&quot;80&quot;</span>;
+<span class="br0">&#125;</span></pre>
+
+<p>
+Configurația de mai sus înseamnă că pentru cererile venite către serviciul Varnish se vor realiza cereri mai departe către serverul <code>ocw.cs.pub.ro</code>. Cererile vor fi cache-urite astfel încât viitoare cereri vor fi servite direct din cache.
+</p>
+
+<p>
+Evaluarea o vom face de pe sistemul gazdă (<code>mjolnir</code>). Pentru acesta va trebui să configurăm sistemul astfel încât cererile către <code>ocw.cs.pub.ro</code> să ajungă la mașina virtuală <code>varnish</code>. Pentru aceasta, folosiți un editor și adăugați în fișierul <code>/etc/hosts</code> linia:
+</p>
+<pre class="code">192.168.0.3	ocw.cs.pub.ro</pre>
+
+<p>
+Cu linia de mai sus, cererile către <code>ocw.cs.pub.ro</code> vor ajunge la mașina virtulă <code>varnish</code>. Putem verifica acest lucru folosind comanda:
+</p>
+<pre class="code">student@mjolnir:~$ ping ocw.cs.pub.ro
+PING ocw.cs.pub.ro (192.168.0.3) 56(84) bytes of data.
+64 bytes from ocw.cs.pub.ro (192.168.0.3): icmp_seq=1 ttl=64 time=0.361 ms
+^C</pre>
+
+<p>
+Pentru început puteți să vă conectați din browserul de pe stația gazdă (<code>mjolnir</code>) și să accesați <abbr title="Uniform Resource Locator">URL</abbr>-ul aferent: <code>http://ocw.cs.pub.ro</code>. O să vedeți că primul acces durează mai mult dar viitoarele accese ale aceleiași pagini sunt mai rapide.
+</p>
+
+<p>
+Pentru a evalua acest lucru, instalați utilitarul <code>httperf</code> pe stația gazdă folosind comanda:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">sudo</span> <span class="kw2">apt-get install</span> httperf</pre>
+
+<p>
+Apoi măsurați conexiunile realizate pentru pagina de la <abbr title="Uniform Resource Locator">URL</abbr>-ul <code>http://ocw.cs.pub.ro</code> folosidn comanda:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span>httperf <span class="re5">--server</span>=ocw.cs.pub.ro <span class="re5">--wsess</span>=<span class="nu0">2000</span>,<span class="nu0">10</span>,<span class="nu0">2</span> <span class="re5">--rate</span> <span class="nu0">300</span> <span class="re5">--timeout</span> <span class="nu0">5</span></pre>
+
+<p>
+Observați în output informații precum <code>Connection rate</code>, <code>Request rate</code>, <code>Net I/O</code>.
+</p>
+
+<p>
+Ca să comparăm trebuie să ne conectăm în mod direct la serverul <code>ocw.cs.pub.ro</code>. Pentru acesta ștergeți (sau comentați) linia adăugată anterior în fișierul <code>/etc/hosts</code> și rulați din nou comanda <code>httperf</code> de mai sus. Observați diferențele parametrilor și, astfel, utilitatea folosirii Varnish ca accelerator pentru conexiuni web.
+</p>
+
+</div>
+</div>
+</body>
+</html>

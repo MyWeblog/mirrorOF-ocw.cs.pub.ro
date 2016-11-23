@@ -1,0 +1,464 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    06. NDK Integration (JNI)    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2014-08-10T13:57:52+0300"/>
+<meta name="keywords" content="ndk,courses,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=ndk:courses"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/ndk/courses/06.html"/>
+<link rel="canonical" href="06.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='ndk:courses';var JSINFO = {"id":"ndk:courses:06","namespace":"ndk:courses","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_ndk.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="06%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="06%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="ndk_integration_jni">06. NDK Integration (JNI)</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Description: Porting NDK apps across hardware platforms and Android versions</div>
+</li>
+<li class="level1"><div class="li"> Practical part: Accessing arrays, synchronizing access, NIO buffers</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit2" id="lecture">Lecture</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"><a href="../../_media/ndk/courses/lecture-6.pdf" class="media mediafile mf_pdf" title="ndk:courses:lecture-6.pdf (2.3 MB)"> Lecture Slides</a></div>
+</li>
+</ul>
+
+<p>
+<iframe title="" src="../../_media/ndk/courses/lecture-6.pdf" style="width:98%; height:400px"></iframe>
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="practical">Practical</h3>
+<div class="level3">
+
+<p>
+Lab archive: <a href="../../_media/ndk/courses/lab-6.zip" class="media mediafile mf_zip" title="ndk:courses:lab-6.zip (1.7 MB)">lab-6.zip</a>
+Lab solutions: <a href="../../_media/ndk/courses/lab-6-solved.zip" class="media mediafile mf_zip" title="ndk:courses:lab-6-solved.zip (1.7 MB)">lab-6-solved.zip</a>
+</p>
+
+</div>
+
+<h4 id="task_1_-_accessing_an_array">Task 1 - Accessing an array</h4>
+<div class="level4">
+
+<p>
+To access a Java array in the JNI you need a reference to it. You can pass the reference from Java or create a new array inside the JNI. Arrays have the type: j&lt;type&gt;Array, for example jintArray.
+</p>
+
+<p>
+To create a Java array from JNI:
+</p>
+<pre class="code C">jintArray javaArray <span class="sy0">=</span> env<span class="sy0">-&gt;</span>NewIntArray<span class="br0">&#40;</span>jsize length<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+or
+</p>
+<pre class="code C">jobjectArray javaArray <span class="sy0">=</span> env<span class="sy0">-&gt;</span>NewObjectArray<span class="br0">&#40;</span>jsize length<span class="sy0">,</span>
+jclass elementClass<span class="sy0">,</span> jobject initialElement<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+where length is the number of elements in the array, elementClass is the class of the Objects and initialElement is the element each item in the array will be initialized as.
+</p>
+
+<p>
+To access a primitive type array use:
+</p>
+<pre class="code C">env<span class="sy0">-&gt;</span>Get<span class="sy0">&lt;</span>Type<span class="sy0">&gt;</span>ArrayRegion<span class="br0">&#40;</span>j<span class="sy0">&lt;</span>type<span class="sy0">&gt;</span>Array array<span class="sy0">,</span>
+jsize start<span class="sy0">,</span> jsize len<span class="sy0">,</span> j<span class="sy0">&lt;</span>type<span class="sy0">&gt;</span> <span class="sy0">*</span>buf<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+This will copy len elements, starting at element start from array into buf (starting from position 0 in buf).
+</p>
+
+<p>
+To copy back from a native array use:
+</p>
+<pre class="code C">env<span class="sy0">-&gt;</span>Set<span class="sy0">&lt;</span>Type<span class="sy0">&gt;</span>ArrayRegion<span class="br0">&#40;</span>j<span class="sy0">&lt;</span>type<span class="sy0">&gt;</span>Array array<span class="sy0">,</span>
+jsize start<span class="sy0">,</span> jsize len<span class="sy0">,</span> j<span class="sy0">&lt;</span>type<span class="sy0">&gt;</span> <span class="sy0">*</span>buf<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+This will copy len elements, starting at element start from buf into array (starting from position 0 in buf).
+</p>
+
+<p>
+For object arrays, use
+</p>
+<pre class="code C">jobject obj <span class="sy0">=</span> env<span class="sy0">-&gt;</span>GetObjectArrayElement<span class="br0">&#40;</span>jobjectArray array<span class="sy0">,</span> jsize index<span class="br0">&#41;</span><span class="sy0">;</span>
+env<span class="sy0">-&gt;</span>SetObjectArrayElement<span class="br0">&#40;</span>jobjectArray array<span class="sy0">,</span> jsize index<span class="sy0">,</span> jobject obj<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+instead. You cannot access more than one object at once (and it is impractical since there is a small amount of object references you can have at any one time).
+</p>
+
+<p>
+Implement the two native functions: getIntArray and getStringArray. Allocate the arrays and initialize the elements to 1, 2, 3, 4, 5 and “one”, “two”, “three”, “four”, “five” respectively (from native code). They will get printed to the log. Use NewStringUTF to create the Strings. Return the created arrays.
+Use DeleteLocalRef to remove the String references (JNI guarantees only 16 references to Java objects at any one time).
+</p>
+
+</div>
+
+<h4 id="task_2_-_keeping_a_reference_to_the_array">Task 2 - Keeping a reference to the array</h4>
+<div class="level4">
+
+<p>
+In the getIntArray method, after creating the array, use
+</p>
+<pre class="code C">globalObj <span class="sy0">=</span> env<span class="sy0">-&gt;</span>NewGlobalRef<span class="br0">&#40;</span>jobject obj<span class="br0">&#41;</span></pre>
+
+<p>
+to create a global reference. Make sure globalObj is declared globally. This means that globalObj will remain valid until it is deleted.
+</p>
+<pre class="code C">DeleteGlobalRef<span class="br0">&#40;</span>globalObj<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+<p>
+deletes a global reference.
+</p>
+
+<p>
+There are also Weak Global references, which allow objects to be garbage collected. You have to check if the reference is still
+valid before using it with <strong>IsSameObject</strong>.
+</p>
+
+<p>
+Implement the updateArray method. Use the global reference to get access to the array. Increment each element by one.
+Use GetArrayLength to get the length of the array.
+</p>
+
+</div>
+
+<h4 id="task_3_-_direct_pointer_to_array">Task 3 - Direct pointer to array</h4>
+<div class="level4">
+
+<p>
+Get&lt;Type&gt;ArrayRegion and Set&lt;Type&gt;ArrayRegion copy the array each time they are used. This will add overhead. Use
+</p>
+<pre class="code C">j<span class="sy0">&lt;</span>type<span class="sy0">&gt;</span> <span class="sy0">*</span>directArray <span class="sy0">=</span> env<span class="sy0">-&gt;</span>Get<span class="sy0">&lt;</span>Type<span class="sy0">&gt;</span>ArrayElements<span class="br0">&#40;</span>j<span class="sy0">&lt;</span>type<span class="sy0">&gt;</span>Array array<span class="sy0">,</span> jboolean <span class="sy0">*</span>isCopy<span class="br0">&#41;</span></pre>
+
+<p>
+to get a direct reference (if possible). 
+</p>
+
+<p>
+To release the array and free space
+</p>
+<pre class="code C">env<span class="sy0">-&gt;</span>Release<span class="sy0">&lt;</span>Type<span class="sy0">&gt;</span>ArrayElements<span class="br0">&#40;</span>j<span class="sy0">&lt;</span>type<span class="sy0">&gt;</span>Array array<span class="sy0">,</span> j<span class="sy0">&lt;</span>type<span class="sy0">&gt;</span> <span class="sy0">*</span>directArray<span class="sy0">,</span> jint mode<span class="br0">&#41;</span></pre>
+
+<p>
+where can be:
+</p>
+<ul>
+<li class="level1"><div class="li"> 0 - Copy back the content and free directArray</div>
+</li>
+<li class="level1"><div class="li"> JNI_COMMIT - Copy the content but don&#039;t free directArray</div>
+</li>
+<li class="level1"><div class="li"> JNI_ABORT - Free directArray</div>
+</li>
+</ul>
+
+<p>
+Copying is only done if directArray is a copy.
+</p>
+
+<p>
+Modify the updateArray method to use direct copies of the array if possible.
+</p>
+
+</div>
+
+<h4 id="task_4_-_synchronized_access">Task 4 - Synchronized access</h4>
+<div class="level4">
+
+<p>
+To synchronize access to objects, Java uses the synchronized key word
+</p>
+<pre class="code Java"><span class="kw1">synchronized</span><span class="br0">&#40;</span>obj<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+<span class="co1">// Thread safe obj access</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+To synchronize native threads and Java threads, JNI has the MonitorEnter and MonitorExit.
+</p>
+<pre class="code C"><span class="kw1">if</span> <span class="br0">&#40;</span>env<span class="sy0">-&gt;</span>MonitorEnter<span class="br0">&#40;</span>jobject obj<span class="br0">&#41;</span> <span class="sy0">==</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+<span class="co1">// ThreadSafe</span>
+   <span class="kw1">if</span> <span class="br0">&#40;</span>env<span class="sy0">-&gt;</span>MonitorExit<span class="br0">&#40;</span>jobject obj<span class="br0">&#41;</span> <span class="sy0">!=</span> <span class="nu0">0</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+      <span class="co1">//Error</span>
+   <span class="br0">&#125;</span>
+<span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span>
+<span class="co1">// Error</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Synchronize access to the array used in updateArray.
+</p>
+
+</div>
+
+<h4 id="task_5_-_create_direct_byte_buffer">Task 5 - Create direct byte buffer</h4>
+<div class="level4">
+
+<p>
+Implement the getBuffer method. It receives as a parameter the number of bytes to allocate, and then it should allocate that number of bytes and return a ByteBuffer.
+To create a byte buffer use:
+</p>
+<pre class="code C">jobject directBuffer <span class="sy0">=</span> env<span class="sy0">-&gt;</span>NewDirectByteBuffer<span class="br0">&#40;</span><span class="kw4">unsigned</span> <span class="kw4">char</span><span class="sy0">*</span> buffer<span class="sy0">,</span> jsize length<span class="br0">&#41;</span></pre>
+
+<p>
+This allows you to share access to the bytes directly between the native code and Java. Keep a global reference to buffer. Remember, you have to free this space you allocate yourself, Java will not clean it.
+</p>
+
+<p>
+To get the native buffer back from Java, call:
+</p>
+<pre class="code C"><span class="kw4">unsigned</span> <span class="kw4">char</span><span class="sy0">*</span> buffer <span class="sy0">=</span> env<span class="sy0">-&gt;</span>NewDirectByteBuffer<span class="br0">&#40;</span>jobject directBuffer<span class="br0">&#41;</span></pre>
+
+<p>
+If the ByteBuffer was allocated from Java code, then memory will be handled by Java.
+</p>
+
+<p>
+In Android Java heap size is very limited, however, malloc or new is not counted towards the same heap size, so you can overcome that limitation by allocating space from C.
+</p>
+
+</div>
+
+<h4 id="task_6_-_image_greyscale">Task 6 - Image greyscale</h4>
+<div class="level4">
+
+<p>
+Implement the greyScale method. The Bitmap representation in the buffer will be RGBARGBARG..RGBA, the size being 4 * Width * Height, and scanning horizontally: the first line is the top one, the first pixel is top left.
+</p>
+
+<p>
+Remember to flip the buffer after using it in Java.
+</p>
+
+<p>
+One of the formulas for grey scale is: R,G,B = 0.21 R + 0.71 G + 0.07 B.
+</p>
+
+</div>
+
+<h4 id="task_7_-_apply_filter_to_image">Task 7 - Apply filter to image</h4>
+<div class="level4">
+
+<p>
+Implement the applyFilter method. Use two image filters from <a href="http://lodev.org/cgtutor/filtering.html" class="urlextern" title="http://lodev.org/cgtutor/filtering.html"  rel="nofollow">http://lodev.org/cgtutor/filtering.html</a>. Create a new buffer (or reuse a previous one if you have already applied a filter) for each image, and apply the filter on top of the original image (or the greyscale one). Implement the functionality of the two buttons for filters. Make sure to run filters on a separate thread.
+</p>
+
+</div>
+
+<h4 id="bonus_-_load_bitmap_from_card">Bonus - Load bitmap from card</h4>
+<div class="level4">
+
+<p>
+Put a image file on the SD card of the phone. Add READ_EXTERNAL_STORAGE permission. Read the file from the card and load it instead of the file from res/ folder (check the <a href="http://developer.android.com/reference/android/graphics/BitmapFactory.html" class="urlextern" title="http://developer.android.com/reference/android/graphics/BitmapFactory.html"  rel="nofollow">BitmapFactory</a> class). Check if your filters and grey scale functions still work.
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<p>
+<a href="../grading.html" class="wikilink1" title="ndk:grading">Rules and Grading</a> <br/>
+
+<a href="../register.html" class="wikilink1" title="ndk:register">Class Register</a>
+</p>
+
+<h1 class="sectionedit1" id="lectures_labs">Lectures &amp; labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_23650785058357aca1dead" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="ndk:courses:01">01. Android Technology</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="ndk:courses:02">02. Android Platform</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="ndk:courses:03">03. Android Internals</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="ndk:courses:04">04. C, Bionic and Low-Level Libraries</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="ndk:courses:05">05. NDK Integration (JNI)</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="06.html" class="wikilink1" title="ndk:courses:06">06. NDK Integration (JNI)</a></span></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="ndk:courses:07">07. Debugging and Profiling</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="ndk:courses:08">08. OpenGL on Android</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="ndk:courses:09">09. Native Activity</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="ndk:courses:10">10. Renderscript</a></div></li>
+<li class="level1"><div class="li"><a href="11.html" class="wikilink1" title="ndk:courses:11">11. NDK Optimization and Portability</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Lectures & labs" [73-130] -->
+<h1 class="sectionedit2" id="resources">Resources</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_29060266958357aca1ee39" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resources/01.html" class="wikilink1" title="ndk:resources:01">Resources</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Resources" [131-184] -->
+<h1 class="sectionedit3" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_140148799658357aca1fdda" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/project.html" class="wikilink1" title="ndk:assignments:project">Project</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/warmup.html" class="wikilink1" title="ndk:assignments:warmup">Warm-up assignment</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Assignments" [185-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="06.html#ndk_integration_jni">06. NDK Integration (JNI)</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="06.html#lecture">Lecture</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#practical">Practical</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="06.html#task_1_-_accessing_an_array">Task 1 - Accessing an array</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#task_2_-_keeping_a_reference_to_the_array">Task 2 - Keeping a reference to the array</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#task_3_-_direct_pointer_to_array">Task 3 - Direct pointer to array</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#task_4_-_synchronized_access">Task 4 - Synchronized access</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#task_5_-_create_direct_byte_buffer">Task 5 - Create direct byte buffer</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#task_6_-_image_greyscale">Task 6 - Image greyscale</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#task_7_-_apply_filter_to_image">Task 7 - Apply filter to image</a></div></li>
+<li class="level4"><div class="li"><a href="06.html#bonus_-_load_bitmap_from_card">Bonus - Load bitmap from card</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          ndk/courses/06.txt · Last modified: 2014/08/10 13:57 by petre.eftime          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="06%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="06%3Fdo=media&amp;ns=ndk%253Acourses.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="06.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=ndk%253Acourses%253A06&amp;1479899850" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,400 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 8: Sensors and Dashboard    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-06-27T11:12:35+0300"/>
+<meta name="keywords" content="iot,labs,08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=iot:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/iot/labs/08.html"/>
+<link rel="canonical" href="08.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='iot:labs';var JSINFO = {"id":"iot:labs:08","namespace":"iot:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_iot.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="http://innovationlabs.ro"/><img height="70" src="../../res/sigla_ilabs.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="08%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="08%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="lab_8sensors_and_dashboard">Lab 8: Sensors and Dashboard</h1>
+<div class="level1">
+
+<p>
+For the following applications, you will read data coming from sensors, which means that you will also need to use the Arduino board. As the Raspberry Pi has no ADCs, you cannot read values coming from analog sensors. 
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="arduino_setup">Arduino Setup</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit3" id="what_you_need">What you need</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> One Raspberry Pi board connected to Wyliodrin STUDIO;</div>
+</li>
+<li class="level1"><div class="li"> One Arduino board;</div>
+</li>
+<li class="level1"><div class="li"> One USB cable.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit4" id="the_setup">The setup</h3>
+<div class="level3">
+
+<p>
+As previously stated, the classical Arduino board is basically a micro-controller, which is capable of running one piece of software at once and that has little processing power and no network connectivity. So you will use the board to gather data from the environment and then pass it on to the Raspberry Pi.  
+</p>
+
+<p>
+The Raspberry Pi is a computer that is capable of processing data and communicating with other smart devices. For instance, you could visualise the temperature on your smart phone.
+</p>
+
+<p>
+The two boards need to be connected in order to send data between them. You can connect them via the USB cable and a serial connection will be established between the two. Once this is done, they can exchange data and the Arduino board can be controlled via the Raspberry Pi. This is done by the <strong>firmata</strong> protocol. The protocol allows the Raspberry Pi to send the Arduino messages in which it requests for a certain action or information and the Arduino will respond accordingly.
+</p>
+
+<p>
+In order to implement the protocol, you need to flash the Arduino with the <strong>StandardFirmata</strong> firmware.
+</p>
+
+<p>
+In the Wyliodrin STUDIO interface you have two tabs referring to <strong>SOFTWARE</strong> and <strong>FIRMWARE</strong>. So far, you used only the <strong>SOFTWARE</strong> tab, as you wrote applications for the Raspberry Pi solely. Now, select the <strong>FIRMARE</strong> tab and there is where you can write code which will be run on the Arduino. In this case, you will import an existing project.
+</p>
+
+<p>
+<a href="../../_detail/iot/labs/select-firmata.png%3Fid=iot%253Alabs%253A08.html" class="media" title="iot:labs:select-firmata.png"><img src="../../_media/iot/labs/select-firmata.png%3Fw=300&amp;tok=4049a1" class="mediacenter" alt="" width="300" /></a>
+</p>
+
+<p>
+Hit the <strong>Show examples</strong> button and select <strong>Arduino</strong>. Then <strong>use</strong> the <strong>Firmata/StandardFirmata</strong> example. Now that you have the software to run on the Arduino, once you hit the <strong>run</strong> button, you will be asked the tyype of the Arduino board and if you want to flash it or not. Select the board you are using and <strong>RUN AND FLASH</strong>. The <strong>StandardFirmata</strong> firmware will be deployed on the Arduino.
+</p>
+
+<p>
+As you know, any micro-controller, including the Arduino, once flashed, runs the same firmware until another one is uploaded on the board. Thus, you don&#039;t have to flash the board each time you run a new Raspberry Pi application. If you are confident that the Arduino is running <strong>StandardFirmata</strong>, you can skip this step.
+<a href="../../_detail/iot/labs/flash-arduino.png%3Fid=iot%253Alabs%253A08.html" class="media" title="iot:labs:flash-arduino.png"><img src="../../_media/iot/labs/flash-arduino.png%3Fw=300&amp;tok=0f36de" class="mediacenter" alt="" width="300" /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit5" id="street_lightning">Street Lightning</h2>
+<div class="level2">
+
+<p>
+In this application, you will build a system to monitor the light level and if there is the case, you will turn on the street lights brighter or dimmer, depending on the amount of light.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="what_you_need1">What you need</h3>
+<div class="level3">
+<ul>
+<li class="level1"><div class="li"> One Raspberry Pi connect to \Wyliodrin;</div>
+</li>
+<li class="level1"><div class="li"> One Arduino connected to the Raspberry Pi;</div>
+</li>
+<li class="level1"><div class="li"> One photocell;</div>
+</li>
+<li class="level1"><div class="li"> One LED;</div>
+</li>
+<li class="level1"><div class="li"> One 220 $\Omega$ resistor;</div>
+</li>
+<li class="level1"><div class="li"> One 10 k$\Omega$ resistor;</div>
+</li>
+<li class="level1"><div class="li"> Jumper wires. </div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit7" id="the_setup1">The Setup</h3>
+<div class="level3">
+
+<p>
+<a href="../../_detail/iot/labs/light_sensor_schematics.png%3Fid=iot%253Alabs%253A08.html" class="media" title="iot:labs:light_sensor_schematics.png"><img src="../../_media/iot/labs/light_sensor_schematics.png%3Fw=600&amp;tok=bd825d" class="mediacenter" alt="" width="600" /></a>
+</p>
+
+<p>
+The photocell works just like resistor with a variable resistance. Depending on the amount of light it receives, its resistance gets higher or lower. As a result, you can connect it in a voltage divider, as well.
+</p>
+
+<p>
+The sensor is connected to the 5V via the 10 K Ohms resistor and to the GND pin on the other side. In order to read the sensor&#039;s value, the yellow jumper wire is connected to the A0 pin of the board. The A0-A5 pins can be used for reading digital values, in this case values ranging from 0 to 1024. 
+</p>
+
+<p>
+For the photocell, the resistance decreases proportionally with the amount of light, so for this schematics, the brighter the environment, the higher is the read value.
+</p>
+
+<p>
+In addition, the photocell has a resistance varying from hundred of ohms to mega ohms and in order for the voltage divider to work, you should use the sensor as a pull-down resistor, while the actual resistor needs to have a resistance comparable with the sensor&#039;s, otherwise its effect is not visible. This is why you need a 10 k Ohms resistor.
+</p>
+
+<p>
+The other part of the setup, the LED is connected similar to the previous schematics except that you can notice that its behaviour is controller by pin 3. That pin has a tilde next to it. That means that it is a PWM pin so you can control if the LED should light up brighter or dimmer. You can write values ranging from 0 to 255 on these pins, 0 being the equivalent of digital 0 and 255 the equivalent of digital 1. 
+</p>
+
+</div>
+
+<h3 class="sectionedit8" id="the_code">The Code</h3>
+<div class="level3">
+
+<p>
+<a href="../../_detail/iot/labs/street_lights_code.png%3Fid=iot%253Alabs%253A08.html" class="media" title="iot:labs:street_lights_code.png"><img src="../../_media/iot/labs/street_lights_code.png%3Fw=400&amp;tok=6b4d67" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+<p>
+First of all, you need to use an <strong>Arduino in</strong> node in order to read the values from the sensor. This node gets triggered each time the value on the pin it reads from changes. To actually configure the node&#039;s behavior you need to set its properties. 
+</p>
+
+<p>
+<a href="../../_detail/iot/labs/arduino_in_properties.png%3Fid=iot%253Alabs%253A08.html" class="media" title="iot:labs:arduino_in_properties.png"><img src="../../_media/iot/labs/arduino_in_properties.png%3Fw=400&amp;tok=efa9fc" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+<p>
+The first property allows you to set the Raspberry Pi connection to the Arduino board so the Raspberry Pi knows the port through which it should send the messages. Usually, the port is <strong>/dev/ttyACM0</strong>. However, in order to make sure, go to the <strong>Shell</strong> tab and type <strong>dmesg</strong>. There you should see messages stating that an FTDI cable has been connected to the board and the port it is connected to. Concatenate that value to <strong>/dev/</strong> and place the value as the first property of the node.
+</p>
+
+<p>
+Further on, you need to specify which pin you want to read from. In this case, the pin is 0 and is an analog pin. Afterwards, you will use a <strong>range</strong> node in order to map the read values to values that should light up the LED. For this, you need to adapt the system to your environment. Depending on the regular amount of light, usually you will read a value of around 400. So in this case, the range scales values going from 400 to 1024 to 0 to 255. However, if the regular value is different, you will need to scale a different range.
+</p>
+
+<p>
+<a href="../../_detail/iot/labs/range-light.png%3Fid=iot%253Alabs%253A08.html" class="media" title="iot:labs:range-light.png"><img src="../../_media/iot/labs/range-light.png%3Fw=400&amp;tok=757879" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+<p>
+The last node to use is <strong>Arduino out</strong>. This node acts just like the <strong>digital write</strong> node used in the previous chapters. However, you still need to select the port for the Arduino board and you can choose from analog or digital write. As you want to make the LED light up brighter or dimmer, you will set the type to <strong>analog</strong> and the <strong>pin</strong> property has to be 3. 
+</p>
+
+<p>
+<p><div class="noteclassic">
+If you use more than one Arduino node in the application, add a new Raspberry Pi board only for one node. For the rest of the nodes, choose the previously added board from the drop-down.
+
+</div></p>
+</p>
+
+<p>
+Now you can run the application and watch how the LED gets brighter as you cover up the sensor. 
+</p>
+
+</div>
+
+<h2 class="sectionedit9" id="exercises">Exercises</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Display the values coming from the light sensor in the dashboard using the <strong>gauge</strong> graph.</div>
+</li>
+<li class="level1"><div class="li"> Connect all the sensors in the kit to the Arduino and display the values you read in the dashboard. <strong>Note:</strong> Do not connect the Hall sensor, which works in a different way.</div>
+</li>
+<li class="level1"><div class="li"> Search the temperature sensor&#039;s datasheet online (TMP36) and transform the read values to celsius degrees.</div>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_90479926358355bca2419b" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="iot:courses:01">Lecture 1: Cross platform mobile development</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="iot:courses:02">Lecture 2: Web Services</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="iot:courses:03">Lecture 3: PhoneGap plugins</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/04.html" class="wikilink1" title="iot:courses:04">Lecture 4: Introduction to IoT</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/05.html" class="wikilink1" title="iot:courses:05">Lecture 5: Electronics for the Internet of Things</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/06.html" class="wikilink1" title="iot:courses:06">Lecture 6: Software for the Internet of Things</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Lectures" [1-51] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_19669822858355bca260de" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="iot:labs:01">Lab 1: User Interface and User Experience</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="iot:labs:02">Lab 2: Web Services</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="iot:labs:03">Lab 3: Plugins and Local Storage</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="iot:labs:04">Lab 4: Raspberry Pi Setup</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="iot:labs:05">Lab 5: Linux</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="iot:labs:06">Lab 6: Light Blink</a></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="iot:labs:07">Lab 7: Programming with Streams</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="08.html" class="wikilink1" title="iot:labs:08">Lab 8: Sensors and Dashboard</a></span></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="iot:labs:09">Lab 9: Connect and use an LCD</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="iot:labs:10">Lab 10: Web server</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [52-97] -->
+<h1 class="sectionedit3" id="others">Others</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_117645219558355bca28018" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/bilbiografie.html" class="wikilink1" title="iot:res:bilbiografie">Bibliography</a></div></li>
+<li class="level1"><div class="li"><a href="../res/components.html" class="wikilink1" title="iot:res:components">Components</a></div></li>
+<li class="level1"><div class="li"><a href="../res/electronics.html" class="wikilink1" title="iot:res:electronics">Electronics</a></div></li>
+<li class="level1"><div class="li"><a href="../res/resistors.html" class="wikilink1" title="iot:res:resistors">Resistor Color Code</a></div></li>
+<li class="level1"><div class="li"><a href="../res/streams.html" class="wikilink1" title="iot:res:streams">Streams nodes</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tipsandtricks.html" class="wikilink1" title="iot:res:tipsandtricks">Tips &amp; Tricks</a></div></li>
+<li class="level1"><div class="li"><a href="../res/wyliodrin.html" class="wikilink1" title="iot:res:wyliodrin">Wyliodrin STUDIO</a></div></li>
+</ul>
+</div></div>
+
+
+
+</div>
+<!-- EDIT3 SECTION "Others" [98-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="08.html#lab_8sensors_and_dashboard">Lab 8: Sensors and Dashboard</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="08.html#arduino_setup">Arduino Setup</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="08.html#what_you_need">What you need</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#the_setup">The setup</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="08.html#street_lightning">Street Lightning</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="08.html#what_you_need1">What you need</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#the_setup1">The Setup</a></div></li>
+<li class="level3"><div class="li"><a href="08.html#the_code">The Code</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="08.html#exercises">Exercises</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          iot/labs/08.txt · Last modified: 2016/06/27 11:12 by ioana_maria.culic          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="08%3Fdo=media&amp;ns=iot%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="08.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=iot%253Alabs%253A08&amp;1479891914" width="2" height="1" alt="" /></div>
+</body>
+</html>

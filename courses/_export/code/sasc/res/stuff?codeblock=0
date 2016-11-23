@@ -1,0 +1,67 @@
+    
+    
+
+import sys
+import random
+import string
+import time
+import itertools
+import operator
+import base64
+
+from Crypto.Hash.HMAC import HMAC
+
+def raw2hex(raw):
+    return raw.encode('hex')
+
+
+def hex2raw(hexstring):
+    return base64.b16decode(hexstring)
+
+
+def slow_foo():
+    p = 181
+    k = 2
+    while k < p:
+        if p % k == 0:
+            return
+        k += 1
+
+
+def verify(message, tag):
+    k = '0123456789ABCDEF'
+
+    # Use MD5 for HMAC
+    digest = HMAC(k, message).digest()
+
+    for i in range(16):
+        # Artificially extend byte comparison duration
+        slow_foo()
+        if tag[i] != digest[i]:
+            return False
+
+    return True
+
+
+hexdigits = '0123456789ABCDEF'
+
+
+def main():
+    message = 'Test'
+
+    # Step 1. Iterate through all possible first byte values, and call the
+    # Verify oracle for each of them
+
+    # Step 2. Store the byte which caused the longest computation time
+
+    # Step 3. Continue the operation for each byte (except the last)
+
+    # Step 4. Guess the last byte, and query the oracle with the complete tag
+    mytag = '???'
+    result = verify(message, mytag)
+    if result == True:
+        print mytag
+
+
+if __name__ == "__main__":
+    main()

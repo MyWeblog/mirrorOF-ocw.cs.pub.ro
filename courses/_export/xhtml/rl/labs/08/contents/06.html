@@ -1,0 +1,104 @@
+    
+    
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>rl:labs:08:contents:06</title>
+<meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2013-11-20T21:52:57+0200"/>
+<meta name="keywords" content="rl,labs,08,contents,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../../../../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../../../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../../../../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../../../../../feed.php%3Fmode=list&amp;ns=rl:labs:08:contents"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="06.html"/>
+<link rel="canonical" href="../../../../../../rl/labs/08/contents/06.html"/>
+<link rel="stylesheet" type="text/css" href="../../../../../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='rl:labs:08:contents';var JSINFO = {"id":"rl:labs:08:contents:06","namespace":"rl:labs:08:contents","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../../../../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+</head>
+<body>
+<div class="dokuwiki export">
+
+<h3 class="sectionedit1" id="p_blocare_completa_a_traficului">6. [5p] Blocare completă a traficului</h3>
+<div class="level3">
+
+<p>
+Pentru început verificați că stația <code>red</code> poate accesa alte stații din rețea. Rulați comanda
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> green
+PING green <span class="br0">&#40;</span>192.168.2.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+<span class="nu0">64</span> bytes from green <span class="br0">&#40;</span>192.168.2.2<span class="br0">&#41;</span>: <span class="re2">icmp_req</span>=<span class="nu0">1</span> <span class="re2">ttl</span>=<span class="nu0">63</span> <span class="re2">time</span>=<span class="nu0">0.076</span> ms
+<span class="nu0">64</span> bytes from green <span class="br0">&#40;</span>192.168.2.2<span class="br0">&#41;</span>: <span class="re2">icmp_req</span>=<span class="nu0">2</span> <span class="re2">ttl</span>=<span class="nu0">63</span> <span class="re2">time</span>=<span class="nu0">0.067</span> ms
+&nbsp;
+<span class="re5">---</span> green <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">2</span> received, <span class="nu0">0</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 999ms
+rtt min<span class="sy0">/</span>avg<span class="sy0">/</span>max<span class="sy0">/</span>mdev = <span class="nu0">0.067</span><span class="sy0">/</span><span class="nu0">0.071</span><span class="sy0">/</span><span class="nu0">0.076</span><span class="sy0">/</span><span class="nu0">0.009</span> ms</pre>
+
+<p>
+Asocierile între porturi și protocoale (<code>21</code> și <abbr title="File Transfer Protocol">FTP</abbr>, <code>22</code> și SSH, <code>23</code> și telnet) sunt cele implicite. Acest lucru nu împiedică însă un administrator să configureze un serviciu să asculte pe un port diferit de cel implicit. Pentru a preveni transferul de fișiere și conectare de la distanță pe stația <code>red</code> vom bloca accesul la toate porturile. Pentru aceasta vom configura stația <code>host</code> pentru a bloca <strong>întreg</strong> traficul de la stația <code>red</code>. Pentru blocarea <strong>întregului</strong> trafic rulați comanda
+</p>
+<pre class="code bash"><span class="co4">root@host:~# </span>iptables <span class="re5">-A</span> FORWARD <span class="re5">-s</span> <span class="kw2">red</span> <span class="re5">-j</span> REJECT
+<span class="co4">root@host:~# </span>iptables <span class="re5">-L</span> FORWARD <span class="re5">-n</span> <span class="re5">-v</span>
+Chain FORWARD <span class="br0">&#40;</span>policy ACCEPT <span class="nu0">0</span> packets, <span class="nu0">0</span> bytes<span class="br0">&#41;</span>
+ pkts bytes target     prot opt <span class="kw1">in</span>     out     <span class="kw3">source</span>               destination         
+    <span class="nu0">0</span>     <span class="nu0">0</span> REJECT     all  <span class="re5">--</span>  <span class="sy0">*</span>      <span class="sy0">*</span>       192.168.1.2          0.0.0.0<span class="sy0">/</span><span class="nu0">0</span>            reject-with icmp-port-unreachable</pre>
+
+<p>
+Comanda blochează întreg traficul <strong>de la</strong> stația <code>red</code> (opțiunea <code>-s</code>) pe care stația <code>host</code> l-ar fi rutat (lanțul <code>FORWARD</code>).
+</p>
+
+<p>
+Verificați că stația <code>red</code> nu poate accesa alte stații. Rulați comenzile
+</p>
+<pre class="code bash"><span class="co4">root@red:~# </span><span class="kw2">ping</span> <span class="re5">-c</span> <span class="nu0">2</span> green
+PING green <span class="br0">&#40;</span>192.168.2.2<span class="br0">&#41;</span> <span class="nu0">56</span><span class="br0">&#40;</span><span class="nu0">84</span><span class="br0">&#41;</span> bytes of data.
+From host <span class="br0">&#40;</span>192.168.1.1<span class="br0">&#41;</span> <span class="re2">icmp_seq</span>=<span class="nu0">1</span> Destination Port Unreachable
+From host <span class="br0">&#40;</span>192.168.1.1<span class="br0">&#41;</span> <span class="re2">icmp_seq</span>=<span class="nu0">2</span> Destination Port Unreachable
+&nbsp;
+<span class="re5">---</span> green <span class="kw2">ping</span> statistics <span class="re5">---</span>
+<span class="nu0">2</span> packets transmitted, <span class="nu0">0</span> received, +<span class="nu0">2</span> errors, <span class="nu0">100</span><span class="sy0">%</span> packet loss, <span class="kw1">time</span> 999ms
+&nbsp;
+<span class="co4">root@red:~# </span>telnet green
+Trying 192.168.2.2...
+telnet: Unable to connect to remote host: Connection refused
+&nbsp;
+<span class="co4">root@red:~# </span><span class="kw2">ftp</span> green
+ftp: connect: Connection refused
+<span class="kw2">ftp</span><span class="sy0">&gt;</span> <span class="kw3">exit</span>
+&nbsp;
+<span class="co4">root@red:~# </span><span class="kw2">ssh</span> <span class="re5">-l</span> student green
+ssh: connect to host green port <span class="nu0">22</span>: Connection refused</pre>
+
+<p>
+Observați că nu mai sosesc pachete de răspuns (sunt respinse de stația <code>host</code>), deci traficul de la stația <code>red</code> este blocat.
+</p>
+
+</div>
+</div>
+</body>
+</html>

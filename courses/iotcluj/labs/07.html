@@ -1,0 +1,418 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 7: Web server    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-07-14T12:42:21+0300"/>
+<meta name="keywords" content="iotcluj,labs,07"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=iotcluj:labs"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/iotcluj/labs/07.html"/>
+<link rel="canonical" href="07.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1479898000.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='iotcluj:labs';var JSINFO = {"id":"iotcluj:labs:07","namespace":"iotcluj:labs","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1479898000"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../../iot/index.html"><img height="70" src="../../res/sigla_iot.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="http://innovationlabs.ro"/><img height="70" src="../../res/sigla_ilabs.png" name="dokuwiki__top"/></a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="07%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="07%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="lab_7web_server">Lab 7: Web server</h1>
+<div class="level1">
+
+</div>
+
+<h2 class="sectionedit2" id="request_data_from_a_web_page">Request data from a web page</h2>
+<div class="level2">
+
+<p>
+Remember using a web service. When you make a request to the server, you need to show it the method, meaning what you expect it to do, which, in the case where you want data to be drown from the web by the server, would be <em>get</em>. Next, you need to tell the server where to get this data from. Any query has the following structure: <a href="http://address:[port]URL?querystring" class="urlextern" title="http://address:[port]URL?querystring"  rel="nofollow">http://address:[port]URL?querystring</a>. Through this query the server will find the data you want and send it back to your browser. 
+</p>
+
+<p>
+To get information from the Web you need as usual, only a few nodes. 
+</p>
+
+<p>
+Let&#039;s imagine you need to access the data from a web site. How could you implement this need in Streams?
+</p>
+
+<p>
+To be able to see the data in under a structure that can be easily interpreted by the nodes, it will have to be in JSON format. What you&#039;ll actually use from the website is an <abbr title="Application Programming Interface">API</abbr> <abbr title="Uniform Resource Locator">URL</abbr>.
+Under functions you have the node <em>http request</em>. 
+</p>
+
+<p>
+Go on the web site you want to get data from. Now search for the <abbr title="Application Programming Interface">API</abbr> and copy the <abbr title="Uniform Resource Locator">URL</abbr>. It will give you access to the data you request written as a JSON.
+In the settings of the second node, paste the <abbr title="Uniform Resource Locator">URL</abbr> into the corresponding field.
+</p>
+
+<p>
+The problem is that when the node puts this data in the payload, it will be a string. In order to be able to parse it, you need to converse it back to a JSON. Use the node which has this very name. 
+<a href="../../_detail/iot2015/labs/parseobj.png%3Fid=iotcluj%253Alabs%253A07.html" class="media" title="iot2015:labs:parseobj.png"><img src="../../_media/iot2015/labs/parseobj.png%3Fw=300&amp;tok=6df7ec" class="mediacenter" alt="" width="300" /></a>
+There is a way of extracting only a part of this object. Search for the <em>change</em> node. This will make of the message in the payload, the one you wish to have.
+There it is, now print it on the screen to see how it works. 
+<a href="../../_detail/iot2015/labs/httprequest.png%3Fid=iotcluj%253Alabs%253A07.html" class="media" title="iot2015:labs:httprequest.png"><img src="../../_media/iot2015/labs/httprequest.png%3Fw=400&amp;tok=6569bf" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit3" id="send_a_message_to_a_web_page">Send a message to a web page</h2>
+<div class="level2">
+
+<p>
+This time, you build a server yourself. What do you need? A port on which your server, once started will listen on and instructions on what it should do. Also you will need a web response, as any request comes with a response. While the former is made of instructions, messages to be sent and an address of the desination, the latter will return the status of the request: did the server find the page, could it access it? 
+</p>
+
+<p>
+Many important details about web servers can be found in the corresponding course. These will help you understand every step in building and using the web services. 
+What you will do is to make a web server, using the <em>Web</em> node. 
+In it&#039;s settings  see that your server will listen on a port, and follow the method you choose to a route configured inside the node. 
+</p>
+
+<p>
+The message you send will be in payload, but you change it simply by using the same node as before. 
+</p>
+
+<p>
+Web response will set the status for the web response. For example, if you write 200 it will be ok, the connection works, but 404 is error <em>not found</em>. 
+</p>
+
+<p>
+Now you have your own web server. Let&#039;s access the page where the new payload will be shown. Add a new tab on your browser and write your board&#039;s IP. 
+</p>
+
+<p>
+You find this IP if you open your board&#039;s shell and write <em>ifconfig</em> . 
+After you write in the <abbr title="Uniform Resource Locator">URL</abbr> fields of the new tab the IP add <em> : </em> and then your port, in this case 5000. 
+</p>
+
+<p>
+Before anything else, you need to run the project to start the server. Only after,if you enter the page, it should show the message from the payload. 
+<a href="../../_detail/iot2015/labs/sendtoweb.png%3Fid=iotcluj%253Alabs%253A07.html" class="media" title="iot2015:labs:sendtoweb.png"><img src="../../_media/iot2015/labs/sendtoweb.png%3Fw=400&amp;tok=49cf2f" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+</div>
+
+<h2 class="sectionedit4" id="try_dynamic_view_in_a_web_page">Try dynamic view in a web page</h2>
+<div class="level2">
+
+<p>
+You saw already how to create a web page using Streams programming language. What you added to the web page was the message in the payload. 
+</p>
+
+<p>
+There is another way by which you can create a web page using Streams. 
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="use_html_to_create_a_web_page">Use HTML to create a web page</h3>
+<div class="level3">
+
+<p>
+The concept is pretty much the same. You send the payload to the web server to write data on a webpage. This time, the payload can be an <abbr title="HyperText Markup Language">HTML</abbr> file, where you build your document. 
+</p>
+
+<p>
+More to that. If in this <abbr title="HyperText Markup Language">HTML</abbr> file you use a variable, say <em>light</em>, and you write it in between two sets of curly brackets {{}} and, if the same variable stores a value in your Streams main file, maybe the value from a light sensor, it will be added to the web page. In short, you store a value in a variable in Streams and use it in the <abbr title="HyperText Markup Language">HTML</abbr> like so: { {variable} } (with no spaces) , and the value will appear on the web document. 
+ How? The template will be processed, meaning the variable in this html file will be given the value from the payload and loaded in the response. 
+</p>
+
+<p>
+Now you have a variable in your Streams main file to which you give the value from a light sensor. This same variable is used in the <abbr title="HyperText Markup Language">HTML</abbr> file you created. Now, let&#039;s make the connection between the two.  
+</p>
+
+<p>
+The picture below shows a basic server which displays a random number.
+</p>
+
+<p>
+<a href="../../_detail/iotcluj/labs/html_code.png%3Fid=iotcluj%253Alabs%253A07.html" class="media" title="iotcluj:labs:html_code.png"><img src="../../_media/iotcluj/labs/html_code.png%3Fw=600&amp;tok=8f494e" class="mediacenter" alt="" width="600" /></a>
+</p>
+
+<p>
+What the server does is to generate a random number every one second and store it in the <strong>random</strong> variable.
+</p>
+
+<p>
+The other stream of nodes sets the route to / and responds with a html template. The <strong>template</strong> node returns the html code which the <strong>Web response</strong> node will return to the client.
+</p>
+
+<p>
+The <strong>template</strong> note generates the following html page:
+<a href="../../_detail/iotcluj/labs/template.png%3Fid=iotcluj%253Alabs%253A07.html" class="media" title="iotcluj:labs:template.png"><img src="../../_media/iotcluj/labs/template.png%3Fw=400&amp;tok=e9a275" class="mediacenter" alt="" width="400" /></a>
+</p>
+
+<p>
+Notice that the random variable is accessed and the structure { { random } } will be replaced with the variable&#039;s value.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="dynamic_web_pages">Dynamic web pages</h3>
+<div class="level3">
+
+<p>
+In these cases there won&#039;t be static files inluded in the page returned to the browser by the server. Using AngularJS, a library which can be used with javaScript and included in <abbr title="HyperText Markup Language">HTML</abbr> files, you can now constantly check if the value has changed and instead of using the request, response, end of communication schematics, you can now keep the communication line open. This way you can see the changes on the web page in real time without the need to reload the page. 
+</p>
+
+<p>
+You have an already built example of how to use an AngularJS in the additional <abbr title="HyperText Markup Language">HTML</abbr> file. You find it, when creating a new application as <em>Web Server</em> under Streams programming language.
+Let&#039;s use the same example with the light sensor. 
+</p>
+
+<p>
+Compared with the previous part, nothing changes concerning the <em>web route</em> node and its connection to the <em>web response</em>. The latter, has a slight change thought that we will come back to a bit later. 
+</p>
+
+<p>
+In this example, the function will generate random numbers and put them in a variable called <em>random</em>.
+You can read an analog pin, as described in the Sensors lab, and send the value to a variable. 
+</p>
+
+<p>
+<a href="../../_detail/iot2015/labs/webserverex.png%3Fid=iotcluj%253Alabs%253A07.html" class="media" title="iot2015:labs:webserverex.png"><img src="../../_media/iot2015/labs/webserverex.png%3Fw=500&amp;tok=1beef1" class="mediacenter" alt="" width="500" /></a>
+Now, the only method by which you can constantly send this value to your web page is to use a <abbr title="HyperText Markup Language">HTML</abbr> file, to which you add AngularJS features, thus making your page a dynamic one. 
+</p>
+
+<p>
+This time, the <abbr title="HyperText Markup Language">HTML</abbr> page is described in the <strong>web html</strong> node.
+</p>
+
+<p>
+Moving on to the body, <em>ng-controller</em> defines the controller. 
+Within the body of the <abbr title="HyperText Markup Language">HTML</abbr> you can write the tags that are necessary for the page you envision. 
+Looking at the example, you will find the variable defined in streams, in the node value, meaning <em>random</em>. If you have used <em>light</em>, you would write <em>{ {light} }</em> (no spaces).  
+</p>
+
+<p>
+You told the web server what the port is, how the page should look like, what it should contain and on which route to locate it. Now run the project and thus you start your server. 
+</p>
+
+<p>
+The next step is to actually access the page and see if it was created correctly. 
+</p>
+
+<p>
+Take the board&#039;s IP search the page just as you did in the previous part: <em> <a href="http://IP:port" class="urlextern" title="http://IP:port"  rel="nofollow">http://IP:port</a> </em>.
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="exercises">Exercises</h2>
+<div class="level2">
+<ol>
+<li class="level1"><div class="li"> Write a web server and show to the user a static html page. If he requests anything else that that page, show him an error page.</div>
+</li>
+<li class="level1"><div class="li"> Build a web service that allow controlling the device pins. (Hint: without any html page, just write the links in the browser)</div>
+<ol>
+<li class="level2"><div class="li"> /pin?mode=read&amp;pin=pin_number</div>
+</li>
+<li class="level2"><div class="li"> /pin?mode=write&amp;pin=pin_number&amp;value=value</div>
+</li>
+</ol>
+</li>
+<li class="level1"><div class="li"> Extend the service for the Arduino pins also with /arduino/digital/pin and /arduino/analog/pin</div>
+</li>
+<li class="level1"><div class="li"> Write a web page to test the service. (Hint: for writing values use html forms with method GET, read about them)</div>
+</li>
+<li class="level1"><div class="li"> Write a web server that shows the user the temperature on each refresh. (Hint: use the template node) </div>
+</li>
+<li class="level1"><div class="li"> Write a web server that shows the user the temperature without refresh. (Hint: use the web html node) </div>
+</li>
+<li class="level1"><div class="li"> Add a select box to the page, so that the user can select what he wants to see: the temperature or the light.</div>
+</li>
+</ol>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="lectures">Lectures</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_2076339892583579ec7b449" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../courses/01.html" class="wikilink1" title="iotcluj:courses:01">Lecture 1: Introduction to IoT</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/02.html" class="wikilink1" title="iotcluj:courses:02">Lecture 2: Electronics for the Internet of Things</a></div></li>
+<li class="level1"><div class="li"><a href="../courses/03.html" class="wikilink1" title="iotcluj:courses:03">Lecture 3: Software for the Internet of Things</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Lectures" [1-55] -->
+<h1 class="sectionedit2" id="labs">Labs</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_1330987091583579ec7d36d" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="iotcluj:labs:01">Lab 1: Raspberry Pi Setup</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="iotcluj:labs:02">Lab 2: Linux</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="iotcluj:labs:03">Lab 3: Light Blink</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="iotcluj:labs:04">Lab 4: Programming with Streams</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="iotcluj:labs:05">Lab 5: Sensors and Dashboard</a></div></li>
+<li class="level1"><div class="li"><a href="06.html" class="wikilink1" title="iotcluj:labs:06">Lab 6: Connect and use an LCD</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="07.html" class="wikilink1" title="iotcluj:labs:07">Lab 7: Web server</a></span></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Labs" [56-105] -->
+<h1 class="sectionedit3" id="others">Others</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_1973397223583579ec7f2af" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/bilbiografie.html" class="wikilink1" title="iotcluj:res:bilbiografie">Bibliography</a></div></li>
+<li class="level1"><div class="li"><a href="../res/components.html" class="wikilink1" title="iotcluj:res:components">Components</a></div></li>
+<li class="level1"><div class="li"><a href="../res/electronics.html" class="wikilink1" title="iotcluj:res:electronics">Electronics</a></div></li>
+<li class="level1"><div class="li"><a href="../res/resistors.html" class="wikilink1" title="iotcluj:res:resistors">Resistor Color Code</a></div></li>
+<li class="level1"><div class="li"><a href="../res/streams.html" class="wikilink1" title="iotcluj:res:streams">Streams nodes</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tipsandtricks.html" class="wikilink1" title="iotcluj:res:tipsandtricks">Tips &amp; Tricks</a></div></li>
+<li class="level1"><div class="li"><a href="../res/wyliodrin.html" class="wikilink1" title="iotcluj:res:wyliodrin">Wyliodrin STUDIO</a></div></li>
+</ul>
+</div></div>
+
+
+
+</div>
+<!-- EDIT3 SECTION "Others" [106-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="07.html#lab_7web_server">Lab 7: Web server</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="07.html#request_data_from_a_web_page">Request data from a web page</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#send_a_message_to_a_web_page">Send a message to a web page</a></div></li>
+<li class="level2"><div class="li"><a href="07.html#try_dynamic_view_in_a_web_page">Try dynamic view in a web page</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="07.html#use_html_to_create_a_web_page">Use HTML to create a web page</a></div></li>
+<li class="level3"><div class="li"><a href="07.html#dynamic_web_pages">Dynamic web pages</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="07.html#exercises">Exercises</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          iotcluj/labs/07.txt · Last modified: 2016/07/14 12:42 by ioana_maria.culic          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+        <a href="07%3Fdo=revisions.html"  class="action revs" accesskey="o" rel="nofollow" title="Old revisions [O]">Old revisions</a>      </div>
+      <div class="bar-right">
+        <a href="07%3Fdo=media&amp;ns=iotcluj%253Alabs.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="07.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=iotcluj%253Alabs%253A07&amp;1479899628" width="2" height="1" alt="" /></div>
+</body>
+</html>

@@ -1,0 +1,442 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Lab 06 - CBC Padding Attack    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-04-25T13:09:43+0300"/>
+<meta name="keywords" content="sasc,laboratoare,06"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=sasc:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/sasc/laboratoare/06.html"/>
+<link rel="canonical" href="06.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='sasc:laboratoare';var JSINFO = {"id":"sasc:laboratoare:06","namespace":"sasc:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="../index.html"><img height="70" src="../../res/sigla_cs.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="06%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="06%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h2 class="sectionedit1" id="lab_06_-_cbc_padding_attack">Lab 06 - CBC Padding Attack</h2>
+<div class="level2">
+
+<p>
+In this lab we&#039;ll try to implement the CBC-padding attack of Serge Vaudenay:
+<a href="http://link.springer.com/content/pdf/10.1007%2F3-540-46035-7_35.pdf" class="urlextern" title="http://link.springer.com/content/pdf/10.1007%2F3-540-46035-7_35.pdf"  rel="nofollow">http://link.springer.com/content/pdf/10.1007%2F3-540-46035-7_35.pdf</a>
+</p>
+
+<p>
+See sections 3.1 to 3.3 of chapter 3 in the paper above.
+</p>
+
+</div>
+
+<h3 class="sectionedit2" id="about_padding">About padding</h3>
+<div class="level3">
+
+<p>
+Given a message of length L bytes, we need to pad with b more bytes such that L+b is a multiple of the cipher&#039;s block size (e.g. 16 bytes in the case of AES). Each of the last b bytes will have the value b. For example, for a message that has 30 bytes, we shall add two bytes with the value 0x02 at the end, obtaining m = [b1 | b2 | .. | b30 | 0x02 | 0x02], where bi are the 30 original bytes.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="attacking_cbc-padding">Attacking CBC-padding</h3>
+<div class="level3">
+
+<p>
+The idea in short is the following: given a 1-block ciphertext c = [c1 | c2 | … | c16], you can find its last byte by crafting a 2-block ciphetext c&#039; = [r | c], where r = [r1 | r2 | … | r16] contains random bytes. Then, by using an oracle that tells you whether the padding of the decryption of c&#039; is correct or not, you can determine the value of c16. For this you just try all possible values of r16, until for one of them you will find that the oracle returns a successful result (it will do that for one value). In that case, due to the workings of CBC, you found out that r16 ⊕ LSB(Dec(k, c)) = 1. Hence you find that the last byte of the decryption of c is r16 ⊕ 1.
+</p>
+
+<p>
+Once you found the last byte c16 of the decryption of c, you can work your way towards the following byte, c15. This time you need to target the two-byte padding [0x02 | 0x02]. For this you simply use for r16 the value LSB(Dec(k, c)) ⊕ 0x02, and try all values for r15 just as we did above for r16. In the same manner you can decrypt all the ciphertext blocks c1 … c16.
+</p>
+
+<p>
+You can then repeat the above process for any ciphertext of arbitrary length. Simply apply the attack on all blocks.
+</p>
+
+<p>
+<p><div class="notetip">
+To obtain a message that was encrypted with CBC, you also need the initial value (IV) and then you need to apply CBC decryption using the values obtained above. Those are just intermediary values, and not the actual message.
+Check the course for details:
+<a href="http://cs.curs.pub.ro/2014/pluginfile.php/13369/mod_resource/content/2/sasc_curs6.pdf" class="urlextern" title="http://cs.curs.pub.ro/2014/pluginfile.php/13369/mod_resource/content/2/sasc_curs6.pdf"  rel="nofollow">http://cs.curs.pub.ro/2014/pluginfile.php/13369/mod_resource/content/2/sasc_curs6.pdf</a>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit4" id="your_task">Your task</h3>
+<div class="level3">
+
+<p>
+You are given the following ciphertext:
+553b43d4b821332868fece8149eea14a2b0a98c7bed43cc1cf75f4e778cb315dc1d92
+8d0340e0aab4900ca8af9adaee761e2affa3e9996d81483e950b913492b
+</p>
+
+<p>
+and a padding oracle (see the method “check_cbcpad” below), which knows the key that was used to encrypt the ciphertext and which will answer 1 if the padding of the ciphertext is correct and 0 otherwise.
+</p>
+
+<p>
+Your task is to decrypt the message by using the CBC-padding attack.
+</p>
+
+<p>
+<p><div class="notetip">
+You are not allowed to use the key from the file, but you can (and you may have to) use the IV in order to decrypt the entire message.
+
+</div></p>
+</p>
+
+<p>
+Here is a starting python script, which contains your padding oracle:
+</p>
+<pre class="code">import sys
+import random
+import string
+import time
+from Crypto.Cipher import AES
+
+IV = &#039;Hristos a inviat&#039;
+
+def strxor(a, b): # xor two strings (trims the longer input)
+  return &quot;&quot;.join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a, b)])
+
+def hexxor(a, b): # xor two hex strings (trims the longer input)
+  ha = a.decode(&#039;hex&#039;)
+  hb = b.decode(&#039;hex&#039;)
+  return &quot;&quot;.join([chr(ord(x) ^ ord(y)).encode(&#039;hex&#039;) for (x, y) in zip(ha, hb)])
+
+def bitxor(a, b): # xor two bit strings (trims the longer input)
+  return &quot;&quot;.join([str(int(x)^int(y)) for (x, y) in zip(a, b)])
+
+def str2bin(ss):
+  &quot;&quot;&quot;
+    Transform a string (e.g. &#039;Hello&#039;) into a string of bits
+  &quot;&quot;&quot;
+  bs = &#039;&#039;
+  for c in ss:
+    bs = bs + bin(ord(c))[2:].zfill(8)
+  return bs
+
+def str2int(ss):
+  &quot;&quot;&quot;
+    Transform a string (e.g. &#039;Hello&#039;) into a (long) integer by converting
+    first to a bistream
+  &quot;&quot;&quot;
+  bs = str2bin(ss)
+  li = int(bs, 2)
+  return li
+
+def hex2bin(hs):
+  &quot;&quot;&quot;
+    Transform a hex string (e.g. &#039;a2&#039;) into a string of bits (e.g.10100010)
+  &quot;&quot;&quot;
+  bs = &#039;&#039;
+  for c in hs:
+    bs = bs + bin(int(c,16))[2:].zfill(4)
+  return bs
+
+def bin2hex(bs):
+  &quot;&quot;&quot;
+    Transform a bit string into a hex string
+  &quot;&quot;&quot;
+  bv = int(bs,2)
+  return int2hexstring(bv)
+
+def byte2bin(bval):
+  &quot;&quot;&quot;
+    Transform a byte (8-bit) value into a bitstring
+  &quot;&quot;&quot;
+  return bin(bval)[2:].zfill(8)
+
+def int2hexstring(bval):
+  &quot;&quot;&quot;
+    Transform an int value into a hexstring (even number of characters)
+  &quot;&quot;&quot;
+  hs = hex(bval)[2:]
+  lh = len(hs)
+  return hs.zfill(lh + lh%2)
+  
+def check_cbcpad(c):
+  &quot;&quot;&quot;
+  Oracle for checking if a given ciphertext has correct CBC-padding.
+  That is, it checks that the last n bytes all have the value n.
+
+  Args:
+    c is the ciphertext to be checked. Note: the key is supposed to be
+    known just by the oracle.
+
+  Return 1 if the pad is correct, 0 otherwise.
+  &quot;&quot;&quot;
+  ko = &#039;Sfantul Gheorghe&#039;
+  m = aes_dec_cbc(ko, c, IV)
+  lm = len(m)
+  lb = ord(m[lm-1])
+
+  if lb &gt; lm:
+    return 0
+
+  for k in range(lb):
+    if ord(m[lm-1-k]) != lb:
+      return 0
+
+  return 1
+
+def aes_enc(k, m):
+  &quot;&quot;&quot;
+  Encrypt a message m with a key k in ECB mode using AES as follows:
+  c = AES(k, m)
+
+  Args:
+    m should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as &#039;Hello...&#039; or &#039;\x02\x04...&#039;)
+    k should be a bytestring of length exactly 16 bytes.
+
+  Return:
+    The bytestring ciphertext c
+  &quot;&quot;&quot;
+  aes = AES.new(k)
+  c = aes.encrypt(m)
+
+  return c
+
+def aes_dec(k, c):
+  &quot;&quot;&quot;
+  Decrypt a ciphertext c with a key k in ECB mode using AES as follows:
+  m = AES(k, c)
+
+  Args:
+    c should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as &#039;Hello...&#039; or &#039;\x02\x04...&#039;)
+    k should be a bytestring of length exactly 16 bytes.
+
+  Return:
+    The bytestring message m
+  &quot;&quot;&quot;
+  aes = AES.new(k)
+  m = aes.decrypt(c)
+
+  return m
+
+def aes_enc_cbc(k, m, iv):
+  &quot;&quot;&quot;
+  Encrypt a message m with a key k in CBC mode using AES as follows:
+  c = AES(k, m)
+
+  Args:
+    m should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as &#039;Hello...&#039; or &#039;\x02\x04...&#039;)
+    k should be a bytestring of length exactly 16 bytes.
+    iv should be a bytestring of length exactly 16 bytes.
+
+  Return:
+    The bytestring ciphertext c
+  &quot;&quot;&quot;
+  aes = AES.new(k, AES.MODE_CBC, iv)
+  c = aes.encrypt(m)
+
+  return c
+
+def aes_dec_cbc(k, c, iv):
+  &quot;&quot;&quot;
+  Decrypt a ciphertext c with a key k in CBC mode using AES as follows:
+  m = AES(k, c)
+
+  Args:
+    c should be a bytestring multiple of 16 bytes (i.e. a sequence of characters such as &#039;Hello...&#039; or &#039;\x02\x04...&#039;)
+    k should be a bytestring of length exactly 16 bytes.
+    iv should be a bytestring of length exactly 16 bytes.
+
+  Return:
+    The bytestring message m
+  &quot;&quot;&quot;
+  aes = AES.new(k, AES.MODE_CBC, iv)
+  m = aes.decrypt(c)
+
+  return m
+
+def main():
+
+  # Find the message corresponding to this ciphertext by using the cbc-padding attack
+  c = &#039;553b43d4b821332868fece8149eea14a2b0a98c7bed43cc1cf75f4e778cb315dc1d928d0340e0aab4900ca8af9adaee761e2affa3e9996d81483e950b913492b&#039;
+  ct = c.decode(&#039;hex&#039;)
+
+  #Check correct padding
+  print &#039;Oracle check of pad = &#039; + str(check_cbcpad(ct))
+
+  # TODO: implement the CBC-padding attack to find the message corresponding to the above ciphertext
+  # Note: you cannot use the key known by the oracle
+  # You can use the known IV in order to recover the full message
+
+
+if __name__ == &quot;__main__&quot;:
+  main()</pre>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+<h1 class="sectionedit1" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_63442005758355bb101eac" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="01.html" class="wikilink1" title="sasc:laboratoare:01">Lab 01 - Introduction</a></div></li>
+<li class="level1"><div class="li"><a href="02.html" class="wikilink1" title="sasc:laboratoare:02">Lab 02 - OTP and Stream Ciphers</a></div></li>
+<li class="level1"><div class="li"><a href="03.html" class="wikilink1" title="sasc:laboratoare:03">Lab 03 - PRGs</a></div></li>
+<li class="level1"><div class="li"><a href="04.html" class="wikilink1" title="sasc:laboratoare:04">Lab 04 - PRFs and PRPs</a></div></li>
+<li class="level1"><div class="li"><a href="05.html" class="wikilink1" title="sasc:laboratoare:05">Lab 05 - DES</a></div></li>
+<li class="level1"><div class="li"><span class="curid"><a href="06.html" class="wikilink1" title="sasc:laboratoare:06">Lab 06 - CBC Padding Attack</a></span></div></li>
+<li class="level1"><div class="li"><a href="07.html" class="wikilink1" title="sasc:laboratoare:07">Lab 07 - Correlation Power Analysis</a></div></li>
+<li class="level1"><div class="li"><a href="08.html" class="wikilink1" title="sasc:laboratoare:08">Lab 08 - MACs</a></div></li>
+<li class="level1"><div class="li"><a href="09.html" class="wikilink1" title="sasc:laboratoare:09">Lab 09 - OpenSSL MACs and Hashes</a></div></li>
+<li class="level1"><div class="li"><a href="10.html" class="wikilink1" title="sasc:laboratoare:10">Lab 10 - OpenSSL AEAD</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT1 SECTION "Laboratoare" [1-61] -->
+<h1 class="sectionedit2" id="resurse">Resurse</h1>
+<div class="level1">
+
+<div><div id="nojs_indexmenu_10761015258355bb103d41" data-jsajax="" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../res/stuff.html" class="wikilink1" title="sasc:res:stuff">Diverse exercitii</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tema1.html" class="wikilink1" title="sasc:res:tema1">Homework 1</a></div></li>
+<li class="level1"><div class="li"><a href="../res/tema2.html" class="wikilink1" title="sasc:res:tema2">Homework 2</a></div></li>
+</ul>
+</div></div>
+
+</div>
+<!-- EDIT2 SECTION "Resurse" [62-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level2"><div class="li"><a href="06.html#lab_06_-_cbc_padding_attack">Lab 06 - CBC Padding Attack</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="06.html#about_padding">About padding</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#attacking_cbc-padding">Attacking CBC-padding</a></div></li>
+<li class="level3"><div class="li"><a href="06.html#your_task">Your task</a></div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          sasc/laboratoare/06.txt · Last modified: 2016/04/25 13:09 by sergiu.costea          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="06%3Fdo=media&amp;ns=sasc%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="06.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=sasc%253Alaboratoare%253A06&amp;1479891889" width="2" height="1" alt="" /></div>
+</body>
+</html>

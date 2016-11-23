@@ -1,0 +1,710 @@
+    
+    
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    Laborator 11: Interactiunea C-assembly    [CS Open CourseWare]
+  </title>
+
+  <meta name="generator" content="DokuWiki"/>
+<meta name="robots" content="index,follow"/>
+<meta name="date" content="2016-10-04T18:17:30+0300"/>
+<meta name="keywords" content="iocla,laboratoare,laborator-11"/>
+<link rel="search" type="application/opensearchdescription+xml" href="../../lib/exe/opensearch.php" title="CS Open CourseWare"/>
+<link rel="start" href="../../../courses.1.html"/>
+<link rel="alternate" type="application/rss+xml" title="Recent Changes" href="../../feed.php"/>
+<link rel="alternate" type="application/rss+xml" title="Current Namespace" href="../../feed.php%3Fmode=list&amp;ns=iocla:laboratoare"/>
+<link rel="alternate" type="text/html" title="Plain HTML" href="../../_export/xhtml/iocla/laboratoare/laborator-11.html"/>
+<link rel="canonical" href="laborator-11.html"/>
+<link rel="stylesheet" type="text/css" href="../../lib/exe/css.php%3Ft=arctic&amp;tseed=1476798676.css"/>
+<script type="text/javascript">/*<![CDATA[*/var NS='iocla:laboratoare';var JSINFO = {"id":"iocla:laboratoare:laborator-11","namespace":"iocla:laboratoare","isadmin":0,"isauth":0};
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="../../lib/exe/js.php%3Ftseed=1476798676"></script>
+<script type="text/x-mathjax-config">/*<![CDATA[*/MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+        displayMath: [ ["$$","$$"], ["\\[","\\]"] ],
+        processEscapes: true
+    }
+});
+/*!]]>*/</script>
+<script type="text/javascript" charset="utf-8" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/javascript">/*<![CDATA[*/
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		  
+/*!]]>*/</script>
+<script type="text/javascript">/*<![CDATA[*/
+var pageTracker = _gat._getTracker("UA-38383934-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+		  
+/*!]]>*/</script>
+
+  <link rel="shortcut icon" href="../../lib/tpl/arctic/images/favicon.ico" />
+
+  
+</head>
+<body>
+<div id="wrapper" class='show'>
+  <div class="dokuwiki">
+
+    
+    <div class="stylehead">
+      <div class="header">
+        <div class="pagename">
+          <a href="http://ocw.cs.pub.ro/courses/iocla/"><img height="70" src="../../res/sigla_iocla.png"/> </a>        </div>
+        <div class="logo">
+          <a style="color: #AAA !important;" href="../../../courses.1.html"/>Open CourseWare</a>        </div>
+      </div>
+    
+       
+      <div class="breadcrumbs">
+              </div>
+      
+            </div>
+
+                  <div class="bar" id="bar__top">
+        <div class="bar-left">
+                  </div>
+        <div class="bar-right">
+          <a href="laborator-11%3Fdo=recent.html"  class="action recent" accesskey="r" rel="nofollow" title="Recent changes [R]">Recent changes</a><a href="laborator-11%3Fdo=login&amp;sectok=f62420cf5b01253da4b50505d148181b.html"  class="action login" rel="nofollow" title="Login">Login</a>        </div>
+    </div>
+        
+    
+    
+    
+              <div class="left_page">
+          
+<h1 class="sectionedit1" id="laborator_11interactiunea_c-assembly">Laborator 11: Interactiunea C-assembly</h1>
+<div class="level1">
+
+<p>
+Având în vedere că limbajul de asamblare prezintă dificultăți atât în citirea cât și în dezvoltarea codului, tendința generală este aceea de a se migra către limbaje de nivel înalt (care sunt mult mai ușor de citit și oferă un <abbr title="Application Programming Interface">API</abbr> mult mai ușor de utilizat). Cu toate acestea, tot există situații în care, din rațiuni de optimizare, se folosesc mici rutine assembly care sunt integrate în modulul limbajului de nivel inalt.
+</p>
+
+<p>
+În acest laborator vom vedea cum se pot integra module de assembly în programe C și viceversa.
+</p>
+
+</div>
+
+<h2 class="sectionedit2" id="utilizarea_procedurilor_assembly_in_functii_c">Utilizarea procedurilor assembly în funcții C</h2>
+<div class="level2">
+
+<p>
+Pentru ca un program C să ajungă să fie executat, este necesar ca acesta să fie tradus în codul mașina al procesorului; aceasta este sarcina unui compilator. Având în vedere că codul rezultat în urma compilării nu este întotdeauna optim, în anumite cazuri se preferă înlocuirea unor porțiuni de cod scris în C cu porțiuni de cod assembly care să facă același lucru, însă cu o performanță mai bună.
+</p>
+
+</div>
+
+<h3 class="sectionedit3" id="declararea_procedurii">Declararea procedurii</h3>
+<div class="level3">
+
+<p>
+Pentru a ne asigura că procedura assembly și modulul C se vor combina cum trebuie și vor fi compatibile, următorii pași trebuie urmați:
+</p>
+<ul>
+<li class="level1"><div class="li"> declararea labelului procedurii ca fiind global, folosing directiva GLOBAL. Pe lângă asta, orice date care vor fi folosite de către procedură trebuie declarate ca fiind globale.</div>
+</li>
+<li class="level1"><div class="li"> folosirea directivei EXTERN pentru a declara procedurile și datele globale ca fiind externe.</div>
+</li>
+<li class="level1"><div class="li"> folosirea convenției de numire din C – i.e. precedarea tuturor numelor (date și proceduri) cu underscore.</div>
+</li>
+</ul>
+
+</div>
+
+<h3 class="sectionedit4" id="setarea_stivei">Setarea stivei</h3>
+<div class="level3">
+
+<p>
+Atunci când se intră intr-o procedură, este necesar să se seteze un stack frame către care să se trimită parametrii. Desigur, dacă procedura nu primește parametri, acest pas nu este necesar. Așadar, pentru a seta stiva, trebuie inclus următorul cod:
+</p>
+<pre class="code">push ebp
+mov ebp, esp</pre>
+
+<p>
+EBP-ul ne oferă posibilitatea să îl folosim ca un index în cadrul stivei și nu ar trebui alterat pe parcursul procedurii.
+</p>
+
+</div>
+
+<h3 class="sectionedit5" id="conservarea_registrelor">Conservarea registrelor</h3>
+<div class="level3">
+
+<p>
+Este necesar ca procedura să conserve valoarea registrelor ESI, EDI, EBP și a registrelor segment. În cazul în care aceste registre sunt corupte, este posibil ca programul să producă erori la întoarcerea din procedura assembly.
+</p>
+
+</div>
+
+<h3 class="sectionedit6" id="transmiterea_parametrilor_din_c_catre_procedura_assembly">Transmiterea parametrilor din C către procedura assembly</h3>
+<div class="level3">
+
+<p>
+Programele C trimit parametrii către procedurile assembly folosind stiva. Să considerăm următoarea secvență de program C:
+</p>
+<pre class="code">extern int Sum();
+   ...
+int a1, a2, x;
+   ...
+x = Sum(a1, a2);</pre>
+
+<p>
+Când C-ul execută apelul către Sum, mai întâi face push la argumente pe stivă, în ordine inversă, apoi face efectiv call către procedură. Astfel, la intrarea în corpul procedurii, stiva va fi intactă.
+</p>
+
+<p>
+Cum variabilele <code>a1</code> și <code>a2</code> sunt declarate ca fiind valori <code>int</code>, vor folosi fiecare câte un cuvânt pe stivă. Metoda aceasta de pasare a parametrilor se numește pasare prin valoare. Codul procedurii Sum ar putea arăta în felul următor:
+</p>
+<pre class="code"> _Sum
+        push    ebp             ; creeaza stack frame pointer
+        mov     ebp, esp
+        mov     eax, [ebp+8]    ; ia primul argument
+        mov     ecx, [ebp+12]   ; ia al doilea argument
+        add     eax, ecx        ; suma celor 2
+        pop     ebp             ; refa base pointerul
+        ret</pre>
+
+<p>
+Este interesant de remarcat o serie de lucruri. În primul rând, codul assembly pune în mod implicit valoarea de retur a procedurii în registrul eax. În al doilea rând, comanda “ret” este suficientă pentru a ieși din procedură, datorită faptului că compilatorul de C se ocupă de restul lucrurilor, cum ar fi îndepărtarea parametrilor de pe stivă.
+</p>
+
+</div>
+
+<h2 class="sectionedit7" id="apelarea_de_functii_c_din_proceduri_assembly">Apelarea de funcții C din proceduri assembly</h2>
+<div class="level2">
+
+<p>
+În majoritatea cazurilor, apelarea de rutine sau funcții din biblioteca standard C dintr-un program în limbaj de asamblare este o operație mult mai complexă decât viceversa. Să luăm exemplul apelării funcției <code>printf</code> dintr-un program în limbaj de asamblare:
+</p>
+<pre class="code">global  _main
+
+extern  _printf
+
+section .data
+
+text    db      &quot;291 is the best!&quot;, 10, 0
+strformat db    &quot;%s&quot;, 0
+
+section .code
+
+_main
+        push    dword text
+        push    dword strformat
+        call    _printf
+        add     esp, 8
+        ret</pre>
+
+<p>
+Remarcați faptul că procedura este declarată ca fiind globală și se numește _main, care este punctul de pornire al oricărui program C.
+Din moment ce în C parametrii sunt puși pe stivă în ordine inversă, offsetul stringului este pus prima oară, urmat de offsetului șirului de formatare. Funcția C poate fi apelată după aceea, însa stiva trebuie restaurată la ieșirea din funcție.
+</p>
+
+<p>
+Când se face linkarea codului assembly trebuie inclusă și biblioteca standard C (sau biblioteca care conține funcțiile pe care le folosiți).
+</p>
+
+</div>
+
+<h2 class="sectionedit8" id="inline_assembly">Inline assembly</h2>
+<div class="level2">
+
+<p>
+În primul rând, ce este “inline”?
+</p>
+
+<p>
+Termenul <code>inline</code> este un cuvânt cheie în limbajul C și este folosit în declararea funcțiilor. În momentul în care compilatorul găsește o funcție declarată ca fiind inline, acesta va înlocui toate apelurile către funcția respectivă cu corpul funcției. Avantajul principal al funcțiilor inline este acela că se pierde overheadul rezultat din apelul unei funcții. Pe de altă parte, dimensiunea binarului va fi mai mare.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Nu are sens să declarăm ca fiind inline funcțiile recursive. De ce?
+
+</div></p>
+</p>
+
+<p>
+Acum este ușor să ghicim la ce se referă expresia “inline assembly”: un set de instrucțiuni assembly scrise ca funcții inline. Inline assembly este folosit ca o metoda de optimizare și este foarte des întâlnit în system programming.
+</p>
+
+<p>
+În programele C/C++ se pot insera instrucțiuni în limbaje de asamblare folosing cuvântul cheie “asm”.
+</p>
+
+<p>
+Pentru mai multe detalii, consultați <a href="http://www.codeproject.com/Articles/15971/Using-Inline-Assembly-in-C-C" class="urlextern" title="http://www.codeproject.com/Articles/15971/Using-Inline-Assembly-in-C-C"  rel="nofollow">linkul</a>.
+</p>
+
+</div>
+
+<h2 class="sectionedit9" id="exercitii">Exerciții</h2>
+<div class="level2">
+
+</div>
+
+<h3 class="sectionedit10" id="pregatire_infrastructura">Pregătire infrastructură</h3>
+<div class="level3">
+
+<p>
+Pentru acest laborator vom folosi <a href="../../lib/exe/fetch.php%3Fhash=943f12&amp;media=http%253A%252F%252Felf.cs.pub.ro%252Fasm%252Fres%252Flaboratoare%252Flab-11-tasks.zip" class="media mediafile mf_zip" title="http://elf.cs.pub.ro/asm/res/laboratoare/lab-11-tasks.zip">această arhivă de resurse</a>. Descărcați arhiva și accesați conținutul acesteia.
+</p>
+
+<p>
+Pentru desfășurarea acestui laborator vom folosi interfața în linia de comandă. Pentru că folosim atât cod C cât și cod în limbaj de asamblare, va trebui să deschideți consola de Visual Studio, care are mediul deja configurat pentru compilarea de programe folosind comanda <code>cl</code>.
+</p>
+
+<p>
+<p><div class="noteclassic">
+Pentru a deschide consola de Visual Studio urmați pașii:
+</p>
+<ul>
+<li class="level1"><div class="li"> Apăsați butonul <code>Start</code>.</div>
+</li>
+<li class="level1"><div class="li"> Accesați opțiunea <code>All apps</code>.</div>
+</li>
+<li class="level1"><div class="li"> Mergeți la litera <code>V</code>.</div>
+</li>
+<li class="level1"><div class="li"> Deschideți meniul <strong>de tip director</strong> <code>Visual Studio 2015</code>.</div>
+</li>
+<li class="level1"><div class="li"> Selectați opțiunea <code>VS2015 x86 Native Tools Command Prompt</code>.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit11" id="p_1_tutorialbucla_for_in_inline_assembly">[1p] 1. Tutorial: Buclă for în inline assembly</h3>
+<div class="level3">
+
+<p>
+În subdirectorul <code>inline-for/</code> din arhiva de sarcini a laboratorului aveți o implementare a unei bucle for folosind inline assembly.
+</p>
+
+<p>
+Urmăriți codul și compilați-l și rulați-l în consola Visual Studio. Pentru a-l compila rulați comanda
+</p>
+<pre class="code">build.bat</pre>
+
+<p>
+În urma rulării comenzii rezultă executabilul <code>inline_for.exe</code> pe care îl putem executa folosind comanda
+</p>
+<pre class="code">.\inline_for.exe</pre>
+
+<p>
+Urmăriți în cod partea de inline assembly din blockul ce începe cu <code>__asm {</code>. Înțelegeți modul în care funcționează inline assembly înainte de a trece la exercițiul următor.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Observați că dacă dorim să folosim valorile variabilelor din programul C, le trecem doar cu același nume în codul inline assembly.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit12" id="p_2_rotatie_in_inline_assembly">[1.5p] 2. Rotație în inline assembly</h3>
+<div class="level3">
+
+<p>
+În limbajul C avem suport pentru operații de shiftare pe biți dar nu avem suport pentru operații de rotație pe biți. Acest lucru în ciuda prezenței operațiilor de rotație pe biți la nivelul procesorului.
+</p>
+
+<p>
+În subdirectorul <code>inline-rotate/</code> găsiți un schelet de cod pe care să îl folosiți pentru a implementa, folosind mnemonicile respectiv <code>rol</code> și <code>ror</code> rotație pe biți. O descriere scurtă a acestor instrucțiuni găsiți <a href="https://en.wikibooks.org/wiki/X86_Assembly/Shift_and_Rotate#Rotate_Instructions" class="urlextern" title="https://en.wikibooks.org/wiki/X86_Assembly/Shift_and_Rotate#Rotate_Instructions"  rel="nofollow">aici</a>.
+</p>
+
+<p>
+Pentru compilare folosiți scriptul <code>build.bat</code>.
+</p>
+
+</div>
+
+<h3 class="sectionedit13" id="p_3_cpuid_in_inline_assembly">[1.5p] 3. CPUID în inline assembly</h3>
+<div class="level3">
+
+<p>
+La nivelul procesoarelor moderne există o instrucțiune simplă, accesibilă doar din limbaj de asamblare, care oferă informații despre procesor numită <code>cpuid</code>.
+</p>
+
+<p>
+În subdirectorul <code>inline-cpuid/</code> găsiți un schelet de cod pe care să îl folosiți pentru obținerea vendor ID string-ului procesorului folosind instrucțiunea <code>cpuid</code>. Completați scheletul și faceți programul să afișeze informațiile dorite.
+</p>
+
+<p>
+Pentru compilare folosiți scriptul <code>build.bat</code>.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru informații despre instrucțiunea <code>cpuid</code> consultați și aceste link-uri:
+</p>
+<ul>
+<li class="level1"><div class="li"> <a href="http://wiki.osdev.org/CPUID" class="urlextern" title="http://wiki.osdev.org/CPUID"  rel="nofollow">http://wiki.osdev.org/CPUID</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="https://en.wikipedia.org/wiki/CPUID#EAX.3D0:_Get_vendor_ID" class="urlextern" title="https://en.wikipedia.org/wiki/CPUID#EAX.3D0:_Get_vendor_ID"  rel="nofollow">https://en.wikipedia.org/wiki/CPUID#EAX.3D0:_Get_vendor_ID</a></div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit14" id="p_4_tutorialcalcul_maxim_in_assembly_cu_apel_din_c">[1p] 4. Tutorial: Calcul maxim în assembly cu apel din C</h3>
+<div class="level3">
+
+<p>
+În subdirectorul <code>max-c-calls/</code> din arhiva de sarcini a laboratorului găsiți o implementare de calcul a maximului unui număr în care funcția <code>main()</code> este definită în C de unde se apelează funcția <code>get_max()</code> definită în limbaj de asamblare.
+</p>
+
+<p>
+Urmăriți codul din cele două fișiere și modul în care se transmit argumentele funcției și valoarea de retur.
+</p>
+
+<p>
+Compilați și rulați programul.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Acordați atenție înțelegerii codului înainte de a trece la exercițiul următor.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit15" id="p_5_extindere_calcul_maxim_in_assembly_cu_apel_din_c">[2p] 5. Extindere calcul maxim în assembly cu apel din C</h3>
+<div class="level3">
+
+<p>
+Extindeți programul de la exercițiul anterior (în limbaj de asamblare și C) astfel încât funcția <code>get_max()</code> să aibă acum signatura <code>unsigned int get_max(unsigned int *arr, unsigned int len, unsigned int *pos)</code>. Al treilea argument al funcției este adresa în care se va reține poziția din vector pe care se găsește maximul.
+</p>
+
+<p>
+La afișare se va afișa și poziția din vector pe care se găsește maximul.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru reținerea poziției, cel mai bine este definiți o variabilă locală <code>pos</code> în funcția <code>main</code> din fișierul C (<code>main.c</code>) în forma
+</p>
+<pre class="code">    unsigned int pos;</pre>
+
+<p>
+iar apelul funcției <code>get_max</code> îl veți face în forma:
+</p>
+<pre class="code">    max = get_max(arr, 10, &amp;pos);</pre>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit16" id="p_6_tutorialcalcul_maxim_in_c_cu_apel_din_assembly">[1p] 6. Tutorial: Calcul maxim în C cu apel din assembly</h3>
+<div class="level3">
+
+<p>
+În subdirectorul <code>max-assembly-calls/</code> din arhiva de sarcini a laboratorului găsiți o implementare de calcul a maximului unui număr în care funcția <code>main()</code> este definită în limbaj de asamblare de unde se apelează funcția <code>get_max()</code> definită în C.
+</p>
+
+<p>
+Urmăriți codul din cele două fișiere și modul în care se transmit argumentele funcției și valoarea de retur.
+</p>
+
+<p>
+Compilați și rulați programul.
+</p>
+
+<p>
+<p><div class="noteimportant">
+Acordați atenție înțelegerii codului înainte de a trece la exercițiul următor.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit17" id="p_7_extindere_calcul_maxim_in_c_cu_apel_din_assembly">[2p] 7. Extindere calcul maxim în C cu apel din assembly</h3>
+<div class="level3">
+
+<p>
+Extindeți programul de la exercițiul anterior (în limbaj de asamblare și C) astfel încât funcția <code>get_max()</code> să aibă acum signatura <code>unsigned int get_max(unsigned int *arr, unsigned int len, unsigned int *pos)</code>. Al treilea argument al funcției este adresa în care se va reține poziția din vector pe care se găsește maximul.
+</p>
+
+<p>
+La afișare se va afișa și poziția din vector pe care se găsește maximul.
+</p>
+
+<p>
+<p><div class="notetip">
+Pentru a reține poziția, cel mai bine este să definiți o variabilă globală în fișierul assembly (<code>main.asm</code>) în secțiunea <code>.data</code>, în forma
+</p>
+<pre class="code">    pos: dd 0</pre>
+
+<p>
+Această variabilă o veți transmite (prin adresă) către apelul <code>get_max</code> și prin valoare pentru apelul <code>printf</code> pentru afișare.
+</p>
+
+<p>
+Pentru afișare modificați șirul <code>print_format</code> și apelul <code>printf</code> în fișierul assembly (<code>main.asm</code>) ca să permită afișare a două valori: maximul și poziția.
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit18" id="p_bonuscalcul_maxim_in_assembly_cu_apel_din_c_pe_64_de_biti">[2p] Bonus: Calcul maxim în assembly cu apel din C pe 64 de biți</h3>
+<div class="level3">
+
+<p>
+Actualizați programul de la exercițiile 4 și 5 în așa fel încât să îl rulați folosind un sistem pe 64 de biți. Pentru aceasta, va trebui să asamblați programul în limbaj de asamblare pentru un executabil pe 64 de biți și să folosiți consola Visual Studio pe 64 de biți.
+</p>
+
+<p>
+<p><div class="notetip">
+<a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff561499%28v=vs.85%29.aspx" class="urlextern" title="https://msdn.microsoft.com/en-us/library/windows/hardware/ff561499%28v=vs.85%29.aspx"  rel="nofollow">Calling convention in Windows x64 binaries</a>.
+</p>
+
+<p>
+Pe arhitectura x64 parametri nu se mai trimit stivă, ci se pun registre. Primii 3 parametri se pun în: RCX, RDX, R8. Aceasta nu este o convenţie adoptată uniform. Această conveţie este este doar pe Windows, pe Linux având alte registre care sunt folosite pentru a transmite parametri unei funcţii.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="notetip">
+Trebuie să aveți în vedere următorii pași:
+</p>
+<ul>
+<li class="level1"><div class="li"> Să folosiți pentru dezvoltare consola <code>VS2015 x64 Native Tools Command Prompt</code>.</div>
+</li>
+<li class="level1"><div class="li"> Să folosiți opțiunea <code>-f win64</code> la <code>nasm</code>.</div>
+</li>
+<li class="level1"><div class="li"> Să folosiți <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff561499%28v=vs.85%29.aspx" class="urlextern" title="https://msdn.microsoft.com/en-us/library/windows/hardware/ff561499%28v=vs.85%29.aspx"  rel="nofollow">convenția de apel Windows x64</a>.</div>
+</li>
+<li class="level1"><div class="li"> Să înlocuiți numele <code>_get_max</code> cu <code>get_max</code> (fără undescore-ul de la început) în fișierul <code>max.asm</code>.</div>
+</li>
+</ul>
+
+<p>
+
+</div></p>
+</p>
+
+</div>
+
+<h3 class="sectionedit19" id="p_bonuscalcul_maxim_in_c_cu_apel_din_assembly_pe_64_de_biti">[2p] Bonus: Calcul maxim în C cu apel din assembly pe 64 de biți</h3>
+<div class="level3">
+
+<p>
+Actualizați programul de la exercițiile 6 și 7 în așa fel încât să îl rulați folosind un sistem pe 64 de biți. Pentru aceasta, va trebui să asamblați programul în limbaj de asamblare pentru un executabil pe 64 de biți și să folosiți consola Visual Studio pe 64 de biți.
+</p>
+
+<p>
+<p><div class="notetip">
+Să folosiți binarul <code>gcc</code> din calea cu MinGW64, adică <code>C:\&quot;Program Files (x86)&quot;\SASM\MinGW64\bin\gcc</code>.
+
+</div></p>
+</p>
+
+<p>
+<p><div class="noteclassic">
+E suficient să obțineți executabilul <code>main.exe</code>. Programul nu va funcționa din cauza unor probleme neelucidate de linking. Vom depana problema în următoarea perioadă <img src="../../lib/images/smileys/icon_smile.gif" class="icon" alt=":-)" />
+
+</div></p>
+</p>
+
+</div>
+
+        </div>
+        <div class="right_sidebar">
+          <form action="../../start.html" accept-charset="utf-8" class="search" id="dw__search" method="get"><div class="no"><input type="hidden" name="do" value="search" /><input type="text" id="qsearch__in" accesskey="f" name="id" class="edit" title="[F]" /><input type="submit" value="Search" class="button" title="Search" /><div id="qsearch__out" class="ajax_qsearch JSpopup"></div></div></form>          <div class="namespace_sidebar sidebar_box">
+
+
+
+<div><div id="nojs_indexmenu_152851391758355a7084f35" data-jsajax="%26skipfile%3D%252B/iocla%253A%2528sidebar%257Cindex%2529/" class="indexmenu_nojs">
+
+<ul class="idx">
+<li class="level1"><div class="li"><a href="../anunturi.html" class="wikilink1" title="iocla:anunturi">Anunțuri</a></div></li>
+<li class="level1"><div class="li"><a href="../bune-practici.html" class="wikilink1" title="iocla:bune-practici">Bune practici</a></div></li>
+<li class="level1"><div class="li"><a href="../calendar.html" class="wikilink1" title="iocla:calendar">Calendar</a></div></li>
+<li class="level1"><div class="li"><a href="../catalog.html" class="wikilink1" title="iocla:catalog">Catalog</a></div></li>
+<li class="level1"><div class="li"><a href="../feed.html" class="wikilink1" title="iocla:feed">Feed RSS</a></div></li>
+<li class="level1"><div class="li"><a href="../need-to-know.html" class="wikilink1" title="iocla:need-to-know">IOCLA Need to Know</a></div></li>
+<li class="level1"><div class="li"><a href="../reguli-notare.html" class="wikilink1" title="iocla:reguli-notare">Reguli și notare</a></div></li>
+<li class="level1"><div class="li"><a href="../utile.html" class="wikilink1" title="iocla:utile">Resurse utile</a></div></li>
+</ul>
+</div></div>
+
+<h1 class="sectionedit1" id="cursuri">Cursuri</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-01.html" class="wikilink1" title="iocla:cursuri:capitol-01">Capitol 01: Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-02.html" class="wikilink1" title="iocla:cursuri:capitol-02">Capitol 02: Reprezentarea datelor în sistemele de calcul</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-03.html" class="wikilink1" title="iocla:cursuri:capitol-03">Capitol 03: Arhitectura unui sistem de calcul</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-04.html" class="wikilink1" title="iocla:cursuri:capitol-04">Capitol 04: Arhitectura x86</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-05.html" class="wikilink1" title="iocla:cursuri:capitol-05">Capitol 05: Moduri de adresare</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-06.html" class="wikilink1" title="iocla:cursuri:capitol-06">Capitol 06: Setul de instrucțiuni</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-07.html" class="wikilink1" title="iocla:cursuri:capitol-07">Capitol 07: Dezvoltarea în limbaj de asamblare pe x86</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-08.html" class="wikilink1" title="iocla:cursuri:capitol-08">Capitol 08: Inginerie inversă și exploatarea aplicațiilor</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-09.html" class="wikilink1" title="iocla:cursuri:capitol-09">Capitol 09: Operații și extensii dedicate</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../cursuri/capitol-10.html" class="wikilink1" title="iocla:cursuri:capitol-10">Capitol 10: Programarea pentru medii specifice</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT1 SECTION "Cursuri" [166-529] -->
+<h1 class="sectionedit2" id="laboratoare">Laboratoare</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="laborator-01.html" class="wikilink1" title="iocla:laboratoare:laborator-01">Laborator 01: Introducere</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-02.html" class="wikilink1" title="iocla:laboratoare:laborator-02">Laborator 02: Toolchain</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-03.html" class="wikilink1" title="iocla:laboratoare:laborator-03">Laborator 03: First baby steps</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-04.html" class="wikilink1" title="iocla:laboratoare:laborator-04">Laborator 04: Rolul registrelor, adresare directă și bazată</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-05.html" class="wikilink1" title="iocla:laboratoare:laborator-05">Laborator 05: Structuri, vectori, explorarea memoriei</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-06.html" class="wikilink1" title="iocla:laboratoare:laborator-06">Laborator 06: Apeluri de funcții</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-07.html" class="wikilink1" title="iocla:laboratoare:laborator-07">Laborator 07: Operații pe numere mari</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-08.html" class="wikilink1" title="iocla:laboratoare:laborator-08">Laborator 08: Interfața în linia de comandă, analiza statică și dinamică</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-09.html" class="wikilink1" title="iocla:laboratoare:laborator-09">Laborator 09: Gestiunea bufferelor. Buffer overflow</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-10.html" class="wikilink1" title="iocla:laboratoare:laborator-10">Laborator 10: Exploatarea memoriei. Shellcodes</a></div>
+</li>
+<li class="level1"><div class="li"> <span class="curid"><a href="laborator-11.html" class="wikilink1" title="iocla:laboratoare:laborator-11">Laborator 11: Interactiunea C-assembly</a></span></div>
+</li>
+<li class="level1"><div class="li"> <a href="laborator-12.html" class="wikilink1" title="iocla:laboratoare:laborator-12">Laborator 12: Calcul în virgulă mobilă</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT2 SECTION "Laboratoare" [530-1037] -->
+<h1 class="sectionedit3" id="teme">Teme</h1>
+<div class="level1">
+<ul>
+<li class="level1"><div class="li"> <a href="../teme/tema-1.html" class="wikilink1" title="iocla:teme:tema-1">Tema 1</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-2.html" class="wikilink1" title="iocla:teme:tema-2">Tema 2</a></div>
+</li>
+<li class="level1"><div class="li"> <a href="../teme/tema-3.html" class="wikilink1" title="iocla:teme:tema-3">Tema 3</a></div>
+</li>
+</ul>
+
+</div>
+<!-- EDIT3 SECTION "Teme" [1038-] -->
+</div>
+<div class="toc_sidebar sidebar_box">
+<!-- TOC START -->
+<div id="sb__right__dw__toc">
+<h3 class="toggle">Table of Contents</h3>
+<div>
+
+<ul class="toc">
+<li class="level1"><div class="li"><a href="laborator-11.html#laborator_11interactiunea_c-assembly">Laborator 11: Interactiunea C-assembly</a></div>
+<ul class="toc">
+<li class="level2"><div class="li"><a href="laborator-11.html#utilizarea_procedurilor_assembly_in_functii_c">Utilizarea procedurilor assembly în funcții C</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-11.html#declararea_procedurii">Declararea procedurii</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#setarea_stivei">Setarea stivei</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#conservarea_registrelor">Conservarea registrelor</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#transmiterea_parametrilor_din_c_catre_procedura_assembly">Transmiterea parametrilor din C către procedura assembly</a></div></li>
+</ul>
+</li>
+<li class="level2"><div class="li"><a href="laborator-11.html#apelarea_de_functii_c_din_proceduri_assembly">Apelarea de funcții C din proceduri assembly</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-11.html#inline_assembly">Inline assembly</a></div></li>
+<li class="level2"><div class="li"><a href="laborator-11.html#exercitii">Exerciții</a></div>
+<ul class="toc">
+<li class="level3"><div class="li"><a href="laborator-11.html#pregatire_infrastructura">Pregătire infrastructură</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_1_tutorialbucla_for_in_inline_assembly">[1p] 1. Tutorial: Buclă for în inline assembly</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_2_rotatie_in_inline_assembly">[1.5p] 2. Rotație în inline assembly</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_3_cpuid_in_inline_assembly">[1.5p] 3. CPUID în inline assembly</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_4_tutorialcalcul_maxim_in_assembly_cu_apel_din_c">[1p] 4. Tutorial: Calcul maxim în assembly cu apel din C</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_5_extindere_calcul_maxim_in_assembly_cu_apel_din_c">[2p] 5. Extindere calcul maxim în assembly cu apel din C</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_6_tutorialcalcul_maxim_in_c_cu_apel_din_assembly">[1p] 6. Tutorial: Calcul maxim în C cu apel din assembly</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_7_extindere_calcul_maxim_in_c_cu_apel_din_assembly">[2p] 7. Extindere calcul maxim în C cu apel din assembly</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_bonuscalcul_maxim_in_assembly_cu_apel_din_c_pe_64_de_biti">[2p] Bonus: Calcul maxim în assembly cu apel din C pe 64 de biți</a></div></li>
+<li class="level3"><div class="li"><a href="laborator-11.html#p_bonuscalcul_maxim_in_c_cu_apel_din_assembly_pe_64_de_biti">[2p] Bonus: Calcul maxim în C cu apel din assembly pe 64 de biți</a></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<!-- TOC END -->
+</div>
+        </div>
+      
+    
+      <div class="stylefoot">
+        <div class="meta">
+          <div class="user">
+                    </div>
+          <div class="doc">
+          iocla/laboratoare/laborator-11.txt · Last modified: 2016/10/04 18:17 by vladimir.diaconescu          </div>
+        </div>
+      </div>
+
+    <div class="clearer"></div>
+
+    
+                <div class="bar" id="bar__bottom">
+      <div class="bar-left">
+              </div>
+      <div class="bar-right">
+        <a href="laborator-11%3Fdo=media&amp;ns=iocla%253Alaboratoare.html"  class="action media" rel="nofollow" title="Media Manager">Media Manager</a><a href="laborator-11.html#dokuwiki__top"  class="action top" accesskey="t" rel="nofollow" title="Back to top [T]">Back to top</a>      </div>
+    </div>
+    <div class="clearer"></div>
+            
+    <div align="center" class="footerinc">
+  <div class="license"><a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img src="../../lib/images/license/button/cc-by-sa.png" alt="CC Attribution-Share Alike 3.0 Unported" /></a></div>
+  <a target="_blank" href="http://www.chimeric.de" title="www.chimeric.de"><img src="../../lib/tpl/arctic/images/button-chimeric-de.png" width="80" height="15" alt="www.chimeric.de" border="0" /></a>
+
+  <a target="_blank" href="http://jigsaw.w3.org/css-validator/check/referer" title="Valid CSS"><img src="../../lib/tpl/arctic/images/button-css.png" width="80" height="15" alt="Valid CSS" border="0" /></a>
+
+  <a target="_blank" href="http://wiki.splitbrain.org/wiki:dokuwiki" title="Driven by DokuWiki"><img src="../../lib/tpl/arctic/images/button-dw.png" width="80" height="15" alt="Driven by DokuWiki" border="0" /></a>
+
+  <a target="_blank" href="http://www.firefox-browser.de" title="do yourself a favour and use a real browser - get firefox"><img src="../../lib/tpl/arctic/images/button-firefox.png" width="80" height="15" alt="do yourself a favour and use a real browser - get firefox!!" border="0" /></a>
+  
+  <a target="_blank" href="../../feed.php" title="Recent changes RSS feed"><img src="../../lib/tpl/arctic/images/button-rss.png" width="80" height="15" alt="Recent changes RSS feed" border="0" /></a>
+
+  <a target="_blank" href="http://validator.w3.org/check/referer" title="Valid XHTML 1.0"><img src="../../lib/tpl/arctic/images/button-xhtml.png" width="80" height="15" alt="Valid XHTML 1.0" border="0" /></a>
+</div>
+
+  </div>
+</div>
+
+<div class="no"><img src="../../lib/exe/indexer.php%3Fid=iocla%253Alaboratoare%253Alaborator-11&amp;1479891568" width="2" height="1" alt="" /></div>
+</body>
+</html>
